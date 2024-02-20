@@ -1253,80 +1253,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           final versionCheck = VersionCheck(
             packageName: Platform.isIOS ? 'com.foodstock' : 'com.foodstock.dev',
             packageVersion: packageInfo.version,
-            /*showUpdateDialog: customShowUpdateDialog(
-                event.context, preferences.getAppLanguage()),*/
+            showUpdateDialog: (ctx,vc){
+              if(vc.packageVersion !=  vc.storeVersion){
+                customShowUpdateDialog(
+                    event.context, preferences.getAppLanguage(),vc.storeUrl);
+              }
+            }
           );
 
           await versionCheck.checkVersion(event.context);
-         /* print(" versionCheck.packageVersion ${ versionCheck.packageVersion}");
-          print(" versionCheck.packageName ${versionCheck.packageName}");
-          print(" versionCheck.storeVersion ${versionCheck.storeVersion}");
-          print("versionCheck.storeUrl ${versionCheck.storeUrl}");*/
-          if(versionCheck.packageVersion !=  versionCheck.storeVersion && Platform.isAndroid){
+          debugPrint('package version:${versionCheck.packageVersion}');
+          debugPrint('store Version:${versionCheck.storeVersion}');
+          /*if(versionCheck.packageVersion !=  versionCheck.storeVersion && Platform.isAndroid){
             customShowUpdateDialog(
                 event.context, preferences.getAppLanguage(),versionCheck.storeUrl);
-          }
+          }*/
         }
       }
     });
   }
 
-  customShowUpdateDialog(BuildContext context, String directionality, String? storeUrl) {
-    showDialog(
-      context: context,
-      builder: (context1) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.new_version_app_update,
-              style: AppStyles.rkRegularTextStyle(
-                  color: AppColors.blackColor,
-                  size: AppConstants.mediumFont)
-          ),
-          actions: [
-            Align(
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: () {
-                  _launchUrl(storeUrl);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                  alignment: Alignment.center,
-                  width: 80,
-                  decoration: BoxDecoration(
-                      gradient: AppColors.appMainGradientColor,
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Text(
-                    AppLocalizations.of(context)!.update,
-                    style: AppStyles.rkRegularTextStyle(
-                        color: AppColors.whiteColor,
-                        size: AppConstants.font_14),
-                  ),
-                ),
-              ),
-            )
-          ],
-        );
-      },);
-  }
 
-
-
-  Future<void> _launchUrl(String? storeUrl) async {
-    Uri _url = Uri.parse(
-        storeUrl ?? ('https://play.google.com/store/apps/details?id=com.foodstock.dev'));
-    if(Platform.isAndroid){
-try{
-  launchUrl(_url);
-}on PlatformException catch(e){
-  debugPrint(e.toString());
-}finally{
-  launchUrl(_url);
-    }
-
-    /*  if (!await launchUrl(_url)) {
-        throw Exception('Could not launch $_url');
-      }*/
-    }
-
-  }
 }

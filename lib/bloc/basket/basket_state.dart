@@ -25,6 +25,7 @@ class BasketState with _$BasketState {
     required List<Product> productDetails,
     required bool isProductLoading,
     required List<ProductSupplierModel> productSupplierList,
+    required bool isQtyUpdated
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -49,6 +50,7 @@ class BasketState with _$BasketState {
      productDetails: [],
      isProductLoading: false,
      productSupplierList:[],
+       isQtyUpdated: false
 
 );
 }

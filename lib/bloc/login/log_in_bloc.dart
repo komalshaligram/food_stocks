@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import 'package:version_check/version_check.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/login_req_model/login_req_model.dart';
 import '../../data/model/res_model/login_res_model/login_res_model.dart';
@@ -95,6 +99,20 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           emit(state.copyWith(
             isLoading: false,
           ));
+        }
+      }
+      else if (event is _checkVersionOfAppEvent) {
+
+        PackageInfo packageInfo = await PackageInfo.fromPlatform();
+        final versionCheck = VersionCheck(
+          packageName: Platform.isIOS ? 'com.foodstock' : 'com.foodstock.dev',
+          packageVersion: packageInfo.version,
+        );
+
+        await versionCheck.checkVersion(event.context);
+        if(versionCheck.packageVersion !=  versionCheck.storeVersion && Platform.isAndroid){
+          customShowUpdateDialog(
+              event.context, preferencesHelper.getAppLanguage(),versionCheck.storeUrl);
         }
       }
       else if (event is _ChangeAuthEvent) {

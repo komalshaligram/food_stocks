@@ -64,7 +64,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             GetAllCartResModel response = GetAllCartResModel.fromJson(res);
 
             if (response.status == 200) {
-              emit(state.copyWith(CartItemList: response, isShimmering: false));
+              emit(state.copyWith(CartItemList: response, isShimmering: false,isQtyUpdated: false));
               List<ProductDetailsModel> temp = [];
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: true);
@@ -115,7 +115,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           list = [...state.basketProductList];
           list[event.listIndex].isProcess = true;
 
-          emit(state.copyWith(isLoading: true, basketProductList: list));
+          emit(state.copyWith(isLoading: true, basketProductList: list,isQtyUpdated: false));
 
           try {
             UpdateCartReqModel reqMap = UpdateCartReqModel();
@@ -210,7 +210,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               debugPrint(
                   'product quantity = ${productStockList[state
                       .productStockUpdateIndex].quantity}');
-              emit(state.copyWith(productStockList: productStockList));
+              emit(state.copyWith(productStockList: productStockList,isQtyUpdated: true));
             } else {
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -1024,6 +1024,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           }
         }
         else if (event is _UpdateQuantityOfProduct) {
+         emit(state.copyWith(isQtyUpdated: true));
+
           List<ProductStockModel> productStockList =
           state.productStockList.toList(growable: false);
         //  if (state.productStockUpdateIndex != -1) {
