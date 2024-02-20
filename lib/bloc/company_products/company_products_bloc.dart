@@ -152,7 +152,7 @@ class CompanyProductsBloc
           print('_productQuantity______${_productQuantity}');
           if (response.status == 200) {
             int productStockUpdateIndex = 0;
-            if(event.isBarcode ){
+            if(event.isBarcode){
               productStockUpdateIndex = 0;
             }
             else{

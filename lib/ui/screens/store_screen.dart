@@ -1803,11 +1803,8 @@ class StoreScreenWidget extends StatelessWidget {
                                           ?.toDouble() ??
                                       0.0,
 
-                                  productStock:  productStock == '0' ? int.parse(productStock ?? '0') :state
-                                      .productStockList[
-                                          state.productStockUpdateIndex]
-                                      .stock,
-                                  isRTL: context.rtl,
+                        productStock: productStock != '0' || productStock == null ? state.productStockList[state.productStockUpdateIndex].stock:int.parse(productStock!),
+                        isRTL: context.rtl,
                                   isSupplierAvailable:
                                       state.productSupplierList.isEmpty
                                           ? false
@@ -1850,16 +1847,18 @@ class StoreScreenWidget extends StatelessWidget {
                                   state.productSupplierList.isEmpty
                                       ? false
                                       : true,
-                              productStock: state
+                              productStock:state
                                   .productStockList[
-                                      state.productStockUpdateIndex]
+                              state.productStockUpdateIndex]
                                   .stock,
                               onAddToOrderPressed: state.isLoading
                                   ? null
                                   : () {
                                       context.read<StoreBloc>().add(
                                           StoreEvent.addToCartProductEvent(
-                                              context: context1));
+                                              context: context1,
+                                          productId: productId
+                                          ));
                                     }),
                     ),
                   );

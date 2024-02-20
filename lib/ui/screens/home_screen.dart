@@ -487,7 +487,12 @@ class HomeScreenWidget extends StatelessWidget {
                                                                 .recommendedProductsList[
                                                             index]
                                                                 .id ??
-                                                                '');
+                                                                '',
+                                                        productStock:(state
+                                                            .recommendedProductsList[
+                                                        index]
+                                                            .productStock.toString()) ?? '',
+                                                        );
 
 
                                                     },
@@ -853,7 +858,8 @@ class HomeScreenWidget extends StatelessWidget {
                                             context: context,
                                             productId: state
                                                 .searchList[index].searchId,
-                                            isBarcode: true
+                                            isBarcode: true,
+                                          productStock: (state.searchList[index].productStock.toString() ?? '')
                                         );
                                       } else if (state
                                           .searchList[index].searchType ==
@@ -1159,7 +1165,8 @@ class HomeScreenWidget extends StatelessWidget {
   void showProductDetails({
     required BuildContext context,
     required String productId,
-    bool? isBarcode
+    bool? isBarcode,
+     String? productStock,
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
           context: context,
@@ -1276,11 +1283,8 @@ class HomeScreenWidget extends StatelessWidget {
                                           .productDetails.first.itemsWeight
                                           ?.toDouble() ??
                                       0.0,
-                                  productStock: state
-                                      .productStockList[
-                                          state.productStockUpdateIndex]
-                                      .stock,
-                                  isRTL: context.rtl,
+                        productStock: productStock != '0' ? state.productStockList[state.productStockUpdateIndex].stock:int.parse(productStock.toString()),
+                        isRTL: context.rtl,
                                   isSupplierAvailable:
                                       state.productSupplierList.isEmpty
                                           ? false
@@ -1316,14 +1320,17 @@ class HomeScreenWidget extends StatelessWidget {
                                       ? false
                                       : true,
                               productStock: state
-                                  .productStockList[state.productStockUpdateIndex]
+                                  .productStockList[
+                              state.productStockUpdateIndex]
                                   .stock,
                               onAddToOrderPressed: state.isLoading
                                   ? null
                                   : () {
                                       context.read<HomeBloc>().add(
                                           HomeEvent.addToCartProductEvent(
-                                              context: context1));
+                                              context: context1,
+                                          productId: productId
+                                          ));
                                     }),
                     ),
                   );

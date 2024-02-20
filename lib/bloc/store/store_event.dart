@@ -53,7 +53,9 @@ class StoreEvent with _$StoreEvent {
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory StoreEvent.addToCartProductEvent(
-      {required BuildContext context}) = _AddToCartProductEvent;
+      {required BuildContext context,
+      required String productId
+      }) = _AddToCartProductEvent;
 
   const factory StoreEvent.setCartCountEvent() = _SetCartCountEvent;
 

@@ -858,7 +858,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             context: context,
                             productId: result,
                             planoGramIndex: 0,
-                            productStock: 1,
                             isBarcode: true,
                           );
                         } else {
@@ -1203,7 +1202,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 "${AppLocalizations.of(context)!.currency}${list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(AppConstants.amountFrLength)}",
                             onPressed: () {
                               showProductDetails(
-                                productStock: list[index].planogramproducts?[subIndex].productStock??0,
+                                productStock: list[index].planogramproducts?[subIndex].productStock ?? 0,
                                   context: context,
                                   productId: list[index]
                                           .planogramproducts?[subIndex]
@@ -1231,7 +1230,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       {required BuildContext context,
       required String productId,
       required int planoGramIndex,
-        required int productStock,
+         int? productStock,
       bool? isBarcode}) async {
     context.read<StoreCategoryBloc>().add(
         StoreCategoryEvent.getProductDetailsEvent(
@@ -1249,7 +1248,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-
+print('productStock');
         return DraggableScrollableSheet(
           expand: true,
           maxChildSize: 1 -
@@ -1339,7 +1338,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             .productDetails.first.itemsWeight
                                             ?.toDouble() ??
                                         0.0,
-                                    productStock: productStock,
+                                    productStock: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock !=0 || productStock== null? state
+                                        .productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex]
+                                        .stock:productStock ?? 0 ,
                           productUnitPrice:
                           state
                               .productStockList[
@@ -1349,7 +1350,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               .productStockList[
                           state.planoGramUpdateIndex]
                           [state.productStockUpdateIndex]
-                              .totalPrice:  double.parse(state.productDetails.first.supplierSales?.first?.productPrice.toString()??'0'),
+                              .totalPrice:  double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
                                     isRTL: context.rtl,
                                     isSupplierAvailable:
                                         state.productSupplierList.isEmpty
@@ -1399,17 +1400,19 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     state.productSupplierList.isEmpty
                                         ? false
                                         : true,
-                            productStock: state
-                                .productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock!=0? state
+                            productStock: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock !=0 || productStock== null? state
                                 .productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex]
-                                .stock:productStock,
+                                .stock:productStock ?? 0,
                                 onAddToOrderPressed: state.isLoading
                                     ? null
                                     : () {
                                         context.read<StoreCategoryBloc>().add(
                                             StoreCategoryEvent
                                                 .addToCartProductEvent(
-                                                    context: context1));
+                                                    context: context1,
+                                              productId: productId
+
+                                            ));
                                       }),
                       ),
                     );

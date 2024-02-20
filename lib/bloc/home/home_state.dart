@@ -50,7 +50,7 @@ class HomeState with _$HomeState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [],
+        productStockList: [ProductStockModel(productId: '')],
         isSelectSupplier: false,
         productSupplierList: [],
         isCartCountChange: false,

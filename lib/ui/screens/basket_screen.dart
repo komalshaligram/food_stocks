@@ -1008,6 +1008,7 @@ class BasketScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
+        print('qty_____$qty');
         return BlocProvider.value(
           value: context.read<BasketBloc>(),
           child: DraggableScrollableSheet(
