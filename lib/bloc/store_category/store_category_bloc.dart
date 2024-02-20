@@ -379,7 +379,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             int productStockUpdateIndex = state.productStockList[planoGramIndex]
                 .indexWhere((productStock) =>
             productStock.productId == event.productId);
-            if (productStockUpdateIndex == -1 && (event.isBarcode ?? false)) {
+              if (productStockUpdateIndex == -1 && (event.isBarcode ?? false)) {
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: false);
               productStockList[productStockList.indexOf(productStockList.last)][0] = productStockList[
