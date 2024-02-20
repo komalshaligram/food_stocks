@@ -538,40 +538,9 @@ class StoreScreenWidget extends StatelessWidget {
                                                                       .productSalesList[
                                                                           index]
                                                                       .id ??
-                                                                  '');
+                                                                  '',
+                                                          );
                                                         });
-                                                    // return buildProductSaleListItem(
-                                                    //   context: context,
-                                                    //   saleImage: state
-                                                    //       .productSalesList[index]
-                                                    //       .mainImage ??
-                                                    //       '',
-                                                    //   title: state
-                                                    //       .productSalesList[index]
-                                                    //       .salesName ??
-                                                    //       '',
-                                                    //   description: parse(state
-                                                    //       .productSalesList[
-                                                    //   index]
-                                                    //       .salesDescription ??
-                                                    //       '')
-                                                    //       .body
-                                                    //       ?.text ??
-                                                    //       '',
-                                                    //   price: double.parse(state
-                                                    //       .productSalesList[index]
-                                                    //       .discountPercentage ??
-                                                    //       '0.0'),
-                                                    //   onButtonTap: () {
-                                                    //     showProductDetails(
-                                                    //         context: context,
-                                                    //         productId: state
-                                                    //             .productSalesList[
-                                                    //         index]
-                                                    //             .id ??
-                                                    //             '');
-                                                    //   },
-                                                    // );
                                                   },
                                                 ),
                                               ),
@@ -668,39 +637,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                                     '');
                                                           },
                                                         )
-                                                    // buildRecommendationAndPreviousOrderProductsListItem(
-                                                    //   context: context,
-                                                    //   productImage: state
-                                                    //       .recommendedProductsList[
-                                                    //   index]
-                                                    //       .mainImage ??
-                                                    //       '',
-                                                    //   productName: state
-                                                    //       .recommendedProductsList[
-                                                    //   index]
-                                                    //       .productName ??
-                                                    //       '',
-                                                    //   totalSale: state
-                                                    //       .recommendedProductsList[
-                                                    //   index]
-                                                    //       .totalSale ??
-                                                    //       0,
-                                                    //   price: state
-                                                    //       .recommendedProductsList[
-                                                    //   index]
-                                                    //       .productPrice
-                                                    //       ?.toDouble() ??
-                                                    //       0.0,
-                                                    //   onButtonTap: () {
-                                                    //     showProductDetails(
-                                                    //         context: context,
-                                                    //         productId: state
-                                                    //             .recommendedProductsList[
-                                                    //         index]
-                                                    //             .id ??
-                                                    //             '');
-                                                    //   },
-                                                    // )
                                                     ),
                                               ),
                                             ],
@@ -792,8 +728,8 @@ class StoreScreenWidget extends StatelessWidget {
                                                                 productId: state
                                                                         .previousOrderProductsList[
                                                                             index]
-                                                                        .id ??
-                                                                    '');
+                                                                        .id ?? '',
+                                                            );
                                                           },
                                                         )
                                                     ),
@@ -993,7 +929,9 @@ class StoreScreenWidget extends StatelessWidget {
                                       context: context,
                                       productId: state
                                           .searchList[index].searchId,
-                                      isBarcode: true);
+                                      isBarcode: true,
+                                  productStock: state.searchList[index].productStock.toString() ?? '0'
+                                  );
                                 }
 
 
@@ -1746,7 +1684,10 @@ class StoreScreenWidget extends StatelessWidget {
 
   void showProductDetails({required BuildContext context,
     required String productId,
-    bool? isBarcode}) async {
+    bool? isBarcode,
+    String? productStock
+
+  }) async {
     context.read<StoreBloc>().add(StoreEvent.getProductDetailsEvent(
         context: context, productId: productId, isBarcode: isBarcode));
     showModalBottomSheet(
@@ -1759,6 +1700,8 @@ class StoreScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
+        print('productStock____111_  ${productStock}');
+        print('productStock____111_  ${productStock == '0'}');
         return BlocProvider.value(
           value: context.read<StoreBloc>(),
           child: DraggableScrollableSheet(
@@ -1860,7 +1803,7 @@ class StoreScreenWidget extends StatelessWidget {
                                           ?.toDouble() ??
                                       0.0,
 
-                                  productStock: state
+                                  productStock:  productStock == '0' ? int.parse(productStock ?? '0') :state
                                       .productStockList[
                                           state.productStockUpdateIndex]
                                       .stock,

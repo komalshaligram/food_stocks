@@ -1249,7 +1249,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        debugPrint('product id  ${productId}');
+
         return DraggableScrollableSheet(
           expand: true,
           maxChildSize: 1 -

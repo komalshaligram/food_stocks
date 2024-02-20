@@ -21,7 +21,7 @@ class CommonProductDetailsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('product stock$productStock');
+    debugPrint('product stock $productStock');
     return !isSupplierAvailable || productStock == 0
         ? 0.width
         : Container(
