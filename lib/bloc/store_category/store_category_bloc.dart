@@ -826,10 +826,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 totalPrice: 0.0,
                 productSaleId: '',
               );
+              Navigator.pop(event.context,{AppStrings.isCartCountString : 'true'});
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,duringCelebration: true));
-              Navigator.pop(event.context,{AppStrings.isCartCountString : 'true'});
-              await Future.delayed(const Duration(milliseconds: 2000));
+              await Future.delayed(const Duration(milliseconds: 500));
               emit(state.copyWith(duringCelebration: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,

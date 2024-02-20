@@ -499,6 +499,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                     print("tap 4");
                                     showProductDetails(
                                         context: context,
+                                        productStock: state.searchList[index].productStock.toString(),
                                         productId: state
                                             .searchList[index].searchId,
                                         isBarcode: true
@@ -522,8 +523,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                           state.searchList
                                         });
                                     if (searchResult != null) {
-                                      bloc.add(CompanyProductsEvent
-                                          .updateGlobalSearchEvent(
+                                      bloc.add(CompanyProductsEvent.updateGlobalSearchEvent(
                                           search: searchResult[
                                           AppStrings.searchString],
                                           searchList: searchResult[
@@ -569,6 +569,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                             print("tap 5");
                             showProductDetails(
                                 context: context,
+                                productStock: '1',
                                 productId: scanResult,
                                 isBarcode: true);
                           }
@@ -691,7 +692,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context, required String productId,  bool? isBarcode,   String productStock = '-1',
+      {required BuildContext context, required String productId,  bool? isBarcode,   String productStock = '0',
       }) async {
     context.read<CompanyProductsBloc>().add(
         CompanyProductsEvent.getProductDetailsEvent(
@@ -717,7 +718,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: AppConstants.bottomSheetInitHeight,
-            //    shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(
@@ -754,7 +754,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                   productPerUnit:
                                       state.productDetails.first.numberOfUnit ??
                                           0,
-
                                   productName:
                                       state.productDetails.first.productName ??
                                           '',
@@ -774,38 +773,13 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       (state.productDetails.first.numberOfUnit ?? 0),
                                   productScaleType: state.productDetails.first.scales?.scaleType ?? '',
                                   productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                               /*   isNoteOpen: state.productStockList[state.productStockUpdateIndex].isNoteOpen,
-                                  onNoteToggleChanged: () {
-                                    context.read<CompanyProductsBloc>().add(
-                                        CompanyProductsEvent.toggleNoteEvent());
-                                  },
-                                  supplierWidget: state.productSupplierList.isEmpty
-                                      ? Container(
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        top: BorderSide(
-                                            color: AppColors
-                                                .borderColor
-                                                .withOpacity(0.5),
-                                            width: 1))),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical:
-                                    AppConstants.padding_30),
-                                alignment: Alignment.center,
-                                child: Text(
-                                '${AppLocalizations.of(context)!.out_of_stock}',
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.smallFont,
-                                      color: AppColors.redColor),
-                                ),
-                              )*/
-                                  //: buildSupplierSelection(context: context),
+
                             productUnitPrice: state
                                 .productStockList[state.productStockUpdateIndex]
                                 .totalPrice!=0?  state
                                 .productStockList[state.productStockUpdateIndex]
                                 .totalPrice:  double.parse(state.productDetails.first.supplierSales?.first?.productPrice.toString()??'0'),
-                              productStock: productStock != '0' ? state.productStockList[state.productStockUpdateIndex].stock:int.parse(productStock),
+                              productStock:int.parse(productStock),
                               isRTL: context.rtl,
                               isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                               scrollController: scrollController,
@@ -829,18 +803,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                         .decreaseQuantityOfProduct(
                                                 context: context1));
                                   },
-
-                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
-                                  // isLoading: state.isLoading,
-                                  /*onAddToOrderPressed: state.isLoading
-                                  ? null
-                                  : () {
-                                context
-                                    .read<CompanyProductsBloc>()
-                                    .add(CompanyProductsEvent
-                                    .addToCartProductEvent(
-                                    context: context1));
-                              }*/
                                 ),
                           bottomNavigationBar: state.isProductLoading
                               ? 0.height
