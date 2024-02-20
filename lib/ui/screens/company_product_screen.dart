@@ -179,7 +179,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                       Column(
                         children: [
                           100.height,
-                          Center(
+                       /*   Center(
                             child: CachedNetworkImage(
                               imageUrl: state.productList.isNotEmpty?"${AppUrls.baseFileUrl}${state.productList.elementAt(0).brandLogo}":companyLogo??'',
                               fit: BoxFit.scaleDown,
@@ -209,7 +209,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          ),
+                          ),*/
                           Expanded(
                             child: state.isShimmering
                                 ? state.isCompanyProductGrid ? SupplierProductsScreenShimmerWidget() :
@@ -570,7 +570,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                             print("tap 5");
                             showProductDetails(
                                 context: context,
-                                productStock: '1',
+                               // productStock: '1',
                                 productId: scanResult,
                                 isBarcode: true);
                           }
@@ -693,7 +693,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context, required String productId,  bool? isBarcode,   String productStock = '-1',
+      {required BuildContext context, required String productId,  bool? isBarcode,   String productStock = '0',
       }) async {
     context.read<CompanyProductsBloc>().add(
         CompanyProductsEvent.getProductDetailsEvent(
