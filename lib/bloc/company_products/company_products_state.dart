@@ -31,6 +31,8 @@ class CompanyProductsState with _$CompanyProductsState {
     required bool isCatVisible,
     required bool isGridView,
     required bool duringCelebration,
+    required int quantity,
+
 
 
   }) = _CompanyProductsState;
@@ -43,7 +45,7 @@ class CompanyProductsState with _$CompanyProductsState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [],
+        productStockList: [ProductStockModel(productId: '')],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,
@@ -63,7 +65,8 @@ class CompanyProductsState with _$CompanyProductsState {
     productCategoryList: [],
     isCatVisible: false,
         isGridView: false,
-    duringCelebration: false
+    duringCelebration: false,
+    quantity: 0
 
       );
 }
