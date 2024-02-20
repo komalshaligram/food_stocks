@@ -565,10 +565,11 @@ class CompanyProductsBloc
                 totalPrice: 0.0,
                 productSaleId: '',
               );
-              emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
               Navigator.pop(event.context);
-              await Future.delayed(const Duration(milliseconds: 2000));
+              emit(state.copyWith(
+                  isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount(),duringCelebration: true));
+
+              await Future.delayed(const Duration(milliseconds: 500));
               emit(state.copyWith(duringCelebration: false));
 
               CustomSnackBar.showSnackBar(
@@ -661,7 +662,6 @@ class CompanyProductsBloc
               Navigator.pop(event.context);
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList));
-              Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(

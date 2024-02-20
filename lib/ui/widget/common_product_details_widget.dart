@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -161,7 +163,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       .map((productImage) => Image.network(
                                             "${AppUrls.baseFileUrl}$productImage",
                                             height: 150,
-                                            fit: BoxFit.fitHeight,
+                                            fit: BoxFit.contain,
                                             loadingBuilder: (context, child,
                                                 loadingProgress) {
                                               if (loadingProgress
@@ -511,10 +513,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                         maxLines: 1,
                                                         textInputAction:
                                                             TextInputAction
-                                                                .next,
-                                                        keyboardType:
-                                                            TextInputType
-                                                                .number,
+                                                                .done,
+                                                        keyboardType: Platform.isIOS?
+                                                        TextInputType.numberWithOptions(signed: true)
+                                                            : TextInputType.number,
                                                         inputFormatters: [
                                                           FilteringTextInputFormatter
                                                               .digitsOnly

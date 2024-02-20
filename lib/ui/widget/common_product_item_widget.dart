@@ -68,8 +68,8 @@ class CommonProductItemWidget extends StatelessWidget {
             Center(
               child:!isGuestUser ? CachedNetworkImage(
                 imageUrl: "${AppUrls.baseFileUrl}$productImage",
-                height: 69,
-                fit: BoxFit.fitHeight,
+                height: 70,
+                fit: BoxFit.contain,
                 placeholder: (context, url) {
                   return CommonShimmerWidget(
                     child: Container(
@@ -90,8 +90,8 @@ class CommonProductItemWidget extends StatelessWidget {
                         height: 70, width: double.maxFinite, fit: BoxFit.cover),
                   );
                 },
-              ) : Image.asset(AppImagePath.imageNotAvailable5 , height: 80,
-                width: 80, ),
+              ) : Image.asset(AppImagePath.imageNotAvailable5 , height: 70,
+                width: 70, ),
             ),
             5.height,
             Text(

@@ -1124,7 +1124,9 @@ class BasketScreenWidget extends StatelessWidget {
                         },
                         onQuantityDecreaseTap: () {
                           if(state
-                              .productStockList[state.productStockUpdateIndex].quantity>0){
+                              .productStockList[
+                          state.productStockUpdateIndex]
+                              .quantity>0){
                             context.read<BasketBloc>().add(
                                 BasketEvent.decreaseQuantityOfProduct(
                                     context: context1));
