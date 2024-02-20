@@ -45,8 +45,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return BlocProvider(
       create: (context) => HomeBloc()
         ..add(HomeEvent.getCartCountEvent(context: context))
@@ -56,7 +54,6 @@ class HomeScreen extends StatelessWidget {
         ..add(HomeEvent.getMessageListEvent(context: context))
         ..add(HomeEvent.getRecommendationProductsListEvent(context: context))
        ..add(HomeEvent.checkVersionOfAppEvent(context: context)),
-       // ..add(HomeEvent.getProductCategoriesListEvent(context: context)),
       child: HomeScreenWidget(),
     );
   }

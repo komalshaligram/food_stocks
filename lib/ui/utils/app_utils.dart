@@ -1,4 +1,4 @@
-
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +11,8 @@ import 'package:getwidget/getwidget.dart';
 
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
-
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 double getScreenHeight(BuildContext context) {
   final screenHeight = MediaQuery.of(context).size.height;
@@ -24,18 +25,29 @@ double getScreenWidth(BuildContext context) {
 }
 
 enum SnackBarType {
-  SUCCESS ,
+  SUCCESS,
   FAILURE,
+}
+
+bool isTablet(BuildContext context) {
+  bool isTablet = false;
+  if (MediaQuery.of(context).size.height < 700) {
+    isTablet = false;
+  } else {
+    return true;
+  }
+  return isTablet;
 }
 
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
-  static void showSnackBar( {required BuildContext context,
+  static void showSnackBar({
+    required BuildContext context,
     required String title,
     required SnackBarType type,
   }) {
     GFToast.showToast(
-      trailing:  Container(),
+      trailing: Container(),
       title,
       context,
       backgroundColor: type == SnackBarType.SUCCESS
@@ -46,8 +58,64 @@ class CustomSnackBar {
       textStyle: AppStyles.rkRegularTextStyle(
           size: AppConstants.smallFont,
           color: AppColors.whiteColor,
-          fontWeight: FontWeight.w400),);
+          fontWeight: FontWeight.w400),
+    );
+  }
+}
 
+customShowUpdateDialog(
+    BuildContext context, String directionality, String? storeUrl) {
+  return showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (context1) {
+      return AlertDialog(
+        title: Text(AppLocalizations.of(context)!.new_version_app_update,
+            style: AppStyles.rkRegularTextStyle(
+                color: AppColors.blackColor, size: AppConstants.mediumFont)),
+        actions: [
+          Align(
+            alignment: Alignment.center,
+            child: GestureDetector(
+              onTap: () {
+                _launchUrl(storeUrl);
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                alignment: Alignment.center,
+                width: 80,
+                decoration: BoxDecoration(
+                    gradient: AppColors.appMainGradientColor,
+                    borderRadius: BorderRadius.circular(8.0)),
+                child: Text(
+                  AppLocalizations.of(context)!.update,
+                  style: AppStyles.rkRegularTextStyle(
+                      color: AppColors.whiteColor, size: AppConstants.font_14),
+                ),
+              ),
+            ),
+          )
+        ],
+      );
+    },
+  );
+}
+
+Future<void> _launchUrl(String? storeUrl) async {
+  Uri _url = Uri.parse(storeUrl ??
+      ('https://play.google.com/store/apps/details?id=com.foodstock.dev'));
+  if (Platform.isAndroid) {
+    try {
+      launchUrl(_url);
+    } on PlatformException catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      launchUrl(_url);
+    }
+
+    /*  if (!await launchUrl(_url)) {
+        throw Exception('Could not launch $_url');
+      }*/
   }
 }
 
@@ -185,29 +253,41 @@ extension StringCasingExtension on String {
       .map((str) => str.toCapitalized())
       .join(' ');
 
-  String toLocalization() => this.contains('.')?this.split('.')[1].toLowerCase():this;
+  String toLocalization() =>
+      this.contains('.') ? this.split('.')[1].toLowerCase() : this;
 }
 
-
-String formatNumber({required String value, required String local}){
-  String result = (NumberFormat.simpleCurrency(locale: local,).format(double.parse(value)));
- String result1 =  splitNumber(result);
+String formatNumber({required String value, required String local}) {
+  String result = (NumberFormat.simpleCurrency(
+    locale: local,
+  ).format(double.parse(value)));
+  String result1 = splitNumber(result);
   return '${result1}';
 }
 
-
-double vatCalculation({required double price , required double vat, double qty = 0,  double deposit = 0}){
- double result = price + ((price * vat)/100) + (qty * deposit) + ((qty * deposit * vat)/100) ;
+double vatCalculation(
+    {required double price,
+    required double vat,
+    double qty = 0,
+    double deposit = 0}) {
+  double result = price +
+      ((price * vat) / 100) +
+      (qty * deposit) +
+      ((qty * deposit * vat) / 100);
   return result;
 }
 
-double totalVatAmountCalculation({required double price , required double vat, double qty = 0,  double deposit = 0}){
-  double result =  ((price * vat)/100) + ((qty * deposit * vat)/100) ;
+double totalVatAmountCalculation(
+    {required double price,
+    required double vat,
+    double qty = 0,
+    double deposit = 0}) {
+  double result = ((price * vat) / 100) + ((qty * deposit * vat) / 100);
   return result;
 }
 
-
-double bottleDepositCalculation({required double qty, required double deposit}){
+double bottleDepositCalculation(
+    {required double qty, required double deposit}) {
   double result = qty * deposit;
   debugPrint('qty$qty');
   debugPrint('bottle deposit$deposit');
@@ -215,8 +295,7 @@ double bottleDepositCalculation({required double qty, required double deposit}){
   return result;
 }
 
-double saleCalculation({required double price , required double salePer}){
-  double result = price - (price * (salePer/100));
+double saleCalculation({required double price, required double salePer}) {
+  double result = price - (price * (salePer / 100));
   return result;
 }
-
