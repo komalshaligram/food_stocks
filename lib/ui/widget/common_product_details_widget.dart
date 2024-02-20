@@ -70,6 +70,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('productStock_sss__${productStock == 0}');
+    print('productQuantity__${productStock == '0'}');
+    print('productStock__${productStock}');
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(

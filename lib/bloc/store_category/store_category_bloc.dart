@@ -375,17 +375,67 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             int planoGramIndex  = event.planoGramIndex;
 
             print('productStockList___${productStockList}');
+            print('planoGramIndex___${event.planoGramIndex}');
+            int productStockUpdateIndex = -1;
+            if(planoGramIndex == 1){
+              productStockUpdateIndex = state.productStockList[planoGramIndex]
+                  .indexWhere((productStock) =>
+              productStock.productId == event.productId);
+            }
+            else{
+              productStockUpdateIndex = planoGramIndex;
+            }
 
-            int productStockUpdateIndex = state.productStockList[planoGramIndex]
-                .indexWhere((productStock) =>
-            productStock.productId == event.productId);
-              if (productStockUpdateIndex == -1 && (event.isBarcode ?? false)) {
+            emit(state.copyWith(planoGramUpdateIndex:planoGramIndex,productStockUpdateIndex:productStockUpdateIndex));
+            print('planoGramUpdateIndex___${state.planoGramUpdateIndex}');
+            print('productStockUpdateIndex___${state.productStockUpdateIndex}');
+            productStockList[productStockList.indexOf(productStockList.last)][0] = productStockList[
+            productStockList.indexOf(productStockList.last)][0]
+                .copyWith(
+                quantity: _productQuantity,
+                productId: response.product?.first.id ?? '' ,
+                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
+            );
+            emit(state.copyWith(productStockList: productStockList));
+
+            try {
+
+              final res = await DioClient(event.context).post(
+                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+                  options: Options(headers: {
+                    HttpHeaders.authorizationHeader:
+                    'Bearer ${preferences.getAuthToken()}'
+                  }));
+              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+              if (response.status == 200) {
+                debugPrint('cart before = ${response.data}');
+                response.data?.data?.forEach((cartProduct) {
+                  if (cartProduct.id ==
+                      state.productStockList[state.planoGramUpdateIndex]
+                      [state.productStockUpdateIndex].productId ||
+                      cartProduct.id == event.productId ||
+                      cartProduct.id == state.productStockList[productStockList.last.length - 1]
+                      [state.productStockUpdateIndex].productId
+                  ) {
+                    _isProductInCart = true;
+                    _cartProductId = cartProduct.cartProductId ?? '';
+                    _productQuantity = cartProduct.totalQuantity ?? 0;
+                    return;
+                  }
+                });
+                debugPrint(
+                    '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
+              }
+            } on ServerException {}
+
+
+            if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: false);
               productStockList[productStockList.indexOf(productStockList.last)][0] = productStockList[
               productStockList.indexOf(productStockList.last)][0]
                   .copyWith(
-                  quantity: 1,
+                  quantity: _productQuantity,
                   productId: response.product?.first.id ?? '' ,
                   stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
               );
@@ -413,6 +463,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               companyName: supplier.supplierCompanyName ?? '',
               basePrice:
               double.parse(supplier.productPrice ?? '0.0'),
+              quantity: _productQuantity,
               stock: int.parse(supplier.productStock ?? '0'),
               selectedIndex: (supplier.supplierId ?? '') ==
                   state
@@ -528,7 +579,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     supplierSaleIndex: supplierSaleIndex));
               }
             }
-            try {
+        /*    try {
 
               final res = await DioClient(event.context).post(
                   '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
@@ -554,7 +605,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 debugPrint(
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
-            } on ServerException {}
+            } on ServerException {}*/
           } else {
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
@@ -718,7 +769,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 productSupplierIds:
                 supplierList[event.supplierIndex].supplierId,
                 stock: supplierList[event.supplierIndex].stock,
-                quantity: 1,
+                quantity:supplierList[event.supplierIndex].quantity != 0 ?supplierList[event.supplierIndex].quantity : 1 ,
                 totalPrice: event.supplierSaleIndex == -2
                     ? supplierList[event.supplierIndex].basePrice
                     : supplierList[event.supplierIndex]
@@ -778,10 +829,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           try {
             emit(state.copyWith(isLoading: true));
             UpdateCartReqModel request = UpdateCartReqModel(
-              productId: state
-                  .productStockList[state.planoGramUpdateIndex]
-              [state.productStockUpdateIndex]
-                  .productId,
+              productId: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].productId == ''? event.productId :state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].productId,
               supplierId: state
                   .productStockList[state.planoGramUpdateIndex]
               [state.productStockUpdateIndex]
@@ -799,8 +847,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               quantity: state
                   .productStockList[state.planoGramUpdateIndex]
               [state.productStockUpdateIndex]
-                  .quantity +
-                  _productQuantity,
+                  .quantity /*+ _productQuantity*/,
               cartProductId: _cartProductId,
             );
             SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -859,10 +906,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             InsertCartModel.InsertCartReqModel insertCartReqModel =
             InsertCartModel.InsertCartReqModel(products: [
               InsertCartModel.Product(
-                  productId: state
-                      .productStockList[state.planoGramUpdateIndex]
-                  [state.productStockUpdateIndex]
-                      .productId,
+                  productId: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].productId == ''? event.productId :state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].productId,
                   quantity: state
                       .productStockList[state.planoGramUpdateIndex]
                   [state.productStockUpdateIndex]
