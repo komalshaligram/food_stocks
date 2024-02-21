@@ -807,7 +807,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                 .totalPrice!=0?  state
                                 .productStockList[state.productStockUpdateIndex]
                                 .totalPrice:  double.parse(state.productDetails.first.supplierSales?.first?.productPrice.toString()??'0'),
-                              productStock: productStock != '0' ? state.productStockList[state.productStockUpdateIndex].stock:int.parse(productStock),
+                            productStock:state.productStockList[state.productStockUpdateIndex].stock != 0 ?
+                            int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                            int.parse(productStock.toString() ?? '0'),
                               isRTL: context.rtl,
                               isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                               scrollController: scrollController,

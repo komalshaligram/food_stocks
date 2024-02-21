@@ -928,7 +928,8 @@ class HomeScreenWidget extends StatelessWidget {
                                 showProductDetails(
                                     context: context,
                                     productId: scanResult,
-                                    isBarcode: true);
+                                    isBarcode: true,
+                                );
                               }
                             },
                           ),
@@ -1166,13 +1167,12 @@ class HomeScreenWidget extends StatelessWidget {
     required BuildContext context,
     required String productId,
     bool? isBarcode,
-     String? productStock,
+     String productStock  = '-1',
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
           context: context,
           productId: productId,
       isBarcode: isBarcode ?? false
-
         ));
     showModalBottomSheet(
       context: context,
@@ -1184,6 +1184,7 @@ class HomeScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
+        print('productStock_11____${productStock}');
         return BlocProvider.value(
           value: context.read<HomeBloc>(),
           child: DraggableScrollableSheet(
@@ -1283,7 +1284,10 @@ class HomeScreenWidget extends StatelessWidget {
                                           .productDetails.first.itemsWeight
                                           ?.toDouble() ??
                                       0.0,
-                        productStock: productStock != '0' ? state.productStockList[state.productStockUpdateIndex].stock:int.parse(productStock.toString()),
+                        productStock: (productStock.toString()) == 0 ?
+                        int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                        productStock == '-1' ? int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                        int.parse(productStock.toString() ?? '0'),
                         isRTL: context.rtl,
                                   isSupplierAvailable:
                                       state.productSupplierList.isEmpty
@@ -1319,10 +1323,10 @@ class HomeScreenWidget extends StatelessWidget {
                                   state.productSupplierList.isEmpty
                                       ? false
                                       : true,
-                              productStock: state
-                                  .productStockList[
-                              state.productStockUpdateIndex]
-                                  .stock,
+                              productStock: (productStock.toString()) == 0 ?
+                              int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                              productStock == '-1' ? int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                              int.parse(productStock.toString() ?? '0'),
                               onAddToOrderPressed: state.isLoading
                                   ? null
                                   : () {

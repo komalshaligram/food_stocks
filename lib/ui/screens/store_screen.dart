@@ -1685,7 +1685,7 @@ class StoreScreenWidget extends StatelessWidget {
   void showProductDetails({required BuildContext context,
     required String productId,
     bool? isBarcode,
-    String? productStock
+    String productStock  = '-1',
 
   }) async {
     context.read<StoreBloc>().add(StoreEvent.getProductDetailsEvent(
@@ -1803,7 +1803,10 @@ class StoreScreenWidget extends StatelessWidget {
                                           ?.toDouble() ??
                                       0.0,
 
-                        productStock: productStock != '0' || productStock == null ? state.productStockList[state.productStockUpdateIndex].stock:int.parse(productStock!),
+                        productStock:(productStock.toString()) == 0 ?
+                        int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                        productStock == '-1' ? int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                        int.parse(productStock.toString() ?? '0'),
                         isRTL: context.rtl,
                                   isSupplierAvailable:
                                       state.productSupplierList.isEmpty
@@ -1847,10 +1850,10 @@ class StoreScreenWidget extends StatelessWidget {
                                   state.productSupplierList.isEmpty
                                       ? false
                                       : true,
-                              productStock:state
-                                  .productStockList[
-                              state.productStockUpdateIndex]
-                                  .stock,
+                              productStock:(productStock.toString()) == 0 ?
+                              int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                              productStock == '-1' ? int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                              int.parse(productStock.toString() ?? '0'),
                               onAddToOrderPressed: state.isLoading
                                   ? null
                                   : () {

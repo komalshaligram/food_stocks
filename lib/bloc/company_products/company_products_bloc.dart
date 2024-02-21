@@ -169,7 +169,7 @@ class CompanyProductsBloc
                 .copyWith(
               quantity: _productQuantity,
               productId: response.product?.first.id ?? '',
-              stock: response.product?.first.numberOfUnit ?? 0,
+              stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
               productSaleId: '',
               productSupplierIds: '',
               note: '',
@@ -218,7 +218,7 @@ class CompanyProductsBloc
                   .copyWith(
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
-                stock: response.product?.first.numberOfUnit ?? 0,
+                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',

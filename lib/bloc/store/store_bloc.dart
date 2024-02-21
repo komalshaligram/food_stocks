@@ -322,7 +322,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 .copyWith(
               quantity: _productQuantity,
               productId: response.product?.first.id ?? '',
-              stock: response.product?.first.numberOfUnit ?? 0,
+              stock: int.parse(response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
               productSaleId: '',
               productSupplierIds: '',
               note: '',
@@ -361,7 +361,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               }
             } on ServerException {}
 
-            if (productStockUpdateIndex == -1 && (event.isBarcode ?? false)) {
+            if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: false);
               productStockList[productStockList
@@ -370,7 +370,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   .copyWith(
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
-                stock: response.product?.first.numberOfUnit ?? 0,
+                stock: int.parse(response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',

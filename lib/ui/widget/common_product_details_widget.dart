@@ -71,7 +71,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     print('productStock_sss__${productStock == 0}');
     print('productQuantity__${productStock == '0'}');
-    print('productStock__${productStock}');
+    print('productStock__${productStock == -1}');
+    print('productStock__${productStock }');
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -326,7 +327,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: AppConstants.padding_15,
                                       vertical: AppConstants.padding_20),
-                                  child: productStock == 0
+                                  child: productStock == 0 || productStock == -1
                                       ? Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
