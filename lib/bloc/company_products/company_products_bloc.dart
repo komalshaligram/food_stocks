@@ -449,7 +449,7 @@ class CompanyProductsBloc
                         1);
             debugPrint(
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
-            emit(state.copyWith(productStockList: productStockList));
+            emit(state.copyWith(productStockList: productStockList,));
           } else {
             CustomSnackBar.showSnackBar(
                 context: event.context,

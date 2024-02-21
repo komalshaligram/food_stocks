@@ -1008,7 +1008,7 @@ class BasketScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        print('qty_____$qty');
+
         return BlocProvider.value(
           value: context.read<BasketBloc>(),
           child: DraggableScrollableSheet(
@@ -1024,6 +1024,7 @@ class BasketScreenWidget extends StatelessWidget {
               return BlocBuilder<BasketBloc, BasketState>(
                 builder: (context, state) {
                   print('state.productStockUpdateIndex${state.productStockUpdateIndex}');
+                  debugPrint('state.isQtyUpdated:${state.isQtyUpdated}');
                   return Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
@@ -1095,14 +1096,12 @@ class BasketScreenWidget extends StatelessWidget {
                         isRTL: context.rtl,
                         isSupplierAvailable: true,
                         scrollController: scrollController,
-                        productQuantity:state
+                        productQuantity:state.isQtyUpdated?state
                             .productStockList[
                         state.productStockUpdateIndex]
-                            .quantity==1?qty:state
-                            .productStockList[
-                        state.productStockUpdateIndex]
-                            .quantity,
+                            .quantity:qty,
                         onQuantityChanged: (quantity) {
+                          debugPrint("Quantity___:$quantity");
                           context.read<BasketBloc>().add(
                               BasketEvent.updateQuantityOfProduct(
                                   context: context1,
