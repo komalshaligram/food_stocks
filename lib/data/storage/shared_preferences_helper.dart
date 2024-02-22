@@ -51,7 +51,7 @@ class SharedPreferencesHelper {
       await prefs.remove(lang);
       await prefs.remove(userLoggedIn);
       await prefs.remove(appVersion);
-      await prefs.remove(fcmToken);
+
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
   }

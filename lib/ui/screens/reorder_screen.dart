@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/reorder/reorder_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/widget/refresh_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../utils/app_utils.dart';
@@ -372,7 +374,33 @@ class ReorderScreenWidget extends StatelessWidget {
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
-                            imageOnTap: (){},
+                            imageOnTap: (){
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Stack(
+                                    children: [
+                                      Container(
+                                        height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                        width: getScreenWidth(context),
+                                        child: PhotoView(
+                                          imageProvider: CachedNetworkImageProvider(
+                                            '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                          ),
+                                        ),
+                                      ),
+
+                                      GestureDetector(
+                                          onTap: (){
+                                            Navigator.pop(context);
+                                          },
+                                          child: Icon(Icons.close,
+                                            color: Colors.white,
+                                          )),
+                                    ],
+                                  );
+                                },);
+                            },
                                   context: context,
 
                                   productImageIndex: state.imageIndex,

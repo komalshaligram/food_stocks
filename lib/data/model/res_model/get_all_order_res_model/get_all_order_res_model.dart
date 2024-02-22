@@ -47,6 +47,10 @@ class Datum with _$Datum {
     int? suppliers,
     @JsonKey(name: "isIssue")
     String? isIssue,
+    String? comaxInvoicePrice,
+    String? rivchitInvoicePrice,
+    String? totalRefundAmount,
+
   }) = _Datum;
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);

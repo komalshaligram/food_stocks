@@ -1242,8 +1242,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               stockList.addAll(response.data?.map(
                       (product) => ProductStockModel(
                       productId: product.id ?? '',
-                      stock: int.parse(product.numberOfUnit  ?? '0') )) ??
-                  []);
+                      stock: int.parse(product.productStock.toString()  ?? '0') )) ?? []);
               productStockList.addAll([stockList]);
             }
             productStockList.add(barcodeStock);

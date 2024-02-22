@@ -1189,10 +1189,8 @@ class HomeScreenWidget extends StatelessWidget {
                                 )
                               : CommonProductDetailsWidget(
                                 imageOnTap: (){
-                                  if(!state.isPreview){
-                                    context.read<HomeBloc>().add(HomeEvent.ImagePreviewEvent());
-                                  }
-                                 state.isPreview ? showDialog(
+
+                                 showDialog(
                                       context: context,
                                       builder: (context) {
                                         return Stack(
@@ -1207,16 +1205,16 @@ class HomeScreenWidget extends StatelessWidget {
                                               ),
                                             ),
 
-                                            GestureDetector(
+                                           GestureDetector(
                                                 onTap: (){
-                                                  context.read<HomeBloc>().add(HomeEvent.ImagePreviewEvent());
+                                                  Navigator.pop(context);
                                                 },
                                                 child: Icon(Icons.close,
                                                   color: Colors.white,
                                                 )),
                                           ],
                                         );
-                                      },)  : 0.width;
+                                      },);
 
                                 },
                                  isPreview: state.isPreview,

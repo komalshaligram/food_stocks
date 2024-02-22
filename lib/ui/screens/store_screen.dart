@@ -8,7 +8,6 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/data/model/search_model/search_model.dart';
-import 'package:food_stock/main.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -22,6 +21,7 @@ import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
@@ -1699,8 +1699,6 @@ class StoreScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        print('productStock____111_  ${productStock}');
-        print('productStock____111_  ${productStock == '0'}');
         return BlocProvider.value(
           value: context.read<StoreBloc>(),
           child: DraggableScrollableSheet(
@@ -1739,7 +1737,33 @@ class StoreScreenWidget extends StatelessWidget {
                                       )),
                                 )
                               : CommonProductDetailsWidget(
-                        imageOnTap: (){},
+                        imageOnTap: (){
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Stack(
+                                children: [
+                                  Container(
+                                    height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                    width: getScreenWidth(context),
+                                    child: PhotoView(
+                                      imageProvider: CachedNetworkImageProvider(
+                                        '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                      ),
+                                    ),
+                                  ),
+
+                                  GestureDetector(
+                                      onTap: (){
+                                        Navigator.pop(context);
+                                      },
+                                      child: Icon(Icons.close,
+                                        color: Colors.white,
+                                      )),
+                                ],
+                              );
+                            },);
+                        },
                                   context: context,
                                   productImageIndex: state.imageIndex,
                                   onPageChanged: (index, p1) {

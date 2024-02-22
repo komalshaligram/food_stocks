@@ -9,16 +9,13 @@ import '../../data/model/order_model/product_details_model.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/req_model/create_issue/create_issue_req_model.dart'
     as create;
-import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
-import '../../data/model/res_model/order_send_res_model/order_send_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
-import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';

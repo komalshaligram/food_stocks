@@ -13,13 +13,9 @@ import 'package:food_stock/data/model/res_model/product_details_res_model/produc
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_version_checker/store_version_checker.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:version_check/version_check.dart';
 import 'package:vibration/vibration.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
@@ -48,9 +44,7 @@ import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_strings.dart';
-import '../../ui/utils/themes/app_styles.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
@@ -1267,7 +1261,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             print(value.newVersion); //return the new app version
             print(value.appURL); //return the app url
             print(value.errorMessage);
-            if(value.canUpdate ){
+            if(value.canUpdate && Platform.isAndroid){
               customShowUpdateDialog(
                   event.context, preferences.getAppLanguage(),value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
             }

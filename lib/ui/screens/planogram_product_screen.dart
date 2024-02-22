@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -12,6 +13,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:photo_view/photo_view.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../routes/app_routes.dart';
@@ -568,7 +570,33 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         )),
                   )
                       : CommonProductDetailsWidget(
-                    imageOnTap: (){},
+                    imageOnTap: (){
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Stack(
+                            children: [
+                              Container(
+                                height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                width: getScreenWidth(context),
+                                child: PhotoView(
+                                  imageProvider: CachedNetworkImageProvider(
+                                    '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                  ),
+                                ),
+                              ),
+
+                              GestureDetector(
+                                  onTap: (){
+                                    Navigator.pop(context);
+                                  },
+                                  child: Icon(Icons.close,
+                                    color: Colors.white,
+                                  )),
+                            ],
+                          );
+                        },);
+                    },
                       context: context,
                           productImageIndex: state.imageIndex,
                       onPageChanged: (index, p1) {

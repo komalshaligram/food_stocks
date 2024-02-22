@@ -90,6 +90,7 @@ class _ProductDetailsScreenWidgetState
   TextEditingController addProblemController = TextEditingController();
   int onTheWayStatus = 6;
   int deliveryStatus = 5;
+  String skuNumber = "5321";
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +125,7 @@ class _ProductDetailsScreenWidgetState
                         '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
                             ),
                     ),
-                    CommonProductButtonWidget(
+                   /* CommonProductButtonWidget(
                       title: AppLocalizations.of(context)!.duplicate_order,
                       borderRadius: 1,
                       height: 35,
@@ -146,7 +147,7 @@ class _ProductDetailsScreenWidgetState
                               );
                             },);
                       },
-                    ),
+                    ),*/
 
                   ],
                 ),
@@ -308,6 +309,8 @@ class _ProductDetailsScreenWidgetState
                                       3.height,
                                       basketRow('${AppLocalizations.of(context)!.vat}', '${AppLocalizations.of(context)!.currency}${state.orderData.vatAmount}'),
                                       5.height,
+                                      basketRow('${AppLocalizations.of(context)!.refund}', '${AppLocalizations.of(context)!.currency}${state.orderData.totalRefundAmount}'),
+                                      5.height,
                                       RichText(
                                         text: TextSpan(
                                           text: AppLocalizations.of(context)!
@@ -406,6 +409,10 @@ class _ProductDetailsScreenWidgetState
                                         vertical: AppConstants.padding_5),
                                     itemBuilder: (context, index) =>
                                         productListItem(
+                                          updatedUnitQuantity: state.orderBySupplierProduct.products?[index].updatedUnitQuantity ?? 0,
+                                          unitQuantity: state.orderBySupplierProduct.products?[index].unitQuantity ?? 0,
+                                          sku: state.orderBySupplierProduct.products?[index].sku ?? '',
+                                          isUpdated : state.orderBySupplierProduct.products?[index].isUpdated ?? false,
                                       index: index,
                                       context: context,
                                       statusNumber: state.orderData.orderstatus
@@ -505,11 +512,19 @@ class _ProductDetailsScreenWidgetState
     bool? isIssue,
     int? missingQuantity,
     String issueStatus = '',
+    bool isUpdated = false,
+    required String sku,
+    required int unitQuantity,
+    required int updatedUnitQuantity,
+
   }) {
+
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
       builder: (context, state) {
         ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
-        return !(state.orderBySupplierProduct.products?[index].isBottle ?? false) ? Container(
+        return !(state.orderBySupplierProduct.products?[index].isBottle ?? false) ||
+            ((state.orderBySupplierProduct.products?[index].isBottle ?? false) ? sku == skuNumber : false)
+        ? Container(
           margin: EdgeInsets.all(AppConstants.padding_10),
           padding: EdgeInsets.symmetric(
               vertical: AppConstants.padding_5,
@@ -532,7 +547,7 @@ class _ProductDetailsScreenWidgetState
                   ? MainAxisAlignment.spaceBetween
                   : MainAxisAlignment.start,
               children: [
-                statusNumber == onTheWayStatus
+                statusNumber == onTheWayStatus &&  sku != skuNumber  && (!isUpdated || (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity != 0 : false))
                     ? Checkbox(
                         value: ((isIssue ?? false) ||
                                 state.productListIndex.contains(index))
@@ -551,9 +566,7 @@ class _ProductDetailsScreenWidgetState
                           bloc.add(ProductDetailsEvent.productProblemEvent(
                               isProductProblem: value!, index: index));
                         })
-                    : SizedBox(),
-                // : 0.width,
-
+                    : 30.width,
                 state.orderBySupplierProduct.products?[index].mainImage != ''
                     ? Image.network(
                         '${AppUrls.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
@@ -620,12 +633,31 @@ class _ProductDetailsScreenWidgetState
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Text(
-                      '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
-                      style: AppStyles.rkRegularTextStyle(
-                        color: AppColors.blackColor,
-                        size: AppConstants.font_12,
-                      ),
+                    Row(
+                      children: [
+                        statusNumber == onTheWayStatus  && isUpdated
+                            ? Text(
+                          '${(state.orderBySupplierProduct.products?[index].updatedUnitQuantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
+                          style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.blackColor,
+                            size: AppConstants.font_12,
+                          ),
+                        ): Text(
+                          '${(state.orderBySupplierProduct.products?[index].unitQuantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
+                          style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.blackColor,
+                            size: AppConstants.font_12,
+                          ),
+                        ) ,
+                        5.width,
+                        statusNumber == onTheWayStatus  && isUpdated ?  Text(
+                         '(${AppLocalizations.of(context)!.original_was}${(state.orderBySupplierProduct.products?[index].unitQuantity.toString() ?? '')}${state.orderBySupplierProduct.products?[index].scale.toString()})',
+                          style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.blackColor,
+                            size: AppConstants.font_12,
+                          ),
+                        ): 0.width,
+                      ],
                     ),
                     Text(
                       '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0,vat:state.orderData.vatPercentage ?? 0 ).toStringAsFixed(2))
@@ -636,7 +668,7 @@ class _ProductDetailsScreenWidgetState
                           fontWeight: FontWeight.w700),
                     ),
                     3.height,
-                    statusNumber == onTheWayStatus
+                    statusNumber == onTheWayStatus &&  sku != skuNumber  && (!isUpdated || (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity != 0 : false))
                         ? GestureDetector(
                       onTap: () {
                          ProductProblemBottomSheet(
@@ -734,7 +766,14 @@ class _ProductDetailsScreenWidgetState
                         ),
                       ),
                     )
-                        : SizedBox(),
+                        : (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity == 0 : false) ?
+                        Text(
+                        '${AppLocalizations.of(context)!.was_not_in_stock}',
+                        style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.redColor,
+                            size: AppConstants.font_12,
+                            fontWeight: FontWeight.w400))
+                        :SizedBox(),
                     (isIssue ?? false)
                         ? Container(
                       width: MediaQuery.of(context).size.width > 370 ?  MediaQuery.of(context).size.width / 2 : 160,
