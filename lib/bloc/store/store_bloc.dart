@@ -718,6 +718,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == 201) {
               Vibration.vibrate();
+              Navigator.pop(event.context);
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: true);
               productStockList[state.productStockUpdateIndex] =
@@ -731,7 +732,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               );
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList));
-              Navigator.pop(event.context);
+
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(

@@ -373,34 +373,6 @@ class CompanyProductsBloc
                     supplierSaleIndex: supplierSaleIndex));
               }
             }
-         /*  try {
-              SharedPreferencesHelper preferences = SharedPreferencesHelper(
-                  prefs: await SharedPreferences.getInstance());
-              final res = await DioClient(event.context).post(
-                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferences.getAuthToken()}'
-                  }));
-              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-              if (response.status == 200) {
-                debugPrint('cart before = ${response.data}');
-                debugPrint('state.productStockUpdateIndex = ${state.productStockUpdateIndex}');
-                response.data?.data?.forEach((cartProduct) {
-                  if (cartProduct.id ==
-                      state.productStockList[state.productStockUpdateIndex]
-                          .productId) {
-                    _isProductInCart = true;
-                    _cartProductId = cartProduct.cartProductId ?? '';
-                    _productQuantity = cartProduct.totalQuantity ?? 0;
-                    return;
-                  }
-
-                });
-                debugPrint(
-                    '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
-              }
-            } on ServerException {}*/
           } else {
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(

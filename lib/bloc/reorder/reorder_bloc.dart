@@ -144,6 +144,33 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 'id = ${state.productStockList.firstWhere((productStock) => productStock.productId == event.productId).productId}\n id = ${event.productId}');
             int productStockUpdateIndex = state.productStockList.indexWhere(
                 (productStock) => productStock.productId == event.productId);
+
+            emit(state.copyWith(productStockUpdateIndex :productStockUpdateIndex));
+            try {
+              SharedPreferencesHelper preferences = SharedPreferencesHelper(
+                  prefs: await SharedPreferences.getInstance());
+              final res = await DioClient(event.context).post(
+                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+                  options: Options(headers: {
+                    HttpHeaders.authorizationHeader:
+                    'Bearer ${preferences.getAuthToken()}'
+                  }));
+              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+              if (response.status == 200) {
+                debugPrint('cart before = ${response.data}');
+                response.data?.data?.forEach((cartProduct) {
+                  if ( cartProduct.id == event.productId) {
+                    _isProductInCart = true;
+                    _cartProductId = cartProduct.cartProductId ?? '';
+                    _productQuantity = cartProduct.totalQuantity ?? 0;
+                    return;
+                  }
+                });
+                debugPrint(
+                    '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
+              }
+            } on ServerException {}
+
             debugPrint('product stock update index = $productStockUpdateIndex');
             debugPrint(
                 'product stock = ${state.productStockList[productStockUpdateIndex].stock}');
@@ -159,6 +186,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                           basePrice:
                               double.parse(supplier.productPrice ?? '0.0'),
                           stock: int.parse(supplier.productStock ?? '0'),
+                          quantity: _productQuantity,
                           selectedIndex: (supplier.supplierId ?? '') ==
                                   state
                                       .productStockList[productStockUpdateIndex]
@@ -261,32 +289,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                     supplierSaleIndex: supplierSaleIndex));
               }
             }
-            try {
-              SharedPreferencesHelper preferences = SharedPreferencesHelper(
-                  prefs: await SharedPreferences.getInstance());
-              final res = await DioClient(event.context).post(
-                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                        'Bearer ${preferences.getAuthToken()}'
-                  }));
-              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-              if (response.status == 200) {
-                debugPrint('cart before = ${response.data}');
-                response.data?.data?.forEach((cartProduct) {
-                  if (cartProduct.id ==
-                      state.productStockList[state.productStockUpdateIndex]
-                          .productId) {
-                    _isProductInCart = true;
-                    _cartProductId = cartProduct.cartProductId ?? '';
-                    _productQuantity = cartProduct.totalQuantity ?? 0;
-                    return;
-                  }
-                });
-                debugPrint(
-                    '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
-              }
-            } on ServerException {}
+
           } else {
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -410,7 +413,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   productSupplierIds:
                       supplierList[event.supplierIndex].supplierId,
                   stock: supplierList[event.supplierIndex].stock,
-                  quantity: 1,
+                  quantity: supplierList[event.supplierIndex].quantity != 0 ?supplierList[event.supplierIndex].quantity :1,
                   totalPrice: event.supplierSaleIndex == -2
                       ? supplierList[event.supplierIndex].basePrice
                       : supplierList[event.supplierIndex]
@@ -469,8 +472,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   : state.productStockList[state.productStockUpdateIndex]
                       .productSaleId,
               quantity: state.productStockList[state.productStockUpdateIndex]
-                      .quantity +
-                  _productQuantity,
+                      .quantity /*+ _productQuantity*/,
               cartProductId: _cartProductId,
             );
             SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -481,6 +483,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == 201) {
+              Navigator.pop(event.context);
               Vibration.vibrate();
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: true);
@@ -495,7 +498,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               );
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList));
-              Navigator.pop(event.context);
+
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(

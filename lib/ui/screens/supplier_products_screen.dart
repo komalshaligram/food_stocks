@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/bloc/supplier_products/supplier_products_bloc.dart';
 import 'package:food_stock/data/model/search_model/search_model.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -22,9 +25,12 @@ import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
+import '../widget/common_product_list_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
+import '../widget/common_search_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
+import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
 
 class SupplierProductsRoute {
   static Widget get route => SupplierProductsScreen();
@@ -59,6 +65,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SupplierProductsBloc bloc = context.read<SupplierProductsBloc>();
     return BlocListener<SupplierProductsBloc, SupplierProductsState>(
       listener: (context, state) {},
       child: BlocBuilder<SupplierProductsBloc, SupplierProductsState>(
@@ -74,196 +81,414 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(context);
                 },
+                trailingWidget: GestureDetector(
+                    onTap: (){
+                      context.read<SupplierProductsBloc>().add(SupplierProductsEvent.getGridListView());
+                    },
+                    child: Icon(state.isGridView ? Icons.list : Icons.grid_view)),
               ),
             ),
             body: SafeArea(
-              child:
-              // NotificationListener<ScrollNotification>(
-              //   child:
-              SmartRefresher(
-                enablePullDown: true,
-                controller: state.refreshController,
-                header: RefreshWidget(),
-                footer: CustomFooter(
-                  builder: (context, mode) =>
-                      SupplierProductsScreenShimmerWidget(),
-                ),
-                enablePullUp: !state.isBottomOfProducts,
-                onRefresh: () {
-                  context.read<SupplierProductsBloc>().add(
-                      SupplierProductsEvent.refreshListEvent(
-                          context: context));
-                },
-                onLoading: () {
-                  context.read<SupplierProductsBloc>().add(
-                      SupplierProductsEvent.getSupplierProductsListEvent(
-                          context: context,searchType: state.searchType));
-                },
-                child: SingleChildScrollView(
-                  physics: state.productList.isEmpty
-                      ? const NeverScrollableScrollPhysics()
-                      : null,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+              child: Stack(
+                children: [
+                  Column(
                     children: [
-                      // Stack(
-                      //   children: [
-                      //     Container(
-                      //       height: getScreenWidth(context) / 3,
-                      //       width: getScreenWidth(context) / 3,
-                      //       clipBehavior: Clip.hardEdge,
-                      //       margin: EdgeInsets.symmetric(
-                      //           vertical: AppConstants.padding_10,
-                      //           horizontal: AppConstants.padding_5),
-                      //       decoration: BoxDecoration(
-                      //         borderRadius: BorderRadius.all(
-                      //             Radius.circular(AppConstants.radius_10)),
-                      //         color: AppColors.whiteColor,
-                      //         boxShadow: [
-                      //           BoxShadow(
-                      //               color: AppColors.shadowColor.withOpacity(0.15),
-                      //               blurRadius: AppConstants.blur_10)
-                      //         ],
-                      //       ),
-                      //       child: Image.network(
-                      //         "${AppUrls.baseFileUrl}",
-                      //         fit: BoxFit.cover,
-                      //         loadingBuilder: (context, child, loadingProgress) {
-                      //           if (loadingProgress?.cumulativeBytesLoaded !=
-                      //               loadingProgress?.expectedTotalBytes) {
-                      //             return Container(
-                      //               height: getScreenWidth(context) / 3,
-                      //               width: getScreenWidth(context) / 3,
-                      //               alignment: Alignment.center,
-                      //               color: AppColors.whiteColor,
-                      //               child: CupertinoActivityIndicator(
-                      //                 color: AppColors.blackColor,
-                      //               ),
-                      //             );
-                      //           }
-                      //           return child;
-                      //         },
-                      //         errorBuilder: (context, error, stackTrace) {
-                      //           // debugPrint('product category list image error : $error');
-                      //           return Container(
-                      //             color: AppColors.whiteColor,
-                      //           );
-                      //         },
-                      //       ),
-                      //     ),
-                      //     Positioned(
-                      //       bottom: 0,
-                      //       left: AppConstants.padding_5,
-                      //       right: AppConstants.padding_5,
-                      //       child: Container(
-                      //         // height: 20,
-                      //         // width: 80,
-                      //         alignment: Alignment.center,
-                      //         padding: EdgeInsets.symmetric(
-                      //             vertical: AppConstants.padding_5,
-                      //             horizontal: AppConstants.padding_5),
-                      //         decoration: BoxDecoration(
-                      //           color: AppColors.mainColor,
-                      //           borderRadius: BorderRadius.only(
-                      //               bottomLeft:
-                      //                   Radius.circular(AppConstants.radius_10),
-                      //               bottomRight:
-                      //                   Radius.circular(AppConstants.radius_10)),
-                      //           // border: Border.all(color: AppColors.whiteColor, width: 1),
-                      //         ),
-                      //         child: Text(
-                      //           'supplierName',
-                      //           style: AppStyles.rkRegularTextStyle(
-                      //               size: AppConstants.font_12,
-                      //               color: AppColors.whiteColor),
-                      //           maxLines: 1,
-                      //           overflow: TextOverflow.ellipsis,
-                      //           textAlign: TextAlign.center,
-                      //         ),
-                      //       ),
-                      //     )
-                      //   ],
-                      // ),
-                      // 10.height,
-                      state.isShimmering
-                          ? SupplierProductsScreenShimmerWidget()
-                          : state.productList.isEmpty
-                          ? Container(
-                        height: getScreenHeight(context) - 80,
-                        width: getScreenWidth(context),
-                        alignment: Alignment.center,
-                        child: Text(
-                          '${AppLocalizations.of(context)!.currently_this_Supplier_has_no_products}',
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.smallFont,
-                              color: AppColors.textColor),
-                        ),
-                      )
-                          : GridView.builder(
-                          itemCount: state.productList.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: AppConstants.padding_5),
-                          gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
-                                  .productGridAspectRatio: AppConstants
-                                  .productGridAspectRatio1
+                      100.height,
+                      Expanded(
+                        child: SmartRefresher(
+                          enablePullDown: true,
+                          controller: state.refreshController,
+                          header: RefreshWidget(),
+                          footer: CustomFooter(
+                            builder: (context, mode) =>
+                               state.isGridView ?  SupplierProductsScreenShimmerWidget() : StoreCategoryScreenSubcategoryShimmerWidget(),
                           ),
-                          itemBuilder: (context, index) {
-                            return DelayedWidget(
-                                child: CommonProductItemWidget(
-                                  isGuestUser: state.isGuestUser,
-                                    productStock: state.productList[index].productStock.toString() ?? '0',
-                                            productImage: state
-                                                    .productList[index]
-                                                    .mainImage ??
-                                                '',
-                                            productName: state
-                                                    .productList[index]
-                                                    .productName ??
-                                                '',
-                                            totalSaleCount: 0,
-                                            price: double.parse(state
-                                                    .productList[index]
-                                                    .productPrice.toString() ??
-                                                "0.0"),
-                                            onButtonTap: () {
-                                     if(!state.isGuestUser){
-                                       showProductDetails(
-                                           context: context,
-                                           productId: state.searchType==SearchTypes.product.toString()?state.productList[index].id??'':state
-                                               .productList[index]
-                                               .productId ??
-                                               '');
-                                     }
-                                     else{
-                                       Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                     }
+                          enablePullUp: !state.isBottomOfProducts,
+                          onRefresh: () {
+                            context.read<SupplierProductsBloc>().add(
+                                SupplierProductsEvent.refreshListEvent(
+                                    context: context));
+                          },
+                          onLoading: () {
+                            context.read<SupplierProductsBloc>().add(
+                                SupplierProductsEvent.getSupplierProductsListEvent(
+                                    context: context,searchType: state.searchType));
+                          },
+                          child: SingleChildScrollView(
+                            physics: state.productList.isEmpty
+                                ? const NeverScrollableScrollPhysics()
+                                : null,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                state.isShimmering
+                                    ?  state.isGridView ?  SupplierProductsScreenShimmerWidget() : StoreCategoryScreenSubcategoryShimmerWidget()
+                                    : state.productList.isEmpty
+                                    ? Container(
+                                  height: getScreenHeight(context) - 80,
+                                  width: getScreenWidth(context),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    '${AppLocalizations.of(context)!.currently_this_Supplier_has_no_products}',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.smallFont,
+                                        color: AppColors.textColor),
+                                  ),
+                                )
+                                    : state.isGridView ? GridView.builder(
+                                    itemCount: state.productList.length,
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: AppConstants.padding_5),
+                                    gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                        childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
+                                            .productGridAspectRatio: AppConstants
+                                            .productGridAspectRatio1
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      return DelayedWidget(
+                                          child: CommonProductItemWidget(
+                                              imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
+                                              imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
+                                            isGuestUser: state.isGuestUser,
+                                              productStock: state.productList[index].productStock.toString() ?? '0',
+                                                      productImage: state
+                                                              .productList[index]
+                                                              .mainImage ??
+                                                          '',
+                                                      productName: state
+                                                              .productList[index]
+                                                              .productName ??
+                                                          '',
+                                                      totalSaleCount: 0,
+                                                      price: double.parse(state
+                                                              .productList[index]
+                                                              .productPrice.toString() ??
+                                                          "0.0"),
+                                                      onButtonTap: () {
+                                               if(!state.isGuestUser){
+                                                 showProductDetails(
+                                                     context: context,
+                                                     productId: /*state.searchType==SearchTypes.product.toString()?state.productList[index].id??'':state
+                                                         .productList[index]
+                                                         .productId ??
+                                                         '',*/state
+                                                         .productList[index]
+                                                         .productId ??
+                                                         '',
+                                                     productStock : '0',
+                                                 );
+                                               }
+                                               else{
+                                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                               }
+                        
+                                                      }),
+                                        );
+                                    }
+                                ) :
+                                ListView.builder(
+                                  itemCount: state.productList.length,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: AppConstants.padding_5),
+                                  itemBuilder: (context, index) => DelayedWidget(
+                                    child: CommonProductListWidget(
+                                        productStock: state.productList[index].productStock ?? 0,
+                                        productImage: state.productList[index]
+                                            .mainImage ??
+                                            '',
+                                        productName: state.productList[index]
+                                            .productName ??
+                                            '',
+                                        /*totalSaleCount: state
+                                            .productList[index]
+                                            .totalSale ??
+                                            0,*/
+                                        price: state.productList[index]
+                                            .productPrice ??
+                                            0.0,
+                                        onButtonTap: () {
+          if(!state.isGuestUser) {
+            showProductDetails(
+              context: context,
+              productId: state
+                  .productList[index]
+                  .id ??
+                  '',
+              productStock: state.productList[index].productStock.toString() ??
+                  '0',
 
-                                            }),
-                              );
-                          }
+            );
+          }
+                                        }, totalSaleCount: 0,),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  CommonSearchWidget(
+                    isFilterTap: true,
+                    isCategoryExpand: state.isCategoryExpand,
+                    isSearching: state.isSearching,
+                    onFilterTap: () {
+                      bloc.add(SupplierProductsEvent.changeCategoryExpansion());
+                    },
+                    onSearchTap: () {
+                      if(state.searchController.text != ''){
+                        bloc.add(SupplierProductsEvent.changeCategoryExpansion(isOpened: true));
+                      }
+                    },
+                    onSearch: (String search) {
+                      if (search.length > 1) {
+                        bloc.add(SupplierProductsEvent.changeCategoryExpansion(isOpened: true));
+                        bloc.add(
+                            SupplierProductsEvent.globalSearchEvent(context: context));
+                      }
+                    },
+                    onSearchSubmit: (String search) {
+                      bloc.add(
+                          SupplierProductsEvent.globalSearchEvent(context: context));
+                    },
+                    onOutSideTap: () {
+                      bloc.add(SupplierProductsEvent.changeCategoryExpansion(
+                          isOpened: false));
+                    },
+                    onSearchItemTap: () {
+                      bloc.add(SupplierProductsEvent.changeCategoryExpansion());
+                    },
+                    controller: state.searchController,
+                    searchList: state.searchList,
+                    searchResultWidget: state.searchList.isEmpty
+                        ? Center(
+                      child: Text(
+                        '${AppLocalizations.of(context)!
+                            .search_result_not_found}',
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.smallFont,
+                            color: AppColors.textColor),
+                      ),
+                    )
+                        : ListView.builder(
+                      itemCount: state.searchList.length,
+                      shrinkWrap: true,
+                      itemBuilder: (listViewContext, index) {
+                        return _buildSearchItem(
+                            productStock : state.searchList[index].productStock,
+                            context: context,
+                            searchName: state.searchList[index].name,
+                            searchImage: state.searchList[index].image,
+                            searchType:
+                            state.searchList[index].searchType,
+                            isMoreResults: state.searchList
+                                .where((search) =>
+                            search.searchType ==
+                                state.searchList[index]
+                                    .searchType)
+                                .toList()
+                                .length ==
+                                10,
+                            isLastItem:
+                            state.searchList.length - 1 == index,
+                            isShowSearchLabel: index == 0
+                                ? true
+                                : state.searchList[index].searchType !=
+                                state.searchList[index - 1]
+                                    .searchType
+                                ? true
+                                : false,
+                            onSeeAllTap: () async {
+                              debugPrint("searchType: ${state.searchList[index].searchType}");
+                              if (state.searchList[index].searchType ==
+                                  SearchTypes.category) {
+                                dynamic searchResult =
+                                await Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .productCategoryScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString:
+                                      state.search,
+                                      AppStrings.reqSearchString:
+                                      state.search,
+                                      AppStrings.searchResultString:
+                                      state.searchList
+                                    });
+                                if (searchResult != null) {
+                                  bloc.add(SupplierProductsEvent
+                                      .updateGlobalSearchEvent(
+                                      search: searchResult[
+                                      AppStrings.searchString],
+                                      searchList: searchResult[
+                                      AppStrings
+                                          .searchResultString]));
+                                }
+                              } else if (state
+                                  .searchList[index].searchType ==
+                                  SearchTypes.subCategory) {
+                                dynamic searchResult =
+                                await Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .storeCategoryScreen.name,
+                                    arguments: {
+                                      AppStrings.categoryIdString: state
+                                          .searchList[index].categoryId,
+                                      AppStrings.categoryNameString:
+                                      state.searchList[index]
+                                          .categoryName,
+                                      AppStrings.searchString:
+                                      state.search,
+                                      AppStrings.searchResultString:
+                                      state.searchList
+                                    });
+                                if (searchResult != null) {
+                                  bloc.add(SupplierProductsEvent
+                                      .updateGlobalSearchEvent(
+                                      search: searchResult[
+                                      AppStrings.searchString],
+                                      searchList: searchResult[
+                                      AppStrings
+                                          .searchResultString]));
+                                }
+                              } else {
+                                state.searchList[index].searchType ==
+                                    SearchTypes.company
+                                    ? Navigator.pushNamed(
+                                    context, RouteDefine.companyScreen.name,
+                                    arguments: {AppStrings.searchString: state.search})
+                                    : state.searchList[index].searchType ==
+                                    SearchTypes.supplier
+                                    ? Navigator.pushNamed(
+                                    context, RouteDefine.supplierScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString:
+                                      state.search
+                                    })
+                                    : state.searchList[index].searchType ==
+                                    SearchTypes.sale
+                                    ? Navigator.pushNamed(
+                                    context,
+                                    RouteDefine.productSaleScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString: state.search
+                                    })
+                                    : Navigator.pushNamed(
+                                    context,
+                                    RouteDefine.supplierProductsScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString: state.search,
+                                      AppStrings.searchType : SearchTypes.product.toString()
+                                    });
+                              }
+                            },
+                            onTap: () async {
+                              if (state.searchList[index].searchType ==
+                                  SearchTypes.subCategory) {
+                                CustomSnackBar.showSnackBar(
+                                  context: context,
+                                  title: AppStrings.getLocalizedStrings(
+                                      'Oops! in progress', context),
+                                  type: SnackBarType.SUCCESS,
+                                );
+                                return;
+                              }
+                              if (state.searchList[index].searchType ==
+                                  SearchTypes.sale ||
+                                  state.searchList[index].searchType ==
+                                      SearchTypes.product) {
+                                print("tap 4");
+                                showProductDetails(
+                                    context: context,
+                                    productStock: state.searchList[index].productStock.toString(),
+                                    productId: state
+                                        .searchList[index].searchId,
+                                    isBarcode: true
+                                );
+                              } else if (state
+                                  .searchList[index].searchType ==
+                                  SearchTypes.category) {
+                                dynamic searchResult =
+                                await Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .storeCategoryScreen.name,
+                                    arguments: {
+                                      AppStrings.categoryIdString: state
+                                          .searchList[index].searchId,
+                                      AppStrings.categoryNameString:
+                                      state.searchList[index].name,
+                                      AppStrings.searchString:
+                                      state.searchController.text,
+                                      AppStrings.searchResultString:
+                                      state.searchList
+                                    });
+                                if (searchResult != null) {
+                                  bloc.add(SupplierProductsEvent
+                                      .updateGlobalSearchEvent(
+                                      search: searchResult[
+                                      AppStrings.searchString],
+                                      searchList: searchResult[
+                                      AppStrings
+                                          .searchResultString]));
+                                }
+                              } else {
+                                state.searchList[index].searchType ==
+                                    SearchTypes.company
+                                    ? Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .companyProductsScreen.name,
+                                    arguments: {
+                                      AppStrings.companyIdString:
+                                      state.searchList[index]
+                                          .searchId
+                                    })
+                                    : Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .supplierProductsScreen
+                                        .name,
+                                    arguments: {
+                                      AppStrings.supplierIdString:
+                                      state.searchList[index]
+                                          .searchId
+                                    });
+                              }
+                              bloc.add(
+                                  SupplierProductsEvent.changeCategoryExpansion());
+                            });
+                      },
+                    ),
+                    onScanTap: () async {
+                      String scanResult = await scanBarcodeOrQRCode(
+                          context: context,
+                          cancelText: AppLocalizations.of(context)!.cancel,
+                          scanMode: ScanMode.BARCODE);
+                      if (scanResult != '-1') {
+                        // -1 result for cancel scanning
+                        debugPrint('result = $scanResult');
+                        print("tap 5");
+                        showProductDetails(
+                            context: context,
+                            // productStock: '1',
+                            productId: scanResult,
+                            isBarcode: true);
+                      }
+                    },
+                  ),
+                ],
               ),
-              //   onNotification: (notification) {
-              //     if (notification.metrics.pixels ==
-              //         notification.metrics.maxScrollExtent) {
-              //       if (!state.isLoadMore) {
-              //         context.read<SupplierProductsBloc>().add(
-              //             SupplierProductsEvent.getSupplierProductsListEvent(
-              //                 context: context));
-              //       }
-              //     }
-              //     return true;
-              //   },
-              // ),
+        
             ),
           );
         },
@@ -382,9 +607,12 @@ class SupplierProductsScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context, required String productId}) async {
+      {required BuildContext context, required String productId , String productStock ='0',
+      bool? isBarcode,
+      }) async {
     context.read<SupplierProductsBloc>().add(
         SupplierProductsEvent.getProductDetailsEvent(
+          isBarcode: isBarcode ?? false,
             context: context, productId: productId));
     showModalBottomSheet(
       context: context,
@@ -396,6 +624,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
+        print('productStock____${productStock}');
         return BlocProvider.value(
           value: context.read<SupplierProductsBloc>(),
           child: DraggableScrollableSheet(
@@ -428,7 +657,18 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                         child: Scaffold(
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
+                              :state.productDetails.isEmpty
+                              ? Center(
+                            child: Text(
+                                AppLocalizations.of(context)!.no_product,
+                                style: AppStyles.rkRegularTextStyle(
+                                  size: AppConstants.normalFont,
+                                  color: AppColors.redColor,
+                                  fontWeight: FontWeight.w500,
+                                )),
+                          )
                               : CommonProductDetailsWidget(
+                            imageOnTap: (){},
                               context: context,
                               // contentKey: _contentKey,
                                   productImageIndex: state.imageIndex,
@@ -474,8 +714,9 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   '',
                               productWeight: state.productDetails.first
                                   .itemsWeight?.toDouble() ?? 0.0,
-                              productStock: state.productStockList[state
-                                  .productStockUpdateIndex].stock,
+                              productStock: state.productStockList[state.productStockUpdateIndex].stock != 0 ?
+                              int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                              int.parse(productStock.toString() ?? '0'),
                               isRTL: context.rtl,
                               isSupplierAvailable: state.productSupplierList
                                   .isEmpty ? false : true,
@@ -501,17 +742,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                         .decreaseQuantityOfProduct(
                                                 context: context1));
                                   },
-
-                                  // isLoading: state.isLoading,
-                                  /*onAddToOrderPressed: state.isLoading
-                                  ? null
-                                  : () {
-                                context
-                                    .read<SupplierProductsBloc>()
-                                    .add(SupplierProductsEvent
-                                    .addToCartProductEvent(
-                                    context: context1));
-                              }*/
                                 ),
                           bottomNavigationBar: state.isProductLoading
                               ? 0.height
@@ -521,10 +751,9 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                       state.productSupplierList.isEmpty
                                           ? false
                                           : true,
-                                  productStock: state
-                                      .productStockList[
-                                          state.productStockUpdateIndex]
-                                      .stock,
+                                  productStock: state.productStockList[state.productStockUpdateIndex].stock != 0 ?
+                                  int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                                  int.parse(productStock.toString() ?? '0'),
                                   onAddToOrderPressed: state.isLoading
                                       ? null
                                       : () {
@@ -532,7 +761,9 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                               .read<SupplierProductsBloc>()
                                               .add(SupplierProductsEvent
                                                   .addToCartProductEvent(
-                                                      context: context1));
+                                                      context: context1,
+                                          productId: productId
+                                          ));
                                         }),
                         ),
                       );
@@ -1079,4 +1310,156 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             },
             buttonTitle: "${AppLocalizations.of(context)!.ok}"));
   }
+
+  Widget _buildSearchItem({
+    required BuildContext context,
+    required String searchName,
+    required String searchImage,
+    required SearchTypes searchType,
+    required bool isShowSearchLabel,
+    required bool isMoreResults,
+    required void Function() onTap,
+    required void Function() onSeeAllTap,
+    bool? isLastItem, required int productStock,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        isShowSearchLabel
+            ? Padding(
+          padding: const EdgeInsets.only(
+              left: AppConstants.padding_20,
+              right: AppConstants.padding_20,
+              top: AppConstants.padding_15,
+              bottom: AppConstants.padding_5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                searchType == SearchTypes.category
+                    ? AppLocalizations.of(context)!.categories
+                    : searchType == SearchTypes.subCategory
+                    ? AppLocalizations.of(context)!.sub_categories
+                    : searchType == SearchTypes.company
+                    ? AppLocalizations.of(context)!.companies
+                    : searchType == SearchTypes.sale
+                    ? AppLocalizations.of(context)!.sales
+                    : searchType == SearchTypes.supplier
+                    ? AppLocalizations.of(context)!
+                    .suppliers
+                    : AppLocalizations.of(context)!
+                    .products,
+                style: AppStyles.rkBoldTextStyle(
+                    size: AppConstants.smallFont,
+                    color: AppColors.blackColor,
+                    fontWeight: FontWeight.w500),
+              ),
+
+              isMoreResults
+                  ? GestureDetector(
+                onTap: onSeeAllTap,
+                child: Text(
+                  AppLocalizations.of(context)!.see_all,
+                  style: AppStyles.rkBoldTextStyle(
+                      size: AppConstants.font_14,
+                      color: AppColors.mainColor),
+                ),
+              )
+                  : 0.width,
+            ],
+          ),
+        )
+            : 0.width,
+        InkWell(
+          onTap: onTap,
+          child: Container(
+            height: (productStock) != 0 ? 35 : 50,
+            decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                border: Border(
+                    bottom: (isLastItem ?? false)
+                        ? BorderSide.none
+                        : BorderSide(
+                        color: AppColors.borderColor.withOpacity(0.5),
+                        width: 1))),
+            padding: EdgeInsets.only(
+                top: AppConstants.padding_5,
+                left: AppConstants.padding_20,
+                right: AppConstants.padding_20,
+                bottom: AppConstants.padding_5),
+            // padding: EdgeInsets.symmetric(
+            //     horizontal: AppConstants.padding_20,
+            //     vertical: AppConstants.padding_5),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  height: 35,
+                  width: 40,
+                  child: Image.network(
+                    '${AppUrls.baseFileUrl}$searchImage',
+                    fit: BoxFit.scaleDown,
+                    height: 35,
+                    width: 40,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return Container(
+                            width: 40,
+                            height: 35,
+                            child: CupertinoActivityIndicator());
+                      }
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return searchType == SearchTypes.subCategory
+                          ? Image.asset(AppImagePath.imageNotAvailable5,
+                          height: 35, width: 40, fit: BoxFit.cover)
+                          : SvgPicture.asset(
+                        AppImagePath.splashLogo,
+                        fit: BoxFit.scaleDown,
+                        width: 40,
+                        height: 35,
+                      );
+                    },
+                  ),
+                ),
+                10.width,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        searchName,
+                        style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_12,
+                          color: AppColors.blackColor,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    (productStock) != 0 ? 0.width : Text(
+                      AppLocalizations.of(context)!
+                          .out_of_stock1,
+                      style: AppStyles.rkBoldTextStyle(
+                          size: AppConstants.font_12,
+                          color: AppColors.redColor,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ],
+                ),
+
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
 }

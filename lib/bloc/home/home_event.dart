@@ -98,6 +98,7 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.checkVersionOfAppEvent(
       {required BuildContext context}) = _checkVersionOfAppEvent;
 
-
+  const factory HomeEvent.ImagePreviewEvent(
+      ) = _ImagePreviewEvent;
 
 }

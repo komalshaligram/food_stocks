@@ -98,7 +98,9 @@ customShowUpdateDialog(
         ],
       );
     },
-  );
+  ).then((value) {
+
+  });
 }
 
 Future<void> _launchUrl(String? storeUrl) async {

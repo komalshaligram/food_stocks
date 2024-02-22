@@ -62,8 +62,6 @@ class CompanyScreenWidget extends StatelessWidget {
           ),
           body: SafeArea(
             child:
-                // NotificationListener<ScrollNotification>(
-                // child:
                 SmartRefresher(
               enablePullDown: true,
               controller: state.refreshController,
@@ -143,16 +141,6 @@ class CompanyScreenWidget extends StatelessWidget {
                 ),
               ),
             ),
-            // onNotification: (notification) {
-            //   if (notification.metrics.pixels ==
-            //       notification.metrics.maxScrollExtent) {
-            //     context
-            //         .read<CompanyBloc>()
-            //         .add(CompanyEvent.getCompaniesListEvent(context: context));
-            //   }
-            //   return true;
-            // },
-            // ),
           ),
         );
       },

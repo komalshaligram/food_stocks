@@ -596,7 +596,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                     itemBuilder: (context,
                                                             index) =>
                                                         CommonProductItemWidget(
-
                                                           productStock: state
                                                                   .recommendedProductsList[
                                                                       index]
@@ -1732,14 +1731,15 @@ class StoreScreenWidget extends StatelessWidget {
                           : state.productDetails.isEmpty
                               ? Center(
                                   child: Text(
-                                      AppLocalizations.of(context)!.no_data,
+                                      AppLocalizations.of(context)!.no_product,
                                       style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants.normalFont,
-                                        color: AppColors.greyColor,
+                                        color: AppColors.redColor,
                                         fontWeight: FontWeight.w500,
                                       )),
                                 )
                               : CommonProductDetailsWidget(
+                        imageOnTap: (){},
                                   context: context,
                                   productImageIndex: state.imageIndex,
                                   onPageChanged: (index, p1) {

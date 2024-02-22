@@ -137,6 +137,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                                     .productGridAspectRatio1),
                                 itemBuilder: (context, index) => DelayedWidget(
                                       child: CommonProductItemWidget(
+                                        imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
+                                        imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                         productStock: state
                                                 .previousOrderProductsList[
                                                     index]
@@ -370,6 +372,7 @@ class ReorderScreenWidget extends StatelessWidget {
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
+                            imageOnTap: (){},
                                   context: context,
 
                                   productImageIndex: state.imageIndex,

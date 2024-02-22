@@ -6,6 +6,7 @@ import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart';
@@ -30,11 +31,11 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
       SharedPreferencesHelper preferences =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if(preferences.getGuestUser()){
-
-
       }
       else{
         if (event is _getPreferenceDataEvent) {
+          PackageInfo packageInfo = await PackageInfo.fromPlatform();
+          emit(state.copyWith(applicationVersion:packageInfo.version ,buildNumber:packageInfo.buildNumber));
           debugPrint('[UserImageUrl]  ${preferences.getUserImageUrl()}');
           debugPrint('[username]   ${preferences.getUserName()}');
           debugPrint('[logo]  ${preferences.getUserCompanyLogoUrl()}');

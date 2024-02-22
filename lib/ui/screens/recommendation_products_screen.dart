@@ -135,6 +135,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                             .productGridAspectRatio1),
                                 itemBuilder: (context, index) => DelayedWidget(
                                       child: CommonProductItemWidget(
+                                          imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
+                                          imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                           productStock: state
                                                   .recommendationProductsList[
                                                       index]
@@ -367,6 +369,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
+                            imageOnTap: (){},
                                   context: context,
                             // contentKey: _contentKey,
                                   productImageIndex: state.imageIndex,

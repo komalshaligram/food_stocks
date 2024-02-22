@@ -7,7 +7,9 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
 
   const factory PlanogramProductEvent.getProductDetailsEvent(
       {required BuildContext context,
-      required String productId}) = _GetProductDetailsEvent;
+      required String productId,
+      required bool isBarcode
+      }) = _GetProductDetailsEvent;
 
   const factory PlanogramProductEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;
@@ -31,7 +33,9 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory PlanogramProductEvent.addToCartProductEvent(
-      {required BuildContext context}) = _AddToCartProductEvent;
+      {required BuildContext context,
+      required String productId
+      }) = _AddToCartProductEvent;
 
   const factory PlanogramProductEvent.setCartCountEvent() = _SetCartCountEvent;
 
@@ -40,4 +44,38 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
   }) = _UpdateImageIndexEvent;
 
   const factory PlanogramProductEvent.toggleNoteEvent() = _ToggleNoteEvent;
+
+  const factory PlanogramProductEvent.isCategoryEvent(
+      {required bool isSubCategory}) = _isCategoryEvent;
+
+  const factory PlanogramProductEvent.getPlanogramByIdEvent({
+    required BuildContext context
+  }) = _getPlanogramByIdEvent;
+
+  const factory PlanogramProductEvent.getPlanogramAllProductEvent({
+    required BuildContext context,
+  }) = _getPlanogramAllProductEvent;
+
+  const factory PlanogramProductEvent.getSubCategoryProductEvent({
+    required BuildContext context,
+  }) = _getSubCategoryProductEvent;
+
+  const factory PlanogramProductEvent.getCartCountEvent(
+      ) = _getCartCountEvent;
+
+  const factory PlanogramProductEvent.getGridListView(
+      ) = _getGridListView;
+
+  const factory PlanogramProductEvent.changeCategoryExpansion({bool? isOpened}) =
+  _ChangeCategoryExpansion;
+
+  const factory PlanogramProductEvent.globalSearchEvent({required BuildContext context}) =
+  _GlobalSearchEvent;
+
+  const factory PlanogramProductEvent.updateGlobalSearchEvent(
+      {required String search,
+        required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+
+  const factory PlanogramProductEvent.getProductCategoriesListEvent(
+      {required BuildContext context}) = _GetProductCategoriesListEvent;
 }

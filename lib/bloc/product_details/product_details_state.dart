@@ -21,7 +21,8 @@ class ProductDetailsState with _$ProductDetailsState {
     required TextEditingController addNoteController,
     required bool isRemoveProcess,
     required String language,
-
+    required List<ProductStockModel> productStockList,
+   required int productStockUpdateIndex
   }) = _ProductDetailsState;
 
   factory ProductDetailsState.initial()=>  ProductDetailsState(
@@ -42,8 +43,9 @@ class ProductDetailsState with _$ProductDetailsState {
     note: '',
     addNoteController: TextEditingController(),
     isRemoveProcess: false,
-    language: 'en'
-
+    language: 'en',
+     productStockList: [],
+    productStockUpdateIndex: 0
 
   );
 }

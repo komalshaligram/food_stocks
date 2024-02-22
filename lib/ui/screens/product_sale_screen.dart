@@ -202,10 +202,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
   }) {
     return DelayedWidget(
         child: CommonProductSaleItemWidget(
+          imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
           isGuestUser: isGuestUser,
             saleImage: saleImage,
             title: title,
-
             description: description,
             salePercentage: salePercentage,
             onButtonTap: onButtonTap, productName: productName,
@@ -256,6 +256,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
+                            imageOnTap: (){},
                             startDate : startDate,
                             endDate: endDate,
                               context: context,

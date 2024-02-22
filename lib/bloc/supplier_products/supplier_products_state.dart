@@ -5,7 +5,7 @@ class SupplierProductsState with _$SupplierProductsState {
   const factory SupplierProductsState({
     required String supplierId,
     required String search,
-    required List<SupplierDatum> productList,
+    required List<SupplierProductsData> productList,
     required bool isShimmering,
     required bool isLoading,
     required bool isProductLoading,
@@ -22,6 +22,13 @@ class SupplierProductsState with _$SupplierProductsState {
     required RefreshController refreshController,
     required String searchType,
     required bool isGuestUser,
+    required bool isGridView,
+    required bool isCategoryExpand,
+    required bool isSearching,
+    required TextEditingController searchController,
+    required List<SearchModel> searchList,
+    required List<Category> productCategoryList,
+    required bool isCatVisible,
   }) = _SupplierProductsState;
 
   factory SupplierProductsState.initial() => SupplierProductsState(
@@ -33,7 +40,7 @@ class SupplierProductsState with _$SupplierProductsState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [],
+        productStockList: [ProductStockModel(productId: '')],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,
@@ -44,5 +51,12 @@ class SupplierProductsState with _$SupplierProductsState {
         refreshController: RefreshController(),
         searchType: '',
       isGuestUser:false,
+     isGridView :false,
+    isCategoryExpand: false,
+    isSearching: false,
+    searchController: TextEditingController(),
+    searchList: [],
+    productCategoryList: [],
+    isCatVisible: false,
       );
 }

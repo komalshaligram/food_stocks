@@ -52,7 +52,7 @@
 "my_basket": "הסל שלי",
 "new_order": "הזמנה חדשה",
 "all_messages": "כל ההודעות",
-"messages": " הודעה",
+"messages": "הודעות",
 "read_more": "קרא עוד",
 "menu": "תפריט",
 "my_orders": "ההזמנות שלי",
@@ -199,7 +199,7 @@
 "search_result_not_found" : "לא נמצאו תוצאות חיפוש",
 "products_not_available" : "לא נמצאו מוצרים",
 "sub_categories_not_available" : "תת קטגוריה לא קיימת",
-"messages_not_found" : "הודעה לא נמצאה",
+"messages_not_found" : "לא נמצאו הודעות",
 "currently_this_Supplier_has_no_products" : "כרגע אין מוצרים עבור ספק זה",
 "currently_products_are_not_on_sale" : "כרגע אין מוצרים במבצע",
 "recommendation_products_are_not_available" : "מוצרים מומלצים לא קיימים",
@@ -392,5 +392,10 @@
   "delete_pop_up_msg": "קיבלנו את בקשת מחיקת החשבון שלך, אנו נטפל בזה בימים הקרובים.",
   "login_as_guest": "כניסה כאורח",
   "new_version_app_update": "קיימת גירסה חדשה עבור האפליקציה אנא עדכן את האפליקציה",
-  "update": "עדכן"
+  "update": "עדכן",
+  "application_version":"גרסת אפליקציה",
+  "no_product" : "No product",
+  "duplicate_order" : "שכפל הזמנה",
+ "you_want_to_duplicate_this_order" : "האם אתה בטוח שברצונך לשכפל את ההזמנה?"
+
 }

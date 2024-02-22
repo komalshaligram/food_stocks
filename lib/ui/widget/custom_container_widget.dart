@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import '../utils/themes/app_colors.dart';
@@ -12,7 +13,7 @@ class CustomContainerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: AppConstants.containerHeight,
+      height: getScreenHeight(context) >= 1000 ? AppConstants.containerSize_50 :AppConstants.containerHeight,
      // width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.only(

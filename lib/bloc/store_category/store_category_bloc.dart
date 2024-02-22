@@ -410,10 +410,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               if (response.status == 200) {
                 debugPrint('cart before = ${response.data}');
                 response.data?.data?.forEach((cartProduct) {
-                  if (cartProduct.id ==
-                      state.productStockList[state.planoGramUpdateIndex]
-                      [state.productStockUpdateIndex].productId ||
-                      cartProduct.id == event.productId ||
+                  if (cartProduct.id == event.productId ||
                       cartProduct.id == state.productStockList[productStockList.last.length - 1]
                       [state.productStockUpdateIndex].productId
                   ) {
@@ -859,6 +856,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == 201) {
               Vibration.vibrate();
+              Navigator.pop(event.context,{AppStrings.isCartCountString : 'true'});
               List<List<ProductStockModel>> productStockList =
                   state.productStockList.toList(growable: true);
               productStockList[state.planoGramUpdateIndex]
@@ -873,7 +871,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 totalPrice: 0.0,
                 productSaleId: '',
               );
-              Navigator.pop(event.context,{AppStrings.isCartCountString : 'true'});
+
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,duringCelebration: true));
               await Future.delayed(const Duration(milliseconds: 500));
@@ -963,6 +961,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
               Vibration.vibrate();
+              Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.planoGramUpdateIndex]
@@ -979,7 +978,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               );
               add(StoreCategoryEvent.setCartCountEvent());
               emit(state.copyWith(isLoading: false, productStockList: productStockList , duringCelebration: true));
-              Navigator.pop(event.context);
+
               await Future.delayed(const Duration(milliseconds: 2000));
               emit(state.copyWith(duringCelebration: false));
 

@@ -140,41 +140,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                               color: AppColors.blackColor,
                             ),
                           ),
-                       /*   state.UserCompanyLogoUrl.isEmpty
-                              ? CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                                decoration: BoxDecoration(
-                                    color: AppColors.whiteColor,
-                                    border: Border.all(
-                                        color: AppColors.borderColor
-                                            .withOpacity(0.5),
-                                        width: 1)),
-                                alignment: Alignment.center,
-                                child: Container(
-                                    height: 50,
-                                    width: getScreenWidth(context) *
-                                        0.35,
-                                    alignment: Alignment.center,
-                                    child:
-                                    const CupertinoActivityIndicator())),
-                            imageUrl:
-                            "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
-                            height: 80,
-                            width: 80,
-                            fit: BoxFit.contain,
-                            alignment: context.rtl
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
-                            errorWidget: (context, url, error) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  color: AppColors
-                                      .whiteColor,
-                                ),
-                              );
-                            },
-                          )
-                              :*/ SvgPicture.asset(
+                    SvgPicture.asset(
                                   AppImagePath.splashLogo,
                                   fit: BoxFit.cover,
                                   height: 90,
@@ -271,7 +237,16 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                    )
+                    ),
+
+                    Text('${AppLocalizations.of(context)!.application_version}${' '}${state.applicationVersion} (${state.buildNumber})',
+                      style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
+                              color: AppColors.blackColor,
+                        fontWeight: FontWeight.bold,
+                      )
+                    ),
+                    20.height,
                   ],
                 ),
               ),

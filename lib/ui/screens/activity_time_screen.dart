@@ -101,12 +101,12 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                               50.height,
                               SizedBox(
                                 width: getScreenWidth(context) < 380
-                                    ? getScreenWidth(context) * 0.25
+                                    ? getScreenWidth(context) * 0.25 : getScreenWidth(context) >= 700 ? getScreenWidth(context) * 0.35
                                     : getScreenWidth(context) * 0.27,
                               ),
                               Container(
-                                  width: getScreenWidth(context) * 0.25,
-                                  height: 20,
+                                  width: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 0.27 : getScreenWidth(context) * 0.25,
+                                  height: getScreenHeight(context) >= 1000 ? 30 : 20,
                                   child: Text(
                                     AppLocalizations.of(context)!.from_time,
                                     style: AppStyles.rkRegularTextStyle(
@@ -116,8 +116,8 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                   )),
                               18.width,
                               Container(
-                                  width: getScreenWidth(context) * 0.25,
-                                  height: 20,
+                                  width: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 0.27 : getScreenWidth(context) * 0.25,
+                                  height: getScreenHeight(context) >= 1000 ? 30 : 20,
                                   child: Text(
                                     AppLocalizations.of(context)!.until_time,
                                     style: AppStyles.rkRegularTextStyle(

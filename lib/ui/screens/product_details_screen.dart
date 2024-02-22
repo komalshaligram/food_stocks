@@ -15,8 +15,10 @@ import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/circular_button_widget.dart';
+import '../widget/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
+import '../widget/common_product_button_widget.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import '../widget/product_details_screen-shimmer_widget.dart';
@@ -106,23 +108,53 @@ class _ProductDetailsScreenWidgetState
                 bgColor: AppColors.pageColor,
                 title: widget.orderNumber.toString(),
                 iconData: Icons.arrow_back_ios_sharp,
-                trailingWidget: Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: AppConstants.padding_10,
-                  ),
-                  child: (state.orderBySupplierProduct) == 0
-                      ? CupertinoActivityIndicator()
-                      : CircularButtonWidget(
-                          buttonName: AppLocalizations.of(context)!.total,
-                          buttonValue:
-                        //  '${AppLocalizations.of(context)!.currency}${(state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0')}'
+                trailingWidget: Row(
+                  children: [
 
-                    '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
-                        ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: AppConstants.padding_10,
+                      ),
+                      child: (state.orderBySupplierProduct) == 0
+                          ? CupertinoActivityIndicator()
+                          : CircularButtonWidget(
+                              buttonName: AppLocalizations.of(context)!.total,
+                              buttonValue:
+                            //  '${AppLocalizations.of(context)!.currency}${(state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0')}'
+                        '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
+                            ),
+                    ),
+                    CommonProductButtonWidget(
+                      title: AppLocalizations.of(context)!.duplicate_order,
+                      borderRadius: 1,
+                      height: 35,
+                      onPressed: (){
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CommonAlertDialog(
+                                title: AppLocalizations.of(context)!.you_want_to_duplicate_this_order,
+                                directionality: state.language,
+                                positiveTitle:AppLocalizations.of(context)!.yes ,
+                                negativeTitle: AppLocalizations.of(context)!.no,
+                                positiveOnTap: (){
+                                 // bloc.add(ProductDetailsEvent.orderSendEvent(context: context));
+                                },
+                                negativeOnTap: (){
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },);
+                      },
+                    ),
+
+                  ],
                 ),
                 onTap: () {
                   Navigator.pop(context);
                 },
+
+
               ),
             ),
             body: state.isShimmering && state.isLoading || (state.orderBySupplierProduct.products?.length == 0)

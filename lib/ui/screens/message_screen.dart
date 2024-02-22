@@ -9,15 +9,12 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
-import 'package:food_stock/ui/widget/message_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
-import '../widget/common_alert_dialog.dart';
 import '../widget/question_and_answer_screen_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 
@@ -64,30 +61,14 @@ class MessageScreenWidget extends StatelessWidget {
                   title: AppLocalizations.of(context)!.messages,
                   iconData: Icons.arrow_back_ios_sharp,
                   onTap: () {
-                    // Navigator.pushNamed(
-                    //     context, RouteDefine.bottomNavScreen.name);
                     Navigator.pop(context, {
                       AppStrings.messageIdListString: state.deletedMessageList,
                     });
                   },
-                  // trailingWidget: Center(
-                  //   child: GestureDetector(
-                  //     onTap: () {},
-                  //     child: Text(
-                  //       AppLocalizations.of(context)!.editing,
-                  //       style: AppStyles.rkRegularTextStyle(
-                  //         size: AppConstants.smallFont,
-                  //         color: AppColors.mainColor,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                 ),
               ),
               body: SafeArea(
                 child:
-                    // NotificationListener<ScrollNotification>(
-                    //     child:
                     SmartRefresher(
                   enablePullDown: true,
                   controller: state.refreshController,
