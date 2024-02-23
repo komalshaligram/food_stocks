@@ -1003,7 +1003,7 @@ class SupplierProductsBloc
               );
               add(SupplierProductsEvent.setCartCountEvent());
               emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList));
+                  isLoading: false, productStockList: productStockList,));
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,

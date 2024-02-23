@@ -48,6 +48,16 @@ class PushNotificationService {
         manageNavigation( true, _mainPage, _subPage , _id);
       },
     );
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null) {
+        // DO YOUR THING HERE
+        debugPrint("onMessageOpenedApp: ${message.data}");
+        _mainPage = message.data['data']['message']['mainPage'];
+        _subPage = message.data['data']['message']['subPage'];
+        _id = message.data['data']['message']['id'];
+        manageNavigation( true, _mainPage, _subPage , _id);
+      }
+    });
     if (Platform.isIOS) {
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     }
@@ -119,6 +129,7 @@ class PushNotificationService {
         _mainPage = mainPage;
         _id = id;
         String imageUrl = data['message']['imageUrl'] ?? '';
+        print('hello______${imageUrl}');
 
         if (imageUrl.isNotEmpty) {
 

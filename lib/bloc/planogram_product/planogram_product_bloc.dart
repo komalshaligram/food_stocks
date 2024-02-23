@@ -811,7 +811,9 @@ class PlanogramProductBloc
               );
               add(PlanogramProductEvent.setCartCountEvent());
               emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList));
+                  isLoading: false, productStockList: productStockList,duringCelebration: true));
+              await Future.delayed(const Duration(milliseconds: 500));
+              emit(state.copyWith(duringCelebration: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(

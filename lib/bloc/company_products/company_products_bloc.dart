@@ -55,6 +55,8 @@ class CompanyProductsBloc
         emit(state.copyWith(companyId: event.companyId, isGuestUser: preferences.getGuestUser(),isCompanyProductGrid: preferences.getCompanyProductGrid()));
         debugPrint('company id = ${state.companyId}');
       } else if (event is _GetCompanyProductsListEvent) {
+
+
         if (state.isLoadMore) {
           return;
         }

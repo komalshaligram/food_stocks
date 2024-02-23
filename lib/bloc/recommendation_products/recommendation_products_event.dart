@@ -7,7 +7,9 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
 
   const factory RecommendationProductsEvent.getProductDetailsEvent(
       {required BuildContext context,
-      required String productId}) = _GetProductDetailsEvent;
+      required String productId,
+        required bool isBarcode
+      }) = _GetProductDetailsEvent;
 
   const factory RecommendationProductsEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;
@@ -31,7 +33,9 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory RecommendationProductsEvent.addToCartProductEvent(
-      {required BuildContext context}) = _AddToCartProductEvent;
+      {required BuildContext context,
+        required String productId
+      }) = _AddToCartProductEvent;
 
   const factory RecommendationProductsEvent.setCartCountEvent() =
       _SetCartCountEvent;

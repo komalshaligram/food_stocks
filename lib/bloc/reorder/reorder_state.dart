@@ -37,7 +37,7 @@ class ReorderState with _$ReorderState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [],
+        productStockList: [ProductStockModel(productId: '')],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,

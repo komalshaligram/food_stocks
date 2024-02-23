@@ -37,7 +37,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [],
+        productStockList: [ProductStockModel(productId: '')],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,

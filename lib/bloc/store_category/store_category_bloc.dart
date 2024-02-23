@@ -854,8 +854,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 productSaleId: '',
               );
 
-              emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList,duringCelebration: true));
+              emit(state.copyWith(isLoading: false, productStockList: productStockList,duringCelebration: true));
               await Future.delayed(const Duration(milliseconds: 500));
               emit(state.copyWith(duringCelebration: false));
               CustomSnackBar.showSnackBar(

@@ -7,7 +7,9 @@ class ReorderEvent with _$ReorderEvent {
 
   const factory ReorderEvent.getProductDetailsEvent(
       {required BuildContext context,
-      required String productId}) = _GetProductDetailsEvent;
+      required String productId,
+      required bool isBarcode
+      }) = _GetProductDetailsEvent;
 
   const factory ReorderEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;
@@ -31,7 +33,9 @@ class ReorderEvent with _$ReorderEvent {
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory ReorderEvent.addToCartProductEvent(
-      {required BuildContext context}) = _AddToCartProductEvent;
+      {required BuildContext context,
+      required String productId
+      }) = _AddToCartProductEvent;
 
   const factory ReorderEvent.setCartCountEvent() = _SetCartCountEvent;
 

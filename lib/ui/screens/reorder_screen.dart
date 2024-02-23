@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/reorder/reorder_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
@@ -10,6 +13,7 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
+import '../../data/model/search_model/search_model.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
@@ -22,12 +26,15 @@ import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_item_widget.dart';
+import '../widget/common_product_list_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
+import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
 import '../widget/delayed_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/supplier_products_screen_shimmer_widget.dart';
+import '../widget/common_search_widget.dart';
 
 class ReorderRoute {
   static Widget get route => ReorderScreen();
@@ -51,6 +58,7 @@ class ReorderScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ReorderBloc bloc = context.read<ReorderBloc>();
     return BlocBuilder<ReorderBloc, ReorderState>(
       builder: (context, state) {
         return Scaffold(
@@ -144,165 +152,456 @@ class ReorderScreenWidget extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
               },
+              trailingWidget: GestureDetector(
+                  onTap: (){
+                    context.read<ReorderBloc>().add(ReorderEvent.getGridListView());
+                  },
+                  child: Icon(state.isGridView ? Icons.list : Icons.grid_view)),
             ),
           ),
-          body: SafeArea(
-            child: SmartRefresher(
-              enablePullDown: /*state.isShimmering || state.isLoading ? false : */
-                  true,
-              controller: state.refreshController,
-              header: RefreshWidget(),
-              footer: CustomFooter(
-                builder: (context, mode) =>
-                    SupplierProductsScreenShimmerWidget(),
-              ),
-              enablePullUp: !state.isBottomOfProducts,
-              onRefresh: () {
-                context
-                    .read<ReorderBloc>()
-                    .add(ReorderEvent.refreshListEvent(context: context));
-              },
-              onLoading: () {
-                context.read<ReorderBloc>().add(
-                    ReorderEvent.getPreviousOrderProductsEvent(
-                        context: context));
-              },
-              child:
-                  // NotificationListener<ScrollNotification>(
-                  // onNotification: (notification) {
-                  //   if (notification.metrics.pixels ==
-                  //       notification.metrics.maxScrollExtent) {
-                  //     if (!state.isLoadMore) {
-                  //       context.read<ReorderBloc>().add(
-                  //           ReorderEvent
-                  //               .getRecommendationProductsEvent(
-                  //                   context: context));
-                  //     }
-                  //   }
-                  //   return true;
-                  // },
-                  // child:
-                  SingleChildScrollView(
-                physics: state.previousOrderProductsList.isEmpty
-                    ? const NeverScrollableScrollPhysics()
-                    : null,
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    state.isShimmering
-                        ? SupplierProductsScreenShimmerWidget()
-                        : state.previousOrderProductsList.isEmpty
-                            ? Container(
-                                height: getScreenHeight(context) - 80,
-                                width: getScreenWidth(context),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  '${AppLocalizations.of(context)!.recommendation_products_are_not_available}',
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.smallFont,
-                                      color: AppColors.textColor),
-                                ),
-                              )
-                            : GridView.builder(
-                                itemCount: state
-                                    .previousOrderProductsList.length,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: AppConstants.padding_5),
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        childAspectRatio:
-                                            MediaQuery.of(context).size.width >
-                                                    370
-                                                ? AppConstants
-                                                    .productGridAspectRatio
-                                                : AppConstants
-                                                    .productGridAspectRatio1),
-                                itemBuilder: (context, index) => DelayedWidget(
-                                      child: CommonProductItemWidget(
-                                        imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
-                                        imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
-                                        productStock: state
-                                                .previousOrderProductsList[
-                                                    index]
-                                                .productStock
-                                                .toString() ??
-                                            '0',
-                                        productImage: state
-                                                .previousOrderProductsList[
-                                                    index]
-                                                .mainImage ??
-                                            '',
-                                        productName: state
-                                                .previousOrderProductsList[
-                                                    index]
-                                                .productName ??
-                                            '',
-                                        totalSaleCount: state
-                                                .previousOrderProductsList[
-                                                    index]
-                                                .totalSale ??
-                                            0,
-                                        price: state
-                                                .previousOrderProductsList[
-                                                    index]
-                                                .productPrice ??
-                                            0.0,
-                                        onButtonTap: () {
-                                          showProductDetails(
-                                              context: context,
-                                              productId: state
-                                                      .previousOrderProductsList[
-                                                          index]
-                                                      .id ??
-                                                  '');
-                                        },
+          body: FocusDetector(
+            onFocusGained: (){
+              bloc.add(ReorderEvent.getCartCountEvent());
+            },
+            child: SafeArea(
+              child: Stack(
+                children: [
+                  SmartRefresher(
+                    enablePullDown: /*state.isShimmering || state.isLoading ? false : */
+                        true,
+                    controller: state.refreshController,
+                    header: RefreshWidget(),
+                    footer: CustomFooter(
+                      builder: (context, mode) =>
+                          SupplierProductsScreenShimmerWidget(),
+                    ),
+                    enablePullUp: !state.isBottomOfProducts,
+                    onRefresh: () {
+                      context
+                          .read<ReorderBloc>()
+                          .add(ReorderEvent.refreshListEvent(context: context));
+                    },
+                    onLoading: () {
+                      context.read<ReorderBloc>().add(
+                          ReorderEvent.getPreviousOrderProductsEvent(
+                              context: context));
+                    },
+                    child:
+                        SingleChildScrollView(
+                      physics: state.previousOrderProductsList.isEmpty
+                          ? const NeverScrollableScrollPhysics()
+                          : null,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          100.height,
+                          state.isShimmering
+                              ? SupplierProductsScreenShimmerWidget()
+                              : state.previousOrderProductsList.isEmpty
+                                  ? Container(
+                                      height: getScreenHeight(context) - 80,
+                                      width: getScreenWidth(context),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '${AppLocalizations.of(context)!.recommendation_products_are_not_available}',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.smallFont,
+                                            color: AppColors.textColor),
                                       ),
                                     )
-                                // buildPreviousOrderProductItem(
-                                //     context: context,
-                                //     index: index,
-                                //     totalSale: state
-                                //             .previousOrderProductsList[
-                                //                 index]
-                                //             .totalSale ??
-                                //         0,
-                                //     productImage: state
-                                //             .previousOrderProductsList[
-                                //                 index]
-                                //             .mainImage ??
-                                //         '',
-                                //     productName: state
-                                //             .previousOrderProductsList[
-                                //                 index]
-                                //             .productName ??
-                                //         '',
-                                //     productPrice: state
-                                //             .previousOrderProductsList[
-                                //                 index]
-                                //             .productPrice ??
-                                //         0.0,
-                                //     onPressed: () {
-                                //       showProductDetails(
-                                //           context: context,
-                                //           productId: state
-                                //                   .previousOrderProductsList[
-                                //                       index]
-                                //                   .id ??
-                                //               '');
-                                //     },
-                                //     isRTL: context.rtl),
-                                ),
-                    // state.isLoadMore
-                    //     ? SupplierProductsScreenShimmerWidget()
-                    //     : 0.width,
-                  ],
-                ),
+                                  : state.isGridView ? GridView.builder(
+                                      itemCount: state
+                                          .previousOrderProductsList.length,
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: AppConstants.padding_5),
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 3,
+                                              childAspectRatio:
+                                                  MediaQuery.of(context).size.width >
+                                                          370
+                                                      ? AppConstants
+                                                          .productGridAspectRatio
+                                                      : AppConstants
+                                                          .productGridAspectRatio1),
+                                      itemBuilder: (context, index) => DelayedWidget(
+                                            child: CommonProductItemWidget(
+                                              imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
+                                              imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
+                                              productStock: state
+                                                      .previousOrderProductsList[
+                                                          index]
+                                                      .productStock
+                                                      .toString() ??
+                                                  '0',
+                                              productImage: state
+                                                      .previousOrderProductsList[
+                                                          index]
+                                                      .mainImage ??
+                                                  '',
+                                              productName: state
+                                                      .previousOrderProductsList[
+                                                          index]
+                                                      .productName ??
+                                                  '',
+                                              totalSaleCount: state
+                                                      .previousOrderProductsList[
+                                                          index]
+                                                      .totalSale ??
+                                                  0,
+                                              price: state
+                                                      .previousOrderProductsList[
+                                                          index]
+                                                      .productPrice ??
+                                                  0.0,
+                                              onButtonTap: () {
+                                                showProductDetails(
+                                                    context: context,
+                                                    productId: state
+                                                            .previousOrderProductsList[
+                                                                index]
+                                                            .id ??
+                                                        '',
+                                                isBarcode: false,
+                                                  productStock: state
+                                                      .previousOrderProductsList[
+                                                  index]
+                                                      .productStock.toString()??
+                                                      ''
+                                                );
+                                              },
+                                            ),
+                                          )
+                                      // buildPreviousOrderProductItem(
+                                      //     context: context,
+                                      //     index: index,
+                                      //     totalSale: state
+                                      //             .previousOrderProductsList[
+                                      //                 index]
+                                      //             .totalSale ??
+                                      //         0,
+                                      //     productImage: state
+                                      //             .previousOrderProductsList[
+                                      //                 index]
+                                      //             .mainImage ??
+                                      //         '',
+                                      //     productName: state
+                                      //             .previousOrderProductsList[
+                                      //                 index]
+                                      //             .productName ??
+                                      //         '',
+                                      //     productPrice: state
+                                      //             .previousOrderProductsList[
+                                      //                 index]
+                                      //             .productPrice ??
+                                      //         0.0,
+                                      //     onPressed: () {
+                                      //       showProductDetails(
+                                      //           context: context,
+                                      //           productId: state
+                                      //                   .previousOrderProductsList[
+                                      //                       index]
+                                      //                   .id ??
+                                      //               '');
+                                      //     },
+                                      //     isRTL: context.rtl),
+                                      ):
+                          ListView.builder(
+                            itemCount: state.previousOrderProductsList.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: AppConstants.padding_5),
+                            itemBuilder: (context, index) => DelayedWidget(
+                              child: CommonProductListWidget(
+                                  productStock: state.previousOrderProductsList[index].productStock ?? 0,
+                                  productImage: state.previousOrderProductsList[index]
+                                      .mainImage ??
+                                      '',
+                                  productName: state.previousOrderProductsList[index]
+                                      .productName ??
+                                      '',
+                                  totalSaleCount: state
+                                      .previousOrderProductsList[index]
+                                      .totalSale ??
+                                      0,
+                                  price: state.previousOrderProductsList[index]
+                                      .productPrice ??
+                                      0.0,
+                                  onButtonTap: () {
+                                    showProductDetails(
+                                      context: context,
+                                      productId: state
+                                          .previousOrderProductsList[index]
+                                          .id ??
+                                          '',
+                                      productStock: state.previousOrderProductsList[index].productStock.toString() ?? '0',
+
+                                    );
+                                  }),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // ),
+                  ),
+                  CommonSearchWidget(
+                    isFilterTap: true,
+                    isCategoryExpand: state.isCategoryExpand,
+                    isSearching: state.isSearching,
+                    onFilterTap: () {
+                      bloc.add(ReorderEvent.changeCategoryExpansion());
+                    },
+                    onSearchTap: () {
+                      if(state.searchController.text != ''){
+                        bloc.add(ReorderEvent.changeCategoryExpansion(isOpened: true));
+                      }
+                    },
+                    onSearch: (String search) {
+                      if (search.length > 1) {
+                        bloc.add(ReorderEvent.changeCategoryExpansion(isOpened: true));
+                        bloc.add(
+                            ReorderEvent.globalSearchEvent(context: context));
+                      }
+                    },
+                    onSearchSubmit: (String search) {
+                      bloc.add(
+                          ReorderEvent.globalSearchEvent(context: context));
+                    },
+                    onOutSideTap: () {
+                      bloc.add(ReorderEvent.changeCategoryExpansion(
+                          isOpened: false));
+                    },
+                    onSearchItemTap: () {
+                      bloc.add(ReorderEvent.changeCategoryExpansion());
+                    },
+                    controller: state.searchController,
+                    searchList: state.searchList,
+                    searchResultWidget: state.searchList.isEmpty
+                        ? Center(
+                      child: Text(
+                        '${AppLocalizations.of(context)!
+                            .search_result_not_found}',
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.smallFont,
+                            color: AppColors.textColor),
+                      ),
+                    )
+                        : ListView.builder(
+                      itemCount: state.searchList.length,
+                      shrinkWrap: true,
+                      itemBuilder: (listViewContext, index) {
+                        return _buildSearchItem(
+                            productStock : state.searchList[index].productStock,
+                            context: context,
+                            searchName: state.searchList[index].name,
+                            searchImage: state.searchList[index].image,
+                            searchType:
+                            state.searchList[index].searchType,
+                            isMoreResults: state.searchList
+                                .where((search) =>
+                            search.searchType ==
+                                state.searchList[index]
+                                    .searchType)
+                                .toList()
+                                .length ==
+                                10,
+                            isLastItem:
+                            state.searchList.length - 1 == index,
+                            isShowSearchLabel: index == 0
+                                ? true
+                                : state.searchList[index].searchType !=
+                                state.searchList[index - 1]
+                                    .searchType
+                                ? true
+                                : false,
+                            onSeeAllTap: () async {
+                              debugPrint("searchType: ${state.searchList[index].searchType}");
+                              if (state.searchList[index].searchType ==
+                                  SearchTypes.category) {
+                                dynamic searchResult =
+                                await Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .productCategoryScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString:
+                                      state.search,
+                                      AppStrings.reqSearchString:
+                                      state.search,
+                                      AppStrings.searchResultString:
+                                      state.searchList
+                                    });
+                                if (searchResult != null) {
+                                  bloc.add(ReorderEvent
+                                      .updateGlobalSearchEvent(
+                                      search: searchResult[
+                                      AppStrings.searchString],
+                                      searchList: searchResult[
+                                      AppStrings
+                                          .searchResultString]));
+                                }
+                              } else if (state
+                                  .searchList[index].searchType ==
+                                  SearchTypes.subCategory) {
+                                dynamic searchResult =
+                                await Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .storeCategoryScreen.name,
+                                    arguments: {
+                                      AppStrings.categoryIdString: state
+                                          .searchList[index].categoryId,
+                                      AppStrings.categoryNameString:
+                                      state.searchList[index]
+                                          .categoryName,
+                                      AppStrings.searchString:
+                                      state.search,
+                                      AppStrings.searchResultString:
+                                      state.searchList
+                                    });
+                                if (searchResult != null) {
+                                  bloc.add(ReorderEvent
+                                      .updateGlobalSearchEvent(
+                                      search: searchResult[
+                                      AppStrings.searchString],
+                                      searchList: searchResult[
+                                      AppStrings
+                                          .searchResultString]));
+                                }
+                              } else {
+                                state.searchList[index].searchType ==
+                                    SearchTypes.company
+                                    ? Navigator.pushNamed(
+                                    context, RouteDefine.companyScreen.name,
+                                    arguments: {AppStrings.searchString: state.search})
+                                    : state.searchList[index].searchType ==
+                                    SearchTypes.supplier
+                                    ? Navigator.pushNamed(
+                                    context, RouteDefine.supplierScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString:
+                                      state.search
+                                    })
+                                    : state.searchList[index].searchType ==
+                                    SearchTypes.sale
+                                    ? Navigator.pushNamed(
+                                    context,
+                                    RouteDefine.productSaleScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString: state.search
+                                    })
+                                    : Navigator.pushNamed(
+                                    context,
+                                    RouteDefine.supplierProductsScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString: state.search,
+                                      AppStrings.searchType : SearchTypes.product.toString()
+                                    });
+                              }
+                            },
+                            onTap: () async {
+                              if (state.searchList[index].searchType ==
+                                  SearchTypes.subCategory) {
+                                CustomSnackBar.showSnackBar(
+                                  context: context,
+                                  title: AppStrings.getLocalizedStrings(
+                                      'Oops! in progress', context),
+                                  type: SnackBarType.SUCCESS,
+                                );
+                                return;
+                              }
+                              if (state.searchList[index].searchType ==
+                                  SearchTypes.sale ||
+                                  state.searchList[index].searchType ==
+                                      SearchTypes.product) {
+                                print("tap 4");
+                                showProductDetails(
+                                    context: context,
+                                    productStock: state.searchList[index].productStock.toString(),
+                                    productId: state
+                                        .searchList[index].searchId,
+                                    isBarcode: true
+                                );
+                              } else if (state
+                                  .searchList[index].searchType ==
+                                  SearchTypes.category) {
+                                dynamic searchResult =
+                                await Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .storeCategoryScreen.name,
+                                    arguments: {
+                                      AppStrings.categoryIdString: state
+                                          .searchList[index].searchId,
+                                      AppStrings.categoryNameString:
+                                      state.searchList[index].name,
+                                      AppStrings.searchString:
+                                      state.searchController.text,
+                                      AppStrings.searchResultString:
+                                      state.searchList
+                                    });
+                                if (searchResult != null) {
+                                  bloc.add(ReorderEvent
+                                      .updateGlobalSearchEvent(
+                                      search: searchResult[
+                                      AppStrings.searchString],
+                                      searchList: searchResult[
+                                      AppStrings
+                                          .searchResultString]));
+                                }
+                              } else {
+                                state.searchList[index].searchType ==
+                                    SearchTypes.company
+                                    ? Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .companyProductsScreen.name,
+                                    arguments: {
+                                      AppStrings.companyIdString:
+                                      state.searchList[index]
+                                          .searchId
+                                    })
+                                    : Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .supplierProductsScreen
+                                        .name,
+                                    arguments: {
+                                      AppStrings.supplierIdString:
+                                      state.searchList[index]
+                                          .searchId
+                                    });
+                              }
+                              bloc.add(
+                                  ReorderEvent.changeCategoryExpansion());
+                            });
+                      },
+                    ),
+                    onScanTap: () async {
+                      String scanResult = await scanBarcodeOrQRCode(
+                          context: context,
+                          cancelText: AppLocalizations.of(context)!.cancel,
+                          scanMode: ScanMode.BARCODE);
+                      if (scanResult != '-1') {
+                        // -1 result for cancel scanning
+                        debugPrint('result = $scanResult');
+                        print("tap 5");
+                        showProductDetails(
+                            context: context,
+                            // productStock: '1',
+                            productId: scanResult,
+                            isBarcode: true);
+                      }
+                    },
+                  ),
+                ],
+                
               ),
-              // ),
             ),
           ),
         );
@@ -416,9 +715,11 @@ class ReorderScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context, required String productId}) async {
+      {required BuildContext context, required String productId,  bool? isBarcode ,  String productStock = '0'}) async {
     context.read<ReorderBloc>().add(ReorderEvent.getProductDetailsEvent(
-        context: context, productId: productId));
+        context: context, productId: productId,
+    isBarcode: isBarcode ?? false
+    ));
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -457,7 +758,18 @@ class ReorderScreenWidget extends StatelessWidget {
                         child: Scaffold(
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
-                              : CommonProductDetailsWidget(
+                                :state.productDetails.isEmpty
+                        ? Center(
+                        child: Text(
+                            AppLocalizations.of(context)!.no_product,
+                          style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.normalFont,
+                            color: AppColors.redColor,
+                            fontWeight: FontWeight.w500,
+                          )),
+                      ):
+
+                          CommonProductDetailsWidget(
                             imageOnTap: (){
                               showDialog(
                                 context: context,
@@ -596,7 +908,9 @@ class ReorderScreenWidget extends StatelessWidget {
                                           context.read<ReorderBloc>().add(
                                               ReorderEvent
                                                   .addToCartProductEvent(
-                                                      context: context1));
+                                                      context: context1,
+                                              productId: productId
+                                              ));
                                         }),
                         ),
                       );
@@ -1134,5 +1448,163 @@ class ReorderScreenWidget extends StatelessWidget {
               Navigator.pop(context);
             },
             buttonTitle: "${AppLocalizations.of(context)!.ok}"));
+  }
+
+  Widget _buildSearchItem({
+    required BuildContext context,
+    required String searchName,
+    required String searchImage,
+    required SearchTypes searchType,
+    required bool isShowSearchLabel,
+    required bool isMoreResults,
+    required void Function() onTap,
+    required void Function() onSeeAllTap,
+    bool? isLastItem, required int productStock,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        isShowSearchLabel
+            ? Padding(
+          padding: const EdgeInsets.only(
+              left: AppConstants.padding_20,
+              right: AppConstants.padding_20,
+              top: AppConstants.padding_15,
+              bottom: AppConstants.padding_5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                searchType == SearchTypes.category
+                    ? AppLocalizations.of(context)!.categories
+                    : searchType == SearchTypes.subCategory
+                    ? AppLocalizations.of(context)!.sub_categories
+                    : searchType == SearchTypes.company
+                    ? AppLocalizations.of(context)!.companies
+                    : searchType == SearchTypes.sale
+                    ? AppLocalizations.of(context)!.sales
+                    : searchType == SearchTypes.supplier
+                    ? AppLocalizations.of(context)!
+                    .suppliers
+                    : AppLocalizations.of(context)!
+                    .products,
+                style: AppStyles.rkBoldTextStyle(
+                    size: AppConstants.smallFont,
+                    color: AppColors.blackColor,
+                    fontWeight: FontWeight.w500),
+              ),
+
+              isMoreResults
+                  ? GestureDetector(
+                onTap: onSeeAllTap,
+                child: Text(
+                  AppLocalizations.of(context)!.see_all,
+                  style: AppStyles.rkBoldTextStyle(
+                      size: AppConstants.font_14,
+                      color: AppColors.mainColor),
+                ),
+              )
+                  : 0.width,
+            ],
+          ),
+        )
+            : 0.width,
+        InkWell(
+          onTap: onTap,
+          child: Container(
+            height: (productStock) != 0 ? 35 : 50,
+            decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                border: Border(
+                    bottom: (isLastItem ?? false)
+                        ? BorderSide.none
+                        : BorderSide(
+                        color: AppColors.borderColor.withOpacity(0.5),
+                        width: 1))),
+            padding: EdgeInsets.only(
+                top: AppConstants.padding_5,
+                left: AppConstants.padding_20,
+                right: AppConstants.padding_20,
+                bottom: AppConstants.padding_5),
+            // padding: EdgeInsets.symmetric(
+            //     horizontal: AppConstants.padding_20,
+            //     vertical: AppConstants.padding_5),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  height: 35,
+                  width: 40,
+                  child: Image.network(
+                    '${AppUrls.baseFileUrl}$searchImage',
+                    fit: BoxFit.scaleDown,
+                    height: 35,
+                    width: 40,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return Container(
+                            width: 40,
+                            height: 35,
+                            child: CupertinoActivityIndicator())
+                        /*CommonShimmerWidget(
+                            child: Container(
+                              width: 40,
+                              height: 35,
+                              color: AppColors.whiteColor,
+                            ))*/
+                        ;
+                      }
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return searchType == SearchTypes.subCategory
+                          ? Image.asset(AppImagePath.imageNotAvailable5,
+                          height: 35, width: 40, fit: BoxFit.cover)
+                          : SvgPicture.asset(
+                        AppImagePath.splashLogo,
+                        fit: BoxFit.scaleDown,
+                        width: 40,
+                        height: 35,
+                      );
+                    },
+                  ),
+                ),
+                10.width,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        searchName,
+                        style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_12,
+                          color: AppColors.blackColor,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    (productStock) != 0 ? 0.width : Text(
+                      AppLocalizations.of(context)!
+                          .out_of_stock1,
+                      style: AppStyles.rkBoldTextStyle(
+                          size: AppConstants.font_12,
+                          color: AppColors.redColor,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ],
+                ),
+
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
