@@ -45,4 +45,22 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
 
   const factory RecommendationProductsEvent.refreshListEvent(
       {required BuildContext context}) = _RefreshListEvent;
+  const factory RecommendationProductsEvent.getCartCountEvent(
+      ) = _getCartCountEvent;
+
+  const factory RecommendationProductsEvent.getGridListView(
+      ) = _getGridListView;
+
+  const factory RecommendationProductsEvent.changeCategoryExpansion({bool? isOpened}) =
+  _ChangeCategoryExpansion;
+
+  const factory RecommendationProductsEvent.globalSearchEvent({required BuildContext context}) =
+  _GlobalSearchEvent;
+
+  const factory RecommendationProductsEvent.updateGlobalSearchEvent(
+      {required String search,
+        required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+
+  const factory RecommendationProductsEvent.getProductCategoriesListEvent(
+      {required BuildContext context}) = _GetProductCategoriesListEvent;
 }

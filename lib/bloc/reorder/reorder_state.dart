@@ -18,6 +18,16 @@ class ReorderState with _$ReorderState {
     required int imageIndex,
     required RefreshController refreshController,
     required TextEditingController noteController,
+    required int cartCount,
+    required bool duringCelebration,
+    required bool isCategoryExpand,
+    required bool isSearching,
+    required TextEditingController searchController,
+    required List<SearchModel> searchList,
+    required String search,
+    required List<Category> productCategoryList,
+    required bool isCatVisible,
+    required bool isGridView,
   }) = _ReorderState;
 
   factory ReorderState.initial() => ReorderState(
@@ -36,5 +46,15 @@ class ReorderState with _$ReorderState {
         imageIndex: 0,
         refreshController: RefreshController(),
         noteController: TextEditingController(),
+    duringCelebration: false,
+    cartCount: 0,
+    isCategoryExpand: false,
+    isSearching: false,
+    searchController: TextEditingController(),
+    searchList: [],
+    search: '',
+    productCategoryList: [],
+    isCatVisible: false,
+    isGridView: true
       );
 }

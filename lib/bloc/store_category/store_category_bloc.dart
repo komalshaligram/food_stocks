@@ -377,13 +377,22 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             print('productStockList___${productStockList}');
             print('planoGramIndex___${event.planoGramIndex}');
             int productStockUpdateIndex = -1;
-            if(planoGramIndex == 1){
+         /*   if(planoGramIndex == 1){
               productStockUpdateIndex = state.productStockList[planoGramIndex]
                   .indexWhere((productStock) =>
               productStock.productId == event.productId);
             }
             else{
               productStockUpdateIndex = planoGramIndex;
+            }*/
+
+            if(event.isBarcode ?? false){
+              productStockUpdateIndex = 0;
+            }
+            else{
+              productStockUpdateIndex = state.productStockList[planoGramIndex]
+                  .indexWhere((productStock) =>
+              productStock.productId == event.productId);
             }
 
             emit(state.copyWith(planoGramUpdateIndex:planoGramIndex,productStockUpdateIndex:productStockUpdateIndex));
@@ -576,33 +585,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     supplierSaleIndex: supplierSaleIndex));
               }
             }
-        /*    try {
-
-              final res = await DioClient(event.context).post(
-                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferences.getAuthToken()}'
-                  }));
-              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-              if (response.status == 200) {
-                debugPrint('cart before = ${response.data}');
-                response.data?.data?.forEach((cartProduct) {
-                  if (cartProduct.id ==
-                      state
-                          .productStockList[state.planoGramUpdateIndex]
-                      [state.productStockUpdateIndex]
-                          .productId) {
-                    _isProductInCart = true;
-                    _cartProductId = cartProduct.cartProductId ?? '';
-                    _productQuantity = cartProduct.totalQuantity ?? 0;
-                    return;
-                  }
-                });
-                debugPrint(
-                    '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
-              }
-            } on ServerException {}*/
           } else {
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
@@ -1192,9 +1174,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if (state.isLoadMore) {
           return;
         }
-         // if (state.isBottomOfProducts) {
-        //  return;
-       //  }
+        /*  if (state.isBottomOfProducts) {
+          return;
+         }*/
         debugPrint('Here');
         try{
           List<PlanogramAllProduct> planogramProductList =
@@ -1255,7 +1237,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
-            emit(state.copyWith(
+           emit(state.copyWith(
                 isBottomOfPlanoGrams: planogramProductList.length ==
                     (response.metaData?.totalFilteredCount ?? 0)
                     ? true

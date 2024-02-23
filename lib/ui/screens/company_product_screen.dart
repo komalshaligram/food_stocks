@@ -12,7 +12,6 @@ import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../routes/app_routes.dart';

@@ -26,6 +26,8 @@ class SharedPreferencesHelper {
   static const String companyProductGrid = 'isCompanyProductGrid';
   static const String supplierProductGrid = 'isSupplierProductGrid';
   static const String planogramProductGrid = 'isPlanogramProductGrid';
+  static const String recommendationProductGrid = 'isrecommendationProductGrid';
+  static const String reorderProductGrid = 'isReorderProductGrid';
 
   final SharedPreferences prefs;
 
@@ -154,6 +156,13 @@ class SharedPreferencesHelper {
   Future<void> setPlanogramProductGridListView({required bool isPlanogramProductGrid}) async {
     await prefs.setBool(planogramProductGrid, isPlanogramProductGrid);
   }
+  Future<void> setReorderProductGridListView({required bool isReorderProductGrid}) async {
+    await prefs.setBool(reorderProductGrid, isReorderProductGrid);
+  }
+  Future<void> setRecommendationProductGridListView({required bool isRecommendationProductGrid}) async {
+    await prefs.setBool(recommendationProductGrid, isRecommendationProductGrid);
+  }
+
 
   String getAppLanguage() {
     return prefs.getString(lang) ?? 'he';
@@ -244,5 +253,11 @@ class SharedPreferencesHelper {
   }
   bool getPlanogramProductGrid() {
     return prefs.getBool(planogramProductGrid) ?? true;
+  }
+  bool getRecommendationProductGrid() {
+    return prefs.getBool(recommendationProductGrid) ?? true;
+  }
+  bool getReorderProductGrid() {
+    return prefs.getBool(reorderProductGrid) ?? true;
   }
 }

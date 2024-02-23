@@ -43,4 +43,23 @@ class ReorderEvent with _$ReorderEvent {
 
   const factory ReorderEvent.refreshListEvent({required BuildContext context}) =
       _RefreshListEvent;
+
+  const factory ReorderEvent.getCartCountEvent(
+      ) = _getCartCountEvent;
+
+  const factory ReorderEvent.getGridListView(
+      ) = _getGridListView;
+
+  const factory ReorderEvent.changeCategoryExpansion({bool? isOpened}) =
+  _ChangeCategoryExpansion;
+
+  const factory ReorderEvent.globalSearchEvent({required BuildContext context}) =
+  _GlobalSearchEvent;
+
+  const factory ReorderEvent.updateGlobalSearchEvent(
+      {required String search,
+        required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+
+  const factory ReorderEvent.getProductCategoriesListEvent(
+      {required BuildContext context}) = _GetProductCategoriesListEvent;
 }

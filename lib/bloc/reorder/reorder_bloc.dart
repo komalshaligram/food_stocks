@@ -22,6 +22,7 @@ import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -29,6 +30,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
+import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 
 part 'reorder_event.dart';
 

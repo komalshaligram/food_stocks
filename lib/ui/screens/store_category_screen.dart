@@ -275,6 +275,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                           itemBuilder:
                                                               (context, index) {
                                                             return buildPlanoGramItem(
+                                                              planogramUpdateIndex: 1,
                                                               isGuestUser: state
                                                                   .isGuestUser,
                                                               context: context,
@@ -371,6 +372,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                       itemBuilder:
                                                           (context, index) {
                                                         return buildPlanoGramItem(
+                                                          planogramUpdateIndex: 2,
                                                             isGuestUser:
                                                                 state.isGuestUser,
                                                             context: context,
@@ -543,11 +545,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                           context: context,
                                                                                           productId: state.planogramProductList[index].id ?? '',
                                                                                           productStock: state.planogramProductList[index].productStock.toString() ?? '0',
-                                                                                          planoGramIndex: index == 0
+                                                                                          planoGramIndex: index /* index == 0
                                                                                               ? (state.planogramProductList.length > 1)
                                                                                                   ? 1
                                                                                                   : 0
-                                                                                              : index,
+                                                                                              : index*/,
                                                                                           isBarcode: false);
                                                                                     } else {
                                                                                       Navigator.pushNamed(context, RouteDefine.connectScreen.name);
@@ -628,11 +630,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                     context: context,
                                                                                     productStock: state.planogramProductList[index].productStock.toString() ?? '0',
                                                                                     productId: state.planogramProductList[index].id ?? '',
-                                                                                    planoGramIndex: index == 0
+                                                                                    planoGramIndex: index /*index == 0
                                                                                         ? (state.planogramProductList.length > 1)
                                                                                             ? 1
                                                                                             : 0
-                                                                                        : index,
+                                                                                        : index*/,
                                                                                     isBarcode: false);
                                                                               } else {
                                                                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
@@ -1046,6 +1048,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       required int subIndex,
       required double height,
       required double width,
+        required int planogramUpdateIndex,
       required List<PlanogramDatum> list,
       required bool isGuestUser}) {
     return BlocProvider.value(
@@ -1082,7 +1085,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       productStock: list[index].planogramproducts?[subIndex].productStock.toString()??'0',
                       productId:
                           list[index].planogramproducts?[subIndex].id ?? '',
-                      planoGramIndex: 0);
+                      planoGramIndex: planogramUpdateIndex);
                 } else {
                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                 }
@@ -1520,6 +1523,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   Widget buildPlanoGramItem(
       {required BuildContext context,
       required int index,
+        required int planogramUpdateIndex,
       required List<PlanogramDatum> list,
       required bool isGuestUser}) {
     return BlocProvider.value(
@@ -1574,6 +1578,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             shrinkWrap: true,
                             itemBuilder: (context, subIndex) {
                               return buildPlanoGramProductListItem(
+                                planogramUpdateIndex: planogramUpdateIndex,
                                   isGuestUser: isGuestUser,
                                   context: context,
                                   list: list,
