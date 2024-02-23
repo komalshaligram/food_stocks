@@ -62,6 +62,8 @@ class PushNotificationService {
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     }
 
+
+
     enableIOSNotifications();
     await registerNotificationListeners();
   }
