@@ -13,7 +13,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../routes/app_routes.dart';
-
 import '../utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_strings.dart';
@@ -76,8 +75,6 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
           ),
           body: SafeArea(
             child:
-                // NotificationListener<ScrollNotification>(
-                //   child:
                 SmartRefresher(
               enablePullDown: true,
               controller: state.refreshController,
@@ -140,28 +137,10 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                                       fontWeight: FontWeight.w400),
                                 )),
                               ),
-                    // state.isLoadMore
-                    //     ? OrderSummaryScreenShimmerWidget(itemCount: 2,)
-                    //     : 0.width,
                   ],
                 ),
               ),
             ),
-            //   onNotification: (notification) {
-            //     if (notification.metrics.pixels ==
-            //         notification.metrics.maxScrollExtent) {
-            //       if ((state.orderList.metaData?.totalFilteredCount ?? 1 ) >
-            //           state.orderDetailsList.length) {
-            //         context
-            //             .read<OrderBloc>()
-            //             .add(OrderEvent.getAllOrderEvent(context: context));
-            //       } else {
-            //         return false;
-            //       }
-            //     }
-            //     return true;
-            //   },
-            // ),
           ),
         );
       },
@@ -175,9 +154,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
               SharedPreferencesHelper preferencesHelper =
               SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
               preferencesHelper.setOrderId(productOrderId:  orderDetailsList[index].id ?? '');
-
               if(orderDetailsList[index].status?.orderStatusNo == cancelStatus){
-
               }
              else if ((orderDetailsList[index].suppliers ?? 0) > 1) {
                 Navigator.pushNamed(
@@ -214,7 +191,6 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                         );
                       },
                     ));
-
               }
             },
             child: Container(
@@ -268,7 +244,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                             ),
                           ),
                           child: Text(
-                            '${(formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal))}',
+                              orderDetailsList[index].comaxInvoicePrice != '0' ? '${(formatNumber(value: orderDetailsList[index].comaxInvoicePrice.toString(), local: AppStrings.hebrewLocal))}'  :'${(formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal))}',
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.font_14,
                                 color: AppColors.whiteColor,
@@ -333,7 +309,6 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                             ? AppColors.blueColor: orderDetailsList[index].status?.orderStatusNo ==
                             deliveryStatus
                             ? AppColors.mainColor : AppColors.orangeColor,
-
                         valueTextSize: AppConstants.smallFont,
                       ),
                     ],

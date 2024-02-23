@@ -399,10 +399,9 @@
   "wallet_refund" : "Wallet refund",
   "original_was" : "Original was",
   "was_not_in_stock" : "Was not in stock",
-  "unit" : "unit",
-  "surfaces_for_order" : "Surfaces for order",
-  "refund_for-order" : "refund for order"
-
+  "units" : "Units",
+  "surfaces_order" : "Surfaces for order",
+  "refund_for_order" : "Refund for order"
 
 
 

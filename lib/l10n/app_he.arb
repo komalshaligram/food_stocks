@@ -400,10 +400,9 @@
  "wallet_refund" : "זיכוי ארנק",
  "original_was" : "במקור היה",
  "was_not_in_stock" : "לא היה במלאי",
-  "unit" : "יחידות",
-  "surfaces_for_order" : "משטחים להזמנה",
-  "refund_for-order" : "זיכוי עבור הזמנה"
-
+  "units" : "יחידות",
+   "surfaces_order" : "משטחים להזמנה",
+   "refund_for_order" : "זיכוי עבור הזמנה"
 
 
 }

@@ -817,10 +817,14 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                   ),
                   10.height,
                   Text(
-            getType(state.walletTransactionsList[listIndex].type
-              .toString()) ==
-             AppLocalizations.of(context)!.order ? '${getType(state.walletTransactionsList[listIndex].type.toString())}:${state.walletTransactionsList[listIndex].orderId}' :
-            '${getType(state.walletTransactionsList[listIndex].type.toString())}',
+            getType(state.walletTransactionsList[listIndex].type.toString()) ==
+             AppLocalizations.of(context)!.order ?
+            '${getType(state.walletTransactionsList[listIndex].type.toString())}'':${state.walletTransactionsList[listIndex].orderId}':
+          getType(state.walletTransactionsList[listIndex].type.toString()) ==
+          AppLocalizations.of(context)!.refund_for_order  ? '${getType(state.walletTransactionsList[listIndex].type.toString())}'':${state.walletTransactionsList[listIndex].orderId}':
+          getType(state.walletTransactionsList[listIndex].type.toString()) ==
+          AppLocalizations.of(context)!.surfaces_order ? '${getType(state.walletTransactionsList[listIndex].type.toString())}'':${state.walletTransactionsList[listIndex].orderId}' :
+          '${getType(state.walletTransactionsList[listIndex].type.toString())}',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.font_12, color: AppColors.blueColor),
                   ),
@@ -833,8 +837,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    getType(state.walletTransactionsList[listIndex].type
-                                .toString()) ==
+                    getType(state.walletTransactionsList[listIndex].type.toString()) ==
                             AppLocalizations.of(context)!.order
                        ? '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(), local: AppStrings.hebrewLocal)}'
                         : '${formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '').toString()), local: AppStrings.hebrewLocal)}',
@@ -845,15 +848,14 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                     .toString()) ==
                                 AppLocalizations.of(context)!.monthly_credit
                             ? AppColors.mainColor
-                            : AppColors.redColor,
+                            :getType(state.walletTransactionsList[listIndex].type.toString()) ==
+                            AppLocalizations.of(context)!.refund_for_order  ? AppColors.mainColor : AppColors.redColor,
                         fontWeight: FontWeight.w600),
                   ),
                   3.height,
                   CircularButtonWidget(
                       buttonName: AppLocalizations.of(context)!.balance_status,
           buttonValue:
-         // '${AppLocalizations.of(context)!.currency}${(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString())}',)
-
              '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(), local: AppStrings.hebrewLocal)}'),
                 ],
               ),
@@ -869,7 +871,12 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
       return AppLocalizations.of(context)!.monthly_credit;
     } else if (type == 'debit') {
       return AppLocalizations.of(context)!.order;
-    } else {
+    }else if (type == 'refund') {
+      return AppLocalizations.of(context)!.refund_for_order;
+    }else if (type == 'surfaceAmount') {
+      return AppLocalizations.of(context)!.surfaces_order;
+    }
+    else {
       return AppLocalizations.of(context)!.refund;
     }
   }
