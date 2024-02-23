@@ -180,6 +180,7 @@ class Product with _$Product {
     bool? isUpdated,
     int? updatedUnitQuantity,
     double? updatedPrice,
+    int? numberOfUnit,
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);

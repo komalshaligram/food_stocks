@@ -399,7 +399,10 @@
  "you_want_to_duplicate_this_order" : "האם אתה בטוח שברצונך לשכפל את ההזמנה?",
  "wallet_refund" : "זיכוי ארנק",
  "original_was" : "במקור היה",
- "was_not_in_stock" : "לא היה במלאי"
+ "was_not_in_stock" : "לא היה במלאי",
+  "units" : "יחידות",
+   "surfaces_order" : "משטחים להזמנה",
+   "refund_for_order" : "זיכוי עבור הזמנה"
 
 
 }

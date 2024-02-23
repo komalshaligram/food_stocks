@@ -15,10 +15,8 @@ import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/circular_button_widget.dart';
-import '../widget/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
-import '../widget/common_product_button_widget.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import '../widget/product_details_screen-shimmer_widget.dart';
@@ -121,8 +119,7 @@ class _ProductDetailsScreenWidgetState
                           : CircularButtonWidget(
                               buttonName: AppLocalizations.of(context)!.total,
                               buttonValue:
-                            //  '${AppLocalizations.of(context)!.currency}${(state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0')}'
-                        '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
+                              state.orderData.comaxInvoicePrice != 0.0 ?  state.orderData.comaxInvoicePrice.toString() : '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
                             ),
                     ),
                    /* CommonProductButtonWidget(
@@ -292,7 +289,7 @@ class _ProductDetailsScreenWidgetState
                                             title: AppLocalizations.of(context)!
                                                 .total_order,
                                             value:
-                                                '${formatNumber(value: state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}',
+                                               state.orderData.comaxInvoicePrice != 0.0 ? state.orderData.comaxInvoicePrice.toString() :'${formatNumber(value: state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}',
                                             titleColor: AppColors.mainColor,
                                             valueColor: AppColors.blackColor,
                                             valueTextWeight: FontWeight.w500,
@@ -303,8 +300,6 @@ class _ProductDetailsScreenWidgetState
                                         ],
                                       ),
                                       15.height,
-
-
                                       basketRow(state.language == AppStrings.englishString ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.orderData.bottleQuantities}' : '${AppLocalizations.of(context)!.bottle_deposit}${state.orderData.bottleQuantities}${'X'}', '${AppLocalizations.of(context)!.currency}${state.orderData.bottlePrice}'),
                                       3.height,
                                       basketRow('${AppLocalizations.of(context)!.vat}', '${AppLocalizations.of(context)!.currency}${state.orderData.vatAmount}'),
@@ -409,6 +404,8 @@ class _ProductDetailsScreenWidgetState
                                         vertical: AppConstants.padding_5),
                                     itemBuilder: (context, index) =>
                                         productListItem(
+                                          numberOfUnit: state.orderBySupplierProduct.products?[index].numberOfUnit ?? 0,
+                                          quantity: state.orderBySupplierProduct.products?[index].quantity ?? 0,
                                           updatedUnitQuantity: state.orderBySupplierProduct.products?[index].updatedUnitQuantity ?? 0,
                                           unitQuantity: state.orderBySupplierProduct.products?[index].unitQuantity ?? 0,
                                           sku: state.orderBySupplierProduct.products?[index].sku ?? '',
@@ -516,9 +513,10 @@ class _ProductDetailsScreenWidgetState
     required String sku,
     required int unitQuantity,
     required int updatedUnitQuantity,
+    required int quantity,
+    required int numberOfUnit,
 
   }) {
-
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
       builder: (context, state) {
         ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
@@ -637,30 +635,40 @@ class _ProductDetailsScreenWidgetState
                       children: [
                         statusNumber == onTheWayStatus  && isUpdated
                             ? Text(
-                          '${(state.orderBySupplierProduct.products?[index].updatedUnitQuantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
+                          '${(updatedUnitQuantity/numberOfUnit).round()}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
                           style: AppStyles.rkRegularTextStyle(
                             color: AppColors.blackColor,
                             size: AppConstants.font_12,
                           ),
-                        ): Text(
-                          '${(state.orderBySupplierProduct.products?[index].unitQuantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
+                        ) : sku == skuNumber ?
+         Text(
+        '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${AppLocalizations.of(context)!.units}',
+        style: AppStyles.rkRegularTextStyle(
+        color: AppColors.blackColor,
+        size: AppConstants.font_12,
+        ),
+        )
+                            : Text(
+                          '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
                           style: AppStyles.rkRegularTextStyle(
                             color: AppColors.blackColor,
                             size: AppConstants.font_12,
                           ),
-                        ) ,
+                        ),
+
                         5.width,
+
                         statusNumber == onTheWayStatus  && isUpdated ?  Text(
-                         '(${AppLocalizations.of(context)!.original_was}${(state.orderBySupplierProduct.products?[index].unitQuantity.toString() ?? '')}${state.orderBySupplierProduct.products?[index].scale.toString()})',
+                         '(${AppLocalizations.of(context)!.original_was}${' '}${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()})',
                           style: AppStyles.rkRegularTextStyle(
-                            color: AppColors.blackColor,
+                            color: AppColors.redColor,
                             size: AppConstants.font_12,
                           ),
                         ): 0.width,
                       ],
                     ),
                     Text(
-                      '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0,vat:state.orderData.vatPercentage ?? 0 ).toStringAsFixed(2))
+                      '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0 ? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0,vat:state.orderData.vatPercentage ?? 0 ).toStringAsFixed(2))
                           : (vatCalculation(price: state.orderBySupplierProduct.products![index].totalPayment ?? 0 ,vat: state.orderData.vatPercentage ?? 0).toStringAsFixed(2)),local: AppStrings.hebrewLocal)}',
                       style: AppStyles.rkRegularTextStyle(
                           color: AppColors.blackColor,

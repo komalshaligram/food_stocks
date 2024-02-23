@@ -545,11 +545,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                           context: context,
                                                                                           productId: state.planogramProductList[index].id ?? '',
                                                                                           productStock: state.planogramProductList[index].productStock.toString() ?? '0',
-                                                                                          planoGramIndex: index /* index == 0
-                                                                                              ? (state.planogramProductList.length > 1)
-                                                                                                  ? 1
-                                                                                                  : 0
-                                                                                              : index*/,
+                                                                                          planoGramIndex: 3,
                                                                                           isBarcode: false);
                                                                                     } else {
                                                                                       Navigator.pushNamed(context, RouteDefine.connectScreen.name);
@@ -630,11 +626,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                     context: context,
                                                                                     productStock: state.planogramProductList[index].productStock.toString() ?? '0',
                                                                                     productId: state.planogramProductList[index].id ?? '',
-                                                                                    planoGramIndex: index /*index == 0
-                                                                                        ? (state.planogramProductList.length > 1)
-                                                                                            ? 1
-                                                                                            : 0
-                                                                                        : index*/,
+                                                                                    planoGramIndex: 3 ,
                                                                                     isBarcode: false);
                                                                               } else {
                                                                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
@@ -1085,7 +1077,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       productStock: list[index].planogramproducts?[subIndex].productStock.toString()??'0',
                       productId:
                           list[index].planogramproducts?[subIndex].id ?? '',
-                      planoGramIndex: planogramUpdateIndex);
+                      planoGramIndex: planogramUpdateIndex, );
                 } else {
                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                 }
@@ -1187,7 +1179,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           .planogramproducts?[subIndex]
                                           .id ??
                                       '',
-                                  planoGramIndex: 0);
+                                  planoGramIndex: planogramUpdateIndex, );
                             },
                             textColor: AppColors.whiteColor,
                             bgColor: AppColors.mainColor,

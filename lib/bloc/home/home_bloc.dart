@@ -174,7 +174,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             ProductDetailsResModel response =
             ProductDetailsResModel.fromJson(res);
             print('ProductDetailsResModel______${response}');
-            print('_productQuantity______${_productQuantity}');
             if (response.status == 200) {
               int productStockUpdateIndex = 0;
               if(event.isBarcode){
