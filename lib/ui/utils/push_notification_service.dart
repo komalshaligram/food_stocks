@@ -51,6 +51,7 @@ class PushNotificationService {
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
         // DO YOUR THING HERE
+        debugPrint("onMessageOpenedApp_1: ${message}");
         debugPrint("onMessageOpenedApp: ${message.data}");
         _mainPage = message.data['data']['message']['mainPage'];
         _subPage = message.data['data']['message']['subPage'];
@@ -61,9 +62,6 @@ class PushNotificationService {
     if (Platform.isIOS) {
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     }
-
-
-
     enableIOSNotifications();
     await registerNotificationListeners();
   }
@@ -134,7 +132,6 @@ class PushNotificationService {
         print('hello______${imageUrl}');
 
         if (imageUrl.isNotEmpty) {
-
           final http.Response response;
           response = await http
               .get(Uri.parse(AppUrls.baseFileUrl + imageUrl.toString()));
@@ -161,6 +158,7 @@ class PushNotificationService {
           channel.name,
           channel.description ?? '',
           android?.smallIcon??'',
+
         );
       }
     });
@@ -229,7 +227,7 @@ class PushNotificationService {
     debugPrint('subPage   = ${subPage}');
     debugPrint('id = ${id}');
     debugPrint('isAppOpen = ${isAppOpen}');
-  //  if (isAppOpen) {
+    if (isAppOpen) {
       debugPrint('subPage  1 = ${subPage}');
       if(subPage == ''){
         if (mainPage == 'companyScreen') {
@@ -286,11 +284,11 @@ class PushNotificationService {
           ));
         }
       }
-   // } else {
-      /*AppRouting.generateRoute(RouteSettings(
+   } else {
+      AppRouting.generateRoute(RouteSettings(
           name: RouteDefine.splashScreen.name,
-         ));*/
-    //}
+         ));
+    }
   }
 
   @pragma('vm:entry-point')

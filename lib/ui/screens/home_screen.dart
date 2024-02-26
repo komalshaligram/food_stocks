@@ -918,7 +918,7 @@ class HomeScreenWidget extends StatelessWidget {
           (remoteMessage) {
         if (remoteMessage != null) {
           debugPrint("onMessageClosedApp: ${remoteMessage.data}");
-          PushNotificationService().manageNavigation( true, remoteMessage.data['data']['message']['mainPage'], remoteMessage.data['data']['message']['subPage'] , remoteMessage.data['data']['message']['id']);
+          PushNotificationService().manageNavigation( true, remoteMessage.data['message']['mainPage'], remoteMessage.data['message']['subPage'] , remoteMessage.data['_id']);
         }
       },
     );
