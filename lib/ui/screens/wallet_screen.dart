@@ -830,9 +830,6 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                   ),
                 ],
               ),
-              //  10.width,
-
-              //  10.width,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
