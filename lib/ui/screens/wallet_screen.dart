@@ -838,8 +838,9 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                 children: [
                   Text(
                     getType(state.walletTransactionsList[listIndex].type.toString()) ==
-                            AppLocalizations.of(context)!.order
-                       ? '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(), local: AppStrings.hebrewLocal)}'
+                            AppLocalizations.of(context)!.order || getType(state.walletTransactionsList[listIndex].type.toString()) ==
+                        AppLocalizations.of(context)!.surfaces_order
+                       ?'${'-'}''${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(), local: AppStrings.hebrewLocal)}'
                         : '${formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '').toString()), local: AppStrings.hebrewLocal)}',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,

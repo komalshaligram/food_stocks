@@ -50,6 +50,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required bool isBottomProducts,
     required int cartCount,
     required bool duringCelebration,
+    required int allProductPageNum
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -99,7 +100,8 @@ class StoreCategoryState with _$StoreCategoryState {
    isGuestUser : false,
     isBottomProducts : false,
     cartCount: 0,
-    duringCelebration: false
+    duringCelebration: false,
+    allProductPageNum: 0
 
       );
 }

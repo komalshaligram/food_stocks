@@ -379,6 +379,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           index: index);
                                     },
                                   ),
+
                                   Column(
                                     mainAxisAlignment:
                                     MainAxisAlignment.start,
@@ -435,9 +436,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         ),
                                       )
                                           : SizedBox(),
-                                      /*   state.isPlanogramShimmering  && state.subPlanoGramsList.isEmpty ? state.isGridView
-                                    ? SupplierProductsScreenShimmerWidget(itemCount: getScreenHeight(context) >= 750 ? 12 :12 ) : StoreCategoryScreenSubcategoryShimmerWidget(itemCount: getScreenHeight(context) >= 750 ? 10 :8,)
-                                    : state.subPlanoGramsList.isEmpty && state.planogramProductList.isEmpty && !state.isPlanogramProductShimmering*/
                                       state.isPlanogramProductShimmering &&
                                           state.planogramProductList
                                               .isEmpty
@@ -650,19 +648,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   //     : 0.width,
                                 ],
                               ),
-                              //   onNotification: (notification) {
-                              //     if (notification.metrics.pixels ==
-                              //         notification.metrics.maxScrollExtent) {
-                              //       if (notification.metrics.axis ==
-                              //           Axis.vertical) {}
-                              //       context.read<StoreCategoryBloc>().add(
-                              //           StoreCategoryEvent
-                              //               .getPlanoGramProductsEvent(
-                              //               context: context));
-                              //     }
-                              //     return true;
-                              //   },
-                              // ),
                             )
                           ],
                         )),

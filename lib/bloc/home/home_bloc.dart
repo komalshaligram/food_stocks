@@ -228,7 +228,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     }
 
                   });
-//65d5f7d1aa0e704db5d08f13
                   debugPrint(
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }

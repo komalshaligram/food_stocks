@@ -41,12 +41,16 @@ class PlanogramAllProduct with _$PlanogramAllProduct {
     String? createdAt,
     @JsonKey(name: "updatedAt")
     String? updatedAt,
+    @JsonKey(name: "isBottle")
+    bool? isBottle,
     @JsonKey(name: "_id")
     String? id,
     @JsonKey(name: "productName")
     String? productName,
     @JsonKey(name: "brandId")
     String? brandId,
+    @JsonKey(name: "brandLogo")
+    String? brandLogo,
     @JsonKey(name: "manufactureName")
     String? manufactureName,
     @JsonKey(name: "healthAndLifestye")
@@ -73,8 +77,6 @@ class PlanogramAllProduct with _$PlanogramAllProduct {
     String? categories,
     @JsonKey(name: "subcategories")
     String? subcategories,
-   // @JsonKey(name: "subsubcategories")
-   // String? subsubcategories,
     @JsonKey(name: "manufacturingCountry")
     String? manufacturingCountry,
     @JsonKey(name: "caseType")
@@ -85,11 +87,15 @@ class PlanogramAllProduct with _$PlanogramAllProduct {
     String? status,
     @JsonKey(name: "productNumber")
     String? productNumber,
-  double? productPrice,
-  double? totalSale,
+    @JsonKey(name: "productStock")
     int? productStock,
-
+    @JsonKey(name: "productPrice")
+    double? productPrice,
+    @JsonKey(name: "totalSale")
+    int? totalSale,
   }) = _PlanogramAllProduct;
+
+
 
   factory PlanogramAllProduct.fromJson(Map<String, dynamic> json) => _$PlanogramAllProductFromJson(json);
 }
