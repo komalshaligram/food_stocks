@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +17,7 @@ import 'package:food_stock/ui/widget/common_search_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart';
@@ -42,14 +44,14 @@ class StoreCategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+    ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint('store category args = $args');
     debugPrint('store  = ${args?[AppStrings.isSubCategory]}');
     return BlocProvider(
       create: (context) => StoreCategoryBloc()
         ..add(StoreCategoryEvent.isCategoryEvent(
             isSubCategory:
-                (args?[AppStrings.isSubCategory] != null) ? false : true))
+            (args?[AppStrings.isSubCategory] != null) ? false : true))
         ..add(StoreCategoryEvent.updateGlobalSearchEvent(
             search: args?[AppStrings.searchString] ?? '',
             context: context,
@@ -90,8 +92,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             }
           },
           child: Scaffold(
-           floatingActionButtonLocation:
-                FloatingActionButtonLocation.endContained,
+            floatingActionButtonLocation:
+            FloatingActionButtonLocation.endContained,
             floatingActionButton: FloatingActionButton(
               elevation: 0,
               child: Stack(
@@ -143,7 +145,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                   SizedBox(
+                  SizedBox(
                     height: 50,
                     width: 25,
                     child: Visibility(
@@ -183,489 +185,472 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             80.height,
                             state.isSubCategory
                                 ? buildTopNavigation(
-                                    context: context,
-                                    categoryName: state.categoryName,
-                                    search: state.searchController.text,
-                                    searchList: state.searchList)
+                                context: context,
+                                categoryName: state.categoryName,
+                                search: state.searchController.text,
+                                searchList: state.searchList)
                                 : buildTopNavigation(
-                                    context: context,
-                                    categoryName: state.categoryName,
-                                    subCategoryName: state.subCategoryName,
-                                    search: state.searchController.text,
-                                    searchList: state.searchList),
+                                context: context,
+                                categoryName: state.categoryName,
+                                subCategoryName: state.subCategoryName,
+                                search: state.searchController.text,
+                                searchList: state.searchList),
                             Expanded(
                               child: state.isSubCategory
                                   ? SmartRefresher(
-                                      enablePullDown: true,
-                                      controller:
-                                          state.subCategoryRefreshController,
-                                      header: RefreshWidget(),
-                                      footer: CustomFooter(
-                                        builder: (context, mode) =>
-                                            StoreCategoryScreenSubcategoryShimmerWidget(),
-                                      ),
-                                      enablePullUp:
-                                          !state.isBottomOfSubCategory,
-                                      onRefresh: () {
-                                        context.read<StoreCategoryBloc>().add(
-                                            StoreCategoryEvent
-                                                .subCategoryRefreshListEvent(
-                                                    context: context));
-                                      },
-                                      onLoading: () {
-                                        context.read<StoreCategoryBloc>().add(
-                                            StoreCategoryEvent
-                                                .getSubCategoryListEvent(
-                                                    context: context));
-                                      },
-                                      child: SingleChildScrollView(
-                                        physics: state.subCategoryList.isEmpty
-                                            ? const NeverScrollableScrollPhysics()
-                                            : null,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            bloc.add(StoreCategoryEvent
-                                                .changeSubCategoryOrPlanogramEvent(
-                                                    isSubCategory: false,
-                                                    context: context));
-                                          },
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              5.height,
-                                              state.isPlanogramShimmering ||
-                                                      state
-                                                          .isSubCategoryShimmering
-                                                  ? StoreCategoryScreenSubcategoryShimmerWidget()
-                                                  : state.planoGramsList
-                                                              .isEmpty &&
-                                                          state.subCategoryList
-                                                              .isEmpty
-                                                      ? Container(
-                                                          height:
-                                                              getScreenHeight(
-                                                                      context) -
-                                                                  160,
-                                                          width: getScreenWidth(
-                                                              context),
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: Text(
-                                                            '${AppLocalizations.of(context)!.no_data}',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: AppStyles.rkRegularTextStyle(
-                                                                size: AppConstants
-                                                                    .smallFont,
-                                                                color: AppColors
-                                                                    .textColor),
-                                                          ),
-                                                        )
-                                                      : ListView.builder(
-                                                          itemCount: state
-                                                              .planoGramsList
-                                                              .length,
-                                                          shrinkWrap: true,
-                                                          physics:
-                                                              const NeverScrollableScrollPhysics(),
-                                                          itemBuilder:
-                                                              (context, index) {
-                                                            return buildPlanoGramItem(
-                                                              isGuestUser: state
-                                                                  .isGuestUser,
-                                                              context: context,
-                                                              list: state
-                                                                  .planoGramsList,
-                                                              index: index,
-                                                            );
-                                                          },
-                                                        ),
-                                              state.isSubCategoryShimmering
-                                                  ? StoreCategoryScreenSubcategoryShimmerWidget()
-                                                  : ListView.builder(
-                                                      itemCount: state
-                                                          .subCategoryList
-                                                          .length,
-                                                      shrinkWrap: true,
-                                                      physics:
-                                                          NeverScrollableScrollPhysics(),
-                                                      itemBuilder: (context,
-                                                              index) =>
-                                                          buildSubCategoryListItem(
-                                                              index: index,
-                                                              context: context,
-                                                              subCategoryName: state
-                                                                      .subCategoryList[
-                                                                          index]
-                                                                      .subCategoryName ??
-                                                                  '',
-                                                              onTap: () {
-                                                                //get subcategory wise plano grams
-                                                                context.read<StoreCategoryBloc>().add(StoreCategoryEvent.changeSubCategoryDetailsEvent(
-                                                                    subCategoryId:
-                                                                        state.subCategoryList[index].id ??
-                                                                            '',
-                                                                    subCategoryName:
-                                                                        state.subCategoryList[index].subCategoryName ??
-                                                                            '',
-                                                                    context:
-                                                                        context));
-                                                              }),
-                                                    ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : ListView(
-                                      physics: AlwaysScrollableScrollPhysics(),
-                                      shrinkWrap: true,
+                                enablePullDown: true,
+                                controller:
+                                state.subCategoryRefreshController,
+                                header: RefreshWidget(),
+                                footer: CustomFooter(
+                                  builder: (context, mode) =>
+                                      StoreCategoryScreenSubcategoryShimmerWidget(),
+                                ),
+                                enablePullUp:
+                                !state.isBottomOfSubCategory,
+                                onRefresh: () {
+                                  context.read<StoreCategoryBloc>().add(
+                                      StoreCategoryEvent
+                                          .subCategoryRefreshListEvent(
+                                          context: context));
+                                },
+                                onLoading: () {
+                                  context.read<StoreCategoryBloc>().add(
+                                      StoreCategoryEvent
+                                          .getSubCategoryListEvent(
+                                          context: context));
+                                },
+                                child: SingleChildScrollView(
+                                  physics: state.subCategoryList.isEmpty
+                                      ? const NeverScrollableScrollPhysics()
+                                      : null,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      bloc.add(StoreCategoryEvent
+                                          .changeSubCategoryOrPlanogramEvent(
+                                          isSubCategory: false,
+                                          context: context));
+                                    },
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                       children: [
-                                        state.isPlanogramShimmering &&
-                                                state.subPlanoGramsList.isEmpty
-                                            ? state.isGridView
-                                                ? SupplierProductsScreenShimmerWidget(
-                                                    itemCount: 3)
-                                                : StoreCategoryScreenSubcategoryShimmerWidget(
-                                                    itemCount: 9,
-                                                  )
-                                            : state.subPlanoGramsList.isEmpty &&
-                                                    state.planogramProductList
-                                                        .isEmpty &&
-                                                    !state
-                                                        .isPlanogramProductShimmering
-                                                ? Container(
-                                                    height: getScreenHeight(
-                                                            context) -
-                                                        160,
-                                                    width:
-                                                        getScreenWidth(context),
-                                                    alignment: Alignment.center,
-                                                    child: Text(
-                                                      '${AppLocalizations.of(context)!.products_not_available}',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: AppStyles
-                                                          .rkRegularTextStyle(
-                                                              size: AppConstants
-                                                                  .smallFont,
-                                                              color: AppColors
-                                                                  .textColor),
-                                                    ),
-                                                  )
-                                                : ListView.builder(
-                                                    itemCount: state
-                                                        .subPlanoGramsList
-                                                        .length,
-                                                    shrinkWrap: true,
-                                                    physics:
-                                                        NeverScrollableScrollPhysics(),
-                                                    /*  state.isPlanogramShimmering  && state.subPlanoGramsList.isEmpty &&
-                                    state.isGridView?  ScrollPhysics() :const NeverScrollableScrollPhysics(),*/
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      return buildPlanoGramItem(
-                                                          isGuestUser:
-                                                              state.isGuestUser,
-                                                          context: context,
-                                                          list: state
-                                                              .subPlanoGramsList,
-                                                          index: index);
-                                                    },
-                                                  ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            state.planogramProductList
-                                                    .isNotEmpty
-                                                ? Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            10.0),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          '${AppLocalizations.of(context)!.products}',
-                                                          style: AppStyles
-                                                              .rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .smallFont,
-                                                                  color: AppColors
-                                                                      .blackColor,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            bloc.add(StoreCategoryEvent
-                                                                .changeGridToListViewEvent(
-                                                                    isGridView:
-                                                                        false));
-                                                          },
-                                                          child: state
-                                                                  .isGridView
-                                                              ? Icon(
-                                                                  Icons.list,
-                                                                  color: AppColors
-                                                                      .blueColor,
-                                                                  size: 24,
-                                                                )
-                                                              : Icon(
-                                                                  Icons
-                                                                      .grid_view,
-                                                                  color: AppColors
-                                                                      .blueColor,
-                                                                  size: 24,
-                                                                ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : SizedBox(),
-                                            /*   state.isPlanogramShimmering  && state.subPlanoGramsList.isEmpty ? state.isGridView
-                                    ? SupplierProductsScreenShimmerWidget(itemCount: getScreenHeight(context) >= 750 ? 12 :12 ) : StoreCategoryScreenSubcategoryShimmerWidget(itemCount: getScreenHeight(context) >= 750 ? 10 :8,)
-                                    : state.subPlanoGramsList.isEmpty && state.planogramProductList.isEmpty && !state.isPlanogramProductShimmering*/
-                                            state.isPlanogramProductShimmering &&
-                                                    state.planogramProductList
-                                                        .isEmpty
-                                                ? state.isGridView
-                                                    ? SupplierProductsScreenShimmerWidget(
-                                                        itemCount: state
-                                                                    .subPlanoGramsList
-                                                                    .length ==
-                                                                0
-                                                            ? (getScreenHeight(
-                                                                        context) >=
-                                                                    750
-                                                                ? 12
-                                                                : 6)
-                                                            : 12)
-                                                    : StoreCategoryScreenSubcategoryShimmerWidget(
-                                                        itemCount: state
-                                                                    .subPlanoGramsList
-                                                                    .length ==
-                                                                0
-                                                            ? (getScreenHeight(
-                                                                        context) >=
-                                                                    750
-                                                                ? 9
-                                                                : 6)
-                                                            : 6)
-                                                : state.planogramProductList
-                                                        .isEmpty
-                                                    ? SizedBox()
-                                                    : Container(
-                                                        color:
-                                                            AppColors.pageColor,
-                                                        child: state.isGridView
-                                                            ? SizedBox(
-                                                                height: state.subPlanoGramsList
-                                                                            .length ==
-                                                                        0
-                                                                    ? (getScreenHeight(context) >=
-                                                                            750
-                                                                        ? getScreenHeight(context) *
-                                                                            0.75
-                                                                        : getScreenHeight(context) *
-                                                                            0.71)
-                                                                    : (getScreenHeight(context) >=
-                                                                            740
-                                                                        ? getScreenHeight(context) *
-                                                                            0.44
-                                                                        : getScreenHeight(context) *
-                                                                            0.38),
-                                                                child:
-                                                                    SmartRefresher(
-                                                                  enablePullDown:
-                                                                      true,
-                                                                  controller: state
-                                                                      .planogramRefreshController,
-                                                                  header:
-                                                                      RefreshWidget(),
-                                                                  footer:
-                                                                      CustomFooter(
-                                                                    builder: (context,
-                                                                            mode) =>
-                                                                        state.isGridView
-                                                                            ? SupplierProductsScreenShimmerWidget()
-                                                                            : StoreCategoryScreenSubcategoryShimmerWidget(),
-                                                                  ),
-                                                                  enablePullUp:
-                                                                      !state
-                                                                          .isBottomOfPlanoGrams,
-                                                                  onRefresh:
-                                                                      () {
-                                                                    context
-                                                                        .read<
-                                                                            StoreCategoryBloc>()
-                                                                        .add(StoreCategoryEvent.planogramRefreshListEvent(
-                                                                            context:
-                                                                                context));
-                                                                  },
-                                                                  onLoading:
-                                                                      () {
-                                                                    context
-                                                                        .read<
-                                                                            StoreCategoryBloc>()
-                                                                        .add(StoreCategoryEvent.getPlanoGramProductsEvent(
-                                                                            context:
-                                                                                context));
-                                                                  },
-                                                                  child: GridView.builder(
-                                                                      itemCount: state.planogramProductList.length,
-                                                                      shrinkWrap: true,
-                                                                      physics: AlwaysScrollableScrollPhysics(),
-                                                                      padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: MediaQuery.of(context).size.width > 370 ? AppConstants.productGridAspectRatio : AppConstants.productGridAspectRatio1),
-                                                                      itemBuilder: (context, index) => DelayedWidget(
-                                                                            child: CommonProductItemWidget(
-                                                                                isGuestUser: state.isGuestUser,
-                                                                                productStock: (state.planogramProductList[index].productStock.toString() ?? '0'),
-                                                                                productImage: state.planogramProductList[index].mainImage ?? '',
-                                                                                productName: state.planogramProductList[index].productName ?? '',
-                                                                                totalSaleCount: state.planogramProductList[index].totalSale?.toInt() ?? 0,
-                                                                                price: state.planogramProductList[index].productPrice ?? 0.0,
-                                                                                onButtonTap: () {
-                                                                                  debugPrint("state.planogramProductList[index]:${index == 0 ? (state.planogramProductList.length > 1) ? 1 : 0 : index}");
-                                                                                  if (!state.isGuestUser) {
-                                                                                    showProductDetails(
-                                                                                        context: context,
-                                                                                        productId: state.planogramProductList[index].id ?? '',
-                                                                                        productStock: state.planogramProductList[index].productStock??0,
-                                                                                        planoGramIndex: index == 0
-                                                                                            ? (state.planogramProductList.length > 1)
-                                                                                                ? 1
-                                                                                                : 0
-                                                                                            : index,
-                                                                                        isBarcode: false);
-                                                                                  } else {
-                                                                                    Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                                                                  }
-                                                                                }),
-                                                                          )),
-                                                                ),
-                                                              )
-                                                            : SizedBox(
-                                                                height: state.subPlanoGramsList.length == 0 ? ( getScreenHeight(context) >= 750 ? getScreenHeight(context) *0.74 : getScreenHeight(context) * 0.70 ) :
-                                                                ( getScreenHeight(context) >= 740 ? getScreenHeight(context) * 0.43 : getScreenHeight(context) * 0.38 ),
-                                                                child:
-                                                                    SmartRefresher(
-                                                                  enablePullDown:
-                                                                      true,
-                                                                  controller: state
-                                                                      .planogramRefreshController,
-                                                                  header:
-                                                                      RefreshWidget(),
-                                                                  footer:
-                                                                      CustomFooter(
-                                                                    builder: (context,
-                                                                            mode) =>
-                                                                        state.isGridView
-                                                                            ? SupplierProductsScreenShimmerWidget()
-                                                                            : StoreCategoryScreenSubcategoryShimmerWidget(),
-                                                                  ),
-                                                                  enablePullUp:
-                                                                      !state
-                                                                          .isBottomOfPlanoGrams,
-                                                                  onRefresh:
-                                                                      () {
-                                                                    context
-                                                                        .read<
-                                                                            StoreCategoryBloc>()
-                                                                        .add(StoreCategoryEvent.planogramRefreshListEvent(
-                                                                            context:
-                                                                                context));
-                                                                  },
-                                                                  onLoading:
-                                                                      () {
-                                                                    context
-                                                                        .read<
-                                                                            StoreCategoryBloc>()
-                                                                        .add(StoreCategoryEvent.getPlanoGramProductsEvent(
-                                                                            context:
-                                                                                context));
-                                                                  },
-                                                                  child: ListView
-                                                                      .builder(
-                                                                    itemCount: state
-                                                                        .planogramProductList
-                                                                        .length,
-                                                                    shrinkWrap:
-                                                                        true,
-                                                                    physics:
-                                                                        AlwaysScrollableScrollPhysics(),
-                                                                    itemBuilder:
-                                                                        (context,
-                                                                            index) {
-                                                                      return CommonProductListWidget(
-                                                                          isGuestUser: state
-                                                                              .isGuestUser,
-                                                                          productStock: state.planogramProductList[index].productStock ??
-                                                                              0,
-                                                                          productImage: state.planogramProductList[index].mainImage ??
-                                                                              '',
-                                                                          productName: state.planogramProductList[index].productName ??
-                                                                              '',
-                                                                          totalSaleCount: state.planogramProductList[index].totalSale?.toInt() ??
-                                                                              0,
-                                                                          price: state.planogramProductList[index].productPrice ??
-                                                                              0.0,
-                                                                          onButtonTap:
-                                                                              () {
-                                                                            if (!state.isGuestUser) {
-                                                                              showProductDetails(
-                                                                                  context: context,
-                                                                                  productStock: state.planogramProductList[index].productStock??0,
-                                                                                  productId: state.planogramProductList[index].id ?? '',
-                                                                                  planoGramIndex: index == 0
-                                                                                      ? (state.planogramProductList.length > 1)
-                                                                                          ? 1
-                                                                                          : 0
-                                                                                      : index,
-                                                                                  isBarcode: false);
-                                                                            } else {
-                                                                              Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                                                            }
-                                                                          });
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                      ),
-                                          ],
+                                        5.height,
+                                        state.isPlanogramShimmering ||
+                                            state
+                                                .isSubCategoryShimmering
+                                            ? StoreCategoryScreenSubcategoryShimmerWidget()
+                                            : state.planoGramsList
+                                            .isEmpty &&
+                                            state.subCategoryList
+                                                .isEmpty
+                                            ? Container(
+                                          height:
+                                          getScreenHeight(
+                                              context) -
+                                              160,
+                                          width: getScreenWidth(
+                                              context),
+                                          alignment:
+                                          Alignment.center,
+                                          child: Text(
+                                            '${AppLocalizations.of(context)!.no_data}',
+                                            textAlign: TextAlign
+                                                .center,
+                                            style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants
+                                                    .smallFont,
+                                                color: AppColors
+                                                    .textColor),
+                                          ),
                                         )
-
-                                        // state.isLoadMore
-                                        //     ? StoreCategoryScreenPlanoGramShimmerWidget()
-                                        //     : 0.width,
-                                        // state.isBottomOfPlanoGrams
-                                        //     ? CommonPaginationEndWidget(
-                                        //         pageEndText: 'No more Products')
-                                        //     : 0.width,
+                                            : ListView.builder(
+                                          itemCount: state
+                                              .planoGramsList
+                                              .length,
+                                          shrinkWrap: true,
+                                          physics:
+                                          const NeverScrollableScrollPhysics(),
+                                          itemBuilder:
+                                              (context, index) {
+                                            return buildPlanoGramItem(
+                                              planogramUpdateIndex: 1,
+                                              isGuestUser: state
+                                                  .isGuestUser,
+                                              context: context,
+                                              list: state
+                                                  .planoGramsList,
+                                              index: index,
+                                            );
+                                          },
+                                        ),
+                                        state.isSubCategoryShimmering
+                                            ? StoreCategoryScreenSubcategoryShimmerWidget()
+                                            : ListView.builder(
+                                          itemCount: state
+                                              .subCategoryList
+                                              .length,
+                                          shrinkWrap: true,
+                                          physics:
+                                          NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context,
+                                              index) =>
+                                              buildSubCategoryListItem(
+                                                  index: index,
+                                                  context: context,
+                                                  subCategoryName: state
+                                                      .subCategoryList[
+                                                  index]
+                                                      .subCategoryName ??
+                                                      '',
+                                                  onTap: () {
+                                                    //get subcategory wise plano grams
+                                                    context.read<StoreCategoryBloc>().add(StoreCategoryEvent.changeSubCategoryDetailsEvent(
+                                                        subCategoryId:
+                                                        state.subCategoryList[index].id ??
+                                                            '',
+                                                        subCategoryName:
+                                                        state.subCategoryList[index].subCategoryName ??
+                                                            '',
+                                                        context:
+                                                        context));
+                                                  }),
+                                        ),
                                       ],
                                     ),
-                              //   onNotification: (notification) {
-                              //     if (notification.metrics.pixels ==
-                              //         notification.metrics.maxScrollExtent) {
-                              //       if (notification.metrics.axis ==
-                              //           Axis.vertical) {}
-                              //       context.read<StoreCategoryBloc>().add(
-                              //           StoreCategoryEvent
-                              //               .getPlanoGramProductsEvent(
-                              //               context: context));
-                              //     }
-                              //     return true;
-                              //   },
-                              // ),
+                                  ),
+                                ),
+                              )
+                                  : SingleChildScrollView(
+                                physics: AlwaysScrollableScrollPhysics(),
+                                child: ListView(
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  children: [
+                                    state.isPlanogramShimmering &&
+                                        state.subPlanoGramsList.isEmpty
+                                        ? state.isGridView
+                                        ? SupplierProductsScreenShimmerWidget(
+                                        itemCount: 3)
+                                        : StoreCategoryScreenSubcategoryShimmerWidget(
+                                      itemCount: 9,
+                                    )
+                                        : state.subPlanoGramsList.isEmpty &&
+                                        state.planogramProductList
+                                            .isEmpty &&
+                                        !state
+                                            .isPlanogramProductShimmering
+                                        ? Container(
+                                      height: getScreenHeight(
+                                          context) -
+                                          160,
+                                      width:
+                                      getScreenWidth(context),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '${AppLocalizations.of(context)!.products_not_available}',
+                                        textAlign:
+                                        TextAlign.center,
+                                        style: AppStyles
+                                            .rkRegularTextStyle(
+                                            size: AppConstants
+                                                .smallFont,
+                                            color: AppColors
+                                                .textColor),
+                                      ),
+                                    )
+                                        : ListView.builder(
+                                      itemCount: state
+                                          .subPlanoGramsList
+                                          .length,
+                                      shrinkWrap: true,
+                                      physics:
+                                      NeverScrollableScrollPhysics(),
+                                      /*  state.isPlanogramShimmering  && state.subPlanoGramsList.isEmpty &&
+                                      state.isGridView?  ScrollPhysics() :const NeverScrollableScrollPhysics(),*/
+                                      itemBuilder:
+                                          (context, index) {
+                                        return buildPlanoGramItem(
+                                            planogramUpdateIndex: 2,
+                                            isGuestUser:
+                                            state.isGuestUser,
+                                            context: context,
+                                            list: state
+                                                .subPlanoGramsList,
+                                            index: index);
+                                      },
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        state.planogramProductList
+                                            .isNotEmpty
+                                            ? Padding(
+                                          padding:
+                                          const EdgeInsets.all(
+                                              10.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            children: [
+                                              Text(
+                                                '${AppLocalizations.of(context)!.products}',
+                                                style: AppStyles
+                                                    .rkRegularTextStyle(
+                                                    size: AppConstants
+                                                        .smallFont,
+                                                    color: AppColors
+                                                        .blackColor,
+                                                    fontWeight:
+                                                    FontWeight
+                                                        .w600),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  bloc.add(StoreCategoryEvent
+                                                      .changeGridToListViewEvent(
+                                                      isGridView:
+                                                      false));
+                                                },
+                                                child: state
+                                                    .isGridView
+                                                    ? Icon(
+                                                  Icons.list,
+                                                  color: AppColors
+                                                      .blueColor,
+                                                  size: 24,
+                                                )
+                                                    : Icon(
+                                                  Icons
+                                                      .grid_view,
+                                                  color: AppColors
+                                                      .blueColor,
+                                                  size: 24,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                            : SizedBox(),
+                                        state.isPlanogramProductShimmering &&
+                                            state.planogramProductList
+                                                .isEmpty
+                                            ? state.isGridView
+                                            ? SupplierProductsScreenShimmerWidget(
+                                            itemCount: state
+                                                .subPlanoGramsList
+                                                .length ==
+                                                0
+                                                ? (getScreenHeight(
+                                                context) >=
+                                                750
+                                                ? 12
+                                                : 6)
+                                                : 12)
+                                            : StoreCategoryScreenSubcategoryShimmerWidget(
+                                            itemCount: state
+                                                .subPlanoGramsList
+                                                .length ==
+                                                0
+                                                ? (getScreenHeight(
+                                                context) >=
+                                                750
+                                                ? 9
+                                                : 6)
+                                                : 6)
+                                            :
+                                        state.planogramProductList
+                                            .isEmpty
+                                            ?
+                                        SizedBox()
+                                            :
+                                        Container(
+                                          color:
+                                          AppColors.pageColor,
+                                          child: state.isGridView
+                                              ? SizedBox(
+                                            height: state.subPlanoGramsList
+                                                .length ==
+                                                0
+                                                ? (getScreenHeight(context) >=
+                                                750
+                                                ? getScreenHeight(context) *
+                                                0.75
+                                                : getScreenHeight(context) *
+                                                0.71)
+                                                : (getScreenHeight(context) >=
+                                                740
+                                                ? getScreenHeight(context) *
+                                                0.44
+                                                : getScreenHeight(context) *
+                                                0.38),
+                                            child:
+                                            SmartRefresher(
+                                              enablePullDown:
+                                              true,
+                                              controller: state
+                                                  .planogramRefreshController,
+                                              header:
+                                              RefreshWidget(),
+                                              footer:
+                                              CustomFooter(
+                                                builder: (context,
+                                                    mode) =>
+                                                state.isGridView
+                                                    ? SupplierProductsScreenShimmerWidget()
+                                                    : StoreCategoryScreenSubcategoryShimmerWidget(),
+                                              ),
+                                              enablePullUp:
+                                              !state
+                                                  .isBottomOfPlanoGrams,
+                                              onRefresh:
+                                                  () {
+
+                                                context
+                                                    .read<
+                                                    StoreCategoryBloc>()
+                                                    .add(StoreCategoryEvent.AllProductsRefreshListEvent(
+                                                    context:
+                                                    context));
+                                              },
+                                              onLoading:
+                                                  () {
+                                                debugPrint("hello");
+                                                context
+                                                    .read<
+                                                    StoreCategoryBloc>()
+                                                    .add(StoreCategoryEvent.getPlanogramAllProductEvent(
+                                                    context:
+                                                    context));
+
+
+                                              },
+                                              child: GridView.builder(
+                                                  itemCount: state.planogramProductList.length,
+                                                  shrinkWrap: true,
+                                                  physics: AlwaysScrollableScrollPhysics(),
+                                                  padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: MediaQuery.of(context).size.width > 370 ? AppConstants.productGridAspectRatio : AppConstants.productGridAspectRatio1),
+                                                  itemBuilder: (context, index) => DelayedWidget(
+                                                    child: CommonProductItemWidget(
+                                                        imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
+                                                        isGuestUser: state.isGuestUser,
+                                                        productStock: (state.planogramProductList[index].productStock.toString() ?? '0'),
+                                                        productImage: state.planogramProductList[index].mainImage ?? '',
+                                                        productName: state.planogramProductList[index].productName ?? '',
+                                                        totalSaleCount: state.planogramProductList[index].totalSale?.toInt() ?? 0,
+                                                        price: state.planogramProductList[index].productPrice ?? 0.0,
+                                                        onButtonTap: () {
+                                                          //debugPrint("state.planogramProductList[index]:${index == 0 ? (state.planogramProductList.length > 1) ? 1 : 0 : index}");
+                                                          if (!state.isGuestUser) {
+                                                            showProductDetails(
+                                                                context: context,
+                                                                productId: state.planogramProductList[index].id ?? '',
+                                                                productStock: state.planogramProductList[index].productStock.toString() ?? '0',
+                                                                planoGramIndex: 3,
+                                                                isBarcode: false);
+                                                          } else {
+                                                            Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                          }
+                                                        }),
+                                                  )),
+                                            ),
+                                          )
+                                              : SizedBox(
+                                            height: state.subPlanoGramsList.length == 0 ? ( getScreenHeight(context) >= 750 ? getScreenHeight(context) *0.74 : getScreenHeight(context) * 0.70 ) :
+                                            ( getScreenHeight(context) >= 740 ? getScreenHeight(context) * 0.43 : getScreenHeight(context) * 0.38 ),
+                                            child:
+                                            SmartRefresher(
+                                              enablePullDown:
+                                              true,
+                                              controller: state
+                                                  .planogramRefreshController,
+                                              header:
+                                              RefreshWidget(),
+                                              footer:
+                                              CustomFooter(
+                                                builder: (context,
+                                                    mode) =>
+                                                state.isGridView
+                                                    ? SupplierProductsScreenShimmerWidget()
+                                                    : StoreCategoryScreenSubcategoryShimmerWidget(),
+                                              ),
+                                              enablePullUp:
+                                              !state
+                                                  .isBottomOfPlanoGrams,
+                                              onRefresh:
+                                                  () {
+                                                context
+                                                    .read<
+                                                    StoreCategoryBloc>()
+                                                    .add(StoreCategoryEvent.AllProductsRefreshListEvent(
+                                                    context:
+                                                    context));
+                                              },
+                                              onLoading:
+                                                  () {
+                                                debugPrint("hello1");
+                                                context
+                                                    .read<
+                                                    StoreCategoryBloc>()
+                                                    .add(StoreCategoryEvent.getPlanogramAllProductEvent(
+                                                    context:
+                                                    context));
+                                              },
+                                              child: ListView
+                                                  .builder(
+                                                itemCount: state
+                                                    .planogramProductList
+                                                    .length,
+                                                shrinkWrap:
+                                                true,
+                                                physics:
+                                                AlwaysScrollableScrollPhysics(),
+                                                itemBuilder:
+                                                    (context,
+                                                    index) {
+                                                  return CommonProductListWidget(
+                                                      isGuestUser: state
+                                                          .isGuestUser,
+                                                      productStock: state.planogramProductList[index].productStock ??
+                                                          0,
+                                                      productImage: state.planogramProductList[index].mainImage ??
+                                                          '',
+                                                      productName: state.planogramProductList[index].productName ??
+                                                          '',
+                                                      totalSaleCount: state.planogramProductList[index].totalSale?.toInt() ??
+                                                          0,
+                                                      price: state.planogramProductList[index].productPrice ??
+                                                          0.0,
+                                                      onButtonTap:
+                                                          () {
+                                                        if (!state.isGuestUser) {
+                                                          showProductDetails(
+                                                              context: context,
+                                                              productStock: state.planogramProductList[index].productStock.toString() ?? '0',
+                                                              productId: state.planogramProductList[index].id ?? '',
+                                                              planoGramIndex: 3 ,
+                                                              isBarcode: false);
+                                                        } else {
+                                                          Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                        }
+                                                      });
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+
                             )
                           ],
                         )),
@@ -708,142 +693,142 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     searchList: state.searchList,
                     searchResultWidget: state.searchList.isEmpty
                         ? Center(
-                            child: Text(
-                              '${AppLocalizations.of(context)!.search_result_not_found}',
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.textColor),
-                            ),
-                          )
+                      child: Text(
+                        '${AppLocalizations.of(context)!.search_result_not_found}',
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.smallFont,
+                            color: AppColors.textColor),
+                      ),
+                    )
                         : ListView.builder(
-                            itemCount: state.searchList.length,
-                            shrinkWrap: true,
-                            itemBuilder: (listViewContext, index) {
-                              return _buildSearchItem(
-                                  isGuestUser: state.isGuestUser,
-                                  productStock:
-                                      state.searchList[index].productStock,
-                                  context: context,
-                                  searchName: state.searchList[index].name,
-                                  searchImage: state.searchList[index].image,
-                                  searchType:
-                                      state.searchList[index].searchType,
-                                  isMoreResults: state.searchList
-                                          .where((search) =>
-                                              search.searchType ==
-                                              state
-                                                  .searchList[index].searchType)
-                                          .toList()
-                                          .length ==
-                                      10,
-                                  isLastItem:
-                                      state.searchList.length - 1 == index,
-                                  isShowSearchLabel: index == 0
-                                      ? true
-                                      : state.searchList[index].searchType !=
-                                              state.searchList[index - 1]
-                                                  .searchType
-                                          ? true
-                                          : false,
-                                  onSeeAllTap: () async {
-                                    if (state.searchList[index].searchType ==
-                                        SearchTypes.category) {
-                                      dynamic result =
-                                          await Navigator.pushNamed(
-                                              context,
-                                              RouteDefine
-                                                  .productCategoryScreen.name,
-                                              arguments: {
-                                            AppStrings.searchString:
-                                                state.searchController.text,
-                                            AppStrings.reqSearchString:
-                                                state.searchController.text,
-                                            AppStrings.fromStoreCategoryString:
-                                                true
-                                          });
-                                      if (result != null) {
-                                        bloc.add(StoreCategoryEvent
-                                            .changeCategoryDetailsEvent(
-                                                categoryId: result[AppStrings
-                                                    .categoryIdString],
-                                                categoryName: result[AppStrings
-                                                    .categoryNameString],
-                                                context: context,
-                                                isSubCategory: ''));
-                                      }
-                                    } else {
-                                      state.searchList[index].searchType ==
-                                              SearchTypes.company
-                                          ? Navigator.pushNamed(
-                                              context, RouteDefine.companyScreen.name,
-                                              arguments: {
-                                                  AppStrings.searchString: state
-                                                      .searchController.text
-                                                })
-                                          : state.searchList[index].searchType ==
-                                                  SearchTypes.supplier
-                                              ? Navigator.pushNamed(
-                                                  context, RouteDefine.supplierScreen.name,
-                                                  arguments: {AppStrings.searchString: state.searchController.text})
-                                              : state.searchList[index].searchType ==
-                                                      SearchTypes.sale
-                                                  ? Navigator.pushNamed(
-                                                      context, RouteDefine.productSaleScreen.name,
-                                                      arguments: {AppStrings.searchString: state.searchController.text})
-                                                  : Navigator.pushNamed(
-                                                      context, RouteDefine.supplierProductsScreen.name,
-                                                      arguments: {AppStrings.searchString: state.searchController.text});
-                                    }
-                                    bloc.add(StoreCategoryEvent
-                                        .changeCategoryExpansionEvent());
-                                  },
-                                  onTap: () {
-                                    if (!state.isGuestUser) {
-                                      state.searchList[index].searchType ==
-                                                  SearchTypes.sale ||
-                                              (state.searchList[index]
-                                                          .searchType ==
-                                                      SearchTypes.product &&
-                                                  !state.isGuestUser)
-                                          ? showProductDetails(
-                                              context: context,
-                                              productStock: state.searchList[index].productStock??0,
-                                              productId: state
-                                                  .searchList[index].searchId,
-                                              planoGramIndex: 0,
-                                              isBarcode: true)
-                                          : state.searchList[index].searchType ==
-                                                  SearchTypes.category
-                                              ? bloc.add(StoreCategoryEvent
-                                                  .changeCategoryDetailsEvent(
-                                                      categoryId: state
-                                                          .searchList[index]
-                                                          .searchId,
-                                                      categoryName: state
-                                                          .searchList[index]
-                                                          .name,
-                                                      context: context,
-                                                      isSubCategory: ''))
-                                              : state.searchList[index]
-                                                          .searchType ==
-                                                      SearchTypes.company
-                                                  ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {
-                                                      AppStrings
-                                                              .companyIdString:
-                                                          state
-                                                              .searchList[index]
-                                                              .searchId,
-                                                    })
-                                                  : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
-                                      bloc.add(StoreCategoryEvent
-                                          .changeCategoryExpansionEvent());
-                                    } else {
-                                      Navigator.pushNamed(context,
-                                          RouteDefine.connectScreen.name);
-                                    }
-                                  });
+                      itemCount: state.searchList.length,
+                      shrinkWrap: true,
+                      itemBuilder: (listViewContext, index) {
+                        return _buildSearchItem(
+                            isGuestUser: state.isGuestUser,
+                            productStock:
+                            state.searchList[index].productStock,
+                            context: context,
+                            searchName: state.searchList[index].name,
+                            searchImage: state.searchList[index].image,
+                            searchType:
+                            state.searchList[index].searchType,
+                            isMoreResults: state.searchList
+                                .where((search) =>
+                            search.searchType ==
+                                state
+                                    .searchList[index].searchType)
+                                .toList()
+                                .length ==
+                                10,
+                            isLastItem:
+                            state.searchList.length - 1 == index,
+                            isShowSearchLabel: index == 0
+                                ? true
+                                : state.searchList[index].searchType !=
+                                state.searchList[index - 1]
+                                    .searchType
+                                ? true
+                                : false,
+                            onSeeAllTap: () async {
+                              if (state.searchList[index].searchType ==
+                                  SearchTypes.category) {
+                                dynamic result =
+                                await Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .productCategoryScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString:
+                                      state.searchController.text,
+                                      AppStrings.reqSearchString:
+                                      state.searchController.text,
+                                      AppStrings.fromStoreCategoryString:
+                                      true
+                                    });
+                                if (result != null) {
+                                  bloc.add(StoreCategoryEvent
+                                      .changeCategoryDetailsEvent(
+                                      categoryId: result[AppStrings
+                                          .categoryIdString],
+                                      categoryName: result[AppStrings
+                                          .categoryNameString],
+                                      context: context,
+                                      isSubCategory: ''));
+                                }
+                              } else {
+                                state.searchList[index].searchType ==
+                                    SearchTypes.company
+                                    ? Navigator.pushNamed(
+                                    context, RouteDefine.companyScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString: state
+                                          .searchController.text
+                                    })
+                                    : state.searchList[index].searchType ==
+                                    SearchTypes.supplier
+                                    ? Navigator.pushNamed(
+                                    context, RouteDefine.supplierScreen.name,
+                                    arguments: {AppStrings.searchString: state.searchController.text})
+                                    : state.searchList[index].searchType ==
+                                    SearchTypes.sale
+                                    ? Navigator.pushNamed(
+                                    context, RouteDefine.productSaleScreen.name,
+                                    arguments: {AppStrings.searchString: state.searchController.text})
+                                    : Navigator.pushNamed(
+                                    context, RouteDefine.supplierProductsScreen.name,
+                                    arguments: {AppStrings.searchString: state.searchController.text});
+                              }
+                              bloc.add(StoreCategoryEvent
+                                  .changeCategoryExpansionEvent());
                             },
-                          ),
+                            onTap: () {
+                              if (!state.isGuestUser) {
+                                state.searchList[index].searchType ==
+                                    SearchTypes.sale ||
+                                    (state.searchList[index]
+                                        .searchType ==
+                                        SearchTypes.product &&
+                                        !state.isGuestUser)
+                                    ? showProductDetails(
+                                    context: context,
+                                    productStock: state.searchList[index].productStock.toString() ??'0',
+                                    productId: state
+                                        .searchList[index].searchId,
+                                    planoGramIndex: 0,
+                                    isBarcode: true)
+                                    : state.searchList[index].searchType ==
+                                    SearchTypes.category
+                                    ? bloc.add(StoreCategoryEvent
+                                    .changeCategoryDetailsEvent(
+                                    categoryId: state
+                                        .searchList[index]
+                                        .searchId,
+                                    categoryName: state
+                                        .searchList[index]
+                                        .name,
+                                    context: context,
+                                    isSubCategory: ''))
+                                    : state.searchList[index]
+                                    .searchType ==
+                                    SearchTypes.company
+                                    ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {
+                                  AppStrings
+                                      .companyIdString:
+                                  state
+                                      .searchList[index]
+                                      .searchId,
+                                })
+                                    : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
+                                bloc.add(StoreCategoryEvent
+                                    .changeCategoryExpansionEvent());
+                              } else {
+                                Navigator.pushNamed(context,
+                                    RouteDefine.connectScreen.name);
+                              }
+                            });
+                      },
+                    ),
                     onScanTap: () async {
                       // Navigator.pushNamed(context, RouteDefine.qrScanScreen.name);
                       String result = await scanBarcodeOrQRCode(
@@ -864,14 +849,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           Navigator.pushNamed(
                               context, RouteDefine.connectScreen.name);
                         }
-                      } /*else {
-                          showProductDetails(
-                              context: context,
-                              productId: '156470',
-                              planoGramIndex: state.productStockList
-                                  .indexOf(state.productStockList.last),
-                              isBarcode: true);
-                        }*/
+                      }
                     },
                   ),
                 ],
@@ -902,44 +880,44 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       children: [
         isShowSearchLabel
             ? Padding(
-                padding: const EdgeInsets.only(
-                    left: AppConstants.padding_20,
-                    right: AppConstants.padding_20,
-                    top: AppConstants.padding_15,
-                    bottom: AppConstants.padding_5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      searchType == SearchTypes.category
-                          ? AppLocalizations.of(context)!.categories
-                          : searchType == SearchTypes.company
-                              ? AppLocalizations.of(context)!.companies
-                              : searchType == SearchTypes.sale
-                                  ? AppLocalizations.of(context)!.sales
-                                  : searchType == SearchTypes.supplier
-                                      ? AppLocalizations.of(context)!.suppliers
-                                      : AppLocalizations.of(context)!.products,
-                      style: AppStyles.rkBoldTextStyle(
-                          size: AppConstants.smallFont,
-                          color: AppColors.blackColor,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    isMoreResults
-                        ? GestureDetector(
-                            onTap: onSeeAllTap,
-                            child: Text(
-                              AppLocalizations.of(context)!.see_all,
-                              style: AppStyles.rkBoldTextStyle(
-                                  size: AppConstants.font_14,
-                                  color: AppColors.mainColor),
-                            ),
-                          )
-                        : 0.width,
-                  ],
+          padding: const EdgeInsets.only(
+              left: AppConstants.padding_20,
+              right: AppConstants.padding_20,
+              top: AppConstants.padding_15,
+              bottom: AppConstants.padding_5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                searchType == SearchTypes.category
+                    ? AppLocalizations.of(context)!.categories
+                    : searchType == SearchTypes.company
+                    ? AppLocalizations.of(context)!.companies
+                    : searchType == SearchTypes.sale
+                    ? AppLocalizations.of(context)!.sales
+                    : searchType == SearchTypes.supplier
+                    ? AppLocalizations.of(context)!.suppliers
+                    : AppLocalizations.of(context)!.products,
+                style: AppStyles.rkBoldTextStyle(
+                    size: AppConstants.smallFont,
+                    color: AppColors.blackColor,
+                    fontWeight: FontWeight.w500),
+              ),
+              isMoreResults
+                  ? GestureDetector(
+                onTap: onSeeAllTap,
+                child: Text(
+                  AppLocalizations.of(context)!.see_all,
+                  style: AppStyles.rkBoldTextStyle(
+                      size: AppConstants.font_14,
+                      color: AppColors.mainColor),
                 ),
               )
+                  : 0.width,
+            ],
+          ),
+        )
             : 0.width,
         InkWell(
           onTap: onTap,
@@ -951,8 +929,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     bottom: (isLastItem ?? false)
                         ? BorderSide.none
                         : BorderSide(
-                            color: AppColors.borderColor.withOpacity(0.5),
-                            width: 1))),
+                        color: AppColors.borderColor.withOpacity(0.5),
+                        width: 1))),
             padding: EdgeInsets.symmetric(
                 horizontal: AppConstants.padding_20,
                 vertical: AppConstants.padding_5),
@@ -965,33 +943,33 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   width: 40,
                   child: !isGuestUser
                       ? Image.network(
-                          '${AppUrls.baseFileUrl}$searchImage',
-                          fit: BoxFit.scaleDown,
-                          height: 35,
-                          width: 40,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            } else {
-                              return CommonShimmerWidget(
-                                  child: Container(
-                                width: 40,
-                                height: 35,
-                                color: AppColors.whiteColor,
-                              ));
-                            }
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return SvgPicture.asset(
-                              AppImagePath.splashLogo,
-                              fit: BoxFit.scaleDown,
+                    '${AppUrls.baseFileUrl}$searchImage',
+                    fit: BoxFit.scaleDown,
+                    height: 35,
+                    width: 40,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return CommonShimmerWidget(
+                            child: Container(
                               width: 40,
                               height: 35,
-                            );
-                          },
-                        )
+                              color: AppColors.whiteColor,
+                            ));
+                      }
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return SvgPicture.asset(
+                        AppImagePath.splashLogo,
+                        fit: BoxFit.scaleDown,
+                        width: 40,
+                        height: 35,
+                      );
+                    },
+                  )
                       : Image.asset(AppImagePath.imageNotAvailable5,
-                          fit: BoxFit.cover),
+                      fit: BoxFit.cover),
                 ),
                 10.width,
                 Column(
@@ -1012,12 +990,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     (productStock) != 0
                         ? 0.width
                         : Text(
-                            AppLocalizations.of(context)!.out_of_stock1,
-                            style: AppStyles.rkBoldTextStyle(
-                                size: AppConstants.font_12,
-                                color: AppColors.redColor,
-                                fontWeight: FontWeight.w400),
-                          ),
+                      AppLocalizations.of(context)!.out_of_stock1,
+                      style: AppStyles.rkBoldTextStyle(
+                          size: AppConstants.font_12,
+                          color: AppColors.redColor,
+                          fontWeight: FontWeight.w400),
+                    ),
                   ],
                 ),
               ],
@@ -1030,9 +1008,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
 
   Widget buildPlanoGramTitles(
       {required BuildContext context,
-      required String title,
-      required void Function() onTap,
-      required subTitle}) {
+        required String title,
+        required void Function() onTap,
+        required subTitle}) {
     return Padding(
       padding: const EdgeInsets.only(
         left: AppConstants.padding_10,
@@ -1066,12 +1044,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
 
   Widget buildPlanoGramProductListItem(
       {required BuildContext context,
-      required int index,
-      required int subIndex,
-      required double height,
-      required double width,
-      required List<PlanogramDatum> list,
-      required bool isGuestUser}) {
+        required int index,
+        required int subIndex,
+        required double height,
+        required double width,
+        required int planogramUpdateIndex,
+        required List<PlanogramDatum> list,
+        required bool isGuestUser}) {
     return BlocProvider.value(
       value: context.read<StoreCategoryBloc>(),
       child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
@@ -1082,7 +1061,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
               borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               boxShadow: [
                 BoxShadow(
                     color: AppColors.shadowColor.withOpacity(0.15),
@@ -1102,11 +1081,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               onTap: () {
                 if (!isGuestUser) {
                   showProductDetails(
-                      context: context,
-                      productStock: list[index].planogramproducts?[subIndex].productStock??0,
-                      productId:
-                          list[index].planogramproducts?[subIndex].id ?? '',
-                      planoGramIndex: 0);
+                    context: context,
+                    productStock: list[index].planogramproducts?[subIndex].productStock.toString()??'0',
+                    productId:
+                    list[index].planogramproducts?[subIndex].id ?? '',
+                    planoGramIndex: planogramUpdateIndex, );
                 } else {
                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                 }
@@ -1118,44 +1097,44 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   Center(
                     child: !isGuestUser
                         ? Image.network(
-                            "${AppUrls.baseFileUrl}${list[index].planogramproducts?[subIndex].mainImage}",
-                            height: 70,
-                            fit: BoxFit.fitHeight,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress?.cumulativeBytesLoaded !=
-                                  loadingProgress?.expectedTotalBytes) {
-                                return CommonShimmerWidget(
-                                  child: Container(
-                                    height: 70,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.whiteColor,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                              AppConstants.radius_10)),
-                                    ),
-                                  ),
-                                );
-                              }
-                              return child;
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              // debugPrint('sale list image error : $error');
-                              return Container(
-                                child: Image.asset(
-                                    AppImagePath.imageNotAvailable5,
-                                    height: 70,
-                                    width: double.maxFinite,
-                                    fit: BoxFit.cover),
-                              );
-                            },
-                          )
+                      "${AppUrls.baseFileUrl}${list[index].planogramproducts?[subIndex].mainImage}",
+                      height: 70,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress?.cumulativeBytesLoaded !=
+                            loadingProgress?.expectedTotalBytes) {
+                          return CommonShimmerWidget(
+                            child: Container(
+                              height: 70,
+                              width: 70,
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(
+                                        AppConstants.radius_10)),
+                              ),
+                            ),
+                          );
+                        }
+                        return child;
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        // debugPrint('sale list image error : $error');
+                        return Container(
+                          child: Image.asset(
+                              AppImagePath.imageNotAvailable5,
+                              height: 70,
+                              width: double.maxFinite,
+                              fit: BoxFit.cover),
+                        );
+                      },
+                    )
                         : Image.asset(
-                            AppImagePath.imageNotAvailable5,
-                            fit: BoxFit.cover,
-                            width: 70,
-                            height: 70,
-                          ),
+                      AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover,
+                      width: 70,
+                      height: 70,
+                    ),
                   ),
                   5.height,
                   Text(
@@ -1169,53 +1148,53 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   ),
                   2.height,
                   (list[index].planogramproducts?[subIndex].productStock ?? 0) >
-                              0 ||
-                          isGuestUser
+                      0 ||
+                      isGuestUser
                       ? 0.width
                       : Text(
-                          AppLocalizations.of(context)!.out_of_stock1,
-                          style: AppStyles.rkBoldTextStyle(
-                              size: AppConstants.font_12,
-                              color: AppColors.redColor,
-                              fontWeight: FontWeight.w400),
-                        ),
+                    AppLocalizations.of(context)!.out_of_stock1,
+                    style: AppStyles.rkBoldTextStyle(
+                        size: AppConstants.font_12,
+                        color: AppColors.redColor,
+                        fontWeight: FontWeight.w400),
+                  ),
                   // 2.height,
                   Expanded(
                     child:
-                        list[index].planogramproducts?[subIndex].totalSale == 0
-                            ? 0.width
-                            : Text(
-                                "${list[index].planogramproducts?[subIndex].totalSale} ${AppLocalizations.of(context)!.discount}",
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.font_10,
-                                    color: AppColors.saleRedColor,
-                                    fontWeight: FontWeight.w600),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                    list[index].planogramproducts?[subIndex].totalSale == 0
+                        ? 0.width
+                        : Text(
+                      "${list[index].planogramproducts?[subIndex].totalSale} ${AppLocalizations.of(context)!.discount}",
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_10,
+                          color: AppColors.saleRedColor,
+                          fontWeight: FontWeight.w600),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   5.height,
                   !isGuestUser
                       ? Center(
-                          child: CommonProductButtonWidget(
-                            title:
-                                "${AppLocalizations.of(context)!.currency}${list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(AppConstants.amountFrLength)}",
-                            onPressed: () {
-                              showProductDetails(
-                                productStock: list[index].planogramproducts?[subIndex].productStock ?? 0,
-                                  context: context,
-                                  productId: list[index]
-                                          .planogramproducts?[subIndex]
-                                          .id ??
-                                      '',
-                                  planoGramIndex: 0);
-                            },
-                            textColor: AppColors.whiteColor,
-                            bgColor: AppColors.mainColor,
-                            borderRadius: AppConstants.radius_3,
-                            textSize: AppConstants.font_12,
-                          ),
-                        )
+                    child: CommonProductButtonWidget(
+                      title:
+                      "${AppLocalizations.of(context)!.currency}${list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(AppConstants.amountFrLength)}",
+                      onPressed: () {
+                        showProductDetails(
+                          productStock: list[index].planogramproducts?[subIndex].productStock.toString() ?? '0',
+                          context: context,
+                          productId: list[index]
+                              .planogramproducts?[subIndex]
+                              .id ??
+                              '',
+                          planoGramIndex: planogramUpdateIndex, );
+                      },
+                      textColor: AppColors.whiteColor,
+                      bgColor: AppColors.mainColor,
+                      borderRadius: AppConstants.radius_3,
+                      textSize: AppConstants.font_12,
+                    ),
+                  )
                       : 0.width
                 ],
               ),
@@ -1228,10 +1207,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
 
   void showProductDetails(
       {required BuildContext context,
-      required String productId,
-      required int planoGramIndex,
-         int? productStock,
-      bool? isBarcode}) async {
+        required String productId,
+        required int planoGramIndex,
+        String productStock  = '0',
+        bool? isBarcode}) async {
     context.read<StoreCategoryBloc>().add(
         StoreCategoryEvent.getProductDetailsEvent(
             context: context,
@@ -1248,7 +1227,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-print('productStock');
+
         return DraggableScrollableSheet(
           expand: true,
           maxChildSize: 1 -
@@ -1275,72 +1254,99 @@ print('productStock');
                         body: state.isProductLoading
                             ? ProductDetailsShimmerWidget()
                             : state.productDetails.isEmpty
-                                ? Center(
-                                    child: Text(
-                                        AppLocalizations.of(context)!.no_data,
-                                        style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.normalFont,
-                                          color: AppColors.greyColor,
-                                          fontWeight: FontWeight.w500,
+                            ? Center(
+                          child: Text(
+                              AppLocalizations.of(context)!.no_product,
+                              style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.normalFont,
+                                color: AppColors.redColor,
+                                fontWeight: FontWeight.w500,
+                              )),
+                        )
+                            : CommonProductDetailsWidget(
+                          imageOnTap: (){
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Stack(
+                                  children: [
+                                    Container(
+                                      height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                      width: getScreenWidth(context),
+                                      child: PhotoView(
+                                        imageProvider: CachedNetworkImageProvider(
+                                          '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                        ),
+                                      ),
+                                    ),
+
+                                    GestureDetector(
+                                        onTap: (){
+                                          Navigator.pop(context);
+                                        },
+                                        child: Icon(Icons.close,
+                                          color: Colors.white,
                                         )),
-                                  )
-                                : CommonProductDetailsWidget(
-                                    context: context,
-                                    productImageIndex: state.imageIndex,
-                                    onPageChanged: (index, p1) {
-                                      context.read<StoreCategoryBloc>().add(
-                                          StoreCategoryEvent
-                                              .updateImageIndexEvent(
-                                                  index: index));
-                                    },
-                                    productImages: [
-                                      state.productDetails.first.mainImage ??
-                                          '',
-                                      ...state.productDetails.first.images?.map(
-                                              (image) =>
-                                                  image.imageUrl ?? '') ??
-                                          []
-                                    ],
-                                    productPerUnit: state.productDetails.first
-                                            .numberOfUnit ??
-                                        0,
+                                  ],
+                                );
+                              },);
+                          },
+                          context: context,
+                          productImageIndex: state.imageIndex,
+                          onPageChanged: (index, p1) {
+                            context.read<StoreCategoryBloc>().add(
+                                StoreCategoryEvent
+                                    .updateImageIndexEvent(
+                                    index: index));
+                          },
+                          productImages: [
+                            state.productDetails.first.mainImage ??
+                                '',
+                            ...state.productDetails.first.images?.map(
+                                    (image) =>
+                                image.imageUrl ?? '') ??
+                                []
+                          ],
+                          productPerUnit: state.productDetails.first
+                              .numberOfUnit ??
+                              0,
 
-                                    productName: state
-                                            .productDetails.first.productName ??
-                                        '',
-                                    productCompanyName:
-                                        state.productDetails.first.brandName ??
-                                            '',
-                                    productDescription: state.productDetails
-                                            .first.productDescription ??
-                                        '',
-                                    productSaleDescription: state.productDetails
-                                            .first.productDescription ??
-                                        '',
-                                    productPrice: state
-                                            .productStockList[
-                                                state.planoGramUpdateIndex]
-                                                [state.productStockUpdateIndex]
-                                            .totalPrice *
-                                        state
-                                            .productStockList[
-                                                state.planoGramUpdateIndex]
-                                                [state.productStockUpdateIndex]
-                                            .quantity *
-                                        (state.productDetails.first
-                                                .numberOfUnit ??
-                                            0),
+                          productName: state
+                              .productDetails.first.productName ??
+                              '',
+                          productCompanyName:
+                          state.productDetails.first.brandName ??
+                              '',
+                          productDescription: state.productDetails
+                              .first.productDescription ??
+                              '',
+                          productSaleDescription: state.productDetails
+                              .first.productDescription ??
+                              '',
+                          productPrice: state
+                              .productStockList[
+                          state.planoGramUpdateIndex]
+                          [state.productStockUpdateIndex]
+                              .totalPrice *
+                              state
+                                  .productStockList[
+                              state.planoGramUpdateIndex]
+                              [state.productStockUpdateIndex]
+                                  .quantity *
+                              (state.productDetails.first
+                                  .numberOfUnit ??
+                                  0),
 
-                                    productScaleType: state.productDetails.first
-                                            .scales?.scaleType ??
-                                        '',
-                                    productWeight: state
-                                            .productDetails.first.itemsWeight
-                                            ?.toDouble() ??
-                                        0.0,
-                                    productStock: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock !=0 || productStock== null? state
-                                        .productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex]
-                                        .stock:productStock ?? 0 ,
+                          productScaleType: state.productDetails.first
+                              .scales?.scaleType ??
+                              '',
+                          productWeight: state
+                              .productDetails.first.itemsWeight
+                              ?.toDouble() ??
+                              0.0,
+                          productStock: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock != 0 ?
+                          int.parse(state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock.toString()):
+                          int.parse(productStock.toString() ?? '0') ,
                           productUnitPrice:
                           state
                               .productStockList[
@@ -1351,69 +1357,59 @@ print('productStock');
                           state.planoGramUpdateIndex]
                           [state.productStockUpdateIndex]
                               .totalPrice:  double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
-                                    isRTL: context.rtl,
-                                    isSupplierAvailable:
-                                        state.productSupplierList.isEmpty
-                                            ? false
-                                            : true,
-                                    scrollController: scrollController,
-                                    productQuantity: state
-                                        .productStockList[
-                                            state.planoGramUpdateIndex]
-                                            [state.productStockUpdateIndex]
-                                        .quantity,
-                                    onQuantityChanged: (quantity) {
-                                      context.read<StoreCategoryBloc>().add(
-                                          StoreCategoryEvent
-                                              .updateQuantityOfProduct(
-                                                  context: context1,
-                                                  quantity: quantity));
-                                    },
-                                    onQuantityIncreaseTap: () {
-                                      context.read<StoreCategoryBloc>().add(
-                                          StoreCategoryEvent
-                                              .increaseQuantityOfProduct(
-                                                  context: context1));
-                                    },
-                                    onQuantityDecreaseTap: () {
-                                      context.read<StoreCategoryBloc>().add(
-                                          StoreCategoryEvent
-                                              .decreaseQuantityOfProduct(
-                                                  context: context1));
-                                    },
+                          isRTL: context.rtl,
+                          isSupplierAvailable:
+                          state.productSupplierList.isEmpty
+                              ? false
+                              : true,
+                          scrollController: scrollController,
+                          productQuantity: state
+                              .productStockList[
+                          state.planoGramUpdateIndex]
+                          [state.productStockUpdateIndex]
+                              .quantity,
+                          onQuantityChanged: (quantity) {
+                            context.read<StoreCategoryBloc>().add(
+                                StoreCategoryEvent
+                                    .updateQuantityOfProduct(
+                                    context: context1,
+                                    quantity: quantity));
+                          },
+                          onQuantityIncreaseTap: () {
+                            context.read<StoreCategoryBloc>().add(
+                                StoreCategoryEvent
+                                    .increaseQuantityOfProduct(
+                                    context: context1));
+                          },
+                          onQuantityDecreaseTap: () {
+                            context.read<StoreCategoryBloc>().add(
+                                StoreCategoryEvent
+                                    .decreaseQuantityOfProduct(
+                                    context: context1));
+                          },
 
-                                    // isLoading: state.isLoading,
-                                    /*onAddToOrderPressed: state.isLoading
+
+                        ),
+                        bottomNavigationBar: state.isProductLoading
+                            ? 0.height
+                            : CommonProductDetailsButton(
+                            isLoading: state.isLoading,
+                            isSupplierAvailable:
+                            state.productSupplierList.isEmpty
+                                ? false
+                                : true,
+                            productStock: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock,
+                            onAddToOrderPressed: state.isLoading
                                 ? null
                                 : () {
                               context.read<StoreCategoryBloc>().add(
                                   StoreCategoryEvent
                                       .addToCartProductEvent(
-                                      context: context1));
-                            }*/
-                                  ),
-                        bottomNavigationBar: state.isProductLoading
-                            ? 0.height
-                            : CommonProductDetailsButton(
-                                isLoading: state.isLoading,
-                                isSupplierAvailable:
-                                    state.productSupplierList.isEmpty
-                                        ? false
-                                        : true,
-                            productStock: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock !=0 || productStock== null? state
-                                .productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex]
-                                .stock:productStock ?? 0,
-                                onAddToOrderPressed: state.isLoading
-                                    ? null
-                                    : () {
-                                        context.read<StoreCategoryBloc>().add(
-                                            StoreCategoryEvent
-                                                .addToCartProductEvent(
-                                                    context: context1,
-                                              productId: productId
+                                      context: context1,
+                                      productId: productId
 
-                                            ));
-                                      }),
+                                  ));
+                            }),
                       ),
                     );
                   },
@@ -1428,10 +1424,10 @@ print('productStock');
 
   Widget buildTopNavigation(
       {required BuildContext context,
-      required String categoryName,
-      String? subCategoryName,
-      required String search,
-      required List<SearchModel> searchList}) {
+        required String categoryName,
+        String? subCategoryName,
+        required String search,
+        required List<SearchModel> searchList}) {
     debugPrint('subCategoryName:$subCategoryName');
     return Container(
       width: getScreenWidth(context),
@@ -1500,12 +1496,12 @@ print('productStock');
                 subCategoryName?.isEmpty ?? true
                     ? 0.height
                     : Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: subCategoryName?.isEmpty ?? true
-                            ? AppColors.blackColor
-                            : AppColors.mainColor,
-                        size: 16,
-                      ),
+                  Icons.arrow_forward_ios_rounded,
+                  color: subCategoryName?.isEmpty ?? true
+                      ? AppColors.blackColor
+                      : AppColors.mainColor,
+                  size: 16,
+                ),
               ],
             ),
           ),
@@ -1526,9 +1522,10 @@ print('productStock');
 
   Widget buildPlanoGramItem(
       {required BuildContext context,
-      required int index,
-      required List<PlanogramDatum> list,
-      required bool isGuestUser}) {
+        required int index,
+        required int planogramUpdateIndex,
+        required List<PlanogramDatum> list,
+        required bool isGuestUser}) {
     return BlocProvider.value(
       value: context.read<StoreCategoryBloc>(),
       child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
@@ -1544,52 +1541,53 @@ print('productStock');
                   list.isEmpty
                       ? SizedBox()
                       : buildPlanoGramTitles(
-                          context: context,
-                          title: list[index].planogramName ?? '',
-                          onTap: () {
-                            Navigator.pushNamed(context,
-                                RouteDefine.planogramProductScreen.name,
-                                arguments: {
-                                  AppStrings.planogramProductsParamString:
-                                      list[index]
-                                });
-                          },
-                          subTitle:
-                              (list[index].planogramproducts?.length ?? 0) < 6
-                                  ? ''
-                                  : AppLocalizations.of(context)!.see_all),
+                      context: context,
+                      title: list[index].planogramName ?? '',
+                      onTap: () {
+                        Navigator.pushNamed(context,
+                            RouteDefine.planogramProductScreen.name,
+                            arguments: {
+                              AppStrings.planogramProductsParamString:
+                              list[index]
+                            });
+                      },
+                      subTitle:
+                      (list[index].planogramproducts?.length ?? 0) < 6
+                          ? ''
+                          : AppLocalizations.of(context)!.see_all),
                   5.height,
                   SizedBox(
                     height: 175,
                     child: list.isEmpty
                         ? Center(
-                            child: Text(
-                              '${AppLocalizations.of(context)!.out_of_stock}',
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.textColor),
-                            ),
-                          )
+                      child: Text(
+                        '${AppLocalizations.of(context)!.out_of_stock}',
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.smallFont,
+                            color: AppColors.textColor),
+                      ),
+                    )
                         : ListView.builder(
-                            itemCount:
-                                (list[index].planogramproducts?.length ?? 0) < 6
-                                    ? list[index].planogramproducts?.length
-                                    : 6,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: AppConstants.padding_5),
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            itemBuilder: (context, subIndex) {
-                              return buildPlanoGramProductListItem(
-                                  isGuestUser: isGuestUser,
-                                  context: context,
-                                  list: list,
-                                  index: index,
-                                  subIndex: subIndex,
-                                  height: 150,
-                                  width: getScreenWidth(context) / 3.2);
-                            },
-                          ),
+                      itemCount:
+                      (list[index].planogramproducts?.length ?? 0) < 6
+                          ? list[index].planogramproducts?.length
+                          : 6,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: AppConstants.padding_5),
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemBuilder: (context, subIndex) {
+                        return buildPlanoGramProductListItem(
+                            planogramUpdateIndex: planogramUpdateIndex,
+                            isGuestUser: isGuestUser,
+                            context: context,
+                            list: list,
+                            index: index,
+                            subIndex: subIndex,
+                            height: 150,
+                            width: getScreenWidth(context) / 3.2);
+                      },
+                    ),
                   ),
                   10.height,
                 ],
@@ -1603,9 +1601,9 @@ print('productStock');
 
   Widget buildSubCategoryListItem(
       {required int index,
-      required BuildContext context,
-      required String subCategoryName,
-      required void Function()? onTap}) {
+        required BuildContext context,
+        required String subCategoryName,
+        required void Function()? onTap}) {
     return DelayedWidget(
       child: InkWell(
         onTap: onTap,
@@ -1615,7 +1613,7 @@ print('productStock');
           decoration: BoxDecoration(
               color: AppColors.whiteColor,
               borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
               boxShadow: [
                 BoxShadow(
                     color: AppColors.shadowColor.withOpacity(0.1),
@@ -1665,7 +1663,7 @@ print('productStock');
                   children: [
                     Padding(
                       padding:
-                          const EdgeInsets.only(bottom: AppConstants.padding_5),
+                      const EdgeInsets.only(bottom: AppConstants.padding_5),
                       child: InkWell(
                         onTap: () {
                           context.read<StoreCategoryBloc>().add(
@@ -1674,489 +1672,489 @@ print('productStock');
                         },
                         child: state.productSupplierList.length > 1
                             ? Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!.suppliers,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.smallFont,
-                                        color: AppColors.mainColor,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Icon(
-                                    Icons.arrow_drop_down,
-                                    size: 26,
-                                    color: AppColors.blackColor,
-                                  )
-                                ],
-                              )
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.suppliers,
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: AppConstants.smallFont,
+                                  color: AppColors.mainColor,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            Icon(
+                              Icons.arrow_drop_down,
+                              size: 26,
+                              color: AppColors.blackColor,
+                            )
+                          ],
+                        )
                             : 0.width,
                       ),
                     ),
                     state.productSupplierList
-                            .where((supplier) => supplier.selectedIndex != -1)
-                            .isEmpty
+                        .where((supplier) => supplier.selectedIndex != -1)
+                        .isEmpty
                         ? InkWell(
-                            onTap: () {
-                              context.read<StoreCategoryBloc>().add(
-                                  StoreCategoryEvent
-                                      .changeSupplierSelectionExpansionEvent());
-                            },
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            child: Container(
-                              height: 60,
-                              width: getScreenWidth(context),
-                              alignment: Alignment.center,
-                              child: Text(
-                                '${AppLocalizations.of(context)!.select_supplier}',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.smallFont,
-                                    color: AppColors.blackColor),
-                              ),
-                            ))
+                        onTap: () {
+                          context.read<StoreCategoryBloc>().add(
+                              StoreCategoryEvent
+                                  .changeSupplierSelectionExpansionEvent());
+                        },
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        child: Container(
+                          height: 60,
+                          width: getScreenWidth(context),
+                          alignment: Alignment.center,
+                          child: Text(
+                            '${AppLocalizations.of(context)!.select_supplier}',
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.smallFont,
+                                color: AppColors.blackColor),
+                          ),
+                        ))
                         : ListView.builder(
-                            itemCount: state.productSupplierList
-                                    .where((supplier) =>
-                                        supplier.selectedIndex != -1)
-                                    .isNotEmpty
-                                ? 1
-                                : 0,
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                height: 85,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: AppConstants.padding_5,
-                                    horizontal: AppConstants.padding_10),
-                                margin: EdgeInsets.symmetric(
-                                    vertical: AppConstants.padding_5),
-                                decoration: BoxDecoration(
-                                  color: AppColors.iconBGColor,
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(AppConstants.radius_5)),
-                                  border: Border.all(
-                                      color: AppColors.borderColor
-                                          .withOpacity(0.8),
-                                      width: 1),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex != -1).companyName}',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_14,
-                                          color: AppColors.blackColor,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        width: getScreenWidth(context),
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: AppColors.borderColor
-                                                    .withOpacity(0.5),
-                                                width: 1),
-                                            color: AppColors.whiteColor,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                    AppConstants.radius_5))),
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: AppConstants.padding_3,
-                                            horizontal: AppConstants.padding_5),
-                                        margin: EdgeInsets.only(
-                                          top: AppConstants.padding_5,
-                                        ),
-                                        child: state.productSupplierList
-                                                    .firstWhere(
-                                                      (supplier) =>
-                                                          supplier
-                                                              .selectedIndex ==
-                                                          -2,
-                                                      orElse: () =>
-                                                          ProductSupplierModel(
-                                                              supplierId: '',
-                                                              companyName: ''),
-                                                    )
-                                                    .selectedIndex ==
-                                                -2
-                                            ? Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Text(
-                                                    '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency}${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}',
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .font_14,
-                                                            color: AppColors
-                                                                .blackColor),
-                                                  ),
-                                                ],
-                                              )
-                                            : Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Text(
-                                                    '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}',
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .font_12,
-                                                            color: AppColors
-                                                                .saleRedColor),
-                                                  ),
-                                                  2.height,
-                                                  Text(
-                                                    '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency} ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .font_14,
-                                                            color: AppColors
-                                                                .blackColor),
-                                                  ),
-                                                ],
-                                              ),
+                      itemCount: state.productSupplierList
+                          .where((supplier) =>
+                      supplier.selectedIndex != -1)
+                          .isNotEmpty
+                          ? 1
+                          : 0,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          height: 85,
+                          padding: EdgeInsets.symmetric(
+                              vertical: AppConstants.padding_5,
+                              horizontal: AppConstants.padding_10),
+                          margin: EdgeInsets.symmetric(
+                              vertical: AppConstants.padding_5),
+                          decoration: BoxDecoration(
+                            color: AppColors.iconBGColor,
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(AppConstants.radius_5)),
+                            border: Border.all(
+                                color: AppColors.borderColor
+                                    .withOpacity(0.8),
+                                width: 1),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex != -1).companyName}',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.font_14,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  width: getScreenWidth(context),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: AppColors.borderColor
+                                              .withOpacity(0.5),
+                                          width: 1),
+                                      color: AppColors.whiteColor,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              AppConstants.radius_5))),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: AppConstants.padding_3,
+                                      horizontal: AppConstants.padding_5),
+                                  margin: EdgeInsets.only(
+                                    top: AppConstants.padding_5,
+                                  ),
+                                  child: state.productSupplierList
+                                      .firstWhere(
+                                        (supplier) =>
+                                    supplier
+                                        .selectedIndex ==
+                                        -2,
+                                    orElse: () =>
+                                        ProductSupplierModel(
+                                            supplierId: '',
+                                            companyName: ''),
+                                  )
+                                      .selectedIndex ==
+                                      -2
+                                      ? Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Text(
+                                        '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency}${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}',
+                                        style: AppStyles
+                                            .rkRegularTextStyle(
+                                            size: AppConstants
+                                                .font_14,
+                                            color: AppColors
+                                                .blackColor),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  )
+                                      : Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Text(
+                                        '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}',
+                                        style: AppStyles
+                                            .rkRegularTextStyle(
+                                            size: AppConstants
+                                                .font_12,
+                                            color: AppColors
+                                                .saleRedColor),
+                                      ),
+                                      2.height,
+                                      Text(
+                                        '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency} ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
+                                        style: AppStyles
+                                            .rkRegularTextStyle(
+                                            size: AppConstants
+                                                .font_14,
+                                            color: AppColors
+                                                .blackColor),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              );
-                            },
-                          )
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    )
                   ],
                 ),
               ),
               secondChild: state.productSupplierList.isEmpty
                   ? Container(
-                      decoration: BoxDecoration(
-                          border: Border(
-                              top: BorderSide(
-                                  color: AppColors.borderColor.withOpacity(0.5),
-                                  width: 1))),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: AppConstants.padding_30),
-                      alignment: Alignment.center,
-                      child: Text(
-                        '${AppLocalizations.of(context)!.suppliers_not_available}',
-                        style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.smallFont,
-                            color: AppColors.textColor),
-                      ),
-                    )
+                decoration: BoxDecoration(
+                    border: Border(
+                        top: BorderSide(
+                            color: AppColors.borderColor.withOpacity(0.5),
+                            width: 1))),
+                padding: const EdgeInsets.symmetric(
+                    vertical: AppConstants.padding_30),
+                alignment: Alignment.center,
+                child: Text(
+                  '${AppLocalizations.of(context)!.suppliers_not_available}',
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.smallFont,
+                      color: AppColors.textColor),
+                ),
+              )
                   : ConstrainedBox(
-                      constraints: BoxConstraints(
-                          maxHeight: getScreenHeight(context) * 0.5,
-                          maxWidth: getScreenWidth(context)),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border(
-                                top: BorderSide(
-                                    color:
-                                        AppColors.borderColor.withOpacity(0.5),
-                                    width: 1))),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: AppConstants.padding_10,
-                            horizontal: AppConstants.padding_30),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: AppConstants.padding_5),
-                              child: InkWell(
-                                onTap: () {
-                                  context.read<StoreCategoryBloc>().add(
-                                      StoreCategoryEvent
-                                          .changeSupplierSelectionExpansionEvent());
-                                },
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      AppLocalizations.of(context)!.suppliers,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.mainColor,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Icon(
-                                      Icons.remove,
-                                      size: 26,
-                                      color: AppColors.blackColor,
-                                    )
-                                  ],
-                                ),
+                constraints: BoxConstraints(
+                    maxHeight: getScreenHeight(context) * 0.5,
+                    maxWidth: getScreenWidth(context)),
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                          top: BorderSide(
+                              color:
+                              AppColors.borderColor.withOpacity(0.5),
+                              width: 1))),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: AppConstants.padding_10,
+                      horizontal: AppConstants.padding_30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: AppConstants.padding_5),
+                        child: InkWell(
+                          onTap: () {
+                            context.read<StoreCategoryBloc>().add(
+                                StoreCategoryEvent
+                                    .changeSupplierSelectionExpansionEvent());
+                          },
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.suppliers,
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.mainColor,
+                                    fontWeight: FontWeight.w500),
                               ),
-                            ),
-                            Flexible(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: state.productSupplierList.length,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    height: 105,
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_5,
-                                        horizontal: AppConstants.padding_10),
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_10),
-                                    decoration: BoxDecoration(
-                                        color: AppColors.iconBGColor,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                                AppConstants.radius_10)),
-                                        boxShadow: [
-                                          state.productSupplierList[index]
-                                                      .selectedIndex !=
-                                                  -1
-                                              ? BoxShadow(
-                                                  color: AppColors.shadowColor
-                                                      .withOpacity(0.15),
-                                                  blurRadius:
-                                                      AppConstants.blur_10)
-                                              : BoxShadow()
-                                        ],
-                                        border: Border.all(
-                                            color: AppColors.lightBorderColor,
-                                            width: 1)),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          '${state.productSupplierList[index].companyName}',
-                                          style: AppStyles.rkRegularTextStyle(
-                                              size: AppConstants.font_14,
-                                              color: AppColors.blackColor,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        Expanded(
-                                          child: ListView.builder(
-                                            itemCount: state
-                                                    .productSupplierList[index]
-                                                    .supplierSales
-                                                    .length +
-                                                1,
-                                            scrollDirection: Axis.horizontal,
-                                            itemBuilder: (context, subIndex) {
-                                              return subIndex ==
-                                                      state
-                                                          .productSupplierList[
-                                                              index]
-                                                          .supplierSales
-                                                          .length
-                                                  ? InkWell(
-                                                      onTap: () {
-                                                        //for base price selection /without sale pass -2
-                                                        context
-                                                            .read<
-                                                                StoreCategoryBloc>()
-                                                            .add(StoreCategoryEvent
-                                                                .supplierSelectionEvent(
-                                                                    supplierIndex:
-                                                                        index,
-                                                                    context:
-                                                                        context,
-                                                                    supplierSaleIndex:
-                                                                        -2));
-                                                        context
-                                                            .read<
-                                                                StoreCategoryBloc>()
-                                                            .add(StoreCategoryEvent
-                                                                .changeSupplierSelectionExpansionEvent());
-                                                      },
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                            color: AppColors
-                                                                .whiteColor,
-                                                            borderRadius: BorderRadius.all(
-                                                                Radius.circular(
-                                                                    AppConstants
-                                                                        .radius_10)),
-                                                            border: Border.all(
-                                                                color: state
-                                                                            .productSupplierList[
-                                                                                index]
-                                                                            .selectedIndex ==
-                                                                        -2
-                                                                    ? AppColors
-                                                                        .mainColor
-                                                                        .withOpacity(
-                                                                            0.8)
-                                                                    : Colors
-                                                                        .transparent,
-                                                                width: 1.5)),
-                                                        padding: EdgeInsets.symmetric(
-                                                            vertical:
-                                                                AppConstants
-                                                                    .padding_3,
-                                                            horizontal:
-                                                                AppConstants
-                                                                    .padding_5),
-                                                        margin: EdgeInsets.only(
-                                                            top: AppConstants
-                                                                .padding_5,
-                                                            left: AppConstants
-                                                                .padding_5,
-                                                            right: AppConstants
-                                                                .padding_5),
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Text(
-                                                              '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency} ${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}',
-                                                              style: AppStyles.rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .font_14,
-                                                                  color: AppColors
-                                                                      .blackColor),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : InkWell(
-                                                      onTap: () {
-                                                        context
-                                                            .read<
-                                                                StoreCategoryBloc>()
-                                                            .add(StoreCategoryEvent
-                                                                .supplierSelectionEvent(
-                                                                    supplierIndex:
-                                                                        index,
-                                                                    context:
-                                                                        context,
-                                                                    supplierSaleIndex:
-                                                                        subIndex));
-                                                        context
-                                                            .read<
-                                                                StoreCategoryBloc>()
-                                                            .add(StoreCategoryEvent
-                                                                .changeSupplierSelectionExpansionEvent());
-                                                      },
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                            color: AppColors
-                                                                .whiteColor,
-                                                            borderRadius: BorderRadius.all(
-                                                                Radius.circular(
-                                                                    AppConstants
-                                                                        .radius_10)),
-                                                            border: Border.all(
-                                                                color: state.productSupplierList[index].selectedIndex ==
-                                                                        subIndex
-                                                                    ? AppColors
-                                                                        .mainColor
-                                                                        .withOpacity(
-                                                                            0.8)
-                                                                    : Colors
-                                                                        .transparent,
-                                                                width: 1.5)),
-                                                        padding: EdgeInsets.symmetric(
-                                                            vertical:
-                                                                AppConstants
-                                                                    .padding_3,
-                                                            horizontal:
-                                                                AppConstants
-                                                                    .padding_5),
-                                                        margin: EdgeInsets.only(
-                                                            top: AppConstants
-                                                                .padding_5,
-                                                            left: AppConstants
-                                                                .padding_5,
-                                                            right: AppConstants
-                                                                .padding_5),
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Text(
-                                                              '${state.productSupplierList[index].supplierSales[subIndex].saleName}',
-                                                              style: AppStyles.rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .font_12,
-                                                                  color: AppColors
-                                                                      .saleRedColor),
-                                                            ),
-                                                            2.height,
-                                                            Text(
-                                                              '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency} ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
-                                                              style: AppStyles.rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .font_14,
-                                                                  color: AppColors
-                                                                      .blackColor),
-                                                            ),
-                                                            2.height,
-                                                            GestureDetector(
-                                                                onTap: () {
-                                                                  showConditionDialog(
-                                                                      context:
-                                                                          context,
-                                                                      saleCondition:
-                                                                          '${state.productSupplierList[index].supplierSales[subIndex].saleDescription}');
-                                                                },
-                                                                child: Text(
-                                                                  '${AppLocalizations.of(context)!.read_condition}',
-                                                                  style: AppStyles.rkRegularTextStyle(
-                                                                      size: AppConstants
-                                                                          .font_10,
-                                                                      color: AppColors
-                                                                          .blueColor),
-                                                                )),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                            },
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            )
-                          ],
+                              Icon(
+                                Icons.remove,
+                                size: 26,
+                                color: AppColors.blackColor,
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
+                      Flexible(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: state.productSupplierList.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              height: 105,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: AppConstants.padding_5,
+                                  horizontal: AppConstants.padding_10),
+                              margin: EdgeInsets.symmetric(
+                                  vertical: AppConstants.padding_10),
+                              decoration: BoxDecoration(
+                                  color: AppColors.iconBGColor,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          AppConstants.radius_10)),
+                                  boxShadow: [
+                                    state.productSupplierList[index]
+                                        .selectedIndex !=
+                                        -1
+                                        ? BoxShadow(
+                                        color: AppColors.shadowColor
+                                            .withOpacity(0.15),
+                                        blurRadius:
+                                        AppConstants.blur_10)
+                                        : BoxShadow()
+                                  ],
+                                  border: Border.all(
+                                      color: AppColors.lightBorderColor,
+                                      width: 1)),
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '${state.productSupplierList[index].companyName}',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_14,
+                                        color: AppColors.blackColor,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  Expanded(
+                                    child: ListView.builder(
+                                      itemCount: state
+                                          .productSupplierList[index]
+                                          .supplierSales
+                                          .length +
+                                          1,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, subIndex) {
+                                        return subIndex ==
+                                            state
+                                                .productSupplierList[
+                                            index]
+                                                .supplierSales
+                                                .length
+                                            ? InkWell(
+                                          onTap: () {
+                                            //for base price selection /without sale pass -2
+                                            context
+                                                .read<
+                                                StoreCategoryBloc>()
+                                                .add(StoreCategoryEvent
+                                                .supplierSelectionEvent(
+                                                supplierIndex:
+                                                index,
+                                                context:
+                                                context,
+                                                supplierSaleIndex:
+                                                -2));
+                                            context
+                                                .read<
+                                                StoreCategoryBloc>()
+                                                .add(StoreCategoryEvent
+                                                .changeSupplierSelectionExpansionEvent());
+                                          },
+                                          splashColor:
+                                          Colors.transparent,
+                                          highlightColor:
+                                          Colors.transparent,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: AppColors
+                                                    .whiteColor,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(
+                                                        AppConstants
+                                                            .radius_10)),
+                                                border: Border.all(
+                                                    color: state
+                                                        .productSupplierList[
+                                                    index]
+                                                        .selectedIndex ==
+                                                        -2
+                                                        ? AppColors
+                                                        .mainColor
+                                                        .withOpacity(
+                                                        0.8)
+                                                        : Colors
+                                                        .transparent,
+                                                    width: 1.5)),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical:
+                                                AppConstants
+                                                    .padding_3,
+                                                horizontal:
+                                                AppConstants
+                                                    .padding_5),
+                                            margin: EdgeInsets.only(
+                                                top: AppConstants
+                                                    .padding_5,
+                                                left: AppConstants
+                                                    .padding_5,
+                                                right: AppConstants
+                                                    .padding_5),
+                                            alignment:
+                                            Alignment.center,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisSize:
+                                              MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency} ${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}',
+                                                  style: AppStyles.rkRegularTextStyle(
+                                                      size: AppConstants
+                                                          .font_14,
+                                                      color: AppColors
+                                                          .blackColor),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                            : InkWell(
+                                          onTap: () {
+                                            context
+                                                .read<
+                                                StoreCategoryBloc>()
+                                                .add(StoreCategoryEvent
+                                                .supplierSelectionEvent(
+                                                supplierIndex:
+                                                index,
+                                                context:
+                                                context,
+                                                supplierSaleIndex:
+                                                subIndex));
+                                            context
+                                                .read<
+                                                StoreCategoryBloc>()
+                                                .add(StoreCategoryEvent
+                                                .changeSupplierSelectionExpansionEvent());
+                                          },
+                                          splashColor:
+                                          Colors.transparent,
+                                          highlightColor:
+                                          Colors.transparent,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: AppColors
+                                                    .whiteColor,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(
+                                                        AppConstants
+                                                            .radius_10)),
+                                                border: Border.all(
+                                                    color: state.productSupplierList[index].selectedIndex ==
+                                                        subIndex
+                                                        ? AppColors
+                                                        .mainColor
+                                                        .withOpacity(
+                                                        0.8)
+                                                        : Colors
+                                                        .transparent,
+                                                    width: 1.5)),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical:
+                                                AppConstants
+                                                    .padding_3,
+                                                horizontal:
+                                                AppConstants
+                                                    .padding_5),
+                                            margin: EdgeInsets.only(
+                                                top: AppConstants
+                                                    .padding_5,
+                                                left: AppConstants
+                                                    .padding_5,
+                                                right: AppConstants
+                                                    .padding_5),
+                                            alignment:
+                                            Alignment.center,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisSize:
+                                              MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  '${state.productSupplierList[index].supplierSales[subIndex].saleName}',
+                                                  style: AppStyles.rkRegularTextStyle(
+                                                      size: AppConstants
+                                                          .font_12,
+                                                      color: AppColors
+                                                          .saleRedColor),
+                                                ),
+                                                2.height,
+                                                Text(
+                                                  '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency} ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
+                                                  style: AppStyles.rkRegularTextStyle(
+                                                      size: AppConstants
+                                                          .font_14,
+                                                      color: AppColors
+                                                          .blackColor),
+                                                ),
+                                                2.height,
+                                                GestureDetector(
+                                                    onTap: () {
+                                                      showConditionDialog(
+                                                          context:
+                                                          context,
+                                                          saleCondition:
+                                                          '${state.productSupplierList[index].supplierSales[subIndex].saleDescription}');
+                                                    },
+                                                    child: Text(
+                                                      '${AppLocalizations.of(context)!.read_condition}',
+                                                      style: AppStyles.rkRegularTextStyle(
+                                                          size: AppConstants
+                                                              .font_10,
+                                                          color: AppColors
+                                                              .blueColor),
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
               crossFadeState: state.isSelectSupplier
                   ? CrossFadeState.showSecond
                   : CrossFadeState.showFirst,

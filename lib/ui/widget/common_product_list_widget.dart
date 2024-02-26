@@ -63,7 +63,7 @@ class CommonProductListWidget extends StatelessWidget {
               imageUrl: "${AppUrls.baseFileUrl}$productImage",
               height: 70,
               width: 70,
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.contain,
               placeholder: (context, url) {
                 return CommonShimmerWidget(
                   child: Container(

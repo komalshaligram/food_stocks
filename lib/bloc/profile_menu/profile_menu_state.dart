@@ -10,6 +10,8 @@ class ProfileMenuState with _$ProfileMenuState {
     required bool isLogOut,
     required bool isLogOutProcess,
     required String language,
+    required String applicationVersion,
+    required String buildNumber,
   }) = _ProfileMenuState;
 
   factory ProfileMenuState.initial() => ProfileMenuState(
@@ -19,6 +21,8 @@ class ProfileMenuState with _$ProfileMenuState {
         isHebrewLanguage: false,
     isLogOut: false,
     isLogOutProcess: false,
-    language: 'he'
+    language: 'he',
+      applicationVersion: "1.0.0",
+      buildNumber: '1'
       );
 }

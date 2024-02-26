@@ -13,12 +13,9 @@ import 'package:food_stock/data/model/res_model/product_details_res_model/produc
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:version_check/version_check.dart';
+import 'package:store_version_checker/store_version_checker.dart';
 import 'package:vibration/vibration.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
@@ -47,9 +44,7 @@ import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_strings.dart';
-import '../../ui/utils/themes/app_styles.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
@@ -169,9 +164,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           debugPrint('product details id = ${event.productId}');
           _isProductInCart = false;
           _cartProductId = '';
-          _productQuantity = 0;
+          _productQuantity = 1;
           try {
-
             emit(state.copyWith(
                 isProductLoading: true, isSelectSupplier: false));
             final res = await DioClient(event.context).post(
@@ -179,19 +173,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 data: ProductDetailsReqModel(params: event.productId).toJson());
             ProductDetailsResModel response =
             ProductDetailsResModel.fromJson(res);
+            print('ProductDetailsResModel______${response}');
             if (response.status == 200) {
-              int productStockUpdateIndex = -1;
+              int productStockUpdateIndex = 0;
               if(event.isBarcode){
                 productStockUpdateIndex = 0;
               }
               else{
-
                 productStockUpdateIndex = state.productStockList.indexWhere(
                       (productStock) =>
                   productStock.productId == event.productId,);
               }
-
-              emit(state.copyWith(productStockUpdateIndex : productStockUpdateIndex));
+              emit(state.copyWith(productStockUpdateIndex:productStockUpdateIndex));
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
               productStockList[productStockList
@@ -200,7 +193,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   .copyWith(
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
-                stock: response.product?.first.numberOfUnit ?? 0,
+                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',
@@ -219,20 +212,28 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                 if (response.status == 200) {
                   debugPrint('cart before = ${response.data}');
+
+                  debugPrint('state.productStockUpdateIndex = ${state.productStockList[state.productStockUpdateIndex].productId}');
+
                   response.data?.data?.forEach((cartProduct) {
-                    if (cartProduct.id == state.productStockList[state.productStockUpdateIndex].productId || cartProduct.id == event.productId
-                    ||cartProduct.id == state.productStockList[state.productStockList.length - 1].productId
+                    debugPrint('cart id : ${cartProduct.id}');
+                    if (cartProduct.id == state.productStockList[state.productStockList.length-1].productId
+                        || cartProduct.id == event.productId
+
                     ) {
                       _isProductInCart = true;
                       _cartProductId = cartProduct.cartProductId ?? '';
                       _productQuantity = cartProduct.totalQuantity ?? 0;
                       return;
                     }
+
                   });
+//65d5f7d1aa0e704db5d08f13
                   debugPrint(
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
+
               if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: false);
@@ -242,12 +243,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     .copyWith(
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '',
-                  stock: response.product?.first.numberOfUnit ?? 0,
+                  stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
                   productSaleId: '',
                   productSupplierIds: '',
                   note: '',
                   isNoteOpen: false,
                 );
+
 
                 emit(state.copyWith(productStockList: productStockList));
                 debugPrint('new index = ${state.productStockList.last}');
@@ -255,6 +257,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     productStockList.indexOf(productStockList.last);
 
                 debugPrint('barcode stock = ${state.productStockList.last}');
+                debugPrint('barcode stock 1= ${state.productStockList.last.quantity}');
                 debugPrint(
                     'barcode stock update index = ${state.productStockList
                         .length}');
@@ -395,7 +398,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       supplierSaleIndex: supplierSaleIndex));
                 }
               }
-
             } else {
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
@@ -637,6 +639,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               UpdateCartResModel response = UpdateCartResModel.fromJson(res);
               if (response.status == 201) {
                 Vibration.vibrate();
+                Navigator.pop(event.context);
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
                 productStockList[state.productStockUpdateIndex] =
@@ -651,7 +654,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 emit(state.copyWith(
                     isLoading: false, productStockList: productStockList));
 
-                Navigator.pop(event.context);
+
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
@@ -1248,26 +1251,45 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
 
         else if (event is _checkVersionOfAppEvent) {
-
-          PackageInfo packageInfo = await PackageInfo.fromPlatform();
-          final versionCheck = VersionCheck(
-            packageName: Platform.isIOS ? 'com.foodstock' : 'com.foodstock.dev',
-            packageVersion: packageInfo.version,
-            showUpdateDialog: (ctx,vc){
-              if(vc.packageVersion !=  vc.storeVersion){
-                customShowUpdateDialog(
-                    event.context, preferences.getAppLanguage(),vc.storeUrl);
-              }
+          final _checker = StoreVersionChecker();
+         // PackageInfo packageInfo = await PackageInfo.fromPlatform();
+          _checker.checkUpdate().then((value) {
+            print('update available');
+            print(value.canUpdate); //return true if update is available
+            print(value.currentVersion); //return current app version
+            print(value.newVersion); //return the new app version
+            print(value.appURL); //return the app url
+            print(value.errorMessage);
+            if(value.canUpdate && Platform.isAndroid){
+              customShowUpdateDialog(
+                  event.context, preferences.getAppLanguage(),value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
             }
-          );
 
-          await versionCheck.checkVersion(event.context);
+          });
+         // final versionCheck = VersionCheck(
+         //    packageName: Platform.isIOS ? 'com.foodstock' : 'com.foodstock.dev',
+         //    packageVersion: packageInfo.version,
+         //    showUpdateDialog: (ctx,vc){
+         //      if(vc.packageVersion !=  vc.storeVersion){
+         //        customShowUpdateDialog(
+         //            event.context, preferences.getAppLanguage(),vc.storeUrl);
+         //        emit(state.copyWith(isIgnorePointer: true));
+         //
+         //      }
+         //    }
+         //  );
+
+         /* await versionCheck.checkVersion(event.context);
           debugPrint('package version:${versionCheck.packageVersion}');
-          debugPrint('store Version:${versionCheck.storeVersion}');
+          debugPrint('store Version:${versionCheck.storeVersion}');*/
           /*if(versionCheck.packageVersion !=  versionCheck.storeVersion && Platform.isAndroid){
             customShowUpdateDialog(
                 event.context, preferences.getAppLanguage(),versionCheck.storeUrl);
           }*/
+        }
+
+        else if(event is _ImagePreviewEvent){
+          emit(state.copyWith(isPreview: !state.isPreview));
         }
       }
     });

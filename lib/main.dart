@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -30,6 +31,27 @@ void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
+    await FirebaseMessaging.
+    instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true, // Required to display a heads up notification
+      badge: true,
+      sound: true,
+    );
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+      debugPrint("onMessageOpenedApp: $message");
+      debugPrint('notification payload:1 ${message.notification}');
+      //Map valueMap = (message.data);
+
+    });
+    /*FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null) {
+        // DO YOUR THING HERE
+        debugPrint("onMessageOpenedApp: $message");
+        debugPrint('notification payload:1 ${message.notification}');
+      }
+    });*/
     await PushNotificationService().setupInteractedMessage();
     //await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
@@ -49,6 +71,13 @@ void main() async {
   },
           (error, stack) =>
           FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
+}
+
+
+@pragma('vm:entry-point')
+Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  debugPrint("Handling a background message:${message.messageId}");
+  debugPrint("Handling a background message:${message.data.toString()}");
 }
 
 class MyApp extends StatefulWidget {

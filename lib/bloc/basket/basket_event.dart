@@ -53,7 +53,9 @@ class BasketEvent with _$BasketEvent {
         required String productId}) = _GetProductDetailsEvent;
 
   const factory BasketEvent.addToCartProductEvent(
-      {required BuildContext context}) = _AddToCartProductEvent;
+      {required BuildContext context,
+        required String productId
+      }) = _AddToCartProductEvent;
 
   const factory BasketEvent.supplierSelectionEvent(
       {required int supplierIndex,

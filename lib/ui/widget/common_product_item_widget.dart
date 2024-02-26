@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_colors.dart';
@@ -20,24 +21,27 @@ class CommonProductItemWidget extends StatelessWidget {
   final String productStock;
   final void Function() onButtonTap;
   final bool isGuestUser;
+  final double? imageHeight;
+  final double? imageWidth;
 
 
 
   const CommonProductItemWidget(
       {super.key,
-      this.height,
+      this.height ,
       this.width,
       required this.productImage,
       required this.productName,
       required this.totalSaleCount,
       required this.price,
       required this.onButtonTap, this.productStock = '0',
-        this.isGuestUser = false
+        this.isGuestUser = false,
+        this.imageHeight = 70,
+        this.imageWidth = 70
       });
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       height: height,
       width: width,
@@ -68,13 +72,13 @@ class CommonProductItemWidget extends StatelessWidget {
             Center(
               child:!isGuestUser ? CachedNetworkImage(
                 imageUrl: "${AppUrls.baseFileUrl}$productImage",
-                height: 70,
+                height: imageHeight,
                 fit: BoxFit.contain,
                 placeholder: (context, url) {
                   return CommonShimmerWidget(
                     child: Container(
-                      height: 70,
-                      width: 70,
+                      height: imageHeight,
+                      width: imageWidth,
                       decoration: BoxDecoration(
                         color: AppColors.whiteColor,
                         borderRadius: BorderRadius.all(
@@ -87,11 +91,11 @@ class CommonProductItemWidget extends StatelessWidget {
                   // debugPrint('sale list image error : $error');
                   return Container(
                     child: Image.asset(AppImagePath.imageNotAvailable5,
-                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                        height: imageHeight, width: double.maxFinite, fit: BoxFit.cover),
                   );
                 },
-              ) : Image.asset(AppImagePath.imageNotAvailable5 , height: 70,
-                width: 70, ),
+              ) : Image.asset(AppImagePath.imageNotAvailable5 , height: imageHeight,
+                width: imageWidth, ),
             ),
             5.height,
             Text(

@@ -55,6 +55,8 @@ class CompanyProductsBloc
         emit(state.copyWith(companyId: event.companyId, isGuestUser: preferences.getGuestUser(),isCompanyProductGrid: preferences.getCompanyProductGrid()));
         debugPrint('company id = ${state.companyId}');
       } else if (event is _GetCompanyProductsListEvent) {
+
+
         if (state.isLoadMore) {
           return;
         }
@@ -169,7 +171,7 @@ class CompanyProductsBloc
                 .copyWith(
               quantity: _productQuantity,
               productId: response.product?.first.id ?? '',
-              stock: response.product?.first.numberOfUnit ?? 0,
+              stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
               productSaleId: '',
               productSupplierIds: '',
               note: '',
@@ -218,7 +220,7 @@ class CompanyProductsBloc
                   .copyWith(
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
-                stock: response.product?.first.numberOfUnit ?? 0,
+                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',
@@ -373,34 +375,6 @@ class CompanyProductsBloc
                     supplierSaleIndex: supplierSaleIndex));
               }
             }
-         /*  try {
-              SharedPreferencesHelper preferences = SharedPreferencesHelper(
-                  prefs: await SharedPreferences.getInstance());
-              final res = await DioClient(event.context).post(
-                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferences.getAuthToken()}'
-                  }));
-              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-              if (response.status == 200) {
-                debugPrint('cart before = ${response.data}');
-                debugPrint('state.productStockUpdateIndex = ${state.productStockUpdateIndex}');
-                response.data?.data?.forEach((cartProduct) {
-                  if (cartProduct.id ==
-                      state.productStockList[state.productStockUpdateIndex]
-                          .productId) {
-                    _isProductInCart = true;
-                    _cartProductId = cartProduct.cartProductId ?? '';
-                    _productQuantity = cartProduct.totalQuantity ?? 0;
-                    return;
-                  }
-
-                });
-                debugPrint(
-                    '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
-              }
-            } on ServerException {}*/
           } else {
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(

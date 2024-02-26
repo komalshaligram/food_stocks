@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/req_model/get_app_content_req_model/get_app_content_req_model.dart';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../data/error/exceptions.dart';
@@ -23,6 +24,10 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
   MenuBloc() : super(MenuState.initial()) {
     on<MenuEvent>((event, emit) async {
       if (event is _GetAppContentListEvent) {
+
+
+
+
         if (state.isLoadMore) {
           return;
         }

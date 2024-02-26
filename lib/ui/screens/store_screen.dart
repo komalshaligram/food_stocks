@@ -8,7 +8,6 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/data/model/search_model/search_model.dart';
-import 'package:food_stock/main.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -22,6 +21,7 @@ import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
@@ -596,7 +596,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                     itemBuilder: (context,
                                                             index) =>
                                                         CommonProductItemWidget(
-
                                                           productStock: state
                                                                   .recommendedProductsList[
                                                                       index]
@@ -1685,7 +1684,7 @@ class StoreScreenWidget extends StatelessWidget {
   void showProductDetails({required BuildContext context,
     required String productId,
     bool? isBarcode,
-    String? productStock
+    String productStock  = '-1',
 
   }) async {
     context.read<StoreBloc>().add(StoreEvent.getProductDetailsEvent(
@@ -1700,8 +1699,6 @@ class StoreScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        print('productStock____111_  ${productStock}');
-        print('productStock____111_  ${productStock == '0'}');
         return BlocProvider.value(
           value: context.read<StoreBloc>(),
           child: DraggableScrollableSheet(
@@ -1732,14 +1729,41 @@ class StoreScreenWidget extends StatelessWidget {
                           : state.productDetails.isEmpty
                               ? Center(
                                   child: Text(
-                                      AppLocalizations.of(context)!.no_data,
+                                      AppLocalizations.of(context)!.no_product,
                                       style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants.normalFont,
-                                        color: AppColors.greyColor,
+                                        color: AppColors.redColor,
                                         fontWeight: FontWeight.w500,
                                       )),
                                 )
                               : CommonProductDetailsWidget(
+                        imageOnTap: (){
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Stack(
+                                children: [
+                                  Container(
+                                    height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                    width: getScreenWidth(context),
+                                    child: PhotoView(
+                                      imageProvider: CachedNetworkImageProvider(
+                                        '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                      ),
+                                    ),
+                                  ),
+
+                                  GestureDetector(
+                                      onTap: (){
+                                        Navigator.pop(context);
+                                      },
+                                      child: Icon(Icons.close,
+                                        color: Colors.white,
+                                      )),
+                                ],
+                              );
+                            },);
+                        },
                                   context: context,
                                   productImageIndex: state.imageIndex,
                                   onPageChanged: (index, p1) {
@@ -1803,7 +1827,10 @@ class StoreScreenWidget extends StatelessWidget {
                                           ?.toDouble() ??
                                       0.0,
 
-                        productStock: productStock != '0' || productStock == null ? state.productStockList[state.productStockUpdateIndex].stock:int.parse(productStock!),
+                        productStock:(productStock.toString()) == 0 ?
+                        int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                        productStock == '-1' ? int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                        int.parse(productStock.toString() ?? '0'),
                         isRTL: context.rtl,
                                   isSupplierAvailable:
                                       state.productSupplierList.isEmpty
@@ -1847,10 +1874,10 @@ class StoreScreenWidget extends StatelessWidget {
                                   state.productSupplierList.isEmpty
                                       ? false
                                       : true,
-                              productStock:state
-                                  .productStockList[
-                              state.productStockUpdateIndex]
-                                  .stock,
+                              productStock:(productStock.toString()) == 0 ?
+                              int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                              productStock == '-1' ? int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                              int.parse(productStock.toString() ?? '0'),
                               onAddToOrderPressed: state.isLoading
                                   ? null
                                   : () {

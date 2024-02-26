@@ -18,6 +18,16 @@ class RecommendationProductsState with _$RecommendationProductsState {
     required int imageIndex,
     required RefreshController refreshController,
     required TextEditingController noteController,
+    required int cartCount,
+    required bool duringCelebration,
+    required bool isCategoryExpand,
+    required bool isSearching,
+    required TextEditingController searchController,
+    required List<SearchModel> searchList,
+    required String search,
+    required List<Category> productCategoryList,
+    required bool isCatVisible,
+    required bool isGridView,
   }) = _RecommendationProductsState;
 
   factory RecommendationProductsState.initial() => RecommendationProductsState(
@@ -27,7 +37,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [],
+        productStockList: [ProductStockModel(productId: '')],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,
@@ -36,5 +46,15 @@ class RecommendationProductsState with _$RecommendationProductsState {
         imageIndex: 0,
         refreshController: RefreshController(),
         noteController: TextEditingController(),
+    cartCount: 0,
+    duringCelebration: false,
+    isCategoryExpand: false,
+    isSearching: false,
+    searchController: TextEditingController(),
+    searchList: [],
+    search: '',
+    productCategoryList: [],
+    isCatVisible: false,
+    isGridView: true
       );
 }

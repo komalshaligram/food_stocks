@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/product_sale/product_sale_bloc.dart';
@@ -10,12 +11,14 @@ import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/product_sale_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
+import '../utils/themes/app_urls.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
@@ -202,10 +205,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
   }) {
     return DelayedWidget(
         child: CommonProductSaleItemWidget(
+          imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
           isGuestUser: isGuestUser,
             saleImage: saleImage,
             title: title,
-
             description: description,
             salePercentage: salePercentage,
             onButtonTap: onButtonTap, productName: productName,
@@ -256,6 +259,33 @@ class ProductSaleScreenWidget extends StatelessWidget {
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
+                            imageOnTap: (){
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Stack(
+                                    children: [
+                                      Container(
+                                        height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                        width: getScreenWidth(context),
+                                        child: PhotoView(
+                                          imageProvider: CachedNetworkImageProvider(
+                                            '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                          ),
+                                        ),
+                                      ),
+
+                                      GestureDetector(
+                                          onTap: (){
+                                            Navigator.pop(context);
+                                          },
+                                          child: Icon(Icons.close,
+                                            color: Colors.white,
+                                          )),
+                                    ],
+                                  );
+                                },);
+                            },
                             startDate : startDate,
                             endDate: endDate,
                               context: context,

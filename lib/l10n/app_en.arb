@@ -390,8 +390,19 @@
   "delete_account" : "Delete account",
   "delete_pop_up_msg": "We received your account deletion request and we will take care of it in a few days, thank you.",
   "login_as_guest": "Login as guest",
-  "new_version_app_update": "There is a new version for the app please update the app",
-  "update": "Update"
+  "new_version_app_update": "קיימת גירסה חדשה עבור האפליקציה אנא עדכן את האפליקציה",
+  "update": "עדכן",
+  "application_version":"Application version",
+  "no_product" : "המוצר לא קיים",
+  "duplicate_order" : "Duplicate Order",
+ "you_want_to_duplicate_this_order" : "האם אתה בטוח שברצונך לשכפל את ההזמנה?",
+  "wallet_refund" : "Wallet refund",
+  "original_was" : "Original was",
+  "was_not_in_stock" : "Was not in stock",
+  "units" : "Units",
+  "surfaces_order" : "Surfaces for order",
+  "refund_for_order" : "Refund for order"
+
 
 
 

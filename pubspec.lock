@@ -1141,6 +1141,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.0"
+  photo_view:
+    dependency: "direct main"
+    description:
+      name: photo_view
+      sha256: "8036802a00bae2a78fc197af8a158e3e2f7b500561ed23b4c458107685e645bb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.14.0"
   pin_input_text_field:
     dependency: transitive
     description:
@@ -1426,6 +1434,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0+2"
+  store_version_checker:
+    dependency: "direct main"
+    description:
+      name: store_version_checker
+      sha256: "1f5418fc4cb2664bbc6857042cdbbaee3d54ac0a051c1d3878a4401cd4147704"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   stream_channel:
     dependency: transitive
     description:

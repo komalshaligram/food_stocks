@@ -88,6 +88,7 @@ class _ProductDetailsScreenWidgetState
   TextEditingController addProblemController = TextEditingController();
   int onTheWayStatus = 6;
   int deliveryStatus = 5;
+  String skuNumber = "5321";
 
   @override
   Widget build(BuildContext context) {
@@ -106,23 +107,52 @@ class _ProductDetailsScreenWidgetState
                 bgColor: AppColors.pageColor,
                 title: widget.orderNumber.toString(),
                 iconData: Icons.arrow_back_ios_sharp,
-                trailingWidget: Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: AppConstants.padding_10,
-                  ),
-                  child: (state.orderBySupplierProduct) == 0
-                      ? CupertinoActivityIndicator()
-                      : CircularButtonWidget(
-                          buttonName: AppLocalizations.of(context)!.total,
-                          buttonValue:
-                        //  '${AppLocalizations.of(context)!.currency}${(state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0')}'
+                trailingWidget: Row(
+                  children: [
 
-                    '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
-                        ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: AppConstants.padding_10,
+                      ),
+                      child: (state.orderBySupplierProduct) == 0
+                          ? CupertinoActivityIndicator()
+                          : CircularButtonWidget(
+                              buttonName: AppLocalizations.of(context)!.total,
+                              buttonValue:
+                              state.orderData.comaxInvoicePrice != 0.0 ?  state.orderData.comaxInvoicePrice.toString() : '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
+                            ),
+                    ),
+                   /* CommonProductButtonWidget(
+                      title: AppLocalizations.of(context)!.duplicate_order,
+                      borderRadius: 1,
+                      height: 35,
+                      onPressed: (){
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CommonAlertDialog(
+                                title: AppLocalizations.of(context)!.you_want_to_duplicate_this_order,
+                                directionality: state.language,
+                                positiveTitle:AppLocalizations.of(context)!.yes ,
+                                negativeTitle: AppLocalizations.of(context)!.no,
+                                positiveOnTap: (){
+                                 // bloc.add(ProductDetailsEvent.orderSendEvent(context: context));
+                                },
+                                negativeOnTap: (){
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },);
+                      },
+                    ),*/
+
+                  ],
                 ),
                 onTap: () {
                   Navigator.pop(context);
                 },
+
+
               ),
             ),
             body: state.isShimmering && state.isLoading || (state.orderBySupplierProduct.products?.length == 0)
@@ -259,7 +289,7 @@ class _ProductDetailsScreenWidgetState
                                             title: AppLocalizations.of(context)!
                                                 .total_order,
                                             value:
-                                                '${formatNumber(value: state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}',
+                                               state.orderData.comaxInvoicePrice != 0.0 ? state.orderData.comaxInvoicePrice.toString() :'${formatNumber(value: state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}',
                                             titleColor: AppColors.mainColor,
                                             valueColor: AppColors.blackColor,
                                             valueTextWeight: FontWeight.w500,
@@ -270,11 +300,11 @@ class _ProductDetailsScreenWidgetState
                                         ],
                                       ),
                                       15.height,
-
-
                                       basketRow(state.language == AppStrings.englishString ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.orderData.bottleQuantities}' : '${AppLocalizations.of(context)!.bottle_deposit}${state.orderData.bottleQuantities}${'X'}', '${AppLocalizations.of(context)!.currency}${state.orderData.bottlePrice}'),
                                       3.height,
                                       basketRow('${AppLocalizations.of(context)!.vat}', '${AppLocalizations.of(context)!.currency}${state.orderData.vatAmount}'),
+                                      5.height,
+                                      basketRow('${AppLocalizations.of(context)!.refund}', '${AppLocalizations.of(context)!.currency}${state.orderData.totalRefundAmount}'),
                                       5.height,
                                       RichText(
                                         text: TextSpan(
@@ -374,6 +404,12 @@ class _ProductDetailsScreenWidgetState
                                         vertical: AppConstants.padding_5),
                                     itemBuilder: (context, index) =>
                                         productListItem(
+                                          numberOfUnit: state.orderBySupplierProduct.products?[index].numberOfUnit ?? 0,
+                                          quantity: state.orderBySupplierProduct.products?[index].quantity ?? 0,
+                                          updatedUnitQuantity: state.orderBySupplierProduct.products?[index].updatedUnitQuantity ?? 0,
+                                          unitQuantity: state.orderBySupplierProduct.products?[index].unitQuantity ?? 0,
+                                          sku: state.orderBySupplierProduct.products?[index].sku ?? '',
+                                          isUpdated : state.orderBySupplierProduct.products?[index].isUpdated ?? false,
                                       index: index,
                                       context: context,
                                       statusNumber: state.orderData.orderstatus
@@ -473,11 +509,20 @@ class _ProductDetailsScreenWidgetState
     bool? isIssue,
     int? missingQuantity,
     String issueStatus = '',
+    bool isUpdated = false,
+    required String sku,
+    required int unitQuantity,
+    required int updatedUnitQuantity,
+    required int quantity,
+    required int numberOfUnit,
+
   }) {
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
       builder: (context, state) {
         ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
-        return !(state.orderBySupplierProduct.products?[index].isBottle ?? false) ? Container(
+        return !(state.orderBySupplierProduct.products?[index].isBottle ?? false) ||
+            ((state.orderBySupplierProduct.products?[index].isBottle ?? false) ? sku == skuNumber : false)
+        ? Container(
           margin: EdgeInsets.all(AppConstants.padding_10),
           padding: EdgeInsets.symmetric(
               vertical: AppConstants.padding_5,
@@ -500,7 +545,7 @@ class _ProductDetailsScreenWidgetState
                   ? MainAxisAlignment.spaceBetween
                   : MainAxisAlignment.start,
               children: [
-                statusNumber == onTheWayStatus
+                statusNumber == onTheWayStatus &&  sku != skuNumber  && (!isUpdated || (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity != 0 : false))
                     ? Checkbox(
                         value: ((isIssue ?? false) ||
                                 state.productListIndex.contains(index))
@@ -519,9 +564,7 @@ class _ProductDetailsScreenWidgetState
                           bloc.add(ProductDetailsEvent.productProblemEvent(
                               isProductProblem: value!, index: index));
                         })
-                    : SizedBox(),
-                // : 0.width,
-
+                    : 30.width,
                 state.orderBySupplierProduct.products?[index].mainImage != ''
                     ? Image.network(
                         '${AppUrls.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
@@ -588,15 +631,44 @@ class _ProductDetailsScreenWidgetState
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Text(
-                      '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
-                      style: AppStyles.rkRegularTextStyle(
-                        color: AppColors.blackColor,
-                        size: AppConstants.font_12,
-                      ),
+                    Row(
+                      children: [
+                        statusNumber == onTheWayStatus  && isUpdated
+                            ? Text(
+                          '${(updatedUnitQuantity/numberOfUnit).round()}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
+                          style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.blackColor,
+                            size: AppConstants.font_12,
+                          ),
+                        ) : sku == skuNumber ?
+         Text(
+        '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${AppLocalizations.of(context)!.units}',
+        style: AppStyles.rkRegularTextStyle(
+        color: AppColors.blackColor,
+        size: AppConstants.font_12,
+        ),
+        )
+                            : Text(
+                          '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
+                          style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.blackColor,
+                            size: AppConstants.font_12,
+                          ),
+                        ),
+
+                        5.width,
+
+                        statusNumber == onTheWayStatus  && isUpdated ?  Text(
+                         '(${AppLocalizations.of(context)!.original_was}${' '}${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()})',
+                          style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.redColor,
+                            size: AppConstants.font_12,
+                          ),
+                        ): 0.width,
+                      ],
                     ),
                     Text(
-                      '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0,vat:state.orderData.vatPercentage ?? 0 ).toStringAsFixed(2))
+                      '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0 ? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0,vat:state.orderData.vatPercentage ?? 0 ).toStringAsFixed(2))
                           : (vatCalculation(price: state.orderBySupplierProduct.products![index].totalPayment ?? 0 ,vat: state.orderData.vatPercentage ?? 0).toStringAsFixed(2)),local: AppStrings.hebrewLocal)}',
                       style: AppStyles.rkRegularTextStyle(
                           color: AppColors.blackColor,
@@ -604,7 +676,7 @@ class _ProductDetailsScreenWidgetState
                           fontWeight: FontWeight.w700),
                     ),
                     3.height,
-                    statusNumber == onTheWayStatus
+                    statusNumber == onTheWayStatus &&  sku != skuNumber  && (!isUpdated || (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity != 0 : false))
                         ? GestureDetector(
                       onTap: () {
                          ProductProblemBottomSheet(
@@ -702,7 +774,14 @@ class _ProductDetailsScreenWidgetState
                         ),
                       ),
                     )
-                        : SizedBox(),
+                        : (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity == 0 : false) ?
+                        Text(
+                        '${AppLocalizations.of(context)!.was_not_in_stock}',
+                        style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.redColor,
+                            size: AppConstants.font_12,
+                            fontWeight: FontWeight.w400))
+                        :SizedBox(),
                     (isIssue ?? false)
                         ? Container(
                       width: MediaQuery.of(context).size.width > 370 ?  MediaQuery.of(context).size.width / 2 : 160,

@@ -59,7 +59,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
       if (event is _isCategoryEvent) {
         emit(state.copyWith(isSubCategory: event.isSubCategory ,isGridView: preferences.getIsGridView(),
-          isGuestUser: preferences.getGuestUser()
+            isGuestUser: preferences.getGuestUser()
         ));
       }
       if (event is _ChangeCategoryExpansionEvent) {
@@ -81,20 +81,20 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
         else{
           emit(state.copyWith(planogramPageNum : 0 , isBottomOfPlanoGrams: false));
-         add(StoreCategoryEvent.changeCategoryDetailsEvent(context:event.context , isSubCategory: '', categoryName: state.categoryName ,categoryId: state.categoryId));
+          add(StoreCategoryEvent.changeCategoryDetailsEvent(context:event.context , isSubCategory: '', categoryName: state.categoryName ,categoryId: state.categoryId));
 
         }
 
       } else if (event is _ChangeCategoryDetailsEvent) {
         print('categoryName   ${state.categoryName}');
         emit(state.copyWith(
-          cartCount: preferences.getCartCount(),
+            cartCount: preferences.getCartCount(),
             isSubCategory: state.isSubCategory,
             categoryId: event.categoryId,
             categoryName: event.categoryName,
-           // subCategoryList: [],
+            // subCategoryList: [],
             planoGramsList : [],
-             subPlanoGramsList: [],
+            subPlanoGramsList: [],
             planogramProductList:[],
             subProductPageNum: 0,
             subCategoryPageNum: 0,
@@ -104,7 +104,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             isBottomOfPlanoGrams: false,
             isBottomOfProducts: false,
             productStockList: [
-              [ProductStockModel(productId: '')]
+              state.productStockList[0],
+              state.productStockList[1],
+              [],
+              []
             ]));
         if(event.isSubCategory == ''){
           add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
@@ -126,11 +129,14 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           emit(state.copyWith(
             subCategoryId: event.subCategoryId,
             subCategoryName: event.subCategoryName,
-        //    planoGramsList: [],
+            //    planoGramsList: [],
             subPlanoGramsList: [],
             subCategoryList: [],
             productStockList: [
-              [ProductStockModel(productId: '')]
+              state.productStockList[0],
+              state.productStockList[1],
+              [],
+              [],
             ],
             planogramProductList:[],
             subProductPageNum: 0,
@@ -170,11 +176,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             subCategoryList.addAll(response.data?.subCategories ?? []);
             debugPrint('new sub category List = ${subCategoryList.length}');
             emit(state.copyWith(
-                subCategoryList: subCategoryList,
-                subCategoryPageNum: state.subCategoryPageNum + 1,
-                isSubCategoryShimmering: false,
-                isLoadMore: false,
-                categoryName: response.data?.subCategories?.length != 0 ? (response.data?.subCategories?[0].parentCategoryName ?? '' ) : state.categoryName,
+              subCategoryList: subCategoryList,
+              subCategoryPageNum: state.subCategoryPageNum + 1,
+              isSubCategoryShimmering: false,
+              isLoadMore: false,
+              categoryName: response.data?.subCategories?.length != 0 ? (response.data?.subCategories?[0].parentCategoryName ?? '' ) : state.categoryName,
             ) );
             emit(state.copyWith(
                 isBottomOfSubCategory:
@@ -201,6 +207,14 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         emit(state.copyWith(
             subCategoryPageNum: 0,
             subCategoryList: [],
+            planoGramsList: [],
+            planogramPageNum: 0,
+            productStockList: [
+              state.productStockList[0],
+              [],
+              state.productStockList[2],
+              state.productStockList[3],
+            ],
             isBottomOfPlanoGrams: false,
             isBottomOfSubCategory: false));
         add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
@@ -283,19 +297,44 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
-            List<ProductStockModel> barcodeStock =
-            productStockList.removeLast();
+            // List<ProductStockModel> barcodeStock =
+            // productStockList.removeLast();
+            List<ProductStockModel> stockList = [];
+            debugPrint('page1 = ${response.data?.length}');
             for (int i = 0; i < (response.data?.length ?? 0); i++) {
-              List<ProductStockModel> stockList = [];
               stockList.addAll(response.data![i].planogramproducts?.map(
                       (product) => ProductStockModel(
                       productId: product.id ?? '',
                       stock: product.productStock ?? 0)) ??
                   []);
               // debugPrint('stockList[$i] = $stockList');
-              productStockList.addAll([stockList]);
             }
-            productStockList.add(barcodeStock);
+            if(isSubCategoryString == '' && !state.isSubCategory ){
+              productStockList[2] = stockList;
+            }
+            else if(isSubCategoryString != '' && !state.isSubCategory ){
+              productStockList[2] = stockList;
+            }
+            else{
+              // first planogram
+              productStockList[1] = stockList;
+            }
+
+            debugPrint('page = ${productStockList[1].length}');
+            debugPrint('page = ${productStockList[2].length}');
+            debugPrint('page = ${productStockList[3].length}');
+
+            // for (int i = 0; i < (response.data?.length ?? 0); i++) {
+            //   List<ProductStockModel> stockList = [];
+            //   stockList.addAll(response.data![i].planogramproducts?.map(
+            //           (product) => ProductStockModel(
+            //           productId: product.id ?? '',
+            //           stock: product.productStock ?? 0)) ??
+            //       []);
+            //   // debugPrint('stockList[$i] = $stockList');
+            //   productStockList.addAll([stockList]);
+            // }
+            // productStockList.add(barcodeStock);
             // productStockList.add(barcodeStock.isNotEmpty ? barcodeStock : [ProductStockModel(productId: '')]);
             debugPrint('planogram list = ${planoGramsList.length}');
             debugPrint('planogram stock list = ${productStockList.length}');
@@ -308,7 +347,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               planoGramsList: state.planoGramsList,
               productStockList: productStockList,
               subProductPageNum: state.subProductPageNum+1,
-                planogramPageNum: state.planogramPageNum + 1,
+              planogramPageNum: state.planogramPageNum + 1,
               isPlanogramShimmering: false,
               isLoadMore: false,
             ));
@@ -340,7 +379,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         emit(state.copyWith(
             planogramPageNum: 0,
             planoGramsList: [],
-           productCategoryList: [],
+            productCategoryList: [],
             subPlanoGramsList: isSubCategoryString != '' && !state.isSubCategory ? [] : isSubCategoryString != '' && state.isSubCategory ? [] : state.subPlanoGramsList,
             //subProductPageNum: 0,
             /*productStockList: [
@@ -348,6 +387,19 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             ],*/
             isBottomOfPlanoGrams: false));
         add(StoreCategoryEvent.getPlanoGramProductsEvent(
+            context: event.context));
+      }
+      else if (event is _AllProductsRefreshListEvent) {
+        emit(state.copyWith(
+            subProductPageNum: 0,
+            planogramProductList: [],
+            productStockList: [
+              state.productStockList[0],
+              state.productStockList[1],
+              state.productStockList[2],
+              [],
+            ]));
+        add(StoreCategoryEvent.getPlanogramAllProductEvent(
             context: event.context));
       }
       else if (event is _GetProductDetailsEvent) {
@@ -370,33 +422,56 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             // 0 planogram
             //1 product
             //2 barcode
+
+            //new chanegs
+            //0 for barcode and search
+            //1 for planogram above sub cat.
+            //2 for planogram above grid/list products.
+            //3 for grid/list products.
             List<List<ProductStockModel>> productStockList =
-             state.productStockList.toList(growable: true);
+            state.productStockList.toList(growable: true);
             int planoGramIndex  = event.planoGramIndex;
 
-            print('productStockList___${productStockList}');
+            print('productStockList___${productStockList[1]}');
+            print('productStockList___${productStockList[2]}');
+            print('productStockList___${productStockList[3]}');
             print('planoGramIndex___${event.planoGramIndex}');
             int productStockUpdateIndex = -1;
-            if(planoGramIndex == 1){
+            /*   if(planoGramIndex == 1){
               productStockUpdateIndex = state.productStockList[planoGramIndex]
                   .indexWhere((productStock) =>
               productStock.productId == event.productId);
             }
             else{
               productStockUpdateIndex = planoGramIndex;
+            }*/
+
+            if(event.isBarcode ?? false){
+              productStockUpdateIndex = 0;
+              productStockList[0][0] =  productStockList[0][0]
+                  .copyWith(
+                  quantity: _productQuantity,
+                  productId: response.product?.first.id ?? '' ,
+                  stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
+              );
+            }
+            else{
+              productStockUpdateIndex = state.productStockList[planoGramIndex]
+                  .indexWhere((productStock) =>
+              productStock.productId == event.productId);
             }
 
             emit(state.copyWith(planoGramUpdateIndex:planoGramIndex,productStockUpdateIndex:productStockUpdateIndex));
             print('planoGramUpdateIndex___${state.planoGramUpdateIndex}');
             print('productStockUpdateIndex___${state.productStockUpdateIndex}');
-            productStockList[productStockList.indexOf(productStockList.last)][0] = productStockList[
-            productStockList.indexOf(productStockList.last)][0]
-                .copyWith(
-                quantity: _productQuantity,
-                productId: response.product?.first.id ?? '' ,
-                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
-            );
-            emit(state.copyWith(productStockList: productStockList));
+            // productStockList[productStockList.indexOf(productStockList.last)][0] = productStockList[
+            // productStockList.indexOf(productStockList.last)][0]
+            //     .copyWith(
+            //     quantity: _productQuantity,
+            //     productId: response.product?.first.id ?? '' ,
+            //     stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
+            // );
+            // emit(state.copyWith(productStockList: productStockList));
 
             try {
 
@@ -410,11 +485,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               if (response.status == 200) {
                 debugPrint('cart before = ${response.data}');
                 response.data?.data?.forEach((cartProduct) {
-                  if (cartProduct.id ==
-                      state.productStockList[state.planoGramUpdateIndex]
-                      [state.productStockUpdateIndex].productId ||
-                      cartProduct.id == event.productId ||
-                      cartProduct.id == state.productStockList[productStockList.last.length - 1]
+                  if (cartProduct.id == event.productId ||
+                      cartProduct.id == state.productStockList[state.planoGramUpdateIndex]
                       [state.productStockUpdateIndex].productId
                   ) {
                     _isProductInCart = true;
@@ -430,33 +502,39 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
 
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
-              List<List<ProductStockModel>> productStockList =
-              state.productStockList.toList(growable: false);
-              productStockList[productStockList.indexOf(productStockList.last)][0] = productStockList[
-              productStockList.indexOf(productStockList.last)][0]
+              // List<List<ProductStockModel>> productStockList =
+              // state.productStockList.toList(growable: false);
+              productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '' ,
                   stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
               );
+              // productStockList[productStockList.indexOf(productStockList.last)][0] = productStockList[
+              // productStockList.indexOf(productStockList.last)][0]
+              //     .copyWith(
+              //     quantity: _productQuantity,
+              //     productId: response.product?.first.id ?? '' ,
+              //     stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
+              // );
               emit(state.copyWith(productStockList: productStockList));
-              debugPrint('new index = ${state.productStockList.last}');
-              productStockUpdateIndex = 0;
-              planoGramIndex = productStockList.indexOf(productStockList.last);
-              /*productStockList[planoGramIndex].indexOf(productStockList[planoGramIndex].last);*/
-              debugPrint(
-                  'new index = ${planoGramIndex},$productStockUpdateIndex');
+              // debugPrint('new index = ${state.productStockList.last}');
+              // productStockUpdateIndex = 0;
+              // planoGramIndex = productStockList.indexOf(productStockList.last);
+              // /*productStockList[planoGramIndex].indexOf(productStockList[planoGramIndex].last);*/
+              // debugPrint(
+              //     'new index = ${planoGramIndex},$productStockUpdateIndex');
             }
             // productStockList[planoGramIndex][productStockUpdateIndex] =
             //     productStockList[planoGramIndex][productStockUpdateIndex]
             //         .copyWith(stock: response.product?.first.numberOfUnit ?? 0);
-            debugPrint(
-                'stock ${productStockList[planoGramIndex][productStockUpdateIndex].stock}');
-            debugPrint(
-                'supplier list stock = ${response.product?.first.supplierSales?.map((e) => e.productStock)}');
+            // debugPrint(
+            //     'stock ${productStockList[planoGramIndex][productStockUpdateIndex].stock}');
+            // debugPrint(
+            //     'supplier list stock = ${response.product?.first.supplierSales?.map((e) => e.productStock)}');
             List<ProductSupplierModel> supplierList = [];
-            debugPrint(
-                'supplier id = ${state.productStockList[planoGramIndex][productStockUpdateIndex].productSupplierIds}');
+            // debugPrint(
+            //     'supplier id = ${state.productStockList[planoGramIndex][productStockUpdateIndex].productSupplierIds}');
             supplierList.addAll(response.product?.first.supplierSales
                 ?.map((supplier) => ProductSupplierModel(
               supplierId: supplier.supplierId ?? '',
@@ -547,7 +625,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 }
               });
               debugPrint('isSupplierSelected = $isSupplierSelected');
-              if (!isSupplierSelected) {
+              debugPrint('isSupplierSelected = ${state.planoGramUpdateIndex}');
+              if (!isSupplierSelected || state.planoGramUpdateIndex == 0) {
                 int supplierIndex = 0;
                 int supplierSaleIndex = -1;
                 double cheapestPrice = supplierList.first.basePrice;
@@ -579,33 +658,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     supplierSaleIndex: supplierSaleIndex));
               }
             }
-        /*    try {
-
-              final res = await DioClient(event.context).post(
-                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferences.getAuthToken()}'
-                  }));
-              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-              if (response.status == 200) {
-                debugPrint('cart before = ${response.data}');
-                response.data?.data?.forEach((cartProduct) {
-                  if (cartProduct.id ==
-                      state
-                          .productStockList[state.planoGramUpdateIndex]
-                      [state.productStockUpdateIndex]
-                          .productId) {
-                    _isProductInCart = true;
-                    _cartProductId = cartProduct.cartProductId ?? '';
-                    _productQuantity = cartProduct.totalQuantity ?? 0;
-                    return;
-                  }
-                });
-                debugPrint(
-                    '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
-              }
-            } on ServerException {}*/
           } else {
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
@@ -859,23 +911,23 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == 201) {
               Vibration.vibrate();
-              List<List<ProductStockModel>> productStockList =
-                  state.productStockList.toList(growable: true);
-              productStockList[state.planoGramUpdateIndex]
-                      [state.productStockUpdateIndex] =
-                  productStockList[state.planoGramUpdateIndex]
-                          [state.productStockUpdateIndex]
-                      .copyWith(
-                note: '',
-                isNoteOpen: false,
-                quantity: 0,
-                productSupplierIds: '',
-                totalPrice: 0.0,
-                productSaleId: '',
-              );
               Navigator.pop(event.context,{AppStrings.isCartCountString : 'true'});
-              emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList,duringCelebration: true));
+              List<List<ProductStockModel>> productStockList =
+              state.productStockList.toList(growable: true);
+              productStockList[state.planoGramUpdateIndex]
+              [state.productStockUpdateIndex] =
+                  productStockList[state.planoGramUpdateIndex]
+                  [state.productStockUpdateIndex]
+                      .copyWith(
+                    note: '',
+                    isNoteOpen: false,
+                    quantity: 0,
+                    productSupplierIds: '',
+                    totalPrice: 0.0,
+                    productSaleId: '',
+                  );
+
+              emit(state.copyWith(isLoading: false, productStockList: productStockList,duringCelebration: true));
               await Future.delayed(const Duration(milliseconds: 500));
               emit(state.copyWith(duringCelebration: false));
               CustomSnackBar.showSnackBar(
@@ -963,6 +1015,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
               Vibration.vibrate();
+              Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.planoGramUpdateIndex]
@@ -971,15 +1024,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   [state.productStockUpdateIndex]
                       .copyWith(
                     note: '',
-                isNoteOpen: false,
-                quantity: 0,
-                productSupplierIds: '',
-                totalPrice: 0.0,
-                productSaleId: '',
-              );
+                    isNoteOpen: false,
+                    quantity: 0,
+                    productSupplierIds: '',
+                    totalPrice: 0.0,
+                    productSaleId: '',
+                  );
               add(StoreCategoryEvent.setCartCountEvent());
               emit(state.copyWith(isLoading: false, productStockList: productStockList , duringCelebration: true));
-              Navigator.pop(event.context);
+
               await Future.delayed(const Duration(milliseconds: 2000));
               emit(state.copyWith(duringCelebration: false));
 
@@ -1093,7 +1146,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 searchId: supplier.productId ?? '',
                 name: supplier.productName ?? '',
                 searchType: SearchTypes.product,
-               productStock:  int.parse(supplier.productStock ?? 0.toString()),
+                productStock:  int.parse(supplier.productStock ?? 0.toString()),
                 image: supplier.mainImage ?? ''))
                 .toList() ??
                 []);
@@ -1193,9 +1246,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if (state.isLoadMore) {
           return;
         }
-         // if (state.isBottomOfProducts) {
-        //  return;
-       //  }
+        /*  if (state.isBottomOfProducts) {
+          return;
+         }*/
         debugPrint('Here');
         try{
           List<PlanogramAllProduct> planogramProductList =
@@ -1213,41 +1266,42 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           final res;
 
           if(!preferences.getGuestUser()){
-             res = await DioClient(event.context)
+            res = await DioClient(event.context)
                 .post('${AppUrls.getPlanogramAllProductUrl}',
                 data: planogramReqModel
             );
-             debugPrint('getAllProductUrl_____${AppUrls.getPlanogramAllProductUrl}');
-             debugPrint('getAllProductUrl req_____${planogramReqModel}');
+            debugPrint('getAllProductUrl_____${AppUrls.getPlanogramAllProductUrl}');
+            debugPrint('getAllProductUrl req_____${planogramReqModel}');
           }
           else{
-             res = await DioClient(event.context)
+            res = await DioClient(event.context)
                 .post('${AppUrls.getPlanogramAllProductForGuestUserUrl}',
                 data: planogramReqModel
             );
-             debugPrint('getAllProductUrl_____${AppUrls.getPlanogramAllProductForGuestUserUrl}');
-             debugPrint('getAllProductUrl req_____${planogramReqModel}');
+            debugPrint('getAllProductUrl_____${AppUrls.getPlanogramAllProductForGuestUserUrl}');
+            debugPrint('getAllProductUrl req_____${planogramReqModel}');
           }
 
-  print('getAllProduct_____$res');
+          print('getAllProduct_____$res');
           GetPlanogramProductModel response = GetPlanogramProductModel.fromJson(res);
           debugPrint('getAllProduct response_____${response}');
+          debugPrint('getAllProduct response_____${response.metaData?.totalFilteredCount}');
 
           if(response.status == 200){
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
-            List<ProductStockModel> barcodeStock =
-            productStockList.removeLast();
-            for (int i = 0; i < (response.data?.length ?? 0); i++) {
-              List<ProductStockModel> stockList = [];
-              stockList.addAll(response.data?.map(
-                      (product) => ProductStockModel(
-                      productId: product.id ?? '',
-                      stock: int.parse(product.numberOfUnit  ?? '0') )) ??
-                  []);
-              productStockList.addAll([stockList]);
-            }
-            productStockList.add(barcodeStock);
+            // List<ProductStockModel> barcodeStock =
+            // productStockList.removeLast();
+            List<ProductStockModel> stockList = [];
+            debugPrint('getAllProduct response_____${response.data?.length}');
+            stockList.addAll(response.data?.map(
+                    (product) => ProductStockModel(
+                    productId: product.id ?? '',
+                    stock: int.parse(product.productStock.toString()  ?? '0') )) ?? []);
+            productStockList[3].addAll(stockList);
+            debugPrint('page = ${stockList.length}');
+            debugPrint('page = ${productStockList[3].length}');
+            // productStockList.add(barcodeStock);
             planogramProductList.addAll(response.data ?? []);
             emit(state.copyWith(planogramProductList: planogramProductList,productStockList: productStockList,
                 isPlanogramProductShimmering: false,isPlanogramShimmering: false
@@ -1257,8 +1311,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
+
             emit(state.copyWith(
-                isBottomOfPlanoGrams: planogramProductList.length ==
+                isBottomOfPlanoGrams:
+                planogramProductList.length ==
                     (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));

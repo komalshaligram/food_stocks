@@ -22,6 +22,8 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final double discountedPrice;
   final void Function() onButtonTap;
   final bool isGuestUser;
+  final double? imageHeight;
+  final double? imageWidth;
 
   const CommonProductSaleItemWidget(
       {super.key,
@@ -35,6 +37,8 @@ class CommonProductSaleItemWidget extends StatelessWidget {
       required this.onButtonTap,
       required this.discountedPrice,
         this.isGuestUser = false,
+        this.imageHeight = 70,
+        this.imageWidth = 70,
       });
 
   @override
@@ -69,12 +73,12 @@ class CommonProductSaleItemWidget extends StatelessWidget {
             Center(
               child: !isGuestUser ? CachedNetworkImage(
                 imageUrl: "${AppUrls.baseFileUrl}$saleImage",
-                height: 70,
+                height: imageHeight,
                 fit: BoxFit.fitHeight,
                 placeholder: (context, url) {
                   return CommonShimmerWidget(
                     child: Container(
-                      height: 70,
+                      height: imageHeight,
                       width: 70,
                       decoration: BoxDecoration(
                         color: AppColors.whiteColor,
@@ -92,12 +96,12 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                   // debugPrint('sale list image error : $error');
                   return Container(
                     child: Image.asset(AppImagePath.imageNotAvailable5,
-                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                        height: imageHeight, width: double.maxFinite, fit: BoxFit.cover),
                   );
                 },
               ) :
               Image.asset(AppImagePath.imageNotAvailable5,
-                height: 70,
+                height: imageHeight,
                 width: 70,
               ),
             ),

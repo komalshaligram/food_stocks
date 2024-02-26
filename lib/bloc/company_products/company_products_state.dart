@@ -32,9 +32,6 @@ class CompanyProductsState with _$CompanyProductsState {
     required bool isGridView,
     required bool duringCelebration,
     required int quantity,
-
-
-
   }) = _CompanyProductsState;
 
   factory CompanyProductsState.initial() => CompanyProductsState(
