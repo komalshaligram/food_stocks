@@ -31,29 +31,7 @@ void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-    await FirebaseMessaging.
-    instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true, // Required to display a heads up notification
-      badge: true,
-      sound: true,
-    );
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      FlutterAppBadger.removeBadge();
-      debugPrint("onMessageOpenedApp: $message");
 
-      debugPrint('notification payload:1 ${message.notification}');
-      //Map valueMap = (message.data);
-
-    });
-    /*FirebaseMessaging.instance.getInitialMessage().then((message) {
-      if (message != null) {
-        // DO YOUR THING HERE
-        debugPrint("onMessageOpenedApp: $message");
-        debugPrint('notification payload:1 ${message.notification}');
-      }
-    });*/
     await PushNotificationService().setupInteractedMessage();
     //await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(

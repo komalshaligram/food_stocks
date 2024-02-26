@@ -781,6 +781,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             },
                             onTap: () {
                               if (!state.isGuestUser) {
+                                debugPrint('searchtype:${state.searchList[index]
+                                    .searchType}');
                                 state.searchList[index].searchType ==
                                     SearchTypes.sale ||
                                     (state.searchList[index]
@@ -1215,7 +1217,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         required String productId,
         required int planoGramIndex,
         String productStock  = '0',
-        bool? isBarcode}) async {
+        bool isBarcode = false}) async {
     context.read<StoreCategoryBloc>().add(
         StoreCategoryEvent.getProductDetailsEvent(
             context: context,
@@ -1242,10 +1244,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           initialChildSize: AppConstants.bottomSheetInitHeight,
           //shouldCloseOnMinExtent: true,
           builder: (BuildContext context1, ScrollController scrollController) {
+
             return BlocProvider.value(
                 value: context.read<StoreCategoryBloc>(),
                 child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
                   builder: (context, state) {
+                    debugPrint('productStockList: ${ state.productStockList.toString()}');
                     return Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
@@ -1264,7 +1268,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               AppLocalizations.of(context)!.no_data,
                               style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.normalFont,
-                                color: AppColors.greyColor,
+                                color: AppColors.redColor,
                                 fontWeight: FontWeight.w500,
                               )),
                         )
