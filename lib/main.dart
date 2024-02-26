@@ -19,7 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'data/services/locale_provider.dart';
 import 'app_config.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
-
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 
 final shorebirdCodePush = ShorebirdCodePush();
 
@@ -40,7 +40,9 @@ void main() async {
     );
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+      FlutterAppBadger.removeBadge();
       debugPrint("onMessageOpenedApp: $message");
+
       debugPrint('notification payload:1 ${message.notification}');
       //Map valueMap = (message.data);
 
