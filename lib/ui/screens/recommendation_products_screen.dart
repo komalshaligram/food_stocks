@@ -34,6 +34,7 @@ import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
 import '../widget/product_details_shimmer_widget.dart';
+import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
 import '../widget/supplier_products_screen_shimmer_widget.dart';
 
 class RecommendationProductsRoute {
@@ -174,7 +175,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                     header: RefreshWidget(),
                     footer: CustomFooter(
                       builder: (context, mode) =>
-                          SupplierProductsScreenShimmerWidget(),
+                         state.isGridView?  SupplierProductsScreenShimmerWidget() :StoreCategoryScreenSubcategoryShimmerWidget()
                     ),
                     enablePullUp: !state.isBottomOfProducts,
                     onRefresh: () {
@@ -198,7 +199,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                         children: [
                           100.height,
                           state.isShimmering
-                              ? SupplierProductsScreenShimmerWidget()
+                              ? state.isGridView ? SupplierProductsScreenShimmerWidget() :
+                          StoreCategoryScreenSubcategoryShimmerWidget()
                               : state.recommendationProductsList.isEmpty
                                   ? Container(
                                       height: getScreenHeight(context) - 80,

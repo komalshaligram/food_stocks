@@ -62,7 +62,7 @@ class StoreCategoryState with _$StoreCategoryState {
         subCategoryList: [],
         productCategoryList: [],
         planoGramsList: [],
-        productStockList: [],
+        productStockList: [[],[],[],[]],
         isPlanogramShimmering: false,
         isSubCategoryShimmering: false,
         isLoading: false,

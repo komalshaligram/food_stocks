@@ -106,4 +106,7 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.getCartCountEvent(
   ) = _getCartCountEvent;
+
+  const factory StoreCategoryEvent.AllProductsRefreshListEvent(
+      {required BuildContext context}) = _AllProductsRefreshListEvent;
 }

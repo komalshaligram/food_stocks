@@ -740,7 +740,7 @@ class RecommendationProductsBloc
             state.copyWith(cartCount: preferences.getCartCount()));
       }
       else if (event is _getGridListView) {
-        preferences.setReorderProductGridListView( isReorderProductGrid: !state.isGridView);
+        preferences.setRecommendationProductGridListView(isRecommendationProductGrid: !state.isGridView);
         emit(state.copyWith(isGridView: !state.isGridView));
       }
       else if (event is _ChangeCategoryExpansion) {
