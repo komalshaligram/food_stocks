@@ -37,6 +37,8 @@ class HomeState with _$HomeState {
     required List<Category> productCategoryList,
     required bool isCatVisible,
     required bool isGuestUser,
+    required bool isIgnorePointer,
+    required bool isPreview,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -50,7 +52,7 @@ class HomeState with _$HomeState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [],
+        productStockList: [ProductStockModel(productId: '')],
         isSelectSupplier: false,
         productSupplierList: [],
         isCartCountChange: false,
@@ -73,6 +75,8 @@ class HomeState with _$HomeState {
     search: '',
     productCategoryList: [],
     isCatVisible: false,
-    isGuestUser: false
+    isGuestUser: false,
+    isIgnorePointer: false,
+    isPreview: false
       );
 }

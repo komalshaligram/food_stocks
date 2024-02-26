@@ -11,7 +11,9 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
 
   const factory SupplierProductsEvent.getProductDetailsEvent(
       {required BuildContext context,
-      required String productId}) = _GetProductDetailsEvent;
+      required String productId,
+      required bool isBarcode
+      }) = _GetProductDetailsEvent;
 
   const factory SupplierProductsEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;
@@ -35,7 +37,9 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory SupplierProductsEvent.addToCartProductEvent(
-      {required BuildContext context}) = _AddToCartProductEvent;
+      {required BuildContext context,
+      required String productId,
+      }) = _AddToCartProductEvent;
 
   const factory SupplierProductsEvent.setCartCountEvent() = _SetCartCountEvent;
 
@@ -50,4 +54,16 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
 
   const factory SupplierProductsEvent.getAllProducts(
       {required BuildContext context,required String search}) = _GetAllProductsEvent;
+
+  const factory SupplierProductsEvent.getGridListView(
+      ) = _getGridListView;
+  const factory SupplierProductsEvent.changeCategoryExpansion({bool? isOpened}) =
+  _ChangeCategoryExpansion;
+
+  const factory SupplierProductsEvent.globalSearchEvent({required BuildContext context}) =
+  _GlobalSearchEvent;
+
+  const factory SupplierProductsEvent.updateGlobalSearchEvent(
+      {required String search,
+        required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
 }

@@ -35,7 +35,6 @@ class CommonProductListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: onButtonTap,
       child: Container(
@@ -64,7 +63,7 @@ class CommonProductListWidget extends StatelessWidget {
               imageUrl: "${AppUrls.baseFileUrl}$productImage",
               height: 70,
               width: 70,
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.contain,
               placeholder: (context, url) {
                 return CommonShimmerWidget(
                   child: Container(
@@ -119,7 +118,7 @@ class CommonProductListWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
-                  (productStock) != 0 ||   isGuestUser ? 0.width :Text(
+                  (productStock) != 0  ||   isGuestUser ? 0.width :Text(
                     AppLocalizations.of(context)!
                         .out_of_stock1,
                     style: AppStyles.rkBoldTextStyle(

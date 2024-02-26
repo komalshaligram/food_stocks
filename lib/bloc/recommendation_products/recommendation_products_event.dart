@@ -7,7 +7,9 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
 
   const factory RecommendationProductsEvent.getProductDetailsEvent(
       {required BuildContext context,
-      required String productId}) = _GetProductDetailsEvent;
+      required String productId,
+        required bool isBarcode
+      }) = _GetProductDetailsEvent;
 
   const factory RecommendationProductsEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;
@@ -31,7 +33,9 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory RecommendationProductsEvent.addToCartProductEvent(
-      {required BuildContext context}) = _AddToCartProductEvent;
+      {required BuildContext context,
+        required String productId
+      }) = _AddToCartProductEvent;
 
   const factory RecommendationProductsEvent.setCartCountEvent() =
       _SetCartCountEvent;
@@ -45,4 +49,22 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
 
   const factory RecommendationProductsEvent.refreshListEvent(
       {required BuildContext context}) = _RefreshListEvent;
+  const factory RecommendationProductsEvent.getCartCountEvent(
+      ) = _getCartCountEvent;
+
+  const factory RecommendationProductsEvent.getGridListView(
+      ) = _getGridListView;
+
+  const factory RecommendationProductsEvent.changeCategoryExpansion({bool? isOpened}) =
+  _ChangeCategoryExpansion;
+
+  const factory RecommendationProductsEvent.globalSearchEvent({required BuildContext context}) =
+  _GlobalSearchEvent;
+
+  const factory RecommendationProductsEvent.updateGlobalSearchEvent(
+      {required String search,
+        required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+
+  const factory RecommendationProductsEvent.getProductCategoriesListEvent(
+      {required BuildContext context}) = _GetProductCategoriesListEvent;
 }

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
@@ -29,6 +32,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final ScrollController scrollController;
   final void Function() onQuantityIncreaseTap;
   final void Function() onQuantityDecreaseTap;
+  final void Function() imageOnTap;
   final void Function(String) onQuantityChanged;
   final bool isRTL;
   final int productStock;
@@ -38,6 +42,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final String saleDate;
   final String startDate;
   final String endDate;
+  final bool isPreview;
 
   const CommonProductDetailsWidget({
     super.key,
@@ -62,12 +67,13 @@ class CommonProductDetailsWidget extends StatelessWidget {
     required this.isSupplierAvailable,
     required this.productImageIndex,
     required this.onPageChanged,
-     this.saleDate = '',   this.startDate = '',this.endDate = ''
+     this.saleDate = '',   this.startDate = '',this.endDate = '',
+    this.isPreview = false,
+    required this.imageOnTap
   });
 
   @override
   Widget build(BuildContext context) {
-  print('productStock____-------${productStock}');
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -80,14 +86,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
           top: AppConstants.padding_10,
           bottom: MediaQuery.of(context).viewInsets.bottom),
       clipBehavior: Clip.hardEdge,
-      child:
-          // Stack(
-          //   fit: StackFit.passthrough,
-          //   children: [
-          Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-              Row(
+           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Expanded(child: 0.width),
@@ -162,48 +164,51 @@ class CommonProductDetailsWidget extends StatelessWidget {
                               child: CarouselSlider(
                                   // carouselController: carouselController,
                                   items: productImages
-                                      .map((productImage) => Image.network(
-                                            "${AppUrls.baseFileUrl}$productImage",
-                                            height: 150,
-                                            fit: BoxFit.fitHeight,
-                                            loadingBuilder: (context, child,
-                                                loadingProgress) {
-                                              if (loadingProgress
-                                                      ?.cumulativeBytesLoaded !=
-                                                  loadingProgress
-                                                      ?.expectedTotalBytes) {
-                                                return CommonShimmerWidget(
-                                                  child: Container(
-                                                    height: 150,
-                                                    width: 150,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          AppColors.whiteColor,
-                                                      borderRadius: BorderRadius
-                                                          .all(Radius.circular(
-                                                              AppConstants
-                                                                  .radius_10)),
+                                      .map((productImage) => GestureDetector(
+                                    onTap: imageOnTap,
+                                        child: Image.network(
+                                              "${AppUrls.baseFileUrl}$productImage",
+                                              height: 150,
+                                              fit: BoxFit.contain,
+                                              loadingBuilder: (context, child,
+                                                  loadingProgress) {
+                                                if (loadingProgress
+                                                        ?.cumulativeBytesLoaded !=
+                                                    loadingProgress
+                                                        ?.expectedTotalBytes) {
+                                                  return CommonShimmerWidget(
+                                                    child: Container(
+                                                      height: 150,
+                                                      width: 150,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            AppColors.whiteColor,
+                                                        borderRadius: BorderRadius
+                                                            .all(Radius.circular(
+                                                                AppConstants
+                                                                    .radius_10)),
+                                                      ),
+                                                      // alignment: Alignment.center,
+                                                      // child: CupertinoActivityIndicator(
+                                                      //   color: AppColors.blackColor,
+                                                      // ),
                                                     ),
-                                                    // alignment: Alignment.center,
-                                                    // child: CupertinoActivityIndicator(
-                                                    //   color: AppColors.blackColor,
-                                                    // ),
-                                                  ),
+                                                  );
+                                                }
+                                                return child;
+                                              },
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                // debugPrint('product category list image error : $error');
+                                                return Image.asset(
+                                                  AppImagePath.imageNotAvailable5,
+                                                  fit: BoxFit.cover,
+                                                  // width: 90,
+                                                  height: 150,
                                                 );
-                                              }
-                                              return child;
-                                            },
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              // debugPrint('product category list image error : $error');
-                                              return Image.asset(
-                                                AppImagePath.imageNotAvailable5,
-                                                fit: BoxFit.cover,
-                                                // width: 90,
-                                                height: 150,
-                                              );
-                                            },
-                                          ))
+                                              },
+                                            ),
+                                      ))
                                       .toList(),
                                   options: CarouselOptions(
                                       height: 150,
@@ -305,8 +310,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
                         ),
                       ): 0.width,
                       10.height,*/
-                      /*false */ /*productStock == 0*/ /* ? 0.width : */
-                 //     supplierWidget,
                      Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -326,7 +329,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: AppConstants.padding_15,
                                       vertical: AppConstants.padding_20),
-                                  child: productStock == 0
+                                  child: productStock == 0 || productStock == -1
                                       ? Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -349,9 +352,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Container(
-                                              width: (getScreenWidth(context) -
-                                                      30) /
-                                                  2,
+                                              width: getScreenWidth(context) >= 700 ? (getScreenWidth(context) - 30) / 3 :  (getScreenWidth(context) - 30) / 2,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -388,9 +389,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                               ),
                                             ),
                                             Container(
-                                              width: (getScreenWidth(context) -
-                                                      30) /
-                                                  2,
+                                              width: getScreenWidth(context) >= 700 ?(getScreenWidth(context) - 30) / 3 :  (getScreenWidth(context) - 30) / 2,
                                               child: Row(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -516,9 +515,9 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                         textInputAction:
                                                             TextInputAction
                                                                 .done,
-                                                        keyboardType:
-                                                            TextInputType
-                                                                .number,
+                                                        keyboardType: Platform.isIOS?
+                                                        TextInputType.numberWithOptions(signed: true)
+                                                            : TextInputType.number,
                                                         inputFormatters: [
                                                           FilteringTextInputFormatter
                                                               .digitsOnly
@@ -756,38 +755,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
           ),
         ],
       ),
-      // !isSupplierAvailable || productStock == 0
-      //     ? 0.width
-      //     : Positioned(
-      //         bottom: 0,
-      //         right: 0,
-      //         left: 0,
-      //         child: Container(
-      //           height: 90,
-      //           width: getScreenWidth(context),
-      //           padding: EdgeInsets.symmetric(
-      //               horizontal: AppConstants.padding_20,
-      //               vertical: AppConstants.padding_20),
-      //           decoration: BoxDecoration(
-      //               color: AppColors.whiteColor,
-      //               border: Border(
-      //                   top: BorderSide(
-      //                       color: AppColors.lightBorderColor, width: 1))),
-      //           child: CommonProductButtonWidget(
-      //             title: AppLocalizations.of(context)!.add_to_order,
-      //             isLoading: isLoading,
-      //             onPressed: onAddToOrderPressed,
-      //             width: double.maxFinite,
-      //             height: AppConstants.buttonHeight,
-      //             borderRadius: AppConstants.radius_5,
-      //             textSize: AppConstants.normalFont,
-      //             textColor: AppColors.whiteColor,
-      //             bgColor: AppColors.mainColor,
-      //           ),
-      //         ),
-      //       ),
-      // ],
-      // ),
     );
   }
 }

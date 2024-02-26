@@ -23,6 +23,7 @@ import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:photo_view/photo_view.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/balance_indicator.dart';
@@ -45,8 +46,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return BlocProvider(
       create: (context) => HomeBloc()
         ..add(HomeEvent.getCartCountEvent(context: context))
@@ -55,8 +54,7 @@ class HomeScreen extends StatelessWidget {
         ..add(HomeEvent.getWalletRecordEvent(context: context))
         ..add(HomeEvent.getMessageListEvent(context: context))
         ..add(HomeEvent.getRecommendationProductsListEvent(context: context))
-       ..add(HomeEvent.checkVersionOfAppEvent(context: context)),
-       // ..add(HomeEvent.getProductCategoriesListEvent(context: context)),
+       /*..add(HomeEvent.checkVersionOfAppEvent(context: context))*/,
       child: HomeScreenWidget(),
     );
   }
@@ -88,6 +86,7 @@ class HomeScreenWidget extends StatelessWidget {
                 bloc.add(HomeEvent.getMessageListEvent(context: context));
                 bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
                 bloc.add(HomeEvent.getCartCountEvent(context: context));
+                bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
               },
               child: SafeArea(
                 child: Column(
@@ -450,14 +449,13 @@ class HomeScreenWidget extends StatelessWidget {
                                                   AppConstants.padding_5),
                                               itemBuilder: (context, index) =>
                                                   CommonProductItemWidget(
-
                                                     productStock: state
                                                         .recommendedProductsList[
                                                     index]
                                                         .productStock.toString() ??
                                                         '0',
                                                     height: 160,
-                                                    width: 140,
+                                                    width:  140,
                                                     productImage: state
                                                         .recommendedProductsList[
                                                     index]
@@ -487,44 +485,17 @@ class HomeScreenWidget extends StatelessWidget {
                                                                 .recommendedProductsList[
                                                             index]
                                                                 .id ??
-                                                                '');
+                                                                '',
+                                                        productStock:(state
+                                                            .recommendedProductsList[
+                                                        index]
+                                                            .productStock.toString()) ?? '',
+                                                        );
 
 
                                                     },
                                                   )
-                                            // buildRecommendationAndPreviousOrderProductsListItem(
-                                            //   context: context,
-                                            //   productImage: state
-                                            //       .recommendedProductsList[
-                                            //   index]
-                                            //       .mainImage ??
-                                            //       '',
-                                            //   productName: state
-                                            //       .recommendedProductsList[
-                                            //   index]
-                                            //       .productName ??
-                                            //       '',
-                                            //   totalSale: state
-                                            //       .recommendedProductsList[
-                                            //   index]
-                                            //       .totalSale ??
-                                            //       0,
-                                            //   price: state
-                                            //       .recommendedProductsList[
-                                            //   index]
-                                            //       .productPrice
-                                            //       ?.toDouble() ??
-                                            //       0.0,
-                                            //   onButtonTap: () {
-                                            //     showProductDetails(
-                                            //         context: context,
-                                            //         productId: state
-                                            //             .recommendedProductsList[
-                                            //         index]
-                                            //             .id ??
-                                            //             '');
-                                            //   },
-                                            // )
+
                                           ),
                                         ),
                                       ],
@@ -559,7 +530,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 ),
                                 30.height,
                                 state.messageList.isEmpty
-                                    ? Padding(
+                                    ? 0.width/*Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: AppConstants.padding_10),
                                   child: Column(
@@ -587,7 +558,7 @@ class HomeScreenWidget extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                )
+                                )*/
                                     : Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -853,7 +824,8 @@ class HomeScreenWidget extends StatelessWidget {
                                             context: context,
                                             productId: state
                                                 .searchList[index].searchId,
-                                            isBarcode: true
+                                            isBarcode: true,
+                                          productStock: (state.searchList[index].productStock.toString() ?? '')
                                         );
                                       } else if (state
                                           .searchList[index].searchType ==
@@ -922,7 +894,8 @@ class HomeScreenWidget extends StatelessWidget {
                                 showProductDetails(
                                     context: context,
                                     productId: scanResult,
-                                    isBarcode: true);
+                                    isBarcode: true,
+                                );
                               }
                             },
                           ),
@@ -1159,13 +1132,13 @@ class HomeScreenWidget extends StatelessWidget {
   void showProductDetails({
     required BuildContext context,
     required String productId,
-    bool? isBarcode
+    bool? isBarcode,
+     String productStock  = '0',
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
           context: context,
           productId: productId,
       isBarcode: isBarcode ?? false
-
         ));
     showModalBottomSheet(
       context: context,
@@ -1177,6 +1150,7 @@ class HomeScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
+        print('productStock_11____${productStock}');
         return BlocProvider.value(
           value: context.read<HomeBloc>(),
           child: DraggableScrollableSheet(
@@ -1206,14 +1180,44 @@ class HomeScreenWidget extends StatelessWidget {
                           : state.productDetails.isEmpty
                               ? Center(
                                   child: Text(
-                                      AppLocalizations.of(context)!.no_data,
+                                      AppLocalizations.of(context)!.no_product,
                                       style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants.normalFont,
-                                        color: AppColors.greyColor,
+                                        color: AppColors.redColor,
                                         fontWeight: FontWeight.w500,
                                       )),
                                 )
                               : CommonProductDetailsWidget(
+                                imageOnTap: (){
+
+                                 showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Stack(
+                                          children: [
+                                            Container(
+                                              height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                              width: getScreenWidth(context),
+                                              child: PhotoView(
+                                                imageProvider: CachedNetworkImageProvider(
+                                                  '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                ),
+                                              ),
+                                            ),
+
+                                           GestureDetector(
+                                                onTap: (){
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Icon(Icons.close,
+                                                  color: Colors.white,
+                                                )),
+                                          ],
+                                        );
+                                      },);
+
+                                },
+                                 isPreview: state.isPreview,
                                   context: context,
                                   productImageIndex: state.imageIndex,
                                   onPageChanged: (index, p1) {
@@ -1276,11 +1280,10 @@ class HomeScreenWidget extends StatelessWidget {
                                           .productDetails.first.itemsWeight
                                           ?.toDouble() ??
                                       0.0,
-                                  productStock: state
-                                      .productStockList[
-                                          state.productStockUpdateIndex]
-                                      .stock,
-                                  isRTL: context.rtl,
+                        productStock: state.productStockList[state.productStockUpdateIndex].stock != 0 ?
+                        int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                        int.parse(productStock.toString() ?? '0'),
+                        isRTL: context.rtl,
                                   isSupplierAvailable:
                                       state.productSupplierList.isEmpty
                                           ? false
@@ -1315,15 +1318,17 @@ class HomeScreenWidget extends StatelessWidget {
                                   state.productSupplierList.isEmpty
                                       ? false
                                       : true,
-                              productStock: state
-                                  .productStockList[state.productStockUpdateIndex]
-                                  .stock,
+                              productStock: state.productStockList[state.productStockUpdateIndex].stock != 0 ?
+                              int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
+                              int.parse(productStock.toString() ?? '0'),
                               onAddToOrderPressed: state.isLoading
                                   ? null
                                   : () {
                                       context.read<HomeBloc>().add(
                                           HomeEvent.addToCartProductEvent(
-                                              context: context1));
+                                              context: context1,
+                                          productId: productId
+                                          ));
                                     }),
                     ),
                   );
@@ -1343,27 +1348,28 @@ class HomeScreenWidget extends StatelessWidget {
     required String dateTime,
     required void Function() onTap,
   }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.rotationY(context.rtl ? pi : 0),
-            child: SvgPicture.asset(
-              AppImagePath.message,
-              fit: BoxFit.scaleDown,
-              height: 16,
-              width: 16,
-              colorFilter:
-                  ColorFilter.mode(AppColors.blackColor, BlendMode.srcIn),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        color: AppColors.pageColor,
+        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.rotationY(context.rtl ? pi : 0),
+              child: SvgPicture.asset(
+                AppImagePath.message,
+                fit: BoxFit.scaleDown,
+                height: 16,
+                width: 16,
+                colorFilter:
+                    ColorFilter.mode(AppColors.blackColor, BlendMode.srcIn),
+              ),
             ),
-          ),
-          10.width,
-          Expanded(
-            child: GestureDetector(
-              onTap: onTap,
+            10.width,
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -1404,8 +1410,8 @@ class HomeScreenWidget extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import 'package:food_stock/ui/widget/common_product_details_widget.dart';
 import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:photo_view/photo_view.dart';
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
@@ -26,6 +28,7 @@ import '../utils/themes/app_styles.dart';
 import '../widget/basket_screen_shimmer_widget.dart';
 import '../widget/common_product_details_button.dart';
 import '../widget/common_shimmer_widget.dart';
+import '../widget/product_details_shimmer_widget.dart';
 
 class BasketRoute {
   static Widget get route => const BasketScreen();
@@ -610,7 +613,11 @@ class BasketScreenWidget extends StatelessWidget {
                                 showProductDetails(
                                     context: context,
                                     index: index,
-                                    CartItemList: state.CartItemList);
+                                    qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
+                                    CartItemList: state.CartItemList,
+                                  cartProductId: state.CartItemList.data?.data?[index].id ?? ''
+
+                                );
                               },
                               child: Image.asset(
                                 AppImagePath.imageNotAvailable5,
@@ -624,7 +631,10 @@ class BasketScreenWidget extends StatelessWidget {
                                 showProductDetails(
                                     context: context,
                                     index: index,
-                                    CartItemList: state.CartItemList);
+                                    qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
+                                    CartItemList: state.CartItemList,
+                                    cartProductId: state.CartItemList.data?.data?[index].id ?? ''
+                                );
                               },
                               child: Image.network(
                                 '${AppUrls.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
@@ -671,7 +681,10 @@ class BasketScreenWidget extends StatelessWidget {
                                   showProductDetails(
                                       context: context,
                                       index: index,
-                                      CartItemList: state.CartItemList);
+                                      qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
+                                      CartItemList: state.CartItemList,
+                                      cartProductId: state.CartItemList.data?.data?[index].id ?? ''
+                                  );
                                 },
                                 child: Container(
                                   child: Text(
@@ -710,6 +723,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           bloc.add(
                                               BasketEvent.productUpdateEvent(
                                             listIndex: index,
+                                            isFromCart: false,
                                             productWeight: state.basketProductList[index].totalQuantity! +
                                                 1,
                                             context: context,
@@ -796,6 +810,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           bloc.add(
                                               BasketEvent.productUpdateEvent(
                                             listIndex: index,
+                                            isFromCart: false,
                                             productWeight: state
                                                     .basketProductList[index]
                                                     .totalQuantity! -
@@ -988,8 +1003,19 @@ class BasketScreenWidget extends StatelessWidget {
   void showProductDetails(
       {required BuildContext context,
       required int index,
-      required GetAllCartResModel CartItemList}) async {
-/*   showModalBottomSheet(
+        required int qty,
+      required GetAllCartResModel CartItemList,
+        required String cartProductId,
+      }) async {
+/*    context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(
+        context: context,
+    ));*/
+    context.read<BasketBloc>().add(BasketEvent.getProductDetailsEvent(
+      productId: cartProductId,
+       isBarcode: false,
+      context: context,
+    ));
+    showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
@@ -1023,505 +1049,170 @@ class BasketScreenWidget extends StatelessWidget {
                     ),
                     clipBehavior: Clip.hardEdge,
                     child: Scaffold(
-                      body:  CommonProductDetailsWidget(
+                      body: state.isProductLoading
+                          ? ProductDetailsShimmerWidget()
+                          : state.productDetails.isEmpty
+                          ? Center(
+                        child: Text(
+                            AppLocalizations.of(context)!.no_data,
+                            style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.normalFont,
+                              color: AppColors.greyColor,
+                              fontWeight: FontWeight.w500,
+                            )),
+                      )
+                          : CommonProductDetailsWidget(
+                        imageOnTap: (){
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Stack(
+                                children: [
+                                  Container(
+                                    height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                    width: getScreenWidth(context),
+                                    child: PhotoView(
+                                      imageProvider: CachedNetworkImageProvider(
+                                        '${AppUrls.baseFileUrl}${state.productDetails[state.productImageIndex].mainImage}',
+                                      ),
+                                    ),
+                                  ),
+
+                                  GestureDetector(
+                                      onTap: (){
+                                        Navigator.pop(context);
+                                      },
+                                      child: Icon(Icons.close,
+                                        color: Colors.white,
+                                      )),
+                                ],
+                              );
+                            },);
+                        },
                         context: context,
-                        productImageIndex: 0,
+                        productImageIndex: state.productImageIndex,
                         onPageChanged: (index, p1) {
+                          context.read<BasketBloc>().add(
+                              BasketEvent.updateImageIndexEvent(
+                                  index: index));
                         },
                         productImages: [
-                          CartItemList
-                              .data
-                              ?.data?[index]
-                              .productDetails
-                              ?.mainImage ??
+                          state.productDetails.first.mainImage ??
                               '',
-                          ...?CartItemList
-                              .data
-                              ?.data?[index]
-                              .productDetails
-                              ?.images
+                          ...state.productDetails.first.images
                               ?.map((image) =>
-                          image.imageUrl ??
-                              '')
+                          image.imageUrl ?? '') ??
+                              []
                         ],
-                        productPerUnit: 0,
-                      //  productPerUnit: CartItemList.data?.data?[index].productDetails?.price?? 0,
-                        productUnitPrice: CartItemList
-                            .data
-                            ?.data?[index]
-                            .productPrice??0,
-                        productName:CartItemList
-                            .data
-                            ?.data?[index]
-                            .productDetails?.productName??'',
-                        productCompanyName: '',
-                        productDescription: '',
-                        productSaleDescription: '',
-                        productPrice:0,
-                        productScaleType:  CartItemList
-                            .data
-                            ?.data?[index]
-                            .productDetails?.scales ??
+                        productPerUnit: state.productDetails.first
+                            .numberOfUnit ??
+                            0,
+                        productUnitPrice: state
+                            .productStockList[
+                        state.productStockUpdateIndex]
+                            .totalPrice,
+                        productName: state.productDetails.first
+                            .productName ??
                             '',
-                        productWeight:  CartItemList
-                            .data
-                            ?.data?[index]
-                            .productDetails?.itemsWeight ??
+                        productCompanyName: state
+                            .productDetails.first.brandName ??
+                            '',
+                        productDescription: parse(state
+                            .productDetails
+                            .first
+                            .productDescription ??
+                            '')
+                            .body
+                            ?.text ??
+                            '',
+                        productSaleDescription: parse(state
+                            .productDetails
+                            .first
+                            .productDescription ??
+                            '')
+                            .body
+                            ?.text ??
+                            '',
+                        productPrice: state
+                            .productStockList[
+                        state.productStockUpdateIndex]
+                            .totalPrice *
+                            state
+                                .productStockList[
+                            state.productStockUpdateIndex]
+                                .quantity *
+                            (state.productDetails.first
+                                .numberOfUnit ??
+                                0),
+                        productScaleType: state.productDetails
+                            .first.scales?.scaleType ??
+                            '',
+                        productWeight: state
+                            .productDetails.first.itemsWeight
+                            ?.toDouble() ??
                             0.0,
-                        productStock:  CartItemList
-                            .data
-                            ?.data?[index]
-                            .productStock??0,
+                        productStock:
+                        int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString())
+                        ,
                         isRTL: context.rtl,
-                        isSupplierAvailable: true,
+                        isSupplierAvailable:
+                        state.productSupplierList.isEmpty
+                            ? false
+                            : true,
                         scrollController: scrollController,
-                        productQuantity:  CartItemList
-                            .data
-                            ?.data?[index]
-                            .totalQuantity??0,
+                        productQuantity: state
+                            .productStockList[
+                        state.productStockUpdateIndex]
+                            .quantity,
                         onQuantityChanged: (quantity) {
-                        *//*  context.read<BasketBloc>().add(
+                          context.read<BasketBloc>().add(
                               BasketEvent.updateQuantityOfProduct(
                                   context: context1,
-                                  quantity: quantity));*//*
+                                  quantity: quantity));
                         },
                         onQuantityIncreaseTap: () {
-                          *//*context.read<BasketBloc>().add(
+                          context.read<BasketBloc>().add(
                               BasketEvent.increaseQuantityOfProduct(
-                                  context: context1));*//*
+                                  context: context1));
                         },
                         onQuantityDecreaseTap: () {
-                        *//*  context.read<BasketBloc>().add(
+                          context.read<BasketBloc>().add(
                               BasketEvent.decreaseQuantityOfProduct(
-                                  context: context1));*//*
+                                  context: context1));
                         },
+                      ),
+                      bottomNavigationBar: state.isProductLoading
+                          ? 0.height
+                          : CommonProductDetailsButton(
+                          isLoading: state.isLoading,
+                          isSupplierAvailable:
+                          state.productSupplierList.isEmpty
+                              ? false
+                              : true,
+                          productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                          onAddToOrderPressed: state.isLoading
+                              ? null
+                              : () {
+                            context.read<BasketBloc>().add(
+                                BasketEvent.addToCartProductEvent(
+                                    context: context1,
+                                  productId: cartProductId
+                                ));
+                          }),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
+    ).then((value) {
+     /* context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(
+        context: context,
+      ));*/
+    });
 
-                        // isLoading: state.isLoading,
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        );
-      },
-    );*/
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      isDismissible: true,
-      clipBehavior: Clip.hardEdge,
-      showDragHandle: true,
-      useSafeArea: true,
-      enableDrag: true,
-      builder: (context1) {
-        return BlocProvider.value(
-          value: context.read<BasketBloc>(),
-          child: DraggableScrollableSheet(
-            expand: false,
-            //  maxChildSize: 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
-            //  minChildSize: 0.6,
-            //   initialChildSize: 0.6,
-            //  shouldCloseOnMinExtent: false,
-            builder:
-                (BuildContext context1, ScrollController scrollController) {
-              return BlocBuilder<BasketBloc, BasketState>(
-                builder: (context, state) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppConstants.radius_30),
-                        topRight: Radius.circular(AppConstants.radius_30),
-                      ),
-                      color: AppColors.whiteColor,
-                    ),
-                    clipBehavior: Clip.hardEdge,
-                    child: Scaffold(
-                      backgroundColor: AppColors.whiteColor,
-                      body: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(AppConstants.radius_30),
-                              topRight: Radius.circular(AppConstants.radius_30),
-                            ),
-                            color: AppColors.whiteColor,
-                          ),
-                          padding: EdgeInsets.only(
-                              top: AppConstants.padding_10,
-                              bottom: MediaQuery.of(context).viewInsets.bottom),
-                          clipBehavior: Clip.hardEdge,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row (
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Expanded(child: 0.width),
-                                  Expanded(
-                                    flex: 4,
-                                    child: Text(
-                                      CartItemList.data?.data?[index]
-                                              .productDetails?.productName ??
-                                          '',
-                                      style: AppStyles.rkBoldTextStyle(
-                                        size: AppConstants.normalFont,
-                                        color: AppColors.blackColor,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Icon(
-                                          Icons.close,
-                                          size: 36,
-                                          color: AppColors.blackColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              5.height,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    '${(double.parse(CartItemList.data?.data?[index].productDetails?.itemsWeight?.toStringAsFixed(2) ?? '') / (CartItemList.data?.data?[index].totalQuantity ?? 1)).toStringAsFixed(2)}${CartItemList.data?.data?[index].productDetails?.scales ?? ''}',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.smallFont,
-                                        color: AppColors.blackColor),
-                                  ),
-                                  Text(
-                                    ' | ',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.smallFont,
-                                        color: AppColors.blackColor),
-                                  ),
-                                  Text(
-                                    '${CartItemList.data?.data?[index].suppliers?.first.contactName ?? ''}',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.smallFont,
-                                        color: AppColors.blackColor),
-                                  ),
-                                ],
-                              ),
-                              10.height,
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  controller: scrollController,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Center(
-                                        child: Stack(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 20,
-                                                  right:
-                                                      AppConstants.padding_10,
-                                                  left: AppConstants.padding_10,
-                                                  top: AppConstants.padding_10),
-                                              child: CarouselSlider(
-                                                  // carouselController: carouselController,
-                                                  items: [
-                                                    CartItemList
-                                                            .data
-                                                            ?.data?[index]
-                                                            .productDetails
-                                                            ?.mainImage ??
-                                                        '',
-                                                    ...?CartItemList
-                                                        .data
-                                                        ?.data?[index]
-                                                        .productDetails
-                                                        ?.images
-                                                        ?.map((image) =>
-                                                            image.imageUrl ??
-                                                            '')
-                                                  ]
-                                                      .map((productImage) =>
-                                                          Image.network(
-                                                            "${AppUrls.baseFileUrl}$productImage",
-                                                            height: 150,
-                                                            fit: BoxFit
-                                                                .fitHeight,
-                                                            loadingBuilder:
-                                                                (context, child,
-                                                                    loadingProgress) {
-                                                              if (loadingProgress
-                                                                      ?.cumulativeBytesLoaded !=
-                                                                  loadingProgress
-                                                                      ?.expectedTotalBytes) {
-                                                                return CommonShimmerWidget(
-                                                                  child:
-                                                                      Container(
-                                                                    height: 150,
-                                                                    width: 150,
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: AppColors
-                                                                          .whiteColor,
-                                                                      borderRadius:
-                                                                          BorderRadius.all(
-                                                                              Radius.circular(AppConstants.radius_10)),
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              }
-                                                              return child;
-                                                            },
-                                                            errorBuilder:
-                                                                (context, error,
-                                                                    stackTrace) {
-                                                              return Image
-                                                                  .asset(
-                                                                AppImagePath
-                                                                    .imageNotAvailable5,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                width: 80,
-                                                                height: 150,
-                                                              );
-                                                            },
-                                                          ))
-                                                      .toList(),
-                                                  options: CarouselOptions(
-                                                      height: 150,
-                                                      onPageChanged:
-                                                          (index, p1) {
-                                                        context
-                                                            .read<BasketBloc>()
-                                                            .add(BasketEvent
-                                                                .updateImageIndexEvent(
-                                                                    index:
-                                                                        index));
-                                                      },
-                                                      initialPage: 1,
-                                                      aspectRatio: 16 / 9,
-                                                      scrollDirection:
-                                                          Axis.horizontal,
-                                                      enableInfiniteScroll:
-                                                          false,
-                                                      autoPlayCurve:
-                                                          Curves.decelerate,
-                                                      pageSnapping: true)),
-                                            ),
-                                            [
-                                                      CartItemList
-                                                              .data
-                                                              ?.data?[index]
-                                                              .productDetails
-                                                              ?.mainImage ??
-                                                          '',
-                                                      ...?CartItemList
-                                                          .data
-                                                          ?.data?[index]
-                                                          .productDetails
-                                                          ?.images
-                                                          ?.map((image) =>
-                                                              image.imageUrl ??
-                                                              '')
-                                                    ].length <
-                                                    2
-                                                ? 0.width
-                                                : Positioned(
-                                                    bottom: 5,
-                                                    child: Container(
-                                                      width: getScreenWidth(
-                                                          context),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          CartItemList
-                                                                  .data
-                                                                  ?.data?[index]
-                                                                  .productDetails
-                                                                  ?.mainImage ??
-                                                              '',
-                                                          ...?CartItemList
-                                                              .data
-                                                              ?.data?[index]
-                                                              .productDetails
-                                                              ?.images
-                                                              ?.map((image) =>
-                                                                  image
-                                                                      .imageUrl ??
-                                                                  '')
-                                                        ]
-                                                            .asMap()
-                                                            .entries
-                                                            .map(
-                                                                (productImage) =>
-                                                                    Container(
-                                                                      height: 7,
-                                                                      width: 7,
-                                                                      margin: EdgeInsets.symmetric(
-                                                                          horizontal:
-                                                                              AppConstants.padding_2),
-                                                                      decoration: BoxDecoration(
-                                                                          color: state.productImageIndex == productImage.key
-                                                                              ? AppColors.mainColor
-                                                                              : AppColors.borderColor,
-                                                                          shape: BoxShape.circle),
-                                                                    ))
-                                                            .toList(),
-                                                      ),
-                                                    ))
-                                          ],
-                                        ),
-                                      ),
-                                      5.width,
-                                      Text(
-                                        CartItemList.data?.data?[index]
-                                                .productDetails?.productName ??
-                                            '',
-                                        style: AppStyles.rkBoldTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.greyColor,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      Text(
-                                        '${AppLocalizations.of(context)!.currency}${(double.parse(CartItemList.data?.data?[index].totalAmount.toString() ?? '0') / (CartItemList.data?.data?[index].totalQuantity ?? 1)).toStringAsFixed(2)}',
-                                        style: AppStyles.rkBoldTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.blackColor,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      10.height,
-                                      (CartItemList.data?.data?[index].sales
-                                                      ?.length ??
-                                                  0) >
-                                              0
-                                          ? Align(
-                                              alignment: Alignment.topLeft,
-                                              child: Text(
-                                                "${parse(CartItemList.data?.data?[index].sales?.first.salesDescription).body?.text}",
-                                                style:
-                                                    AppStyles.rkBoldTextStyle(
-                                                  size: AppConstants.font_14,
-                                                  color: AppColors.greyColor,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            )
-                                          : SizedBox(),
-                                      (CartItemList.data?.data?[index].note ??
-                                                  '')
-                                              .isNotEmpty
-                                          ? Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical:
-                                                        AppConstants.padding_20,
-                                                  ),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .note,
-                                                        style: AppStyles
-                                                            .rkRegularTextStyle(
-                                                          size: AppConstants
-                                                              .font_14,
-                                                          color: AppColors
-                                                              .greyColor,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                      ),
-                                                      10.height,
-                                                      Container(
-                                                          width: getScreenWidth(
-                                                              context),
-                                                          padding: EdgeInsets.only(
-                                                              left: AppConstants
-                                                                  .padding_10,
-                                                              right: AppConstants
-                                                                  .padding_10,
-                                                              bottom: AppConstants
-                                                                  .padding_5),
-                                                          decoration: BoxDecoration(
-                                                              color: AppColors
-                                                                  .notesBGColor,
-                                                              borderRadius: BorderRadius.all(
-                                                                  Radius.circular(
-                                                                      AppConstants
-                                                                          .radius_5))),
-                                                          child: Padding(
-                                                            padding: const EdgeInsets
-                                                                .symmetric(
-                                                                vertical:
-                                                                    AppConstants
-                                                                        .padding_10),
-                                                            child: Text(
-                                                              CartItemList
-                                                                      .data
-                                                                      ?.data?[
-                                                                          index]
-                                                                      .note ??
-                                                                  '',
-                                                              style: AppStyles.rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .font_14,
-                                                                  color: AppColors
-                                                                      .blackColor),
-                                                            ),
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          : SizedBox(),
-                                      // 160.height,
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        );
-      },
-    );
+
   }
 }

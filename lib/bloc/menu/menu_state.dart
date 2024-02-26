@@ -9,6 +9,7 @@ class MenuState with _$MenuState {
     required bool isLoadMore,
     required bool isBottomOfAppContents,
     required RefreshController refreshController,
+
   }) = _MenuState;
 
   factory MenuState.initial() => MenuState(
@@ -18,5 +19,6 @@ class MenuState with _$MenuState {
         isLoadMore: false,
         isBottomOfAppContents: false,
         refreshController: RefreshController(),
+
       );
 }

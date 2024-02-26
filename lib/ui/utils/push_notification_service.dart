@@ -48,9 +48,21 @@ class PushNotificationService {
         manageNavigation( true, _mainPage, _subPage , _id);
       },
     );
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null) {
+        // DO YOUR THING HERE
+        debugPrint("onMessageOpenedApp: ${message.data}");
+        _mainPage = message.data['data']['message']['mainPage'];
+        _subPage = message.data['data']['message']['subPage'];
+        _id = message.data['data']['message']['id'];
+        manageNavigation( true, _mainPage, _subPage , _id);
+      }
+    });
     if (Platform.isIOS) {
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     }
+
+
 
     enableIOSNotifications();
     await registerNotificationListeners();
@@ -81,6 +93,7 @@ class PushNotificationService {
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,
+
     );
     String? fcmToken = '';
 
@@ -118,6 +131,7 @@ class PushNotificationService {
         _mainPage = mainPage;
         _id = id;
         String imageUrl = data['message']['imageUrl'] ?? '';
+        print('hello______${imageUrl}');
 
         if (imageUrl.isNotEmpty) {
 
@@ -164,7 +178,8 @@ class PushNotificationService {
                 channelId,
                 channelName,
                 channelDescription: channelDesc,
-                icon: androidIcon??'',
+                icon: androidIcon ??'',
+                channelShowBadge: true,
                 styleInformation: BigPictureStyleInformation(
                   FilePathAndroidBitmap(fileName),
                   hideExpandedLargeIcon: false,
@@ -175,6 +190,7 @@ class PushNotificationService {
                 channelName,
                 channelDescription: channelDesc,
                 icon: androidIcon??'',
+               channelShowBadge: true
               ),
       ):flutter_local_notifications.NotificationDetails(
       iOS: fileName != null
@@ -209,12 +225,11 @@ class PushNotificationService {
   }
 
   void manageNavigation(bool isAppOpen, String mainPage, String subPage , String id) {
-
     debugPrint('main   = ${mainPage}');
     debugPrint('subPage   = ${subPage}');
     debugPrint('id = ${id}');
     debugPrint('isAppOpen = ${isAppOpen}');
-    if (isAppOpen) {
+  //  if (isAppOpen) {
       debugPrint('subPage  1 = ${subPage}');
       if(subPage == ''){
         if (mainPage == 'companyScreen') {
@@ -265,14 +280,17 @@ class PushNotificationService {
                 AppStrings.isSubCategory : 'false',
               });
         }
+      else{
+          AppRouting.generateRoute(RouteSettings(
+            name: RouteDefine.splashScreen.name,
+          ));
+        }
       }
-
-
-    } else {
-      AppRouting.generateRoute(RouteSettings(
+   // } else {
+      /*AppRouting.generateRoute(RouteSettings(
           name: RouteDefine.splashScreen.name,
-         ));
-    }
+         ));*/
+    //}
   }
 
   @pragma('vm:entry-point')
@@ -283,7 +301,6 @@ class PushNotificationService {
     _subPage = message.data['data']['message']['subPage'];
     _id = message.data['data']['message']['id'];
     manageNavigation( true, _mainPage, _subPage , _id);
-
   }
 
   Future<void> enableIOSNotifications() async {
@@ -302,5 +319,6 @@ class PushNotificationService {
         description:
             'This channel is used for important notifications.', // description
         importance: Importance.max,
+        showBadge: true,
       );
 }

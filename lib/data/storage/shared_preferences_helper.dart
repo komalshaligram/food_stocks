@@ -23,7 +23,11 @@ class SharedPreferencesHelper {
   static const String gridView = 'gridView';
   static const String emailId = 'userEmailId';
   static const String guestUser = 'guestUser';
-  static const String CompanyGridView = 'CompanyGridView';
+  static const String companyProductGrid = 'isCompanyProductGrid';
+  static const String supplierProductGrid = 'isSupplierProductGrid';
+  static const String planogramProductGrid = 'isPlanogramProductGrid';
+  static const String recommendationProductGrid = 'isrecommendationProductGrid';
+  static const String reorderProductGrid = 'isReorderProductGrid';
 
   final SharedPreferences prefs;
 
@@ -49,7 +53,7 @@ class SharedPreferencesHelper {
       await prefs.remove(lang);
       await prefs.remove(userLoggedIn);
       await prefs.remove(appVersion);
-      await prefs.remove(fcmToken);
+
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
   }
@@ -143,9 +147,22 @@ class SharedPreferencesHelper {
   Future<void> setEmailId({required String userEmailId}) async {
     await prefs.setString(emailId, userEmailId);
   }
-  Future<void> setCompanyGridView({required bool isCompanyGridView}) async {
-    await prefs.setBool(CompanyGridView, isCompanyGridView);
+  Future<void> setCompanyGridListView({required bool isCompanyProductGrid}) async {
+    await prefs.setBool(companyProductGrid, isCompanyProductGrid);
   }
+  Future<void> setSupplierProductGridListView({required bool isSupplierProductGrid}) async {
+    await prefs.setBool(supplierProductGrid, isSupplierProductGrid);
+  }
+  Future<void> setPlanogramProductGridListView({required bool isPlanogramProductGrid}) async {
+    await prefs.setBool(planogramProductGrid, isPlanogramProductGrid);
+  }
+  Future<void> setReorderProductGridListView({required bool isReorderProductGrid}) async {
+    await prefs.setBool(reorderProductGrid, isReorderProductGrid);
+  }
+  Future<void> setRecommendationProductGridListView({required bool isRecommendationProductGrid}) async {
+    await prefs.setBool(recommendationProductGrid, isRecommendationProductGrid);
+  }
+
 
   String getAppLanguage() {
     return prefs.getString(lang) ?? 'he';
@@ -228,8 +245,19 @@ class SharedPreferencesHelper {
   bool getGuestUser() {
     return prefs.getBool(guestUser) ?? false;
   }
-
-  bool getCompanyGridView() {
-    return prefs.getBool(CompanyGridView) ?? true;
+  bool getCompanyProductGrid() {
+    return prefs.getBool(companyProductGrid) ?? true;
+  }
+  bool getSupplierProductGrid() {
+    return prefs.getBool(supplierProductGrid) ?? true;
+  }
+  bool getPlanogramProductGrid() {
+    return prefs.getBool(planogramProductGrid) ?? true;
+  }
+  bool getRecommendationProductGrid() {
+    return prefs.getBool(recommendationProductGrid) ?? true;
+  }
+  bool getReorderProductGrid() {
+    return prefs.getBool(reorderProductGrid) ?? true;
   }
 }

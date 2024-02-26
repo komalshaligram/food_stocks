@@ -10,7 +10,9 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
 
   const factory CompanyProductsEvent.getProductDetailsEvent(
       {required BuildContext context,
-      required String productId}) = _GetProductDetailsEvent;
+      required String productId,
+      required bool isBarcode
+      }) = _GetProductDetailsEvent;
 
   const factory CompanyProductsEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;
@@ -31,10 +33,13 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
   const factory CompanyProductsEvent.supplierSelectionEvent(
       {required int supplierIndex,
       required BuildContext context,
-      required int supplierSaleIndex}) = _SupplierSelectionEvent;
+      required int supplierSaleIndex,
+      }) = _SupplierSelectionEvent;
 
   const factory CompanyProductsEvent.addToCartProductEvent(
-      {required BuildContext context}) = _AddToCartProductEvent;
+      {required BuildContext context,
+      required String productId
+      }) = _AddToCartProductEvent;
 
   const factory CompanyProductsEvent.setCartCountEvent() = _SetCartCountEvent;
 
@@ -48,10 +53,22 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
       {required BuildContext context}) = _RefreshListEvent;
 
 
-  const factory CompanyProductsEvent.getGridOrListViewEvent(
-      {required BuildContext context}) = _getGridOrListViewEvent;
-
   const factory CompanyProductsEvent.getCartCountEvent(
       ) = _getCartCountEvent;
 
+  const factory CompanyProductsEvent.getGridListView(
+      ) = _getGridListView;
+
+  const factory CompanyProductsEvent.changeCategoryExpansion({bool? isOpened}) =
+  _ChangeCategoryExpansion;
+
+  const factory CompanyProductsEvent.globalSearchEvent({required BuildContext context}) =
+  _GlobalSearchEvent;
+
+  const factory CompanyProductsEvent.updateGlobalSearchEvent(
+      {required String search,
+        required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+
+  const factory CompanyProductsEvent.getProductCategoriesListEvent(
+      {required BuildContext context}) = _GetProductCategoriesListEvent;
 }

@@ -13,12 +13,9 @@ import 'package:food_stock/data/model/res_model/product_details_res_model/produc
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:version_check/version_check.dart';
+import 'package:store_version_checker/store_version_checker.dart';
 import 'package:vibration/vibration.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
@@ -47,9 +44,7 @@ import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_strings.dart';
-import '../../ui/utils/themes/app_styles.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
@@ -169,7 +164,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           debugPrint('product details id = ${event.productId}');
           _isProductInCart = false;
           _cartProductId = '';
-          _productQuantity = 0;
+          _productQuantity = 1;
           try {
             emit(state.copyWith(
                 isProductLoading: true, isSelectSupplier: false));
@@ -178,25 +173,83 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 data: ProductDetailsReqModel(params: event.productId).toJson());
             ProductDetailsResModel response =
             ProductDetailsResModel.fromJson(res);
+            print('ProductDetailsResModel______${response}');
             if (response.status == 200) {
-              int productStockUpdateIndex = state.productStockList.indexWhere(
-                    (productStock) =>
-                productStock.productId == event.productId,);
-              if (productStockUpdateIndex == -1 && (event.isBarcode ?? false)) {
+              int productStockUpdateIndex = 0;
+              if(event.isBarcode){
+                productStockUpdateIndex = 0;
+              }
+              else{
+                productStockUpdateIndex = state.productStockList.indexWhere(
+                      (productStock) =>
+                  productStock.productId == event.productId,);
+              }
+              emit(state.copyWith(productStockUpdateIndex:productStockUpdateIndex));
+              List<ProductStockModel> productStockList =
+              state.productStockList.toList(growable: false);
+              productStockList[productStockList
+                  .indexOf(productStockList.last)] = productStockList[
+              productStockList.indexOf(productStockList.last)]
+                  .copyWith(
+                quantity: _productQuantity,
+                productId: response.product?.first.id ?? '',
+                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
+                productSaleId: '',
+                productSupplierIds: '',
+                note: '',
+                isNoteOpen: false,
+              );
+              emit(state.copyWith(productStockList: productStockList));
+              try {
+                SharedPreferencesHelper preferences = SharedPreferencesHelper(
+                    prefs: await SharedPreferences.getInstance());
+                final res = await DioClient(event.context).post(
+                    '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+                    options: Options(headers: {
+                      HttpHeaders.authorizationHeader:
+                      'Bearer ${preferences.getAuthToken()}'
+                    }));
+                GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+                if (response.status == 200) {
+                  debugPrint('cart before = ${response.data}');
+
+                  debugPrint('state.productStockUpdateIndex = ${state.productStockList[state.productStockUpdateIndex].productId}');
+
+                  response.data?.data?.forEach((cartProduct) {
+                    debugPrint('cart id : ${cartProduct.id}');
+                    if (cartProduct.id == state.productStockList[state.productStockList.length-1].productId
+                        || cartProduct.id == event.productId
+
+                    ) {
+                      _isProductInCart = true;
+                      _cartProductId = cartProduct.cartProductId ?? '';
+                      _productQuantity = cartProduct.totalQuantity ?? 0;
+                      return;
+                    }
+
+                  });
+//65d5f7d1aa0e704db5d08f13
+                  debugPrint(
+                      '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
+                }
+              } on ServerException {}
+
+              if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: false);
                 productStockList[productStockList
                     .indexOf(productStockList.last)] = productStockList[
                 productStockList.indexOf(productStockList.last)]
                     .copyWith(
-                  quantity: 1,
+                  quantity: _productQuantity,
                   productId: response.product?.first.id ?? '',
-                  stock: response.product?.first.numberOfUnit ?? 0,
+                  stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
                   productSaleId: '',
                   productSupplierIds: '',
                   note: '',
                   isNoteOpen: false,
                 );
+
 
                 emit(state.copyWith(productStockList: productStockList));
                 debugPrint('new index = ${state.productStockList.last}');
@@ -204,6 +257,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     productStockList.indexOf(productStockList.last);
 
                 debugPrint('barcode stock = ${state.productStockList.last}');
+                debugPrint('barcode stock 1= ${state.productStockList.last.quantity}');
                 debugPrint(
                     'barcode stock update index = ${state.productStockList
                         .length}');
@@ -232,6 +286,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     basePrice:
                     double.parse(supplier.productPrice ?? '0.0'),
                     stock: int.parse(supplier.productStock ?? '0'),
+                    quantity: _productQuantity,
                     selectedIndex: (supplier.supplierId ?? '') ==
                         state
                             .productStockList[productStockUpdateIndex]
@@ -343,32 +398,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       supplierSaleIndex: supplierSaleIndex));
                 }
               }
-              try {
-                SharedPreferencesHelper preferences = SharedPreferencesHelper(
-                    prefs: await SharedPreferences.getInstance());
-                final res = await DioClient(event.context).post(
-                    '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                    options: Options(headers: {
-                      HttpHeaders.authorizationHeader:
-                      'Bearer ${preferences.getAuthToken()}'
-                    }));
-                GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-                if (response.status == 200) {
-                  debugPrint('cart before = ${response.data}');
-                  response.data?.data?.forEach((cartProduct) {
-                    if (cartProduct.id ==
-                        state.productStockList[state.productStockUpdateIndex]
-                            .productId) {
-                      _isProductInCart = true;
-                      _cartProductId = cartProduct.cartProductId ?? '';
-                      _productQuantity = cartProduct.totalQuantity ?? 0;
-                      return;
-                    }
-                  });
-                  debugPrint(
-                      '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
-                }
-              } on ServerException {}
             } else {
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
@@ -524,7 +553,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     productSupplierIds:
                     supplierList[event.supplierIndex].supplierId,
                     stock: supplierList[event.supplierIndex].stock,
-                    quantity: 1,
+                    quantity: supplierList[event.supplierIndex].quantity != 0 ? supplierList[event.supplierIndex].quantity :1,
                     totalPrice: event.supplierSaleIndex == -2
                         ? supplierList[event.supplierIndex].basePrice
                         : supplierList[event.supplierIndex]
@@ -586,8 +615,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               // debugPrint('last quantity = $lastQuantityIndex');
               emit(state.copyWith(isLoading: true));
               UpdateCartReqModel request = UpdateCartReqModel(
-                productId: state
-                    .productStockList[state.productStockUpdateIndex].productId,
+                productId: state.productStockList[state.productStockUpdateIndex].productId == ''? event.productId :state.productStockList[state.productStockUpdateIndex].productId,
                 supplierId: state.productStockList[state
                     .productStockUpdateIndex]
                     .productSupplierIds,
@@ -598,8 +626,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     : state.productStockList[state.productStockUpdateIndex]
                     .productSaleId,
                 quantity: state.productStockList[state.productStockUpdateIndex]
-                    .quantity +
-                    _productQuantity /*int.parse(cartProductQuantityList[lastQuantityIndex])*/,
+                    .quantity/* + _productQuantity */,
                 cartProductId:
                 _cartProductId /*cartProductIdList[cartProductList.indexOf(state
                   .productStockList[state.productStockUpdateIndex].productId)]*/
@@ -612,6 +639,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               UpdateCartResModel response = UpdateCartResModel.fromJson(res);
               if (response.status == 201) {
                 Vibration.vibrate();
+                Navigator.pop(event.context);
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
                 productStockList[state.productStockUpdateIndex] =
@@ -626,7 +654,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 emit(state.copyWith(
                     isLoading: false, productStockList: productStockList));
 
-                Navigator.pop(event.context);
+
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
@@ -657,9 +685,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               InsertCartModel.InsertCartReqModel insertCartReqModel =
               InsertCartModel.InsertCartReqModel(products: [
                 InsertCartModel.Product(
-                    productId: state
-                        .productStockList[state.productStockUpdateIndex]
-                        .productId,
+                    productId: state.productStockList[state.productStockUpdateIndex].productId == ''? event.productId :state.productStockList[state.productStockUpdateIndex].productId,
                     quantity: state
                         .productStockList[state.productStockUpdateIndex]
                         .quantity,
@@ -1023,7 +1049,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         }
 
-        if (event is _ChangeCategoryExpansion) {
+        else if (event is _ChangeCategoryExpansion) {
           if (event.isOpened != null) {
             emit(state.copyWith(isCategoryExpand: event.isOpened ?? false));
           } else {
@@ -1225,85 +1251,49 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
 
         else if (event is _checkVersionOfAppEvent) {
+          final _checker = StoreVersionChecker();
+         // PackageInfo packageInfo = await PackageInfo.fromPlatform();
+          _checker.checkUpdate().then((value) {
+            print('update available');
+            print(value.canUpdate); //return true if update is available
+            print(value.currentVersion); //return current app version
+            print(value.newVersion); //return the new app version
+            print(value.appURL); //return the app url
+            print(value.errorMessage);
+            if(value.canUpdate && Platform.isAndroid){
+              customShowUpdateDialog(
+                  event.context, preferences.getAppLanguage(),value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
+            }
 
-          PackageInfo packageInfo = await PackageInfo.fromPlatform();
-          final versionCheck = VersionCheck(
-            packageName: Platform.isIOS ? 'com.foodstock' : 'com.foodstock.dev',
-            packageVersion: packageInfo.version,
-            /*showUpdateDialog: customShowUpdateDialog(
-                event.context, preferences.getAppLanguage()),*/
-          );
+          });
+         // final versionCheck = VersionCheck(
+         //    packageName: Platform.isIOS ? 'com.foodstock' : 'com.foodstock.dev',
+         //    packageVersion: packageInfo.version,
+         //    showUpdateDialog: (ctx,vc){
+         //      if(vc.packageVersion !=  vc.storeVersion){
+         //        customShowUpdateDialog(
+         //            event.context, preferences.getAppLanguage(),vc.storeUrl);
+         //        emit(state.copyWith(isIgnorePointer: true));
+         //
+         //      }
+         //    }
+         //  );
 
-          await versionCheck.checkVersion(event.context);
-         /* print(" versionCheck.packageVersion ${ versionCheck.packageVersion}");
-          print(" versionCheck.packageName ${versionCheck.packageName}");
-          print(" versionCheck.storeVersion ${versionCheck.storeVersion}");
-          print("versionCheck.storeUrl ${versionCheck.storeUrl}");*/
-          if(versionCheck.packageVersion !=  versionCheck.storeVersion && Platform.isAndroid){
+         /* await versionCheck.checkVersion(event.context);
+          debugPrint('package version:${versionCheck.packageVersion}');
+          debugPrint('store Version:${versionCheck.storeVersion}');*/
+          /*if(versionCheck.packageVersion !=  versionCheck.storeVersion && Platform.isAndroid){
             customShowUpdateDialog(
                 event.context, preferences.getAppLanguage(),versionCheck.storeUrl);
-          }
+          }*/
+        }
+
+        else if(event is _ImagePreviewEvent){
+          emit(state.copyWith(isPreview: !state.isPreview));
         }
       }
     });
   }
 
-  customShowUpdateDialog(BuildContext context, String directionality, String? storeUrl) {
-    showDialog(
-      context: context,
-      builder: (context1) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.new_version_app_update,
-              style: AppStyles.rkRegularTextStyle(
-                  color: AppColors.blackColor,
-                  size: AppConstants.mediumFont)
-          ),
-          actions: [
-            Align(
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: () {
-                  _launchUrl(storeUrl);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                  alignment: Alignment.center,
-                  width: 80,
-                  decoration: BoxDecoration(
-                      gradient: AppColors.appMainGradientColor,
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Text(
-                    AppLocalizations.of(context)!.update,
-                    style: AppStyles.rkRegularTextStyle(
-                        color: AppColors.whiteColor,
-                        size: AppConstants.font_14),
-                  ),
-                ),
-              ),
-            )
-          ],
-        );
-      },);
-  }
 
-
-
-  Future<void> _launchUrl(String? storeUrl) async {
-    Uri _url = Uri.parse(
-        storeUrl ?? ('https://play.google.com/store/apps/details?id=com.foodstock.dev'));
-    if(Platform.isAndroid){
-try{
-  launchUrl(_url);
-}on PlatformException catch(e){
-  debugPrint(e.toString());
-}finally{
-  launchUrl(_url);
-    }
-
-    /*  if (!await launchUrl(_url)) {
-        throw Exception('Could not launch $_url');
-      }*/
-    }
-
-  }
 }

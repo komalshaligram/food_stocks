@@ -49,6 +49,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required bool isGuestUser,
     required bool isBottomProducts,
     required int cartCount,
+    required bool duringCelebration,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -61,7 +62,7 @@ class StoreCategoryState with _$StoreCategoryState {
         subCategoryList: [],
         productCategoryList: [],
         planoGramsList: [],
-        productStockList: [],
+        productStockList: [[],[],[],[]],
         isPlanogramShimmering: false,
         isSubCategoryShimmering: false,
         isLoading: false,
@@ -97,7 +98,8 @@ class StoreCategoryState with _$StoreCategoryState {
     isGridView: true,
    isGuestUser : false,
     isBottomProducts : false,
-    cartCount: 0
+    cartCount: 0,
+    duringCelebration: false
 
       );
 }

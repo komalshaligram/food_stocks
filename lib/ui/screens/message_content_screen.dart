@@ -81,11 +81,6 @@ class MessageContentScreenWidget extends StatelessWidget {
                         trailingWidget: Center(
                           child: GestureDetector(
                             onTap: () {
-                              // Navigator.pop(context, {
-                              //   AppStrings.messageIdString: state.message.id,
-                              //   AppStrings.messageReadString: !(state.message.isRead ?? true),
-                              //   AppStrings.messageDeleteString: true,
-                              // });
                               showDialog(
                                 context: context,
                                 builder: (context1) => CommonAlertDialog(
@@ -156,13 +151,6 @@ class MessageContentScreenWidget extends StatelessWidget {
                                             shape: BoxShape.circle),
                                         alignment: Alignment.center,
                                         child: Image.asset(AppImagePath.imageNotAvailable5)
-                                        /*Text(
-                                          AppStrings.failedToLoadString,
-                                          textAlign: TextAlign.center,
-                                          style: AppStyles.rkRegularTextStyle(
-                                              size: AppConstants.font_14,
-                                              color: AppColors.textColor),
-                                        ),*/
                                       );
                                     },
                                   )
@@ -245,16 +233,6 @@ class MessageContentScreenWidget extends StatelessWidget {
                                                     shape: BoxShape.circle),
                                                 alignment: Alignment.center,
                                                 child:Image.asset(AppImagePath.imageNotAvailable5)
-                                                /* Text(
-                                                  AppStrings.failedToLoadString,
-                                                  textAlign: TextAlign.center,
-                                                  style: AppStyles
-                                                      .rkRegularTextStyle(
-                                                          size: AppConstants
-                                                              .font_14,
-                                                          color: AppColors
-                                                              .textColor),
-                                                ),*/
                                               );
                                             },
                                           )

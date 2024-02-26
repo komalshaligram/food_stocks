@@ -58,7 +58,9 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory StoreCategoryEvent.addToCartProductEvent(
-      {required BuildContext context}) = _AddToCartProductEvent;
+      {required BuildContext context,
+      required String productId
+      }) = _AddToCartProductEvent;
 
   const factory StoreCategoryEvent.setCartCountEvent() = _SetCartCountEvent;
 
@@ -104,4 +106,7 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.getCartCountEvent(
   ) = _getCartCountEvent;
+
+  const factory StoreCategoryEvent.AllProductsRefreshListEvent(
+      {required BuildContext context}) = _AllProductsRefreshListEvent;
 }

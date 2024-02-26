@@ -34,7 +34,9 @@ class HomeEvent with _$HomeEvent {
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory HomeEvent.addToCartProductEvent(
-      {required BuildContext context}) = _AddToCartProductEvent;
+      {required BuildContext context,
+      required String productId
+      }) = _AddToCartProductEvent;
 
   const factory HomeEvent.setCartCountEvent() = _SetCartCountEvent;
 
@@ -96,6 +98,7 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.checkVersionOfAppEvent(
       {required BuildContext context}) = _checkVersionOfAppEvent;
 
-
+  const factory HomeEvent.ImagePreviewEvent(
+      ) = _ImagePreviewEvent;
 
 }

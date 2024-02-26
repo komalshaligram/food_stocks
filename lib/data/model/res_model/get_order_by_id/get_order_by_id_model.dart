@@ -55,6 +55,10 @@ class OrderDatum with _$OrderDatum {
     double? bottlePrice,
     double? bottleTax,
     double? vatAmount,
+    double? comaxInvoicePrice,
+    double? rivchitInvoicePrice,
+    double? totalRefundAmount,
+
 
   }) = _OrderDatum;
 
@@ -139,6 +143,7 @@ class Product with _$Product {
     String? productName,
     @JsonKey(name: "quantity")
     int? quantity,
+    int? unitQuantity,
     @JsonKey(name: "sku")
     String? sku,
     @JsonKey(name: "brand")
@@ -172,6 +177,10 @@ class Product with _$Product {
     @JsonKey(name: "mainImage")
     String? mainImage,
     bool? isBottle,
+    bool? isUpdated,
+    int? updatedUnitQuantity,
+    double? updatedPrice,
+    int? numberOfUnit,
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);

@@ -59,4 +59,20 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
       required List<String> Product,
         required BuildContext BottomSheetContext,
       }) = _removeIssueEvent;
+
+  const factory ProductDetailsEvent.duplicateButtonEvent({
+    required BuildContext context,
+  }) = _duplicateButtonEvent;
+
+  const factory ProductDetailsEvent.getAllCartEvent({required BuildContext context}) =
+  _getAllCartEvent;
+
+  const factory ProductDetailsEvent.addToCartProductEvent(
+      {required BuildContext context,
+        required String productId
+      }) = _AddToCartProductEvent;
+
+  const factory ProductDetailsEvent.updateQuantityOfProduct(
+      {required BuildContext context}) = _UpdateQuantityOfProduct;
+
 }
