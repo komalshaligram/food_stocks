@@ -34,7 +34,7 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
       {required BuildContext context,
       required String productId,
       required int planoGramIndex,
-      bool? isBarcode}) = _GetProductDetailsEvent;
+        required bool isBarcode}) = _GetProductDetailsEvent;
 
   const factory StoreCategoryEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;
