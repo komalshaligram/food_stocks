@@ -259,6 +259,13 @@ class ProductSaleScreenWidget extends StatelessWidget {
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
+                            isLoading: state.isLoading,
+                            addToOrderTap: () {
+                              context.read<ProductSaleBloc>().add(
+                                  ProductSaleEvent
+                                      .addToCartProductEvent(
+                                      context: context1));
+                            },
                             imageOnTap: (){
                               showDialog(
                                 context: context,

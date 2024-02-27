@@ -19,6 +19,7 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_product_details_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
+import 'package:food_stock/ui/widget/company_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -1144,6 +1145,7 @@ class HomeScreenWidget extends StatelessWidget {
           productId: productId,
       isBarcode: isBarcode ?? false
         ));
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1159,9 +1161,7 @@ class HomeScreenWidget extends StatelessWidget {
           value: context.read<HomeBloc>(),
           child: DraggableScrollableSheet(
             expand: true,
-            maxChildSize: 1 -
-                (MediaQuery.of(context).viewPadding.top /
-                    getScreenHeight(context)),
+            maxChildSize: 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: AppConstants.bottomSheetInitHeight,
             //shouldCloseOnMinExtent: true,
@@ -1192,6 +1192,14 @@ class HomeScreenWidget extends StatelessWidget {
                                       )),
                                 )
                               : CommonProductDetailsWidget(
+                        addToOrderTap: () {
+                          context.read<HomeBloc>().add(
+                              HomeEvent.addToCartProductEvent(
+                                  context: context1,
+                                  productId: productId
+                              ));
+                        },
+                        isLoading: state.isLoading,
                                 imageOnTap: (){
                                  showDialog(
                                       context: context,
@@ -1309,26 +1317,28 @@ class HomeScreenWidget extends StatelessWidget {
                                             context: context1));
                                   },
                                 ),
-                      bottomNavigationBar: state.isProductLoading
+                      bottomNavigationBar: state.isRelatedShimmering
                           ? 0.height
-                          : CommonProductDetailsButton(
-                              isLoading: state.isLoading,
-                              isSupplierAvailable:
-                                  state.productSupplierList.isEmpty
-                                      ? false
-                                      : true,
-                              productStock: state.productStockList[state.productStockUpdateIndex].stock != 0 ?
-                              int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
-                              int.parse(productStock.toString() ?? '0'),
-                              onAddToOrderPressed: state.isLoading
-                                  ? null
-                                  : () {
-                                      context.read<HomeBloc>().add(
-                                          HomeEvent.addToCartProductEvent(
-                                              context: context1,
-                                          productId: productId
-                                          ));
-                                    }),
+                          :
+                      Container(
+                        height: 200,
+                        padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemBuilder: (context,i){
+                            return CommonProductItemWidget(
+                              productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
+                            width: 140,
+                            productImage:state.relatedProductList[i].mainImage??'',
+                            productName: state.relatedProductList.elementAt(i).productName??'',
+                            totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
+                            price:state.relatedProductList.elementAt(i).productPrice??0.0,
+                            onButtonTap: () {
+                              print("tap 2");
+                            },
+                          );},itemCount: state.relatedProductList.length,),
+                      ),
                     ),
                   );
                 },

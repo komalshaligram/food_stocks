@@ -753,6 +753,17 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                             )),
                       )
                           : CommonProductDetailsWidget(
+                        isLoading: state.isLoading,
+                        addToOrderTap: () {
+                          context
+                              .read<CompanyProductsBloc>()
+                              .add(CompanyProductsEvent
+                              .addToCartProductEvent(
+                              context: context1,
+                              productId: productId
+
+                          ));
+                        },
                         imageOnTap: (){
                           showDialog(
                             context: context,
@@ -817,32 +828,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                   (state.productDetails.first.numberOfUnit ?? 0),
                               productScaleType: state.productDetails.first.scales?.scaleType ?? '',
                               productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                           /*   isNoteOpen: state.productStockList[state.productStockUpdateIndex].isNoteOpen,
-                              onNoteToggleChanged: () {
-                                context.read<CompanyProductsBloc>().add(
-                                    CompanyProductsEvent.toggleNoteEvent());
-                              },
-                              supplierWidget: state.productSupplierList.isEmpty
-                                  ? Container(
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    top: BorderSide(
-                                        color: AppColors
-                                            .borderColor
-                                            .withOpacity(0.5),
-                                        width: 1))),
-                            padding: const EdgeInsets.symmetric(
-                                vertical:
-                                AppConstants.padding_30),
-                            alignment: Alignment.center,
-                            child: Text(
-                            '${AppLocalizations.of(context)!.out_of_stock}',
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.redColor),
-                            ),
-                          )*/
-                              //: buildSupplierSelection(context: context),
                         productUnitPrice: state
                             .productStockList[state.productStockUpdateIndex]
                             .totalPrice!=0?  state
@@ -874,43 +859,32 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                     .decreaseQuantityOfProduct(
                                             context: context1));
                               },
-
-                              // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
-                              // isLoading: state.isLoading,
-                              /*onAddToOrderPressed: state.isLoading
-                              ? null
-                              : () {
-                            context
-                                .read<CompanyProductsBloc>()
-                                .add(CompanyProductsEvent
-                                .addToCartProductEvent(
-                                context: context1));
-                          }*/
                             ),
                       bottomNavigationBar: state.isProductLoading
                           ? 0.height
-                          : CommonProductDetailsButton(
-                              isLoading: state.isLoading,
-                              isSupplierAvailable:
-                                  state.productSupplierList.isEmpty
-                                      ? false
-                                      : true,
-                              productStock: state
-                                  .productStockList[
-                                      state.productStockUpdateIndex]
-                                  .stock,
-                              onAddToOrderPressed: state.isLoading
-                                  ? null
-                                  : () {
-                                      context
-                                          .read<CompanyProductsBloc>()
-                                          .add(CompanyProductsEvent
-                                              .addToCartProductEvent(
-                                                  context: context1,
-                                        productId: productId
-
-                                      ));
-                                    }),
+                          : Container(
+                        height: 200,
+                        padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemBuilder: (context,i){return   CommonProductItemWidget(
+                            productStock: '1',
+                            height: 10,
+                            width: 140,
+                            productImage:
+                            '',
+                            productName:
+                            '',
+                            totalSaleCount:
+                            0,
+                            price:
+                            0.0,
+                            onButtonTap: () {
+                              print("tap 2");
+                            },
+                          );},itemCount: 3,),
+                      )
                     ),
                   );
                 },
@@ -1325,21 +1299,15 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                   : InkWell(
                                                       onTap: () {
                                                         context
-                                                            .read<
-                                                                CompanyProductsBloc>()
+                                                            .read<CompanyProductsBloc>()
                                                             .add(CompanyProductsEvent
                                                                 .supplierSelectionEvent(
-                                                                    supplierIndex:
-                                                                        index,
-                                                                    context:
-                                                                        context,
-                                                                    supplierSaleIndex:
-                                                                        subIndex));
+                                                                    supplierIndex: index,
+                                                                    context: context,
+                                                                    supplierSaleIndex: subIndex));
                                                         context
-                                                            .read<
-                                                                CompanyProductsBloc>()
-                                                            .add(CompanyProductsEvent
-                                                                .changeSupplierSelectionExpansionEvent());
+                                                            .read<CompanyProductsBloc>()
+                                                            .add(CompanyProductsEvent.changeSupplierSelectionExpansionEvent());
                                                       },
                                                       splashColor:
                                                           Colors.transparent,
@@ -1356,20 +1324,13 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                             border: Border.all(
                                                                 color: state.productSupplierList[index].selectedIndex ==
                                                                         subIndex
-                                                                    ? AppColors
-                                                                        .mainColor
-                                                                        .withOpacity(
-                                                                            0.8)
-                                                                    : Colors
-                                                                        .transparent,
+                                                                    ? AppColors.mainColor.withOpacity(0.8)
+                                                                    : Colors.transparent,
                                                                 width: 1.5)),
                                                         padding: EdgeInsets.symmetric(
-                                                            vertical:
-                                                                AppConstants
-                                                                    .padding_3,
+                                                            vertical: AppConstants.padding_3,
                                                             horizontal:
-                                                                AppConstants
-                                                                    .padding_5),
+                                                                AppConstants.padding_5),
                                                         margin: EdgeInsets.only(
                                                             top: AppConstants
                                                                 .padding_5,

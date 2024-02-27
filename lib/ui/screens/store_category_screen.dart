@@ -1276,6 +1276,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               )),
                         )
                             : CommonProductDetailsWidget(
+                          isLoading: state.isLoading,
+                          addToOrderTap: state.isLoading
+                              ? (){}
+                              : () {
+                            context.read<StoreCategoryBloc>().add(
+                                StoreCategoryEvent
+                                    .addToCartProductEvent(
+                                    productId: productId,
+                                    context: context1));
+                          },
                           imageOnTap: (){
                             showDialog(
                               context: context,
@@ -1411,22 +1421,29 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         ),
                         bottomNavigationBar: state.isProductLoading
                             ? 0.height
-                            : CommonProductDetailsButton(
-                            isLoading: state.isLoading,
-                            isSupplierAvailable:
-                            state.productSupplierList.isEmpty
-                                ? false
-                                : true,
-                            productStock: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock,
-                            onAddToOrderPressed: state.isLoading
-                                ? null
-                                : () {
-                              context.read<StoreCategoryBloc>().add(
-                                  StoreCategoryEvent
-                                      .addToCartProductEvent(
-                                    productId: productId,
-                                      context: context1));
-                            }),
+                            : Container(
+                          height: 200,
+                          padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            itemBuilder: (context,i){return   CommonProductItemWidget(
+                              productStock: '1',
+                              height: 10,
+                              width: 140,
+                              productImage:
+                              '',
+                              productName:
+                              '',
+                              totalSaleCount:
+                              0,
+                              price:
+                              0.0,
+                              onButtonTap: () {
+                                print("tap 2: supplier product scren");
+                              },
+                            );},itemCount: 3,),
+                        ),
                       ),
                     );
                   },

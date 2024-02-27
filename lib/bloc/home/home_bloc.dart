@@ -10,6 +10,7 @@ import 'package:food_stock/data/model/req_model/product_sales_req_model/product_
 import 'package:food_stock/data/model/req_model/update_cart/update_cart_req_model.dart';
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
+import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
@@ -178,11 +179,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               int productStockUpdateIndex = 0;
               if(event.isBarcode){
                 productStockUpdateIndex = 0;
-              }
-              else{
+              } else{
                 productStockUpdateIndex = state.productStockList.indexWhere(
                       (productStock) =>
                   productStock.productId == event.productId,);
+               add(HomeEvent.RelatedProductsEvent(context: event.context,productId: event.productId));
               }
               emit(state.copyWith(productStockUpdateIndex:productStockUpdateIndex));
               List<ProductStockModel> productStockList =
@@ -213,15 +214,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                 if (response.status == 200) {
                   debugPrint('cart before = ${response.data}');
-
                   debugPrint('state.productStockUpdateIndex = ${state.productStockList[state.productStockUpdateIndex].productId}');
 
                   response.data?.data?.forEach((cartProduct) {
                     debugPrint('cart id : ${cartProduct.id}');
                     if (cartProduct.id == state.productStockList[state.productStockList.length-1].productId
-                        || cartProduct.id == event.productId
-
-                    ) {
+                        || cartProduct.id == event.productId) {
                       _isProductInCart = true;
                       _cartProductId = cartProduct.cartProductId ?? '';
                       _productQuantity = cartProduct.totalQuantity ?? 0;
@@ -1290,7 +1288,32 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
         else if(event is _ImagePreviewEvent){
           emit(state.copyWith(isPreview: !state.isPreview));
+        }else if(event is _RelatedProductsEvent){
+          emit(state.copyWith(isRelatedShimmering:true));
+          final res = await DioClient(event.context).post(
+              AppUrls.relatedProductsUrl,
+              data: {'mainProductId':event.productId});
+          RelatedProductResModel response =
+          RelatedProductResModel.fromJson(res);
+          debugPrint('product categories = ${response.data.length
+              .toString()}');
+          if (response.status == 200) {
+            emit(state.copyWith(
+               relatedProductList:response.data ?? [],
+                isRelatedShimmering: false));
+          } else {
+            emit(state.copyWith(isRelatedShimmering: false));
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(
+                  response.message?.toLocalization() ??
+                      response.message!,
+                  event.context),
+              type: SnackBarType.SUCCESS,
+            );
+          }
         }
+
       }
     });
   }

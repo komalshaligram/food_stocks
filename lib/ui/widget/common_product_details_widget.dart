@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:food_stock/ui/widget/common_product_details_button.dart';
+import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,7 +15,6 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
-import 'common_product_button_widget.dart';
 
 class CommonProductDetailsWidget extends StatelessWidget {
   final BuildContext context;
@@ -43,6 +43,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final String startDate;
   final String endDate;
   final bool isPreview;
+  final Function() addToOrderTap;
+  final bool isLoading;
 
   const CommonProductDetailsWidget({
     super.key,
@@ -69,7 +71,9 @@ class CommonProductDetailsWidget extends StatelessWidget {
     required this.onPageChanged,
      this.saleDate = '',   this.startDate = '',this.endDate = '',
     this.isPreview = false,
-    required this.imageOnTap
+    this.isLoading = false,
+    required this.imageOnTap,
+    required this.addToOrderTap
   });
 
   @override
@@ -148,9 +152,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
               Expanded(
                 // fit: FlexFit.tight,
                 child: SingleChildScrollView(
+                  physics: NeverScrollableScrollPhysics(),
                   controller: scrollController,
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Center(
@@ -312,7 +317,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       ): 0.width,
                       10.height,*/
                      Column(
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisSize: MainAxisSize.max,
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
@@ -321,15 +326,13 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           color: AppColors.borderColor
                                               .withOpacity(0.5),
                                           width: 1),
-                                      bottom: BorderSide(
+                                     /* bottom: BorderSide(
                                           width: 1,
                                           color: AppColors.borderColor
-                                              .withOpacity(0.5)),
+                                              .withOpacity(0.5)),*/
                                     ),
                                   ),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: AppConstants.padding_15,
-                                      vertical: AppConstants.padding_20),
+                                  padding: EdgeInsets.fromLTRB(10,10,10,0),
                                   child: productStock == 0 || productStock == -1
                                       ? Row(
                                           mainAxisAlignment:
@@ -347,18 +350,16 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           ],
                                         )
                                       : Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Container(
+                                              height: 1200,
                                               width: getScreenWidth(context) >= 700 ? (getScreenWidth(context) - 30) / 3 :  (getScreenWidth(context) - 30) / 2,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-
                                                   Text(
                                                     '${AppLocalizations.of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}',
                                                     style: AppStyles
@@ -404,8 +405,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                     child: Container(
                                                       height: 50,
                                                       width: 40,
-                                                      // padding: EdgeInsets.symmetric(
-                                                      //     horizontal: AppConstants.padding_10),
                                                       decoration: BoxDecoration(
                                                         color: AppColors
                                                             .iconBGColor,
@@ -441,7 +440,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                                 .navSelectedColor,
                                                             width: 1),
                                                       ),
-                                                      // padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
                                                       alignment:
                                                           Alignment.center,
                                                       child: Icon(
@@ -455,11 +453,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                   5.width,
                                                   Expanded(
                                                     child: Container(
-                                                      // width: max,
                                                       height: 50,
-                                                      // padding: EdgeInsets.symmetric(
-                                                      //     horizontal:
-                                                      //         AppConstants.padding_10),
                                                       decoration: BoxDecoration(
                                                         color: AppColors
                                                             .iconBGColor,
@@ -514,19 +508,13 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                         maxLength: 5,
                                                         maxLines: 1,
                                                         textInputAction:
-                                                            TextInputAction
-                                                                .done,
+                                                            TextInputAction.done,
                                                         keyboardType: Platform.isIOS?
                                                         TextInputType.numberWithOptions(signed: true)
                                                             : TextInputType.number,
                                                         inputFormatters: [
-                                                          FilteringTextInputFormatter
-                                                              .digitsOnly
+                                                          FilteringTextInputFormatter.digitsOnly
                                                         ],
-                                                        // onTapOutside: (event) =>
-                                                        //     FocusScope.of(
-                                                        //             context)
-                                                        //         .unfocus(),
                                                         textDirection:
                                                             TextDirection.ltr,
                                                         onChanged:
@@ -568,20 +556,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                                     vertical:
                                                                         0)),
                                                       )
-                                                      /*Text(
-                                                        '$productQuantity',
-                                                        style: AppStyles
-                                                            .rkBoldTextStyle(
-                                                                size: AppConstants
-                                                                    .font_26,
-                                                                color: AppColors
-                                                                    .blackColor,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700),
-                                                        // maxLines: 1,
-                                                      )*/
-                                                      ,
                                                     ),
                                                   ),
                                                   5.width,
@@ -591,8 +565,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                     child: Container(
                                                       height: 50,
                                                       width: 40,
-                                                      // padding: EdgeInsets.symmetric(
-                                                      //     horizontal: AppConstants.padding_10),
                                                       decoration: BoxDecoration(
                                                         color: AppColors
                                                             .iconBGColor,
@@ -642,118 +614,36 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           ],
                                         ),
                                 ),
-                               /* productStock == 0
-                                    ? 0.width
-                                    : Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical:
-                                                    AppConstants.padding_20,
-                                                horizontal:
-                                                    AppConstants.padding_20),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .note,
-                                                      style: AppStyles
-                                                          .rkRegularTextStyle(
-                                                              size: AppConstants
-                                                                  .font_14,
-                                                              color: AppColors
-                                                                  .blackColor),
-                                                    ),
-                                                    InkWell(
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      onTap:
-                                                          onNoteToggleChanged,
-                                                      child: Icon(
-                                                        isNoteOpen
-                                                            ? Icons.remove
-                                                            : Icons.add,
-                                                        size: 26,
-                                                        color: AppColors
-                                                            .blackColor,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                10.height,
-                                                AnimatedCrossFade(
-                                                    firstChild:
-                                                        getScreenWidth(context)
-                                                            .width,
-                                                    secondChild: Container(
-                                                      // height: 120,
-                                                      width: getScreenWidth(
-                                                          context),
-                                                      padding: EdgeInsets.only(
-                                                          left: AppConstants
-                                                              .padding_10,
-                                                          right: AppConstants
-                                                              .padding_10,
-                                                          bottom: AppConstants
-                                                              .padding_5),
-                                                      decoration: BoxDecoration(
-                                                          color: AppColors
-                                                              .notesBGColor,
-                                                          borderRadius: BorderRadius
-                                                              .all(Radius.circular(
-                                                                  AppConstants
-                                                                      .radius_5))),
-                                                      margin: EdgeInsets.only(
-                                                          bottom: AppConstants
-                                                              .padding_15),
-                                                      child: TextFormField(
-                                                        controller:
-                                                            noteController,
-                                                        onChanged:
-                                                            onNoteChanged,
-                                                        textInputAction:
-                                                            TextInputAction
-                                                                .done,
-                                                        decoration:
-                                                            InputDecoration(
-                                                                border:
-                                                                    InputBorder
-                                                                        .none),
-                                                        maxLines: 3,
-                                                        maxLength: 50,
-                                                      ),
-                                                    ),
-                                                    crossFadeState: isNoteOpen
-                                                        ? CrossFadeState
-                                                            .showSecond
-                                                        : CrossFadeState
-                                                            .showFirst,
-                                                    duration: Duration(
-                                                        milliseconds: 300))
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),*/
                           ],
-                        )
+                        ),
 
-                  // 160.height,
-                ],
+                                    ],
+                                  ),
+                ),
+          ),
+
+          CommonProductDetailsButton(
+              isLoading: isLoading,
+              isSupplierAvailable: true,
+              productStock:productStock,
+              onAddToOrderPressed: isLoading?null:addToOrderTap),
+
+          Align(
+            alignment: context.rtl?Alignment.centerRight:Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                AppLocalizations.of(context)!.related_products,
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.mediumFont,
+                    color: AppColors.blackColor),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
             ),
           ),
+
         ],
       ),
     );
