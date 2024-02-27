@@ -34,6 +34,7 @@ import '../../data/model/res_model/global_search_res_model/global_search_res_mod
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
@@ -70,10 +71,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
 
         if (event.isOpened != null) {
-          emit(state.copyWith(isCategoryExpand: event.isOpened ?? false,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : [], isBottomOfProducts : false));
+          emit(state.copyWith(isCategoryExpand: event.isOpened ?? false,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : []));
 
         } else {
-          emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : [] ,isBottomOfProducts : false ));
+          emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : []));
 
         }
       }
@@ -218,13 +219,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
       }
       else if (event is _GetPlanoGramProductsEvent) {
-        if(state.isSubCategory){
-          add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
-        }
-        else{
-          // emit(state.copyWith(isBottomProducts: false));
-          add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
-        }
+
         if (state.isLoadMore) {
           return;
         }
@@ -270,7 +265,13 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           print('state.issubcat:${state.isSubCategory}');
           print('GetPlanoGramProductsEvent   response :${response}');
           if (response.status == 200) {
-
+            if(state.isSubCategory){
+              add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
+            }
+            else{
+               emit(state.copyWith(isBottomProducts: false));
+              add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
+            }
             emit(state.copyWith(categoryPlanogramList: []));
             List<PlanogramDatum> planoGramsList =[];
             planoGramsList.addAll(state.planoGramsList);
@@ -343,35 +344,16 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               subPlanoGramsList: state.subPlanoGramsList,
               planoGramsList: state.planoGramsList,
               productStockList: productStockList,
-              subProductPageNum: state.subProductPageNum+1,
+              subProductPageNum: state.subProductPageNum + 1,
               planogramPageNum: state.planogramPageNum + 1,
               isPlanogramShimmering: false,
               isLoadMore: false,
             ));
-            if(isSubCategoryString == '' && !state.isSubCategory ){
-              emit(state.copyWith(
-                  isBottomOfPlanoGrams: subPlanoGramList.length ==
-                      (response.metaData?.totalFilteredCount ?? 0)
-                      ? true
-                      : false));
-            }
-            else if(isSubCategoryString != '' && !state.isSubCategory ){
-              emit(state.copyWith(
-                  isBottomOfPlanoGrams: subPlanoGramList.length ==
-                      (response.metaData?.totalFilteredCount ?? 0)
-                      ? true
-                      : false));
-            }
-            else{
               emit(state.copyWith(
                   isBottomOfPlanoGrams: planoGramsList.length ==
                       (response.metaData?.totalFilteredCount ?? 0)
                       ? true
                       : false));
-            }
-
-
-
 
           } else {
             emit(state.copyWith(isLoadMore: false));
@@ -504,6 +486,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
+            add(StoreCategoryEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
 
 
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
@@ -1143,6 +1126,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 searchId: sale.id ?? '',
                 name: sale.productName ?? '',
                 searchType: SearchTypes.sale,
+                numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
                 image: sale.mainImage ?? ''))
                 .toList() ??
                 []);
@@ -1153,8 +1137,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 name: supplier.productName ?? '',
                 searchType: SearchTypes.product,
                 productStock:  int.parse(supplier.productStock ?? 0.toString()),
-                image: supplier.mainImage ?? ''))
-                .toList() ??
+                numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ?? 0,
+                priceOfBox: double.parse(supplier.productPrice.toString()) ?? 0,
+                image: supplier.mainImage ?? '')).toList() ??
                 []);
             debugPrint('store cat search list = ${searchList.length}');
             emit(state.copyWith(
@@ -1252,9 +1237,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if (state.isLoadMore) {
           return;
         }
-          if (state.isBottomOfProducts) {
+        /*  if (state.isBottomOfProducts) {
           return;
-         }
+         }*/
         debugPrint('Here');
         try{
           List<PlanogramAllProduct> planogramProductList =
@@ -1264,11 +1249,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
           GetSubCategoriesProductReqModel getSubCategoriesProductReqModel = GetSubCategoriesProductReqModel(
               subCategoryId: state.subCategoryId,
-              pageNum: state.subPlanogramPageNum ,
+              pageNum: state.subProductPageNum ,
               pageLimit: AppConstants.orderPageLimit,
             );
 
-          final     res = await DioClient(event.context)
+          final  res = await DioClient(event.context)
                 .post('${AppUrls.getsubCategoryProductsUrl}',
                 data: getSubCategoriesProductReqModel
             );
@@ -1333,6 +1318,32 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       else if (event is _getCartCountEvent) {
         emit(
             state.copyWith(cartCount: preferences.getCartCount()));
+      }
+      else if(event is _RelatedProductsEvent){
+        emit(state.copyWith(isRelatedShimmering:true));
+        final res = await DioClient(event.context).post(
+            AppUrls.relatedProductsUrl,
+            data: {'mainProductId':event.productId});
+        RelatedProductResModel response =
+        RelatedProductResModel.fromJson(res);
+        debugPrint('product categories = ${response.data.length
+            .toString()}');
+        if (response.status == 200) {
+
+          emit(state.copyWith(
+              relatedProductList:response.data ?? [],
+              isRelatedShimmering: false));
+        } else {
+          emit(state.copyWith(isRelatedShimmering: false));
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: AppStrings.getLocalizedStrings(
+                response.message.toLocalization() ??
+                    response.message,
+                event.context),
+            type: SnackBarType.SUCCESS,
+          );
+        }
       }
     });
   }

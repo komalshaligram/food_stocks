@@ -32,6 +32,9 @@ class CompanyProductsState with _$CompanyProductsState {
     required bool isGridView,
     required bool duringCelebration,
     required int quantity,
+    required List<RelatedProductDatum> relatedProductList,
+    required bool isRelatedShimmering,
+
   }) = _CompanyProductsState;
 
   factory CompanyProductsState.initial() => CompanyProductsState(
@@ -63,7 +66,9 @@ class CompanyProductsState with _$CompanyProductsState {
     isCatVisible: false,
         isGridView: false,
     duringCelebration: false,
-    quantity: 0
+    quantity: 0,
+    relatedProductList: [],
+    isRelatedShimmering: false
 
       );
 }

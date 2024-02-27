@@ -71,4 +71,6 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
 
   const factory CompanyProductsEvent.getProductCategoriesListEvent(
       {required BuildContext context}) = _GetProductCategoriesListEvent;
+  const factory CompanyProductsEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
+
 }

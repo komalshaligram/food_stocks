@@ -21,6 +21,7 @@ import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.d
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -163,6 +164,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
+            add(ProductSaleEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
+
 
             debugPrint('product stock update index = $productStockUpdateIndex');
             debugPrint(
@@ -622,7 +625,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         emit(state.copyWith(imageIndex: event.index));
       } else if (event is _SetSearchEvent) {
         emit(state.copyWith(search: event.search));
-      } else if (event is _ToggleNoteEvent) {
+      }
+      else if (event is _ToggleNoteEvent) {
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: true);
         productStockList[state.productStockUpdateIndex] =
@@ -630,6 +634,32 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 isNoteOpen: !productStockList[state.productStockUpdateIndex]
                     .isNoteOpen);
         emit(state.copyWith(productStockList: productStockList));
+      }
+      else if(event is _RelatedProductsEvent){
+        emit(state.copyWith(isRelatedShimmering:true));
+        final res = await DioClient(event.context).post(
+            AppUrls.relatedProductsUrl,
+            data: {'mainProductId':event.productId});
+        RelatedProductResModel response =
+        RelatedProductResModel.fromJson(res);
+        debugPrint('product categories = ${response.data.length
+            .toString()}');
+        if (response.status == 200) {
+
+          emit(state.copyWith(
+              relatedProductList:response.data ?? [],
+              isRelatedShimmering: false));
+        } else {
+          emit(state.copyWith(isRelatedShimmering: false));
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: AppStrings.getLocalizedStrings(
+                response.message.toLocalization() ??
+                    response.message,
+                event.context),
+            type: SnackBarType.SUCCESS,
+          );
+        }
       }
     });
   }

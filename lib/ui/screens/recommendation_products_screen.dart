@@ -25,6 +25,7 @@ import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
@@ -356,6 +357,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
+                            numberOfUnits:state.searchList[index].numberOfUnits,
+                            priceOfBox: state.searchList[index].priceOfBox,
                             productStock : state.searchList[index].productStock,
                             context: context,
                             searchName: state.searchList[index].name,
@@ -840,30 +843,27 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                 context: context1));
                                   },
                                 ),
-                          bottomNavigationBar: state.isProductLoading
-                              ? 0.height
-                              :Container(
+                          bottomNavigationBar: state.isRelatedShimmering
+                              ? RelatedProductShimmerWidget()
+                              :
+                          Container(
                             height: 200,
                             padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               shrinkWrap: true,
-                              itemBuilder: (context,i){return   CommonProductItemWidget(
-                                productStock: '1',
-                                height: 10,
-                                width: 140,
-                                productImage:
-                                '',
-                                productName:
-                                '',
-                                totalSaleCount:
-                                0,
-                                price:
-                                0.0,
-                                onButtonTap: () {
-                                  print("tap 2: supplier product scren");
-                                },
-                              );},itemCount: 3,),
+                              itemBuilder: (context,i){
+                                return CommonProductItemWidget(
+                                  productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
+                                  width: 140,
+                                  productImage:state.relatedProductList[i].mainImage??'',
+                                  productName: state.relatedProductList.elementAt(i).productName??'',
+                                  totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
+                                  price:state.relatedProductList.elementAt(i).productPrice??0.0,
+                                  onButtonTap: () {
+                                    print("tap 2");
+                                  },
+                                );},itemCount: state.relatedProductList.length,),
                           ),
                         ),
                       );
@@ -1421,6 +1421,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
     required void Function() onTap,
     required void Function() onSeeAllTap,
     bool? isLastItem, required int productStock,
+    required int numberOfUnits,
+    required double priceOfBox,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,

@@ -22,6 +22,7 @@ import '../../data/model/res_model/global_search_res_model/global_search_res_mod
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
@@ -139,6 +140,7 @@ class PlanogramProductBloc
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
+            add(PlanogramProductEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
 
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
@@ -606,7 +608,8 @@ class PlanogramProductBloc
             isSelectSupplier:
                 event.isSelectSupplier ?? !state.isSelectSupplier));
         debugPrint('supplier selection : ${state.isSelectSupplier}');
-      } else if (event is _SupplierSelectionEvent) {
+      }
+      else if (event is _SupplierSelectionEvent) {
         debugPrint(
             'supplier[${event.supplierIndex}][${event.supplierSaleIndex}]');
         if (event.supplierIndex >= 0) {
@@ -974,6 +977,7 @@ class PlanogramProductBloc
                   searchId: sale.id ?? '',
                   name: sale.productName ?? '',
                   searchType: SearchTypes.sale,
+                  numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
                   image: sale.mainImage ?? '',
 
                 ))
@@ -988,7 +992,9 @@ class PlanogramProductBloc
                     searchType: SearchTypes.product,
                     image: supplier.mainImage ?? '',
                     productStock: int.parse(
-                        supplier.productStock ?? 0.toString())
+                        supplier.productStock ?? 0.toString()),
+                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ?? 0,
+                  priceOfBox: double.parse(supplier.productPrice.toString()) ?? 0,
                 ))
                 .toList() ??
                 []);
@@ -1077,6 +1083,32 @@ class PlanogramProductBloc
           emit(state.copyWith(isShimmering: false));
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
+        }
+      }
+      else if(event is _RelatedProductsEvent){
+        emit(state.copyWith(isRelatedShimmering:true));
+        final res = await DioClient(event.context).post(
+            AppUrls.relatedProductsUrl,
+            data: {'mainProductId':event.productId});
+        RelatedProductResModel response =
+        RelatedProductResModel.fromJson(res);
+        debugPrint('product categories = ${response.data.length
+            .toString()}');
+        if (response.status == 200) {
+
+          emit(state.copyWith(
+              relatedProductList:response.data ?? [],
+              isRelatedShimmering: false));
+        } else {
+          emit(state.copyWith(isRelatedShimmering: false));
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: AppStrings.getLocalizedStrings(
+                response.message.toLocalization() ??
+                    response.message,
+                event.context),
+            type: SnackBarType.SUCCESS,
+          );
         }
       }
 

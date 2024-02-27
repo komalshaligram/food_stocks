@@ -24,6 +24,7 @@ import '../../data/model/order_model/product_details_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/order_send_res_model/order_send_res_model.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -1390,6 +1391,32 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             }
           } on ServerException {
             emit(state.copyWith(isLoading: false));
+          }
+        }
+        else if(event is _RelatedProductsEvent){
+          emit(state.copyWith(isRelatedShimmering:true));
+          final res = await DioClient(event.context).post(
+              AppUrls.relatedProductsUrl,
+              data: {'mainProductId':event.productId});
+          RelatedProductResModel response =
+          RelatedProductResModel.fromJson(res);
+          debugPrint('product categories = ${response.data.length
+              .toString()}');
+          if (response.status == 200) {
+
+            emit(state.copyWith(
+                relatedProductList:response.data ?? [],
+                isRelatedShimmering: false));
+          } else {
+            emit(state.copyWith(isRelatedShimmering: false));
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(
+                  response.message.toLocalization() ??
+                      response.message,
+                  event.context),
+              type: SnackBarType.SUCCESS,
+            );
           }
         }
       }

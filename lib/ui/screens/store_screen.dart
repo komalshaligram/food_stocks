@@ -29,6 +29,7 @@ import '../../bloc/store/store_bloc.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_strings.dart';
+import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_product_details_button.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
@@ -776,6 +777,8 @@ class StoreScreenWidget extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (listViewContext, index) {
                           return _buildSearchItem(
+                              numberOfUnits:state.searchList[index].numberOfUnits,
+                              priceOfBox: state.searchList[index].priceOfBox,
                             isGuestUser: state.isGuestUser,
                             productStock : state.searchList[index].productStock,
                               context: context,
@@ -1020,7 +1023,9 @@ class StoreScreenWidget extends StatelessWidget {
     required void Function() onTap,
     required void Function() onSeeAllTap,
     bool? isLastItem, required int productStock,
-    bool isGuestUser = false
+    bool isGuestUser = false,
+    required int numberOfUnits,
+    required double priceOfBox,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1851,32 +1856,28 @@ class StoreScreenWidget extends StatelessWidget {
                                     context: context1));
                           }*/
                                 ),
-                      bottomNavigationBar: state.isProductLoading
-                          ? 0.height
-                          :    Container(
+                      bottomNavigationBar: state.isRelatedShimmering
+                          ? RelatedProductShimmerWidget()
+                          :
+                      Container(
                         height: 200,
-                          padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemBuilder: (context,i){return   CommonProductItemWidget(
-                                productStock: '1',
-                                height: 10,
-                                width: 140,
-                                productImage:
-                                '',
-                                productName:
-                                '',
-                                totalSaleCount:
-                                0,
-                                price:
-                                0.0,
-                                onButtonTap: () {
-                                  print("tap 2");
-
-                                },
-                              );},itemCount: 10,),
-                          )
+                        padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemBuilder: (context,i){
+                            return CommonProductItemWidget(
+                              productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
+                              width: 140,
+                              productImage:state.relatedProductList[i].mainImage??'',
+                              productName: state.relatedProductList.elementAt(i).productName??'',
+                              totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
+                              price:state.relatedProductList.elementAt(i).productPrice??0.0,
+                              onButtonTap: () {
+                                print("tap 2");
+                              },
+                            );},itemCount: state.relatedProductList.length,),
+                      ),
                     ),
                   );
                 },

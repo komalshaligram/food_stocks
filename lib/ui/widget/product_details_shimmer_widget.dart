@@ -166,10 +166,28 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                   ],
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: CommonShimmerWidget(
+                  child: Container(
+                    width: double.maxFinite - 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: AppColors.whiteColor,
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(AppConstants.radius_5)),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
+
+
         ],
       ),
+
+
     );
   }
 

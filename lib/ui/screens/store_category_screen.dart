@@ -22,6 +22,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
+import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
@@ -705,6 +706,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
+                            numberOfUnits:state.searchList[index].numberOfUnits,
+                            priceOfBox: state.searchList[index].priceOfBox,
                             isGuestUser: state.isGuestUser,
                             productStock:
                             state.searchList[index].productStock,
@@ -883,6 +886,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     required int productStock,
     bool? isLastItem,
     bool isGuestUser = false,
+    required int numberOfUnits,
+    required double priceOfBox,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1419,30 +1424,27 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       context: context1));
                             }*/
                         ),
-                        bottomNavigationBar: state.isProductLoading
-                            ? 0.height
-                            : Container(
+                        bottomNavigationBar: state.isRelatedShimmering
+                            ? RelatedProductShimmerWidget()
+                            :
+                        Container(
                           height: 200,
                           padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
-                            itemBuilder: (context,i){return   CommonProductItemWidget(
-                              productStock: '1',
-                              height: 10,
-                              width: 140,
-                              productImage:
-                              '',
-                              productName:
-                              '',
-                              totalSaleCount:
-                              0,
-                              price:
-                              0.0,
-                              onButtonTap: () {
-                                print("tap 2: supplier product scren");
-                              },
-                            );},itemCount: 3,),
+                            itemBuilder: (context,i){
+                              return CommonProductItemWidget(
+                                productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
+                                width: 140,
+                                productImage:state.relatedProductList[i].mainImage??'',
+                                productName: state.relatedProductList.elementAt(i).productName??'',
+                                totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
+                                price:state.relatedProductList.elementAt(i).productPrice??0.0,
+                                onButtonTap: () {
+                                  print("tap 2");
+                                },
+                              );},itemCount: state.relatedProductList.length,),
                         ),
                       ),
                     );

@@ -29,6 +29,8 @@ class SupplierProductsState with _$SupplierProductsState {
     required List<SearchModel> searchList,
     required List<Category> productCategoryList,
     required bool isCatVisible,
+    required List<RelatedProductDatum> relatedProductList,
+    required bool isRelatedShimmering,
   }) = _SupplierProductsState;
 
   factory SupplierProductsState.initial() => SupplierProductsState(
@@ -58,5 +60,7 @@ class SupplierProductsState with _$SupplierProductsState {
     searchList: [],
     productCategoryList: [],
     isCatVisible: false,
+    relatedProductList: [],
+    isRelatedShimmering: false
       );
 }
