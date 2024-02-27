@@ -15,6 +15,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_product_details_widget.dart';
+import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
@@ -1062,6 +1063,14 @@ class BasketScreenWidget extends StatelessWidget {
                             )),
                       )
                           : CommonProductDetailsWidget(
+                        addToOrderTap: () {
+                          context.read<BasketBloc>().add(
+                              BasketEvent.addToCartProductEvent(
+                                  context: context1,
+                                  productId: cartProductId
+                              ));
+                        },
+                        isLoading: state.isLoading,
                         imageOnTap: (){
                           showDialog(
                             context: context,
@@ -1183,22 +1192,30 @@ class BasketScreenWidget extends StatelessWidget {
                       ),
                       bottomNavigationBar: state.isProductLoading
                           ? 0.height
-                          : CommonProductDetailsButton(
-                          isLoading: state.isLoading,
-                          isSupplierAvailable:
-                          state.productSupplierList.isEmpty
-                              ? false
-                              : true,
-                          productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
-                          onAddToOrderPressed: state.isLoading
-                              ? null
-                              : () {
-                            context.read<BasketBloc>().add(
-                                BasketEvent.addToCartProductEvent(
-                                    context: context1,
-                                  productId: cartProductId
-                                ));
-                          }),
+                          :Container(
+                        height: 200,
+                        padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemBuilder: (context,i){return   CommonProductItemWidget(
+                            productStock: '1',
+                            height: 10,
+                            width: 140,
+                            productImage:
+                            '',
+                            productName:
+                            '',
+                            totalSaleCount:
+                            0,
+                            price:
+                            0.0,
+                            onButtonTap: () {
+                              print("tap 2");
+
+                            },
+                          );},itemCount: 3,),
+                      )
                     ),
                   );
                 },

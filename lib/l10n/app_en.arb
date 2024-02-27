@@ -401,7 +401,8 @@
   "was_not_in_stock" : "Was not in stock",
   "units" : "Units",
   "surfaces_order" : "Surfaces for order",
-  "refund_for_order" : "Refund for order"
+  "refund_for_order" : "Refund for order",
+  "related_products": "Related products"
 
 
 

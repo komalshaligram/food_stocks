@@ -19,7 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'data/services/locale_provider.dart';
 import 'app_config.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
+
 
 final shorebirdCodePush = ShorebirdCodePush();
 

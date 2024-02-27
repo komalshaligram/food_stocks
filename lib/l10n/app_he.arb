@@ -402,7 +402,8 @@
  "was_not_in_stock" : "לא היה במלאי",
   "units" : "יחידות",
    "surfaces_order" : "משטחים להזמנה",
-   "refund_for_order" : "זיכוי עבור הזמנה"
+   "refund_for_order" : "זיכוי עבור הזמנה",
+  "related_products": "מוצרים דומים"
 
 
 }

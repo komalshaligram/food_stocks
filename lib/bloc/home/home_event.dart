@@ -101,4 +101,6 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.ImagePreviewEvent(
       ) = _ImagePreviewEvent;
 
+  const factory HomeEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
+
 }
