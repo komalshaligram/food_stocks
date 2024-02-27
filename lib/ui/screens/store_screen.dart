@@ -559,24 +559,10 @@ class StoreScreenWidget extends StatelessWidget {
                                             children: [
                                               buildListTitles(
                                                   context: context,
-                                                  title: AppLocalizations.of(
-                                                          context)!
-                                                      .recommended_for_you,
-                                                  subTitle: /*state
-                                              .recommendedProductsList
-                                              .length <
-                                              6
-                                              ? ''
-                                              : */
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .more,
+                                                  title: AppLocalizations.of(context)!.recommended_for_you,
+                                                  subTitle: AppLocalizations.of(context)!.more,
                                                   onTap: () {
-                                                    Navigator.pushNamed(
-                                                        context,
-                                                        RouteDefine
-                                                            .recommendationProductsScreen
-                                                            .name);
+                                                    Navigator.pushNamed(context, RouteDefine.recommendationProductsScreen.name);
                                                   }),
                                               SizedBox(
                                                 width: getScreenWidth(context),
@@ -657,21 +643,10 @@ class StoreScreenWidget extends StatelessWidget {
                                                   title: AppLocalizations.of(
                                                           context)!
                                                       .previous_order_products,
-                                                  subTitle:
-                                                      /*state.previousOrderProductsList
-                                              .length <
-                                              6
-                                              ? ''
-                                              : */
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .more,
+                                                  subTitle: AppLocalizations.of(context)!.more,
                                                   onTap: () {
                                                     Navigator.pushNamed(
-                                                        context,
-                                                        RouteDefine
-                                                            .reorderScreen
-                                                            .name);
+                                                        context, RouteDefine.reorderScreen.name);
                                                   }),
                                               SizedBox(
                                                 width: getScreenWidth(context),
@@ -1703,11 +1678,8 @@ class StoreScreenWidget extends StatelessWidget {
           value: context.read<StoreBloc>(),
           child: DraggableScrollableSheet(
             expand: true,
-            maxChildSize: 1 -
-                (MediaQuery.of(context).viewPadding
-                    .top /
-                    getScreenHeight(context)),
-            minChildSize: 0.4,
+            maxChildSize: 1,
+            minChildSize: 0.8,
             initialChildSize: AppConstants.bottomSheetInitHeight,
             //shouldCloseOnMinExtent: true,
             builder:
@@ -1737,6 +1709,16 @@ class StoreScreenWidget extends StatelessWidget {
                                       )),
                                 )
                               : CommonProductDetailsWidget(
+                        isLoading: state.isLoading,
+                        addToOrderTap: state.isLoading
+                            ? (){}
+                            : () {
+                          context.read<StoreBloc>().add(
+                              StoreEvent.addToCartProductEvent(
+                                  context: context1,
+                                  productId: productId
+                              ));
+                        },
                         imageOnTap: (){
                           showDialog(
                             context: context,
@@ -1868,25 +1850,30 @@ class StoreScreenWidget extends StatelessWidget {
                                 ),
                       bottomNavigationBar: state.isProductLoading
                           ? 0.height
-                          : CommonProductDetailsButton(
-                              isLoading: state.isLoading,
-                              isSupplierAvailable:
-                                  state.productSupplierList.isEmpty
-                                      ? false
-                                      : true,
-                              productStock:(productStock.toString()) == 0 ?
-                              int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
-                              productStock == '-1' ? int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
-                              int.parse(productStock.toString() ?? '0'),
-                              onAddToOrderPressed: state.isLoading
-                                  ? null
-                                  : () {
-                                      context.read<StoreBloc>().add(
-                                          StoreEvent.addToCartProductEvent(
-                                              context: context1,
-                                          productId: productId
-                                          ));
-                                    }),
+                          :    Container(
+                        height: 200,
+                          padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemBuilder: (context,i){return   CommonProductItemWidget(
+                                productStock: '1',
+                                height: 10,
+                                width: 140,
+                                productImage:
+                                '',
+                                productName:
+                                '',
+                                totalSaleCount:
+                                0,
+                                price:
+                                0.0,
+                                onButtonTap: () {
+                                  print("tap 2");
+
+                                },
+                              );},itemCount: 10,),
+                          )
                     ),
                   );
                 },

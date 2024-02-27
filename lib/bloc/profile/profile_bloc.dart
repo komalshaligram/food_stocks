@@ -132,7 +132,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }   else if (event is _DeleteAccountEvent) {
         try {
           final res = await DioClient(event.context).post(
-              '${AppUrls.deleteAccount}${state.userId}');
+              '${AppUrls.deleteAccountUrl}${state.userId}');
           if(res[AppStrings.statusString]==200){
             final response = await DioClient(event.context).put(
                 path: AppUrls.logOutUrl,
