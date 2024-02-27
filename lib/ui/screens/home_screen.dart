@@ -656,8 +656,13 @@ class HomeScreenWidget extends StatelessWidget {
                             onFilterTap: () {
                               bloc.add(HomeEvent.changeCategoryExpansion());
                             },
+                          onCloseTap: () {
+                            bloc.add(HomeEvent.changeCategoryExpansion(isOpened: false));
+                          },
                             onSearchTap: () {
-                              if(state.searchController.text != ''){
+                              print('state.searchController.text____${state.searchController.text}');
+
+                              if(state.searchController.text.isNotEmpty){
                                 bloc.add(HomeEvent.changeCategoryExpansion(isOpened: true));
                               }
                             },
@@ -673,11 +678,10 @@ class HomeScreenWidget extends StatelessWidget {
                                   HomeEvent.globalSearchEvent(context: context));
                             },
                             onOutSideTap: () {
-                              bloc.add(HomeEvent.changeCategoryExpansion(
-                                  isOpened: false));
+                              bloc.add(HomeEvent.changeCategoryExpansion(isOpened: false));
                             },
                             onSearchItemTap: () {
-                              bloc.add(HomeEvent.changeCategoryExpansion());
+                                bloc.add(HomeEvent.changeCategoryExpansion());
                             },
                             controller: state.searchController,
                             searchList: state.searchList,
@@ -1189,7 +1193,6 @@ class HomeScreenWidget extends StatelessWidget {
                                 )
                               : CommonProductDetailsWidget(
                                 imageOnTap: (){
-
                                  showDialog(
                                       context: context,
                                       builder: (context) {
@@ -1234,12 +1237,8 @@ class HomeScreenWidget extends StatelessWidget {
                                         []
                                   ],
                                   productPerUnit: state.productDetails.first
-                                          .numberOfUnit ??
-                                      0,
-                                  productUnitPrice: state
-                                      .productStockList[
-                                          state.productStockUpdateIndex]
-                                      .totalPrice,
+                                          .numberOfUnit ?? 0,
+                                  productUnitPrice: state.productStockList[state.productStockUpdateIndex].totalPrice,
                                   productName: state.productDetails.first
                                           .productName ??
                                       '',

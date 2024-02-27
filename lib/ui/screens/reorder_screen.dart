@@ -351,6 +351,9 @@ class ReorderScreenWidget extends StatelessWidget {
                     // ),
                   ),
                   CommonSearchWidget(
+                    onCloseTap: () {
+                      bloc.add(ReorderEvent.changeCategoryExpansion(isOpened: false));
+                    },
                     isFilterTap: true,
                     isCategoryExpand: state.isCategoryExpand,
                     isSearching: state.isSearching,

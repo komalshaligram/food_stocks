@@ -1,8 +1,4 @@
-
-
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-
 part 'get_planogram_product_model.freezed.dart';
 part 'get_planogram_product_model.g.dart';
 
@@ -27,6 +23,36 @@ class GetPlanogramProductModel with _$GetPlanogramProductModel {
 @freezed
 class PlanogramAllProduct with _$PlanogramAllProduct {
   const factory PlanogramAllProduct({
+    @JsonKey(name: "_id")
+    String? id,
+    @JsonKey(name: "productId")
+    String? productId,
+    @JsonKey(name: "subCategoryId")
+    String? subCategoryId,
+    @JsonKey(name: "__v")
+    int? v,
+    @JsonKey(name: "createdAt")
+    DateTime? createdAt,
+    @JsonKey(name: "isDeleted")
+    bool? isDeleted,
+    @JsonKey(name: "isHomePreference")
+    bool? isHomePreference,
+    @JsonKey(name: "order")
+    int? order,
+    @JsonKey(name: "updatedAt")
+    DateTime? updatedAt,
+    @JsonKey(name: "product")
+    PlanoProduct? product,
+    @JsonKey(name: "sortField")
+    double? sortField,
+  }) = _PlanogramAllProduct;
+
+  factory PlanogramAllProduct.fromJson(Map<String, dynamic> json) => _$PlanogramAllProductFromJson(json);
+}
+
+@freezed
+class PlanoProduct with _$PlanoProduct {
+  const factory PlanoProduct({
     @JsonKey(name: "numberOfUnit")
     String? numberOfUnit,
     @JsonKey(name: "itemsWeight")
@@ -93,11 +119,9 @@ class PlanogramAllProduct with _$PlanogramAllProduct {
     double? productPrice,
     @JsonKey(name: "totalSale")
     int? totalSale,
-  }) = _PlanogramAllProduct;
+  }) = _PlanoProduct;
 
-
-
-  factory PlanogramAllProduct.fromJson(Map<String, dynamic> json) => _$PlanogramAllProductFromJson(json);
+  factory PlanoProduct.fromJson(Map<String, dynamic> json) => _$PlanoProductFromJson(json);
 }
 
 @freezed

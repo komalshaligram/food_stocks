@@ -82,5 +82,5 @@ class AppUrls {
   static const String removeIssueUrl = '/v1/orders/issues/removeIssue';
   static const String getPlanogramAllProductForGuestUserUrl = '/v1/store/getAllProducts';
   static const String deleteAccount = '/v1/clients/deleteAccount/';
-  static const String getsubCategoryProducts = '/v1/store/getsubCategoryProducts';
+  static const String getsubCategoryProductsUrl = '/v1/store/getsubCategoryProducts';
 }

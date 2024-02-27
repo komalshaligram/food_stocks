@@ -256,6 +256,7 @@ class SupplierProductsBloc
               productSupplierIds: '',
               note: '',
               isNoteOpen: false,
+                totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
             );
             emit(state.copyWith(productStockList: productStockList));
             try {
@@ -1063,6 +1064,10 @@ class SupplierProductsBloc
         emit(state.copyWith(isGridView: !state.isGridView));
       }
       else if (event is _ChangeCategoryExpansion) {
+        if(event.isOpened == false ){
+          state.searchController.clear();
+          emit(state.copyWith(searchController: state.searchController));
+        }
         if (event.isOpened != null) {
           emit(state.copyWith(isCategoryExpand: event.isOpened ?? false));
         } else {

@@ -307,6 +307,9 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                     // ),
                   ),
                   CommonSearchWidget(
+                    onCloseTap: () {
+                      bloc.add(RecommendationProductsEvent.changeCategoryExpansion(isOpened: false));
+                    },
                     isFilterTap: true,
                     isCategoryExpand: state.isCategoryExpand,
                     isSearching: state.isSearching,

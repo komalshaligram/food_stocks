@@ -198,6 +198,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 productSupplierIds: '',
                 note: '',
                 isNoteOpen: false,
+                totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
               );
               emit(state.copyWith(productStockList: productStockList));
               try {
@@ -282,8 +283,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   ProductSupplierModel(
                     supplierId: supplier.supplierId ?? '',
                     companyName: supplier.supplierCompanyName ?? '',
-                    basePrice:
-                    double.parse(supplier.productPrice ?? '0.0'),
+                    basePrice: double.parse(supplier.productPrice ?? '0.0'),
                     stock: int.parse(supplier.productStock ?? '0'),
                     quantity: _productQuantity,
                     selectedIndex: (supplier.supplierId ?? '') ==
@@ -1023,7 +1023,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       (recommendationProduct) =>
                       ProductStockModel(
                           productId: recommendationProduct.id ?? '',
-                          stock: recommendationProduct.productStock ?? 0)) ??
+                          stock: recommendationProduct.productStock ?? 0,
+                      )) ??
                   []);
               //productStockList.add(barcodeStock);
               emit(state.copyWith(

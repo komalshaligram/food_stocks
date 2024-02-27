@@ -239,6 +239,9 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                     ],
                   ),
                   CommonSearchWidget(
+                    onCloseTap: () {
+                      bloc.add(SupplierProductsEvent.changeCategoryExpansion(isOpened: false));
+                    },
                     isFilterTap: true,
                     isCategoryExpand: state.isCategoryExpand,
                     isSearching: state.isSearching,

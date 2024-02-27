@@ -750,6 +750,9 @@ class StoreScreenWidget extends StatelessWidget {
                       ),
                     ),
                     CommonSearchWidget(
+                      onCloseTap: () {
+                        bloc.add(StoreEvent.changeCategoryExpansion(isOpened: false));
+                      },
                       isCategoryExpand: state.isCategoryExpand,
                       isSearching: state.isSearching,
                       onFilterTap: () {
