@@ -24,6 +24,7 @@ import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model
 import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
@@ -176,6 +177,7 @@ class CompanyProductsBloc
               productSupplierIds: '',
               note: '',
               isNoteOpen: false,
+                totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
             );
             emit(state.copyWith(productStockList: productStockList));
             try {
@@ -210,7 +212,7 @@ class CompanyProductsBloc
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-
+            add(CompanyProductsEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
@@ -755,6 +757,10 @@ class CompanyProductsBloc
       }
 
       else if (event is _ChangeCategoryExpansion) {
+        if(event.isOpened == false ){
+          state.searchController.clear();
+          emit(state.copyWith(searchController: state.searchController));
+        }
         if (event.isOpened != null) {
           emit(state.copyWith(isCategoryExpand: event.isOpened ?? false));
         } else {
@@ -849,6 +855,7 @@ class CompanyProductsBloc
                   searchId: sale.id ?? '',
                   name: sale.productName ?? '',
                   searchType: SearchTypes.sale,
+                  numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
                   image: sale.mainImage ?? '',
 
                 ))
@@ -863,7 +870,9 @@ class CompanyProductsBloc
                     searchType: SearchTypes.product,
                     image: supplier.mainImage ?? '',
                     productStock: int.parse(
-                        supplier.productStock ?? 0.toString())
+                        supplier.productStock ?? 0.toString()),
+                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ?? 0,
+                  priceOfBox: double.parse(supplier.productPrice.toString()) ?? 0,
                 ))
                 .toList() ??
                 []);

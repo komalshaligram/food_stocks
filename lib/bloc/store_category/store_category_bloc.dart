@@ -5,7 +5,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/error/exceptions.dart';
-import 'package:food_stock/data/model/req_model/get_sub_categories_product_req_model/get_sub_categories_product_req_model.dart';
 import 'package:food_stock/data/model/req_model/planogram_req_model/planogram_req_model.dart';
 import 'package:food_stock/data/model/req_model/product_subcategories_req_model/product_subcategories_req_model.dart';
 import 'package:food_stock/data/model/res_model/planogram_res_model/planogram_res_model.dart';
@@ -22,6 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
+import '../../data/model/req_model/get_sub_categories_product/get_sub_categories_product_req_model.dart';
 import '../../data/model/req_model/global_search_req_model/global_search_req_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
 as InsertCartModel;
@@ -34,6 +34,7 @@ import '../../data/model/res_model/global_search_res_model/global_search_res_mod
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
@@ -64,6 +65,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         ));
       }
       if (event is _ChangeCategoryExpansionEvent) {
+        if(event.isOpened == false ){
+          state.searchController.clear();
+          emit(state.copyWith(searchController: state.searchController));
+        }
 
         if (event.isOpened != null) {
           emit(state.copyWith(isCategoryExpand: event.isOpened ?? false,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : []));
@@ -214,6 +219,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
       }
       else if (event is _GetPlanoGramProductsEvent) {
+
         if (state.isLoadMore) {
           return;
         }
@@ -263,7 +269,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
             }
             else{
-              emit(state.copyWith(isBottomOfPlanoGrams: false,isBottomOfProducts: false));
+               emit(state.copyWith(isBottomProducts: false));
               add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
             }
             emit(state.copyWith(categoryPlanogramList: []));
@@ -338,16 +344,17 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               subPlanoGramsList: state.subPlanoGramsList,
               planoGramsList: state.planoGramsList,
               productStockList: productStockList,
-              subProductPageNum: state.subProductPageNum+1,
+              subProductPageNum: state.subProductPageNum + 1,
               planogramPageNum: state.planogramPageNum + 1,
               isPlanogramShimmering: false,
               isLoadMore: false,
             ));
-            emit(state.copyWith(
-                isBottomOfPlanoGrams: planoGramsList.length ==
-                    (response.metaData?.totalFilteredCount ?? 0)
-                    ? true
-                    : false));
+              emit(state.copyWith(
+                  isBottomOfPlanoGrams: planoGramsList.length ==
+                      (response.metaData?.totalFilteredCount ?? 0)
+                      ? true
+                      : false));
+
           } else {
             emit(state.copyWith(isLoadMore: false));
             /* CustomSnackBar.showSnackBar(
@@ -431,7 +438,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   .copyWith(
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '' ,
-                  stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
+                  stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
+                  totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
               );
             }
             else{
@@ -478,6 +486,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
+            add(StoreCategoryEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
 
 
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
@@ -1117,6 +1126,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 searchId: sale.id ?? '',
                 name: sale.productName ?? '',
                 searchType: SearchTypes.sale,
+                numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
                 image: sale.mainImage ?? ''))
                 .toList() ??
                 []);
@@ -1127,8 +1137,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 name: supplier.productName ?? '',
                 searchType: SearchTypes.product,
                 productStock:  int.parse(supplier.productStock ?? 0.toString()),
-                image: supplier.mainImage ?? ''))
-                .toList() ??
+                numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ?? 0,
+                priceOfBox: double.parse(supplier.productPrice.toString()) ?? 0,
+                image: supplier.mainImage ?? '')).toList() ??
                 []);
             debugPrint('store cat search list = ${searchList.length}');
             emit(state.copyWith(
@@ -1226,9 +1237,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if (state.isLoadMore) {
           return;
         }
-        if (state.isBottomOfProducts) {
+        /*  if (state.isBottomOfProducts) {
           return;
-        }
+         }*/
         debugPrint('Here');
         try{
           List<PlanogramAllProduct> planogramProductList =
@@ -1237,46 +1248,55 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
 
           GetSubCategoriesProductReqModel getSubCategoriesProductReqModel = GetSubCategoriesProductReqModel(
-            subCategoryId: state.subCategoryId,
-            pageNum:  state.planogramProductList.isEmpty?state.subCategoryPageNum:state.subPlanogramPageNum+1,
-            pageLimit: AppConstants.orderPageLimit,
-          );
+              subCategoryId: state.subCategoryId,
+              pageNum: state.subProductPageNum ,
+              pageLimit: AppConstants.orderPageLimit,
+            );
 
-          final res = await DioClient(event.context)
-              .post('${AppUrls.subCategoryProductsUrl}',
-              data: getSubCategoriesProductReqModel
-          );
-          debugPrint('getSubCatProductUrl_____${AppUrls.subCategoryProductsUrl}');
-          debugPrint('getSubCatProductUrl req_____${getSubCategoriesProductReqModel}');
+          final  res = await DioClient(event.context)
+                .post('${AppUrls.getsubCategoryProductsUrl}',
+                data: getSubCategoriesProductReqModel
+            );
+            debugPrint('getAllProductUrl_____${AppUrls.getsubCategoryProductsUrl}');
+            debugPrint('getAllProductUrl req_____${getSubCategoriesProductReqModel}');
 
           print('getAllProduct_____$res');
           GetPlanogramProductModel response = GetPlanogramProductModel.fromJson(res);
-          debugPrint('getSubCatProductUrl response_____${response}');
-          debugPrint('getSubCatProductUrl response count_____${response.metaData?.totalFilteredCount}');
+          debugPrint('getAllProduct response_____${response}');
+          debugPrint('getAllProduct response_____${response.metaData?.totalFilteredCount}');
 
           if(response.status == 200){
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
-
+            // List<ProductStockModel> barcodeStock =
+            // productStockList.removeLast();
             List<ProductStockModel> stockList = [];
             debugPrint('getAllProduct response_____${response.data?.length}');
             stockList.addAll(response.data?.map(
                     (product) {
-                  return ProductStockModel(
-                      productId: product.productId ?? '',
-                      stock: int.parse(product.product?.productStock.toString() ?? '0') );
-                }) ?? []);
+                      return ProductStockModel(
+                    productId: product.productId ?? '',
+                    stock: int.parse(product.product?.productStock.toString() ?? '0') );
+                    }) ?? []);
             productStockList[3].addAll(stockList);
             debugPrint('page = ${stockList.length}');
             debugPrint('page = ${productStockList[3].length}');
             // productStockList.add(barcodeStock);
             planogramProductList.addAll(response.data ?? []);
-            print('isBottomOfPlanoGrams____${planogramProductList.length ==
-                (response.metaData?.totalFilteredCount ?? 0) ? true : false}');
-            emit( state.copyWith(planogramProductList: planogramProductList,productStockList: productStockList,
-                isPlanogramProductShimmering: false,isBottomOfProducts: planogramProductList.length >=
-                    (response.metaData?.totalFilteredCount ?? 0) ? true : false
+            print('planogramProductList____${planogramProductList}');
+            emit(state.copyWith(planogramProductList: planogramProductList,productStockList: productStockList,
+                isPlanogramProductShimmering: false,isPlanogramShimmering: false
             ));
+            emit(state.copyWith(
+                isBottomOfProducts: planogramProductList.length ==
+                    (response.metaData?.totalFilteredCount ?? 0)
+                    ? true
+                    : false));
+           emit(state.copyWith(
+                isBottomOfPlanoGrams: planogramProductList.length ==
+                    (response.metaData?.totalFilteredCount ?? 0)
+                    ? true
+                    : false));
           }
           else{
             emit(state.copyWith(isLoadMore: false,isPlanogramProductShimmering: false));
@@ -1298,6 +1318,32 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       else if (event is _getCartCountEvent) {
         emit(
             state.copyWith(cartCount: preferences.getCartCount()));
+      }
+      else if(event is _RelatedProductsEvent){
+        emit(state.copyWith(isRelatedShimmering:true));
+        final res = await DioClient(event.context).post(
+            AppUrls.relatedProductsUrl,
+            data: {'mainProductId':event.productId});
+        RelatedProductResModel response =
+        RelatedProductResModel.fromJson(res);
+        debugPrint('product categories = ${response.data.length
+            .toString()}');
+        if (response.status == 200) {
+
+          emit(state.copyWith(
+              relatedProductList:response.data ?? [],
+              isRelatedShimmering: false));
+        } else {
+          emit(state.copyWith(isRelatedShimmering: false));
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: AppStrings.getLocalizedStrings(
+                response.message.toLocalization() ??
+                    response.message,
+                event.context),
+            type: SnackBarType.SUCCESS,
+          );
+        }
       }
     });
   }

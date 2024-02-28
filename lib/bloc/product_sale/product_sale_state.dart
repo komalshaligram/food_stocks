@@ -20,6 +20,8 @@ class ProductSaleState with _$ProductSaleState {
     required TextEditingController noteController,
     required RefreshController refreshController,
     required bool isGuestUser,
+    required List<RelatedProductDatum> relatedProductList,
+    required bool isRelatedShimmering,
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => ProductSaleState(
@@ -39,6 +41,8 @@ class ProductSaleState with _$ProductSaleState {
         imageIndex: 0,
         noteController: TextEditingController(),
         refreshController: RefreshController(),
-      isGuestUser : false
+      isGuestUser : false,
+    relatedProductList: [],
+    isRelatedShimmering: false
       );
 }

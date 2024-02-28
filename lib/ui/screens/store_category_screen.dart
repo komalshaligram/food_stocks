@@ -22,6 +22,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
+import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
@@ -379,6 +380,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           index: index);
                                     },
                                   ),
+
                                   Column(
                                     mainAxisAlignment:
                                     MainAxisAlignment.start,
@@ -435,9 +437,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         ),
                                       )
                                           : SizedBox(),
-                                      /*   state.isPlanogramShimmering  && state.subPlanoGramsList.isEmpty ? state.isGridView
-                                    ? SupplierProductsScreenShimmerWidget(itemCount: getScreenHeight(context) >= 750 ? 12 :12 ) : StoreCategoryScreenSubcategoryShimmerWidget(itemCount: getScreenHeight(context) >= 750 ? 10 :8,)
-                                    : state.subPlanoGramsList.isEmpty && state.planogramProductList.isEmpty && !state.isPlanogramProductShimmering*/
                                       state.isPlanogramProductShimmering &&
                                           state.planogramProductList
                                               .isEmpty
@@ -544,7 +543,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                         if (!state.isGuestUser) {
                                                           showProductDetails(
                                                               context: context,
-                                                              productId: state.planogramProductList[index].id ?? '',
+                                                              productId: state.planogramProductList[index].productId ?? '',
                                                               productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
                                                               planoGramIndex: 3,
                                                               isBarcode: false);
@@ -626,7 +625,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                         showProductDetails(
                                                             context: context,
                                                             productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
-                                                            productId: state.planogramProductList[index].id ?? '',
+                                                            productId: state.planogramProductList[index].productId ?? '',
                                                             planoGramIndex: 3,
                                                             isBarcode: false);
                                                       } else {
@@ -650,24 +649,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   //     : 0.width,
                                 ],
                               ),
-                              //   onNotification: (notification) {
-                              //     if (notification.metrics.pixels ==
-                              //         notification.metrics.maxScrollExtent) {
-                              //       if (notification.metrics.axis ==
-                              //           Axis.vertical) {}
-                              //       context.read<StoreCategoryBloc>().add(
-                              //           StoreCategoryEvent
-                              //               .getPlanoGramProductsEvent(
-                              //               context: context));
-                              //     }
-                              //     return true;
-                              //   },
-                              // ),
                             )
                           ],
                         )),
                   ),
                   CommonSearchWidget(
+                    onCloseTap: () {
+                      bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(isOpened: false));
+                    },
                     isCategoryExpand: state.isCategoryExpand,
                     isSearching: state.isSearching,
                     isBackButton: true,
@@ -717,6 +706,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
+                            numberOfUnits:state.searchList[index].numberOfUnits,
+                            priceOfBox: state.searchList[index].priceOfBox,
                             isGuestUser: state.isGuestUser,
                             productStock:
                             state.searchList[index].productStock,
@@ -895,6 +886,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     required int productStock,
     bool? isLastItem,
     bool isGuestUser = false,
+    required int numberOfUnits,
+    required double priceOfBox,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1431,30 +1424,27 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       context: context1));
                             }*/
                         ),
-                        bottomNavigationBar: state.isProductLoading
-                            ? 0.height
-                            : Container(
+                        bottomNavigationBar: state.isRelatedShimmering
+                            ? RelatedProductShimmerWidget()
+                            :
+                        Container(
                           height: 200,
                           padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
-                            itemBuilder: (context,i){return   CommonProductItemWidget(
-                              productStock: '1',
-                              height: 10,
-                              width: 140,
-                              productImage:
-                              '',
-                              productName:
-                              '',
-                              totalSaleCount:
-                              0,
-                              price:
-                              0.0,
-                              onButtonTap: () {
-                                print("tap 2: supplier product scren");
-                              },
-                            );},itemCount: 3,),
+                            itemBuilder: (context,i){
+                              return CommonProductItemWidget(
+                                productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
+                                width: 140,
+                                productImage:state.relatedProductList[i].mainImage??'',
+                                productName: state.relatedProductList.elementAt(i).productName??'',
+                                totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
+                                price:state.relatedProductList.elementAt(i).productPrice??0.0,
+                                onButtonTap: () {
+                                  print("tap 2");
+                                },
+                              );},itemCount: state.relatedProductList.length,),
                         ),
                       ),
                     );

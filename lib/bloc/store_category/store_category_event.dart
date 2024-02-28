@@ -109,4 +109,7 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.AllProductsRefreshListEvent(
       {required BuildContext context}) = _AllProductsRefreshListEvent;
+
+  const factory StoreCategoryEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
+
 }

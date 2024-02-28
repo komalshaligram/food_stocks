@@ -28,6 +28,8 @@ class RecommendationProductsState with _$RecommendationProductsState {
     required List<Category> productCategoryList,
     required bool isCatVisible,
     required bool isGridView,
+    required List<RelatedProductDatum> relatedProductList,
+    required bool isRelatedShimmering,
   }) = _RecommendationProductsState;
 
   factory RecommendationProductsState.initial() => RecommendationProductsState(
@@ -55,6 +57,8 @@ class RecommendationProductsState with _$RecommendationProductsState {
     search: '',
     productCategoryList: [],
     isCatVisible: false,
-    isGridView: true
+    isGridView: true,
+    relatedProductList: [],
+    isRelatedShimmering: false
       );
 }
