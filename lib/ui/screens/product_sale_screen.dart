@@ -19,9 +19,11 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
+import '../widget/common_product_item_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 
@@ -217,7 +219,11 @@ class ProductSaleScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context, required String productId, required String startDate, required String endDate}) async {
+      {required BuildContext context,
+        required String productId,
+        required String startDate,
+        required String endDate
+      }) async {
     context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductDetailsEvent(
         context: context, productId: productId));
     showModalBottomSheet(
@@ -359,37 +365,38 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                             .decreaseQuantityOfProduct(
                                                 context: context1));
                                   },
-
-                                  // isLoading: state.isLoading,
-                                  /*onAddToOrderPressed: state.isLoading
-                                  ? null
-                                  : () {
-                                context.read<ProductSaleBloc>().add(
-                                    ProductSaleEvent
-                                        .addToCartProductEvent(
-                                        context: context1));
-                              }*/
                                 ),
-                          bottomNavigationBar: state.isProductLoading
-                              ? 0.height
-                              : CommonProductDetailsButton(
-                                  isLoading: state.isLoading,
-                                  isSupplierAvailable:
-                                      state.productSupplierList.isEmpty
-                                          ? false
-                                          : true,
-                                  productStock: state
-                                      .productStockList[
-                                          state.productStockUpdateIndex]
-                                      .stock,
-                                  onAddToOrderPressed: state.isLoading
-                                      ? null
-                                      : () {
-                                          context.read<ProductSaleBloc>().add(
-                                              ProductSaleEvent
-                                                  .addToCartProductEvent(
-                                                      context: context1));
-                                        }),
+                          bottomNavigationBar: state.isRelatedShimmering
+                              ? RelatedProductShimmerWidget()
+                              :
+                          Container(
+                            height: 200,
+                            padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemBuilder: (context,i){
+                                return CommonProductItemWidget(
+                                  productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
+                                  width: 140,
+                                  productImage:state.relatedProductList[i].mainImage??'',
+                                  productName: state.relatedProductList.elementAt(i).productName??'',
+                                  totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
+                                  price:state.relatedProductList.elementAt(i).productPrice??0.0,
+                                  onButtonTap: () {
+                                    Navigator.of(context1).pop();
+                                    showProductDetails(
+                                        context: context,
+                                        productId: state
+                                            .relatedProductList[i].id,
+                                       endDate: '',
+                                       startDate: ''
+                                       // isBarcode: false,
+                                       // productStock: (state.relatedProductList[i].productStock.toString() ?? '')
+                                    );
+                                  },
+                                );},itemCount: state.relatedProductList.length,),
+                          ),
                         ),
                       );
                     },
@@ -399,7 +406,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
         );
       },
     ).then((value) {
-      context.read<ProductSaleBloc>().add(ProductSaleEvent.RemoveRelatedProductEvent());
+    //  context.read<ProductSaleBloc>().add(ProductSaleEvent.RemoveRelatedProductEvent());
 
     });
   }

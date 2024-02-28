@@ -257,27 +257,12 @@ class HomeScreenWidget extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                             /*   InkWell(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(AppConstants.radius_100)),
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, RouteDefine.menuScreen.name);
-                                  },
-                                  child: SvgPicture.asset(
-                                    AppImagePath.menuVertical,
-                                    fit: BoxFit.scaleDown,
-                                    width: 54,
-                                    height: 54,
-                                  ),
-                                ),*/
                               ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                   // 5.height,
                     Expanded(
                       child: Stack(
                         children: [
@@ -531,35 +516,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 ),
                                 30.height,
                                 state.messageList.isEmpty
-                                    ? 0.width/*Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: AppConstants.padding_10),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .messages,
-                                        style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.smallFont,
-                                            color: AppColors.blackColor),
-                                      ),
-                                      Container(
-                                        height: getScreenHeight(context) / 6,
-                                        width: getScreenWidth(context),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          '${AppLocalizations.of(context)!.messages_not_found}',
-                                          style: AppStyles.pVRegularTextStyle(
-                                              size: AppConstants.mediumFont,
-                                              color: AppColors.textColor),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )*/
+                                    ? 0.width
                                     : Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -1171,7 +1128,7 @@ class HomeScreenWidget extends StatelessWidget {
           value: context.read<HomeBloc>(),
           child: DraggableScrollableSheet(
             expand: true,
-            maxChildSize: 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
+            maxChildSize: 1,
             minChildSize: 0.4,
             initialChildSize: AppConstants.bottomSheetInitHeight,
             //shouldCloseOnMinExtent: true,
@@ -1362,9 +1319,7 @@ class HomeScreenWidget extends StatelessWidget {
           ),
         );
       },
-    ).then((value){
-      context.read<HomeBloc>().add(HomeEvent.RemoveRelatedProductEvent());
-    });
+    );
   }
 
   Widget messageListItem({
@@ -2043,8 +1998,8 @@ class HomeScreenWidget extends StatelessWidget {
             //     horizontal: AppConstants.padding_20,
             //     vertical: AppConstants.padding_5),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   height: 60,
@@ -2074,12 +2029,12 @@ class HomeScreenWidget extends StatelessWidget {
                     errorBuilder: (context, error, stackTrace) {
                       return searchType == SearchTypes.subCategory
                           ? Image.asset(AppImagePath.imageNotAvailable5,
-                          height: 35, width: 40, fit: BoxFit.cover)
+                          height: 60, width: 50, fit: BoxFit.cover)
                           : SvgPicture.asset(
                         AppImagePath.splashLogo,
                         fit: BoxFit.scaleDown,
-                        width: 40,
-                        height: 35,
+                        width: 60,
+                        height: 50,
                       );
                     },
                   ),
@@ -2089,18 +2044,21 @@ class HomeScreenWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      searchName,
-                      style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_12,
-                        color: AppColors.blackColor,
+                    Container(
+                      width: 200,
+                      child: Text(
+                        searchName,
+                        style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_12,
+                          color: AppColors.blackColor,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
 
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
                           width: 200,
@@ -2127,18 +2085,21 @@ class HomeScreenWidget extends StatelessWidget {
                                 '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox / numberOfUnits).toStringAsFixed(2)}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
-                                    color: AppColors.blackColor,
+                                    color: AppColors.blueColor,
                                     fontWeight: FontWeight.w400),
                               ) : 0.width,
                             ],
                           ),
                         ),
-                        priceOfBox != 0.0 ? Text(
-                          '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
-                          style: AppStyles.rkBoldTextStyle(
-                              size: AppConstants.font_12,
-                              color: AppColors.blackColor,
-                              fontWeight: FontWeight.w400),
+                        priceOfBox != 0.0 ? Container(
+                          width: 60,
+                          child: Text(
+                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
+                            style: AppStyles.rkBoldTextStyle(
+                                size: AppConstants.font_12,
+                                color: AppColors.blueColor,
+                                fontWeight: FontWeight.w400),
+                          ),
                         ) : 0.width,
 
                       ],

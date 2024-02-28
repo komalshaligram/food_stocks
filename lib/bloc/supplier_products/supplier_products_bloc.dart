@@ -108,7 +108,7 @@ class SupplierProductsBloc
             productStockList.addAll(response.data?.map((product) =>
                     ProductStockModel(
                         productId:event.searchType == SearchTypes.product.toString()?product.id ??'': product.productId ?? '',
-                        stock:event.searchType == SearchTypes.product.toString()?product.productStock: int.parse(product.productStock ?? '0'))) ??
+                        stock:event.searchType == SearchTypes.product.toString() ? product.productStock: double.parse(product.productStock.toString()??'0').toInt())) ??
                 []);
             debugPrint('new product list len = ${productList.length}');
             debugPrint(
@@ -219,6 +219,7 @@ class SupplierProductsBloc
             context: event.context,searchType:''));
       }
       else if (event is _GetProductDetailsEvent) {
+        add(SupplierProductsEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
         _cartProductId = '';
@@ -292,7 +293,7 @@ class SupplierProductsBloc
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(SupplierProductsEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
+            add(SupplierProductsEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
 
 
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {

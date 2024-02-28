@@ -114,7 +114,7 @@ class PlanoProduct with _$PlanoProduct {
     @JsonKey(name: "productNumber")
     String? productNumber,
     @JsonKey(name: "productStock")
-    double? productStock,
+    String? productStock,
     @JsonKey(name: "productPrice")
     double? productPrice,
     @JsonKey(name: "totalSale")
