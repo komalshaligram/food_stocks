@@ -380,7 +380,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             planoGramsList: [],
             productCategoryList: [],
             subPlanoGramsList: isSubCategoryString != '' && !state.isSubCategory ? [] : isSubCategoryString != '' && state.isSubCategory ? [] : state.subPlanoGramsList,
-            //subProductPageNum: 0,
+            subProductPageNum: 0,
+            planogramProductList: [],
             /*productStockList: [
               [ProductStockModel(productId: '')]
             ],*/
@@ -1252,31 +1253,32 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               pageNum: state.subProductPageNum,
               pageLimit: AppConstants.orderPageLimit,
             );
-
+          debugPrint('getAllProductUrl_____${AppUrls.getsubCategoryProductsUrl}');
+          debugPrint('getAllProductUrl req_____${getSubCategoriesProductReqModel}');
           final  res = await DioClient(event.context)
                 .post('${AppUrls.getsubCategoryProductsUrl}',
                 data: getSubCategoriesProductReqModel
             );
-            debugPrint('getAllProductUrl_____${AppUrls.getsubCategoryProductsUrl}');
-            debugPrint('getAllProductUrl req_____${getSubCategoriesProductReqModel}');
+
 
           print('getAllProduct_____$res');
           GetPlanogramProductModel response = GetPlanogramProductModel.fromJson(res);
           debugPrint('getAllProduct response_____${response}');
-          debugPrint('getAllProduct response_____${response.metaData?.totalFilteredCount}');
+          debugPrint('getAllProduct response count_____${response.metaData?.totalFilteredCount}');
 
           if(response.status == 200){
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
-            // List<ProductStockModel> barcodeStock =
-            // productStockList.removeLast();
+
             List<ProductStockModel> stockList = [];
-            debugPrint('getAllProduct response_____${response.data?.length}');
+
             stockList.addAll(response.data?.map(
                     (product) {
+                      debugPrint('product.productId :${product.productId }');
+                      debugPrint('product.product?.productStock  :${product.product?.productStock }');
                       return ProductStockModel(
                     productId: product.productId ?? '',
-                    stock: int.parse(product.product?.productStock.toString() ?? '0') );
+                    stock: double.parse(product.product?.productStock.toString()??'0').toInt());
                     }) ?? []);
             productStockList[3].addAll(stockList);
             debugPrint('page = ${stockList.length}');
