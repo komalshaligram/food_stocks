@@ -81,6 +81,6 @@ class HomeState with _$HomeState {
     isIgnorePointer: false,
     isPreview: false,
       isRelatedShimmering:false,
-      relatedProductList: []
+      relatedProductList: [],
       );
 }

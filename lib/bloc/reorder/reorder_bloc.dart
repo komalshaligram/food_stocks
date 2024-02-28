@@ -967,9 +967,19 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             .toString()}');
         if (response.status == 200) {
 
+          List<ProductStockModel> productStockList =
+          state.productStockList.toList(growable: true);
+          productStockList.addAll(response.data.map(
+                  (Product) =>
+                  ProductStockModel(
+                    productId: Product.id ?? '',
+                    stock: Product.productStock ?? 0,
+                  )) ??
+              []);
+
           emit(state.copyWith(
               relatedProductList:response.data ?? [],
-              isRelatedShimmering: false));
+              isRelatedShimmering: false,productStockList: productStockList));
         } else {
           emit(state.copyWith(isRelatedShimmering: false));
           CustomSnackBar.showSnackBar(
@@ -982,6 +992,10 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           );
         }
       }
+      else if(event is _RemoveRelatedProductEvent){
+        emit(state.copyWith(relatedProductList: []));
+      }
+
     });
   }
 }

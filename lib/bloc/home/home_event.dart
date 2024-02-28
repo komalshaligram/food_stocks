@@ -10,7 +10,10 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.getProductDetailsEvent(
       {required BuildContext context,
         required bool isBarcode,
-      required String productId}) = _GetProductDetailsEvent;
+      required String productId,
+      required int planoGramIndex,
+
+      }) = _GetProductDetailsEvent;
 
   const factory HomeEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;
@@ -100,5 +103,6 @@ class HomeEvent with _$HomeEvent {
 
 
   const factory HomeEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
+  const factory HomeEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
 
 }

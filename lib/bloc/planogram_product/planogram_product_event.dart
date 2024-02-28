@@ -80,5 +80,6 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
       {required BuildContext context}) = _GetProductCategoriesListEvent;
 
   const factory PlanogramProductEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
+  const factory PlanogramProductEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
 
 }

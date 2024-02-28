@@ -1250,6 +1250,10 @@ class SupplierProductsBloc
           );
         }
       }
+      else if(event is _RemoveRelatedProductEvent){
+        emit(state.copyWith(relatedProductList: []));
+      }
+
     });
   }
 }

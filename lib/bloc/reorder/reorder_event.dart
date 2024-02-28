@@ -68,5 +68,6 @@ class ReorderEvent with _$ReorderEvent {
       {required BuildContext context}) = _GetProductCategoriesListEvent;
 
   const factory ReorderEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
+  const factory ReorderEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
 
 }

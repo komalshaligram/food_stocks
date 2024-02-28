@@ -295,8 +295,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   state.searchList[index]
                                       .searchType)
                                   .toList()
-                                  .length ==
-                                  10,
+                                  .length >=
+                                  1,
                               isLastItem:
                               state.searchList.length - 1 == index,
                               isShowSearchLabel: index == 0
@@ -708,6 +708,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       },
     ).then((value) {
       context.read<PlanogramProductBloc>().add(PlanogramProductEvent.getCartCountEvent());
+      context.read<PlanogramProductBloc>().add(PlanogramProductEvent.RemoveRelatedProductEvent());
+
     });
   }
 
@@ -1309,7 +1311,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != 0 ? 35 : 50,
+            height: (productStock) != 0 ? 80 : 90,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1377,13 +1379,49 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    (productStock) != 0 ? 0.width : Text(
-                      AppLocalizations.of(context)!
-                          .out_of_stock1,
-                      style: AppStyles.rkBoldTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.redColor,
-                          fontWeight: FontWeight.w400),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 200,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              (productStock) != 0 ? 0.width : Text(
+                                AppLocalizations.of(context)!
+                                    .out_of_stock1,
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.redColor,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              numberOfUnits != 0 ? Text(
+                                '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.w400),
+                              ) : 0.width,
+                              numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
+                                '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox / numberOfUnits).toStringAsFixed(2)}',
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.w400),
+                              ) : 0.width,
+                            ],
+                          ),
+                        ),
+                        priceOfBox != 0.0 ? Text(
+                          '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
+                          style: AppStyles.rkBoldTextStyle(
+                              size: AppConstants.font_12,
+                              color: AppColors.blackColor,
+                              fontWeight: FontWeight.w400),
+                        ) : 0.width,
+
+                      ],
                     ),
                   ],
                 ),

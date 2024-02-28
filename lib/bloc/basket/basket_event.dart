@@ -63,5 +63,5 @@ class BasketEvent with _$BasketEvent {
         required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory BasketEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
-
+  const factory BasketEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
 }
