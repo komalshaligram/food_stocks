@@ -398,7 +398,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
           ),
         );
       },
-    );
+    ).then((value) {
+      context.read<ProductSaleBloc>().add(ProductSaleEvent.RemoveRelatedProductEvent());
+
+    });
   }
 
   Widget buildSupplierSelection({required BuildContext context}) {

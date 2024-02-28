@@ -494,8 +494,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             .productStock.toString()) ?? '',
                                                         );
 
-
-                                                    },
+                                                    }
                                                   )
 
                                           ),
@@ -662,8 +661,6 @@ class HomeScreenWidget extends StatelessWidget {
                             bloc.add(HomeEvent.changeCategoryExpansion(isOpened: false));
                           },
                             onSearchTap: () {
-                              print('state.searchController.text____${state.searchController.text}');
-
                               if(state.searchController.text.isNotEmpty){
                                 bloc.add(HomeEvent.changeCategoryExpansion(isOpened: true));
                               }
@@ -676,8 +673,16 @@ class HomeScreenWidget extends StatelessWidget {
                               }
                             },
                             onSearchSubmit: (String search) {
-                              bloc.add(
-                                  HomeEvent.globalSearchEvent(context: context));
+                             // bloc.add(HomeEvent.globalSearchEvent(context: context));
+                            Navigator.pushNamed(
+                                    context,
+                                    RouteDefine.supplierProductsScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString: state.search,
+                                      AppStrings.searchType : SearchTypes.product.toString()
+                                    });
+
+
                             },
                             onOutSideTap: () {
                               bloc.add(HomeEvent.changeCategoryExpansion(isOpened: false));
@@ -717,8 +722,8 @@ class HomeScreenWidget extends StatelessWidget {
                                         state.searchList[index]
                                             .searchType)
                                         .toList()
-                                        .length ==
-                                        10,
+                                        .length >=
+                                        1,
                                     isLastItem:
                                     state.searchList.length - 1 == index,
                                     isShowSearchLabel: index == 0
@@ -1143,11 +1148,14 @@ class HomeScreenWidget extends StatelessWidget {
     required String productId,
     bool? isBarcode,
      String productStock  = '0',
+    bool isRelated = false,
+     int planoGramIndex = 0,
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
           context: context,
           productId: productId,
-      isBarcode: isBarcode ?? false
+      isBarcode: isBarcode ?? false,
+      planoGramIndex: planoGramIndex
         ));
     showModalBottomSheet(
       context: context,
@@ -1248,7 +1256,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   ],
                                   productPerUnit: state.productDetails.first
                                           .numberOfUnit ?? 0,
-                                  productUnitPrice: state.productStockList[state.productStockUpdateIndex].totalPrice,
+                                  productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
                                   productName: state.productDetails.first
                                           .productName ??
                                       '',
@@ -1281,7 +1289,7 @@ class HomeScreenWidget extends StatelessWidget {
                                           .quantity *
                                       (state.productDetails.first
                                               .numberOfUnit ??
-                                          0),
+                                          0) ,
                                   productScaleType: state.productDetails
                                           .first.scales?.scaleType ??
                                       '',
@@ -1289,16 +1297,14 @@ class HomeScreenWidget extends StatelessWidget {
                                           .productDetails.first.itemsWeight
                                           ?.toDouble() ??
                                       0.0,
-                        productStock: state.productStockList[state.productStockUpdateIndex].stock != 0 ?
-                        int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
-                        int.parse(productStock.toString() ?? '0'),
+                        productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
                         isRTL: context.rtl,
                                   isSupplierAvailable:
                                       state.productSupplierList.isEmpty
                                           ? false
                                           : true,
                                   scrollController: scrollController,
-                                  productQuantity: state
+                                  productQuantity:  state
                                       .productStockList[
                                           state.productStockUpdateIndex]
                                       .quantity,
@@ -1337,7 +1343,14 @@ class HomeScreenWidget extends StatelessWidget {
                             totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
                             price:state.relatedProductList.elementAt(i).productPrice??0.0,
                             onButtonTap: () {
-                              print("tap 2");
+                              Navigator.of(context1).pop();
+                                  showProductDetails(
+                                      context: context,
+                                      productId: state
+                                          .relatedProductList[i].id,
+                                      isBarcode: false,
+                                      productStock: (state.relatedProductList[i].productStock.toString() ?? '')
+                                  );
                             },
                           );},itemCount: state.relatedProductList.length,),
                       ),
@@ -1349,7 +1362,9 @@ class HomeScreenWidget extends StatelessWidget {
           ),
         );
       },
-    );
+    ).then((value){
+      context.read<HomeBloc>().add(HomeEvent.RemoveRelatedProductEvent());
+    });
   }
 
   Widget messageListItem({

@@ -68,5 +68,6 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
         required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
 
   const factory SupplierProductsEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
+  const factory SupplierProductsEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
 
 }
