@@ -140,6 +140,7 @@ class RecommendationProductsBloc
             context: event.context));
       }
       else if (event is _GetProductDetailsEvent) {
+        add(RecommendationProductsEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
         _cartProductId = '';
@@ -213,7 +214,7 @@ class RecommendationProductsBloc
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(RecommendationProductsEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
+            add(RecommendationProductsEvent.RelatedProductsEvent(context: event.context, productId:state.productStockList[state.productStockList.length-1].productId));
 
 
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
@@ -586,6 +587,7 @@ class RecommendationProductsBloc
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == 201) {
+             add(RecommendationProductsEvent.getCartCountEvent());
               Vibration.vibrate();
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: true);

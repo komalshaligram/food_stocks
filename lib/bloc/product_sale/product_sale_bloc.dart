@@ -122,6 +122,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             isBottomOfProducts: false));
         add(ProductSaleEvent.getProductSalesListEvent(context: event.context));
       } else if (event is _GetProductDetailsEvent) {
+        add(ProductSaleEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
         _cartProductId = '';
@@ -164,7 +165,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(ProductSaleEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
+            add(ProductSaleEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
 
 
             debugPrint('product stock update index = $productStockUpdateIndex');

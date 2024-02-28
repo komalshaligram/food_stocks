@@ -433,7 +433,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 //await HapticFeedback.heavyImpact();
                 //
                 Vibration.vibrate();
-
+                add(BasketEvent.getAllCartEvent(context: event.context));
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
                 productStockList[state.productStockUpdateIndex] =
@@ -480,210 +480,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             }
           }
         }
-       /* else if (event is _AddToCartProductEvent) {
-          if (state.productStockList[state.productStockUpdateIndex]
-              .productSupplierIds.isEmpty) {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:
-                '${AppLocalizations.of(event.context)!.please_select_supplier}',
-                type: SnackBarType.FAILURE);
-            return;
-          }
-          if (state.productStockList[state.productStockUpdateIndex].quantity ==
-              0) {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
-                type: SnackBarType.FAILURE);
-            return;
-          }
-          // List<String> cartProductList = preferences.getCartProductList();
-          // List<String> cartProductIdList = preferences.getCartProductIdList();
-          // List<String> cartProductQuantityList =
-          //     preferences.getCartProductQuantityList();
-          //update or insert cart API
-          if (_isProductInCart *//*cartProductList.contains(
-            state.productStockList[state.productStockUpdateIndex].productId)*//*
-          ) {
-            debugPrint('update cart');
-            try {
-              // int lastQuantityIndex = cartProductList.indexOf(state
-              //     .productStockList[state.productStockUpdateIndex].productId);
-              // debugPrint('last quantity = $lastQuantityIndex');
-              emit(state.copyWith(isLoading: true));
-              UpdateCartReqModel request = UpdateCartReqModel(
-                productId: event.productId,
-                supplierId: state.productStockList[state
-                    .productStockUpdateIndex]
-                    .productSupplierIds,
-                saleId: state.productStockList[state.productStockUpdateIndex]
-                    .productSaleId ==
-                    ''
-                    ? null
-                    : state.productStockList[state.productStockUpdateIndex]
-                    .productSaleId,
-                quantity: state.productStockList[state.productStockUpdateIndex]
-                    .quantity,
-                cartProductId:
-                _cartProductId *//*cartProductIdList[cartProductList.indexOf(state
-                  .productStockList[state.productStockUpdateIndex].productId)]*//*
-                ,
-              );
-              final res = await DioClient(event.context).post(
-                '${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}',
-                data: request,
-              );
-              UpdateCartResModel response = UpdateCartResModel.fromJson(res);
-              if (response.status == 201) {
-                Vibration.vibrate();
-                List<ProductStockModel> productStockList =
-                state.productStockList.toList(growable: true);
-                productStockList[state.productStockUpdateIndex] =
-                    productStockList[state.productStockUpdateIndex].copyWith(
-                      note: '',
-                      isNoteOpen: false,
-                      quantity: 0,
-                      productSupplierIds: '',
-                      totalPrice: 0.0,
-                      productSaleId: '',
-                    );
-                emit(state.copyWith(
-                    isLoading: false, productStockList: productStockList));
-
-                Navigator.pop(event.context);
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title: AppStrings.getLocalizedStrings(
-                        response.message?.toLocalization() ??
-                            response.message!,
-                        event.context),
-                    type: SnackBarType.SUCCESS);
-              } else {
-                emit(state.copyWith(isLoading: false));
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title: AppStrings.getLocalizedStrings(
-                        response.message?.toLocalization() ??
-                            response.message!,
-                        event.context),
-                    type: SnackBarType.FAILURE);
-              }
-            } on ServerException {
-              emit(state.copyWith(isLoading: false));
-            } catch (e) {
-              debugPrint('err = $e');
-              emit(state.copyWith(isLoading: false));
-            }
-          } else {
-            debugPrint('insert cart');
-            try {
-              emit(state.copyWith(isLoading: true));
-              InsertCartModel.InsertCartReqModel insertCartReqModel =
-              InsertCartModel.InsertCartReqModel(products: [
-                InsertCartModel.Product(
-                    productId: state
-                        .productStockList[state.productStockUpdateIndex]
-                        .productId,
-                    quantity: state
-                        .productStockList[state.productStockUpdateIndex]
-                        .quantity,
-                    supplierId: state
-                        .productStockList[state.productStockUpdateIndex]
-                        .productSupplierIds,
-                    note: state.productStockList[state.productStockUpdateIndex]
-                        .note.isEmpty
-                        ? null
-                        : state
-                        .productStockList[state.productStockUpdateIndex].note,
-                    saleId: state.productStockList[state
-                        .productStockUpdateIndex]
-                        .productSaleId.isEmpty
-                        ? null
-                        : state.productStockList[state.productStockUpdateIndex]
-                        .productSaleId)
-              ]);
-              Map<String, dynamic> req = insertCartReqModel.toJson();
-              req.removeWhere((key, value) {
-                if (value != null) {
-                  debugPrint("[$key] = $value");
-                }
-                return value == null;
-              });
-              debugPrint('insert cart req = $req');
-
-              debugPrint(
-                  'insert cart url1 = ${AppUrls
-                      .insertProductInCartUrl}${preferencesHelper
-                      .getCartId()}');
-              debugPrint(
-                  'insert cart url1 auth = ${preferencesHelper
-                      .getAuthToken()}');
-              final res = await DioClient(event.context).post(
-                  '${AppUrls.insertProductInCartUrl}${preferencesHelper
-                      .getCartId()}',
-                  data: req,
-                  options: Options(
-                    headers: {
-                      HttpHeaders.authorizationHeader:
-                      'Bearer ${preferencesHelper.getAuthToken()}',
-                    },
-                  ));
-              InsertCartResModel response = InsertCartResModel.fromJson(res);
-              if (response.status == 201) {
-                //await HapticFeedback.heavyImpact();
-                //
-                Vibration.vibrate();
-
-                List<ProductStockModel> productStockList =
-                state.productStockList.toList(growable: true);
-                productStockList[state.productStockUpdateIndex] =
-                    productStockList[state.productStockUpdateIndex].copyWith(
-                      note: '',
-                      isNoteOpen: false,
-                      quantity: 0,
-                      productSupplierIds: '',
-                      totalPrice: 0.0,
-                      productSaleId: '',
-                    );
-
-                emit(state.copyWith(
-                    isLoading: false,
-                    productStockList: productStockList,
-                    isCartCountChange: true));
-                emit(state.copyWith(isCartCountChange: false));
-              //  add(BasketEvent.setCartCountEvent());
-
-
-                Navigator.pop(event.context);
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title: AppStrings.getLocalizedStrings(
-                        response.message?.toLocalization() ??
-                            response.message!,
-                        event.context),
-                    type: SnackBarType.SUCCESS);
-              } else if (response.status == 403) {
-                emit(state.copyWith(isLoading: false));
-              } else {
-                emit(state.copyWith(isLoading: false));
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title: AppStrings.getLocalizedStrings(
-                        response.message?.toLocalization() ??
-                            response.message!,
-                        event.context),
-                    type: SnackBarType.FAILURE);
-              }
-            } on ServerException {
-              emit(state.copyWith(isLoading: false));
-            } catch (e) {
-              debugPrint('err = $e');
-              emit(state.copyWith(isLoading: false));
-            }
-          }
-        }*/
         else if (event is _GetProductDetailsEvent) {
+          add(BasketEvent.RemoveRelatedProductEvent());
           debugPrint('product details id = ${event.productId}');
           _isProductInCart = false;
           _cartProductId = '';
@@ -737,6 +535,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
+              add(BasketEvent.RelatedProductsEvent(productId: event.productId,context: event.context));
 
               if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
                 List<ProductStockModel> productStockList =

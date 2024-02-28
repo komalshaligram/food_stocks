@@ -187,6 +187,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                         .toUpperCase(),
                                     fontColors: AppColors.mainColor,
                                     borderColor: AppColors.mainColor,
+                                    isFromConnectScreen: true,
                                     onPressed: () {
                                       ScaffoldMessenger.of(context)
                                           .hideCurrentSnackBar();

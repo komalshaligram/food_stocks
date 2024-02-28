@@ -139,6 +139,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         add(ReorderEvent.getPreviousOrderProductsEvent(context: event.context));
       }
       else if (event is _GetProductDetailsEvent) {
+        add(ReorderEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
         _cartProductId = '';
@@ -212,7 +213,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(ReorderEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
+            add(ReorderEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
 
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =

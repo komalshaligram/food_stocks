@@ -390,6 +390,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             context: event.context));
       }
       else if (event is _GetProductDetailsEvent) {
+        add(StoreCategoryEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
         _cartProductId = '';
@@ -487,9 +488,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(StoreCategoryEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
-
-
+            add(StoreCategoryEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.planoGramUpdateIndex]
+            [state.productStockUpdateIndex].productId));
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               // List<List<ProductStockModel>> productStockList =
               // state.productStockList.toList(growable: false);
@@ -1332,19 +1332,24 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         debugPrint('product categories = ${response.data.length
             .toString()}');
         if (response.status == 200) {
-     /*     List<ProductStockModel> productStockList =
+          List<List<ProductStockModel>> productStockList =
           state.productStockList.toList(growable: true);
-          productStockList.addAll(response.data.map(
-                  (Product) =>
-                  ProductStockModel(
-                    productId: Product.id ?? '',
-                    stock: Product.productStock ?? 0,
-                  )) ??
-              []);
+          // List<ProductStockModel> barcodeStock =
+          // productStockList.removeLast();
+          List<ProductStockModel> stockList = [];
+          debugPrint('getAllProduct response_____${response.data.length}');
+          stockList.addAll(response.data.map(
+                  (product) {
+                return ProductStockModel(
+                    productId: product.id ?? '',
+                    stock: int.parse(product.productStock.toString() ?? '0') );
+              }) ?? []);
+        //  productStockList[4].addAll(stockList);
+          productStockList[3].addAll(stockList);
 
           emit(state.copyWith(
               relatedProductList:response.data ?? [],
-              isRelatedShimmering: false,productStockList: productStockList));*/
+              isRelatedShimmering: false,productStockList: productStockList));
         } else {
           emit(state.copyWith(isRelatedShimmering: false));
           CustomSnackBar.showSnackBar(
