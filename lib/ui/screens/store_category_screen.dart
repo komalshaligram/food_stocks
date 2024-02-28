@@ -609,7 +609,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 return CommonProductListWidget(
                                                     isGuestUser: state
                                                         .isGuestUser,
-                                                    productStock: state.planogramProductList[index].product?.productStock ??
+                                                    productStock: int.parse(state.planogramProductList[index].product!.productStock.toString())??
                                                         0,
                                                     productImage: state.planogramProductList[index].product?.mainImage ??
                                                         '',
@@ -709,8 +709,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             numberOfUnits:state.searchList[index].numberOfUnits,
                             priceOfBox: state.searchList[index].priceOfBox,
                             isGuestUser: state.isGuestUser,
-                            productStock:
-                            state.searchList[index].productStock,
+                            productStock:int.parse(state.searchList[index].productStock.toString()),
                             context: context,
                             searchName: state.searchList[index].name,
                             searchImage: state.searchList[index].image,
