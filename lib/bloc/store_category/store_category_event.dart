@@ -111,5 +111,6 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
       {required BuildContext context}) = _AllProductsRefreshListEvent;
 
   const factory StoreCategoryEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
+  const factory StoreCategoryEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
 
 }

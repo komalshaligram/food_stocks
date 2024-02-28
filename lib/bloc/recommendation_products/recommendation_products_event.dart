@@ -69,5 +69,6 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
       {required BuildContext context}) = _GetProductCategoriesListEvent;
 
   const factory RecommendationProductsEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
+  const factory RecommendationProductsEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
 
 }

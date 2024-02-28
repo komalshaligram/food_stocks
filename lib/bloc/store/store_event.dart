@@ -76,5 +76,5 @@ class StoreEvent with _$StoreEvent {
       _ToggleNoteEvent;
 
   const factory StoreEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
-
+  const factory StoreEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
 }

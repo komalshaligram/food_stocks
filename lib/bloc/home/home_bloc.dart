@@ -166,6 +166,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           _isProductInCart = false;
           _cartProductId = '';
           _productQuantity = 1;
+         // emit(state.copyWith(relatedProductList: []));
+
           try {
             emit(state.copyWith(
                 isProductLoading: true, isSelectSupplier: false));
@@ -183,7 +185,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 productStockUpdateIndex = state.productStockList.indexWhere(
                       (productStock) =>
                   productStock.productId == event.productId,);
-              // add(HomeEvent.RelatedProductsEvent(context: event.context,productId: event.productId));
               }
               emit(state.copyWith(productStockUpdateIndex:productStockUpdateIndex));
               List<ProductStockModel> productStockList =
@@ -393,6 +394,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       supplierIndex: supplierIndex,
                       context: event.context,
                       supplierSaleIndex: supplierSaleIndex));
+
                 }
               }
             } else {
@@ -1268,26 +1270,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     event.context, preferences.getAppLanguage(),value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
               }
           });
-         // final versionCheck = VersionCheck(
-         //    packageName: Platform.isIOS ? 'com.foodstock' : 'com.foodstock.dev',
-         //    packageVersion: packageInfo.version,
-         //    showUpdateDialog: (ctx,vc){
-         //      if(vc.packageVersion !=  vc.storeVersion){
-         //        customShowUpdateDialog(
-         //            event.context, preferences.getAppLanguage(),vc.storeUrl);
-         //        emit(state.copyWith(isIgnorePointer: true));
-         //
-         //      }
-         //    }
-         //  );
-
-         /* await versionCheck.checkVersion(event.context);
-          debugPrint('package version:${versionCheck.packageVersion}');
-          debugPrint('store Version:${versionCheck.storeVersion}');*/
-          /*if(versionCheck.packageVersion !=  versionCheck.storeVersion && Platform.isAndroid){
-            customShowUpdateDialog(
-                event.context, preferences.getAppLanguage(),versionCheck.storeUrl);
-          }*/
         }
 
         else if(event is _RelatedProductsEvent){
@@ -1300,10 +1282,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           debugPrint('product categories = ${response.data.length
               .toString()}');
           if (response.status == 200) {
+            List<ProductStockModel> productStockList =
+            state.productStockList.toList(growable: true);
+            productStockList.addAll(response.data.map(
+                    (Product) =>
+                    ProductStockModel(
+                      productId: Product.id ?? '',
+                      stock: Product.productStock ?? 0,
+                    )) ??
+                []);
 
             emit(state.copyWith(
                relatedProductList:response.data ?? [],
-                isRelatedShimmering: false));
+                isRelatedShimmering: false,productStockList: productStockList));
           } else {
             emit(state.copyWith(isRelatedShimmering: false));
             CustomSnackBar.showSnackBar(
@@ -1316,6 +1307,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             );
           }
         }
+
+        else if(event is _RemoveRelatedProductEvent){
+          emit(state.copyWith(relatedProductList: []));
+        }
+
 
       }
     });

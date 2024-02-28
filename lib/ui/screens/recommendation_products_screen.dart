@@ -371,8 +371,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                 state.searchList[index]
                                     .searchType)
                                 .toList()
-                                .length ==
-                                10,
+                                .length >=
+                                1,
                             isLastItem:
                             state.searchList.length - 1 == index,
                             isShowSearchLabel: index == 0
@@ -861,7 +861,14 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
                                   price:state.relatedProductList.elementAt(i).productPrice??0.0,
                                   onButtonTap: () {
-                                    print("tap 2");
+                                    Navigator.of(context1).pop();
+                                    showProductDetails(
+                                        context: context1,
+                                        productId: state
+                                            .relatedProductList[i].id,
+                                        isBarcode: false,
+                                        productStock: (state.relatedProductList[i].productStock.toString() ?? '')
+                                    );
                                   },
                                 );},itemCount: state.relatedProductList.length,),
                           ),
@@ -875,6 +882,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
       },
     ).then((value) {
       context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.getCartCountEvent());
+      context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.RemoveRelatedProductEvent());
+
     });
   }
 
@@ -1477,7 +1486,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != 0 ? 35 : 50,
+            height: (productStock) != 0 ? 80 : 90,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1546,13 +1555,49 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    (productStock) != 0 ? 0.width : Text(
-                      AppLocalizations.of(context)!
-                          .out_of_stock1,
-                      style: AppStyles.rkBoldTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.redColor,
-                          fontWeight: FontWeight.w400),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 200,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              (productStock) != 0 ? 0.width : Text(
+                                AppLocalizations.of(context)!
+                                    .out_of_stock1,
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.redColor,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              numberOfUnits != 0 ? Text(
+                                '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.w400),
+                              ) : 0.width,
+                              numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
+                                '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox / numberOfUnits).toStringAsFixed(2)}',
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.w400),
+                              ) : 0.width,
+                            ],
+                          ),
+                        ),
+                        priceOfBox != 0.0 ? Text(
+                          '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
+                          style: AppStyles.rkBoldTextStyle(
+                              size: AppConstants.font_12,
+                              color: AppColors.blackColor,
+                              fontWeight: FontWeight.w400),
+                        ) : 0.width,
+
+                      ],
                     ),
                   ],
                 ),

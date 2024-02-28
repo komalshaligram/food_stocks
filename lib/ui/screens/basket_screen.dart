@@ -1209,7 +1209,7 @@ class BasketScreenWidget extends StatelessWidget {
                               totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
                               price:state.relatedProductList.elementAt(i).productPrice??0.0,
                               onButtonTap: () {
-                                print("tap 2");
+
                               },
                             );},itemCount: state.relatedProductList.length,),
                       ),
@@ -1222,9 +1222,7 @@ class BasketScreenWidget extends StatelessWidget {
         );
       },
     ).then((value) {
-     /* context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(
-        context: context,
-      ));*/
+      context.read<BasketBloc>().add(BasketEvent.RemoveRelatedProductEvent());
     });
 
 
