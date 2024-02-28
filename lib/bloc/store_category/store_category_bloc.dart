@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/error/exceptions.dart';
+import 'package:food_stock/data/model/req_model/get_sub_categories_product_req_model/get_sub_categories_product_req_model.dart';
 import 'package:food_stock/data/model/req_model/planogram_req_model/planogram_req_model.dart';
 import 'package:food_stock/data/model/req_model/product_subcategories_req_model/product_subcategories_req_model.dart';
 import 'package:food_stock/data/model/res_model/planogram_res_model/planogram_res_model.dart';
@@ -262,7 +263,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
             }
             else{
-              emit(state.copyWith(isBottomOfPlanoGrams: false));
+              emit(state.copyWith(isBottomOfPlanoGrams: false,isBottomOfProducts: false));
               add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
             }
             emit(state.copyWith(categoryPlanogramList: []));
@@ -1225,76 +1226,57 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if (state.isLoadMore) {
           return;
         }
-        /*  if (state.isBottomOfProducts) {
+        if (state.isBottomOfProducts) {
           return;
-         }*/
+        }
         debugPrint('Here');
         try{
           List<PlanogramAllProduct> planogramProductList =
           state.planogramProductList.toList(growable: true);
           emit(state.copyWith(isPlanogramProductShimmering: true));
-          PlanogramReqModel planogramReqModel =  PlanogramReqModel(
-            categoryId : state.categoryId,
+
+
+          GetSubCategoriesProductReqModel getSubCategoriesProductReqModel = GetSubCategoriesProductReqModel(
             subCategoryId: state.subCategoryId,
-            pageNum: state.subProductPageNum,
+            pageNum:  state.planogramProductList.isEmpty?state.subCategoryPageNum:state.subPlanogramPageNum+1,
             pageLimit: AppConstants.orderPageLimit,
-            sortOrder: AppStrings.ascendingString,
-            sortField: AppStrings.planogramSortFieldString,
           );
 
-          final res;
-
-          if(!preferences.getGuestUser()){
-            res = await DioClient(event.context)
-                .post('${AppUrls.getPlanogramAllProductUrl}',
-                data: planogramReqModel
-            );
-            debugPrint('getAllProductUrl_____${AppUrls.getPlanogramAllProductUrl}');
-            debugPrint('getAllProductUrl req_____${planogramReqModel}');
-          }
-          else{
-            res = await DioClient(event.context)
-                .post('${AppUrls.getPlanogramAllProductForGuestUserUrl}',
-                data: planogramReqModel
-            );
-            debugPrint('getAllProductUrl_____${AppUrls.getPlanogramAllProductForGuestUserUrl}');
-            debugPrint('getAllProductUrl req_____${planogramReqModel}');
-          }
+          final res = await DioClient(event.context)
+              .post('${AppUrls.subCategoryProductsUrl}',
+              data: getSubCategoriesProductReqModel
+          );
+          debugPrint('getSubCatProductUrl_____${AppUrls.subCategoryProductsUrl}');
+          debugPrint('getSubCatProductUrl req_____${getSubCategoriesProductReqModel}');
 
           print('getAllProduct_____$res');
           GetPlanogramProductModel response = GetPlanogramProductModel.fromJson(res);
-          debugPrint('getAllProduct response_____${response}');
-          debugPrint('getAllProduct response_____${response.metaData?.totalFilteredCount}');
+          debugPrint('getSubCatProductUrl response_____${response}');
+          debugPrint('getSubCatProductUrl response count_____${response.metaData?.totalFilteredCount}');
 
           if(response.status == 200){
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
-            // List<ProductStockModel> barcodeStock =
-            // productStockList.removeLast();
+
             List<ProductStockModel> stockList = [];
             debugPrint('getAllProduct response_____${response.data?.length}');
             stockList.addAll(response.data?.map(
-                    (product) => ProductStockModel(
-                    productId: product.id ?? '',
-                    stock: int.parse(product.productStock.toString()  ?? '0') )) ?? []);
+                    (product) {
+                  return ProductStockModel(
+                      productId: product.productId ?? '',
+                      stock: int.parse(product.product?.productStock.toString() ?? '0') );
+                }) ?? []);
             productStockList[3].addAll(stockList);
             debugPrint('page = ${stockList.length}');
             debugPrint('page = ${productStockList[3].length}');
             // productStockList.add(barcodeStock);
             planogramProductList.addAll(response.data ?? []);
-            emit(state.copyWith(planogramProductList: planogramProductList,productStockList: productStockList,
-                isPlanogramProductShimmering: false,isPlanogramShimmering: false
+            print('isBottomOfPlanoGrams____${planogramProductList.length ==
+                (response.metaData?.totalFilteredCount ?? 0) ? true : false}');
+            emit( state.copyWith(planogramProductList: planogramProductList,productStockList: productStockList,
+                isPlanogramProductShimmering: false,isBottomOfProducts: planogramProductList.length >=
+                    (response.metaData?.totalFilteredCount ?? 0) ? true : false
             ));
-            emit(state.copyWith(
-                isBottomOfProducts: planogramProductList.length ==
-                    (response.metaData?.totalFilteredCount ?? 0)
-                    ? true
-                    : false));
-            emit(state.copyWith(
-                isBottomOfPlanoGrams: planogramProductList.length ==
-                    (response.metaData?.totalFilteredCount ?? 0)
-                    ? true
-                    : false));
           }
           else{
             emit(state.copyWith(isLoadMore: false,isPlanogramProductShimmering: false));

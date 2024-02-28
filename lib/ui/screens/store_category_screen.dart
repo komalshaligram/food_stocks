@@ -534,18 +534,18 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                   child: CommonProductItemWidget(
                                                       imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                                       isGuestUser: state.isGuestUser,
-                                                      productStock: (state.planogramProductList[index].productStock.toString() ?? '0'),
-                                                      productImage: state.planogramProductList[index].mainImage ?? '',
-                                                      productName: state.planogramProductList[index].productName ?? '',
-                                                      totalSaleCount: state.planogramProductList[index].totalSale?.toInt() ?? 0,
-                                                      price: state.planogramProductList[index].productPrice ?? 0.0,
+                                                      productStock: (state.planogramProductList[index].product?.productStock.toString() ?? '0'),
+                                                      productImage: state.planogramProductList[index].product?.mainImage ?? '',
+                                                      productName: state.planogramProductList[index].product?.productName ?? '',
+                                                      totalSaleCount: state.planogramProductList[index].product?.totalSale?.toInt() ?? 0,
+                                                      price: state.planogramProductList[index].product?.productPrice ?? 0.0,
                                                       onButtonTap: () {
                                                         debugPrint("state.planogramProductList[index]:${index == 0 ? (state.planogramProductList.length > 1) ? 1 : 0 : index}");
                                                         if (!state.isGuestUser) {
                                                           showProductDetails(
                                                               context: context,
                                                               productId: state.planogramProductList[index].id ?? '',
-                                                              productStock: state.planogramProductList[index].productStock.toString() ?? '0',
+                                                              productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
                                                               planoGramIndex: 3,
                                                               isBarcode: false);
                                                         } else {
@@ -610,22 +610,22 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 return CommonProductListWidget(
                                                     isGuestUser: state
                                                         .isGuestUser,
-                                                    productStock: state.planogramProductList[index].productStock ??
+                                                    productStock: state.planogramProductList[index].product?.productStock ??
                                                         0,
-                                                    productImage: state.planogramProductList[index].mainImage ??
+                                                    productImage: state.planogramProductList[index].product?.mainImage ??
                                                         '',
-                                                    productName: state.planogramProductList[index].productName ??
+                                                    productName: state.planogramProductList[index].product?.productName ??
                                                         '',
-                                                    totalSaleCount: state.planogramProductList[index].totalSale?.toInt() ??
+                                                    totalSaleCount: state.planogramProductList[index].product?.totalSale?.toInt() ??
                                                         0,
-                                                    price: state.planogramProductList[index].productPrice ??
+                                                    price: state.planogramProductList[index].product?.productPrice ??
                                                         0.0,
                                                     onButtonTap:
                                                         () {
                                                       if (!state.isGuestUser) {
                                                         showProductDetails(
                                                             context: context,
-                                                            productStock: state.planogramProductList[index].productStock.toString() ?? '0',
+                                                            productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
                                                             productId: state.planogramProductList[index].id ?? '',
                                                             planoGramIndex: 3,
                                                             isBarcode: false);

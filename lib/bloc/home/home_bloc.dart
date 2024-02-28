@@ -1261,7 +1261,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               customShowUpdateDialog(
                   event.context, preferences.getAppLanguage(),value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
             }
-
           });
          // final versionCheck = VersionCheck(
          //    packageName: Platform.isIOS ? 'com.foodstock' : 'com.foodstock.dev',
@@ -1284,7 +1283,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 event.context, preferences.getAppLanguage(),versionCheck.storeUrl);
           }*/
         }
-
         else if(event is _ImagePreviewEvent){
           emit(state.copyWith(isPreview: !state.isPreview));
         }else if(event is _RelatedProductsEvent){
@@ -1312,10 +1310,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             );
           }
         }
-
       }
     });
   }
-
-
 }
