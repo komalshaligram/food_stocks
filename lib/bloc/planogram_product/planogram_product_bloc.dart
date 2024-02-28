@@ -67,6 +67,7 @@ class PlanogramProductBloc
 
       }
       else if (event is _GetProductDetailsEvent) {
+        add(PlanogramProductEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
         _cartProductId = '';

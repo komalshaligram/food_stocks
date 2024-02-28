@@ -140,6 +140,7 @@ class RecommendationProductsBloc
             context: event.context));
       }
       else if (event is _GetProductDetailsEvent) {
+        add(RecommendationProductsEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
         _cartProductId = '';
@@ -586,6 +587,7 @@ class RecommendationProductsBloc
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == 201) {
+             add(RecommendationProductsEvent.getCartCountEvent());
               Vibration.vibrate();
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: true);

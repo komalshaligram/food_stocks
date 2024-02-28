@@ -122,6 +122,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             isBottomOfProducts: false));
         add(ProductSaleEvent.getProductSalesListEvent(context: event.context));
       } else if (event is _GetProductDetailsEvent) {
+        add(ProductSaleEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
         _cartProductId = '';

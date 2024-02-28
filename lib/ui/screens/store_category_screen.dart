@@ -951,25 +951,25 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 vertical: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  height: 35,
-                  width: 40,
+                  height: 60,
+                  width: 50,
                   child: !isGuestUser
                       ? Image.network(
                     '${AppUrls.baseFileUrl}$searchImage',
                     fit: BoxFit.scaleDown,
-                    height: 35,
-                    width: 40,
+                    height: 60,
+                    width: 50,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) {
                         return child;
                       } else {
                         return CommonShimmerWidget(
                             child: Container(
-                              width: 40,
-                              height: 35,
+                              height: 60,
+                              width: 50,
                               color: AppColors.whiteColor,
                             ));
                       }
@@ -978,29 +978,28 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       return SvgPicture.asset(
                         AppImagePath.splashLogo,
                         fit: BoxFit.scaleDown,
-                        width: 40,
-                        height: 35,
+                        height: 60,
+                        width: 50,
                       );
                     },
                   )
                       : Image.asset(AppImagePath.imageNotAvailable5,
-                      fit: BoxFit.cover),
+                      fit: BoxFit.cover, height: 60,
+                    width: 50,),
                 ),
                 10.width,
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Text(
-                        searchName,
-                        style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.blackColor,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                    Text(
+                      searchName,
+                      style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_12,
+                        color: AppColors.blackColor,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1030,18 +1029,21 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox / numberOfUnits).toStringAsFixed(2)}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
-                                    color: AppColors.blackColor,
+                                    color: AppColors.blueColor,
                                     fontWeight: FontWeight.w400),
                               ) : 0.width,
                             ],
                           ),
                         ),
-                        priceOfBox != 0.0 ? Text(
-                          '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
-                          style: AppStyles.rkBoldTextStyle(
-                              size: AppConstants.font_12,
-                              color: AppColors.blackColor,
-                              fontWeight: FontWeight.w400),
+                        priceOfBox != 0.0 ? Container(
+                          width: 60,
+                          child: Text(
+                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
+                            style: AppStyles.rkBoldTextStyle(
+                                size: AppConstants.font_12,
+                                color: AppColors.blueColor,
+                                fontWeight: FontWeight.w400),
+                          ),
                         ) : 0.width,
 
                       ],
@@ -1280,9 +1282,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         debugPrint('product id  ${productId}');
         return DraggableScrollableSheet(
           expand: true,
-          maxChildSize: 1 -
-              (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
+          maxChildSize: 1,
           minChildSize: 0.4,
           initialChildSize: AppConstants.bottomSheetInitHeight,
           //shouldCloseOnMinExtent: true,
@@ -1448,16 +1448,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     .decreaseQuantityOfProduct(
                                     context: context1));
                           },
-
-                          // isLoading: state.isLoading,
-                          /*onAddToOrderPressed: state.isLoading
-                                ? null
-                                : () {
-                              context.read<StoreCategoryBloc>().add(
-                                  StoreCategoryEvent
-                                      .addToCartProductEvent(
-                                      context: context1));
-                            }*/
                         ),
                         bottomNavigationBar: state.isRelatedShimmering
                             ? RelatedProductShimmerWidget()
@@ -1477,14 +1467,15 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
                                 price:state.relatedProductList.elementAt(i).productPrice??0.0,
                                 onButtonTap: () {
-                               /*   Navigator.of(context1).pop();
+                                  Navigator.of(context1).pop();
                                   showProductDetails(
+                                    planoGramIndex: 4,
                                       context: context1,
                                       productId: state
                                           .relatedProductList[i].id,
                                       isBarcode: false,
                                       productStock: (state.relatedProductList[i].productStock.toString() ?? '')
-                                  );*/
+                                  );
                                 },
                               );},itemCount: state.relatedProductList.length,),
                         ),
@@ -1496,8 +1487,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         );
       },
     ).then((value) {
-      context.read<StoreCategoryBloc>().add(StoreCategoryEvent.getCartCountEvent());
-      context.read<StoreCategoryBloc>().add(StoreCategoryEvent.RemoveRelatedProductEvent());
+      //context.read<StoreCategoryBloc>().add(StoreCategoryEvent.getCartCountEvent());
+    //  context.read<StoreCategoryBloc>().add(StoreCategoryEvent.RemoveRelatedProductEvent());
 
     });
   }

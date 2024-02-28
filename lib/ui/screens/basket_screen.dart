@@ -614,9 +614,6 @@ class BasketScreenWidget extends StatelessWidget {
                               onTap: () {
                                 showProductDetails(
                                     context: context,
-                                    index: index,
-                                    qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
-                                    CartItemList: state.CartItemList,
                                   cartProductId: state.CartItemList.data?.data?[index].id ?? ''
 
                                 );
@@ -632,9 +629,6 @@ class BasketScreenWidget extends StatelessWidget {
                               onTap: () {
                                 showProductDetails(
                                     context: context,
-                                    index: index,
-                                    qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
-                                    CartItemList: state.CartItemList,
                                     cartProductId: state.CartItemList.data?.data?[index].id ?? ''
                                 );
                               },
@@ -682,9 +676,6 @@ class BasketScreenWidget extends StatelessWidget {
                                 onTap: () {
                                   showProductDetails(
                                       context: context,
-                                      index: index,
-                                      qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
-                                      CartItemList: state.CartItemList,
                                       cartProductId: state.CartItemList.data?.data?[index].id ?? ''
                                   );
                                 },
@@ -1004,9 +995,6 @@ class BasketScreenWidget extends StatelessWidget {
 
   void showProductDetails(
       {required BuildContext context,
-      required int index,
-        required int qty,
-      required GetAllCartResModel CartItemList,
         required String cartProductId,
       }) async {
 /*    context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(
@@ -1209,7 +1197,11 @@ class BasketScreenWidget extends StatelessWidget {
                               totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
                               price:state.relatedProductList.elementAt(i).productPrice??0.0,
                               onButtonTap: () {
-
+                                Navigator.of(context1).pop();
+                                showProductDetails(
+                                    cartProductId: state.relatedProductList.elementAt(i).id.toString() ??'',
+                                    context: context,
+                                );
                               },
                             );},itemCount: state.relatedProductList.length,),
                       ),
@@ -1222,7 +1214,7 @@ class BasketScreenWidget extends StatelessWidget {
         );
       },
     ).then((value) {
-      context.read<BasketBloc>().add(BasketEvent.RemoveRelatedProductEvent());
+      context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(context: context));
     });
 
 

@@ -139,6 +139,7 @@ class CompanyProductsBloc
             context: event.context));
       }
       else if (event is _GetProductDetailsEvent) {
+        add(CompanyProductsEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
         _cartProductId = '';

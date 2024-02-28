@@ -403,7 +403,8 @@
   "units" : "יחידות",
    "surfaces_order" : "משטחים להזמנה",
    "refund_for_order" : "זיכוי עבור הזמנה",
-  "related_products": "מוצרים דומים"
+  "related_products": "מוצרים דומים",
+  "search_result" : "תוצאות חיפוש"
 
 
 }

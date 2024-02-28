@@ -7,14 +7,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/recommendation_products/recommendation_products_bloc.dart';
-import 'package:food_stock/ui/widget/common_product_details_button.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
-import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/refresh_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:html/parser.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../routes/app_routes.dart';
@@ -227,80 +225,76 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                               childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
                                                   .productGridAspectRatio: AppConstants
                                                   .productGridAspectRatio1),
-                                      itemBuilder: (context, index) => DelayedWidget(
-                                            child: CommonProductItemWidget(
-                                                imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
-                                                imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
-                                                productStock: state
+                                      itemBuilder: (context, index) => CommonProductItemWidget(
+                                          imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
+                                          imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
+                                          productStock: state
+                                                  .recommendationProductsList[
+                                                      index]
+                                                  .productStock.toString() ??
+                                              '0',
+                                          productImage: state
+                                                  .recommendationProductsList[
+                                                      index]
+                                                  .mainImage ??
+                                              '',
+                                          productName: state
+                                                  .recommendationProductsList[
+                                                      index]
+                                                  .productName ??
+                                              '',
+                                          totalSaleCount: state
+                                                  .recommendationProductsList[
+                                                      index]
+                                                  .totalSale ??
+                                              0,
+                                          price: state
+                                                  .recommendationProductsList[
+                                                      index]
+                                                  .productPrice ??
+                                              0.0,
+                                          onButtonTap: () {
+                                            showProductDetails(
+                                                context: context,
+                                                productId: state
                                                         .recommendationProductsList[
                                                             index]
-                                                        .productStock.toString() ??
-                                                    '0',
-                                                productImage: state
-                                                        .recommendationProductsList[
-                                                            index]
-                                                        .mainImage ??
-                                                    '',
-                                                productName: state
-                                                        .recommendationProductsList[
-                                                            index]
-                                                        .productName ??
-                                                    '',
-                                                totalSaleCount: state
-                                                        .recommendationProductsList[
-                                                            index]
-                                                        .totalSale ??
-                                                    0,
-                                                price: state
-                                                        .recommendationProductsList[
-                                                            index]
-                                                        .productPrice ??
-                                                    0.0,
-                                                onButtonTap: () {
-                                                  showProductDetails(
-                                                      context: context,
-                                                      productId: state
-                                                              .recommendationProductsList[
-                                                                  index]
-                                                              .id ??
-                                                          '');
-                                                }),
-                                          )
-                  
+                                                        .id ??
+                                                    '');
+                                          })
+
                                       ):   ListView.builder(
                         itemCount: state.recommendationProductsList.length,
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               padding: EdgeInsets.symmetric(
                     horizontal: AppConstants.padding_5),
-                              itemBuilder: (context, index) => DelayedWidget(
-                  child: CommonProductListWidget(
-                      productStock: state.recommendationProductsList[index].productStock ?? 0,
-                      productImage: state.recommendationProductsList[index]
-                          .mainImage ??
-                          '',
-                      productName: state.recommendationProductsList[index]
-                          .productName ??
-                          '',
-                      totalSaleCount: state
-                          .recommendationProductsList[index]
-                          .totalSale ??
-                          0,
-                      price: state.recommendationProductsList[index]
-                          .productPrice ??
-                          0.0,
-                      onButtonTap: () {
-                        showProductDetails(
-                          context: context,
-                          productId: state
-                              .recommendationProductsList[index]
-                              .id ??
-                              '',
-                          productStock: state.recommendationProductsList[index].productStock.toString() ?? '0',
-                  
-                        );
-                      }),
-                              ),
+                              itemBuilder: (context, index) => CommonProductListWidget(
+                                  productStock: state.recommendationProductsList[index].productStock ?? 0,
+                                  productImage: state.recommendationProductsList[index]
+                                      .mainImage ??
+                                      '',
+                                  productName: state.recommendationProductsList[index]
+                                      .productName ??
+                                      '',
+                                  totalSaleCount: state
+                                      .recommendationProductsList[index]
+                                      .totalSale ??
+                                      0,
+                                  price: state.recommendationProductsList[index]
+                                      .productPrice ??
+                                      0.0,
+                                  onButtonTap: () {
+                                    showProductDetails(
+                                      context: context,
+                                      productId: state
+                                          .recommendationProductsList[index]
+                                          .id ??
+                                          '',
+                                      productStock: state.recommendationProductsList[index].productStock.toString() ?? '0',
+
+                                    );
+                                  }),
                         ),
                         ],
                       ),
@@ -579,100 +573,98 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
     required double productPrice,
     required void Function() onPressed,
   }) {
-    return DelayedWidget(
-      child: Container(
-        // height: 150,
-        // width: 130,
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15),
-                blurRadius: AppConstants.blur_10),
-          ],
-        ),
-        clipBehavior: Clip.hardEdge,
-        margin: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_10,
-            horizontal: AppConstants.padding_5),
-        padding: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_5,
-            horizontal: AppConstants.padding_10),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: Image.network(
-                "${AppUrls.baseFileUrl}$productImage",
-                height: 70,
-                fit: BoxFit.fitHeight,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress?.cumulativeBytesLoaded !=
-                      loadingProgress?.expectedTotalBytes) {
-                    return CommonShimmerWidget(
-                      child: Container(
-                        height: 70,
-                        width: 70,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(AppConstants.radius_10)),
-                        ),
+    return Container(
+      // height: 150,
+      // width: 130,
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius:
+            BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.shadowColor.withOpacity(0.15),
+              blurRadius: AppConstants.blur_10),
+        ],
+      ),
+      clipBehavior: Clip.hardEdge,
+      margin: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_10,
+          horizontal: AppConstants.padding_5),
+      padding: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_5,
+          horizontal: AppConstants.padding_10),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Image.network(
+              "${AppUrls.baseFileUrl}$productImage",
+              height: 70,
+              fit: BoxFit.fitHeight,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress?.cumulativeBytesLoaded !=
+                    loadingProgress?.expectedTotalBytes) {
+                  return CommonShimmerWidget(
+                    child: Container(
+                      height: 70,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.radius_10)),
                       ),
-                    );
-                  }
-                  return child;
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  // debugPrint('sale list image error : $error');
-                  return Container(
-                    child: Image.asset(AppImagePath.imageNotAvailable5,
-                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                  );
-                },
-              ),
-            ),
-            5.height,
-            Text(
-              productName,
-              style: AppStyles.rkBoldTextStyle(
-                  size: AppConstants.font_12,
-                  color: AppColors.blackColor,
-                  fontWeight: FontWeight.w600),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            5.height,
-            Expanded(
-              child: totalSale == 0
-                  ? 0.width
-                  : Text(
-                      "${totalSale} ${AppLocalizations.of(context)!.discount}",
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_10,
-                          color: AppColors.saleRedColor,
-                          fontWeight: FontWeight.w600),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
+                  );
+                }
+                return child;
+              },
+              errorBuilder: (context, error, stackTrace) {
+                // debugPrint('sale list image error : $error');
+                return Container(
+                  child: Image.asset(AppImagePath.imageNotAvailable5,
+                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                );
+              },
             ),
-            5.height,
-            Center(
-              child: CommonProductButtonWidget(
-                title:
-                    "${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}",
-                onPressed: onPressed,
-                textColor: AppColors.whiteColor,
-                bgColor: AppColors.mainColor,
-                borderRadius: AppConstants.radius_3,
-                textSize: AppConstants.font_12,
-              ),
-            )
-          ],
-        ),
+          ),
+          5.height,
+          Text(
+            productName,
+            style: AppStyles.rkBoldTextStyle(
+                size: AppConstants.font_12,
+                color: AppColors.blackColor,
+                fontWeight: FontWeight.w600),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          5.height,
+          Expanded(
+            child: totalSale == 0
+                ? 0.width
+                : Text(
+                    "${totalSale} ${AppLocalizations.of(context)!.discount}",
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_10,
+                        color: AppColors.saleRedColor,
+                        fontWeight: FontWeight.w600),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+          ),
+          5.height,
+          Center(
+            child: CommonProductButtonWidget(
+              title:
+                  "${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}",
+              onPressed: onPressed,
+              textColor: AppColors.whiteColor,
+              bgColor: AppColors.mainColor,
+              borderRadius: AppConstants.radius_3,
+              textSize: AppConstants.font_12,
+            ),
+          )
+        ],
       ),
     );
   }
@@ -700,190 +692,198 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
           value: context.read<RecommendationProductsBloc>(),
           child: DraggableScrollableSheet(
             expand: true,
-            maxChildSize: 1 -
-                (MediaQuery.of(context).viewPadding.top /
-                    getScreenHeight(context)),
+            maxChildSize: 1,
             minChildSize: 0.4,
             initialChildSize: AppConstants.bottomSheetInitHeight,
-            //  shouldCloseOnMinExtent: true,
+            //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
-              return BlocProvider.value(
-                  value: context.read<RecommendationProductsBloc>(),
-                  child: BlocBuilder<RecommendationProductsBloc,
-                      RecommendationProductsState>(
-                    builder: (context, state) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(AppConstants.radius_30),
-                            topRight: Radius.circular(AppConstants.radius_30),
-                          ),
-                          color: AppColors.whiteColor,
-                        ),
-                        clipBehavior: Clip.hardEdge,
-                        child: Scaffold(
-                          body: state.isProductLoading
-                              ? ProductDetailsShimmerWidget()
-                                :state.productDetails.isEmpty
-                        ? Center(
+              return BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
+                builder: (context, state) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(AppConstants.radius_30),
+                        topRight: Radius.circular(AppConstants.radius_30),
+                      ),
+                      color: AppColors.whiteColor,
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: Scaffold(
+                      body: state.isProductLoading
+                          ? ProductDetailsShimmerWidget()
+                          : state.productDetails.isEmpty
+                          ? Center(
                         child: Text(
                             AppLocalizations.of(context)!.no_product,
-                          style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.normalFont,
-                            color: AppColors.redColor,
-                            fontWeight: FontWeight.w500,
-                          )),
-                      ):
-                          CommonProductDetailsWidget(
-                            addToOrderTap: () {
-                              context
-                                  .read<
-                                  RecommendationProductsBloc>()
-                                  .add(RecommendationProductsEvent
-                                  .addToCartProductEvent(
+                            style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.normalFont,
+                              color: AppColors.redColor,
+                              fontWeight: FontWeight.w500,
+                            )),
+                      )
+                          : CommonProductDetailsWidget(
+                        addToOrderTap: () {
+                          context.read<RecommendationProductsBloc>().add(
+                              RecommendationProductsEvent.addToCartProductEvent(
                                   context: context1,
                                   productId: productId
                               ));
-                            },
-                            imageOnTap: (){
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return Stack(
-                                    children: [
-                                      Container(
-                                        height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
-                                        width: getScreenWidth(context),
-                                        child: PhotoView(
-                                          imageProvider: CachedNetworkImageProvider(
-                                            '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
-                                          ),
-                                        ),
+                        },
+                        isLoading: state.isLoading,
+                        imageOnTap: (){
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Stack(
+                                children: [
+                                  Container(
+                                    height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                    width: getScreenWidth(context),
+                                    child: PhotoView(
+                                      imageProvider: CachedNetworkImageProvider(
+                                        '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                       ),
+                                    ),
+                                  ),
 
-                                      GestureDetector(
-                                          onTap: (){
-                                            Navigator.pop(context);
-                                          },
-                                          child: Icon(Icons.close,
-                                            color: Colors.white,
-                                          )),
-                                    ],
-                                  );
-                                },);
-                            },
-                                  context: context,
-                            // contentKey: _contentKey,
-                                  productImageIndex: state.imageIndex,
-                                  onPageChanged: (index, p1) {
-                                    context
-                                        .read<RecommendationProductsBloc>()
-                                        .add(RecommendationProductsEvent
-                                            .updateImageIndexEvent(
-                                                index: index));
-                                  },
-                                  productImages: [
-                                    state.productDetails.first.mainImage ?? '',
-                                    ...state.productDetails.first.images?.map(
-                                            (image) => image.imageUrl ?? '') ??
-                                        []
-                                  ],
-                                  productPerUnit:
-                                      state.productDetails.first.numberOfUnit ??
-                                          0,
-                                  productUnitPrice: state
-                                      .productStockList[
-                                          state.productStockUpdateIndex]
-                                      .totalPrice,
-                                  productName:
-                                      state.productDetails.first.productName ??
-                                          '',
-                                  productCompanyName:
-                                      state.productDetails.first.brandName ??
-                                          '',
-                                  productDescription: state.productDetails.first
-                                          .productDescription ??
-                                      '',
-                                  productSaleDescription: state.productDetails
-                                          .first.productDescription ??
-                                      '',
-                                  productPrice: state
-                                          .productStockList[state.productStockUpdateIndex]
-                                          .totalPrice *
-                                      state.productStockList[state.productStockUpdateIndex].quantity *
-                                      (state.productDetails.first.numberOfUnit ?? 0),
-                                  productScaleType: state.productDetails.first.scales?.scaleType ?? '',
-                                  productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                                  productStock: state.productStockList[state.productStockUpdateIndex].stock,
-                                  isRTL: context.rtl,
-                                  isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
-                                  scrollController: scrollController,
-                                  productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
-                                  onQuantityChanged: (quantity) {
-                                    context
-                                        .read<RecommendationProductsBloc>()
-                                        .add(RecommendationProductsEvent
-                                            .updateQuantityOfProduct(
-                                                context: context1,
-                                                quantity: quantity));
-                                  },
-                                  onQuantityIncreaseTap: () {
-                                    context
-                                        .read<RecommendationProductsBloc>()
-                                        .add(RecommendationProductsEvent
-                                            .increaseQuantityOfProduct(
-                                                context: context1));
-                                  },
-                                  onQuantityDecreaseTap: () {
-                                    context
-                                        .read<RecommendationProductsBloc>()
-                                        .add(RecommendationProductsEvent
-                                            .decreaseQuantityOfProduct(
-                                                context: context1));
-                                  },
-                                ),
-                          bottomNavigationBar: state.isRelatedShimmering
-                              ? RelatedProductShimmerWidget()
-                              :
-                          Container(
-                            height: 200,
-                            padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemBuilder: (context,i){
-                                return CommonProductItemWidget(
-                                  productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
-                                  width: 140,
-                                  productImage:state.relatedProductList[i].mainImage??'',
-                                  productName: state.relatedProductList.elementAt(i).productName??'',
-                                  totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
-                                  price:state.relatedProductList.elementAt(i).productPrice??0.0,
-                                  onButtonTap: () {
-                                    Navigator.of(context1).pop();
-                                    showProductDetails(
-                                        context: context1,
-                                        productId: state
-                                            .relatedProductList[i].id,
-                                        isBarcode: false,
-                                        productStock: (state.relatedProductList[i].productStock.toString() ?? '')
-                                    );
-                                  },
-                                );},itemCount: state.relatedProductList.length,),
-                          ),
-                        ),
-                      );
-                    },
-                  ));
+                                  GestureDetector(
+                                      onTap: (){
+                                        Navigator.pop(context);
+                                      },
+                                      child: Icon(Icons.close,
+                                        color: Colors.white,
+                                      )),
+                                ],
+                              );
+                            },);
+
+                        },
+                        context: context,
+                        productImageIndex: state.imageIndex,
+                        onPageChanged: (index, p1) {
+                          context.read<RecommendationProductsBloc>().add(
+                              RecommendationProductsEvent.updateImageIndexEvent(
+                                  index: index));
+                        },
+                        productImages: [
+                          state.productDetails.first.mainImage ??
+                              '',
+                          ...state.productDetails.first.images
+                              ?.map((image) =>
+                          image.imageUrl ?? '') ??
+                              []
+                        ],
+                        productPerUnit: state.productDetails.first
+                            .numberOfUnit ?? 0,
+                        productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
+                        productName: state.productDetails.first
+                            .productName ??
+                            '',
+                        productCompanyName: state
+                            .productDetails.first.brandName ??
+                            '',
+                        productDescription: parse(state
+                            .productDetails
+                            .first
+                            .productDescription ??
+                            '')
+                            .body
+                            ?.text ??
+                            '',
+                        productSaleDescription: parse(state
+                            .productDetails
+                            .first
+                            .productDescription ??
+                            '')
+                            .body
+                            ?.text ??
+                            '',
+                        productPrice: state
+                            .productStockList[
+                        state.productStockUpdateIndex]
+                            .totalPrice *
+                            state
+                                .productStockList[
+                            state.productStockUpdateIndex]
+                                .quantity *
+                            (state.productDetails.first
+                                .numberOfUnit ??
+                                0) ,
+                        productScaleType: state.productDetails
+                            .first.scales?.scaleType ??
+                            '',
+                        productWeight: state
+                            .productDetails.first.itemsWeight
+                            ?.toDouble() ??
+                            0.0,
+                        productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                        isRTL: context.rtl,
+                        isSupplierAvailable:
+                        state.productSupplierList.isEmpty
+                            ? false
+                            : true,
+                        scrollController: scrollController,
+                        productQuantity:  state
+                            .productStockList[
+                        state.productStockUpdateIndex]
+                            .quantity,
+                        onQuantityChanged: (quantity) {
+                          context.read<RecommendationProductsBloc>().add(
+                              RecommendationProductsEvent.updateQuantityOfProduct(
+                                  context: context1,
+                                  quantity: quantity));
+                        },
+                        onQuantityIncreaseTap: () {
+                          context.read<RecommendationProductsBloc>().add(
+                              RecommendationProductsEvent.increaseQuantityOfProduct(
+                                  context: context1));
+                        },
+                        onQuantityDecreaseTap: () {
+                          context.read<RecommendationProductsBloc>().add(
+                              RecommendationProductsEvent.decreaseQuantityOfProduct(
+                                  context: context1));
+                        },
+                      ),
+                      bottomNavigationBar: state.isRelatedShimmering
+                          ? RelatedProductShimmerWidget()
+                          :
+                      Container(
+                        height: 200,
+                        padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemBuilder: (context,i){
+                            return CommonProductItemWidget(
+                              productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
+                              width: 140,
+                              productImage:state.relatedProductList[i].mainImage??'',
+                              productName: state.relatedProductList.elementAt(i).productName??'',
+                              totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
+                              price:state.relatedProductList.elementAt(i).productPrice??0.0,
+                              onButtonTap: () {
+                                Navigator.of(context1).pop();
+                                showProductDetails(
+                                    context: context,
+                                    productId: state
+                                        .relatedProductList[i].id,
+                                    isBarcode: false,
+                                    productStock: (state.relatedProductList[i].productStock.toString() ?? '')
+                                );
+                              },
+                            );},itemCount: state.relatedProductList.length,),
+                      ),
+                    ),
+                  );
+                },
+              );
             },
           ),
         );
       },
     ).then((value) {
-      context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.getCartCountEvent());
-      context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.RemoveRelatedProductEvent());
-
+     // context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.getCartCountEvent());
     });
   }
 
@@ -1420,6 +1420,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
             buttonTitle: "${AppLocalizations.of(context)!.ok}"));
   }
 
+
   Widget _buildSearchItem({
     required BuildContext context,
     required String searchName,
@@ -1504,37 +1505,43 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
             //     horizontal: AppConstants.padding_20,
             //     vertical: AppConstants.padding_5),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  height: 35,
-                  width: 40,
+                  height: 60,
+                  width: 50,
                   child: Image.network(
                     '${AppUrls.baseFileUrl}$searchImage',
                     fit: BoxFit.scaleDown,
-                    height: 35,
-                    width: 40,
+                    height: 60,
+                    width: 50,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) {
                         return child;
                       } else {
                         return Container(
-                            width: 40,
-                            height: 35,
+                            height: 60,
+                            width: 50,
                             child: CupertinoActivityIndicator())
+                        /*CommonShimmerWidget(
+                            child: Container(
+                              width: 40,
+                              height: 35,
+                              color: AppColors.whiteColor,
+                            ))*/
                         ;
                       }
                     },
                     errorBuilder: (context, error, stackTrace) {
                       return searchType == SearchTypes.subCategory
                           ? Image.asset(AppImagePath.imageNotAvailable5,
-                          height: 35, width: 40, fit: BoxFit.cover)
+                          height: 60, width: 50, fit: BoxFit.cover)
                           : SvgPicture.asset(
                         AppImagePath.splashLogo,
                         fit: BoxFit.scaleDown,
-                        width: 40,
-                        height: 35,
+                        width: 60,
+                        height: 50,
                       );
                     },
                   ),
@@ -1544,7 +1551,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
+                    Container(
+                      width: 200,
                       child: Text(
                         searchName,
                         style: AppStyles.rkRegularTextStyle(
@@ -1555,8 +1563,9 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
                           width: 200,
@@ -1583,22 +1592,26 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                 '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox / numberOfUnits).toStringAsFixed(2)}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
-                                    color: AppColors.blackColor,
+                                    color: AppColors.blueColor,
                                     fontWeight: FontWeight.w400),
                               ) : 0.width,
                             ],
                           ),
                         ),
-                        priceOfBox != 0.0 ? Text(
-                          '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
-                          style: AppStyles.rkBoldTextStyle(
-                              size: AppConstants.font_12,
-                              color: AppColors.blackColor,
-                              fontWeight: FontWeight.w400),
+                        priceOfBox != 0.0 ? Container(
+                          width: 60,
+                          child: Text(
+                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
+                            style: AppStyles.rkBoldTextStyle(
+                                size: AppConstants.font_12,
+                                color: AppColors.blueColor,
+                                fontWeight: FontWeight.w400),
+                          ),
                         ) : 0.width,
 
                       ],
                     ),
+
                   ],
                 ),
 

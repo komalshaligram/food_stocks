@@ -139,6 +139,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         add(ReorderEvent.getPreviousOrderProductsEvent(context: event.context));
       }
       else if (event is _GetProductDetailsEvent) {
+        add(ReorderEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
         _cartProductId = '';

@@ -162,6 +162,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
 
         else if (event is _GetProductDetailsEvent) {
+          add(HomeEvent.RemoveRelatedProductEvent());
           debugPrint('product details id = ${event.productId}');
           _isProductInCart = false;
           _cartProductId = '';
