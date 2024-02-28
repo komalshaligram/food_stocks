@@ -66,4 +66,7 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
   const factory SupplierProductsEvent.updateGlobalSearchEvent(
       {required String search,
         required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+
+  const factory SupplierProductsEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
+
 }

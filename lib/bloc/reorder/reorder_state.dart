@@ -28,6 +28,8 @@ class ReorderState with _$ReorderState {
     required List<Category> productCategoryList,
     required bool isCatVisible,
     required bool isGridView,
+    required List<RelatedProductDatum> relatedProductList,
+    required bool isRelatedShimmering,
   }) = _ReorderState;
 
   factory ReorderState.initial() => ReorderState(
@@ -55,6 +57,8 @@ class ReorderState with _$ReorderState {
     search: '',
     productCategoryList: [],
     isCatVisible: false,
-    isGridView: true
+    isGridView: true,
+    relatedProductList: [],
+    isRelatedShimmering: false
       );
 }

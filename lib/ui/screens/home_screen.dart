@@ -28,6 +28,7 @@ import 'package:photo_view/photo_view.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/balance_indicator.dart';
+import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_button.dart';
 import '../widget/common_product_item_widget.dart';
@@ -657,8 +658,13 @@ class HomeScreenWidget extends StatelessWidget {
                             onFilterTap: () {
                               bloc.add(HomeEvent.changeCategoryExpansion());
                             },
+                          onCloseTap: () {
+                            bloc.add(HomeEvent.changeCategoryExpansion(isOpened: false));
+                          },
                             onSearchTap: () {
-                              if(state.searchController.text != ''){
+                              print('state.searchController.text____${state.searchController.text}');
+
+                              if(state.searchController.text.isNotEmpty){
                                 bloc.add(HomeEvent.changeCategoryExpansion(isOpened: true));
                               }
                             },
@@ -674,11 +680,10 @@ class HomeScreenWidget extends StatelessWidget {
                                   HomeEvent.globalSearchEvent(context: context));
                             },
                             onOutSideTap: () {
-                              bloc.add(HomeEvent.changeCategoryExpansion(
-                                  isOpened: false));
+                              bloc.add(HomeEvent.changeCategoryExpansion(isOpened: false));
                             },
                             onSearchItemTap: () {
-                              bloc.add(HomeEvent.changeCategoryExpansion());
+                                bloc.add(HomeEvent.changeCategoryExpansion());
                             },
                             controller: state.searchController,
                             searchList: state.searchList,
@@ -697,6 +702,9 @@ class HomeScreenWidget extends StatelessWidget {
                               shrinkWrap: true,
                               itemBuilder: (listViewContext, index) {
                                 return _buildSearchItem(
+                                   numberOfUnits:state.searchList[index].numberOfUnits,
+                                    priceOfBox: state.searchList[index].priceOfBox,
+                                    pricePerUnit: state.searchList[index].priceParUnit,
                                     productStock : state.searchList[index].productStock,
                                     context: context,
                                     searchName: state.searchList[index].name,
@@ -919,7 +927,7 @@ class HomeScreenWidget extends StatelessWidget {
           (remoteMessage) {
         if (remoteMessage != null) {
           debugPrint("onMessageClosedApp: ${remoteMessage.data}");
-          PushNotificationService().manageNavigation( true, remoteMessage.data['data']['message']['mainPage'], remoteMessage.data['data']['message']['subPage'] , remoteMessage.data['data']['message']['id']);
+          PushNotificationService().manageNavigation( true, remoteMessage.data['message']['mainPage'], remoteMessage.data['message']['subPage'] , remoteMessage.data['_id']);
         }
       },
     );
@@ -1141,7 +1149,6 @@ class HomeScreenWidget extends StatelessWidget {
           productId: productId,
       isBarcode: isBarcode ?? false
         ));
-
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1152,7 +1159,6 @@ class HomeScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        print('productStock_11____${productStock}');
         return BlocProvider.value(
           value: context.read<HomeBloc>(),
           child: DraggableScrollableSheet(
@@ -1241,12 +1247,8 @@ class HomeScreenWidget extends StatelessWidget {
                                         []
                                   ],
                                   productPerUnit: state.productDetails.first
-                                          .numberOfUnit ??
-                                      0,
-                                  productUnitPrice: state
-                                      .productStockList[
-                                          state.productStockUpdateIndex]
-                                      .totalPrice,
+                                          .numberOfUnit ?? 0,
+                                  productUnitPrice: state.productStockList[state.productStockUpdateIndex].totalPrice,
                                   productName: state.productDetails.first
                                           .productName ??
                                       '',
@@ -1318,7 +1320,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   },
                                 ),
                       bottomNavigationBar: state.isRelatedShimmering
-                          ? 0.height
+                          ? RelatedProductShimmerWidget()
                           :
                       Container(
                         height: 200,
@@ -1951,6 +1953,9 @@ class HomeScreenWidget extends StatelessWidget {
     required void Function() onTap,
     required void Function() onSeeAllTap,
     bool? isLastItem, required int productStock,
+    required int numberOfUnits,
+    required double priceOfBox,
+    required double pricePerUnit,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -2005,7 +2010,7 @@ class HomeScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != 0 ? 35 : 50,
+            height: (productStock) != 0 ? 80 : 90,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -2027,20 +2032,20 @@ class HomeScreenWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  height: 35,
-                  width: 40,
+                  height: 60,
+                  width: 50,
                   child: Image.network(
                     '${AppUrls.baseFileUrl}$searchImage',
                     fit: BoxFit.scaleDown,
-                    height: 35,
-                    width: 40,
+                    height: 60,
+                    width: 50,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) {
                         return child;
                       } else {
                         return Container(
-                            width: 40,
-                            height: 35,
+                            height: 60,
+                            width: 50,
                             child: CupertinoActivityIndicator())
                         /*CommonShimmerWidget(
                             child: Container(
@@ -2069,25 +2074,61 @@ class HomeScreenWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Text(
-                        searchName,
-                        style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.blackColor,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                    Text(
+                      searchName,
+                      style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_12,
+                        color: AppColors.blackColor,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    (productStock) != 0 ? 0.width : Text(
-                      AppLocalizations.of(context)!
-                          .out_of_stock1,
-                      style: AppStyles.rkBoldTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.redColor,
-                          fontWeight: FontWeight.w400),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 200,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              (productStock) != 0 ? 0.width : Text(
+                                AppLocalizations.of(context)!
+                                    .out_of_stock1,
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.redColor,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              numberOfUnits != 0 ? Text(
+                                '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.w400),
+                              ) : 0.width,
+                              numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
+                                '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox / numberOfUnits).toStringAsFixed(2)}',
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.w400),
+                              ) : 0.width,
+                            ],
+                          ),
+                        ),
+                        priceOfBox != 0.0 ? Text(
+                          '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
+                          style: AppStyles.rkBoldTextStyle(
+                              size: AppConstants.font_12,
+                              color: AppColors.blackColor,
+                              fontWeight: FontWeight.w400),
+                        ) : 0.width,
+
+                      ],
                     ),
+
                   ],
                 ),
 

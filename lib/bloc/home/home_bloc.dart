@@ -183,7 +183,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 productStockUpdateIndex = state.productStockList.indexWhere(
                       (productStock) =>
                   productStock.productId == event.productId,);
-               add(HomeEvent.RelatedProductsEvent(context: event.context,productId: event.productId));
+              // add(HomeEvent.RelatedProductsEvent(context: event.context,productId: event.productId));
               }
               emit(state.copyWith(productStockUpdateIndex:productStockUpdateIndex));
               List<ProductStockModel> productStockList =
@@ -199,6 +199,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 productSupplierIds: '',
                 note: '',
                 isNoteOpen: false,
+                totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
               );
               emit(state.copyWith(productStockList: productStockList));
               try {
@@ -230,7 +231,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-
+              add(HomeEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
               if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: false);
@@ -280,8 +281,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   ProductSupplierModel(
                     supplierId: supplier.supplierId ?? '',
                     companyName: supplier.supplierCompanyName ?? '',
-                    basePrice:
-                    double.parse(supplier.productPrice ?? '0.0'),
+                    basePrice: double.parse(supplier.productPrice ?? '0.0'),
                     stock: int.parse(supplier.productStock ?? '0'),
                     quantity: _productQuantity,
                     selectedIndex: (supplier.supplierId ?? '') ==
@@ -1021,7 +1021,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       (recommendationProduct) =>
                       ProductStockModel(
                           productId: recommendationProduct.id ?? '',
-                          stock: recommendationProduct.productStock ?? 0)) ??
+                          stock: recommendationProduct.productStock ?? 0,
+                      )) ??
                   []);
               //productStockList.add(barcodeStock);
               emit(state.copyWith(
@@ -1080,7 +1081,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       searchId: category.id ?? '',
                       name: category.categoryName ?? '',
                       searchType: SearchTypes.category,
-                      image: category.categoryImage ?? '')));
+                      image: category.categoryImage ?? '',
+                  )));
               emit(state.copyWith(searchList: searchList, isSearching: false));
               return;
             }
@@ -1119,7 +1121,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     name: company.brandName ?? '',
                     searchType: SearchTypes.company,
                     image: company.brandLogo ?? '',
-
                   ))
                   .toList() ??
                   []);
@@ -1142,7 +1143,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     name: sale.productName ?? '',
                     searchType: SearchTypes.sale,
                     image: sale.mainImage ?? '',
-
+                    numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
                   ))
                   .toList() ??
                   []);
@@ -1155,7 +1156,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       searchType: SearchTypes.product,
                       image: supplier.mainImage ?? '',
                       productStock: int.parse(
-                          supplier.productStock ?? 0.toString())
+                          supplier.productStock ?? 0.toString()),
+                    numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ?? 0,
+                    priceOfBox: double.parse(supplier.productPrice.toString()) ?? 0,
                   ))
                   .toList() ??
                   []);
@@ -1285,9 +1288,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }*/
         }
 
-        else if(event is _ImagePreviewEvent){
-          emit(state.copyWith(isPreview: !state.isPreview));
-        }else if(event is _RelatedProductsEvent){
+        else if(event is _RelatedProductsEvent){
           emit(state.copyWith(isRelatedShimmering:true));
           final res = await DioClient(event.context).post(
               AppUrls.relatedProductsUrl,
@@ -1297,6 +1298,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           debugPrint('product categories = ${response.data.length
               .toString()}');
           if (response.status == 200) {
+
             emit(state.copyWith(
                relatedProductList:response.data ?? [],
                 isRelatedShimmering: false));
@@ -1305,8 +1307,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.getLocalizedStrings(
-                  response.message?.toLocalization() ??
-                      response.message!,
+                  response.message.toLocalization() ??
+                      response.message,
                   event.context),
               type: SnackBarType.SUCCESS,
             );

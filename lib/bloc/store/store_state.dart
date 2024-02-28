@@ -30,6 +30,8 @@ class StoreState with _$StoreState {
     required bool isSupplierVisible,
     required bool isCompanyVisible,
     required bool isGuestUser,
+    required List<RelatedProductDatum> relatedProductList,
+    required bool isRelatedShimmering,
   }) = _StoreState;
 
   factory StoreState.initial() => StoreState(
@@ -59,6 +61,8 @@ class StoreState with _$StoreState {
         isCompanyVisible: true,
         isCatVisible: true,
         isSupplierVisible: true,
-        isGuestUser: false
+        isGuestUser: false,
+    relatedProductList: [],
+    isRelatedShimmering: false
       );
 }

@@ -26,7 +26,8 @@ class PlanogramProductState with _$PlanogramProductState {
     required bool isCatVisible,
     required bool isGridView,
     required bool isShimmering,
-
+    required List<RelatedProductDatum> relatedProductList,
+    required bool isRelatedShimmering,
   }) = _PlanogramProductState;
 
   factory PlanogramProductState.initial() => PlanogramProductState(
@@ -52,6 +53,8 @@ class PlanogramProductState with _$PlanogramProductState {
     productCategoryList: [],
     isCatVisible: false,
     isGridView: true,
-    isShimmering: false
+    isShimmering: false,
+    relatedProductList: [],
+    isRelatedShimmering: false
       );
 }

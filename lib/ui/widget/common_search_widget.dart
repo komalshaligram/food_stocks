@@ -19,6 +19,7 @@ class CommonSearchWidget extends StatelessWidget {
   final Widget searchResultWidget;
   final bool isBackButton;
   final void Function() onScanTap;
+  final void Function() onCloseTap;
   final void Function() onFilterTap;
   final void Function() onSearchTap;
   final void Function() onOutSideTap;
@@ -44,6 +45,7 @@ class CommonSearchWidget extends StatelessWidget {
     required this.onSearchItemTap,
     required this.searchList,
     this.isFilterTap = false,
+    required this.onCloseTap
   });
 
   @override
@@ -155,6 +157,21 @@ class CommonSearchWidget extends StatelessWidget {
                                 color: AppColors.greyColor,
                               ),
                             ),
+                            suffixIcon: controller.text.isNotEmpty ? GestureDetector(
+                              onTap: (){
+                                onCloseTap();
+                                controller.clear();
+                              },
+                              child: Transform(
+                                alignment: Alignment.center,
+                                transform:
+                                Matrix4.rotationY(context.rtl ? pi : 0),
+                                child: Icon(
+                                  Icons.close,
+                                  color: AppColors.greyColor,
+                                ),
+                              ),
+                            ) : SizedBox(),
                           ),
                           onTapOutside: (event) =>
                               FocusScope.of(context).unfocus(),

@@ -119,7 +119,7 @@ class _ProductDetailsScreenWidgetState
                           : CircularButtonWidget(
                               buttonName: AppLocalizations.of(context)!.total,
                               buttonValue:
-                              state.orderData.comaxInvoicePrice != 0.0 ?  state.orderData.comaxInvoicePrice.toString() : '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
+                              state.orderData.comaxInvoicePrice != 0.0 ?  '${formatNumber(value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}': '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
                             ),
                     ),
                    /* CommonProductButtonWidget(
@@ -289,7 +289,7 @@ class _ProductDetailsScreenWidgetState
                                             title: AppLocalizations.of(context)!
                                                 .total_order,
                                             value:
-                                               state.orderData.comaxInvoicePrice != 0.0 ? state.orderData.comaxInvoicePrice.toString() :'${formatNumber(value: state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}',
+                                               state.orderData.comaxInvoicePrice != 0.0 ? '${formatNumber(value: state.orderData.comaxInvoicePrice?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}' :'${formatNumber(value: state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}',
                                             titleColor: AppColors.mainColor,
                                             valueColor: AppColors.blackColor,
                                             valueTextWeight: FontWeight.w500,
@@ -304,7 +304,7 @@ class _ProductDetailsScreenWidgetState
                                       3.height,
                                       basketRow('${AppLocalizations.of(context)!.vat}', '${AppLocalizations.of(context)!.currency}${state.orderData.vatAmount}'),
                                       5.height,
-                                      basketRow('${AppLocalizations.of(context)!.refund}', '${AppLocalizations.of(context)!.currency}${state.orderData.totalRefundAmount}'),
+                                      basketRow('${AppLocalizations.of(context)!.refund}', '${AppLocalizations.of(context)!.currency}${state.orderData.totalRefundAmount}',color: AppColors.mainColor),
                                       5.height,
                                       RichText(
                                         text: TextSpan(
@@ -1342,7 +1342,7 @@ class _ProductDetailsScreenWidgetState
     );
   }
 
-  Widget basketRow(String title,String amount,{bool isTitle = false}){
+  Widget basketRow(String title,String amount,{bool isTitle = false,Color color = Colors.black}  ){
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -1350,8 +1350,7 @@ class _ProductDetailsScreenWidgetState
           title,
           style: AppStyles.rkRegularTextStyle(
               size: AppConstants.mediumFont,
-              color: AppColors
-                  .blackColor,
+              color: color,
           fontWeight: FontWeight.bold),
         ),
         20.width,
@@ -1359,8 +1358,7 @@ class _ProductDetailsScreenWidgetState
           amount,
           style: AppStyles.rkRegularTextStyle(
               size: AppConstants.mediumFont,
-              color: AppColors
-                  .blackColor,
+              color: color,
               fontWeight:  FontWeight.bold),
           overflow: TextOverflow.ellipsis,
 

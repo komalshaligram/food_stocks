@@ -50,6 +50,9 @@ class StoreCategoryState with _$StoreCategoryState {
     required bool isBottomProducts,
     required int cartCount,
     required bool duringCelebration,
+    required int allProductPageNum,
+    required List<RelatedProductDatum> relatedProductList,
+    required bool isRelatedShimmering,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -99,7 +102,10 @@ class StoreCategoryState with _$StoreCategoryState {
    isGuestUser : false,
     isBottomProducts : false,
     cartCount: 0,
-    duringCelebration: false
+    duringCelebration: false,
+    allProductPageNum: 0,
+    relatedProductList: [],
+    isRelatedShimmering: false
 
       );
 }
