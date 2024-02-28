@@ -64,7 +64,7 @@ class CustomSnackBar {
 }
 
 customShowUpdateDialog(
-    BuildContext context, String directionality, String? storeUrl) {
+    BuildContext context, String directionality, String storeUrl) {
   return showDialog(
     barrierDismissible: false,
     context: context,
@@ -78,6 +78,7 @@ customShowUpdateDialog(
             alignment: Alignment.center,
             child: GestureDetector(
               onTap: () {
+                debugPrint(storeUrl);
                 _launchUrl(storeUrl);
               },
               child: Container(
@@ -103,10 +104,9 @@ customShowUpdateDialog(
   });
 }
 
-Future<void> _launchUrl(String? storeUrl) async {
-  Uri _url = Uri.parse(storeUrl ??
-      ('https://play.google.com/store/apps/details?id=com.foodstock.dev'));
-  if (Platform.isAndroid) {
+Future<void> _launchUrl(String storeUrl) async {
+  Uri _url = Uri.parse(storeUrl);
+
     try {
       launchUrl(_url);
     } on PlatformException catch (e) {
@@ -114,11 +114,9 @@ Future<void> _launchUrl(String? storeUrl) async {
     } finally {
       launchUrl(_url);
     }
-
     /*  if (!await launchUrl(_url)) {
         throw Exception('Could not launch $_url');
       }*/
-  }
 }
 
 Future<CroppedFile?> cropImage(

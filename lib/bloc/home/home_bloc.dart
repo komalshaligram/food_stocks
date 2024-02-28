@@ -1263,8 +1263,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             if(value.canUpdate && Platform.isAndroid){
               customShowUpdateDialog(
                   event.context, preferences.getAppLanguage(),value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
-            }
-
+            }else if(value.canUpdate && Platform.isIOS){
+                customShowUpdateDialog(
+                    event.context, preferences.getAppLanguage(),value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
+              }
           });
          // final versionCheck = VersionCheck(
          //    packageName: Platform.isIOS ? 'com.foodstock' : 'com.foodstock.dev',
