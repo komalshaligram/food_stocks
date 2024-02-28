@@ -487,9 +487,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(StoreCategoryEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
-
-
+            add(StoreCategoryEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.planoGramUpdateIndex]
+            [state.productStockUpdateIndex].productId));
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               // List<List<ProductStockModel>> productStockList =
               // state.productStockList.toList(growable: false);
@@ -1343,7 +1342,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     productId: product.id ?? '',
                     stock: int.parse(product.productStock.toString() ?? '0') );
               }) ?? []);
-          productStockList[4].addAll(stockList);
+        //  productStockList[4].addAll(stockList);
+          productStockList[3].addAll(stockList);
 
           emit(state.copyWith(
               relatedProductList:response.data ?? [],

@@ -95,160 +95,6 @@ class BasketScreenWidget extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                 /* Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_5,
-                                        horizontal: AppConstants.padding_5),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            AppConstants.radius_30),
-                                        color: AppColors.whiteColor,
-                                        border: Border.all(
-                                            color: AppColors.borderColor)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-
-                                        Container(
-                                          height: AppConstants.containerSize_50,
-                                          alignment: Alignment.center,
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: AppConstants.padding_3,
-                                              horizontal:
-                                                  AppConstants.padding_10),
-                                          decoration: BoxDecoration(
-                                              color: AppColors.mainColor,
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: context.rtl
-                                                      ? Radius.circular(
-                                                          AppConstants.radius_5)
-                                                      : Radius.circular(AppConstants
-                                                          .radius_25),
-                                                  bottomLeft: context.rtl
-                                                      ? Radius.circular(
-                                                          AppConstants.radius_5)
-                                                      : Radius.circular(
-                                                          AppConstants
-                                                              .radius_25),
-                                                  bottomRight: context.rtl
-                                                      ? Radius.circular(
-                                                          AppConstants
-                                                              .radius_25)
-                                                      : Radius.circular(
-                                                          AppConstants.radius_5),
-                                                  topRight: context.rtl ? Radius.circular(AppConstants.radius_25) : Radius.circular(AppConstants.radius_5))),
-                                          child: (state.CartItemList.data?.cart!
-                                                          .length ??
-                                                      0) ==
-                                                  0
-                                              ? CupertinoActivityIndicator()
-                                              : Row(
-                                            children: [
-                                              Text(
-                                                '${AppLocalizations.of(context)!.total}',
-                                                style: AppStyles.rkRegularTextStyle(
-                                                    size: AppConstants.font_14,
-                                                    color: AppColors
-                                                        .whiteColor,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w700),
-                                              ),
-                                              Text(
-                                                ' : ${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}',
-                                                style: AppStyles.rkRegularTextStyle(
-                                                    size: AppConstants.mediumFont,
-                                                    color: AppColors
-                                                        .whiteColor,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w700),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ],
-                                          )
-                                         *//*
-                                         Directionality(
-                                            textDirection:
-                                            TextDirection.ltr,
-                                            child: Expanded(
-                                              child: Text(
-                                                '${AppLocalizations.of(context)!.total} : ${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}',
-                                                style: AppStyles.rkRegularTextStyle(
-                                                    size: 18,
-                                                    color: AppColors
-                                                        .whiteColor,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w700),
-                                              ),
-                                            ),
-                                          )*//*
-                                        ),
-                                        5.width,
-                                        GestureDetector(
-                                          onTap: () {
-                                            if(!state.isRemoveProcess && !state.isLoading && !state.isShimmering){
-                                              Navigator.pushNamed(
-                                                  context,
-                                                  RouteDefine
-                                                      .orderSummaryScreen.name,
-                                                  arguments: {
-                                                    AppStrings.getCartListString:
-                                                    state.CartItemList
-                                                  });
-                                            }
-                                          },
-                                          child: Container(
-                                            // width: getScreenWidth(context) * 0.22,
-                                            height:
-                                                AppConstants.containerSize_50,
-                                            alignment: Alignment.center,
-                                            padding: EdgeInsets.symmetric(
-                                                vertical:
-                                                    AppConstants.padding_5,
-                                                horizontal:
-                                                    AppConstants.padding_10),
-                                            decoration: BoxDecoration(
-                                                color:
-                                                    AppColors.navSelectedColor,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft: context.rtl
-                                                        ? Radius.circular(AppConstants
-                                                            .radius_25)
-                                                        : Radius.circular(
-                                                            AppConstants
-                                                                .radius_4),
-                                                    bottomLeft: context.rtl
-                                                        ? Radius.circular(
-                                                            AppConstants
-                                                                .radius_25)
-                                                        : Radius.circular(
-                                                            AppConstants
-                                                                .radius_4),
-                                                    bottomRight: context.rtl
-                                                        ? Radius.circular(AppConstants.radius_4)
-                                                        : Radius.circular(AppConstants.radius_25),
-                                                    topRight: context.rtl ? Radius.circular(AppConstants.radius_4) : Radius.circular(AppConstants.radius_25))),
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .submit,
-                                              style:
-                                                  AppStyles.rkRegularTextStyle(
-                                                size: getScreenWidth(context) <=
-                                                        380
-                                                    ? AppConstants.smallFont
-                                                    : AppConstants.mediumFont,
-                                                color: AppColors.whiteColor,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),*/
-
                                   InkWell(
                                     onTap: () {
                                       deleteDialog(
@@ -314,7 +160,7 @@ class BasketScreenWidget extends StatelessWidget {
                             )
                           : SizedBox(),
 
-                      state.isShimmering && state.basketProductList.isEmpty
+                      state.isShimmering
                           ? BasketScreenShimmerWidget()
                           : (state.basketProductList.length) != 0
                               ? Expanded(
@@ -1213,10 +1059,6 @@ class BasketScreenWidget extends StatelessWidget {
           ),
         );
       },
-    ).then((value) {
-      context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(context: context));
-    });
-
-
+    );
   }
 }

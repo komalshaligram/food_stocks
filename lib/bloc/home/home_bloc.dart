@@ -233,7 +233,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-              add(HomeEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
+              add(HomeEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
               if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: false);
@@ -1274,6 +1274,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
 
         else if(event is _RelatedProductsEvent){
+          print('event.productId____${event.productId}');
           emit(state.copyWith(isRelatedShimmering:true));
           final res = await DioClient(event.context).post(
               AppUrls.relatedProductsUrl,

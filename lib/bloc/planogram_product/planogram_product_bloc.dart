@@ -141,7 +141,7 @@ class PlanogramProductBloc
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(PlanogramProductEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
+            add(PlanogramProductEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
 
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
