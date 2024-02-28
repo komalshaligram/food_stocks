@@ -8,6 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import 'package:store_version_checker/store_version_checker.dart';
 import 'package:version_check/version_check.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/login_req_model/login_req_model.dart';
@@ -102,18 +103,23 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         }
       }
       else if (event is _checkVersionOfAppEvent) {
-
-        PackageInfo packageInfo = await PackageInfo.fromPlatform();
-        final versionCheck = VersionCheck(
-          packageName: Platform.isIOS ? 'com.foodstock' : 'com.foodstock.dev',
-          packageVersion: packageInfo.version,
-        );
-
-        await versionCheck.checkVersion(event.context);
-        if(versionCheck.packageVersion !=  versionCheck.storeVersion && Platform.isAndroid){
-          customShowUpdateDialog(
-              event.context, preferencesHelper.getAppLanguage(),versionCheck.storeUrl);
-        }
+        final _checker = StoreVersionChecker();
+        // PackageInfo packageInfo = await PackageInfo.fromPlatform();
+        _checker.checkUpdate().then((value) {
+          print('update available');
+          print(value.canUpdate); //return true if update is available
+          print(value.currentVersion); //return current app version
+          print(value.newVersion); //return the new app version
+          print(value.appURL); //return the app url
+          print(value.errorMessage);
+          if(value.canUpdate && Platform.isAndroid){
+            customShowUpdateDialog(
+                event.context, preferencesHelper.getAppLanguage(),value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
+          }else if(value.canUpdate && Platform.isIOS){
+            customShowUpdateDialog(
+                event.context, preferencesHelper.getAppLanguage(),value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
+          }
+        });
       }
       else if (event is _ChangeAuthEvent) {
         emit(state.copyWith(isRegister: event.isRegister));

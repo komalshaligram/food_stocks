@@ -618,18 +618,20 @@ class HomeScreenWidget extends StatelessWidget {
                             bloc.add(HomeEvent.changeCategoryExpansion(isOpened: false));
                           },
                             onSearchTap: () {
+                              debugPrint('onSearchTap');
                               if(state.searchController.text.isNotEmpty){
                                 bloc.add(HomeEvent.changeCategoryExpansion(isOpened: true));
                               }
                             },
                             onSearch: (String search) {
+                              debugPrint('onSearch');
                               if (search.length > 1) {
                                 bloc.add(HomeEvent.changeCategoryExpansion(isOpened: true));
-                                bloc.add(
-                                    HomeEvent.globalSearchEvent(context: context));
+                                bloc.add(HomeEvent.globalSearchEvent(context: context));
                               }
                             },
                             onSearchSubmit: (String search) {
+                              debugPrint('onSearchSubmit');
                              // bloc.add(HomeEvent.globalSearchEvent(context: context));
                             Navigator.pushNamed(
                                     context,
@@ -638,8 +640,6 @@ class HomeScreenWidget extends StatelessWidget {
                                       AppStrings.searchString: state.search,
                                       AppStrings.searchType : SearchTypes.product.toString()
                                     });
-
-
                             },
                             onOutSideTap: () {
                               bloc.add(HomeEvent.changeCategoryExpansion(isOpened: false));

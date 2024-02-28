@@ -504,7 +504,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             ),
                                             enablePullUp:
                                             !state
-                                                .isBottomOfPlanoGrams,
+                                                .   isBottomOfProducts,
                                             onRefresh:
                                                 () {
                                               context
