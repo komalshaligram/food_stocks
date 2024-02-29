@@ -366,7 +366,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                 context: context1));
                                   },
                                 ),
-                          bottomNavigationBar: state.isRelatedShimmering
+                          bottomNavigationBar: state.productDetails.isEmpty ? 0.width :state.isRelatedShimmering
                               ? RelatedProductShimmerWidget()
                               :
                           Container(

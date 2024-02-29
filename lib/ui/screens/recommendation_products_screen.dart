@@ -324,8 +324,14 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       }
                     },
                     onSearchSubmit: (String search) {
-                      bloc.add(
-                          RecommendationProductsEvent.globalSearchEvent(context: context));
+                     // bloc.add(RecommendationProductsEvent.globalSearchEvent(context: context));
+                      Navigator.pushNamed(
+                          context,
+                          RouteDefine.supplierProductsScreen.name,
+                          arguments: {
+                            AppStrings.searchString: state.search,
+                            AppStrings.searchType : SearchTypes.product.toString()
+                          });
                     },
                     onOutSideTap: () {
                       bloc.add(RecommendationProductsEvent.changeCategoryExpansion(
@@ -845,7 +851,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   context: context1));
                         },
                       ),
-                      bottomNavigationBar: state.isRelatedShimmering
+                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width :state.isRelatedShimmering
                           ? RelatedProductShimmerWidget()
                           :
                       Container(

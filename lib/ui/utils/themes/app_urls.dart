@@ -79,7 +79,7 @@ class AppUrls {
   static const String refreshTokenUrl = '/v1/auth/refreshToken';
   static const String getPlanoramByIdUrl = '/v1/planograms/getPlanogram/';
   static const String otpVerifyUrl = '/v1/auth/otpVerification';
-  static const String getPlanogramAllProductUrl = '/v1/products/getAllProducts';
+  static const String getPlanogramAllProductUrl = '/v1/store/getAllProducts';
   static const String removeIssueUrl = '/v1/orders/issues/removeIssue';
   static const String getPlanogramAllProductForGuestUserUrl = '/v1/store/getAllProducts';
   static const String deleteAccountUrl = '/v1/clients/deleteAccount/';

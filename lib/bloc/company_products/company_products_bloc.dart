@@ -213,7 +213,9 @@ class CompanyProductsBloc
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(CompanyProductsEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
+            if(response.product != null){
+              add(CompanyProductsEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
+            }
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
@@ -601,10 +603,7 @@ class CompanyProductsBloc
                   isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
               Navigator.pop(event.context);
               emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount(),duringCelebration: true));
-
-              await Future.delayed(const Duration(milliseconds: 500));
-              emit(state.copyWith(duringCelebration: false));
+                  isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
 
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -679,6 +678,7 @@ class CompanyProductsBloc
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
+              add(CompanyProductsEvent.setCartCountEvent());
               Vibration.vibrate();
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: true);
@@ -692,11 +692,12 @@ class CompanyProductsBloc
                 totalPrice: 0.0,
                 productSaleId: '',
               );
-              add(CompanyProductsEvent.setCartCountEvent());
+              add(CompanyProductsEvent.getCartCountEvent());
               Navigator.pop(event.context);
               emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList));
-
+                  isLoading: false, productStockList: productStockList,duringCelebration: true));
+              await Future.delayed(const Duration(milliseconds: 500));
+              emit(state.copyWith(duringCelebration: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
