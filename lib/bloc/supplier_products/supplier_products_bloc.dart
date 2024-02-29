@@ -108,7 +108,7 @@ class SupplierProductsBloc
             productStockList.addAll(response.data?.map((product) =>
                     ProductStockModel(
                         productId:event.searchType == SearchTypes.product.toString()?product.id ??'': product.productId ?? '',
-                        stock:event.searchType == SearchTypes.product.toString() ? product.productStock: double.parse(product.productStock.toString()??'0').toInt())) ??
+                        stock:event.searchType == SearchTypes.product.toString() ? double.parse(product.productStock.toString()??'0').toInt(): double.parse(product.productStock.toString()??'0').toInt())) ??
                 []);
             debugPrint('new product list len = ${productList.length}');
             debugPrint(

@@ -26,6 +26,7 @@ samples, guidance on mobile development, and a full API reference.
 
 - for creating release apk:
   flutter build apk --flavor dev
+- flutter build ios --flavor dev
 
 # changes in library:
 
