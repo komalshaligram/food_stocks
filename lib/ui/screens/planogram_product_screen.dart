@@ -86,7 +86,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                Positioned(
+                state.cartCount!=0?Positioned(
                   top: 5,
                   right: context.rtl ? null : 0,
                   left: context.rtl ? 0 : null,
@@ -105,14 +105,14 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                               color: AppColors.whiteColor, width: 1),
                         ),
                         child: Text(
-                          '${state.cartCount}',
+                        '${state.cartCount}',
                           style: AppStyles.rkRegularTextStyle(
                               size: 10, color: AppColors.whiteColor),
                         ),
                       ),
                     ],
                   ),
-                ),
+                ):0.width,
                 SizedBox(
                   height: 50,
                   width: 25,
@@ -199,6 +199,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                 horizontal: AppConstants.padding_5),
                             itemBuilder: (context, index) => DelayedWidget(
                               child: CommonProductListWidget(
+                                  numberOfUnits: '0',
                                   productStock: state.planogramProductList[index].productStock ?? 0,
                                   productImage: state.planogramProductList[index]
                                       .mainImage ??

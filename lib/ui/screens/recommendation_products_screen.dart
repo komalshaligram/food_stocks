@@ -90,7 +90,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       color: AppColors.whiteColor,
                     ),),
                 ),
-                Positioned(
+                state.cartCount!=0?Positioned(
                   top: 5,
                   right: context.rtl ? null : 0,
                   left: context.rtl ? 0 : null,
@@ -110,7 +110,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               width: 1),
                         ),
                         child: Text(
-                          '${state.cartCount}',
+                         '${state.cartCount}',
                           style: AppStyles.rkRegularTextStyle(
                               size: 10,
                               color:  AppColors.whiteColor),
@@ -118,7 +118,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
+                ):0.width,
                 SizedBox(
                   height: 50,
                   width: 25,
@@ -270,6 +270,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               padding: EdgeInsets.symmetric(
                     horizontal: AppConstants.padding_5),
                               itemBuilder: (context, index) => CommonProductListWidget(
+
                                   productStock: state.recommendationProductsList[index].productStock ?? 0,
                                   productImage: state.recommendationProductsList[index]
                                       .mainImage ??
