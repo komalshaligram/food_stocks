@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_marquee_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/product_category_screen_shimmer_widget.dart';
+import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../routes/app_routes.dart';
@@ -92,7 +93,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                         color: AppColors.whiteColor,
                       ),),
                   ),
-                  Positioned(
+                  state.cartCount!=0?Positioned(
                     top: 5,
                     right: context.rtl ? null : 0,
                     left: context.rtl ? 0 : null,
@@ -112,7 +113,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                                 width: 1),
                           ),
                           child: Text(
-                            '${state.cartCount}',
+                       '${state.cartCount}',
                             style: AppStyles.rkRegularTextStyle(
                                 size: 10,
                                 color:  AppColors.whiteColor),
@@ -120,7 +121,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
+                  ):0.width,
                   /*  SizedBox(
                     height: 50,
                     width: 25,

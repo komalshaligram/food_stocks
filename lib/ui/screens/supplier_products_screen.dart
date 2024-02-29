@@ -198,6 +198,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                       horizontal: AppConstants.padding_5),
                                   itemBuilder: (context, index) => DelayedWidget(
                                     child: CommonProductListWidget(
+                                      numberOfUnits:  state.productList[index].numberOfUnit ?? '0',
                                         productStock: state.productList[index].productStock ?? 0,
                                         productImage: state.productList[index]
                                             .mainImage ??

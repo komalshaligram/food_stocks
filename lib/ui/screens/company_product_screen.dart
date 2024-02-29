@@ -99,7 +99,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                       color: AppColors.whiteColor,
                     ),),
                 ),
-                Positioned(
+                state.cartCount!=0?Positioned(
                   top: 5,
                   right: context.rtl ? null : 0,
                   left: context.rtl ? 0 : null,
@@ -119,7 +119,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                               width: 1),
                         ),
                         child: Text(
-                          '${state.cartCount}',
+                      '${state.cartCount}',
                           style: AppStyles.rkRegularTextStyle(
                               size: 10,
                               color:  AppColors.whiteColor),
@@ -127,7 +127,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
+                ):0.width,
                   SizedBox(
                     height: 50,
                     width: 25,
@@ -299,6 +299,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                           horizontal: AppConstants.padding_5),
                                       itemBuilder: (context, index) => DelayedWidget(
                                           child: CommonProductListWidget(
+                                            numberOfUnits: state.productList[index].numberOfUnit??'0',
                                               productStock: state.productList[index].productStock ?? 0,
                                               productImage: state.productList[index]
                                                   .mainImage ??

@@ -20,8 +20,10 @@ class CommonProductListWidget extends StatelessWidget {
   final dynamic productStock;
   final void Function() onButtonTap;
   final bool isGuestUser;
+  final String numberOfUnits;
 
-   CommonProductListWidget({super.key,
+
+    CommonProductListWidget({super.key,
      this.height,
      this.width,
      required this.productImage,
@@ -29,8 +31,8 @@ class CommonProductListWidget extends StatelessWidget {
      required this.totalSaleCount,
      required this.price,
      required this.onButtonTap, this.productStock = 0,
-     this.isGuestUser = false
-
+     this.isGuestUser = false,
+     this.numberOfUnits = '0'
    });
 
   @override
@@ -100,7 +102,7 @@ class CommonProductListWidget extends StatelessWidget {
                   Text(
                     productName,
                     style: AppStyles.rkBoldTextStyle(
-                        size: AppConstants.smallFont,
+                        size: AppConstants.font_14,
                         color: AppColors.blackColor,
                         fontWeight: FontWeight.w600),
                     maxLines: 4,
@@ -126,6 +128,13 @@ class CommonProductListWidget extends StatelessWidget {
                         color: AppColors.redColor,
                         fontWeight: FontWeight.w400),
                   ),
+                  numberOfUnits != '0' ? Text(
+                    '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
+                    style: AppStyles.rkBoldTextStyle(
+                        size: AppConstants.font_12,
+                        color: AppColors.blackColor,
+                        fontWeight: FontWeight.w400),
+                  ) : 0.width,
                 ],
               ),
             ),
@@ -139,7 +148,7 @@ class CommonProductListWidget extends StatelessWidget {
               borderRadius: AppConstants.radius_3,
               textSize: AppConstants.font_14,
               height: 32,
-              width: 100,
+              width: 80,
             ) : 0.width,
           ],
         ),
