@@ -858,18 +858,16 @@ class BasketScreenWidget extends StatelessWidget {
       builder: (context1) {
         return BlocProvider.value(
           value: context.read<BasketBloc>(),
-          child: DraggableScrollableSheet(
+          child: BlocBuilder<BasketBloc, BasketState>(
+  builder: (context, state) {
+    return DraggableScrollableSheet(
             expand: true,
-            maxChildSize: 1 -
-                (MediaQuery.of(context).viewPadding.top /
-                    getScreenHeight(context)),
+            maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight: 1,
             minChildSize: 0.4,
-            initialChildSize: AppConstants.bottomSheetInitHeight,
+            initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
             //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
-              return BlocBuilder<BasketBloc, BasketState>(
-                builder: (context, state) {
                   return Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
@@ -893,6 +891,7 @@ class BasketScreenWidget extends StatelessWidget {
                             )),
                       )
                           : CommonProductDetailsWidget(
+                        isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                         addToOrderTap: () {
                           context.read<BasketBloc>().add(
                               BasketEvent.addToCartProductEvent(
@@ -1048,10 +1047,10 @@ class BasketScreenWidget extends StatelessWidget {
                       ),
                     ),
                   );
-                },
-              );
             },
-          ),
+          );
+  },
+),
         );
       },
     );

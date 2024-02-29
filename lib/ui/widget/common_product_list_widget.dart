@@ -16,7 +16,7 @@ class CommonProductListWidget extends StatelessWidget {
   final String productImage;
   final String productName;
   final int totalSaleCount;
-  final dynamic price;
+  final double price;
   final dynamic productStock;
   final void Function() onButtonTap;
   final bool isGuestUser;
@@ -37,6 +37,7 @@ class CommonProductListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: onButtonTap,
       child: Container(
@@ -135,6 +136,16 @@ class CommonProductListWidget extends StatelessWidget {
                         color: AppColors.blackColor,
                         fontWeight: FontWeight.w400),
                   ) : 0.width,
+
+                  numberOfUnits !='0' && price != 0.0 ? Text(
+                    '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(price * int.parse(numberOfUnits)).toStringAsFixed(2)}',
+                    style: AppStyles.rkBoldTextStyle(
+                        size: AppConstants.font_12,
+                        color: AppColors.blueColor,
+                        fontWeight: FontWeight.w400),
+                  ) : 0.width,
+
+
                 ],
               ),
             ),

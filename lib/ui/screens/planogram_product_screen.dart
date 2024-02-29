@@ -545,18 +545,19 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       builder: (context1) {
         return BlocProvider.value(
           value: context.read<PlanogramProductBloc>(),
-          child: DraggableScrollableSheet(
+          child: BlocBuilder<PlanogramProductBloc, PlanogramProductState>(
+  builder: (context, state) {
+    return DraggableScrollableSheet(
             expand: true,
-            maxChildSize: 1 ,
+            maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1 ,
             minChildSize: 0.4,
-            initialChildSize: AppConstants.bottomSheetInitHeight,
+            initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
 
             builder:
                 (BuildContext context1, ScrollController scrollController) {
                   PlanogramProductBloc bloc = context.read<PlanogramProductBloc>();
 
-              return BlocBuilder<PlanogramProductBloc, PlanogramProductState>(
-                                  builder: (context, state) {
+
               return Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -580,6 +581,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         )),
                   )
                       : CommonProductDetailsWidget(
+                    isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                     addToOrderTap: () {
                       context
                           .read<PlanogramProductBloc>()
@@ -680,7 +682,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                         context: context1));
                           },
                         ),
-                  bottomNavigationBar: state.productDetails.isEmpty ? 0.width :state.isRelatedShimmering
+                  bottomNavigationBar: state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width :state.isRelatedShimmering
                       ? RelatedProductShimmerWidget()
                       :
                   Container(
@@ -711,17 +713,14 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                   ),
                 ),
               );
-                                  },
-                                );
+
             },
-          ),
+          );
+  },
+),
         );
       },
-    ).then((value) {
-     // context.read<PlanogramProductBloc>().add(PlanogramProductEvent.getCartCountEvent());
-     // context.read<PlanogramProductBloc>().add(PlanogramProductEvent.RemoveRelatedProductEvent());
-
-    });
+    );
   }
 
   Widget buildSupplierSelection({required BuildContext context}) {
@@ -1424,7 +1423,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     fontWeight: FontWeight.w400),
                               ) : 0.width,
                               numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
-                                '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox / numberOfUnits).toStringAsFixed(2)}',
+                                '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.blueColor,
@@ -1436,7 +1435,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         priceOfBox != 0.0 ? Container(
                           width: 60,
                           child: Text(
-                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
+                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toStringAsFixed(2)}',
                             style: AppStyles.rkBoldTextStyle(
                                 size: AppConstants.font_12,
                                 color: AppColors.blueColor,

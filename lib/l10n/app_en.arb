@@ -403,5 +403,6 @@
   "surfaces_order" : "Surfaces for order",
   "refund_for_order" : "Refund for order",
   "related_products": "Related products",
-  "search_result" : "Search result"
+  "search_result" : "Price per box",
+  "price_par_box" : "מחיר למארז"
 }

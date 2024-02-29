@@ -270,7 +270,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               padding: EdgeInsets.symmetric(
                     horizontal: AppConstants.padding_5),
                               itemBuilder: (context, index) => CommonProductListWidget(
-
                                   productStock: state.recommendationProductsList[index].productStock ?? 0,
                                   productImage: state.recommendationProductsList[index]
                                       .mainImage ??
@@ -697,16 +696,16 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
       builder: (context1) {
         return BlocProvider.value(
           value: context.read<RecommendationProductsBloc>(),
-          child: DraggableScrollableSheet(
+          child: BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
+  builder: (context, state) {
+    return DraggableScrollableSheet(
             expand: true,
-            maxChildSize: 1,
+            maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
             minChildSize: 0.4,
-            initialChildSize: AppConstants.bottomSheetInitHeight,
+            initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight: 1,
             //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
-              return BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
-                builder: (context, state) {
                   return Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
@@ -730,6 +729,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                             )),
                       )
                           : CommonProductDetailsWidget(
+                        isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                         addToOrderTap: () {
                           context.read<RecommendationProductsBloc>().add(
                               RecommendationProductsEvent.addToCartProductEvent(
@@ -852,7 +852,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   context: context1));
                         },
                       ),
-                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width :state.isRelatedShimmering
+                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width:state.isRelatedShimmering
                           ? RelatedProductShimmerWidget()
                           :
                       Container(
@@ -883,15 +883,13 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       ),
                     ),
                   );
-                },
-              );
             },
-          ),
+          );
+  },
+),
         );
       },
-    ).then((value) {
-     // context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.getCartCountEvent());
-    });
+    );
   }
 
   Widget buildSupplierSelection({required BuildContext context}) {
@@ -1596,7 +1594,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                     fontWeight: FontWeight.w400),
                               ) : 0.width,
                               numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
-                                '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox / numberOfUnits).toStringAsFixed(2)}',
+                                '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.blueColor,
@@ -1608,7 +1606,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                         priceOfBox != 0.0 ? Container(
                           width: 60,
                           child: Text(
-                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
+                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toStringAsFixed(2)}',
                             style: AppStyles.rkBoldTextStyle(
                                 size: AppConstants.font_12,
                                 color: AppColors.blueColor,
