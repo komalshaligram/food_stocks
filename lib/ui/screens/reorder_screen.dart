@@ -374,8 +374,14 @@ class ReorderScreenWidget extends StatelessWidget {
                       }
                     },
                     onSearchSubmit: (String search) {
-                      bloc.add(
-                          ReorderEvent.globalSearchEvent(context: context));
+                     // bloc.add(ReorderEvent.globalSearchEvent(context: context));
+                      Navigator.pushNamed(
+                          context,
+                          RouteDefine.supplierProductsScreen.name,
+                          arguments: {
+                            AppStrings.searchString: state.search,
+                            AppStrings.searchType : SearchTypes.product.toString()
+                          });
                     },
                     onOutSideTap: () {
                       bloc.add(ReorderEvent.changeCategoryExpansion(
@@ -904,7 +910,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                         context: context1));
                               }*/
                                 ),
-                          bottomNavigationBar: state.isRelatedShimmering
+                          bottomNavigationBar: state.productDetails.isEmpty ? 0.width :state.isRelatedShimmering
                               ? RelatedProductShimmerWidget()
                               :
                           Container(

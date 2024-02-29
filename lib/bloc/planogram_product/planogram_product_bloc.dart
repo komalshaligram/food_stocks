@@ -802,7 +802,9 @@ class PlanogramProductBloc
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
+              Vibration.vibrate();
               Navigator.pop(event.context);
+              add(PlanogramProductEvent.setCartCountEvent());
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: true);
               productStockList[state.productStockUpdateIndex] =
@@ -814,7 +816,7 @@ class PlanogramProductBloc
                 totalPrice: 0.0,
                 productSaleId: '',
               );
-              add(PlanogramProductEvent.setCartCountEvent());
+              add(PlanogramProductEvent.getCartCountEvent());
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,duringCelebration: true));
               await Future.delayed(const Duration(milliseconds: 500));
