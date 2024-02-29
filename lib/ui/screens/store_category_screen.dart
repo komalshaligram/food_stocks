@@ -119,7 +119,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned(
+                  state.cartCount!=0? Positioned(
                     top: 5,
                     right: context.rtl ? null : 0,
                     left: context.rtl ? 0 : null,
@@ -145,7 +145,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
+                  ):0.width,
                   SizedBox(
                     height: 50,
                     width: 25,
@@ -527,6 +527,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                     (context,
                                                     index) {
                                                   return CommonProductListWidget(
+                                                    numberOfUnits:state.planogramProductList[index].product?.numberOfUnit ??
+                                                        '0',
                                                       isGuestUser: state
                                                           .isGuestUser,
                                                       productStock: double.parse(state.planogramProductList[index].product!.productStock.toString())??

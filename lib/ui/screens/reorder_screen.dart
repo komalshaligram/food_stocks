@@ -90,7 +90,7 @@ class ReorderScreenWidget extends StatelessWidget {
                       color: AppColors.whiteColor,
                     ),),
                 ),
-                Positioned(
+                state.cartCount!=0? Positioned(
                   top: 5,
                   right: context.rtl ? null : 0,
                   left: context.rtl ? 0 : null,
@@ -110,7 +110,7 @@ class ReorderScreenWidget extends StatelessWidget {
                               width: 1),
                         ),
                         child: Text(
-                          '${state.cartCount}',
+                      '${state.cartCount}',
                           style: AppStyles.rkRegularTextStyle(
                               size: 10,
                               color:  AppColors.whiteColor),
@@ -118,7 +118,7 @@ class ReorderScreenWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
+                ):0.width,
                 SizedBox(
                   height: 50,
                   width: 25,
@@ -340,7 +340,6 @@ class ReorderScreenWidget extends StatelessWidget {
                                           .id ??
                                           '',
                                       productStock: state.previousOrderProductsList[index].productStock.toString() ?? '0',
-
                                     );
                                   }),
                             ),
