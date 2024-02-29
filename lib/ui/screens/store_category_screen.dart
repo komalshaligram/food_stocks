@@ -286,6 +286,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             );
                                           },
                                         ),
+
                                         state.isSubCategoryShimmering
                                             ? StoreCategoryScreenSubcategoryShimmerWidget()
                                             : ListView.builder(
