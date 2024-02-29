@@ -726,16 +726,16 @@ class CompanyProductsScreenWidget extends StatelessWidget {
       builder: (context1) {
         return BlocProvider.value(
           value: context.read<CompanyProductsBloc>(),
-          child: DraggableScrollableSheet(
+          child: BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
+  builder: (context, state) {
+    return DraggableScrollableSheet(
             expand: true,
-            maxChildSize: 1,
+            maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
             minChildSize: 0.4,
-            initialChildSize: AppConstants.bottomSheetInitHeight,
+            initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
             //    shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
-              return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
-                builder: (context, state) {
                   return Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
@@ -759,6 +759,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                             )),
                       )
                           : CommonProductDetailsWidget(
+                        isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                         isLoading: state.isLoading,
                         addToOrderTap: () {
                           context
@@ -866,7 +867,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                             context: context1));
                               },
                             ),
-                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width :state.isRelatedShimmering
+                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width: state.relatedProductList.isEmpty ? 0.width :state.isRelatedShimmering
                           ? RelatedProductShimmerWidget()
                           :
                       Container(
@@ -897,10 +898,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                       ),
                     ),
                   );
-                },
-              );
             },
-          ),
+          );
+  },
+),
         );
       },
     ).then((value){

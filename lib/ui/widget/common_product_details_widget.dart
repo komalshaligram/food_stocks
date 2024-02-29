@@ -45,6 +45,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final bool isPreview;
   final Function() addToOrderTap;
   final bool isLoading;
+  final bool isRelatedProduct;
 
   const CommonProductDetailsWidget({
     super.key,
@@ -73,7 +74,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
     this.isPreview = false,
     this.isLoading = false,
     required this.imageOnTap,
-    required this.addToOrderTap
+    required this.addToOrderTap,
+    this.isRelatedProduct = false
   });
 
   @override
@@ -632,7 +634,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
             alignment: context.rtl?Alignment.centerRight:Alignment.centerLeft,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
+              child: isRelatedProduct ? 0.width :Text(
                 AppLocalizations.of(context)!.related_products,
                 style: AppStyles.rkRegularTextStyle(
                     size: AppConstants.mediumFont,

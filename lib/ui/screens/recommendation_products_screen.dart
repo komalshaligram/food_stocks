@@ -696,16 +696,16 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
       builder: (context1) {
         return BlocProvider.value(
           value: context.read<RecommendationProductsBloc>(),
-          child: DraggableScrollableSheet(
+          child: BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
+  builder: (context, state) {
+    return DraggableScrollableSheet(
             expand: true,
-            maxChildSize: 1,
+            maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
             minChildSize: 0.4,
-            initialChildSize: AppConstants.bottomSheetInitHeight,
+            initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight: 1,
             //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
-              return BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
-                builder: (context, state) {
                   return Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
@@ -729,6 +729,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                             )),
                       )
                           : CommonProductDetailsWidget(
+                        isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                         addToOrderTap: () {
                           context.read<RecommendationProductsBloc>().add(
                               RecommendationProductsEvent.addToCartProductEvent(
@@ -851,7 +852,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   context: context1));
                         },
                       ),
-                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width :state.isRelatedShimmering
+                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width:state.isRelatedShimmering
                           ? RelatedProductShimmerWidget()
                           :
                       Container(
@@ -882,15 +883,13 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       ),
                     ),
                   );
-                },
-              );
             },
-          ),
+          );
+  },
+),
         );
       },
-    ).then((value) {
-     // context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.getCartCountEvent());
-    });
+    );
   }
 
   Widget buildSupplierSelection({required BuildContext context}) {

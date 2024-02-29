@@ -1124,16 +1124,16 @@ class HomeScreenWidget extends StatelessWidget {
       builder: (context1) {
         return BlocProvider.value(
           value: context.read<HomeBloc>(),
-          child: DraggableScrollableSheet(
+          child: BlocBuilder<HomeBloc, HomeState>(
+  builder: (context, state) {
+    return DraggableScrollableSheet(
             expand: true,
-            maxChildSize:  1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
+            maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
             minChildSize: 0.4,
-            initialChildSize: AppConstants.bottomSheetInitHeight,
+            initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
             //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
-              return BlocBuilder<HomeBloc, HomeState>(
-                builder: (context, state) {
                   return Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
@@ -1157,6 +1157,7 @@ class HomeScreenWidget extends StatelessWidget {
                                       )),
                                 )
                               : CommonProductDetailsWidget(
+                        isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                         addToOrderTap: () {
                           context.read<HomeBloc>().add(
                               HomeEvent.addToCartProductEvent(
@@ -1280,7 +1281,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             context: context1));
                                   },
                                 ),
-                      bottomNavigationBar:state.productDetails.isEmpty ? 0.width : state.isRelatedShimmering
+                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width : state.isRelatedShimmering
                           ? RelatedProductShimmerWidget() :
                       Container(
                         height: 200,
@@ -1310,10 +1311,10 @@ class HomeScreenWidget extends StatelessWidget {
                       ),
                     ),
                   );
-                },
-              );
             },
-          ),
+          );
+  },
+),
         );
       },
     );
@@ -2079,7 +2080,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     fontWeight: FontWeight.w400),
                               ) : 0.width,
                               numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
-                                '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox / numberOfUnits).toStringAsFixed(2)}',
+                                '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${priceOfBox.toString()}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.blueColor,
@@ -2091,7 +2092,7 @@ class HomeScreenWidget extends StatelessWidget {
                         priceOfBox != 0.0 ? Container(
                           width: 60,
                           child: Text(
-                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
+                            '${AppLocalizations.of(context)!.currency}${(priceOfBox / numberOfUnits).toStringAsFixed(2)}',
                             style: AppStyles.rkBoldTextStyle(
                                 size: AppConstants.font_12,
                                 color: AppColors.blueColor,

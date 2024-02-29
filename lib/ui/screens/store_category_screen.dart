@@ -1197,16 +1197,15 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         debugPrint('product id  ${productId}');
         return BlocProvider.value(
           value: context.read<StoreCategoryBloc>(),
-       child: DraggableScrollableSheet(
+       child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
+  builder: (context, state) {
+    return DraggableScrollableSheet(
           expand: true,
-          maxChildSize: 1,
+          maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
           minChildSize: 0.4,
-          initialChildSize: AppConstants.bottomSheetInitHeight,
+          initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
           //shouldCloseOnMinExtent: true,
           builder: (BuildContext context1, ScrollController scrollController) {
-            return BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
-              builder: (context, state) {
-                debugPrint('productStockList: ${ state.productStockList.toString()}');
                 return Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
@@ -1230,6 +1229,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           )),
                     )
                         : CommonProductDetailsWidget(
+                      isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                       isLoading: state.isLoading,
                       addToOrderTap: state.isLoading
                           ? (){}
@@ -1363,7 +1363,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 context: context1));
                       },
                     ),
-                    bottomNavigationBar: state.productDetails.isEmpty ? 0.width :state.isRelatedShimmering
+                    bottomNavigationBar: state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width:state.isRelatedShimmering
                         ? RelatedProductShimmerWidget()
                         :
                     Container(
@@ -1395,10 +1395,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     ),
                   ),
                 );
-              },
-            );
+
           },
-        ),
+        );
+  },
+),
 );
       },
     );

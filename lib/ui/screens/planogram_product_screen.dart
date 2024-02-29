@@ -544,18 +544,19 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       builder: (context1) {
         return BlocProvider.value(
           value: context.read<PlanogramProductBloc>(),
-          child: DraggableScrollableSheet(
+          child: BlocBuilder<PlanogramProductBloc, PlanogramProductState>(
+  builder: (context, state) {
+    return DraggableScrollableSheet(
             expand: true,
-            maxChildSize: 1 ,
+            maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1 ,
             minChildSize: 0.4,
-            initialChildSize: AppConstants.bottomSheetInitHeight,
+            initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
 
             builder:
                 (BuildContext context1, ScrollController scrollController) {
                   PlanogramProductBloc bloc = context.read<PlanogramProductBloc>();
 
-              return BlocBuilder<PlanogramProductBloc, PlanogramProductState>(
-                                  builder: (context, state) {
+
               return Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -579,6 +580,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         )),
                   )
                       : CommonProductDetailsWidget(
+                    isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                     addToOrderTap: () {
                       context
                           .read<PlanogramProductBloc>()
@@ -679,7 +681,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                         context: context1));
                           },
                         ),
-                  bottomNavigationBar: state.productDetails.isEmpty ? 0.width :state.isRelatedShimmering
+                  bottomNavigationBar: state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width :state.isRelatedShimmering
                       ? RelatedProductShimmerWidget()
                       :
                   Container(
@@ -710,17 +712,14 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                   ),
                 ),
               );
-                                  },
-                                );
+
             },
-          ),
+          );
+  },
+),
         );
       },
-    ).then((value) {
-     // context.read<PlanogramProductBloc>().add(PlanogramProductEvent.getCartCountEvent());
-     // context.read<PlanogramProductBloc>().add(PlanogramProductEvent.RemoveRelatedProductEvent());
-
-    });
+    );
   }
 
   Widget buildSupplierSelection({required BuildContext context}) {
