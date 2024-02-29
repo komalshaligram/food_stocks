@@ -286,6 +286,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             );
                                           },
                                         ),
+
                                         state.isSubCategoryShimmering
                                             ? StoreCategoryScreenSubcategoryShimmerWidget()
                                             : ListView.builder(
@@ -323,324 +324,242 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   ),
                                 ),
                               )
-                                  : ListView(
-                                physics: AlwaysScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                children: [
-                                  state.isPlanogramShimmering &&
-                                      state.subPlanoGramsList.isEmpty
-                                      ? state.isGridView
-                                      ? SupplierProductsScreenShimmerWidget(
-                                      itemCount: 3)
-                                      : StoreCategoryScreenSubcategoryShimmerWidget(
-                                    itemCount: 9,
-                                  )
-                                      : state.subPlanoGramsList.isEmpty &&
-                                      state.planogramProductList
-                                          .isEmpty &&
-                                      !state
-                                          .isPlanogramProductShimmering
-                                      ? Container(
-                                    height: getScreenHeight(
-                                        context) -
-                                        160,
-                                    width:
-                                    getScreenWidth(context),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      '${AppLocalizations.of(context)!.products_not_available}',
-                                      textAlign:
-                                      TextAlign.center,
-                                      style: AppStyles
-                                          .rkRegularTextStyle(
-                                          size: AppConstants
-                                              .smallFont,
-                                          color: AppColors
-                                              .textColor),
+                                  : SmartRefresher(
+                                enablePullDown:
+                                true,
+                                controller: state
+                                    .planogramRefreshController,
+                                header:
+                                RefreshWidget(),
+                                footer:
+                                CustomFooter(
+                                  builder: (context,
+                                      mode) =>
+                                  state.isGridView
+                                      ? SupplierProductsScreenShimmerWidget()
+                                      : StoreCategoryScreenSubcategoryShimmerWidget(),
+                                ),
+                                enablePullUp: !state.isBottomOfProducts,
+                                onRefresh:
+                                    () {
+                                  context
+                                      .read<
+                                      StoreCategoryBloc>()
+                                      .add(StoreCategoryEvent.planogramRefreshListEvent(
+                                      context:
+                                      context));
+                                },
+                                onLoading:
+                                    () {
+                                  context
+                                      .read<
+                                      StoreCategoryBloc>()
+                                      .add(StoreCategoryEvent.getPlanogramAllProductEvent(
+                                      context:
+                                      context));
+                                },
+                                    child: ListView(
+                                                                    physics: AlwaysScrollableScrollPhysics(),
+                                                                    shrinkWrap: true,
+                                                                    children: [
+                                    state.isPlanogramShimmering &&
+                                        state.subPlanoGramsList.isEmpty
+                                        ? state.isGridView
+                                        ? SupplierProductsScreenShimmerWidget(
+                                        itemCount: 3)
+                                        : StoreCategoryScreenSubcategoryShimmerWidget(
+                                      itemCount: 9,
+                                    )
+                                        : state.subPlanoGramsList.isEmpty &&
+                                        state.planogramProductList
+                                            .isEmpty &&
+                                        !state
+                                            .isPlanogramProductShimmering
+                                        ? Container(
+                                      height: getScreenHeight(
+                                          context) -
+                                          160,
+                                      width:
+                                      getScreenWidth(context),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '${AppLocalizations.of(context)!.products_not_available}',
+                                        textAlign:
+                                        TextAlign.center,
+                                        style: AppStyles
+                                            .rkRegularTextStyle(
+                                            size: AppConstants
+                                                .smallFont,
+                                            color: AppColors
+                                                .textColor),
+                                      ),
+                                    )
+                                        : ListView.builder(
+                                      itemCount: state
+                                          .subPlanoGramsList
+                                          .length,
+                                      shrinkWrap: true,
+                                      physics:
+                                      NeverScrollableScrollPhysics(),
+                                      itemBuilder:
+                                          (context, index) {
+                                        return buildPlanoGramItem(
+                                            planogramUpdateIndex: 2,
+                                            isGuestUser:
+                                            state.isGuestUser,
+                                            context: context,
+                                            list: state
+                                                .subPlanoGramsList,
+                                            index: index);
+                                      },
                                     ),
-                                  )
-                                      : ListView.builder(
-                                    itemCount: state
-                                        .subPlanoGramsList
-                                        .length,
-                                    shrinkWrap: true,
-                                    physics:
-                                    NeverScrollableScrollPhysics(),
-                                    /*  state.isPlanogramShimmering  && state.subPlanoGramsList.isEmpty &&
-                                    state.isGridView?  ScrollPhysics() :const NeverScrollableScrollPhysics(),*/
-                                    itemBuilder:
-                                        (context, index) {
-                                      return buildPlanoGramItem(
-                                          planogramUpdateIndex: 2,
-                                          isGuestUser:
-                                          state.isGuestUser,
-                                          context: context,
-                                          list: state
-                                              .subPlanoGramsList,
-                                          index: index);
-                                    },
-                                  ),
 
-                                  Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      state.planogramProductList
-                                          .isNotEmpty
-                                          ? Padding(
-                                        padding:
-                                        const EdgeInsets.all(
-                                            10.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .spaceBetween,
-                                          children: [
-                                            Text(
-                                              '${AppLocalizations.of(context)!.products}',
-                                              style: AppStyles
-                                                  .rkRegularTextStyle(
-                                                  size: AppConstants
-                                                      .smallFont,
-                                                  color: AppColors
-                                                      .blackColor,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w600),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                bloc.add(StoreCategoryEvent
-                                                    .changeGridToListViewEvent(
-                                                    isGridView:
-                                                    false));
-                                              },
-                                              child: state
-                                                  .isGridView
-                                                  ? Icon(
-                                                Icons.list,
-                                                color: AppColors
-                                                    .blueColor,
-                                                size: 24,
-                                              )
-                                                  : Icon(
-                                                Icons
-                                                    .grid_view,
-                                                color: AppColors
-                                                    .blueColor,
-                                                size: 24,
+                                    Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        state.planogramProductList
+                                            .isNotEmpty
+                                            ? Padding(
+                                          padding:
+                                          const EdgeInsets.all(
+                                              10.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            children: [
+                                              Text(
+                                                '${AppLocalizations.of(context)!.products}',
+                                                style: AppStyles
+                                                    .rkRegularTextStyle(
+                                                    size: AppConstants
+                                                        .smallFont,
+                                                    color: AppColors
+                                                        .blackColor,
+                                                    fontWeight:
+                                                    FontWeight
+                                                        .w600),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                          : SizedBox(),
-                                      state.isPlanogramProductShimmering &&
-                                          state.planogramProductList
-                                              .isEmpty
-                                          ? state.isGridView
-                                          ? SupplierProductsScreenShimmerWidget(
-                                          itemCount: state
-                                              .subPlanoGramsList
-                                              .length ==
-                                              0
-                                              ? (getScreenHeight(
-                                              context) >=
-                                              750
-                                              ? 12
-                                              : 6)
-                                              : 12)
-                                          : StoreCategoryScreenSubcategoryShimmerWidget(
-                                          itemCount: state
-                                              .subPlanoGramsList
-                                              .length ==
-                                              0
-                                              ? (getScreenHeight(
-                                              context) >=
-                                              750
-                                              ? 9
-                                              : 6)
-                                              : 6)
-                                          : state.planogramProductList
-                                          .isEmpty
-                                          ? SizedBox()
-                                          : Container(
-                                        color:
-                                        AppColors.pageColor,
-                                        child: state.isGridView
-                                            ? SizedBox(
-                                          height: state.subPlanoGramsList
-                                              .length ==
-                                              0
-                                              ? (getScreenHeight(context) >=
-                                              750
-                                              ? getScreenHeight(context) *
-                                              0.75
-                                              : getScreenHeight(context) *
-                                              0.71)
-                                              : (getScreenHeight(context) >=
-                                              740
-                                              ? getScreenHeight(context) *
-                                              0.44
-                                              : getScreenHeight(context) *
-                                              0.38),
-                                          child:
-                                          SmartRefresher(
-                                            enablePullDown:
-                                            true,
-                                            controller: state
-                                                .planogramRefreshController,
-                                            header:
-                                            RefreshWidget(),
-                                            footer:
-                                            CustomFooter(
-                                              builder: (context,
-                                                  mode) =>
-                                              state.isGridView
-                                                  ? SupplierProductsScreenShimmerWidget()
-                                                  : StoreCategoryScreenSubcategoryShimmerWidget(),
-                                            ),
-                                            enablePullUp:
-                                            !state
-                                                .   isBottomOfProducts,
-                                            onRefresh:
-                                                () {
-                                              context
-                                                  .read<
-                                                  StoreCategoryBloc>()
-                                                  .add(StoreCategoryEvent.planogramRefreshListEvent(
-                                                  context:
-                                                  context));
-                                            },
-                                            onLoading:
-                                                () {
-                                              context
-                                                  .read<
-                                                  StoreCategoryBloc>()
-                                                  .add(StoreCategoryEvent.getPlanogramAllProductEvent(
-                                                  context:
-                                                  context));
-                                            },
-                                            child: GridView.builder(
-                                                itemCount: state.planogramProductList.length,
-                                                shrinkWrap: true,
-                                                physics: AlwaysScrollableScrollPhysics(),
-                                                padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: MediaQuery.of(context).size.width > 370 ? AppConstants.productGridAspectRatio : AppConstants.productGridAspectRatio1),
-                                                itemBuilder: (context, index) => DelayedWidget(
-                                                  child: CommonProductItemWidget(
-                                                      imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
-                                                      isGuestUser: state.isGuestUser,
-                                                      productStock: (state.planogramProductList[index].product?.productStock.toString() ?? '0'),
-                                                      productImage: state.planogramProductList[index].product?.mainImage ?? '',
-                                                      productName: state.planogramProductList[index].product?.productName ?? '',
-                                                      totalSaleCount: state.planogramProductList[index].product?.totalSale?.toInt() ?? 0,
-                                                      price: state.planogramProductList[index].product?.productPrice ?? 0.0,
-                                                      onButtonTap: () {
-                                                        debugPrint("state.planogramProductList[index]:${index == 0 ? (state.planogramProductList.length > 1) ? 1 : 0 : index}");
+                                              GestureDetector(
+                                                onTap: () {
+                                                  bloc.add(StoreCategoryEvent
+                                                      .changeGridToListViewEvent(
+                                                      isGridView:
+                                                      false));
+                                                },
+                                                child: state
+                                                    .isGridView
+                                                    ? Icon(
+                                                  Icons.list,
+                                                  color: AppColors
+                                                      .blueColor,
+                                                  size: 24,
+                                                )
+                                                    : Icon(
+                                                  Icons
+                                                      .grid_view,
+                                                  color: AppColors
+                                                      .blueColor,
+                                                  size: 24,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                            : SizedBox(),
+                                        state.isPlanogramProductShimmering &&
+                                            state.planogramProductList
+                                                .isEmpty
+                                            ? state.isGridView
+                                            ? SupplierProductsScreenShimmerWidget(
+                                            itemCount: 10)
+                                            : StoreCategoryScreenSubcategoryShimmerWidget(
+                                            itemCount: 10)
+                                            : state.planogramProductList
+                                            .isEmpty
+                                            ? SizedBox()
+                                            : Container(
+                                          color:
+                                          AppColors.pageColor,
+                                          child: state.isGridView
+                                              ? GridView.builder(
+                                                  itemCount: state.planogramProductList.length,
+                                                  shrinkWrap: true,
+                                                  physics: NeverScrollableScrollPhysics(),
+                                                  padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: MediaQuery.of(context).size.width > 370 ? AppConstants.productGridAspectRatio : AppConstants.productGridAspectRatio1),
+                                                  itemBuilder: (context, index) => DelayedWidget(
+                                                    child: CommonProductItemWidget(
+                                                        imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
+                                                        isGuestUser: state.isGuestUser,
+                                                        productStock: (state.planogramProductList[index].product?.productStock.toString() ?? '0'),
+                                                        productImage: state.planogramProductList[index].product?.mainImage ?? '',
+                                                        productName: state.planogramProductList[index].product?.productName ?? '',
+                                                        totalSaleCount: state.planogramProductList[index].product?.totalSale?.toInt() ?? 0,
+                                                        price: state.planogramProductList[index].product?.productPrice ?? 0.0,
+                                                        onButtonTap: () {
+                                                          debugPrint("state.planogramProductList[index]:${index == 0 ? (state.planogramProductList.length > 1) ? 1 : 0 : index}");
+                                                          if (!state.isGuestUser) {
+                                                            showProductDetails(
+                                                                context: context,
+                                                                productId: state.planogramProductList[index].productId ?? '',
+                                                                productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
+                                                                planoGramIndex: 3,
+                                                                isBarcode: false);
+                                                          } else {
+                                                            Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                          }
+                                                        }),
+                                                  ))
+                                              : ListView
+                                                  .builder(
+                                                itemCount: state
+                                                    .planogramProductList
+                                                    .length,
+                                                shrinkWrap:
+                                                true,
+                                                physics:
+                                                NeverScrollableScrollPhysics(),
+                                                itemBuilder:
+                                                    (context,
+                                                    index) {
+                                                  return CommonProductListWidget(
+                                                      isGuestUser: state
+                                                          .isGuestUser,
+                                                      productStock: double.parse(state.planogramProductList[index].product!.productStock.toString())??
+                                                          0,
+                                                      productImage: state.planogramProductList[index].product?.mainImage ??
+                                                          '',
+                                                      productName: state.planogramProductList[index].product?.productName ??
+                                                          '',
+                                                      totalSaleCount: state.planogramProductList[index].product?.totalSale?.toInt() ??
+                                                          0,
+                                                      price: state.planogramProductList[index].product?.productPrice ??
+                                                          0.0,
+                                                      onButtonTap:
+                                                          () {
                                                         if (!state.isGuestUser) {
                                                           showProductDetails(
                                                               context: context,
-                                                              productId: state.planogramProductList[index].productId ?? '',
                                                               productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
+                                                              productId: state.planogramProductList[index].productId ?? '',
                                                               planoGramIndex: 3,
                                                               isBarcode: false);
                                                         } else {
                                                           Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                         }
-                                                      }),
-                                                )),
-                                          ),
-                                        )
-                                            : SizedBox(
-                                          height: state.subPlanoGramsList.length == 0 ? ( getScreenHeight(context) >= 750 ? getScreenHeight(context) *0.74 : getScreenHeight(context) * 0.70 ) :
-                                          ( getScreenHeight(context) >= 740 ? getScreenHeight(context) * 0.43 : getScreenHeight(context) * 0.38 ),
-                                          child:
-                                          SmartRefresher(
-                                            enablePullDown:
-                                            true,
-                                            controller: state
-                                                .planogramRefreshController,
-                                            header:
-                                            RefreshWidget(),
-                                            footer:
-                                            CustomFooter(
-                                              builder: (context,
-                                                  mode) =>
-                                              state.isGridView
-                                                  ? SupplierProductsScreenShimmerWidget()
-                                                  : StoreCategoryScreenSubcategoryShimmerWidget(),
-                                            ),
-                                            enablePullUp:
-                                            !state
-                                                .isBottomOfProducts,
-                                            onRefresh:
-                                                () {
-                                              context
-                                                  .read<
-                                                  StoreCategoryBloc>()
-                                                  .add(StoreCategoryEvent.planogramRefreshListEvent(
-                                                  context:
-                                                  context));
-                                            },
-                                            onLoading:
-                                                () {
-                                              context
-                                                  .read<
-                                                  StoreCategoryBloc>()
-                                                  .add(StoreCategoryEvent.getPlanogramAllProductEvent(
-                                                  context:
-                                                  context));
-                                            },
-                                            child: ListView
-                                                .builder(
-                                              itemCount: state
-                                                  .planogramProductList
-                                                  .length,
-                                              shrinkWrap:
-                                              true,
-                                              physics:
-                                              AlwaysScrollableScrollPhysics(),
-                                              itemBuilder:
-                                                  (context,
-                                                  index) {
-                                                return CommonProductListWidget(
-                                                    isGuestUser: state
-                                                        .isGuestUser,
-                                                    productStock: double.parse(state.planogramProductList[index].product!.productStock.toString())??
-                                                        0,
-                                                    productImage: state.planogramProductList[index].product?.mainImage ??
-                                                        '',
-                                                    productName: state.planogramProductList[index].product?.productName ??
-                                                        '',
-                                                    totalSaleCount: state.planogramProductList[index].product?.totalSale?.toInt() ??
-                                                        0,
-                                                    price: state.planogramProductList[index].product?.productPrice ??
-                                                        0.0,
-                                                    onButtonTap:
-                                                        () {
-                                                      if (!state.isGuestUser) {
-                                                        showProductDetails(
-                                                            context: context,
-                                                            productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
-                                                            productId: state.planogramProductList[index].productId ?? '',
-                                                            planoGramIndex: 3,
-                                                            isBarcode: false);
-                                                      } else {
-                                                        Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                                      }
-                                                    });
-                                              },
-                                            ),
-                                          ),
+                                                      });
+                                                },
+                                              ),
                                         ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
+                                      ],
+                                    )
+                                                                    ],
+                                                                  ),
+                                  ),
                             )
                           ],
                         )),
@@ -1168,7 +1087,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           return child;
                         },
                         errorBuilder: (context, error, stackTrace) {
-                          // debugPrint('sale list image error : $error');
                           return Container(
                             child: Image.asset(
                                 AppImagePath.imageNotAvailable5,
@@ -1483,11 +1401,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         ),
 );
       },
-    ).then((value) {
-      //context.read<StoreCategoryBloc>().add(StoreCategoryEvent.getCartCountEvent());
-    //  context.read<StoreCategoryBloc>().add(StoreCategoryEvent.RemoveRelatedProductEvent());
-
-    });
+    );
   }
 
   Widget buildTopNavigation(

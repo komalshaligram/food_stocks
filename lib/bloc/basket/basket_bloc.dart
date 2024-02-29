@@ -1194,6 +1194,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         }
         else if(event is _RelatedProductsEvent){
           emit(state.copyWith(isRelatedShimmering:true));
+          print('productId____${event.productId}');
           final res = await DioClient(event.context).post(
               AppUrls.relatedProductsUrl,
               data: {'mainProductId':event.productId});
