@@ -107,6 +107,7 @@ class SupplierProductsBloc
             state.productList.toList(growable: true);
             productList.addAll(response.data ?? []);
             List<ProductStockModel> productStockList =
+
             state.productStockList.toList(growable: true);
             productStockList.addAll(response.data?.map((product) {
               return ProductStockModel(
@@ -118,6 +119,7 @@ class SupplierProductsBloc
                       : double.parse(product.productStock.toString() ?? '0')
                       .toInt());
             }) ??
+
                 []);
             debugPrint('new product list len = ${productList.length}');
             debugPrint(
