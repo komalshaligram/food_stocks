@@ -225,9 +225,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
           value: context.read<ProductSaleBloc>(),
           child: DraggableScrollableSheet(
             expand: true,
-            maxChildSize: 1 -
-                (MediaQuery.of(context).viewPadding.top /
-                    getScreenHeight(context)),
+            maxChildSize: 1,
             minChildSize: 0.4,
             initialChildSize: AppConstants.bottomSheetInitHeight,
             builder:

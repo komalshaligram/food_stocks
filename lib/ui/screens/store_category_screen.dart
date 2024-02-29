@@ -519,7 +519,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               context
                                                   .read<
                                                   StoreCategoryBloc>()
-                                                  .add(StoreCategoryEvent.getPlanoGramProductsEvent(
+                                                  .add(StoreCategoryEvent.getPlanogramAllProductEvent(
                                                   context:
                                                   context));
                                             },
@@ -575,7 +575,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             ),
                                             enablePullUp:
                                             !state
-                                                .isBottomOfPlanoGrams,
+                                                .isBottomOfProducts,
                                             onRefresh:
                                                 () {
                                               context
@@ -590,7 +590,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               context
                                                   .read<
                                                   StoreCategoryBloc>()
-                                                  .add(StoreCategoryEvent.getPlanoGramProductsEvent(
+                                                  .add(StoreCategoryEvent.getPlanogramAllProductEvent(
                                                   context:
                                                   context));
                                             },
@@ -609,7 +609,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 return CommonProductListWidget(
                                                     isGuestUser: state
                                                         .isGuestUser,
-                                                    productStock: int.parse(state.planogramProductList[index].product!.productStock.toString())??
+                                                    productStock: double.parse(state.planogramProductList[index].product!.productStock.toString())??
                                                         0,
                                                     productImage: state.planogramProductList[index].product?.mainImage ??
                                                         '',
@@ -1620,9 +1620,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             });
                       },
                       subTitle:
-                      (list[index].planogramproducts?.length ?? 0) < 6
-                          ? ''
-                          : AppLocalizations.of(context)!.see_all),
+                      (list[index].planogramproducts?.length ?? 0) >= 1
+                          ? AppLocalizations.of(context)!.see_all
+                          : ''),
                   5.height,
                   SizedBox(
                     height: 175,
