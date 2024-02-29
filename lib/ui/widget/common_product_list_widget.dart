@@ -35,7 +35,6 @@ class CommonProductListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('productImage____$productImage');
     return GestureDetector(
       onTap: onButtonTap,
       child: Container(

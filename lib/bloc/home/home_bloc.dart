@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
@@ -118,7 +117,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
             MessageCountResModel response = MessageCountResModel.fromJson(res);
             if (response.status == 200) {
-              print('unread message count = ${response.data}');
+              debugPrint('unread message count = ${response.data}');
               await preferences.setMessageCount(
                   count: response.data ?? preferences.getMessageCount());
               emit(state.copyWith(messageCount: response.data ?? 0));
@@ -177,7 +176,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 data: ProductDetailsReqModel(params: event.productId).toJson());
             ProductDetailsResModel response =
             ProductDetailsResModel.fromJson(res);
-            print('ProductDetailsResModel______${response}');
+            debugPrint('ProductDetailsResModel______${response}');
             if (response.status == 200) {
               int productStockUpdateIndex = 0;
               if(event.isBarcode){
@@ -1015,9 +1014,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             );
             RecommendationProductsResModel response =
             RecommendationProductsResModel.fromJson(res);
-            print('getRecommendationProductsUrl       ${AppUrls
+            debugPrint('getRecommendationProductsUrl       ${AppUrls
                 .getRecommendationProductsUrl}');
-            print('response       ${response.status}');
+            debugPrint('response       ${response.status}');
             if (response.status == 200) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: true);
@@ -1259,12 +1258,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           final _checker = StoreVersionChecker();
          // PackageInfo packageInfo = await PackageInfo.fromPlatform();
           _checker.checkUpdate().then((value) {
-            print('update available');
+            debugPrint('update available');
             print(value.canUpdate); //return true if update is available
-            print(value.currentVersion); //return current app version
-            print(value.newVersion); //return the new app version
-            print(value.appURL); //return the app url
-            print(value.errorMessage);
+            debugPrint(value.currentVersion); //return current app version
+            debugPrint(value.newVersion); //return the new app version
+            debugPrint(value.appURL); //return the app url
+            debugPrint(value.errorMessage);
             if(value.canUpdate && Platform.isAndroid){
               customShowUpdateDialog(
                   event.context, preferences.getAppLanguage(),value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
@@ -1276,7 +1275,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
 
         else if(event is _RelatedProductsEvent){
-          print('event.productId____${event.productId}');
+
           if(event.productId != ''){
             emit(state.copyWith(isRelatedShimmering:true));
             final res = await DioClient(event.context).post(

@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
-
-import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import 'common_shimmer_widget.dart';

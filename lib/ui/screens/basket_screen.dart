@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,8 +6,6 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/basket/basket_bloc.dart';
-import 'package:food_stock/data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart'
-    hide Image;
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -28,8 +25,6 @@ import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/basket_screen_shimmer_widget.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
-import '../widget/common_product_details_button.dart';
-import '../widget/common_shimmer_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 
 class BasketRoute {
