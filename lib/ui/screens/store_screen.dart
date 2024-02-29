@@ -750,8 +750,14 @@ class StoreScreenWidget extends StatelessWidget {
                         }
                       },
                       onSearchSubmit: (String search) {
-                        bloc.add(
-                            StoreEvent.globalSearchEvent(context: context));
+                       // bloc.add(StoreEvent.globalSearchEvent(context: context));
+                        Navigator.pushNamed(
+                            context,
+                            RouteDefine.supplierProductsScreen.name,
+                            arguments: {
+                              AppStrings.searchString: state.search,
+                              AppStrings.searchType : SearchTypes.product.toString()
+                            });
                       },
                       onOutSideTap: () {
                         bloc.add(StoreEvent.changeCategoryExpansion(
@@ -1894,7 +1900,7 @@ class StoreScreenWidget extends StatelessWidget {
                                     context: context1));
                           }*/
                                 ),
-                      bottomNavigationBar: state.isRelatedShimmering
+                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width :state.isRelatedShimmering
                           ? RelatedProductShimmerWidget()
                           :
                       Container(

@@ -669,14 +669,20 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       //     StoreCategoryEvent.changeCategoryExpansionEvent());
                     },
                     onSearch: (String search) {
-                      if (search.length > 2) {
+                      if (search.length > 1) {
                         bloc.add(StoreCategoryEvent.globalSearchEvent(
                             context: context));
                       }
                     },
                     onSearchSubmit: (String search) {
-                      bloc.add(StoreCategoryEvent.globalSearchEvent(
-                          context: context));
+                     // bloc.add(StoreCategoryEvent.globalSearchEvent(context: context));
+                      Navigator.pushNamed(
+                          context,
+                          RouteDefine.supplierProductsScreen.name,
+                          arguments: {
+                            AppStrings.searchString: state.search,
+                            AppStrings.searchType : SearchTypes.product.toString()
+                          });
                     },
                     onSearchTap: () {
                       bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(
@@ -1447,7 +1453,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 context: context1));
                       },
                     ),
-                    bottomNavigationBar: state.isRelatedShimmering
+                    bottomNavigationBar: state.productDetails.isEmpty ? 0.width :state.isRelatedShimmering
                         ? RelatedProductShimmerWidget()
                         :
                     Container(

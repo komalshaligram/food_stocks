@@ -488,8 +488,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(StoreCategoryEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.planoGramUpdateIndex]
-            [state.productStockUpdateIndex].productId));
+            if(response.product != null){
+              add(StoreCategoryEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].productId));
+            }
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               // List<List<ProductStockModel>> productStockList =
               // state.productStockList.toList(growable: false);
@@ -917,9 +918,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   );
 
               emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList,duringCelebration: true));
-              await Future.delayed(const Duration(milliseconds: 500));
-              emit(state.copyWith(duringCelebration: false));
+                  isLoading: false, productStockList: productStockList));
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
@@ -1005,6 +1004,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
               Vibration.vibrate();
+              add(StoreCategoryEvent.setCartCountEvent());
               Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
@@ -1020,7 +1020,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     totalPrice: 0.0,
                     productSaleId: '',
                   );
-              add(StoreCategoryEvent.setCartCountEvent());
+              add(StoreCategoryEvent.getCartCountEvent());
               emit(state.copyWith(isLoading: false, productStockList: productStockList , duringCelebration: true));
 
               await Future.delayed(const Duration(milliseconds: 2000));
