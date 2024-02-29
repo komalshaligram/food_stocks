@@ -1423,7 +1423,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     fontWeight: FontWeight.w400),
                               ) : 0.width,
                               numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
-                                '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox / numberOfUnits).toStringAsFixed(2)}',
+                                '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.blueColor,
@@ -1435,7 +1435,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         priceOfBox != 0.0 ? Container(
                           width: 60,
                           child: Text(
-                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
+                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toStringAsFixed(2)}',
                             style: AppStyles.rkBoldTextStyle(
                                 size: AppConstants.font_12,
                                 color: AppColors.blueColor,
