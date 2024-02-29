@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/error/exceptions.dart';
@@ -233,7 +231,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               isPlanogramShimmering: state.planogramPageNum == 0 ? true : false,
               isLoadMore: state.planogramPageNum == 0 ? false : true));
           PlanogramReqModel planogramReqModel =  isSubCategoryString == '' && !state.isSubCategory  ? PlanogramReqModel(
-              pageNum: state.subProductPageNum + 1,
+              pageNum: state.planogramPageNum + 1,
               pageLimit: AppConstants.orderPageLimit,
               sortOrder: AppStrings.ascendingString,
               sortField: AppStrings.planogramSortFieldString,
@@ -344,7 +342,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               subPlanoGramsList: state.subPlanoGramsList,
               planoGramsList: state.planoGramsList,
               productStockList: productStockList,
-              subProductPageNum: state.subProductPageNum + 1,
+            //  subProductPageNum: state.subProductPageNum + 1,
               planogramPageNum: state.planogramPageNum + 1,
               isPlanogramShimmering: false,
               isLoadMore: false,
@@ -382,11 +380,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             subPlanoGramsList: isSubCategoryString != '' && !state.isSubCategory ? [] : isSubCategoryString != '' && state.isSubCategory ? [] : state.subPlanoGramsList,
             subProductPageNum: 0,
             planogramProductList: [],
+            isBottomOfProducts:false,
             /*productStockList: [
               [ProductStockModel(productId: '')]
             ],*/
             isBottomOfPlanoGrams: false));
-        add(StoreCategoryEvent.getPlanoGramProductsEvent(
+        add(StoreCategoryEvent.getPlanogramAllProductEvent(
             context: event.context));
       }
       else if (event is _GetProductDetailsEvent) {
@@ -1250,7 +1249,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
           GetSubCategoriesProductReqModel getSubCategoriesProductReqModel = GetSubCategoriesProductReqModel(
               subCategoryId: state.subCategoryId,
-              pageNum: state.subProductPageNum,
+              pageNum: state.subProductPageNum + 1,
               pageLimit: AppConstants.orderPageLimit,
             );
           debugPrint('getAllProductUrl_____${AppUrls.getsubCategoryProductsUrl}');
@@ -1283,18 +1282,20 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             productStockList[3].addAll(stockList);
             debugPrint('page = ${stockList.length}');
             debugPrint('page = ${productStockList[3].length}');
+            debugPrint('page = ${productStockList[2].length}');
             // productStockList.add(barcodeStock);
             planogramProductList.addAll(response.data ?? []);
-            print('isBottomOfProducts____${ planogramProductList.length ==
-                (response.metaData?.totalFilteredCount ?? 0)
-                ? true
-                : false}');
+
             print('planogramProductList.length_____${ planogramProductList.length}');
             emit(state.copyWith(planogramProductList: planogramProductList,productStockList: productStockList,
                 isPlanogramProductShimmering: false,isPlanogramShimmering: false,subProductPageNum: state.subProductPageNum + 1,
             ));
+            print('isBottomOfProducts____${ planogramProductList.length >=
+                (response.metaData?.totalFilteredCount ?? 0)
+                ? true
+                : false}');
             emit(state.copyWith(
-                isBottomOfProducts: planogramProductList.length ==
+                isBottomOfProducts: planogramProductList.length >=
                     (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
@@ -1324,6 +1325,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       }
       else if(event is _RelatedProductsEvent){
         emit(state.copyWith(isRelatedShimmering:true));
+        print('event.productId____${event.productId}');
         final res = await DioClient(event.context).post(
             AppUrls.relatedProductsUrl,
             data: {'mainProductId':event.productId});
@@ -1337,7 +1339,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           // List<ProductStockModel> barcodeStock =
           // productStockList.removeLast();
           List<ProductStockModel> stockList = [];
-          debugPrint('getAllProduct response_____${response.data.length}');
+          debugPrint('RelatedProducts response_____${response.data.length}');
           stockList.addAll(response.data.map(
                   (product) {
                 return ProductStockModel(
