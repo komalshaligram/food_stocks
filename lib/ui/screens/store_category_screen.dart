@@ -639,14 +639,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       ),
                                     ],
                                   )
-
-                                  // state.isLoadMore
-                                  //     ? StoreCategoryScreenPlanoGramShimmerWidget()
-                                  //     : 0.width,
-                                  // state.isBottomOfPlanoGrams
-                                  //     ? CommonPaginationEndWidget(
-                                  //         pageEndText: 'No more Products')
-                                  //     : 0.width,
                                 ],
                               ),
                             )

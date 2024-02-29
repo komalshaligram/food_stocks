@@ -24,7 +24,6 @@ import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
-import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_list_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
@@ -698,7 +697,14 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                           totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
                           price:state.relatedProductList.elementAt(i).productPrice??0.0,
                           onButtonTap: () {
-                            print("tap 2");
+                            Navigator.of(context1).pop();
+                            showProductDetails(
+                                context: context1,
+                                productId: state
+                                    .relatedProductList[i].id,
+                                isBarcode: false,
+                                productStock: (state.relatedProductList[i].productStock.toString() ?? '')
+                            );
                           },
                         );},itemCount: state.relatedProductList.length,),
                   ),

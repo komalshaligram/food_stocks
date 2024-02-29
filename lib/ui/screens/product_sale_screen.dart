@@ -21,7 +21,6 @@ import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
-import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_item_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
@@ -168,24 +167,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     );
                                   },
                                 ),
-                      // state.isLoadMore ? ProductSaleScreenShimmerWidget() : 0.width,
-                      // state.isBottomOfProducts
-                      //     ? CommonPaginationEndWidget(pageEndText: 'No more Products')
-                      //     : 0.width,
                     ],
                   ),
                 ),
               ),
-              // onNotification: (notification) {
-              //   if (notification.metrics.pixels ==
-              //         notification.metrics.maxScrollExtent) {
-              //       context.read<ProductSaleBloc>().add(
-              //           ProductSaleEvent.getProductSalesListEvent(
-              //               context: context));
-              //     }
-              //     return true;
-              //   },
-              // ),
             ),
           );
         },
@@ -245,7 +230,6 @@ class ProductSaleScreenWidget extends StatelessWidget {
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: AppConstants.bottomSheetInitHeight,
-            //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(
@@ -391,8 +375,6 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                             .relatedProductList[i].id,
                                        endDate: '',
                                        startDate: ''
-                                       // isBarcode: false,
-                                       // productStock: (state.relatedProductList[i].productStock.toString() ?? '')
                                     );
                                   },
                                 );},itemCount: state.relatedProductList.length,),
@@ -405,10 +387,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
           ),
         );
       },
-    ).then((value) {
-    //  context.read<ProductSaleBloc>().add(ProductSaleEvent.RemoveRelatedProductEvent());
-
-    });
+    );
   }
 
   Widget buildSupplierSelection({required BuildContext context}) {

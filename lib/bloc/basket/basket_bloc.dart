@@ -537,7 +537,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               } on ServerException {}
               add(BasketEvent.RelatedProductsEvent(productId: event.productId,context: event.context));
 
-              if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
+              if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode)) {
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: false);
                 productStockList[productStockList

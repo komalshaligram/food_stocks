@@ -24,7 +24,6 @@ import '../utils/themes/app_urls.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
-import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_item_widget.dart';
 import '../widget/common_product_list_widget.dart';
@@ -36,7 +35,7 @@ import '../widget/delayed_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
 import '../widget/supplier_products_screen_shimmer_widget.dart';
-import '../widget/common_search_widget.dart';
+
 
 class ReorderRoute {
   static Widget get route => ReorderScreen();
