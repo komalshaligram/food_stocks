@@ -16,7 +16,6 @@ import '../../data/services/locale_provider.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
-import '../../ui/widget/common_alert_dialog.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'profile_menu_event.dart';

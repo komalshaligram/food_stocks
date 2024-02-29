@@ -121,7 +121,6 @@ class PlanogramProductBloc
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
               if (response.status == 200) {
                 debugPrint('cart before = ${response.data}');
-
                 debugPrint('state.productStockUpdateIndex = ${state.productStockList[state.productStockUpdateIndex].productId}');
 
                 response.data?.data?.forEach((cartProduct) {
@@ -141,8 +140,9 @@ class PlanogramProductBloc
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(PlanogramProductEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
-
+            if(response.product != null){
+              add(PlanogramProductEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
+            }
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);

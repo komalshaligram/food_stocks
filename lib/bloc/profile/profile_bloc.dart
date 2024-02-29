@@ -20,13 +20,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
-import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
-import '../../data/model/req_model/remove_form_and_file_req_model/remove_form_and_file_req_model.dart';
-import '../../data/model/res_model/file_update_res_model/file_update_res_model.dart'
-    as file;
 import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
-import '../../data/model/res_model/remove_form_and_file_res_model/remove_form_and_file_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
