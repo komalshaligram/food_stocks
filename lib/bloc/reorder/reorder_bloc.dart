@@ -213,8 +213,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(ReorderEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
-
+            if(response.product != null){
+              add(ReorderEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
+            }
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
@@ -600,9 +601,8 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 productSaleId: '',
               );
               emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList ,duringCelebration: true));
-              await Future.delayed(const Duration(milliseconds: 500));
-              emit(state.copyWith(duringCelebration: false));
+                  isLoading: false, productStockList: productStockList ));
+
 
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -677,6 +677,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
+              add(ReorderEvent.setCartCountEvent());
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: true);
               productStockList[state.productStockUpdateIndex] =
@@ -688,9 +689,11 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 totalPrice: 0.0,
                 productSaleId: '',
               );
-              add(ReorderEvent.setCartCountEvent());
+              add(ReorderEvent.getCartCountEvent());
               emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList));
+                  isLoading: false, productStockList: productStockList,duringCelebration: true));
+              await Future.delayed(const Duration(milliseconds: 500));
+              emit(state.copyWith(duringCelebration: false));
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,

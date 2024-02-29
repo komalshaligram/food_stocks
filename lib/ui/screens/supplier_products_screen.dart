@@ -26,7 +26,6 @@ import '../utils/themes/app_styles.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
-import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_list_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
@@ -176,10 +175,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                if(!state.isGuestUser){
                                                  showProductDetails(
                                                      context: context,
-                                                     productId: /*state.searchType==SearchTypes.product.toString()?state.productList[index].id??'':state
-                                                         .productList[index]
-                                                         .productId ??
-                                                         '',*/state
+                                                     productId: state.searchType == SearchTypes.product.toString()?state.productList[index].id??'':state
                                                          .productList[index]
                                                          .productId ??
                                                          '',
@@ -262,8 +258,14 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                       }
                     },
                     onSearchSubmit: (String search) {
-                      bloc.add(
-                          SupplierProductsEvent.globalSearchEvent(context: context));
+                      //bloc.add(SupplierProductsEvent.globalSearchEvent(context: context));
+                      Navigator.pushNamed(
+                          context,
+                          RouteDefine.supplierProductsScreen.name,
+                          arguments: {
+                            AppStrings.searchString: state.search,
+                            AppStrings.searchType : SearchTypes.product.toString()
+                          });
                     },
                     onOutSideTap: () {
                       bloc.add(SupplierProductsEvent.changeCategoryExpansion(
@@ -632,7 +634,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        print('productStock____${productStock}');
         return BlocProvider.value(
           value: context.read<SupplierProductsBloc>(),
           child: DraggableScrollableSheet(
@@ -784,7 +785,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 context: context1));
                                   },
                                 ),
-                          bottomNavigationBar: state.isRelatedShimmering
+                          bottomNavigationBar: state.productDetails.isEmpty ? 0.width :state.isRelatedShimmering
                               ? RelatedProductShimmerWidget()
                               :
                           Container(
@@ -805,8 +806,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                     Navigator.of(context1).pop();
                                     showProductDetails(
                                         context: context1,
-                                        productId: state
-                                            .relatedProductList[i].id,
+                                        productId: state.relatedProductList[i].id,
                                         isBarcode: false,
                                         productStock: (state.relatedProductList[i].productStock.toString() ?? '')
                                     );
@@ -821,10 +821,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
           ),
         );
       },
-    ).then((value) {
-     // context.read<SupplierProductsBloc>().add(SupplierProductsEvent.RemoveRelatedProductEvent());
-
-    });
+    );
   }
 
   Widget buildSupplierSelection({required BuildContext context}) {

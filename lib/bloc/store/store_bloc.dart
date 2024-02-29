@@ -367,7 +367,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(StoreEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
+            if(response.product != null){
+              add(StoreEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
+            }
 
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
@@ -817,6 +819,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
+              add(StoreEvent.setCartCountEvent());
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: true);
               productStockList[state.productStockUpdateIndex] =
@@ -828,7 +831,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 totalPrice: 0.0,
                 productSaleId: '',
               );
-              add(StoreEvent.setCartCountEvent());
               Vibration.vibrate(amplitude: 128);
               emit(state.copyWith(
                   isLoading: false,
@@ -1148,39 +1150,42 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             }
 
       else if(event is _RelatedProductsEvent){
-        emit(state.copyWith(isRelatedShimmering:true));
-        final res = await DioClient(event.context).post(
-            AppUrls.relatedProductsUrl,
-            data: {'mainProductId':event.productId});
-        RelatedProductResModel response =
-        RelatedProductResModel.fromJson(res);
-        debugPrint('product categories = ${response.data.length
-            .toString()}');
-        if (response.status == 200) {
-          List<ProductStockModel> productStockList =
-          state.productStockList.toList(growable: true);
-          productStockList.addAll(response.data.map(
-                  (Product) =>
-                  ProductStockModel(
-                    productId: Product.id ?? '',
-                    stock: Product.productStock ?? 0,
-                  )) ??
-              []);
+        if(event.productId != ''){
+          emit(state.copyWith(isRelatedShimmering:true));
+          final res = await DioClient(event.context).post(
+              AppUrls.relatedProductsUrl,
+              data: {'mainProductId':event.productId});
+          RelatedProductResModel response =
+          RelatedProductResModel.fromJson(res);
+          debugPrint('product categories = ${response.data.length
+              .toString()}');
+          if (response.status == 200) {
+            List<ProductStockModel> productStockList =
+            state.productStockList.toList(growable: true);
+            productStockList.addAll(response.data.map(
+                    (Product) =>
+                    ProductStockModel(
+                      productId: Product.id ?? '',
+                      stock: Product.productStock ?? 0,
+                    )) ??
+                []);
 
-          emit(state.copyWith(
-              relatedProductList:response.data ?? [],
-              isRelatedShimmering: false,productStockList: productStockList));
-        } else {
-          emit(state.copyWith(isRelatedShimmering: false));
-          CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppStrings.getLocalizedStrings(
-                response.message.toLocalization() ??
-                    response.message,
-                event.context),
-            type: SnackBarType.SUCCESS,
-          );
+            emit(state.copyWith(
+                relatedProductList:response.data ?? [],
+                isRelatedShimmering: false,productStockList: productStockList));
+          } else {
+            emit(state.copyWith(isRelatedShimmering: false));
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(
+                  response.message.toLocalization() ??
+                      response.message,
+                  event.context),
+              type: SnackBarType.SUCCESS,
+            );
+          }
         }
+
       }
       else if(event is _RemoveRelatedProductEvent){
         emit(state.copyWith(relatedProductList: []));

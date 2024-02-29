@@ -19,7 +19,6 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_product_details_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/company_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -30,7 +29,6 @@ import '../utils/themes/app_urls.dart';
 import '../widget/balance_indicator.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_product_button_widget.dart';
-import '../widget/common_product_details_button.dart';
 import '../widget/common_product_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
@@ -1128,7 +1126,7 @@ class HomeScreenWidget extends StatelessWidget {
           value: context.read<HomeBloc>(),
           child: DraggableScrollableSheet(
             expand: true,
-            maxChildSize: 1,
+            maxChildSize:  1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: AppConstants.bottomSheetInitHeight,
             //shouldCloseOnMinExtent: true,
@@ -1282,9 +1280,8 @@ class HomeScreenWidget extends StatelessWidget {
                                             context: context1));
                                   },
                                 ),
-                      bottomNavigationBar: state.isRelatedShimmering
-                          ? RelatedProductShimmerWidget()
-                          :
+                      bottomNavigationBar:state.productDetails.isEmpty ? 0.width : state.isRelatedShimmering
+                          ? RelatedProductShimmerWidget() :
                       Container(
                         height: 200,
                         padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
