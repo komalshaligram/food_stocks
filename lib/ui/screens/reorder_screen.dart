@@ -712,10 +712,16 @@ class ReorderScreenWidget extends StatelessWidget {
   builder: (context, state) {
     return DraggableScrollableSheet(
             expand: true,
-            maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-            minChildSize: 0.4,
-            initialChildSize:state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-            //shouldCloseOnMinExtent: true,
+      maxChildSize: 1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
+
+      minChildSize:  productStock == '0' ? 0.8 :  1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
+      initialChildSize:  productStock == '0' ? 0.8 :  1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocBuilder<ReorderBloc, ReorderState>(
@@ -881,9 +887,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                     context: context1));
                           }*/
                             ),
-                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width:state.isRelatedShimmering
-                          ? RelatedProductShimmerWidget()
-                          :
+                      bottomNavigationBar: state.isRelatedShimmering ? RelatedProductShimmerWidget() :
+                      state.relatedProductList.isEmpty ? 0.width :
                       Container(
                         height: 200,
                         padding: EdgeInsets.only(bottom:10,left: 10,right: 10),

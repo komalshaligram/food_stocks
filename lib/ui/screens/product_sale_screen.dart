@@ -157,6 +157,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                 .productSalesList[index].fromDate.toString(),
                                             endDate : state
                                                 .productSalesList[index].endDate.toString(),
+
                                           );
                                         }
                                         else{
@@ -207,7 +208,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
       {required BuildContext context,
         required String productId,
         required String startDate,
-        required String endDate
+        required String endDate,
+         String productStock = '0',
       }) async {
     context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductDetailsEvent(
         context: context, productId: productId));
@@ -227,9 +229,16 @@ class ProductSaleScreenWidget extends StatelessWidget {
   builder: (context, state) {
     return DraggableScrollableSheet(
             expand: true,
-            maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-            minChildSize: 0.4,
-            initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight: 1,
+      maxChildSize: 1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
+
+      minChildSize:  productStock == '0' ? 0.8 :  1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
+      initialChildSize:  productStock == '0' ? 0.8 :  1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
             builder:
                 (BuildContext context1, ScrollController scrollController) {
                   return Container(
@@ -355,9 +364,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
 
                               },
                             ),
-                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width:state.isRelatedShimmering
-                          ? RelatedProductShimmerWidget()
-                          :
+                      bottomNavigationBar: state.isRelatedShimmering ? RelatedProductShimmerWidget() :
+                      state.relatedProductList.isEmpty ? 0.width :
                       Container(
                         height: 200,
                         padding: EdgeInsets.only(bottom:10,left: 10,right: 10),

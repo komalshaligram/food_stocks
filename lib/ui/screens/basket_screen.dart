@@ -862,11 +862,11 @@ class BasketScreenWidget extends StatelessWidget {
                  maxChildSize: 1 -
                      (MediaQuery.of(context).viewPadding.top /
                          getScreenHeight(context)),
-                 //maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-                 minChildSize: 1 -
+
+                 minChildSize:  1 -
                      (MediaQuery.of(context).viewPadding.top /
                          getScreenHeight(context)),
-                 initialChildSize: 1 -
+                 initialChildSize:   1 -
                      (MediaQuery.of(context).viewPadding.top /
                          getScreenHeight(context)),
             builder:
