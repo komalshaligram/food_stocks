@@ -670,6 +670,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             )),
                       )
                           : CommonProductDetailsWidget(
+                        qrCode:state.productDetails.first.qrcode ?? '' ,
                         isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                         isLoading: state.isLoading,
                         addToOrderTap: state.isLoading

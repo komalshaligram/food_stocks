@@ -838,9 +838,6 @@ class BasketScreenWidget extends StatelessWidget {
       {required BuildContext context,
         required String cartProductId,
       }) async {
-/*    context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(
-        context: context,
-    ));*/
     context.read<BasketBloc>().add(BasketEvent.getProductDetailsEvent(
       productId: cartProductId,
        isBarcode: false,
@@ -859,13 +856,12 @@ class BasketScreenWidget extends StatelessWidget {
         return BlocProvider.value(
           value: context.read<BasketBloc>(),
           child: BlocBuilder<BasketBloc, BasketState>(
-  builder: (context, state) {
-    return DraggableScrollableSheet(
+           builder: (context, state) {
+               return DraggableScrollableSheet(
             expand: true,
             maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight: 1,
             minChildSize: 0.4,
             initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-            //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
                   return Container(
@@ -891,6 +887,7 @@ class BasketScreenWidget extends StatelessWidget {
                             )),
                       )
                           : CommonProductDetailsWidget(
+                        qrCode:state.productDetails.first.qrcode ?? '' ,
                         isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                         addToOrderTap: () {
                           context.read<BasketBloc>().add(
@@ -915,7 +912,6 @@ class BasketScreenWidget extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-
                                   GestureDetector(
                                       onTap: (){
                                         Navigator.pop(context);
@@ -1014,14 +1010,19 @@ class BasketScreenWidget extends StatelessWidget {
                                   context: context1));
                         },
                         onQuantityDecreaseTap: () {
-                          context.read<BasketBloc>().add(
-                              BasketEvent.decreaseQuantityOfProduct(
-                                  context: context1));
+                          if(state
+                              .productStockList[
+                          state.productStockUpdateIndex]
+                              .quantity > 1){
+                            context.read<BasketBloc>().add(
+                                BasketEvent.decreaseQuantityOfProduct(
+                                    context: context1));
+                          }
+
                         },
                       ),
-                      bottomNavigationBar: state.isRelatedShimmering
-                          ? RelatedProductShimmerWidget()
-                          :
+                      bottomNavigationBar: state.isRelatedShimmering ? RelatedProductShimmerWidget() :
+                          state.relatedProductList.isEmpty ? 0.width :
                       Container(
                         height: 200,
                         padding: EdgeInsets.only(bottom:10,left: 10,right: 10),

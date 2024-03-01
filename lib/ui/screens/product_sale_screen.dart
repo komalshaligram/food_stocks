@@ -245,6 +245,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                       body: state.isProductLoading
                           ? ProductDetailsShimmerWidget()
                           : CommonProductDetailsWidget(
+                        qrCode:state.productDetails.first.qrcode ?? '' ,
                         isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                         isLoading: state.isLoading,
                         addToOrderTap: () {
@@ -341,10 +342,17 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     context: context1));
                           },
                           onQuantityDecreaseTap: () {
-                            context.read<ProductSaleBloc>().add(
-                                ProductSaleEvent
-                                        .decreaseQuantityOfProduct(
-                                            context: context1));
+
+                            if(state
+                                .productStockList[
+                            state.productStockUpdateIndex]
+                                .quantity > 1){
+                              context.read<ProductSaleBloc>().add(
+                                  ProductSaleEvent
+                                      .decreaseQuantityOfProduct(
+                                      context: context1));
+                            }
+
                               },
                             ),
                       bottomNavigationBar: state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width:state.isRelatedShimmering

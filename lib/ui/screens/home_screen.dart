@@ -29,6 +29,7 @@ import '../utils/themes/app_urls.dart';
 import '../widget/balance_indicator.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_product_button_widget.dart';
+import '../widget/common_product_details_button.dart';
 import '../widget/common_product_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
@@ -1129,9 +1130,8 @@ class HomeScreenWidget extends StatelessWidget {
     return DraggableScrollableSheet(
             expand: true,
             maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-            minChildSize: 0.4,
+            minChildSize: 0.6,
             initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-            //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
                   return Container(
@@ -1157,6 +1157,7 @@ class HomeScreenWidget extends StatelessWidget {
                                       )),
                                 )
                               : CommonProductDetailsWidget(
+                        qrCode:state.productDetails.first.qrcode ?? '' ,
                         isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                         addToOrderTap: () {
                           context.read<HomeBloc>().add(
@@ -1276,12 +1277,19 @@ class HomeScreenWidget extends StatelessWidget {
                                             context: context1));
                                   },
                                   onQuantityDecreaseTap: () {
-                                    context.read<HomeBloc>().add(
-                                        HomeEvent.decreaseQuantityOfProduct(
-                                            context: context1));
+                          if(state
+                              .productStockList[
+                          state.productStockUpdateIndex]
+                              .quantity > 1){
+                            context.read<HomeBloc>().add(
+                                HomeEvent.decreaseQuantityOfProduct(
+                                    context: context1));
+                          }
                                   },
                                 ),
-                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width : state.isRelatedShimmering
+
+                      bottomNavigationBar:
+                      state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width : state.isRelatedShimmering
                           ? RelatedProductShimmerWidget() :
                       Container(
                         height: 200,
@@ -1292,23 +1300,26 @@ class HomeScreenWidget extends StatelessWidget {
                           itemBuilder: (context,i){
                             return CommonProductItemWidget(
                               productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
-                            width: 140,
-                            productImage:state.relatedProductList[i].mainImage??'',
-                            productName: state.relatedProductList.elementAt(i).productName??'',
-                            totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
-                            price:state.relatedProductList.elementAt(i).productPrice??0.0,
-                            onButtonTap: () {
-                              Navigator.of(context1).pop();
-                                  showProductDetails(
-                                      context: context,
-                                      productId: state
-                                          .relatedProductList[i].id,
-                                      isBarcode: false,
-                                      productStock: (state.relatedProductList[i].productStock.toString() ?? '')
-                                  );
-                            },
-                          );},itemCount: state.relatedProductList.length,),
-                      ),
+                              width: 140,
+                              productImage:state.relatedProductList[i].mainImage??'',
+                              productName: state.relatedProductList.elementAt(i).productName??'',
+                              totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
+                              price:state.relatedProductList.elementAt(i).productPrice??0.0,
+                              onButtonTap: () {
+                                Navigator.of(context1).pop();
+                                showProductDetails(
+                                    context: context,
+                                    productId: state
+                                        .relatedProductList[i].id,
+                                    isBarcode: false,
+                                    productStock: (state.relatedProductList[i].productStock.toString() ?? '')
+                                );
+                              },
+                            );},itemCount: state.relatedProductList.length,),
+                      )
+
+
+
                     ),
                   );
             },
