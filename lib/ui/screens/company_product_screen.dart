@@ -760,6 +760,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                             )),
                       )
                           : CommonProductDetailsWidget(
+                        qrCode:state.productDetails.first.qrcode ?? '' ,
                         isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                         isLoading: state.isLoading,
                         addToOrderTap: () {
@@ -874,10 +875,16 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                     context: context1));
                           },
                           onQuantityDecreaseTap: () {
-                            context.read<CompanyProductsBloc>().add(
-                                CompanyProductsEvent
-                                    .decreaseQuantityOfProduct(
-                                            context: context1));
+                            if(state
+                                .productStockList[
+                            state.productStockUpdateIndex]
+                                .quantity > 1){
+                              context.read<CompanyProductsBloc>().add(
+                                  CompanyProductsEvent
+                                      .decreaseQuantityOfProduct(
+                                      context: context1));
+                            }
+
                               },
                             ),
                       bottomNavigationBar: state.productDetails.isEmpty ? 0.width: state.relatedProductList.isEmpty ? 0.width :state.isRelatedShimmering

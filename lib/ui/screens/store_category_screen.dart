@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -598,6 +599,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           });
                     },
                     onSearchTap: () {
+                      print('search');
                       bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(
                           isOpened: true));
                     },
@@ -796,13 +798,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     required BuildContext context,
     required String searchName,
     required String searchImage,
-    required bool isMoreResults,
     required SearchTypes searchType,
     required bool isShowSearchLabel,
+    required bool isMoreResults,
     required void Function() onTap,
     required void Function() onSeeAllTap,
-    required int productStock,
-    bool? isLastItem,
+    bool? isLastItem, required int productStock,
     bool isGuestUser = false,
     required int numberOfUnits,
     required double priceOfBox,
@@ -825,18 +826,23 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               Text(
                 searchType == SearchTypes.category
                     ? AppLocalizations.of(context)!.categories
+                    : searchType == SearchTypes.subCategory
+                    ? AppLocalizations.of(context)!.sub_categories
                     : searchType == SearchTypes.company
                     ? AppLocalizations.of(context)!.companies
                     : searchType == SearchTypes.sale
                     ? AppLocalizations.of(context)!.sales
                     : searchType == SearchTypes.supplier
-                    ? AppLocalizations.of(context)!.suppliers
-                    : AppLocalizations.of(context)!.products,
+                    ? AppLocalizations.of(context)!
+                    .suppliers
+                    : AppLocalizations.of(context)!
+                    .products,
                 style: AppStyles.rkBoldTextStyle(
                     size: AppConstants.smallFont,
                     color: AppColors.blackColor,
                     fontWeight: FontWeight.w500),
               ),
+
               isMoreResults
                   ? GestureDetector(
                 onTap: onSeeAllTap,
@@ -855,7 +861,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != 0 ? 80 : 90,
+            height:  (productStock) != 0 ? 80 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :90,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -864,46 +870,51 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         : BorderSide(
                         color: AppColors.borderColor.withOpacity(0.5),
                         width: 1))),
-            padding: EdgeInsets.symmetric(
-                horizontal: AppConstants.padding_20,
-                vertical: AppConstants.padding_5),
+            padding: EdgeInsets.only(
+                top: AppConstants.padding_5,
+                left: AppConstants.padding_20,
+                right: AppConstants.padding_20,
+                bottom: AppConstants.padding_5),
+            // padding: EdgeInsets.symmetric(
+            //     horizontal: AppConstants.padding_20,
+            //     vertical: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment:searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? MainAxisAlignment.start: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  height: 60,
-                  width: 50,
-                  child: !isGuestUser
-                      ? Image.network(
+                  height: 80,
+                  width: 70,
+                  child: !isGuestUser?  Image.network(
                     '${AppUrls.baseFileUrl}$searchImage',
                     fit: BoxFit.scaleDown,
-                    height: 60,
-                    width: 50,
+                    height: 80,
+                    width: 70,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) {
                         return child;
                       } else {
-                        return CommonShimmerWidget(
-                            child: Container(
-                              height: 60,
-                              width: 50,
-                              color: AppColors.whiteColor,
-                            ));
+                        return Container(
+                            height: 80,
+                            width: 70,
+                            child: CupertinoActivityIndicator());
                       }
                     },
                     errorBuilder: (context, error, stackTrace) {
-                      return SvgPicture.asset(
+                      return searchType == SearchTypes.subCategory
+                          ? Image.asset(AppImagePath.imageNotAvailable5,
+                          height: 80,
+                          width: 70, fit: BoxFit.cover)
+                          : SvgPicture.asset(
                         AppImagePath.splashLogo,
                         fit: BoxFit.scaleDown,
-                        height: 60,
-                        width: 50,
+                        height: 80,
+                        width: 70,
                       );
                     },
-                  )
-                      : Image.asset(AppImagePath.imageNotAvailable5,
-                      fit: BoxFit.cover, height: 60,
-                    width: 50,),
+                  ) : Image.asset(AppImagePath.imageNotAvailable5,
+                    fit: BoxFit.cover, height: 80,
+                    width: 70,),
                 ),
                 10.width,
                 Column(
@@ -913,17 +924,19 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     Text(
                       searchName,
                       style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_12,
-                        color: AppColors.blackColor,
+                          size: AppConstants.font_14,
+                          color: AppColors.blackColor,
+                          fontWeight: FontWeight.bold
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      // overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
+                    searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? 0.width :
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          width: 200,
+                          width: getScreenWidth(context) * 0.45,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -968,6 +981,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     ),
                   ],
                 ),
+
               ],
             ),
           ),
@@ -975,6 +989,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       ],
     );
   }
+
 
   Widget buildPlanoGramTitles(
       {required BuildContext context,
@@ -1204,8 +1219,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     return DraggableScrollableSheet(
           expand: true,
           maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-          minChildSize: 0.4,
-          initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
+          minChildSize: 0.5,
+          initialChildSize:  state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
           //shouldCloseOnMinExtent: true,
           builder: (BuildContext context1, ScrollController scrollController) {
                 return Container(
@@ -1231,6 +1246,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           )),
                     )
                         : CommonProductDetailsWidget(
+                      qrCode:state.productDetails.first.qrcode ?? '' ,
                       isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                       isLoading: state.isLoading,
                       addToOrderTap: state.isLoading
@@ -1371,10 +1387,17 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 context: context1));
                       },
                       onQuantityDecreaseTap: () {
-                        context.read<StoreCategoryBloc>().add(
-                            StoreCategoryEvent
-                                .decreaseQuantityOfProduct(
-                                context: context1));
+                        if(state
+                            .productStockList[
+                        state.planoGramUpdateIndex]
+                        [state.productStockUpdateIndex]
+                            .quantity > 1){
+                          context.read<StoreCategoryBloc>().add(
+                              StoreCategoryEvent
+                                  .decreaseQuantityOfProduct(
+                                  context: context1));
+                        }
+
                       },
                     ),
                     bottomNavigationBar: state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width:state.isRelatedShimmering

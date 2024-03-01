@@ -779,6 +779,7 @@ class ReorderScreenWidget extends StatelessWidget {
                   ):
               
                       CommonProductDetailsWidget(
+                        qrCode:state.productDetails.first.qrcode ?? '' ,
                         isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                         isLoading: state.isLoading,
                         addToOrderTap: (){
@@ -894,9 +895,15 @@ class ReorderScreenWidget extends StatelessWidget {
                                         context: context1));
                               },
                               onQuantityDecreaseTap: () {
-                                context.read<ReorderBloc>().add(
-                                    ReorderEvent.decreaseQuantityOfProduct(
-                                        context: context1));
+                                if(state
+                                    .productStockList[
+                                state.productStockUpdateIndex]
+                                    .quantity > 1){
+                                  context.read<ReorderBloc>().add(
+                                      ReorderEvent.decreaseQuantityOfProduct(
+                                          context: context1));
+                                }
+
                               },
               
                               // isLoading: state.isLoading,

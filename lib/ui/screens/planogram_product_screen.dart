@@ -581,6 +581,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         )),
                   )
                       : CommonProductDetailsWidget(
+                    qrCode:state.productDetails.first.qrcode ?? '' ,
                     isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                     addToOrderTap: () {
                       context
@@ -688,10 +689,16 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                 context: context1));
                       },
                       onQuantityDecreaseTap: () {
-                        bloc.add(
-                            PlanogramProductEvent
-                                .decreaseQuantityOfProduct(
-                                        context: context1));
+                        if(state
+                            .productStockList[
+                        state.productStockUpdateIndex]
+                            .quantity > 1){
+                          bloc.add(
+                              PlanogramProductEvent
+                                  .decreaseQuantityOfProduct(
+                                  context: context1));
+                        }
+
                           },
                         ),
                   bottomNavigationBar: state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width :state.isRelatedShimmering
