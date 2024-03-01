@@ -1196,8 +1196,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       ),
     );
   }
-/*
-  void showProductDetails(
+
+/*  void showProductDetails(
       {required BuildContext context,
         required String productId,
         required int planoGramIndex,
@@ -1435,7 +1435,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               Navigator.of(context1).pop();
                               showProductDetails(
                                 planoGramIndex: 3,
-                                  context: context1,
+                                  context: context,
                                   productId: state
                                       .relatedProductList[i].id,
                                   isBarcode: false,
@@ -1463,12 +1463,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     String productStock  = '0',
     bool isBarcode = false
   }) async {
-    context.read<StoreCategoryBloc>().add(StoreCategoryEvent.getProductDetailsEvent(
-        context: context,
-        productId: productId,
-        planoGramIndex: planoGramIndex,
-        isBarcode: isBarcode
-    ));
+    context.read<StoreCategoryBloc>().add(
+        StoreCategoryEvent.getProductDetailsEvent(
+            context: context,
+            productId: productId,
+            planoGramIndex: planoGramIndex,
+            isBarcode: isBarcode));
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1696,7 +1696,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   Navigator.pop(context1);
                                   showProductDetails(
                                       planoGramIndex: 3,
-                                      context: context1,
+                                      context: context,
                                       productId: state
                                           .relatedProductList[i].id,
                                       isBarcode: false,
