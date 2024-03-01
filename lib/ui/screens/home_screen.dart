@@ -1016,7 +1016,6 @@ class HomeScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        print('height____${getScreenHeight(context)}');
         return BlocProvider.value(
           value: context.read<HomeBloc>(),
           child: BlocBuilder<HomeBloc, HomeState>(
