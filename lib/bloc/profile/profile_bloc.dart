@@ -10,7 +10,6 @@ import 'package:food_stock/data/model/res_model/profile_details_res_model/profil
     as resGet;
 import 'package:food_stock/data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart'
     as reqUpdate;
-import 'package:food_stock/data/services/locale_provider.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';

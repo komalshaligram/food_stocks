@@ -4,8 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/req_model/update_cart/update_cart_req_model.dart';
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
@@ -124,42 +122,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
           } on ServerException {} catch (e) {}
         }
-        else if (event is _GetProductSalesListEvent) {
-          try {
-            emit(state.copyWith(isProductSaleShimmering: true));
-            final res = await DioClient(event.context).post(
-                AppUrls.getSaleProductsUrl,
-                data: ProductSalesReqModel(
-                    pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
-                    .toJson());
-            ProductSalesResModel response = ProductSalesResModel.fromJson(res);
-            if (response.status == 200) {
-              List<ProductSale> saleProductsList =
-                  response.data?.toList(growable: true) ?? [];
-              saleProductsList.map((sale) => debugPrint('${sale.endDate}'));
-              // saleProductsList.removeWhere(
-              //     (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
-              debugPrint('sale Products = ${saleProductsList.length}');
-              debugPrint('sale Products = ${response.data?.length}');
-              List<ProductStockModel> productStockList = [];
-              productStockList.addAll(response.data?.map((saleProduct) =>
-                  ProductStockModel(
-                      productId: saleProduct.id ?? '',
-                      stock: int.parse(saleProduct.numberOfUnit ?? '0'))) ??
-                  []);
-              debugPrint('stock list len = ${productStockList.length}');
-              emit(state.copyWith(
-                  productSalesList: response.data ?? [],
-                  productStockList: productStockList,
-                  isProductSaleShimmering: false));
-            } else {
-
-            }
-          } on ServerException {
-            emit(state.copyWith(isProductSaleShimmering: false));
-          }
-        }
-
         else if (event is _GetProductDetailsEvent) {
           add(HomeEvent.RemoveRelatedProductEvent());
           debugPrint('product details id = ${event.productId}');
@@ -195,7 +157,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   .copyWith(
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
-                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
+                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0"),
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',
@@ -236,7 +198,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 add(HomeEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
               }
 
-              if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
+              if ((event.isBarcode )) {
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: false);
                 productStockList[productStockList
@@ -245,7 +207,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     .copyWith(
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '',
-                  stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
+                  stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0"),
                   productSaleId: '',
                   productSupplierIds: '',
                   note: '',
@@ -1161,8 +1123,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       image: supplier.mainImage ?? '',
                       productStock: int.parse(
                           supplier.productStock ?? 0.toString()),
-                    numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ?? 0,
-                    priceOfBox: double.parse(supplier.productPrice.toString()) ?? 0,
+                    numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
+                    priceOfBox: double.parse(supplier.productPrice.toString()),
                   ))
                   .toList() ??
                   []);
@@ -1172,12 +1134,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   search: state.searchController.text,
                   isSearching: false));
             } else {
-              // emit(state.copyWith(searchList: []));
               emit(state.copyWith(isSearching: false));
-              // CustomSnackBar.showSnackBar(
-              //     context: event.context,
-              //     title: response.message ?? AppStrings.somethingWrongString,
-              //     type: SnackBarType.SUCCESS);
             }
           } on ServerException {
             CustomSnackBar.showSnackBar(
@@ -1290,12 +1247,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               productStockList.addAll(response.data.map(
                       (Product) =>
                       ProductStockModel(
-                        productId: Product.id ?? '',
-                        stock: Product.productStock ?? 0,
-                      )) ??
-                  []);
+                        productId: Product.id ,
+                        stock: Product.productStock ,
+                      )) );
               emit(state.copyWith(
-                  relatedProductList:response.data ?? [],
+                  relatedProductList:response.data ,
                   isRelatedShimmering: false,productStockList: productStockList));
               print('relatedProductList___${state.relatedProductList.length}');
             } else {
@@ -1303,8 +1259,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message.toLocalization() ??
-                        response.message,
+                    response.message.toLocalization(),
                     event.context),
                 type: SnackBarType.SUCCESS,
               );

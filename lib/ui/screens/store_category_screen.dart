@@ -25,7 +25,6 @@ import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart'
 import '../../data/model/search_model/search_model.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_product_button_widget.dart';
-import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_item_widget.dart';
 import '../widget/common_product_list_widget.dart';
@@ -532,8 +531,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                         '0',
                                                       isGuestUser: state
                                                           .isGuestUser,
-                                                      productStock: double.parse(state.planogramProductList[index].product!.productStock.toString())??
-                                                          0,
+                                                      productStock: double.parse(state.planogramProductList[index].product!.productStock.toString()),
                                                       productImage: state.planogramProductList[index].product?.mainImage ??
                                                           '',
                                                       productName: state.planogramProductList[index].product?.productName ??
@@ -717,7 +715,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         !state.isGuestUser)
                                     ? showProductDetails(
                                     context: context,
-                                    productStock: state.searchList[index].productStock.toString()??'0',
+                                    productStock: state.searchList[index].productStock.toString(),
                                     productId: state
                                         .searchList[index].searchId,
                                     planoGramIndex: 0,
@@ -861,7 +859,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height:  (productStock) != 0 ? 80 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :90,
+            height:  (productStock) != 0 ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -884,52 +882,61 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               children: [
                 Container(
                   height: 80,
-                  width: 70,
-                  child: !isGuestUser?  Image.network(
-                    '${AppUrls.baseFileUrl}$searchImage',
-                    fit: BoxFit.scaleDown,
-                    height: 80,
-                    width: 70,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return Container(
+                  width: 80,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20)
+                  ),
+                  child: !isGuestUser ?  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      '${AppUrls.baseFileUrl}$searchImage',
+                      fit: BoxFit.fill,
+                      height: 80,
+                      width: 80,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return Container(
+                              height: 80,
+                              width: 70,
+                              child: CupertinoActivityIndicator());
+                        }
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return searchType == SearchTypes.subCategory
+                            ? Image.asset(AppImagePath.imageNotAvailable5,
                             height: 80,
-                            width: 70,
-                            child: CupertinoActivityIndicator());
-                      }
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return searchType == SearchTypes.subCategory
-                          ? Image.asset(AppImagePath.imageNotAvailable5,
+                            width: 70, fit: BoxFit.cover)
+                            : SvgPicture.asset(
+                          AppImagePath.splashLogo,
+                          fit: BoxFit.scaleDown,
                           height: 80,
-                          width: 70, fit: BoxFit.cover)
-                          : SvgPicture.asset(
-                        AppImagePath.splashLogo,
-                        fit: BoxFit.scaleDown,
-                        height: 80,
-                        width: 70,
-                      );
-                    },
+                          width: 70,
+                        );
+                      },
+                    ),
                   ) : Image.asset(AppImagePath.imageNotAvailable5,
                     fit: BoxFit.cover, height: 80,
                     width: 70,),
                 ),
                 10.width,
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      searchName,
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_14,
-                          color: AppColors.blackColor,
-                          fontWeight: FontWeight.bold
+                    Container(
+                      width: getScreenWidth(context) * 0.45,
+                      child: Text(
+                        searchName,
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.font_14,
+                            color: AppColors.blackColor,
+                            fontWeight: FontWeight.bold
+                        ),
+                        // overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
                       ),
-                      // overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
                     ),
                     searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? 0.width :
                     Row(
@@ -1339,7 +1346,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           0.0,
                       productStock: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock != 0 ?
                       int.parse(state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock.toString()):
-                      int.parse(productStock.toString() ?? '0') ,
+                      int.parse(productStock.toString()) ,
                       productUnitPrice:
                       state
                           .productStockList[
@@ -1399,12 +1406,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (context,i){
                           return CommonProductItemWidget(
-                            productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
+                            productStock:state.relatedProductList.elementAt(i).productStock.toString(),
                             width: 140,
-                            productImage:state.relatedProductList[i].mainImage??'',
-                            productName: state.relatedProductList.elementAt(i).productName??'',
-                            totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
-                            price:state.relatedProductList.elementAt(i).productPrice??0.0,
+                            productImage:state.relatedProductList[i].mainImage,
+                            productName: state.relatedProductList.elementAt(i).productName,
+                            totalSaleCount: state.relatedProductList.elementAt(i).totalSale,
+                            price:state.relatedProductList.elementAt(i).productPrice,
                             onButtonTap: () {
                               Navigator.of(context1).pop();
                               showProductDetails(
@@ -1413,7 +1420,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   productId: state
                                       .relatedProductList[i].id,
                                   isBarcode: false,
-                                  productStock: (state.relatedProductList[i].productStock.toString() ?? '')
+                                  productStock: (state.relatedProductList[i].productStock.toString() )
                               );
                             },
                           );},itemCount: state.relatedProductList.length,),

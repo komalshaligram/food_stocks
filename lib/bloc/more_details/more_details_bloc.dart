@@ -45,7 +45,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
     on<MoreDetailsEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
       String city = '';
       if (event is _getProfileModelEvent) {
         profileModel = event.profileModel;

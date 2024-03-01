@@ -31,7 +31,6 @@ part 'product_details_bloc.freezed.dart';
 class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
-  int _productQuantity = 0;
   ProductDetailsBloc() : super(ProductDetailsState.initial()) {
     on<ProductDetailsEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
@@ -263,10 +262,6 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
 
       else if (event is _duplicateButtonEvent) {
         add(ProductDetailsEvent.getAllCartEvent(context: event.context));
-
-        List<ProductStockModel> productStockList =
-        state.productStockList.toList(growable: true);
-
         List<InsertCartModel.Product> insertList = [];
         List<InsertCartModel.Product> updateList = [];
 
