@@ -231,8 +231,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                           productStock: state
                                                   .recommendationProductsList[
                                                       index]
-                                                  .productStock.toString() ??
-                                              '0',
+                                                  .productStock.toString(),
                                           productImage: state
                                                   .recommendationProductsList[
                                                       index]
@@ -870,12 +869,12 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                           shrinkWrap: true,
                           itemBuilder: (context,i){
                             return CommonProductItemWidget(
-                              productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
+                              productStock:state.relatedProductList.elementAt(i).productStock.toString(),
                               width: 140,
-                              productImage:state.relatedProductList[i].mainImage??'',
-                              productName: state.relatedProductList.elementAt(i).productName??'',
-                              totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
-                              price:state.relatedProductList.elementAt(i).productPrice??0.0,
+                              productImage:state.relatedProductList[i].mainImage,
+                              productName: state.relatedProductList.elementAt(i).productName,
+                              totalSaleCount: state.relatedProductList.elementAt(i).totalSale,
+                              price:state.relatedProductList.elementAt(i).productPrice,
                               onButtonTap: () {
                                 Navigator.of(context1).pop();
                                 showProductDetails(

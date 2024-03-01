@@ -101,7 +101,7 @@ class PlanogramProductBloc
                 .copyWith(
               quantity: _productQuantity,
               productId: response.product?.first.id ?? '',
-              stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
+              stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ,
               productSaleId: '',
               productSupplierIds: '',
               note: '',
@@ -152,7 +152,7 @@ class PlanogramProductBloc
                   .copyWith(
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
-                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
+                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ,
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',
@@ -980,7 +980,7 @@ class PlanogramProductBloc
                   searchId: sale.id ?? '',
                   name: sale.productName ?? '',
                   searchType: SearchTypes.sale,
-                  numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
+                  numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                   image: sale.mainImage ?? '',
 
                 ))
@@ -996,8 +996,8 @@ class PlanogramProductBloc
                     image: supplier.mainImage ?? '',
                     productStock: int.parse(
                         supplier.productStock ?? 0.toString()),
-                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ?? 0,
-                  priceOfBox: double.parse(supplier.productPrice.toString()) ?? 0,
+                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
+                  priceOfBox: double.parse(supplier.productPrice.toString()) ,
                 ))
                 .toList() ??
                 []);
@@ -1103,13 +1103,13 @@ class PlanogramProductBloc
           productStockList.addAll(response.data.map(
                   (Product) =>
                   ProductStockModel(
-                    productId: Product.id ?? '',
-                    stock: Product.productStock ?? 0,
+                    productId: Product.id,
+                    stock: Product.productStock ,
                   )) ??
               []);
 
           emit(state.copyWith(
-              relatedProductList:response.data ?? [],
+              relatedProductList:response.data ,
               isRelatedShimmering: false,productStockList: productStockList));
         } else {
           emit(state.copyWith(isRelatedShimmering: false));

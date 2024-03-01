@@ -265,7 +265,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                             height:   160,
                                             width:  140,
                                               imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
-                                              productStock: state.productList[index].productStock.toString() ?? '0',
+                                              productStock: state.productList[index].productStock.toString(),
                                                 productImage: state.productList[index]
                                                         .mainImage ??
                                                     '',
@@ -285,7 +285,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                       productId: state
                                                               .productList[index]
                                                               .id ?? '',
-                                                    productStock: state.productList[index].productStock.toString() ?? '0',
+                                                    productStock: state.productList[index].productStock.toString(),
 
                                                   );
                                                 }),
@@ -844,7 +844,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                             .totalPrice:  double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
                         productStock:state.productStockList[state.productStockUpdateIndex].stock != 0 ?
                         int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
-                        int.parse(productStock.toString() ?? '0'),
+                        int.parse(productStock.toString()),
                           isRTL: context.rtl,
                           isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                           scrollController: scrollController,
@@ -886,12 +886,12 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                           shrinkWrap: true,
                           itemBuilder: (context,i){
                             return CommonProductItemWidget(
-                              productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
+                              productStock:state.relatedProductList.elementAt(i).productStock.toString(),
                               width: 140,
-                              productImage:state.relatedProductList[i].mainImage??'',
-                              productName: state.relatedProductList.elementAt(i).productName??'',
-                              totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
-                              price:state.relatedProductList.elementAt(i).productPrice??0.0,
+                              productImage:state.relatedProductList[i].mainImage,
+                              productName: state.relatedProductList.elementAt(i).productName,
+                              totalSaleCount: state.relatedProductList.elementAt(i).totalSale,
+                              price:state.relatedProductList.elementAt(i).productPrice,
                               onButtonTap: () {
                                 Navigator.of(context1).pop();
                                 showProductDetails(

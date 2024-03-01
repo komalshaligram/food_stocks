@@ -77,14 +77,14 @@ class AppConstants{
   static const double productGridAspectRatio = 9 / 13;
   static const double productGridAspectRatio1 = 8 / 13;
   static const double productGridAspectRatio2 = 7 / 13;
-  static const double saleProductAspectRatio = 8 / 13;
 
   //bottom nav space
   static const double bottomNavSpace = 30;
 
   //product details bottom sheet height
   static const double bottomSheetInitHeight = 1;
-  static const double bottomSheetMaxHeight = 0.7;
+  static const double bottomSheetMaxHeight =  0.75;
+  static const double bottomSheetMaxHeight1 =  0.7;
 
   //pagination
   static const int defaultPageLimit = 6;
