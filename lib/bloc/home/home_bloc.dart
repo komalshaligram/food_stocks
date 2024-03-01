@@ -195,7 +195,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 }
               } on ServerException {}
               if(response.product != null){
-                add(HomeEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
+                add(HomeEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
               }
 
               if ((event.isBarcode )) {
@@ -1232,6 +1232,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
 
         else if(event is _RelatedProductsEvent){
+          debugPrint('event.productId ;${event.productId }');
           if(event.productId != ''){
             emit(state.copyWith(isRelatedShimmering:true));
             final res = await DioClient(event.context).post(

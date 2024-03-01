@@ -1150,6 +1150,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             }
 
       else if(event is _RelatedProductsEvent){
+        debugPrint('event.productId${event.productId}');
         if(event.productId != ''){
           emit(state.copyWith(isRelatedShimmering:true));
           final res = await DioClient(event.context).post(
