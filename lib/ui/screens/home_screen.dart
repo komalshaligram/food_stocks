@@ -598,7 +598,6 @@ class HomeScreenWidget extends StatelessWidget {
                                   ],
                                 ),
                                 AppConstants.bottomNavSpace.height,
-
                                 //dashboard stats
 
                               ],
@@ -1021,10 +1020,13 @@ class HomeScreenWidget extends StatelessWidget {
           value: context.read<HomeBloc>(),
           child: BlocBuilder<HomeBloc, HomeState>(
   builder: (context, state) {
+
     return DraggableScrollableSheet(
             expand: true,
-            maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-            minChildSize: 0.6,
+        maxChildSize: 1 -
+            (MediaQuery.of(context).viewPadding.top /
+                getScreenHeight(context)),
+            minChildSize: 0.4 ,
             initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
@@ -1070,9 +1072,21 @@ class HomeScreenWidget extends StatelessWidget {
                                             Container(
                                               height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
                                               width: getScreenWidth(context),
-                                              child: PhotoView(
-                                                imageProvider: CachedNetworkImageProvider(
-                                                  '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                              child: GestureDetector(
+                                                onVerticalDragStart: (dragDetails) {
+                                                  print('onVerticalDragStart');
+                                                },
+                                                onVerticalDragUpdate: (dragDetails) {
+                                                  print('onVerticalDragUpdate');
+                                                },
+                                                onVerticalDragEnd: (endDetails) {
+                                                  print('onVerticalDragEnd');
+                                                  Navigator.pop(context);
+                                                },
+                                                child: PhotoView(
+                                                  imageProvider: CachedNetworkImageProvider(
+                                                    '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -1087,7 +1101,6 @@ class HomeScreenWidget extends StatelessWidget {
                                           ],
                                         );
                                       },);
-
                                 },
                                  isPreview: state.isPreview,
                                   context: context,

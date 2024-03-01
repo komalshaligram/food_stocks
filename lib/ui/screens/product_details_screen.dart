@@ -300,11 +300,11 @@ class _ProductDetailsScreenWidgetState
                                         ],
                                       ),
                                       15.height,
-                                      basketRow(state.language == AppStrings.englishString ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.orderData.bottleQuantities}' : '${AppLocalizations.of(context)!.bottle_deposit}${state.orderData.bottleQuantities}${'X'}', '${AppLocalizations.of(context)!.currency}${state.orderData.bottlePrice}'),
+                                      state.orderData.bottleQuantities!=0?basketRow(state.language == AppStrings.englishString ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.orderData.bottleQuantities}' : '${AppLocalizations.of(context)!.bottle_deposit}${state.orderData.bottleQuantities}${'X'}', '${AppLocalizations.of(context)!.currency}${state.orderData.bottlePrice}'):0.width,
                                       3.height,
                                       basketRow('${AppLocalizations.of(context)!.vat}', '${AppLocalizations.of(context)!.currency}${state.orderData.vatAmount}'),
                                       5.height,
-                                      basketRow('${AppLocalizations.of(context)!.refund}', '${AppLocalizations.of(context)!.currency}${state.orderData.totalRefundAmount}',color: AppColors.mainColor),
+                                      state.orderData.totalRefundAmount!=0.0?basketRow('${AppLocalizations.of(context)!.refund}', '${AppLocalizations.of(context)!.currency}${state.orderData.totalRefundAmount}',color: AppColors.mainColor):0.width,
                                       5.height,
                                       RichText(
                                         text: TextSpan(
@@ -317,7 +317,7 @@ class _ProductDetailsScreenWidgetState
                                           children: <TextSpan>[
                                             TextSpan(
                                                 text:
-                                                '${': '}${state.orderBySupplierProduct.supplierOrderNumber ?? '0'}',
+                                                '${': '}${widget.orderNumber ?? '0'}',
                                                 style: AppStyles
                                                     .rkRegularTextStyle(
                                                     color: AppColors
@@ -837,8 +837,13 @@ class _ProductDetailsScreenWidgetState
           maxChildSize: 1 -
               (MediaQuery.of(context).viewPadding.top /
                   getScreenHeight(context)),
-          minChildSize: 0.4,
-          initialChildSize: AppConstants.bottomSheetInitHeight,
+          //maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
+          minChildSize: 1 -
+              (MediaQuery.of(context).viewPadding.top /
+                  getScreenHeight(context)),
+          initialChildSize: 1 -
+              (MediaQuery.of(context).viewPadding.top /
+                  getScreenHeight(context)),
           //shouldCloseOnMinExtent: true,
           builder: (context, scrollController) {
             return BlocProvider(

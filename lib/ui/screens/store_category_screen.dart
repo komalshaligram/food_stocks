@@ -1225,9 +1225,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   builder: (context, state) {
     return DraggableScrollableSheet(
           expand: true,
-          maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-          minChildSize: 0.5,
-          initialChildSize:  state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
+      maxChildSize: 1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
+      //maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
+      minChildSize: 1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
+      initialChildSize: 1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
           //shouldCloseOnMinExtent: true,
           builder: (BuildContext context1, ScrollController scrollController) {
                 return Container(
@@ -1274,9 +1281,21 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 Container(
                                   height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
                                   width: getScreenWidth(context),
-                                  child: PhotoView(
-                                    imageProvider: CachedNetworkImageProvider(
-                                      '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                  child: GestureDetector(
+                                    onVerticalDragStart: (dragDetails) {
+                                      print('onVerticalDragStart');
+                                    },
+                                    onVerticalDragUpdate: (dragDetails) {
+                                      print('onVerticalDragUpdate');
+                                    },
+                                    onVerticalDragEnd: (endDetails) {
+                                      print('onVerticalDragEnd');
+                                      Navigator.pop(context);
+                                    },
+                                    child: PhotoView(
+                                      imageProvider: CachedNetworkImageProvider(
+                                        '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                      ),
                                     ),
                                   ),
                                 ),
