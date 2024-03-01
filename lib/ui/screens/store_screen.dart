@@ -1782,9 +1782,21 @@ class StoreScreenWidget extends StatelessWidget {
                                   Container(
                                     height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
                                     width: getScreenWidth(context),
-                                    child: PhotoView(
-                                      imageProvider: CachedNetworkImageProvider(
-                                        '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                    child: GestureDetector(
+                                      onVerticalDragStart: (dragDetails) {
+                                        print('onVerticalDragStart');
+                                      },
+                                      onVerticalDragUpdate: (dragDetails) {
+                                        print('onVerticalDragUpdate');
+                                      },
+                                      onVerticalDragEnd: (endDetails) {
+                                        print('onVerticalDragEnd');
+                                        Navigator.pop(context);
+                                      },
+                                      child: PhotoView(
+                                        imageProvider: CachedNetworkImageProvider(
+                                          '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                        ),
                                       ),
                                     ),
                                   ),

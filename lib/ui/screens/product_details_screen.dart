@@ -304,7 +304,7 @@ class _ProductDetailsScreenWidgetState
                                       3.height,
                                       basketRow('${AppLocalizations.of(context)!.vat}', '${AppLocalizations.of(context)!.currency}${state.orderData.vatAmount}'),
                                       5.height,
-                                      basketRow('${AppLocalizations.of(context)!.refund}', '${AppLocalizations.of(context)!.currency}${state.orderData.totalRefundAmount}',color: AppColors.mainColor),
+                                      state.orderData.totalRefundAmount!=0.0?basketRow('${AppLocalizations.of(context)!.refund}', '${AppLocalizations.of(context)!.currency}${state.orderData.totalRefundAmount}',color: AppColors.mainColor):0.width,
                                       5.height,
                                       RichText(
                                         text: TextSpan(
