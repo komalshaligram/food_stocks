@@ -173,7 +173,7 @@ class CompanyProductsBloc
                 .copyWith(
               quantity: _productQuantity,
               productId: response.product?.first.id ?? '',
-              stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
+              stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0"),
               productSaleId: '',
               productSupplierIds: '',
               note: '',
@@ -225,7 +225,7 @@ class CompanyProductsBloc
                   .copyWith(
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
-                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
+                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0"),
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',
@@ -857,7 +857,7 @@ class CompanyProductsBloc
                   searchId: sale.id ?? '',
                   name: sale.productName ?? '',
                   searchType: SearchTypes.sale,
-                  numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
+                  numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                   image: sale.mainImage ?? '',
 
                 ))
@@ -873,8 +873,8 @@ class CompanyProductsBloc
                     image: supplier.mainImage ?? '',
                     productStock: int.parse(
                         supplier.productStock ?? 0.toString()),
-                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ?? 0,
-                  priceOfBox: double.parse(supplier.productPrice.toString()) ?? 0,
+                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
+                  priceOfBox: double.parse(supplier.productPrice.toString()) ,
                 ))
                 .toList() ??
                 []);
@@ -884,12 +884,7 @@ class CompanyProductsBloc
                 search: state.searchController.text,
                 isSearching: false));
           } else {
-            // emit(state.copyWith(searchList: []));
             emit(state.copyWith(isSearching: false));
-            // CustomSnackBar.showSnackBar(
-            //     context: event.context,
-            //     title: response.message ?? AppStrings.somethingWrongString,
-            //     type: SnackBarType.SUCCESS);
           }
         } on ServerException {
           CustomSnackBar.showSnackBar(
@@ -981,13 +976,12 @@ class CompanyProductsBloc
           productStockList.addAll(response.data.map(
                   (Product) =>
                   ProductStockModel(
-                    productId: Product.id ?? '',
-                    stock: Product.productStock ?? 0,
-                  )) ??
-              []);
+                    productId: Product.id ,
+                    stock: Product.productStock ,
+                  )));
 
           emit(state.copyWith(
-              relatedProductList:response.data ?? [],
+              relatedProductList:response.data,
               isRelatedShimmering: false,productStockList: productStockList));
         } else {
           emit(state.copyWith(isRelatedShimmering: false));

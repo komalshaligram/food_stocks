@@ -26,7 +26,7 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_urls.dart';
-import '../../ui/widget/common_alert_dialog.dart';
+
 
 part 'wallet_event.dart';
 
@@ -40,7 +40,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       var date = new DateTime.now().toString();
-      var date1 = new DateTime.now();
       var dateParse = DateTime.parse(date.toString());
       DateTime firstDayCurrentMonth = DateTime.utc(DateTime.now().year, DateTime.now().month, 1);
 

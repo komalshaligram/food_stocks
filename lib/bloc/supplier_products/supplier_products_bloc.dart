@@ -331,7 +331,7 @@ class SupplierProductsBloc
                 productId: response.product?.first.id ?? '',
                 stock: int.parse(
                     response.product?.first.supplierSales!.first.productStock
-                        .toString() ?? "0") ?? 0,
+                        .toString() ?? "0"),
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',
@@ -1053,21 +1053,19 @@ class SupplierProductsBloc
             productStockList.addAll(response.data.map(
                     (Product) =>
                     ProductStockModel(
-                      productId: Product.id ?? '',
-                      stock: Product.productStock ?? 0,
-                    )) ??
-                []);
+                      productId: Product.id ,
+                      stock: Product.productStock,
+                    )) );
 
             emit(state.copyWith(
-                relatedProductList:response.data ?? [],
+                relatedProductList:response.data,
                 isRelatedShimmering: false,productStockList: productStockList));
           } else {
             emit(state.copyWith(isRelatedShimmering: false));
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.getLocalizedStrings(
-                  response.message.toLocalization() ??
-                      response.message,
+                  response.message.toLocalization(),
                   event.context),
               type: SnackBarType.SUCCESS,
             );

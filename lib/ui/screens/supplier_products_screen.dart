@@ -157,7 +157,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                               imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                               imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
                                             isGuestUser: state.isGuestUser,
-                                              productStock: state.productList[index].productStock.toString() ?? '0',
+                                              productStock: state.productList[index].productStock.toString(),
                                                       productImage: state
                                                               .productList[index]
                                                               .mainImage ??
@@ -169,8 +169,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                       totalSaleCount: 0,
                                                       price: double.parse(state
                                                               .productList[index]
-                                                              .productPrice.toString() ??
-                                                          "0.0"),
+                                                              .productPrice.toString()),
                                                       onButtonTap: () {
                                                if(!state.isGuestUser){
                                                  showProductDetails(
@@ -221,9 +220,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                   .productList[index]
                   .id ??
                   '',
-              productStock: state.productList[index].productStock.toString() ??
-                  '0',
-
+              productStock: state.productList[index].productStock.toString(),
             );
           }
                                         }, totalSaleCount: 0,),
@@ -259,7 +256,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                       }
                     },
                     onSearchSubmit: (String search) {
-                      //bloc.add(SupplierProductsEvent.globalSearchEvent(context: context));
                       Navigator.pushNamed(
                           context,
                           RouteDefine.supplierProductsScreen.name,
@@ -765,7 +761,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                               .itemsWeight?.toDouble() ?? 0.0,
                           productStock: state.productStockList[state.productStockUpdateIndex].stock != 0 ?
                           int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()):
-                          int.parse(productStock.toString() ?? '0'),
+                          int.parse(productStock.toString()),
                           isRTL: context.rtl,
                           isSupplierAvailable: state.productSupplierList
                               .isEmpty ? false : true,
@@ -803,19 +799,19 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           shrinkWrap: true,
                           itemBuilder: (context,i){
                             return CommonProductItemWidget(
-                              productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
+                              productStock:state.relatedProductList.elementAt(i).productStock.toString(),
                               width: 140,
                               productImage:state.relatedProductList[i].mainImage??'',
-                              productName: state.relatedProductList.elementAt(i).productName??'',
-                              totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
-                              price:state.relatedProductList.elementAt(i).productPrice??0.0,
+                              productName: state.relatedProductList.elementAt(i).productName,
+                              totalSaleCount: state.relatedProductList.elementAt(i).totalSale,
+                              price:state.relatedProductList.elementAt(i).productPrice,
                               onButtonTap: () {
                                 Navigator.of(context1).pop();
                                 showProductDetails(
                                     context: context1,
                                     productId: state.relatedProductList[i].id,
                                     isBarcode: false,
-                                    productStock: (state.relatedProductList[i].productStock.toString() ?? '')
+                                    productStock: (state.relatedProductList[i].productStock.toString() )
                                 );
                               },
                             );},itemCount: state.relatedProductList.length,),

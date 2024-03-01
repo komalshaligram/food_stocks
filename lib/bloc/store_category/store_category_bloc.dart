@@ -284,9 +284,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             planoGramsList.addAll(state.planoGramsList);
             List<PlanogramDatum> subPlanoGramList =
             state.subPlanoGramsList.toList(growable: true);
-            List<Planogramproduct> categoryPlanogramList =
-            state.categoryPlanogramList.toList(growable: true);
-
             if(isSubCategoryString == '' && !state.isSubCategory ){
               subPlanoGramList.addAll(response.data??[]);
               emit(state.copyWith(subPlanoGramsList: subPlanoGramList,));
@@ -421,7 +418,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               productStockUpdateIndex = planoGramIndex;
             }*/
 
-            if(event.isBarcode ?? false){
+            if(event.isBarcode ){
               productStockUpdateIndex = 0;
               print('responseproductid____${response.product?.first.id}');
               productStockList[0][0] =  productStockList[0][0]
@@ -441,15 +438,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             emit(state.copyWith(planoGramUpdateIndex:planoGramIndex,productStockUpdateIndex:productStockUpdateIndex));
             print('planoGramUpdateIndex___${state.planoGramUpdateIndex}');
             print('productStockUpdateIndex___${state.productStockUpdateIndex}');
-            // productStockList[productStockList.indexOf(productStockList.last)][0] = productStockList[
-            // productStockList.indexOf(productStockList.last)][0]
-            //     .copyWith(
-            //     quantity: _productQuantity,
-            //     productId: response.product?.first.id ?? '' ,
-            //     stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
-            // );
-            // emit(state.copyWith(productStockList: productStockList));
-
             try {
 
               final res = await DioClient(event.context).post(
@@ -1126,8 +1114,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 name: supplier.productName ?? '',
                 searchType: SearchTypes.product,
                 productStock:  int.parse(supplier.productStock ?? 0.toString()),
-                numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ?? 0,
-                priceOfBox: double.parse(supplier.productPrice.toString()) ?? 0,
+                numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
+                priceOfBox: double.parse(supplier.productPrice.toString()),
                 image: supplier.mainImage ?? '')).toList() ??
                 []);
             debugPrint('store cat search list = ${searchList.length}');
@@ -1136,12 +1124,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 // previousSearch: state.searchController.text,
                 isSearching: false));
           } else {
-            // emit(state.copyWith(searchList: []));
+
             emit(state.copyWith(isSearching: false));
-            // CustomSnackBar.showSnackBar(
-            //     context: event.context,
-            //     title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-            //     type: SnackBarType.SUCCESS);
+
           }
         } on ServerException {
           emit(state.copyWith(isSearching: false));
@@ -1333,9 +1318,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   (product) {
                 return ProductStockModel(
                     productId: product.id ?? '',
-                    stock: double.parse(product.productStock.toString() ?? '0').toInt() );
-              }) ?? []);
-        //  productStockList[4].addAll(stockList);
+                    stock: double.parse(product.productStock.toString()).toInt() );
+              }) );
           productStockList[3].addAll(stockList);
 
           emit(state.copyWith(
@@ -1346,8 +1330,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(
-                response.message.toLocalization() ??
-                    response.message,
+                response.message.toLocalization(),
                 event.context),
             type: SnackBarType.SUCCESS,
           );

@@ -236,8 +236,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                                       .previousOrderProductsList[
                                                           index]
                                                       .productStock
-                                                      .toString() ??
-                                                  '0',
+                                                      .toString() ,
                                               productImage: state
                                                       .previousOrderProductsList[
                                                           index]
@@ -270,45 +269,11 @@ class ReorderScreenWidget extends StatelessWidget {
                                                   productStock: state
                                                       .previousOrderProductsList[
                                                   index]
-                                                      .productStock.toString()??
-                                                      ''
+                                                      .productStock.toString()
                                                 );
                                               },
                                             ),
                                           )
-                                      // buildPreviousOrderProductItem(
-                                      //     context: context,
-                                      //     index: index,
-                                      //     totalSale: state
-                                      //             .previousOrderProductsList[
-                                      //                 index]
-                                      //             .totalSale ??
-                                      //         0,
-                                      //     productImage: state
-                                      //             .previousOrderProductsList[
-                                      //                 index]
-                                      //             .mainImage ??
-                                      //         '',
-                                      //     productName: state
-                                      //             .previousOrderProductsList[
-                                      //                 index]
-                                      //             .productName ??
-                                      //         '',
-                                      //     productPrice: state
-                                      //             .previousOrderProductsList[
-                                      //                 index]
-                                      //             .productPrice ??
-                                      //         0.0,
-                                      //     onPressed: () {
-                                      //       showProductDetails(
-                                      //           context: context,
-                                      //           productId: state
-                                      //                   .previousOrderProductsList[
-                                      //                       index]
-                                      //                   .id ??
-                                      //               '');
-                                      //     },
-                                      //     isRTL: context.rtl),
                                       ):
                           ListView.builder(
                             itemCount: state.previousOrderProductsList.length,
@@ -927,12 +892,12 @@ class ReorderScreenWidget extends StatelessWidget {
                           shrinkWrap: true,
                           itemBuilder: (context,i){
                             return CommonProductItemWidget(
-                              productStock:state.relatedProductList.elementAt(i).productStock.toString()??'0',
+                              productStock:state.relatedProductList.elementAt(i).productStock.toString(),
                               width: 140,
-                              productImage:state.relatedProductList[i].mainImage??'',
-                              productName: state.relatedProductList.elementAt(i).productName??'',
-                              totalSaleCount: state.relatedProductList.elementAt(i).totalSale??0,
-                              price:state.relatedProductList.elementAt(i).productPrice??0.0,
+                              productImage:state.relatedProductList[i].mainImage,
+                              productName: state.relatedProductList.elementAt(i).productName,
+                              totalSaleCount: state.relatedProductList.elementAt(i).totalSale,
+                              price:state.relatedProductList.elementAt(i).productPrice,
                               onButtonTap: () {
                                 Navigator.of(context1).pop();
                                 showProductDetails(
@@ -940,7 +905,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                     productId: state
                                         .relatedProductList[i].id,
                                     isBarcode: false,
-                                    productStock: (state.relatedProductList[i].productStock.toString() ?? '')
+                                    productStock: (state.relatedProductList[i].productStock.toString())
                                 );
                               },
                             );},itemCount: state.relatedProductList.length,),

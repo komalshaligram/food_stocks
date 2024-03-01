@@ -174,7 +174,7 @@ class RecommendationProductsBloc
                 .copyWith(
               quantity: _productQuantity,
               productId: response.product?.first.id ?? '',
-              stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
+              stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ,
               productSaleId: '',
               productSupplierIds: '',
               note: '',
@@ -217,7 +217,7 @@ class RecommendationProductsBloc
             if(response.product != null){
               add(RecommendationProductsEvent.RelatedProductsEvent(context: event.context, productId:state.productStockList[state.productStockList.length-1].productId));
             }
-            if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
+            if ( (event.isBarcode)) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
               productStockList[productStockList
@@ -226,7 +226,7 @@ class RecommendationProductsBloc
                   .copyWith(
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
-                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
+                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ,
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',
@@ -866,8 +866,8 @@ class RecommendationProductsBloc
                     image: supplier.mainImage ?? '',
                     productStock: int.parse(
                         supplier.productStock ?? 0.toString()),
-                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ?? 0,
-                  priceOfBox: double.parse(supplier.productPrice.toString()) ?? 0,
+                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
+                  priceOfBox: double.parse(supplier.productPrice.toString())
                 ))
                 .toList() ??
                 []);
@@ -973,21 +973,19 @@ class RecommendationProductsBloc
           productStockList.addAll(response.data.map(
                   (Product) =>
                   ProductStockModel(
-                    productId: Product.id ?? '',
-                    stock: Product.productStock ?? 0,
-                  )) ??
-              []);
+                    productId: Product.id ,
+                    stock: Product.productStock ,
+                  )));
 
           emit(state.copyWith(
-              relatedProductList:response.data ?? [],
+              relatedProductList:response.data ,
               isRelatedShimmering: false,productStockList: productStockList));
         } else {
           emit(state.copyWith(isRelatedShimmering: false));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(
-                response.message.toLocalization() ??
-                    response.message,
+                response.message.toLocalization(),
                 event.context),
             type: SnackBarType.SUCCESS,
           );
