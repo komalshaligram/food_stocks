@@ -1139,7 +1139,7 @@ class StoreScreenWidget extends StatelessWidget {
                 ),
                 10.width,
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
@@ -1730,11 +1730,11 @@ class StoreScreenWidget extends StatelessWidget {
       maxChildSize: 1 -
           (MediaQuery.of(context).viewPadding.top /
               getScreenHeight(context)),
-      //maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-      minChildSize: 1 -
+
+      minChildSize:  productStock == '0' ? 0.8 :  1 -
           (MediaQuery.of(context).viewPadding.top /
               getScreenHeight(context)),
-      initialChildSize: 1 -
+      initialChildSize:  productStock == '0' ? 0.8 :  1 -
           (MediaQuery.of(context).viewPadding.top /
               getScreenHeight(context)),
             //shouldCloseOnMinExtent: true,
@@ -1923,9 +1923,8 @@ class StoreScreenWidget extends StatelessWidget {
                                     context: context1));
                           }*/
                                 ),
-                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width :state.isRelatedShimmering
-                          ? RelatedProductShimmerWidget()
-                          :
+                      bottomNavigationBar:state.isRelatedShimmering ? RelatedProductShimmerWidget() :
+                      state.relatedProductList.isEmpty ? 0.width :
                       Container(
                         height: 200,
                         padding: EdgeInsets.only(bottom:10,left: 10,right: 10),

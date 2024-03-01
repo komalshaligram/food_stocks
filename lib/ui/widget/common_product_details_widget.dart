@@ -157,7 +157,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
               Expanded(
                 // fit: FlexFit.tight,
                 child: SingleChildScrollView(
-               //   physics: AlwaysScrollableScrollPhysics(),
+                  physics: AlwaysScrollableScrollPhysics(),
                  controller: scrollController,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
@@ -325,9 +325,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       ): 0.width,
                       10.height,*/
                      Column(
-                              mainAxisSize: MainAxisSize.max,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Container(
+
                                   decoration: BoxDecoration(
                                     border: Border(
                                       top: BorderSide(
@@ -336,288 +337,305 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           width: 1),
                                     ),
                                   ),
-                                  padding: EdgeInsets.fromLTRB(10,10,10,0),
+                                  padding: EdgeInsets.fromLTRB(10,10,20,0),
                                   child: productStock == 0 || productStock == -1
-                                      ? Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              '${AppLocalizations.of(context)!.out_of_stock1}',
-                                              style:
-                                                  AppStyles.rkRegularTextStyle(
-                                                      size: AppConstants
-                                                          .smallFont,
-                                                      color:
-                                                          AppColors.redColor),
+                                      ? Column(
+                                        children: [
+                                          20.height,
+                                          Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  '${AppLocalizations.of(context)!.out_of_stock1}',
+                                                  style:
+                                                      AppStyles.rkRegularTextStyle(
+                                                          size: AppConstants
+                                                              .smallFont,
+                                                          color:
+                                                              AppColors.redColor),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        )
-                                      : Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              height: 800,
-                                              width: getScreenWidth(context) >= 700 ? (getScreenWidth(context) - 30) / 3 :  (getScreenWidth(context) - 30) / 2,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    '${AppLocalizations.of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}',
-                                                    style: AppStyles
-                                                        .rkBoldTextStyle(
-                                                            size: AppConstants
-                                                                .font_30,
-                                                            color: AppColors
-                                                                .blackColor,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700),
-                                                  ),
-                                                  Text(
-                                                    "${parse(productSaleDescription).body?.text}",
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .font_14,
-                                                            color: AppColors
-                                                                .blackColor,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                    maxLines: 5,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              width: getScreenWidth(context) >= 700 ?(getScreenWidth(context) - 30) / 3 :  (getScreenWidth(context) - 30) / 2,
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap:
-                                                        onQuantityIncreaseTap,
-                                                    child: Container(
-                                                      height: 50,
-                                                      width: 40,
-                                                      decoration: BoxDecoration(
-                                                        color: AppColors
-                                                            .iconBGColor,
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                          topLeft: Radius
-                                                              .circular(isRTL
-                                                                  ? AppConstants
-                                                                      .radius_5
-                                                                  : AppConstants
-                                                                      .radius_50),
-                                                          bottomLeft: Radius
-                                                              .circular(isRTL
-                                                                  ? AppConstants
-                                                                      .radius_5
-                                                                  : AppConstants
-                                                                      .radius_50),
-                                                          bottomRight: Radius
-                                                              .circular(isRTL
-                                                                  ? AppConstants
-                                                                      .radius_50
-                                                                  : AppConstants
-                                                                      .radius_5),
-                                                          topRight: Radius
-                                                              .circular(isRTL
-                                                                  ? AppConstants
-                                                                      .radius_50
-                                                                  : AppConstants
-                                                                      .radius_5),
-                                                        ),
-                                                        border: Border.all(
-                                                            color: AppColors
-                                                                .navSelectedColor,
-                                                            width: 1),
-                                                      ),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Icon(
-                                                        Icons.add,
-                                                        size: 26,
-                                                        color:
-                                                            AppColors.mainColor,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  5.width,
-                                                  Expanded(
-                                                    child: Container(
-                                                      height: 50,
-                                                      decoration: BoxDecoration(
-                                                        color: AppColors
-                                                            .iconBGColor,
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  AppConstants
-                                                                      .radius_5),
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  AppConstants
-                                                                      .radius_5),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  AppConstants
-                                                                      .radius_5),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  AppConstants
-                                                                      .radius_5),
-                                                        ),
-                                                        border: Border.all(
-                                                            color: AppColors
-                                                                .navSelectedColor,
-                                                            width: 1),
-                                                      ),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: TextField(
-                                                        // readOnly: true,
-                                                        controller: TextEditingController(
-                                                            text:
-                                                                "${productQuantity}")
-                                                          ..selection = TextSelection
-                                                              .fromPosition(
-                                                                  TextPosition(
-                                                                      offset: "$productQuantity"
-                                                                          .length)),
-                                                        textAlign:
-                                                            TextAlign.center,
+                                        ],
+                                      )
+                                      : Column(
+                                        children: [
+                                          20.height,
+                                          Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  width: getScreenWidth(context) >= 700 ? (getScreenWidth(context) - 30) / 3 :  (getScreenWidth(context) - 30) / 2,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        '${AppLocalizations.of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}',
                                                         style: AppStyles
                                                             .rkBoldTextStyle(
-                                                                size:
-                                                                    AppConstants
-                                                                        .font_26,
+                                                                size: AppConstants
+                                                                    .font_30,
                                                                 color: AppColors
                                                                     .blackColor,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w700),
-                                                        maxLength: 5,
-                                                        maxLines: 1,
-                                                        textInputAction:
-                                                            TextInputAction.done,
-                                                        keyboardType: Platform.isIOS?
-                                                        TextInputType.numberWithOptions(signed: true)
-                                                            : TextInputType.number,
-                                                        inputFormatters: [
-                                                          FilteringTextInputFormatter.digitsOnly
-                                                        ],
-                                                        textDirection:
-                                                            TextDirection.ltr,
-                                                        onChanged:
-                                                            onQuantityChanged,
-                                                        cursorColor:
-                                                            AppColors.mainColor,
-                                                        decoration: InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                            enabledBorder:
-                                                                InputBorder
-                                                                    .none,
-                                                            focusedBorder:
-                                                                InputBorder
-                                                                    .none,
-                                                            errorBorder:
-                                                                InputBorder
-                                                                    .none,
-                                                            focusedErrorBorder:
-                                                                InputBorder
-                                                                    .none,
-                                                            disabledBorder:
-                                                                InputBorder
-                                                                    .none,
-                                                            filled: true,
-                                                            counterText: '',
-                                                            constraints:
-                                                                BoxConstraints(
-                                                                    maxHeight:
-                                                                        50,
-                                                                    minWidth:
-                                                                        50),
-                                                            fillColor: Colors
-                                                                .transparent,
-                                                            contentPadding:
-                                                                EdgeInsets.symmetric(
-                                                                    horizontal:
-                                                                        0,
-                                                                    vertical:
-                                                                        0)),
-                                                      )
-                                                    ),
-                                                  ),
-                                                  5.width,
-                                                  GestureDetector(
-                                                    onTap:
-                                                        onQuantityDecreaseTap,
-                                                    child: Container(
-                                                      height: 50,
-                                                      width: 40,
-                                                      decoration: BoxDecoration(
-                                                        color: AppColors
-                                                            .iconBGColor,
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                          topLeft: Radius
-                                                              .circular(isRTL
-                                                                  ? AppConstants
-                                                                      .radius_50
-                                                                  : AppConstants
-                                                                      .radius_5),
-                                                          bottomLeft: Radius
-                                                              .circular(isRTL
-                                                                  ? AppConstants
-                                                                      .radius_50
-                                                                  : AppConstants
-                                                                      .radius_5),
-                                                          bottomRight: Radius
-                                                              .circular(isRTL
-                                                                  ? AppConstants
-                                                                      .radius_5
-                                                                  : AppConstants
-                                                                      .radius_50),
-                                                          topRight: Radius
-                                                              .circular(isRTL
-                                                                  ? AppConstants
-                                                                      .radius_5
-                                                                  : AppConstants
-                                                                      .radius_50),
-                                                        ),
-                                                        border: Border.all(
-                                                            color: AppColors
-                                                                .navSelectedColor,
-                                                            width: 1),
                                                       ),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Icon(Icons.remove,
-                                                          size: 26,
-                                                          color: AppColors
-                                                              .mainColor),
-                                                    ),
+                                                      Text(
+                                                        "${parse(productSaleDescription).body?.text}",
+                                                        style: AppStyles
+                                                            .rkRegularTextStyle(
+                                                                size: AppConstants
+                                                                    .font_14,
+                                                                color: AppColors
+                                                                    .blackColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                        maxLines: 5,
+                                                        overflow:
+                                                            TextOverflow.ellipsis,
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                                Container(
+
+                                                  width: getScreenWidth(context) >= 700 ?(getScreenWidth(context) - 30) / 3 :  (getScreenWidth(context) - 30) / 2,
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    mainAxisSize: MainAxisSize.max,
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap:
+                                                            onQuantityIncreaseTap,
+                                                        child: Container(
+                                                          height: 50,
+                                                          width: 40,
+                                                          decoration: BoxDecoration(
+                                                            color: AppColors
+                                                                .iconBGColor,
+                                                            borderRadius:
+                                                                BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(isRTL
+                                                                      ? AppConstants
+                                                                          .radius_5
+                                                                      : AppConstants
+                                                                          .radius_50),
+                                                              bottomLeft: Radius
+                                                                  .circular(isRTL
+                                                                      ? AppConstants
+                                                                          .radius_5
+                                                                      : AppConstants
+                                                                          .radius_50),
+                                                              bottomRight: Radius
+                                                                  .circular(isRTL
+                                                                      ? AppConstants
+                                                                          .radius_50
+                                                                      : AppConstants
+                                                                          .radius_5),
+                                                              topRight: Radius
+                                                                  .circular(isRTL
+                                                                      ? AppConstants
+                                                                          .radius_50
+                                                                      : AppConstants
+                                                                          .radius_5),
+                                                            ),
+                                                            border: Border.all(
+                                                                color: AppColors
+                                                                    .navSelectedColor,
+                                                                width: 1),
+                                                          ),
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Icon(
+                                                            Icons.add,
+                                                            size: 26,
+                                                            color:
+                                                                AppColors.mainColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      5.width,
+                                                      Expanded(
+                                                        child: Container(
+                                                          height: 50,
+                                                          decoration: BoxDecoration(
+                                                            color: AppColors
+                                                                .iconBGColor,
+                                                            borderRadius:
+                                                                BorderRadius.only(
+                                                              topLeft:
+                                                                  Radius.circular(
+                                                                      AppConstants
+                                                                          .radius_5),
+                                                              bottomLeft:
+                                                                  Radius.circular(
+                                                                      AppConstants
+                                                                          .radius_5),
+                                                              bottomRight:
+                                                                  Radius.circular(
+                                                                      AppConstants
+                                                                          .radius_5),
+                                                              topRight:
+                                                                  Radius.circular(
+                                                                      AppConstants
+                                                                          .radius_5),
+                                                            ),
+                                                            border: Border.all(
+                                                                color: AppColors
+                                                                    .navSelectedColor,
+                                                                width: 1),
+                                                          ),
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: TextField(
+                                                            // readOnly: true,
+                                                            controller: TextEditingController(
+                                                                text:
+                                                                    "${productQuantity}")
+                                                              ..selection = TextSelection
+                                                                  .fromPosition(
+                                                                      TextPosition(
+                                                                          offset: "$productQuantity"
+                                                                              .length)),
+                                                            textAlign:
+                                                                TextAlign.center,
+                                                            style: AppStyles
+                                                                .rkBoldTextStyle(
+                                                                    size:
+                                                                        AppConstants
+                                                                            .font_26,
+                                                                    color: AppColors
+                                                                        .blackColor,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700),
+                                                            maxLength: 5,
+                                                            maxLines: 1,
+                                                            textInputAction:
+                                                                TextInputAction.done,
+                                                            keyboardType: Platform.isIOS?
+                                                            TextInputType.numberWithOptions(signed: true)
+                                                                : TextInputType.number,
+                                                            inputFormatters: [
+                                                              FilteringTextInputFormatter.digitsOnly
+                                                            ],
+                                                            textDirection:
+                                                                TextDirection.ltr,
+                                                            onChanged:
+                                                                onQuantityChanged,
+                                                            cursorColor:
+                                                                AppColors.mainColor,
+                                                            decoration: InputDecoration(
+                                                                border: InputBorder
+                                                                    .none,
+                                                                enabledBorder:
+                                                                    InputBorder
+                                                                        .none,
+                                                                focusedBorder:
+                                                                    InputBorder
+                                                                        .none,
+                                                                errorBorder:
+                                                                    InputBorder
+                                                                        .none,
+                                                                focusedErrorBorder:
+                                                                    InputBorder
+                                                                        .none,
+                                                                disabledBorder:
+                                                                    InputBorder
+                                                                        .none,
+                                                                filled: true,
+                                                                counterText: '',
+                                                                constraints:
+                                                                    BoxConstraints(
+                                                                        maxHeight:
+                                                                            50,
+                                                                        minWidth:
+                                                                            50),
+                                                                fillColor: Colors
+                                                                    .transparent,
+                                                                contentPadding:
+                                                                    EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            0,
+                                                                        vertical:
+                                                                            0)),
+                                                          )
+                                                        ),
+                                                      ),
+                                                      5.width,
+                                                      GestureDetector(
+                                                        onTap:
+                                                            onQuantityDecreaseTap,
+                                                        child: Container(
+                                                          height: 50,
+                                                          width: 40,
+                                                          decoration: BoxDecoration(
+                                                            color: AppColors
+                                                                .iconBGColor,
+                                                            borderRadius:
+                                                                BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(isRTL
+                                                                      ? AppConstants
+                                                                          .radius_50
+                                                                      : AppConstants
+                                                                          .radius_5),
+                                                              bottomLeft: Radius
+                                                                  .circular(isRTL
+                                                                      ? AppConstants
+                                                                          .radius_50
+                                                                      : AppConstants
+                                                                          .radius_5),
+                                                              bottomRight: Radius
+                                                                  .circular(isRTL
+                                                                      ? AppConstants
+                                                                          .radius_5
+                                                                      : AppConstants
+                                                                          .radius_50),
+                                                              topRight: Radius
+                                                                  .circular(isRTL
+                                                                      ? AppConstants
+                                                                          .radius_5
+                                                                      : AppConstants
+                                                                          .radius_50),
+                                                            ),
+                                                            border: Border.all(
+                                                                color: AppColors
+                                                                    .navSelectedColor,
+                                                                width: 1),
+                                                          ),
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Icon(Icons.remove,
+                                                              size: 26,
+                                                              color: AppColors
+                                                                  .mainColor),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
+                                          20.height,
+                                          CommonProductDetailsButton(
+                                              isLoading: isLoading,
+                                              isSupplierAvailable: true,
+                                              productStock:productStock,
+                                              onAddToOrderPressed: isLoading ? null:addToOrderTap),
+                                        ],
+                                      ),
                                 ),
+
                           ],
                         ),
                                     ],
@@ -625,11 +643,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                 ),
           ),
 
-          CommonProductDetailsButton(
-              isLoading: isLoading,
-              isSupplierAvailable: true,
-              productStock:productStock,
-              onAddToOrderPressed: isLoading ? null:addToOrderTap),
+
           Align(
             alignment: context.rtl?Alignment.centerRight:Alignment.centerLeft,
             child: Padding(
