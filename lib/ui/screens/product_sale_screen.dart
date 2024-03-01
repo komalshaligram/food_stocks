@@ -226,7 +226,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
         return BlocProvider.value(
           value: context.read<ProductSaleBloc>(),
           child: BlocBuilder<ProductSaleBloc, ProductSaleState>(
-  builder: (context, state) {
+  builder: (blocContext, state) {
     return DraggableScrollableSheet(
             expand: true,
       maxChildSize: 1 -

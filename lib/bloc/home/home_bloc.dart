@@ -124,6 +124,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
         else if (event is _GetProductDetailsEvent) {
           add(HomeEvent.RemoveRelatedProductEvent());
+
           debugPrint('product details id = ${event.productId}');
           _isProductInCart = false;
           _cartProductId = '';
@@ -1232,8 +1233,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
 
         else if(event is _RelatedProductsEvent){
-          if(event.productId != ''){
-            emit(state.copyWith(isRelatedShimmering:true));
+          debugPrint('productId___${event.productId}');
+            emit(state.copyWith(isRelatedShimmering:true,relatedProductList: []));
+          print('length____${state.relatedProductList.length}');
             final res = await DioClient(event.context).post(
                 AppUrls.relatedProductsUrl,
                 data: {'mainProductId':event.productId});
@@ -1248,10 +1250,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       (Product) =>
                       ProductStockModel(
                         productId: Product.id ,
-                        stock: Product.productStock ,
+                        stock: Product.productStock,
                       )) );
               emit(state.copyWith(
-                  relatedProductList:response.data ,
+                  relatedProductList:response.data ?? [],
                   isRelatedShimmering: false,productStockList: productStockList));
               print('relatedProductList___${state.relatedProductList.length}');
             } else {
@@ -1264,7 +1266,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 type: SnackBarType.SUCCESS,
               );
             }
-          }
+
         }
         else if(event is _RemoveRelatedProductEvent){
           emit(state.copyWith(relatedProductList: []));

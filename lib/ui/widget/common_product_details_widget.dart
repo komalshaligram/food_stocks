@@ -131,38 +131,31 @@ class CommonProductDetailsWidget extends StatelessWidget {
                 ],
               ),
               5.height,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '$productPerUnit ${AppLocalizations.of(context)!.unit_in_box} ',
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.smallFont,
-                        color: AppColors.blackColor),
-                  ),
-                  Text(
-                    '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
-                    style: AppStyles
-                        .rkRegularTextStyle(
-                        size: AppConstants
-                            .font_14,
-                        color: AppColors
-                            .blackColor),
-                  ),
-
-                ],
-              ),
-              10.height,
               Expanded(
                 // fit: FlexFit.tight,
                 child: SingleChildScrollView(
-               //   physics: AlwaysScrollableScrollPhysics(),
+                  physics: AlwaysScrollableScrollPhysics(),
                  controller: scrollController,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+
+                      Text(
+                        '$productPerUnit ${AppLocalizations.of(context)!.unit_in_box} ',
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.smallFont,
+                            color: AppColors.blackColor),
+                      ),
+                      Text(
+                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
+                        style: AppStyles
+                            .rkRegularTextStyle(
+                            size: AppConstants
+                                .font_14,
+                            color: AppColors
+                                .blackColor),
+                      ),
                       Center(
                         child: Stack(
                           children: [
