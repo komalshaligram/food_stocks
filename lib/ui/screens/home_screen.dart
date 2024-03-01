@@ -1129,8 +1129,10 @@ class HomeScreenWidget extends StatelessWidget {
 
     return DraggableScrollableSheet(
             expand: true,
-            maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-            minChildSize: 0.6,
+        maxChildSize: 1 -
+            (MediaQuery.of(context).viewPadding.top /
+                getScreenHeight(context)),
+            minChildSize: 0.4 ,
             initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
             builder:
                 (BuildContext context1, ScrollController scrollController) {

@@ -157,8 +157,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
               Expanded(
                 // fit: FlexFit.tight,
                 child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  controller: scrollController,
+               //   physics: AlwaysScrollableScrollPhysics(),
+                 controller: scrollController,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -358,7 +358,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Container(
-                                              height: 1200,
+                                              height: 800,
                                               width: getScreenWidth(context) >= 700 ? (getScreenWidth(context) - 30) / 3 :  (getScreenWidth(context) - 30) / 2,
                                               child: Column(
                                                 crossAxisAlignment:

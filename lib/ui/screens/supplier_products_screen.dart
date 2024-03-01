@@ -641,9 +641,16 @@ class SupplierProductsScreenWidget extends StatelessWidget {
   builder: (context, state) {
     return DraggableScrollableSheet(
             expand: true,
-            maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-            minChildSize: 0.4,
-            initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight: 1,
+      maxChildSize: 1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
+      //maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
+      minChildSize: 1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
+      initialChildSize: 1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
             //  shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
