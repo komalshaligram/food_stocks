@@ -1232,7 +1232,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
 
         else if(event is _RelatedProductsEvent){
-          debugPrint('event.productId ;${event.productId }');
           if(event.productId != ''){
             emit(state.copyWith(isRelatedShimmering:true));
             final res = await DioClient(event.context).post(
@@ -1252,7 +1251,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         stock: Product.productStock ,
                       )) );
               emit(state.copyWith(
-                  relatedProductList:response.data ,
+                  relatedProductList:response.data ?? [],
                   isRelatedShimmering: false,productStockList: productStockList));
               print('relatedProductList___${state.relatedProductList.length}');
             } else {
