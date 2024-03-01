@@ -144,8 +144,6 @@ class CommonProductListWidget extends StatelessWidget {
                         color: AppColors.blueColor,
                         fontWeight: FontWeight.w400),
                   ) : 0.width,
-
-
                 ],
               ),
             ),

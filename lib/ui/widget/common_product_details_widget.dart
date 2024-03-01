@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:food_stock/ui/widget/common_product_details_button.dart';
+import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -81,6 +82,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('qrCode_____${qrCode}');
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -148,14 +150,15 @@ class CommonProductDetailsWidget extends StatelessWidget {
                         color: AppColors
                             .blackColor),
                   ),
+
                 ],
               ),
               10.height,
               Expanded(
                 // fit: FlexFit.tight,
                 child: SingleChildScrollView(
-                  physics: NeverScrollableScrollPhysics(),
-                  controller: scrollController,
+               //   physics: AlwaysScrollableScrollPhysics(),
+                 controller: scrollController,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -355,7 +358,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Container(
-                                              height: 1200,
+                                              height: 800,
                                               width: getScreenWidth(context) >= 700 ? (getScreenWidth(context) - 30) / 3 :  (getScreenWidth(context) - 30) / 2,
                                               child: Column(
                                                 crossAxisAlignment:
@@ -617,17 +620,16 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                 ),
                           ],
                         ),
-
                                     ],
-
                                   ),
                 ),
           ),
+
           CommonProductDetailsButton(
               isLoading: isLoading,
               isSupplierAvailable: true,
               productStock:productStock,
-              onAddToOrderPressed: isLoading?null:addToOrderTap),
+              onAddToOrderPressed: isLoading ? null:addToOrderTap),
           Align(
             alignment: context.rtl?Alignment.centerRight:Alignment.centerLeft,
             child: Padding(
