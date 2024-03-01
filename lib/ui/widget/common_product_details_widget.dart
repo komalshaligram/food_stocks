@@ -359,6 +359,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           children: [
                                             Container(
                                               height: 800,
+
                                               width: getScreenWidth(context) >= 700 ? (getScreenWidth(context) - 30) / 3 :  (getScreenWidth(context) - 30) / 2,
                                               child: Column(
                                                 crossAxisAlignment:

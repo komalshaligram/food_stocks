@@ -1015,7 +1015,6 @@ class HomeScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        print('height____${getScreenHeight(context)}');
         return BlocProvider.value(
           value: context.read<HomeBloc>(),
           child: BlocBuilder<HomeBloc, HomeState>(
@@ -1023,11 +1022,16 @@ class HomeScreenWidget extends StatelessWidget {
 
     return DraggableScrollableSheet(
             expand: true,
-        maxChildSize: 1 -
-            (MediaQuery.of(context).viewPadding.top /
-                getScreenHeight(context)),
-            minChildSize: 0.4 ,
-            initialChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
+      maxChildSize: 1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
+
+      minChildSize:  productStock == '0' ? 0.8 :  1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
+      initialChildSize:  productStock == '0' ? 0.8 :  1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
             builder:
                 (BuildContext context1, ScrollController scrollController) {
                   return Container(
@@ -1446,7 +1450,7 @@ class HomeScreenWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: 200,
+                      width: getScreenWidth(context) * 0.45,
                       child: Text(
                         searchName,
                         style: AppStyles.rkRegularTextStyle(

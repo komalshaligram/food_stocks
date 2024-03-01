@@ -731,16 +731,16 @@ class CompanyProductsScreenWidget extends StatelessWidget {
   builder: (context, state) {
     return DraggableScrollableSheet(
             expand: true,
-         maxChildSize: 1 -
+      maxChildSize: 1 -
           (MediaQuery.of(context).viewPadding.top /
               getScreenHeight(context)),
-            //maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
-            minChildSize: 1 -
-                (MediaQuery.of(context).viewPadding.top /
-                    getScreenHeight(context)),
-            initialChildSize: 1 -
-                (MediaQuery.of(context).viewPadding.top /
-                    getScreenHeight(context)),
+
+      minChildSize:  productStock == '0' ? 0.8 :  1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
+      initialChildSize:  productStock == '0' ? 0.8 :  1 -
+          (MediaQuery.of(context).viewPadding.top /
+              getScreenHeight(context)),
             //    shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
@@ -894,9 +894,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
 
                               },
                             ),
-                      bottomNavigationBar: state.productDetails.isEmpty ? 0.width: state.relatedProductList.isEmpty ? 0.width :state.isRelatedShimmering
-                          ? RelatedProductShimmerWidget()
-                          :
+                      bottomNavigationBar: state.isRelatedShimmering ? RelatedProductShimmerWidget() :
+                      state.relatedProductList.isEmpty ? 0.width :
                       Container(
                         height: 200,
                         padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
