@@ -999,14 +999,7 @@ class StoreScreenWidget extends StatelessWidget {
                           else{
                             Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                           }
-
-                        } /*else {
-                          showProductDetails(
-                              context: context,
-                              productId: "7290115205527",
-                              // productId: "9843022871217",
-                              isBarcode: true);
-                        }*/
+                        }
                       },
                     ),
                   ],
@@ -1086,7 +1079,7 @@ class StoreScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != 0 ? 80 : 90,
+            height:  (productStock) != 0 ? 80 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :90,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1105,47 +1098,41 @@ class StoreScreenWidget extends StatelessWidget {
             //     vertical: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment:searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? MainAxisAlignment.start: MainAxisAlignment.spaceBetween,
               children: [
               Container(
-                height: 60,
-                width: 50,
+                height: 80,
+                width: 70,
                   child: !isGuestUser?  Image.network(
                     '${AppUrls.baseFileUrl}$searchImage',
                     fit: BoxFit.scaleDown,
-                    height: 60,
-                    width: 50,
+                    height: 80,
+                    width: 70,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) {
                         return child;
                       } else {
                         return Container(
-                            height: 60,
-                            width: 50,
-                                child: CupertinoActivityIndicator())
-                            /*CommonShimmerWidget(
-                            child: Container(
-                              width: 40,
-                              height: 35,
-                              color: AppColors.whiteColor,
-                            ))*/
-                            ;
+                            height: 80,
+                            width: 70,
+                                child: CupertinoActivityIndicator());
                       }
                     },
                     errorBuilder: (context, error, stackTrace) {
                       return searchType == SearchTypes.subCategory
                           ? Image.asset(AppImagePath.imageNotAvailable5,
-                          height: 60,
-                          width: 50, fit: BoxFit.cover)
+                          height: 80,
+                          width: 70, fit: BoxFit.cover)
                           : SvgPicture.asset(
                               AppImagePath.splashLogo,
                               fit: BoxFit.scaleDown,
-                        height: 60,
-                        width: 50,
+                        height: 80,
+                        width: 70,
                             );
                     },
                   ) : Image.asset(AppImagePath.imageNotAvailable5,
-                       fit: BoxFit.cover),
+                       fit: BoxFit.cover, height: 80,
+                    width: 70,),
                 ),
                 10.width,
                 Column(
@@ -1155,17 +1142,19 @@ class StoreScreenWidget extends StatelessWidget {
                     Text(
                       searchName,
                       style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_12,
+                        size: AppConstants.font_14,
                         color: AppColors.blackColor,
+                        fontWeight: FontWeight.bold
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                     // overflow: TextOverflow.ellipsis,
+                     maxLines: 2,
                     ),
+                    searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? 0.width :
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          width: 200,
+                          width: getScreenWidth(context) * 0.45,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1762,6 +1751,7 @@ class StoreScreenWidget extends StatelessWidget {
                                       )),
                                 )
                               : CommonProductDetailsWidget(
+                        qrCode:state.productDetails.first.qrcode ?? '' ,
                         isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                         isLoading: state.isLoading,
                         addToOrderTap: state.isLoading
@@ -1889,9 +1879,15 @@ class StoreScreenWidget extends StatelessWidget {
                                             context: context1));
                                   },
                                   onQuantityDecreaseTap: () {
-                                    context.read<StoreBloc>().add(StoreEvent
-                                        .decreaseQuantityOfProduct(
-                                            context: context1));
+                                    if(state
+                                        .productStockList[
+                                    state.productStockUpdateIndex]
+                                        .quantity > 1){
+                                      context.read<StoreBloc>().add(StoreEvent
+                                          .decreaseQuantityOfProduct(
+                                          context: context1));
+                                    }
+
                                   },
                                   // isLoading: state.isLoading,
                                   /*onAddToOrderPressed: state.isLoading

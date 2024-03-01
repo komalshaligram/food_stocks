@@ -46,6 +46,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final Function() addToOrderTap;
   final bool isLoading;
   final bool isRelatedProduct;
+  final String qrCode;
 
   const CommonProductDetailsWidget({
     super.key,
@@ -75,12 +76,13 @@ class CommonProductDetailsWidget extends StatelessWidget {
     this.isLoading = false,
     required this.imageOnTap,
     required this.addToOrderTap,
-    this.isRelatedProduct = false
+    this.isRelatedProduct = false,
+     required this.qrCode
   });
 
   @override
   Widget build(BuildContext context) {
-    print('productUnitPrice_____${productUnitPrice}');
+    print('qrCode_____${qrCode}');
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -148,13 +150,14 @@ class CommonProductDetailsWidget extends StatelessWidget {
                         color: AppColors
                             .blackColor),
                   ),
+
                 ],
               ),
               10.height,
               Expanded(
                 // fit: FlexFit.tight,
                 child: SingleChildScrollView(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: AlwaysScrollableScrollPhysics(),
                   controller: scrollController,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
@@ -196,10 +199,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                                 AppConstants
                                                                     .radius_10)),
                                                       ),
-                                                      // alignment: Alignment.center,
-                                                      // child: CupertinoActivityIndicator(
-                                                      //   color: AppColors.blackColor,
-                                                      // ),
                                                     ),
                                                   );
                                                 }
@@ -207,7 +206,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                               },
                                               errorBuilder:
                                                   (context, error, stackTrace) {
-                                                // debugPrint('product category list image error : $error');
                                                 return Image.asset(
                                                   AppImagePath.imageNotAvailable5,
                                                   fit: BoxFit.cover,
@@ -265,7 +263,15 @@ class CommonProductDetailsWidget extends StatelessWidget {
                           ],
                         ),
                       ),
-
+                      Text(qrCode,
+                        style:
+                        AppStyles.rkRegularTextStyle(
+                            size: AppConstants
+                                .smallFont,
+                            color:
+                            AppColors.blackColor),
+                      ),
+                   10.height,
                    /*   startDate != '' ?  Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30),
                         child: Row(
@@ -328,10 +334,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           color: AppColors.borderColor
                                               .withOpacity(0.5),
                                           width: 1),
-                                     /* bottom: BorderSide(
-                                          width: 1,
-                                          color: AppColors.borderColor
-                                              .withOpacity(0.5)),*/
                                     ),
                                   ),
                                   padding: EdgeInsets.fromLTRB(10,10,10,0),
@@ -618,7 +620,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                 ),
                           ],
                         ),
-
                                     ],
                                   ),
                 ),
@@ -628,8 +629,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
               isLoading: isLoading,
               isSupplierAvailable: true,
               productStock:productStock,
-              onAddToOrderPressed: isLoading?null:addToOrderTap),
-
+              onAddToOrderPressed: isLoading ? null:addToOrderTap),
           Align(
             alignment: context.rtl?Alignment.centerRight:Alignment.centerLeft,
             child: Padding(

@@ -1275,7 +1275,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
 
         else if(event is _RelatedProductsEvent){
-
           if(event.productId != ''){
             emit(state.copyWith(isRelatedShimmering:true));
             final res = await DioClient(event.context).post(
@@ -1295,10 +1294,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         stock: Product.productStock ?? 0,
                       )) ??
                   []);
-
               emit(state.copyWith(
                   relatedProductList:response.data ?? [],
                   isRelatedShimmering: false,productStockList: productStockList));
+              print('relatedProductList___${state.relatedProductList.length}');
             } else {
               emit(state.copyWith(isRelatedShimmering: false));
               CustomSnackBar.showSnackBar(
@@ -1311,9 +1310,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               );
             }
           }
-
         }
-
         else if(event is _RemoveRelatedProductEvent){
           emit(state.copyWith(relatedProductList: []));
         }
