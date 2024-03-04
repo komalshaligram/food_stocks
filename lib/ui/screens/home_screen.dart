@@ -1205,7 +1205,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 }
                               },
                             ),
-                            0.height,
+                            10.height,
                             state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context)
                           ],
                         ),

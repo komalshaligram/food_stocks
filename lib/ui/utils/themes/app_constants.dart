@@ -12,6 +12,8 @@ class AppConstants{
   static const double containerSize_35 = 32;
 
   static const double textFormFieldHeight = 40;
+  static const double relatedProductItemHeight = 200;
+  static const double relatedProductItemWidth = 200;
 
   static const double padding_5 = 5;
   static const double padding_10 = 10;
