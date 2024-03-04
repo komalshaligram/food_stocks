@@ -23,7 +23,6 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../../bloc/store/store_bloc.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
@@ -33,7 +32,6 @@ import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_product_details_widget.dart';
-import '../widget/delayed_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/store_screen_shimmer_widget.dart';
 

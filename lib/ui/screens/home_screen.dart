@@ -436,52 +436,50 @@ class HomeScreenWidget extends StatelessWidget {
                                                   horizontal:
                                                   AppConstants.padding_5),
                                               itemBuilder: (context, index) =>
-                                                  DelayedWidget(
-                                                    child: CommonProductItemWidget(
-                                                      productStock: state
-                                                          .recommendedProductsList[
-                                                      index]
-                                                          .productStock.toString(),
-                                                      height: 160,
-                                                      width:  140,
-                                                      productImage: state
-                                                          .recommendedProductsList[
-                                                      index]
-                                                          .mainImage ??
-                                                          '',
-                                                      productName: state
-                                                          .recommendedProductsList[
-                                                      index]
-                                                          .productName ??
-                                                          '',
-                                                      totalSaleCount: state
-                                                          .recommendedProductsList[
-                                                      index]
-                                                          .totalSale ??
-                                                          0,
-                                                      price: state
-                                                          .recommendedProductsList[
-                                                      index]
-                                                          .productPrice
-                                                          ?.toDouble() ??
-                                                          0.0,
-                                                      onButtonTap: () {
-                                                    
-                                                          showProductDetails(
-                                                              context: context,
-                                                              productId: state
-                                                                  .recommendedProductsList[
-                                                              index]
-                                                                  .id ??
-                                                                  '',
-                                                          productStock:(state
-                                                              .recommendedProductsList[
-                                                          index]
-                                                              .productStock.toString()),
-                                                          );
-                                                    
-                                                      }
-                                                    ),
+                                                  CommonProductItemWidget(
+                                                    productStock: state
+                                                        .recommendedProductsList[
+                                                    index]
+                                                        .productStock.toString(),
+                                                    height: 160,
+                                                    width:  140,
+                                                    productImage: state
+                                                        .recommendedProductsList[
+                                                    index]
+                                                        .mainImage ??
+                                                        '',
+                                                    productName: state
+                                                        .recommendedProductsList[
+                                                    index]
+                                                        .productName ??
+                                                        '',
+                                                    totalSaleCount: state
+                                                        .recommendedProductsList[
+                                                    index]
+                                                        .totalSale ??
+                                                        0,
+                                                    price: state
+                                                        .recommendedProductsList[
+                                                    index]
+                                                        .productPrice
+                                                        ?.toDouble() ??
+                                                        0.0,
+                                                    onButtonTap: () {
+
+                                                        showProductDetails(
+                                                            context: context,
+                                                            productId: state
+                                                                .recommendedProductsList[
+                                                            index]
+                                                                .id ??
+                                                                '',
+                                                        productStock:(state
+                                                            .recommendedProductsList[
+                                                        index]
+                                                            .productStock.toString()),
+                                                        );
+
+                                                    }
                                                   )
 
                                           ),
