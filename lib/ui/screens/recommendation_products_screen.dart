@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/recommendation_products/recommendation_products_bloc.dart';
+import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/refresh_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -725,193 +726,163 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       color: AppColors.whiteColor,
                     ),
                     clipBehavior: Clip.hardEdge,
-                    child: SafeArea(
-                      child: Scaffold(
-                          body: state.isProductLoading
-                              ? ProductDetailsShimmerWidget()
-                              : state.productDetails.isEmpty
-                              ? Center(
-                            child: Text(
-                                AppLocalizations.of(context)!.no_product,
-                                style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.normalFont,
-                                  color: AppColors.redColor,
-                                  fontWeight: FontWeight.w500,
-                                )),
-                          )
-                              : SingleChildScrollView(
-                                child: CommonProductDetailsWidget(
-                                  qrCode:state.productDetails.first.qrcode ?? '' ,
-                                  isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
-                                  addToOrderTap: () {
-                                    context.read<RecommendationProductsBloc>().add(
-                                        RecommendationProductsEvent.addToCartProductEvent(
-                                            context: context1,
-                                            productId: productId
-                                        ));
-                                  },
-                                  isLoading: state.isLoading,
-                                  imageOnTap: (){
-                                    showDialog(
-                                      context: context,
-                                      builder: (dialogContext) {
-                                        return Stack(
-                                          children: [
-                                            Container(
-                                              height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
-                                              width: getScreenWidth(context),
-                                              child: GestureDetector(
-                                                onVerticalDragStart: (dragDetails) {
-                                                  print('onVerticalDragStart');
-                                                },
-                                                onVerticalDragUpdate: (dragDetails) {
-                                                  print('onVerticalDragUpdate');
-                                                },
-                                                onVerticalDragEnd: (endDetails) {
-                                                  print('onVerticalDragEnd');
-                                                  Navigator.pop(dialogContext);
-                                                },
-                                                child: PhotoView(
-                                                  imageProvider: CachedNetworkImageProvider(
-                                                    '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
-                                                  ),
-                                                ),
-                                              ),
+                    child:state.isProductLoading
+                        ? ProductDetailsShimmerWidget()
+                        : state.productDetails.isEmpty
+                        ? Center(
+                      child: Text(
+                          AppLocalizations.of(context)!.no_product,
+                          style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.normalFont,
+                            color: AppColors.redColor,
+                            fontWeight: FontWeight.w500,
+                          )),
+                    )
+                        : SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          CommonProductDetailsWidget(
+                            qrCode:state.productDetails.first.qrcode ?? '' ,
+                            addToOrderTap: () {
+                              context.read<RecommendationProductsBloc>().add(
+                                  RecommendationProductsEvent.addToCartProductEvent(
+                                      context: context1,
+                                      productId: productId
+                                  ));
+                            },
+                            isLoading: state.isLoading,
+                            imageOnTap: (){
+                              showDialog(
+                                context: context,
+                                builder: (dialogContext) {
+                                  return Stack(
+                                    children: [
+                                      Container(
+                                        height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                        width: getScreenWidth(context),
+                                        child: GestureDetector(
+                                          onVerticalDragStart: (dragDetails) {
+                                            print('onVerticalDragStart');
+                                          },
+                                          onVerticalDragUpdate: (dragDetails) {
+                                            print('onVerticalDragUpdate');
+                                          },
+                                          onVerticalDragEnd: (endDetails) {
+                                            print('onVerticalDragEnd');
+                                            Navigator.pop(dialogContext);
+                                          },
+                                          child: PhotoView(
+                                            imageProvider: CachedNetworkImageProvider(
+                                              '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                             ),
-                                                      
-                                            GestureDetector(
-                                                onTap: (){
-                                                  Navigator.pop(dialogContext);
-                                                },
-                                                child: Icon(Icons.close,
-                                                  color: Colors.white,
-                                                )),
-                                          ],
-                                        );
-                                      },);
-                                  },
-                                  context: context,
-                                  productImageIndex: state.imageIndex,
-                                  onPageChanged: (index, p1) {
-                                    context.read<RecommendationProductsBloc>().add(
-                                        RecommendationProductsEvent.updateImageIndexEvent(
-                                            index: index));
-                                  },
-                                  productImages: [
-                                    state.productDetails.first.mainImage ??
-                                        '',
-                                    ...state.productDetails.first.images
-                                        ?.map((image) =>
-                                    image.imageUrl ?? '') ??
-                                        []
-                                  ],
-                                  productPerUnit: state.productDetails.first
-                                      .numberOfUnit ?? 0,
-                                  productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
-                                  productName: state.productDetails.first
-                                      .productName ??
-                                      '',
-                                  productCompanyName: state
-                                      .productDetails.first.brandName ??
-                                      '',
-                                  productDescription: parse(state
-                                      .productDetails
-                                      .first
-                                      .productDescription ??
-                                      '')
-                                      .body
-                                      ?.text ??
-                                      '',
-                                  productSaleDescription: parse(state
-                                      .productDetails
-                                      .first
-                                      .productDescription ??
-                                      '')
-                                      .body
-                                      ?.text ??
-                                      '',
-                                  productPrice: state
-                                      .productStockList[
-                                  state.productStockUpdateIndex]
-                                      .totalPrice *
-                                      state
-                                          .productStockList[
-                                      state.productStockUpdateIndex]
-                                          .quantity *
-                                      (state.productDetails.first
-                                          .numberOfUnit ??
-                                          0) ,
-                                  productScaleType: state.productDetails
-                                      .first.scales?.scaleType ??
-                                      '',
-                                  productWeight: state
-                                      .productDetails.first.itemsWeight
-                                      ?.toDouble() ??
-                                      0.0,
-                                  productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
-                                  isRTL: context.rtl,
-                                  isSupplierAvailable:
-                                  state.productSupplierList.isEmpty
-                                      ? false
-                                      : true,
-                                  scrollController: scrollController,
-                                  productQuantity:  state
-                                      .productStockList[
-                                  state.productStockUpdateIndex]
-                                      .quantity,
-                                  onQuantityChanged: (quantity) {
-                                    context.read<RecommendationProductsBloc>().add(
-                                        RecommendationProductsEvent.updateQuantityOfProduct(
-                                            context: context1,
-                                            quantity: quantity));
-                                  },
-                                  onQuantityIncreaseTap: () {
-                                    context.read<RecommendationProductsBloc>().add(
-                                        RecommendationProductsEvent.increaseQuantityOfProduct(
-                                            context: context1));
-                                  },
-                                  onQuantityDecreaseTap: () {
-                                    if(state
-                                        .productStockList[
-                                    state.productStockUpdateIndex]
-                                        .quantity > 1){
-                                      context.read<RecommendationProductsBloc>().add(
-                                          RecommendationProductsEvent.decreaseQuantityOfProduct(
-                                              context: context1));
-                                    }
-                                  },
-                                ),
-                              ),
-                      
-                          bottomNavigationBar:
-                          state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width : state.isRelatedShimmering
-                              ? RelatedProductShimmerWidget() :
-                          Container(
-                            height: 200,
-                            padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemBuilder: (context2,i){
-                                return CommonProductItemWidget(
-                                  productStock:state.relatedProductList.elementAt(i).productStock.toString(),
-                                  width: 140,
-                                  productImage:state.relatedProductList[i].mainImage,
-                                  productName: state.relatedProductList.elementAt(i).productName,
-                                  totalSaleCount: state.relatedProductList.elementAt(i).totalSale,
-                                  price:state.relatedProductList.elementAt(i).productPrice,
-                                  onButtonTap: () {
-                                    Navigator.pop(context1);
-                                    showProductDetails(
-                                        context: context,
-                                        productId: state
-                                            .relatedProductList[i].id,
-                                        isBarcode: false,
-                                        productStock: (state.relatedProductList[i].productStock.toString())
-                                    );
-                                  },
-                                );},itemCount: state.relatedProductList.length,),
-                          )
+                                          ),
+                                        ),
+                                      ),
+
+                                      GestureDetector(
+                                          onTap: (){
+                                            Navigator.pop(dialogContext);
+                                          },
+                                          child: Icon(Icons.close,
+                                            color: Colors.white,
+                                          )),
+                                    ],
+                                  );
+                                },);
+                            },
+                            context: context,
+                            productImageIndex: state.imageIndex,
+                            onPageChanged: (index, p1) {
+                              context.read<RecommendationProductsBloc>().add(
+                                  RecommendationProductsEvent.updateImageIndexEvent(
+                                      index: index));
+                            },
+                            productImages: [
+                              state.productDetails.first.mainImage ??
+                                  '',
+                              ...state.productDetails.first.images
+                                  ?.map((image) =>
+                              image.imageUrl ?? '') ??
+                                  []
+                            ],
+                            productPerUnit: state.productDetails.first
+                                .numberOfUnit ?? 0,
+                            productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
+                            productName: state.productDetails.first
+                                .productName ??
+                                '',
+                            productCompanyName: state
+                                .productDetails.first.brandName ??
+                                '',
+                            productDescription: parse(state
+                                .productDetails
+                                .first
+                                .productDescription ??
+                                '')
+                                .body
+                                ?.text ??
+                                '',
+                            productSaleDescription: parse(state
+                                .productDetails
+                                .first
+                                .productDescription ??
+                                '')
+                                .body
+                                ?.text ??
+                                '',
+                            productPrice: state
+                                .productStockList[
+                            state.productStockUpdateIndex]
+                                .totalPrice *
+                                state
+                                    .productStockList[
+                                state.productStockUpdateIndex]
+                                    .quantity *
+                                (state.productDetails.first
+                                    .numberOfUnit ??
+                                    0) ,
+                            productScaleType: state.productDetails
+                                .first.scales?.scaleType ??
+                                '',
+                            productWeight: state
+                                .productDetails.first.itemsWeight
+                                ?.toDouble() ??
+                                0.0,
+                            productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                            isRTL: context.rtl,
+                            isSupplierAvailable:
+                            state.productSupplierList.isEmpty
+                                ? false
+                                : true,
+                            scrollController: scrollController,
+                            productQuantity:  state
+                                .productStockList[
+                            state.productStockUpdateIndex]
+                                .quantity,
+                            onQuantityChanged: (quantity) {
+                              context.read<RecommendationProductsBloc>().add(
+                                  RecommendationProductsEvent.updateQuantityOfProduct(
+                                      context: context1,
+                                      quantity: quantity));
+                            },
+                            onQuantityIncreaseTap: () {
+                              context.read<RecommendationProductsBloc>().add(
+                                  RecommendationProductsEvent.increaseQuantityOfProduct(
+                                      context: context1));
+                            },
+                            onQuantityDecreaseTap: () {
+                              if(state
+                                  .productStockList[
+                              state.productStockUpdateIndex]
+                                  .quantity > 1){
+                                context.read<RecommendationProductsBloc>().add(
+                                    RecommendationProductsEvent.decreaseQuantityOfProduct(
+                                        context: context1));
+                              }
+                            },
+                          ),
+                          state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context)
+                        ],
                       ),
                     ),
                   );
@@ -924,7 +895,56 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
       },
     );
   }
-  
+
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Align(
+          alignment:
+          context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            child: Text(
+              AppLocalizations.of(context)!.related_products,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.mediumFont,
+                  color: AppColors.blackColor),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        Container(
+          height: 200,
+          padding: EdgeInsets.only(left: 10,right: 10),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemBuilder: (context2,i){
+              return CommonProductItemWidget(
+                productStock:relatedProductList.elementAt(i).productStock.toString(),
+                width: 140,
+                productImage:relatedProductList[i].mainImage,
+                productName: relatedProductList.elementAt(i).productName,
+                totalSaleCount: relatedProductList.elementAt(i).totalSale,
+                price:relatedProductList.elementAt(i).productPrice,
+                onButtonTap: (){
+                  Navigator.pop(prevContext);
+                  showProductDetails(
+                      context: context,
+                      productId: relatedProductList[i].id,
+                      isBarcode: false,
+                      productStock: (relatedProductList[i].productStock.toString())
+                  );
+                },
+              );},itemCount: relatedProductList.length,),
+        )
+      ],
+    );
+  }
   
 /*  void showProductDetails(
       {required BuildContext context, required String productId,
