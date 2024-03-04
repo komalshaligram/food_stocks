@@ -307,13 +307,16 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     top: BorderSide(
                         color: AppColors.borderColor.withOpacity(0.5),
                         width: 1),
+                    bottom: BorderSide(
+                        color: AppColors.borderColor.withOpacity(0.5),
+                        width: 1),
                   ),
                 ),
                 padding: EdgeInsets.fromLTRB(10, 10, 20, 0),
                 child: productStock == 0 || productStock == -1
                     ? Column(
                         children: [
-                          20.height,
+                          10.height,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -325,6 +328,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                               ),
                             ],
                           ),
+                          15.height
                         ],
                       )
                     : Column(

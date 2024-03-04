@@ -1141,13 +1141,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       0 ||
                       isGuestUser
                       ? 0.width
-                      : Text(
-                    AppLocalizations.of(context)!.out_of_stock1,
-                    style: AppStyles.rkBoldTextStyle(
+                      : Text(AppLocalizations.of(context)!.out_of_stock1,
+                                               style: AppStyles.rkBoldTextStyle(
                         size: AppConstants.font_12,
                         color: AppColors.redColor,
                         fontWeight: FontWeight.w400),
-                  ),
+                                        ),
                   // 2.height,
                   Expanded(
                     child:
@@ -1507,7 +1506,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     child: state.isProductLoading
                         ? ProductDetailsShimmerWidget()
                         : state.productDetails.isEmpty
-                        ? Center(
+                        ? Container(
+                      alignment: Alignment.center,
                       child: Text(
                           AppLocalizations.of(context)!.no_product,
                           style: AppStyles.rkRegularTextStyle(
@@ -1671,6 +1671,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
 
                             },
                           ),
+                          0.height,
                           state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context)
                         ],
                       ),
@@ -1695,7 +1696,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           alignment:
           context.rtl ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
             child: Text(
               AppLocalizations.of(context)!.related_products,
               style: AppStyles.rkRegularTextStyle(
