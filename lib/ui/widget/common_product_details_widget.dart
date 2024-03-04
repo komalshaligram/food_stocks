@@ -317,7 +317,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                 child: productStock == 0 || productStock == -1
                     ? Column(
                         children: [
-                          10.height,
+                          5.height,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -329,12 +329,12 @@ class CommonProductDetailsWidget extends StatelessWidget {
                               ),
                             ],
                           ),
-                          15.height
+                          10.height
                         ],
                       )
                     : Column(
                         children: [
-                          20.height,
+                          10.height,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,

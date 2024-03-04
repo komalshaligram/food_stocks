@@ -1,11 +1,9 @@
 class AppUrls {
-   //static const String baseUrl = 'http://182.70.118.201:3000/api';
- // static const String baseUrl = 'http://192.168.1.46:8080/api';
-static const String baseUrl = 'https://api.foodstock.shtibel.com/api';
- // static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
-  //static const String baseFileUrl = 'http://182.70.118.201:3000/public/';
- //static const String baseFileUrl = 'http://192.168.1.46:8080/public/';
- static const String baseFileUrl = 'https://foodstock-buckets.s3.il-central-1.amazonaws.com/';
+
+  static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
+ // static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///devUrl
+
+  static const String baseFileUrl = 'https://foodstock-buckets.s3.il-central-1.amazonaws.com/';
 
   static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
   static const String loginOTPUrl = '/v1/auth/clientLogin';
@@ -30,7 +28,6 @@ static const String baseUrl = 'https://api.foodstock.shtibel.com/api';
   static const String getProductDetailsUrl = '/v1/store/ProductDetail';
   static const String getPlanogramProductsUrl =
       '/v1/store/getPalnogramProducts';
-// static const String getProductSuppliersUrl = '/v1/supplierProduct/getSupplierProducts';
   static const String createOrderUrl = '/v1/orders/createOrder';
   static const String getAllOrderUrl = '/v1/orders/getAllOrders';
   static const String verifyProductStockUrl = '/v1/store/verifyStock';
