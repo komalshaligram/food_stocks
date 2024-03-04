@@ -334,7 +334,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       )
                     : Column(
                         children: [
-                          20.height,
+                          10.height,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
