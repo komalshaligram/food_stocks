@@ -875,9 +875,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 left: AppConstants.padding_20,
                 right: AppConstants.padding_20,
                 bottom: AppConstants.padding_5),
-            // padding: EdgeInsets.symmetric(
-            //     horizontal: AppConstants.padding_20,
-            //     vertical: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment:searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? MainAxisAlignment.start: MainAxisAlignment.spaceBetween,
@@ -892,7 +889,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
                       '${AppUrls.baseFileUrl}$searchImage',
-                      fit: BoxFit.fill,
+                      fit: BoxFit.fitHeight,
                       height: 80,
                       width: 80,
                       loadingBuilder: (context, child, loadingProgress) {
@@ -1625,9 +1622,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 .productDetails.first.itemsWeight
                                 ?.toDouble() ??
                                 0.0,
-                            productStock: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock != 0 ?
-                            int.parse(state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock.toString()):
-                            int.parse(productStock.toString()) ,
+                            productStock: int.parse(state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock.toString()),
                             productUnitPrice:
                             state
                                 .productStockList[

@@ -57,8 +57,7 @@ class HomeScreen extends StatelessWidget {
         ..add(HomeEvent.getOrderCountEvent(context: context))
         ..add(HomeEvent.getWalletRecordEvent(context: context))
         ..add(HomeEvent.getMessageListEvent(context: context))
-        ..add(HomeEvent.getRecommendationProductsListEvent(context: context))
-      /*..add(HomeEvent.checkVersionOfAppEvent(context: context))*/,
+        ..add(HomeEvent.getRecommendationProductsListEvent(context: context)),
       child: HomeScreenWidget(),
     );
   }
@@ -798,7 +797,8 @@ class HomeScreenWidget extends StatelessWidget {
                                             context: context,
                                             productId: state
                                                 .searchList[index].searchId,
-                                            isBarcode: true,
+                                            isFromSearch: true,
+                                            isBarcode:  true,
                                             productStock: (state.searchList[index].productStock.toString())
                                         );
                                       } else if (state
@@ -869,6 +869,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   context: context,
                                   productId: scanResult,
                                   isBarcode: true,
+
                                 );
                               }
                             },
@@ -1001,7 +1002,8 @@ class HomeScreenWidget extends StatelessWidget {
   void showProductDetails({
     required BuildContext context,
     required String productId,
-    bool? isBarcode,
+    bool isBarcode= false,
+    bool isFromSearch = false,
     String productStock  = '0',
     bool isRelated = false,
     int planoGramIndex = 0,
@@ -1027,7 +1029,6 @@ class HomeScreenWidget extends StatelessWidget {
           maxChildSize: 1 -
               (MediaQuery.of(context).viewPadding.top /
                   getScreenHeight(context)),
-
           minChildSize:  productStock == '0' ? 0.8 :  1 -
               (MediaQuery.of(context).viewPadding.top /
                   getScreenHeight(context)),
@@ -1080,6 +1081,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 showDialog(
                                   context: context,
                                   builder: (dialogContext) {
+                                    print('state.productStockList[state.productStockUpdateIndex].stock.toString() ${state.productStockUpdateIndex}');
                                     return Stack(
                                       children: [
                                         Container(
@@ -1174,7 +1176,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              productStock: isFromSearch ?int.parse(productStock):int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty
