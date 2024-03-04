@@ -272,6 +272,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                     child: state.isProductLoading
                         ? ProductDetailsShimmerWidget()
                         : SingleChildScrollView(
+                      physics: NeverScrollableScrollPhysics(),
                       child: Column(
                         children: [
                           CommonProductDetailsWidget(

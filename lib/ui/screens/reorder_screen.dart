@@ -751,6 +751,7 @@ class ReorderScreenWidget extends StatelessWidget {
                           )),
                     )
                         : SingleChildScrollView(
+                      physics: NeverScrollableScrollPhysics(),
                       child: Column(
                         children: [
                           CommonProductDetailsWidget(
@@ -931,7 +932,7 @@ class ReorderScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: 200,
+          height: AppConstants.relatedProductItemHeight,
           padding: EdgeInsets.only(left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -939,7 +940,7 @@ class ReorderScreenWidget extends StatelessWidget {
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
-                width: 140,
+                width: AppConstants.relatedProductItemWidth,
                 productImage:relatedProductList[i].mainImage,
                 productName: relatedProductList.elementAt(i).productName,
                 totalSaleCount: relatedProductList.elementAt(i).totalSale,

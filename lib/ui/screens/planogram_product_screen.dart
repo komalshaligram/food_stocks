@@ -592,6 +592,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                           )),
                     )
                         : SingleChildScrollView(
+                      physics: NeverScrollableScrollPhysics(),
                       child: Column(
                         children: [
                           CommonProductDetailsWidget(

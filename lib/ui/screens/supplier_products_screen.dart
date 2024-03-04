@@ -674,6 +674,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           )),
                     )
                         : SingleChildScrollView(
+                      physics: NeverScrollableScrollPhysics(),
                       child: Column(
                         children: [
                           CommonProductDetailsWidget(
@@ -816,7 +817,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                               }
                             },
                           ),
-                          state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context)
+                          state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context),
+                          10.height
                         ],
                       ),
                     ),
