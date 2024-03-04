@@ -18,7 +18,6 @@ import 'package:food_stock/ui/widget/common_search_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
-import 'package:html/parser.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
@@ -582,10 +581,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       //     StoreCategoryEvent.changeCategoryExpansionEvent());
                     },
                     onSearch: (String search) {
-                      if (search.length > 1) {
-                        bloc.add(StoreCategoryEvent.globalSearchEvent(
-                            context: context));
+                      if(state.searchController.text != ''){
+                        bloc.add(
+                            StoreCategoryEvent.globalSearchEvent(context: context));
                       }
+
                     },
                     onSearchSubmit: (String search) {
                      // bloc.add(StoreCategoryEvent.globalSearchEvent(context: context));

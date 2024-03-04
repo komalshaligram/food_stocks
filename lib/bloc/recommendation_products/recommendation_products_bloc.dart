@@ -215,7 +215,7 @@ class RecommendationProductsBloc
               }
             } on ServerException {}
             if(response.product != null){
-              add(RecommendationProductsEvent.RelatedProductsEvent(context: event.context, productId:state.productStockList[state.productStockList.length-1].productId));
+              add(RecommendationProductsEvent.RelatedProductsEvent(context: event.context, productId:response.product?.first.id ?? ''));
             }
             if ( (event.isBarcode)) {
               List<ProductStockModel> productStockList =

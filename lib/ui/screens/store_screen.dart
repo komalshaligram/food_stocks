@@ -133,7 +133,7 @@ class StoreScreenWidget extends StatelessWidget {
                         state.refreshController.loadComplete();
                       },
                       child: SingleChildScrollView(
-                        child: state.isShimmering
+                        child: state.isShimmering && state.productCategoryList.isEmpty
                             ? StoreScreenShimmerWidget()
                             : AnimationLimiter(
                                 child: Column(
@@ -156,7 +156,7 @@ class StoreScreenWidget extends StatelessWidget {
                                               getScreenWidth(context).width,
                                           secondChild: Column(
                                             children: [
-                                              state.isCatVisible?   buildListTitles(
+                                              state.isCatVisible ?   buildListTitles(
                                                   context: context,
                                                   title: AppLocalizations.of(
                                                           context)!
@@ -246,14 +246,14 @@ class StoreScreenWidget extends StatelessWidget {
                                                                     .productCategoryList[
                                                                         index]
                                                                     .categoryName,
-                                                                AppStrings
+                                                               /* AppStrings
                                                                         .searchString:
                                                                     state
                                                                         .search,
                                                                 AppStrings
                                                                         .searchResultString:
                                                                     state
-                                                                        .searchList
+                                                                        .searchList*/
                                                               });
                                                           if (searchResult !=
                                                               null) {
@@ -738,15 +738,16 @@ class StoreScreenWidget extends StatelessWidget {
                       isCategoryExpand: state.isCategoryExpand,
                       isSearching: state.isSearching,
                       onFilterTap: () {
-                        bloc.add(StoreEvent.changeCategoryExpansion());
+                        bloc.add(StoreEvent.changeCategoryExpansion(isOpened: true));
+                        bloc.add(StoreEvent.getProductCategoriesListEvent(
+                            context: context));
                       },
                       onSearchTap: () {
                     if(state.searchController.text != ''){
                       bloc.add(StoreEvent.changeCategoryExpansion(isOpened: true));
                     }
-
-                      /* bloc.add(
-                            StoreEvent.globalSearchEvent(context: context));*/
+                       bloc.add(
+                            StoreEvent.globalSearchEvent(context: context));
                       },
                       onSearch: (String search) {
                         if (search.length > 1) {

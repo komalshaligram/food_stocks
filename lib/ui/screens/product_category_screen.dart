@@ -126,9 +126,8 @@ class ProductCategoryScreenWidget extends StatelessWidget {
               ),
               backgroundColor:Colors.transparent,
               onPressed: () {
-                Navigator.pushNamed(context, RouteDefine.basketScreen.name,
-        arguments: {AppStrings.isBasketScreenString: 'true'}
-                );
+                Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
+                    arguments: {AppStrings.isBasketScreenString: 'true'});
               },
             ),
             backgroundColor: AppColors.pageColor,

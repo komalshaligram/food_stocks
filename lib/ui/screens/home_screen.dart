@@ -1009,7 +1009,7 @@ index]
           context: context,
           productId: productId,
       isBarcode: isBarcode ?? false,
-      planoGramIndex: planoGramIndex
+      planoGramIndex: planoGramIndex,
         ));
     showModalBottomSheet(
       context: context,
