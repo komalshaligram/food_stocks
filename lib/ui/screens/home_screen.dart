@@ -1174,7 +1174,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock: isFromSearch ?int.parse(productStock):int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              productStock:int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty

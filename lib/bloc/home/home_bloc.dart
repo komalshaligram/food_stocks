@@ -210,14 +210,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   productSaleId: '',
                   productSupplierIds: '',
                   note: '',
-                  isNoteOpen: false,
+                  isNoteOpen: false, totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
                 );
 
-                emit(state.copyWith(productStockList: productStockList));
+
                 debugPrint('new index = ${state.productStockList.last}');
                 productStockUpdateIndex =
                     productStockList.indexOf(productStockList.last);
-
+                emit(state.copyWith(productStockList: productStockList,productStockUpdateIndex : productStockUpdateIndex));
                 debugPrint('barcode stock = ${state.productStockList.last}');
                 debugPrint('barcode stock 1= ${state.productStockList.last.quantity}');
                 debugPrint(

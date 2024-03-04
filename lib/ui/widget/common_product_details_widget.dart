@@ -85,6 +85,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     print('qrCode_____${qrCode}');
     print('stock_____${productStock}');
+    print('productUnitPrice${productUnitPrice}');
     return Container(
      // height: getScreenHeight(context) / 1.5,
       decoration: BoxDecoration(
@@ -101,7 +102,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          10.height,
+
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
