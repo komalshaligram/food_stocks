@@ -1963,7 +1963,7 @@ class StoreScreenWidget extends StatelessWidget {
         ),
         Container(
           height: 200,
-          padding: EdgeInsets.only(left: 10,right: 10),
+          padding: EdgeInsets.only(left: 10,right: 10,top: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,

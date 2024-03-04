@@ -8,7 +8,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:food_stock/bloc/home/home_bloc.dart';
-import 'package:food_stock/data/model/product_supplier_model/product_supplier_model.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 
 import 'package:food_stock/routes/app_routes.dart';
@@ -29,8 +28,7 @@ import 'package:photo_view/photo_view.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/balance_indicator.dart';
-import '../widget/bottomsheet_related_product_shimmer_widget.dart';
-import '../widget/common_product_button_widget.dart';
+
 import '../widget/common_product_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
@@ -1232,7 +1230,7 @@ class HomeScreenWidget extends StatelessWidget {
           alignment:
           context.rtl ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
             child: Text(
               AppLocalizations.of(context)!.related_products,
               style: AppStyles.rkRegularTextStyle(
