@@ -371,7 +371,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               add(StoreEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
 
-            if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
+            if ( (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: false);
               productStockList[productStockList
@@ -385,6 +385,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 productSupplierIds: '',
                 note: '',
                 isNoteOpen: false,
+
               );
 
               emit(state.copyWith(productStockList: productStockList));
@@ -1167,7 +1168,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     (Product) =>
                     ProductStockModel(
                       productId: Product.id ,
-                      stock: Product.productStock ,
+                      stock: double.parse(Product.productStock.toString()).toInt(),
                     )) ??
                 []);
 

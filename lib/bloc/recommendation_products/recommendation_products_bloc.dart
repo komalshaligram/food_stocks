@@ -960,7 +960,6 @@ class RecommendationProductsBloc
       }
       else if(event is _RelatedProductsEvent){
         print('productid____${event.productId}');
-
         emit(state.copyWith(isRelatedShimmering:true));
         final res = await DioClient(event.context).post(
             AppUrls.relatedProductsUrl,
@@ -976,7 +975,7 @@ class RecommendationProductsBloc
                   (Product) =>
                   ProductStockModel(
                     productId: Product.id ,
-                    stock: Product.productStock ,
+                    stock: double.parse(Product.productStock.toString()).toInt() ,
                   )));
 
           emit(state.copyWith(

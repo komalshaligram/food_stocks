@@ -48,7 +48,7 @@ class RelatedProductDatum with _$RelatedProductDatum {
     required String scale,
     required String status,
     required String productNumber,
-    required int productStock,
+    required String productStock,
     required double productPrice,
     required int totalSale,
   }) = _Datum;

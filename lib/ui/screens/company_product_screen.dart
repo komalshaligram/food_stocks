@@ -589,7 +589,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                 context: context,
                                // productStock: '1',
                                 productId: scanResult,
-                                isBarcode: true);
+                                isBarcode: true,
+                                productStock: '1'
+                            );
                           }
                         },
                       ),
