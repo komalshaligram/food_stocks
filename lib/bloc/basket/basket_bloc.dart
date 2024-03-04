@@ -938,7 +938,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     (Product) =>
                     ProductStockModel(
                       productId: Product.id,
-                      stock: Product.productStock,
+                      stock: double.parse(Product.productStock.toString()).toInt() ,
                     )));
 
             emit(state.copyWith(

@@ -653,7 +653,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                   (Product) =>
                   ProductStockModel(
                     productId: Product.id ,
-                    stock: Product.productStock ,
+                    stock: double.parse(Product.productStock.toString()).toInt()  ,
                   )));
 
           emit(state.copyWith(
