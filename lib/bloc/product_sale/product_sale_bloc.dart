@@ -165,7 +165,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(ProductSaleEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
+            add(ProductSaleEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
 
 
             debugPrint('product stock update index = $productStockUpdateIndex');
@@ -637,6 +637,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         emit(state.copyWith(productStockList: productStockList));
       }
       else if(event is _RelatedProductsEvent){
+        print('productId____${event.productId}');
         emit(state.copyWith(isRelatedShimmering:true));
         final res = await DioClient(event.context).post(
             AppUrls.relatedProductsUrl,

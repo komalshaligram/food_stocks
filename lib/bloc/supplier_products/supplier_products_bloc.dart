@@ -1038,7 +1038,7 @@ class SupplierProductsBloc
             searchList: event.searchList));
       }
       else if (event is _RelatedProductsEvent) {
-        if (event.productId != '') {
+        print('productId____${event.productId}');
           emit(state.copyWith(isRelatedShimmering: true));
           final res = await DioClient(event.context).post(
               AppUrls.relatedProductsUrl,
@@ -1070,7 +1070,7 @@ class SupplierProductsBloc
               type: SnackBarType.SUCCESS,
             );
           }
-        }
+
       }
       else if (event is _RemoveRelatedProductEvent) {
         emit(state.copyWith(relatedProductList: []));
