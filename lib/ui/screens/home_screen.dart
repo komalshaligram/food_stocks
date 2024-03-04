@@ -1237,7 +1237,7 @@ index]
                             );},itemCount: state.relatedProductList.length,),
                       )
                     ),
-                  );
+                  ));
                     },
                   ),
                 );

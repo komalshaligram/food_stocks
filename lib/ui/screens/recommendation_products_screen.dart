@@ -698,7 +698,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        print('productStock__reecomm__${productStock}');
         return DraggableScrollableSheet(
           expand: true,
           maxChildSize: 1 -
