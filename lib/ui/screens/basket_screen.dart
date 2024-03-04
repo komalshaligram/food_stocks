@@ -22,11 +22,8 @@ import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_img_path.dart';
-
 import '../utils/themes/app_styles.dart';
 import '../widget/basket_screen_shimmer_widget.dart';
-import '../widget/bottomsheet_related_product_shimmer_widget.dart';
-import '../widget/delayed_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 
 class BasketRoute {

@@ -1002,7 +1002,9 @@ class StoreScreenWidget extends StatelessWidget {
                             showProductDetails(
                                 context: context,
                                 productId: scanResult,
-                                isBarcode: true);
+                                isBarcode: true,
+                                productStock: '1'
+                            );
                           }
                           else{
                             Navigator.pushNamed(context, RouteDefine.connectScreen.name);
@@ -1118,7 +1120,7 @@ class StoreScreenWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
                       '${AppUrls.baseFileUrl}$searchImage',
-                      fit: BoxFit.fill,
+                      fit: BoxFit.fitHeight,
                       height: 80,
                       width: 80,
                       loadingBuilder: (context, child, loadingProgress) {

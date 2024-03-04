@@ -973,7 +973,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   (Product) =>
                   ProductStockModel(
                     productId: Product.id ,
-                    stock: Product.productStock ,
+                    stock: double.parse(Product.productStock.toString()).toInt() ,
                   )) ??
               []);
 

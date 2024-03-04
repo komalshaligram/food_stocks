@@ -978,7 +978,7 @@ class CompanyProductsBloc
                   (Product) =>
                   ProductStockModel(
                     productId: Product.id ,
-                    stock: Product.productStock ,
+                    stock: double.parse(Product.productStock.toString()).toInt()  ,
                   )));
 
           emit(state.copyWith(
