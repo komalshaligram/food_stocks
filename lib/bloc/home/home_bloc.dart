@@ -124,7 +124,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
         else if (event is _GetProductDetailsEvent) {
           add(HomeEvent.RemoveRelatedProductEvent());
-
           debugPrint('product details id = ${event.productId}');
           _isProductInCart = false;
           _cartProductId = '';
@@ -196,7 +195,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 }
               } on ServerException {}
               if(response.product != null){
-                add(HomeEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
+                add(HomeEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
               }
 
               if ((event.isBarcode )) {
@@ -1233,9 +1232,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
 
         else if(event is _RelatedProductsEvent){
-          debugPrint('productId___${event.productId}');
-            emit(state.copyWith(isRelatedShimmering:true,relatedProductList: []));
-          print('length____${state.relatedProductList.length}');
+          if(event.productId != ''){
+            emit(state.copyWith(isRelatedShimmering:true));
             final res = await DioClient(event.context).post(
                 AppUrls.relatedProductsUrl,
                 data: {'mainProductId':event.productId});
@@ -1250,7 +1248,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       (Product) =>
                       ProductStockModel(
                         productId: Product.id ,
-                        stock: Product.productStock,
+                        stock: Product.productStock ,
                       )) );
               emit(state.copyWith(
                   relatedProductList:response.data ?? [],
@@ -1266,7 +1264,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 type: SnackBarType.SUCCESS,
               );
             }
-
+          }
         }
         else if(event is _RemoveRelatedProductEvent){
           emit(state.copyWith(relatedProductList: []));
