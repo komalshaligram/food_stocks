@@ -825,28 +825,29 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 AppUrls.getNotificationMessageUrl,
                 data: GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson(),
             );
+
             GetMessagesResModel response = GetMessagesResModel.fromJson(res);
             if (response.status == 200) {
               List<MessageData> messageList = [];
-              messageList.addAll(response.data
-                  ?.map((message) =>
-                  MessageData(
-                    id: message.id,
-                    isRead: message.isRead,
-                    message: Message(
-                        id: message.message?.id ?? '',
-                        title: message.message?.title ?? '',
-                        summary: message.message?.summary ?? '',
-                        body: message.message?.body ?? '',
-                        messageImage:
-                        message.message?.messageImage ?? ''),
-                    createdAt: message.createdAt,
-                    updatedAt: message.updatedAt,
-                  ))
-                  .toList() ??
-                  []);
-              /* messageList.removeWhere(
-                (message) => (message.isPushNotification ?? false) == false);*/
+              if(messageList.isNotEmpty){
+                messageList.addAll(response.data
+                    ?.map((message) =>
+                    MessageData(
+                      id: message.id,
+                      isRead: message.isRead,
+                      message: Message(
+                          id: message.message?.id ?? '',
+                          title: message.message?.title ?? '',
+                          summary: message.message?.summary ?? '',
+                          body: message.message?.body ?? '',
+                          messageImage:
+                          message.message?.messageImage ?? ''),
+                      createdAt: message.createdAt,
+                      updatedAt: message.updatedAt,
+                    ))
+                    .toList() ??
+                    []);
+              }
               debugPrint('new message list len = ${messageList.length}');
               emit(state.copyWith(
                   messageList: messageList, isMessageShimmering: false));

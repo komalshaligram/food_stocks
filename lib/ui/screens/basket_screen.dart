@@ -947,7 +947,6 @@ class BasketScreenWidget extends StatelessWidget {
                                   );
                                 },);
                             },
-
                             context: context,
                             productImageIndex: state.productImageIndex,
                             onPageChanged: (index, p1) {
@@ -1039,6 +1038,7 @@ class BasketScreenWidget extends StatelessWidget {
                               }
                             },
                           ),
+
                           state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context)
                         ],
                       ),
@@ -1063,7 +1063,7 @@ class BasketScreenWidget extends StatelessWidget {
           alignment:
           context.rtl ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
             child: Text(
               AppLocalizations.of(context)!.related_products,
               style: AppStyles.rkRegularTextStyle(
