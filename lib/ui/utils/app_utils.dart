@@ -38,6 +38,7 @@ bool isTablet(BuildContext context) {
   return isTablet;
 }
 
+
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
   static void showSnackBar({

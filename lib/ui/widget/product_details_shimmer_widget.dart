@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/widget/bottomsheet_related_product_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
 import '../utils/app_utils.dart';
@@ -67,6 +68,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                   ),
                 ),
               ),
+              buildTextTitle(width: 80),
               Container(
                 decoration: BoxDecoration(
                   border: Border(
@@ -182,7 +184,11 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
               ),
             ],
           ),
-
+          Container(
+            padding: EdgeInsets.only(left:10,right:10),
+              alignment: Alignment.centerLeft,
+              child: buildTextTitle(width: 80)),
+          RelatedProductShimmerWidget()
 
         ],
       ),
