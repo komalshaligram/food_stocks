@@ -23,7 +23,6 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../../bloc/store/store_bloc.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
@@ -33,7 +32,6 @@ import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_product_details_widget.dart';
-import '../widget/delayed_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/store_screen_shimmer_widget.dart';
 
@@ -135,7 +133,7 @@ class StoreScreenWidget extends StatelessWidget {
                         state.refreshController.loadComplete();
                       },
                       child: SingleChildScrollView(
-                        child: state.isShimmering
+                        child: state.isShimmering && state.productCategoryList.isEmpty
                             ? StoreScreenShimmerWidget()
                             : AnimationLimiter(
                                 child: Column(
@@ -158,7 +156,7 @@ class StoreScreenWidget extends StatelessWidget {
                                               getScreenWidth(context).width,
                                           secondChild: Column(
                                             children: [
-                                              state.isCatVisible?   buildListTitles(
+                                              state.isCatVisible ?   buildListTitles(
                                                   context: context,
                                                   title: AppLocalizations.of(
                                                           context)!
@@ -248,14 +246,14 @@ class StoreScreenWidget extends StatelessWidget {
                                                                     .productCategoryList[
                                                                         index]
                                                                     .categoryName,
-                                                                AppStrings
+                                                               /* AppStrings
                                                                         .searchString:
                                                                     state
                                                                         .search,
                                                                 AppStrings
                                                                         .searchResultString:
                                                                     state
-                                                                        .searchList
+                                                                        .searchList*/
                                                               });
                                                           if (searchResult !=
                                                               null) {
@@ -540,7 +538,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                                           index]
                                                                       .id ??
                                                                   '',
-                                                            productStock: '1'
                                                           );
                                                         });
                                                   },
@@ -614,14 +611,19 @@ class StoreScreenWidget extends StatelessWidget {
                                                           onButtonTap: () {
                                                             print("tap 2");
                                                             showProductDetails(
-                                                                productStock: state.relatedProductList[index].productStock.toString(),
                                                                 context:
                                                                     context,
                                                                 productId: state
                                                                         .recommendedProductsList[
                                                                             index]
                                                                         .id ??
-                                                                    '');
+                                                                    '',
+                                                            productStock:  state
+                                                                .recommendedProductsList[
+                                                            index]
+                                                                .productStock.toString() ??
+                                                                ''
+                                                            );
                                                           },
                                                         )
                                                     ),
@@ -698,13 +700,16 @@ class StoreScreenWidget extends StatelessWidget {
                                                           onButtonTap: () {
                                                             print("tap 3");
                                                             showProductDetails(
-                                                              productStock: state.previousOrderProductsList[index].productStock.toString(),
                                                                 context:
                                                                     context,
                                                                 productId: state
                                                                         .previousOrderProductsList[
                                                                             index]
                                                                         .id ?? '',
+                                                              productStock: state
+                                                                  .previousOrderProductsList[
+                                                              index]
+                                                                  .productStock.toString() ?? '0'
                                                             );
                                                           },
                                                         )
@@ -733,15 +738,16 @@ class StoreScreenWidget extends StatelessWidget {
                       isCategoryExpand: state.isCategoryExpand,
                       isSearching: state.isSearching,
                       onFilterTap: () {
-                        bloc.add(StoreEvent.changeCategoryExpansion());
+                        bloc.add(StoreEvent.changeCategoryExpansion(isOpened: true));
+                        bloc.add(StoreEvent.getProductCategoriesListEvent(
+                            context: context));
                       },
                       onSearchTap: () {
                     if(state.searchController.text != ''){
                       bloc.add(StoreEvent.changeCategoryExpansion(isOpened: true));
                     }
-
-                      /* bloc.add(
-                            StoreEvent.globalSearchEvent(context: context));*/
+                       bloc.add(
+                            StoreEvent.globalSearchEvent(context: context));
                       },
                       onSearch: (String search) {
                         if (search.length > 1) {
@@ -1812,109 +1818,109 @@ class StoreScreenWidget extends StatelessWidget {
                                            ),
                                          ),
 
-                                         GestureDetector(
-                                             onTap: (){
-                                               Navigator.pop(dialogContext);
-                                             },
-                                             child: Icon(Icons.close,
-                                               color: Colors.white,
-                                             )),
-                                       ],
-                                     );
-                                   },);
-                               },
-                               context: context,
-                               productImageIndex: state.imageIndex,
-                               onPageChanged: (index, p1) {
-                                 context.read<StoreBloc>().add(
-                                     StoreEvent.updateImageIndexEvent(
-                                         index: index));
-                               },
-                               productImages: [
-                                 state.productDetails.first.mainImage ??
-                                     '',
-                                 ...state.productDetails.first.images
-                                     ?.map((image) =>
-                                 image.imageUrl ?? '') ??
-                                     []
-                               ],
-                               productPerUnit: state.productDetails.first
-                                   .numberOfUnit ?? 0,
-                               productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
-                               productName: state.productDetails.first
-                                   .productName ??
+                                       GestureDetector(
+                                           onTap: (){
+                                             Navigator.pop(dialogContext);
+                                           },
+                                           child: Icon(Icons.close,
+                                             color: Colors.white,
+                                           )),
+                                     ],
+                                   );
+                                 },);
+                             },
+                             context: context,
+                             productImageIndex: state.imageIndex,
+                             onPageChanged: (index, p1) {
+                               context.read<StoreBloc>().add(
+                                   StoreEvent.updateImageIndexEvent(
+                                       index: index));
+                             },
+                             productImages: [
+                               state.productDetails.first.mainImage ??
                                    '',
-                               productCompanyName: state
-                                   .productDetails.first.brandName ??
-                                   '',
-                               productDescription: parse(state
-                                   .productDetails
-                                   .first
-                                   .productDescription ??
-                                   '')
-                                   .body
-                                   ?.text ??
-                                   '',
-                               productSaleDescription: parse(state
-                                   .productDetails
-                                   .first
-                                   .productDescription ??
-                                   '')
-                                   .body
-                                   ?.text ??
-                                   '',
-                               productPrice: state
-                                   .productStockList[
-                               state.productStockUpdateIndex]
-                                   .totalPrice *
-                                   state
-                                       .productStockList[
-                                   state.productStockUpdateIndex]
-                                       .quantity *
-                                   (state.productDetails.first
-                                       .numberOfUnit ??
-                                       0) ,
-                               productScaleType: state.productDetails
-                                   .first.scales?.scaleType ??
-                                   '',
-                               productWeight: state
-                                   .productDetails.first.itemsWeight
-                                   ?.toDouble() ??
-                                   0.0,
-                               productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
-                               isRTL: context.rtl,
-                               isSupplierAvailable:
-                               state.productSupplierList.isEmpty
-                                   ? false
-                                   : true,
-                               scrollController: scrollController,
-                               productQuantity:  state
-                                   .productStockList[
-                               state.productStockUpdateIndex]
-                                   .quantity,
-                               onQuantityChanged: (quantity) {
-                                 context.read<StoreBloc>().add(
-                                     StoreEvent.updateQuantityOfProduct(
-                                         context: context1,
-                                         quantity: quantity));
-                               },
-                               onQuantityIncreaseTap: () {
-                                 context.read<StoreBloc>().add(
-                                     StoreEvent.increaseQuantityOfProduct(
-                                         context: context1));
-                               },
-                               onQuantityDecreaseTap: () {
-                                 if(state
+                               ...state.productDetails.first.images
+                                   ?.map((image) =>
+                               image.imageUrl ?? '') ??
+                                   []
+                             ],
+                             productPerUnit: state.productDetails.first
+                                 .numberOfUnit ?? 0,
+                             productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
+                             productName: state.productDetails.first
+                                 .productName ??
+                                 '',
+                             productCompanyName: state
+                                 .productDetails.first.brandName ??
+                                 '',
+                             productDescription: parse(state
+                                 .productDetails
+                                 .first
+                                 .productDescription ??
+                                 '')
+                                 .body
+                                 ?.text ??
+                                 '',
+                             productSaleDescription: parse(state
+                                 .productDetails
+                                 .first
+                                 .productDescription ??
+                                 '')
+                                 .body
+                                 ?.text ??
+                                 '',
+                             productPrice: state
+                                 .productStockList[
+                             state.productStockUpdateIndex]
+                                 .totalPrice *
+                                 state
                                      .productStockList[
                                  state.productStockUpdateIndex]
-                                     .quantity > 1){
-                                   context.read<StoreBloc>().add(
-                                       StoreEvent.decreaseQuantityOfProduct(
-                                           context: context1));
-                                 }
-                               },
-                             ),
+                                     .quantity *
+                                 (state.productDetails.first
+                                     .numberOfUnit ??
+                                     0) ,
+                             productScaleType: state.productDetails
+                                 .first.scales?.scaleType ??
+                                 '',
+                             productWeight: state
+                                 .productDetails.first.itemsWeight
+                                 ?.toDouble() ??
+                                 0.0,
+                             productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                             isRTL: context.rtl,
+                             isSupplierAvailable:
+                             state.productSupplierList.isEmpty
+                                 ? false
+                                 : true,
+                             scrollController: scrollController,
+                             productQuantity:  state
+                                 .productStockList[
+                             state.productStockUpdateIndex]
+                                 .quantity,
+                             onQuantityChanged: (quantity) {
+                               context.read<StoreBloc>().add(
+                                   StoreEvent.updateQuantityOfProduct(
+                                       context: context1,
+                                       quantity: quantity));
+                             },
+                             onQuantityIncreaseTap: () {
+                               context.read<StoreBloc>().add(
+                                   StoreEvent.increaseQuantityOfProduct(
+                                       context: context1));
+                             },
+                             onQuantityDecreaseTap: () {
+                               if(state
+                                   .productStockList[
+                               state.productStockUpdateIndex]
+                                   .quantity > 1){
+                                 context.read<StoreBloc>().add(
+                                     StoreEvent.decreaseQuantityOfProduct(
+                                         context: context1));
+                               }
+                             },
                            ),
+                         ),
 
                            bottomNavigationBar:
                            state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width : state.isRelatedShimmering

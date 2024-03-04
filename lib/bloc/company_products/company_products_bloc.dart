@@ -214,7 +214,7 @@ class CompanyProductsBloc
               }
             } on ServerException {}
             if(response.product != null){
-              add(CompanyProductsEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
+              add(CompanyProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
@@ -963,6 +963,7 @@ class CompanyProductsBloc
 
       else if(event is _RelatedProductsEvent){
         emit(state.copyWith(isRelatedShimmering:true));
+        print('productId____${event.productId}');
         final res = await DioClient(event.context).post(
             AppUrls.relatedProductsUrl,
             data: {'mainProductId':event.productId});

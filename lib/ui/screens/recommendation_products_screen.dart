@@ -260,7 +260,13 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                         .recommendationProductsList[
                                                             index]
                                                         .id ??
-                                                    '');
+                                                    '',
+                                             productStock:  state
+                                                 .recommendationProductsList[
+                                             index]
+                                                 .productStock.toString() ??
+                                                 ''
+                                            );
                                           })
 
                                       ):   ListView.builder(

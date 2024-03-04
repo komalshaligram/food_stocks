@@ -465,7 +465,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               }
             } on ServerException {}
             if(response.product != null){
-              add(StoreCategoryEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].productId));
+              add(StoreCategoryEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               // List<List<ProductStockModel>> productStockList =
@@ -491,6 +491,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               // debugPrint(
               //     'new index = ${planoGramIndex},$productStockUpdateIndex');
             }
+
+            
             // productStockList[planoGramIndex][productStockUpdateIndex] =
             //     productStockList[planoGramIndex][productStockUpdateIndex]
             //         .copyWith(stock: response.product?.first.numberOfUnit ?? 0);

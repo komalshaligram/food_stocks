@@ -64,7 +64,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       if (event is _ChangeCategoryExpansion) {
         if(event.isOpened == false ){
           state.searchController.clear();
-          emit(state.copyWith(searchController: state.searchController));
+          emit(state.copyWith(searchController: state.searchController,search: ''));
         }
         if (event.isOpened != null) {
           emit(state.copyWith(isCategoryExpand: event.isOpened ?? false));
@@ -368,7 +368,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               }
             } on ServerException {}
             if(response.product != null){
-              add(StoreEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
+              add(StoreEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
 
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {

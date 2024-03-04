@@ -195,9 +195,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 }
               } on ServerException {}
               if(response.product != null){
-                add(HomeEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
+                add(HomeEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
-
               if ((event.isBarcode )) {
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: false);
@@ -227,6 +226,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 debugPrint(
                     'barcode stock update index = $productStockUpdateIndex');
               }
+
+
               debugPrint(
                   'product stock update index = $productStockUpdateIndex');
               debugPrint(
@@ -823,12 +824,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             final res = await DioClient(event.context).post(
                 AppUrls.getNotificationMessageUrl,
                 data: GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson(),
-                options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferences.getAuthToken()}',
-                  },
-                ));
+            );
             GetMessagesResModel response = GetMessagesResModel.fromJson(res);
             if (response.status == 200) {
               List<MessageData> messageList = [];
@@ -1232,7 +1228,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
 
         else if(event is _RelatedProductsEvent){
-          if(event.productId != ''){
+         print('productId____${event.productId}');
             emit(state.copyWith(isRelatedShimmering:true));
             final res = await DioClient(event.context).post(
                 AppUrls.relatedProductsUrl,
@@ -1248,7 +1244,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       (Product) =>
                       ProductStockModel(
                         productId: Product.id ,
-                        stock: Product.productStock ,
+                        stock: double.parse(Product.productStock.toString()).toInt(),
                       )) );
               emit(state.copyWith(
                   relatedProductList:response.data ?? [],
@@ -1264,7 +1260,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 type: SnackBarType.SUCCESS,
               );
             }
-          }
+
         }
         else if(event is _RemoveRelatedProductEvent){
           emit(state.copyWith(relatedProductList: []));

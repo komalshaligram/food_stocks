@@ -935,7 +935,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-
+                                                      
                                             GestureDetector(
                                                 onTap: (){
                                                   Navigator.pop(dialogContext);
@@ -947,7 +947,7 @@ class BasketScreenWidget extends StatelessWidget {
                                         );
                                       },);
                                   },
-
+                                                      
                                   context: context,
                                   productImageIndex: state.productImageIndex,
                                   onPageChanged: (index, p1) {
@@ -1040,7 +1040,7 @@ class BasketScreenWidget extends StatelessWidget {
                                   },
                                 ),
                               ),
-
+                      
                           bottomNavigationBar:
                           state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width : state.isRelatedShimmering
                               ? RelatedProductShimmerWidget() :
