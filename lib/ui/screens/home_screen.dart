@@ -1,4 +1,3 @@
-
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,6 +34,9 @@ import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
+
+import '../widget/delayed_widget.dart';
+
 
 class HomeRoute {
   static Widget get route =>  HomeScreen();
@@ -1060,7 +1062,7 @@ class HomeScreenWidget extends StatelessWidget {
                             )),
                       )
                           : SingleChildScrollView(
-                        physics: NeverScrollableScrollPhysics(),
+                         physics: NeverScrollableScrollPhysics(),
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
@@ -1077,7 +1079,6 @@ class HomeScreenWidget extends StatelessWidget {
                                 showDialog(
                                   context: context,
                                   builder: (dialogContext) {
-                                    print('state.productStockList[state.productStockUpdateIndex].stock.toString() ${state.productStockUpdateIndex}');
                                     return Stack(
                                       children: [
                                         Container(
@@ -1205,7 +1206,8 @@ class HomeScreenWidget extends StatelessWidget {
                                 }
                               },
                             ),
-                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context),
+                            0.height,
+                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context)
                           ],
                         ),
 
@@ -1242,7 +1244,7 @@ class HomeScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.relatedProductItemHeight,
+          height: 180,
           padding: EdgeInsets.only(left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1250,7 +1252,7 @@ class HomeScreenWidget extends StatelessWidget {
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
-                width: AppConstants.relatedProductItemWidth,
+                width: 140,
                 productImage:relatedProductList[i].mainImage,
                 productName: relatedProductList.elementAt(i).productName,
                 totalSaleCount: relatedProductList.elementAt(i).totalSale,

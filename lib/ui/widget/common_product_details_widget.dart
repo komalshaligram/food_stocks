@@ -83,9 +83,9 @@ class CommonProductDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('qrCode_____${qrCode}');
-    print('stock_____${productStock}');
-    print('productUnitPrice${productUnitPrice}');
+    debugPrint('qrCode_____${qrCode}');
+    debugPrint('stock_____${productStock}');
+    debugPrint('productUnitPrice${productUnitPrice}');
     return Container(
      // height: getScreenHeight(context) / 1.5,
       decoration: BoxDecoration(

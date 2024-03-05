@@ -16,23 +16,23 @@ class AppConfig {
   factory AppConfig.dev() {
     return AppConfig(
         flavor: 'dev',
-        appName: 'Food Stock Dev',
-        appBaseUrl: 'http://192.168.1.46:8080/api',
+        appName: 'Tavili Dev',
+        appBaseUrl: 'https://devapi.foodstock.shtibel.com/api',
         primaryColor: Colors.blue);
   }
 
   factory AppConfig.stag() {
     return AppConfig(
         flavor: 'stag',
-        appName: 'Food Stock Stag',
-        appBaseUrl: 'http://192.168.1.46:3000/api',
+        appName: 'Tavili',
+        appBaseUrl: 'https://api.foodstock.shtibel.com/api',
         primaryColor: Colors.red);
   }
 
   factory AppConfig.prod() {
     return AppConfig(
         flavor: 'prod',
-        appName: 'Food Stock',
+        appName: 'Tavili',
         appBaseUrl: 'https://api.foodstock.shtibel.com/api',
         primaryColor: Colors.green);
   }
