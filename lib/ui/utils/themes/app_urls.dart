@@ -1,7 +1,7 @@
 class AppUrls {
 
   static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
- // static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///devUrl
+  //static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///devUrl
 
   static const String baseFileUrl = 'https://foodstock-buckets.s3.il-central-1.amazonaws.com/';
 
