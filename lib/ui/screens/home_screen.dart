@@ -1081,35 +1081,40 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                             )),
                       )
                           : SingleChildScrollView(
-                            controller: scrollController,
+                        //   controller: scrollController,
                           child: NotificationListener<ScrollNotification>(
                             onNotification: (notification) {
-                              final metrices = notification.metrics;
-                              if (metrices.atEdge && metrices.pixels == 0) {
-                                //you are at top of  list
-                                print('____a');
+                if(getScreenHeight(context)<700 ){
+                  print('____650');
+                  final metrices = notification.metrics;
+                  if (metrices.atEdge && metrices.pixels == 0) {
+                    //you are at top of  list
+                    print('____a');
+                    Navigator.pop(context);
 
-                                Navigator.pop(context1);
-                                return false;
-                              }
+                  }
 
-                              if (metrices.pixels == metrices.minScrollExtent) {
-                                //you are at top of list
-                                print('____b');
-                                return true;
-                              }
+                  if (metrices.pixels == metrices.minScrollExtent) {
+                    //you are at top of list
+                    print('____b');
+                    //Navigator.pop(context);
+                    //return false;
+                  }
 
-                              if (metrices.atEdge && metrices.pixels > 0) {
-                                //you are at end of  list
-                                print('____c');
-                                return false;
-                              }
+                  if (metrices.atEdge && metrices.pixels > 0) {
+                    //you are at end of  list
+                    print('____c');
+                    //Navigator.pop(context);
+                    //return true;
+                  }
 
-                              if (metrices.pixels >= metrices.maxScrollExtent) {
-                                //you are at end of list
-                                print('____d');
-                              }
-                              return true;
+                  if (metrices.pixels >= metrices.maxScrollExtent) {
+                    //you are at end of list
+                    print('____d');
+                  }
+
+                }
+                return false;
                             },
                             child: Column(
                             children: [
@@ -1151,114 +1156,113 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                             ),
                                           ),
 
-                                          GestureDetector(
-                                              onTap: (){
-                                                Navigator.pop(dialogContext);
-                                              },
-                                              child: Icon(Icons.close,
-                                                color: Colors.white,
-                                              )),
-                                        ],
-                                      );
-                                    },);
-                                },
-                                context: context,
-                                productImageIndex: state.imageIndex,
-                                onPageChanged: (index, p1) {
-                                  context.read<HomeBloc>().add(
-                                      HomeEvent.updateImageIndexEvent(
-                                          index: index));
-                                },
-                                productImages: [
-                                  state.productDetails.first.mainImage ??
-                                      '',
-                                  ...state.productDetails.first.images
-                                      ?.map((image) =>
-                                  image.imageUrl ?? '') ??
-                                      []
-                                ],
-                                productPerUnit: state.productDetails.first
-                                    .numberOfUnit ?? 0,
-                                productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
-                                productName: state.productDetails.first
-                                    .productName ??
+                                        GestureDetector(
+                                            onTap: (){
+                                              Navigator.pop(dialogContext);
+                                            },
+                                            child: Icon(Icons.close,
+                                              color: Colors.white,
+                                            )),
+                                      ],
+                                    );
+                                  },);
+                              },
+                              context: context,
+                              productImageIndex: state.imageIndex,
+                              onPageChanged: (index, p1) {
+                                context.read<HomeBloc>().add(
+                                    HomeEvent.updateImageIndexEvent(
+                                        index: index));
+                              },
+                              productImages: [
+                                state.productDetails.first.mainImage ??
                                     '',
-                                productCompanyName: state
-                                    .productDetails.first.brandName ??
-                                    '',
-                                productDescription: parse(state
-                                    .productDetails
-                                    .first
-                                    .productDescription ??
-                                    '')
-                                    .body
-                                    ?.text ??
-                                    '',
-                                productSaleDescription: parse(state
-                                    .productDetails
-                                    .first
-                                    .productDescription ??
-                                    '')
-                                    .body
-                                    ?.text ??
-                                    '',
-                                productPrice: state
-                                    .productStockList[
-                                state.productStockUpdateIndex]
-                                    .totalPrice *
-                                    state
-                                        .productStockList[
-                                    state.productStockUpdateIndex]
-                                        .quantity *
-                                    (state.productDetails.first
-                                        .numberOfUnit ??
-                                        0) ,
-                                productScaleType: state.productDetails
-                                    .first.scales?.scaleType ??
-                                    '',
-                                productWeight: state
-                                    .productDetails.first.itemsWeight
-                                    ?.toDouble() ??
-                                    0.0,
-                                productStock:int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
-                                isRTL: context.rtl,
-                                isSupplierAvailable:
-                                state.productSupplierList.isEmpty
-                                    ? false
-                                    : true,
-                                scrollController: scrollController,
-                                productQuantity:  state
-                                    .productStockList[
-                                state.productStockUpdateIndex]
-                                    .quantity,
-                                onQuantityChanged: (quantity) {
-                                  context.read<HomeBloc>().add(
-                                      HomeEvent.updateQuantityOfProduct(
-                                          context: context1,
-                                          quantity: quantity));
-                                },
-                                onQuantityIncreaseTap: () {
-                                  context.read<HomeBloc>().add(
-                                      HomeEvent.increaseQuantityOfProduct(
-                                          context: context1));
-                                },
-                                onQuantityDecreaseTap: () {
-                                  if(state
+                                ...state.productDetails.first.images
+                                    ?.map((image) =>
+                                image.imageUrl ?? '') ??
+                                    []
+                              ],
+                              productPerUnit: state.productDetails.first
+                                  .numberOfUnit ?? 0,
+                              productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
+                              productName: state.productDetails.first
+                                  .productName ??
+                                  '',
+                              productCompanyName: state
+                                  .productDetails.first.brandName ??
+                                  '',
+                              productDescription: parse(state
+                                  .productDetails
+                                  .first
+                                  .productDescription ??
+                                  '')
+                                  .body
+                                  ?.text ??
+                                  '',
+                              productSaleDescription: parse(state
+                                  .productDetails
+                                  .first
+                                  .productDescription ??
+                                  '')
+                                  .body
+                                  ?.text ??
+                                  '',
+                              productPrice: state
+                                  .productStockList[
+                              state.productStockUpdateIndex]
+                                  .totalPrice *
+                                  state
                                       .productStockList[
                                   state.productStockUpdateIndex]
-                                      .quantity > 1){
-                                    context.read<HomeBloc>().add(
-                                        HomeEvent.decreaseQuantityOfProduct(
-                                            context: context1));
-                                  }
-                                },
-                              ),
-                              state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context,scrollController),
-                            ],
-                                                    ),
-                          ),
+                                      .quantity *
+                                  (state.productDetails.first
+                                      .numberOfUnit ??
+                                      0) ,
+                              productScaleType: state.productDetails
+                                  .first.scales?.scaleType ??
+                                  '',
+                              productWeight: state
+                                  .productDetails.first.itemsWeight
+                                  ?.toDouble() ??
+                                  0.0,
+                              productStock:int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              isRTL: context.rtl,
+                              isSupplierAvailable:
+                              state.productSupplierList.isEmpty
+                                  ? false
+                                  : true,
+                              scrollController: scrollController,
+                              productQuantity:  state
+                                  .productStockList[
+                              state.productStockUpdateIndex]
+                                  .quantity,
+                              onQuantityChanged: (quantity) {
+                                context.read<HomeBloc>().add(
+                                    HomeEvent.updateQuantityOfProduct(
+                                        context: context1,
+                                        quantity: quantity));
+                              },
+                              onQuantityIncreaseTap: () {
+                                context.read<HomeBloc>().add(
+                                    HomeEvent.increaseQuantityOfProduct(
+                                        context: context1));
+                              },
+                              onQuantityDecreaseTap: () {
+                                if(state
+                                    .productStockList[
+                                state.productStockUpdateIndex]
+                                    .quantity > 1){
+                                  context.read<HomeBloc>().add(
+                                      HomeEvent.decreaseQuantityOfProduct(
+                                          context: context1));
+                                }
+                              },
+                            ),
+                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context,scrollController),
+                          ],
+                                                  ),
 
-                                                ));
+                                                )));
                 },
               ),
             );

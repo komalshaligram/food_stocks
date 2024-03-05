@@ -95,71 +95,73 @@ class CommonProductDetailsWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Expanded(child: 0.width),
-              Expanded(
-                flex: 4,
-                child: Text(
-                  productName,
-                  style: AppStyles.rkBoldTextStyle(
-                    size: AppConstants.normalFont,
-                    color: AppColors.blackColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.close,
-                      size: 36,
-                      color: AppColors.blackColor,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          5.height,
-          Text(
-            '$productPerUnit ${AppLocalizations.of(context)!.unit_in_box} ',
-            style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.smallFont, color: AppColors.blackColor),
-          ),
-          Text(
-            '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
-            style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.font_14, color: AppColors.blackColor),
-          ),
-          5.height,
           GestureDetector(
-            onVerticalDragStart: (dragDetails) {
-              print('onVerticalDragStart');
-            },
-            onVerticalDragUpdate: (dragDetails) {
-              print('onVerticalDragUpdate');
-            },
-            onVerticalDragEnd: (endDetails) {
-              print('onVerticalDragEnd');
+            onPanUpdate: (detail){
               Navigator.pop(context);
             },
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Center(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(child: 0.width),
+                    Expanded(
+                      flex: 4,
+                      child: Text(
+                        productName,
+                        style: AppStyles.rkBoldTextStyle(
+                          size: AppConstants.normalFont,
+                          color: AppColors.blackColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(
+                            Icons.close,
+                            size: 36,
+                            color: AppColors.blackColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                5.height,
+                Text(
+                  '$productPerUnit ${AppLocalizations.of(context)!.unit_in_box} ',
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.smallFont, color: AppColors.blackColor),
+                ),
+                Text(
+                  '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_14, color: AppColors.blackColor),
+                ),
+              ],
+            ),
+          ),
+          5.height,
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onPanUpdate: (detail){
+                  Navigator.pop(context);
+                },
+                child: Center(
                   child: Stack(
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(
-                            bottom: 10,
+                            bottom: AppConstants.padding_10,
                             right: AppConstants.padding_10,
                             left: AppConstants.padding_10,
                             top: AppConstants.padding_10),
@@ -247,292 +249,292 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text(
-                  qrCode,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.smallFont, color: AppColors.blackColor),
-                ),
-                5.height,
-                /*   startDate != '' ?  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(AppLocalizations.of(context)!.from_time,
-                                style:
-                                AppStyles.rkRegularTextStyle(
-                                    size: AppConstants
-                                        .smallFont,
-                                    color:
-                                    AppColors.blackColor,
-                                fontWeight: FontWeight.w600
-                                ),
+              ),
+              Text(
+                qrCode,
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont, color: AppColors.blackColor),
+              ),
+              5.height,
+              /*   startDate != '' ?  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(AppLocalizations.of(context)!.from_time,
+                              style:
+                              AppStyles.rkRegularTextStyle(
+                                  size: AppConstants
+                                      .smallFont,
+                                  color:
+                                  AppColors.blackColor,
+                              fontWeight: FontWeight.w600
                               ),
-                              Text(startDate,
-                                style:
-                                AppStyles.rkRegularTextStyle(
-                                    size: AppConstants
-                                        .font_14,
-                                    color:
-                                    AppColors.blackColor),)
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(AppLocalizations.of(context)!.until_time,
-                                style:
-                                AppStyles.rkRegularTextStyle(
-                                    size: AppConstants
-                                        .smallFont,
-                                    color:
-                                    AppColors.blackColor,
-                                    fontWeight: FontWeight.w600
-                                ),),
-                              Text(endDate,
-                                style:
-                                AppStyles.rkRegularTextStyle(
-                                    size: AppConstants
-                                        .font_14,
-                                    color:
-                                    AppColors.blackColor),)
-                            ],
-                          )
-                        ],
-                      ),
-                    ): 0.width,
-                    10.height,*/
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      top: BorderSide(
-                          color: AppColors.borderColor.withOpacity(0.5),
-                          width: 1),
-                      bottom: BorderSide(
-                          color: AppColors.borderColor.withOpacity(0.5),
-                          width: 1),
-                    ),
-                  ),
-                  padding: EdgeInsets.fromLTRB(10, 10, 20, 0),
-                  child: productStock == 0 || productStock == -1
-                      ? Column(
-                          children: [
-                            5.height,
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '${AppLocalizations.of(context)!.out_of_stock1}',
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.smallFont,
-                                      color: AppColors.redColor),
-                                ),
-                              ],
                             ),
-                            10.height
-                          ],
-                        )
-                      : Column(
-                          children: [
-                            5.height,
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: getScreenWidth(context) >= 700
-                                      ? (getScreenWidth(context) - 30) / 3
-                                      : (getScreenWidth(context) - 30) / 2,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '${AppLocalizations.of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}',
-                                        style: AppStyles.rkBoldTextStyle(
-                                            size: AppConstants.font_30,
-                                            color: AppColors.blackColor,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                      Text(
-                                        "${parse(productSaleDescription).body?.text}",
-                                        style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.font_14,
-                                            color: AppColors.blackColor,
-                                            fontWeight: FontWeight.w400),
-                                        maxLines: 3,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  width: getScreenWidth(context) >= 700
-                                      ? (getScreenWidth(context) - 30) / 3
-                                      : (getScreenWidth(context) - 30) / 2,
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: onQuantityIncreaseTap,
-                                        child: Container(
-                                          height: 50,
-                                          width: 40,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.iconBGColor,
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(isRTL
-                                                  ? AppConstants.radius_5
-                                                  : AppConstants.radius_50),
-                                              bottomLeft: Radius.circular(isRTL
-                                                  ? AppConstants.radius_5
-                                                  : AppConstants.radius_50),
-                                              bottomRight: Radius.circular(isRTL
-                                                  ? AppConstants.radius_50
-                                                  : AppConstants.radius_5),
-                                              topRight: Radius.circular(isRTL
-                                                  ? AppConstants.radius_50
-                                                  : AppConstants.radius_5),
-                                            ),
-                                            border: Border.all(
-                                                color: AppColors.navSelectedColor,
-                                                width: 1),
-                                          ),
-                                          alignment: Alignment.center,
-                                          child: Icon(
-                                            Icons.add,
-                                            size: 26,
-                                            color: AppColors.mainColor,
-                                          ),
-                                        ),
-                                      ),
-                                      5.width,
-                                      Expanded(
-                                        child: Container(
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.iconBGColor,
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(
-                                                    AppConstants.radius_5),
-                                                bottomLeft: Radius.circular(
-                                                    AppConstants.radius_5),
-                                                bottomRight: Radius.circular(
-                                                    AppConstants.radius_5),
-                                                topRight: Radius.circular(
-                                                    AppConstants.radius_5),
-                                              ),
-                                              border: Border.all(
-                                                  color:
-                                                      AppColors.navSelectedColor,
-                                                  width: 1),
-                                            ),
-                                            alignment: Alignment.center,
-                                            child: TextField(
-                                              // readOnly: true,
-                                              controller: TextEditingController(
-                                                  text: "${productQuantity}")
-                                                ..selection =
-                                                    TextSelection.fromPosition(
-                                                        TextPosition(
-                                                            offset:
-                                                                "$productQuantity"
-                                                                    .length)),
-                                              textAlign: TextAlign.center,
-                                              style: AppStyles.rkBoldTextStyle(
-                                                  size: AppConstants.font_26,
-                                                  color: AppColors.blackColor,
-                                                  fontWeight: FontWeight.w700),
-                                              maxLength: 5,
-                                              maxLines: 1,
-                                              textInputAction:
-                                                  TextInputAction.done,
-                                              keyboardType: Platform.isIOS
-                                                  ? TextInputType
-                                                      .numberWithOptions(
-                                                          signed: true)
-                                                  : TextInputType.number,
-                                              inputFormatters: [
-                                                FilteringTextInputFormatter
-                                                    .digitsOnly
-                                              ],
-                                              textDirection: TextDirection.ltr,
-                                              onChanged: onQuantityChanged,
-                                              cursorColor: AppColors.mainColor,
-                                              decoration: InputDecoration(
-                                                  border: InputBorder.none,
-                                                  enabledBorder: InputBorder.none,
-                                                  focusedBorder: InputBorder.none,
-                                                  errorBorder: InputBorder.none,
-                                                  focusedErrorBorder:
-                                                      InputBorder.none,
-                                                  disabledBorder:
-                                                      InputBorder.none,
-                                                  filled: true,
-                                                  counterText: '',
-                                                  constraints: BoxConstraints(
-                                                      maxHeight: 50,
-                                                      minWidth: 50),
-                                                  fillColor: Colors.transparent,
-                                                  contentPadding:
-                                                      EdgeInsets.symmetric(
-                                                          horizontal: 0,
-                                                          vertical: 0)),
-                                            )),
-                                      ),
-                                      5.width,
-                                      GestureDetector(
-                                        onTap: onQuantityDecreaseTap,
-                                        child: Container(
-                                          height: 50,
-                                          width: 40,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.iconBGColor,
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(isRTL
-                                                  ? AppConstants.radius_50
-                                                  : AppConstants.radius_5),
-                                              bottomLeft: Radius.circular(isRTL
-                                                  ? AppConstants.radius_50
-                                                  : AppConstants.radius_5),
-                                              bottomRight: Radius.circular(isRTL
-                                                  ? AppConstants.radius_5
-                                                  : AppConstants.radius_50),
-                                              topRight: Radius.circular(isRTL
-                                                  ? AppConstants.radius_5
-                                                  : AppConstants.radius_50),
-                                            ),
-                                            border: Border.all(
-                                                color: AppColors.navSelectedColor,
-                                                width: 1),
-                                          ),
-                                          alignment: Alignment.center,
-                                          child: Icon(Icons.remove,
-                                              size: 26,
-                                              color: AppColors.mainColor),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            CommonProductDetailsButton(
-                                isLoading: isLoading,
-                                isSupplierAvailable: true,
-                                productStock: productStock,
-                                onAddToOrderPressed:
-                                    isLoading ? null : addToOrderTap),
+                            Text(startDate,
+                              style:
+                              AppStyles.rkRegularTextStyle(
+                                  size: AppConstants
+                                      .font_14,
+                                  color:
+                                  AppColors.blackColor),)
                           ],
                         ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(AppLocalizations.of(context)!.until_time,
+                              style:
+                              AppStyles.rkRegularTextStyle(
+                                  size: AppConstants
+                                      .smallFont,
+                                  color:
+                                  AppColors.blackColor,
+                                  fontWeight: FontWeight.w600
+                              ),),
+                            Text(endDate,
+                              style:
+                              AppStyles.rkRegularTextStyle(
+                                  size: AppConstants
+                                      .font_14,
+                                  color:
+                                  AppColors.blackColor),)
+                          ],
+                        )
+                      ],
+                    ),
+                  ): 0.width,
+                  10.height,*/
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                        color: AppColors.borderColor.withOpacity(0.5),
+                        width: 1),
+                    bottom: BorderSide(
+                        color: AppColors.borderColor.withOpacity(0.5),
+                        width: 1),
+                  ),
                 ),
+                padding: EdgeInsets.fromLTRB(10, 10, 20, 0),
+                child: productStock == 0 || productStock == -1
+                    ? Column(
+                        children: [
+                          5.height,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${AppLocalizations.of(context)!.out_of_stock1}',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.redColor),
+                              ),
+                            ],
+                          ),
+                          10.height
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          5.height,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: getScreenWidth(context) >= 700
+                                    ? (getScreenWidth(context) - 30) / 3
+                                    : (getScreenWidth(context) - 30) / 2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${AppLocalizations.of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}',
+                                      style: AppStyles.rkBoldTextStyle(
+                                          size: AppConstants.font_30,
+                                          color: AppColors.blackColor,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    Text(
+                                      "${parse(productSaleDescription).body?.text}",
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.font_14,
+                                          color: AppColors.blackColor,
+                                          fontWeight: FontWeight.w400),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                width: getScreenWidth(context) >= 700
+                                    ? (getScreenWidth(context) - 30) / 3
+                                    : (getScreenWidth(context) - 30) / 2,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: onQuantityIncreaseTap,
+                                      child: Container(
+                                        height: 50,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.iconBGColor,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(isRTL
+                                                ? AppConstants.radius_5
+                                                : AppConstants.radius_50),
+                                            bottomLeft: Radius.circular(isRTL
+                                                ? AppConstants.radius_5
+                                                : AppConstants.radius_50),
+                                            bottomRight: Radius.circular(isRTL
+                                                ? AppConstants.radius_50
+                                                : AppConstants.radius_5),
+                                            topRight: Radius.circular(isRTL
+                                                ? AppConstants.radius_50
+                                                : AppConstants.radius_5),
+                                          ),
+                                          border: Border.all(
+                                              color: AppColors.navSelectedColor,
+                                              width: 1),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: Icon(
+                                          Icons.add,
+                                          size: 26,
+                                          color: AppColors.mainColor,
+                                        ),
+                                      ),
+                                    ),
+                                    5.width,
+                                    Expanded(
+                                      child: Container(
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.iconBGColor,
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(
+                                                  AppConstants.radius_5),
+                                              bottomLeft: Radius.circular(
+                                                  AppConstants.radius_5),
+                                              bottomRight: Radius.circular(
+                                                  AppConstants.radius_5),
+                                              topRight: Radius.circular(
+                                                  AppConstants.radius_5),
+                                            ),
+                                            border: Border.all(
+                                                color:
+                                                    AppColors.navSelectedColor,
+                                                width: 1),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: TextField(
+                                            // readOnly: true,
+                                            controller: TextEditingController(
+                                                text: "${productQuantity}")
+                                              ..selection =
+                                                  TextSelection.fromPosition(
+                                                      TextPosition(
+                                                          offset:
+                                                              "$productQuantity"
+                                                                  .length)),
+                                            textAlign: TextAlign.center,
+                                            style: AppStyles.rkBoldTextStyle(
+                                                size: AppConstants.font_26,
+                                                color: AppColors.blackColor,
+                                                fontWeight: FontWeight.w700),
+                                            maxLength: 5,
+                                            maxLines: 1,
+                                            textInputAction:
+                                                TextInputAction.done,
+                                            keyboardType: Platform.isIOS
+                                                ? TextInputType
+                                                    .numberWithOptions(
+                                                        signed: true)
+                                                : TextInputType.number,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly
+                                            ],
+                                            textDirection: TextDirection.ltr,
+                                            onChanged: onQuantityChanged,
+                                            cursorColor: AppColors.mainColor,
+                                            decoration: InputDecoration(
+                                                border: InputBorder.none,
+                                                enabledBorder: InputBorder.none,
+                                                focusedBorder: InputBorder.none,
+                                                errorBorder: InputBorder.none,
+                                                focusedErrorBorder:
+                                                    InputBorder.none,
+                                                disabledBorder:
+                                                    InputBorder.none,
+                                                filled: true,
+                                                counterText: '',
+                                                constraints: BoxConstraints(
+                                                    maxHeight: 50,
+                                                    minWidth: 50),
+                                                fillColor: Colors.transparent,
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 0,
+                                                        vertical: 0)),
+                                          )),
+                                    ),
+                                    5.width,
+                                    GestureDetector(
+                                      onTap: onQuantityDecreaseTap,
+                                      child: Container(
+                                        height: 50,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.iconBGColor,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(isRTL
+                                                ? AppConstants.radius_50
+                                                : AppConstants.radius_5),
+                                            bottomLeft: Radius.circular(isRTL
+                                                ? AppConstants.radius_50
+                                                : AppConstants.radius_5),
+                                            bottomRight: Radius.circular(isRTL
+                                                ? AppConstants.radius_5
+                                                : AppConstants.radius_50),
+                                            topRight: Radius.circular(isRTL
+                                                ? AppConstants.radius_5
+                                                : AppConstants.radius_50),
+                                          ),
+                                          border: Border.all(
+                                              color: AppColors.navSelectedColor,
+                                              width: 1),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: Icon(Icons.remove,
+                                            size: 26,
+                                            color: AppColors.mainColor),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          CommonProductDetailsButton(
+                              isLoading: isLoading,
+                              isSupplierAvailable: true,
+                              productStock: productStock,
+                              onAddToOrderPressed:
+                                  isLoading ? null : addToOrderTap),
+                        ],
+                      ),
+              ),
 
-              ],
-            ),
+            ],
           ),
         ],
       ),

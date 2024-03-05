@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +35,7 @@ class BottomNavScreen extends StatelessWidget {
         ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint('bottom nav args = $args');
     return BlocProvider(
-      create: (context) => BottomNavBloc()..add(BottomNavEvent.NavigateToStoreScreenEvent(context: context, storeScreen: '')),
+      create: (context) => BottomNavBloc()..add(BottomNavEvent.NavigateToStoreScreenEvent(context: context, storeScreen: args?[AppStrings.pushNavigationString] ?? '',basketScreen:  args?[AppStrings.isBasketScreenString] ?? '')),
       child: BottomNavScreenWidget(storeScreen: args?[AppStrings.pushNavigationString] ?? '',
        basketScreen: args?[AppStrings.isBasketScreenString] ?? '',
       ),
@@ -128,8 +127,6 @@ class BottomNavScreenWidget extends StatelessWidget {
                   onTap: (index) async {
                     storeScreen = '';
                     basketScreen = '';
-
-
                     SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                         prefs: await SharedPreferences.getInstance());
                     if(preferencesHelper.getGuestUser()){
@@ -178,8 +175,6 @@ class BottomNavScreenWidget extends StatelessWidget {
       {required double screenHeight,
       required double screenWidth,
       required BottomNavState state}) {
-
-
     return Container(
       height: screenHeight,
       width: screenWidth,

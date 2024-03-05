@@ -41,6 +41,15 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         }
         debugPrint('cart count = ${state.cartCount}');
       }
+
+      else if(event is _NavigateToStoreScreenEvent){
+        if(event.basketScreen != ''){
+          emit(state.copyWith(index: 2));
+        }
+        else if(event.storeScreen != ''){
+          emit(state.copyWith(index: 1));
+        }
+      }
     });
   }
 }

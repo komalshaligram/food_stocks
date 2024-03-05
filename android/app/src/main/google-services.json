@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "229653257750",
+    "project_id": "foodstock-dev",
+    "storage_bucket": "foodstock-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:229653257750:android:0c3b8480c2b6094d7e5f37",
+        "android_client_info": {
+          "package_name": "com.foodstock"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4BSfAs-goQLSWw-HDLea9ofgfbcql6tY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:229653257750:android:0414e19d5078df777e5f37",
+        "android_client_info": {
+          "package_name": "com.foodstock.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4BSfAs-goQLSWw-HDLea9ofgfbcql6tY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:229653257750:android:cc4dffed27deeb4f7e5f37",
+        "android_client_info": {
+          "package_name": "com.foodstock.stag"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4BSfAs-goQLSWw-HDLea9ofgfbcql6tY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
