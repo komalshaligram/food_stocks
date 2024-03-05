@@ -36,9 +36,6 @@ import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
 
-import '../widget/delayed_widget.dart';
-
-
 class HomeRoute {
   static Widget get route =>  HomeScreen();
 }
