@@ -1,3 +1,4 @@
+
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,12 +29,13 @@ import 'package:photo_view/photo_view.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/balance_indicator.dart';
-
 import '../widget/common_product_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
+
+
 
 class HomeRoute {
   static Widget get route =>  HomeScreen();
@@ -58,8 +60,30 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class HomeScreenWidget extends StatelessWidget {
+class HomeScreenWidget extends StatefulWidget {
   HomeScreenWidget({super.key});
+
+  @override
+  State<HomeScreenWidget> createState() => _HomeScreenWidgetState();
+}
+
+class _HomeScreenWidgetState extends State<HomeScreenWidget> {
+
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >
+          scrollController.position.minScrollExtent + 5) {
+        // do Something
+      }
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent) {
+        // do Something
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -882,7 +906,6 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-
   void handleMessageOnBackground() {
     PushNotificationService().firebaseMessaging.getInitialMessage().then(
           (remoteMessage) {
@@ -926,7 +949,6 @@ class HomeScreenWidget extends StatelessWidget {
       ),
     );
   }
-
 
   Padding buildListTitles(
       {required BuildContext context,
@@ -1006,7 +1028,7 @@ class HomeScreenWidget extends StatelessWidget {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
       context: context,
       productId: productId,
-      isBarcode: isBarcode,
+      isBarcode: isBarcode ?? false,
       planoGramIndex: planoGramIndex,
     ));
     showModalBottomSheet(
@@ -1045,6 +1067,7 @@ class HomeScreenWidget extends StatelessWidget {
                         color: AppColors.whiteColor,
                       ),
                       clipBehavior: Clip.hardEdge,
+
                       child: state.isProductLoading
                           ? ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
@@ -1058,46 +1081,80 @@ class HomeScreenWidget extends StatelessWidget {
                             )),
                       )
                           : SingleChildScrollView(
-                         physics: NeverScrollableScrollPhysics(),
-                        child: Column(
-                          children: [
-                            CommonProductDetailsWidget(
-                              qrCode:state.productDetails.first.qrcode ?? '' ,
-                              addToOrderTap: () {
-                                context.read<HomeBloc>().add(
-                                    HomeEvent.addToCartProductEvent(
-                                        context: context1,
-                                        productId: productId
-                                    ));
-                              },
-                              isLoading: state.isLoading,
-                              imageOnTap: (){
-                                showDialog(
-                                  context: context,
-                                  builder: (dialogContext) {
-                                    return Stack(
-                                      children: [
-                                        Container(
-                                          height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
-                                          width: getScreenWidth(context),
-                                          child: GestureDetector(
-                                            onVerticalDragStart: (dragDetails) {
-                                              print('onVerticalDragStart');
-                                            },
-                                            onVerticalDragUpdate: (dragDetails) {
-                                              print('onVerticalDragUpdate');
-                                            },
-                                            onVerticalDragEnd: (endDetails) {
-                                              print('onVerticalDragEnd');
-                                              Navigator.pop(dialogContext);
-                                            },
-                                            child: PhotoView(
-                                              imageProvider: CachedNetworkImageProvider(
-                                                '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                        //   controller: scrollController,
+                          child: NotificationListener<ScrollNotification>(
+                            onNotification: (notification) {
+                if(getScreenHeight(context)<700 ){
+                  print('____650');
+                  final metrices = notification.metrics;
+                  if (metrices.atEdge && metrices.pixels == 0) {
+                    //you are at top of  list
+                    print('____a');
+                    Navigator.pop(context);
+
+                  }
+
+                  if (metrices.pixels == metrices.minScrollExtent) {
+                    //you are at top of list
+                    print('____b');
+                    //Navigator.pop(context);
+                    //return false;
+                  }
+
+                  if (metrices.atEdge && metrices.pixels > 0) {
+                    //you are at end of  list
+                    print('____c');
+                    //Navigator.pop(context);
+                    //return true;
+                  }
+
+                  if (metrices.pixels >= metrices.maxScrollExtent) {
+                    //you are at end of list
+                    print('____d');
+                  }
+
+                }
+                return false;
+                            },
+                            child: Column(
+                            children: [
+                              CommonProductDetailsWidget(
+                                qrCode:state.productDetails.first.qrcode ?? '' ,
+                                addToOrderTap: () {
+                                  context.read<HomeBloc>().add(
+                                      HomeEvent.addToCartProductEvent(
+                                          context: context1,
+                                          productId: productId
+                                      ));
+                                },
+                                isLoading: state.isLoading,
+                                imageOnTap: (){
+                                  showDialog(
+                                    context: context,
+                                    builder: (dialogContext) {
+                                      return Stack(
+                                        children: [
+                                          Container(
+                                            height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                            width: getScreenWidth(context),
+                                            child: GestureDetector(
+                                              onVerticalDragStart: (dragDetails) {
+                                                print('onVerticalDragStart');
+                                              },
+                                              onVerticalDragUpdate: (dragDetails) {
+                                                print('onVerticalDragUpdate');
+                                              },
+                                              onVerticalDragEnd: (endDetails) {
+                                                print('onVerticalDragEnd');
+                                                Navigator.pop(dialogContext);
+                                              },
+                                              child: PhotoView(
+                                                imageProvider: CachedNetworkImageProvider(
+                                                  '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
 
                                         GestureDetector(
                                             onTap: (){
@@ -1110,7 +1167,6 @@ class HomeScreenWidget extends StatelessWidget {
                                     );
                                   },);
                               },
-                              isPreview: state.isPreview,
                               context: context,
                               productImageIndex: state.imageIndex,
                               onPageChanged: (index, p1) {
@@ -1202,11 +1258,11 @@ class HomeScreenWidget extends StatelessWidget {
                                 }
                               },
                             ),
-                            0.height,
-                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context)
+                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context,scrollController),
                           ],
-                        ),
-                      ));
+                                                  ),
+
+                                                )));
                 },
               ),
             );
@@ -1217,53 +1273,60 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Align(
-          alignment:
-          context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
-            child: Text(
-              AppLocalizations.of(context)!.related_products,
-              style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.mediumFont,
-                  color: AppColors.blackColor),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context , ScrollController scrollController){
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      physics: ClampingScrollPhysics(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Align(
+            alignment:
+            context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
+              child: Text(
+                AppLocalizations.of(context)!.related_products,
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.mediumFont,
+                    color: AppColors.blackColor),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
-        ),
-        Container(
-          height: AppConstants.relatedProductItemHeight,
-          padding: EdgeInsets.only(left: 10,right: 10),
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemBuilder: (context2,i){
-              return CommonProductItemWidget(
-                productStock:relatedProductList.elementAt(i).productStock.toString(),
-                width: AppConstants.relatedProductItemWidth,
-                productImage:relatedProductList[i].mainImage,
-                productName: relatedProductList.elementAt(i).productName,
-                totalSaleCount: relatedProductList.elementAt(i).totalSale,
-                price:relatedProductList.elementAt(i).productPrice,
-                onButtonTap: (){
-                  Navigator.pop(prevContext);
-                  showProductDetails(
-                      context: context,
-                      productId: relatedProductList[i].id,
-                      isBarcode: false,
-                      productStock: (relatedProductList[i].productStock.toString())
-                  );
-                },
-              );},itemCount: relatedProductList.length,),
-        )
-      ],
+          Container(
+            height: AppConstants.relatedProductItemHeight,
+            padding: EdgeInsets.only(left: 10,right: 10),
+            child: ListView.builder(
+              controller: ScrollController(),
+              physics: ClampingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemBuilder: (context2,i){
+                return CommonProductItemWidget(
+                  productStock:relatedProductList.elementAt(i).productStock.toString(),
+                  width: AppConstants.relatedProductItemWidth,
+                  productImage:relatedProductList[i].mainImage,
+                  productName: relatedProductList.elementAt(i).productName,
+                  totalSaleCount: relatedProductList.elementAt(i).totalSale,
+                  price:relatedProductList.elementAt(i).productPrice,
+                  onButtonTap: (){
+                    Navigator.pop(prevContext);
+                    showProductDetails(
+                        context: context,
+                        productId: relatedProductList[i].id,
+                        isBarcode: false,
+                        productStock: (relatedProductList[i].productStock.toString())
+                    );
+                  },
+                );},itemCount: relatedProductList.length,),
+          )
+        ],
+      ),
     );
   }
 
@@ -1341,7 +1404,6 @@ class HomeScreenWidget extends StatelessWidget {
       ),
     );
   }
-
 
   void showConditionDialog(
       {required BuildContext context, required String saleCondition}) {

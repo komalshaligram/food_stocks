@@ -25,16 +25,11 @@ class CommonProductDetailsButton extends StatelessWidget {
     return !isSupplierAvailable || productStock == 0
         ? 0.width
         : Container(
-            height: 90,
+            height: 70,
             width: getScreenWidth(context),
             padding: EdgeInsets.symmetric(
                 horizontal: AppConstants.padding_20,
-                vertical: AppConstants.padding_20),
-      /*      decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                border: Border(
-                    top: BorderSide(
-                        color: AppColors.lightBorderColor, width: 1))),*/
+                vertical: AppConstants.padding_10),
             child: CommonProductButtonWidget(
               title: AppLocalizations.of(context)!.add_to_order,
               isLoading: isLoading,

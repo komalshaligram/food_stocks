@@ -75,6 +75,7 @@ class _MyAppState extends State<MyApp> {
       await AppConfig.initializeAppConfig(context);
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
+
     super.initState();
   }
 
