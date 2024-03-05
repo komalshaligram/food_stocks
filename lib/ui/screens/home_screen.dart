@@ -1062,7 +1062,7 @@ class HomeScreenWidget extends StatelessWidget {
                             )),
                       )
                           : SingleChildScrollView(
-                        // physics: AlwaysScrollableScrollPhysics(),
+                         physics: NeverScrollableScrollPhysics(),
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
@@ -1079,7 +1079,6 @@ class HomeScreenWidget extends StatelessWidget {
                                 showDialog(
                                   context: context,
                                   builder: (dialogContext) {
-                                    print('state.productStockList[state.productStockUpdateIndex].stock.toString() ${state.productStockUpdateIndex}');
                                     return Stack(
                                       children: [
                                         Container(
@@ -1245,7 +1244,7 @@ class HomeScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: 200,
+          height: 180,
           padding: EdgeInsets.only(left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,

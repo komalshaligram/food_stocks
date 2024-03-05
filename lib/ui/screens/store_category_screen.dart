@@ -775,14 +775,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           Navigator.pushNamed(
                               context, RouteDefine.connectScreen.name);
                         }
-                      } /*else {
-                          showProductDetails(
-                              context: context,
-                              productId: '156470',
-                              planoGramIndex: state.productStockList
-                                  .indexOf(state.productStockList.last),
-                              isBarcode: true);
-                        }*/
+                      }
                     },
                   ),
                 ],
