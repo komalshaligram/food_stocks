@@ -64,7 +64,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 cityList: temp,
                 filterList: temp,
                 cityListResModel: cityListResModel,
-               // selectCity: cityListResModel.data!.cities!.first.cityName.toString(),
             ));
           } else {
             emit(state.copyWith(isShimmering: false));
@@ -72,10 +71,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
-          // CustomSnackBar.CustomSnackBar.showSnackBar(
-          //     context: event.context,
-          //     title: e.toString(),
-          //     type: SnackBarType.FAILURE);
         } catch (e) {
           emit(state.copyWith(isShimmering: false));
         }
@@ -140,11 +135,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             }
           } else {
             emit(state.copyWith(isFileSizeExceeds: true));
-          //  emit(state.copyWith(isFileSizeExceeds: false));
-            // CustomSnackBar.CustomSnackBar.showSnackBar(
-            //     context: event.context,
-            //     title: AppStrings.fileSizeLimitString,
-            //     type: SnackBarType.FAILURE);
           }
         }
       }
@@ -157,7 +147,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 .id,
             address: state.addressController.text.trim(),
             email: state.emailController.text,
-            //  phoneNumber: preferencesHelper.getPhoneNumber(),
             clientDetail: ClientDetail(fax: state.faxController.text.isNotEmpty ? state.faxController.text : ''),
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();
@@ -335,20 +324,14 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         if (state.isUpdate) {
           try {
             emit(state.copyWith(
-                /*
-                companyLogo: preferences.getUserCompanyLogoUrl(),*/
+
                 isUpdating: true));
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(
                         id: preferencesHelper.getUserId())
                     .toJson(),
-           /*     options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                        'Bearer ${preferencesHelper.getAuthToken()}',
-                  },
-                )*/);
+         );
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
             print('ProfileDetails Response     =   ${response}');
@@ -427,16 +410,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 type: SnackBarType.SUCCESS);
             return;
           }
-          //logo/659f7544cc3c883cf7b155a5/image_cropper_1704969828015.jpg
-       /*   emit(state.copyWith(isLoading: true));
-          RemoveFormAndFileReqModel reqModel =
-              RemoveFormAndFileReqModel(path: preferencesHelper.getUserCompanyLogoUrl());
-          debugPrint('delete file req = ${reqModel.path}');
-          final res = await DioClient(event.context)
-              .post(AppUrls.removeFileUrl, data: reqModel);
-          RemoveFormAndFileResModel response =
-              RemoveFormAndFileResModel.fromJson(res);
-          debugPrint('delete file res = ${response.message}');*/
           emit(state.copyWith(isUploadProcess: true));
           ProfileModel updatedProfileModel = ProfileModel(
               logo: '',

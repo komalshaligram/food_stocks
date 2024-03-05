@@ -44,7 +44,6 @@ class HomeRoute {
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -60,30 +59,10 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class HomeScreenWidget extends StatefulWidget {
+class HomeScreenWidget extends StatelessWidget {
   HomeScreenWidget({super.key});
 
-  @override
-  State<HomeScreenWidget> createState() => _HomeScreenWidgetState();
-}
-
-class _HomeScreenWidgetState extends State<HomeScreenWidget> {
-
   final ScrollController scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    scrollController.addListener(() {
-      if (scrollController.position.pixels >
-          scrollController.position.minScrollExtent + 5) {
-        // do Something
-      }
-      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent) {
-        // do Something
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -1086,28 +1065,19 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                             onNotification: (notification) {
                               final metrices = notification.metrics;
                               if (metrices.atEdge && metrices.pixels == 0) {
-                                //you are at top of  list
-                                print('____a');
-
                                 Navigator.pop(context1);
                                 return false;
                               }
 
                               if (metrices.pixels == metrices.minScrollExtent) {
-                                //you are at top of list
-                                print('____b');
                                 return true;
                               }
 
                               if (metrices.atEdge && metrices.pixels > 0) {
-                                //you are at end of  list
-                                print('____c');
                                 return false;
                               }
 
                               if (metrices.pixels >= metrices.maxScrollExtent) {
-                                //you are at end of list
-                                print('____d');
                               }
                               return true;
                             },
