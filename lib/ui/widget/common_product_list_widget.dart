@@ -16,7 +16,7 @@ class CommonProductListWidget extends StatelessWidget {
   final String productImage;
   final String productName;
   final int totalSaleCount;
-  final double price;
+  final dynamic price;
   final dynamic productStock;
   final void Function() onButtonTap;
   final bool isGuestUser;

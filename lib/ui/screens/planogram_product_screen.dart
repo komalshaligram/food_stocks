@@ -186,7 +186,10 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                 onPressed: () {
                                   showProductDetails(
                                       context: context,
-                                      productId: state.planogramProductList[index].id ?? '');
+                                      productId: state.planogramProductList[index].id ?? '',
+                                  productStock: state.planogramProductList[index].productStock.toString() ?? '0'
+                                  );
+
 
                                 },
                                 productStock :state.planogramProductList[index].productStock ?? 0,
@@ -592,151 +595,176 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                           )),
                     )
                         : SingleChildScrollView(
-                      physics: NeverScrollableScrollPhysics(),
-                      child: Column(
-                        children: [
-                          CommonProductDetailsWidget(
-                            qrCode:state.productDetails.first.qrcode ?? '' ,
-                            addToOrderTap: () {
-                              context.read<PlanogramProductBloc>().add(
-                                  PlanogramProductEvent.addToCartProductEvent(
-                                      context: context1,
-                                      productId: productId
-                                  ));
-                            },
-                            isLoading: state.isLoading,
-                            imageOnTap: (){
-                              showDialog(
-                                context: context,
-                                builder: (dialogContext) {
-                                  return Stack(
-                                    children: [
-                                      Container(
-                                        height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
-                                        width: getScreenWidth(context),
-                                        child: GestureDetector(
-                                          onVerticalDragStart: (dragDetails) {
-                                            print('onVerticalDragStart');
-                                          },
-                                          onVerticalDragUpdate: (dragDetails) {
-                                            print('onVerticalDragUpdate');
-                                          },
-                                          onVerticalDragEnd: (endDetails) {
-                                            print('onVerticalDragEnd');
-                                            Navigator.pop(dialogContext);
-                                          },
-                                          child: PhotoView(
-                                            imageProvider: CachedNetworkImageProvider(
-                                              '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+
+                      child: NotificationListener<ScrollNotification>(
+                  onNotification: (notification) {
+                  if(getScreenHeight(context)<700 ){
+                  final metrices = notification.metrics;
+                  if (metrices.atEdge && metrices.pixels == 0) {
+                  Navigator.pop(context);
+
+                  }
+
+                  if (metrices.pixels == metrices.minScrollExtent) {
+
+                  }
+
+                  if (metrices.atEdge && metrices.pixels > 0) {
+
+                  }
+
+                  if (metrices.pixels >= metrices.maxScrollExtent) {
+
+                  }
+
+                  }
+                  return false;
+                  },
+                        child: Column(
+                          children: [
+                            CommonProductDetailsWidget(
+                              qrCode:state.productDetails.first.qrcode ?? '' ,
+                              addToOrderTap: () {
+                                context.read<PlanogramProductBloc>().add(
+                                    PlanogramProductEvent.addToCartProductEvent(
+                                        context: context1,
+                                        productId: productId
+                                    ));
+                              },
+                              isLoading: state.isLoading,
+                              imageOnTap: (){
+                                showDialog(
+                                  context: context,
+                                  builder: (dialogContext) {
+                                    return Stack(
+                                      children: [
+                                        Container(
+                                          height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                          width: getScreenWidth(context),
+                                          child: GestureDetector(
+                                            onVerticalDragStart: (dragDetails) {
+                                              print('onVerticalDragStart');
+                                            },
+                                            onVerticalDragUpdate: (dragDetails) {
+                                              print('onVerticalDragUpdate');
+                                            },
+                                            onVerticalDragEnd: (endDetails) {
+                                              print('onVerticalDragEnd');
+                                              Navigator.pop(dialogContext);
+                                            },
+                                            child: PhotoView(
+                                              imageProvider: CachedNetworkImageProvider(
+                                                '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
 
-                                      GestureDetector(
-                                          onTap: (){
-                                            Navigator.pop(dialogContext);
-                                          },
-                                          child: Icon(Icons.close,
-                                            color: Colors.white,
-                                          )),
-                                    ],
-                                  );
-                                },);
-                            },
-                            context: context,
-                            productImageIndex: state.imageIndex,
-                            onPageChanged: (index, p1) {
-                              context.read<PlanogramProductBloc>().add(
-                                  PlanogramProductEvent.updateImageIndexEvent(
-                                      index: index));
-                            },
-                            productImages: [
-                              state.productDetails.first.mainImage ??
+                                        GestureDetector(
+                                            onTap: (){
+                                              Navigator.pop(dialogContext);
+                                            },
+                                            child: Icon(Icons.close,
+                                              color: Colors.white,
+                                            )),
+                                      ],
+                                    );
+                                  },);
+                              },
+                              context: context,
+                              productImageIndex: state.imageIndex,
+                              onPageChanged: (index, p1) {
+                                context.read<PlanogramProductBloc>().add(
+                                    PlanogramProductEvent.updateImageIndexEvent(
+                                        index: index));
+                              },
+                              productImages: [
+                                state.productDetails.first.mainImage ??
+                                    '',
+                                ...state.productDetails.first.images
+                                    ?.map((image) =>
+                                image.imageUrl ?? '') ??
+                                    []
+                              ],
+                              productPerUnit: state.productDetails.first
+                                  .numberOfUnit ?? 0,
+                              productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
+                              productName: state.productDetails.first
+                                  .productName ??
                                   '',
-                              ...state.productDetails.first.images
-                                  ?.map((image) =>
-                              image.imageUrl ?? '') ??
-                                  []
-                            ],
-                            productPerUnit: state.productDetails.first
-                                .numberOfUnit ?? 0,
-                            productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
-                            productName: state.productDetails.first
-                                .productName ??
-                                '',
-                            productCompanyName: state
-                                .productDetails.first.brandName ??
-                                '',
-                            productDescription: parse(state
-                                .productDetails
-                                .first
-                                .productDescription ??
-                                '')
-                                .body
-                                ?.text ??
-                                '',
-                            productSaleDescription: parse(state
-                                .productDetails
-                                .first
-                                .productDescription ??
-                                '')
-                                .body
-                                ?.text ??
-                                '',
-                            productPrice: state
-                                .productStockList[
-                            state.productStockUpdateIndex]
-                                .totalPrice *
-                                state
-                                    .productStockList[
-                                state.productStockUpdateIndex]
-                                    .quantity *
-                                (state.productDetails.first
-                                    .numberOfUnit ??
-                                    0) ,
-                            productScaleType: state.productDetails
-                                .first.scales?.scaleType ??
-                                '',
-                            productWeight: state
-                                .productDetails.first.itemsWeight
-                                ?.toDouble() ??
-                                0.0,
-                            productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
-                            isRTL: context.rtl,
-                            isSupplierAvailable:
-                            state.productSupplierList.isEmpty
-                                ? false
-                                : true,
-                            scrollController: scrollController,
-                            productQuantity:  state
-                                .productStockList[
-                            state.productStockUpdateIndex]
-                                .quantity,
-                            onQuantityChanged: (quantity) {
-                              context.read<PlanogramProductBloc>().add(
-                                  PlanogramProductEvent.updateQuantityOfProduct(
-                                      context: context1,
-                                      quantity: quantity));
-                            },
-                            onQuantityIncreaseTap: () {
-                              context.read<PlanogramProductBloc>().add(
-                                  PlanogramProductEvent.increaseQuantityOfProduct(
-                                      context: context1));
-                            },
-                            onQuantityDecreaseTap: () {
-                              if(state
+                              productCompanyName: state
+                                  .productDetails.first.brandName ??
+                                  '',
+                              productDescription: parse(state
+                                  .productDetails
+                                  .first
+                                  .productDescription ??
+                                  '')
+                                  .body
+                                  ?.text ??
+                                  '',
+                              productSaleDescription: parse(state
+                                  .productDetails
+                                  .first
+                                  .productDescription ??
+                                  '')
+                                  .body
+                                  ?.text ??
+                                  '',
+                              productPrice: state
                                   .productStockList[
                               state.productStockUpdateIndex]
-                                  .quantity > 1){
+                                  .totalPrice *
+                                  state
+                                      .productStockList[
+                                  state.productStockUpdateIndex]
+                                      .quantity *
+                                  (state.productDetails.first
+                                      .numberOfUnit ??
+                                      0) ,
+                              productScaleType: state.productDetails
+                                  .first.scales?.scaleType ??
+                                  '',
+                              productWeight: state
+                                  .productDetails.first.itemsWeight
+                                  ?.toDouble() ??
+                                  0.0,
+                              productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              isRTL: context.rtl,
+                              isSupplierAvailable:
+                              state.productSupplierList.isEmpty
+                                  ? false
+                                  : true,
+                              scrollController: scrollController,
+                              productQuantity:  state
+                                  .productStockList[
+                              state.productStockUpdateIndex]
+                                  .quantity,
+                              onQuantityChanged: (quantity) {
                                 context.read<PlanogramProductBloc>().add(
-                                    PlanogramProductEvent.decreaseQuantityOfProduct(
+                                    PlanogramProductEvent.updateQuantityOfProduct(
+                                        context: context1,
+                                        quantity: quantity));
+                              },
+                              onQuantityIncreaseTap: () {
+                                context.read<PlanogramProductBloc>().add(
+                                    PlanogramProductEvent.increaseQuantityOfProduct(
                                         context: context1));
-                              }
-                            },
-                          ),
-                          state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context)
-                        ],
+                              },
+                              onQuantityDecreaseTap: () {
+                                if(state
+                                    .productStockList[
+                                state.productStockUpdateIndex]
+                                    .quantity > 1){
+                                  context.read<PlanogramProductBloc>().add(
+                                      PlanogramProductEvent.decreaseQuantityOfProduct(
+                                          context: context1));
+                                }
+                              },
+                            ),
+                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context)
+                          ],
+                        ),
                       ),
                     ),
                   );
