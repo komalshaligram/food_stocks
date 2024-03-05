@@ -38,7 +38,6 @@ class HomeState with _$HomeState {
     required bool isCatVisible,
     required bool isGuestUser,
     required bool isIgnorePointer,
-    required bool isPreview,
     required bool isRelatedShimmering,
     required List<RelatedProductDatum> relatedProductList,
   }) = _HomeState;
@@ -79,7 +78,6 @@ class HomeState with _$HomeState {
     isCatVisible: false,
     isGuestUser: false,
     isIgnorePointer: false,
-    isPreview: false,
       isRelatedShimmering:false,
       relatedProductList: [],
       );
