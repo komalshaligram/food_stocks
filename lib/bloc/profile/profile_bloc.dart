@@ -49,12 +49,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (pickedFile != null) {
           debugPrint("compress after size = ${await pickedFile.length()}");
-          // Directory? dir;
-          // if (defaultTargetPlatform == TargetPlatform.android) {
-          //   dir = await getApplicationDocumentsDirectory();
-          // } else {
-          //   dir = await getApplicationDocumentsDirectory();
-          // }
           CroppedFile? croppedImage = await cropImage(
               path: pickedFile.path,
               shape: CropStyle.circle,
@@ -117,10 +111,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             emit(state.copyWith(
                 isFileSizeExceeds: true, isFileUploading: false,isUploadingProcess: false));
             emit(state.copyWith(isFileSizeExceeds: false));
-            // CustomSnackBar.showSnackBar(
-            //     context: event.context,
-            //     title: AppStrings.fileSizeLimit500KBString,
-            //     type: SnackBarType.FAILURE);
           }
         }
       }   else if (event is _DeleteAccountEvent) {
@@ -275,50 +265,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             emit(state.copyWith(isUpdating: false));
           }
         }
-      } else if (event is _updateProfileDetailsEvent) {
-        /* if (state.image.path != '') {
-          Map<String, dynamic> req1 = {AppStrings.profileUpdateString: imgUrl};
-          try {
-            final res = await DioClient(event.context).post(
-              "${AppUrls.fileUpdateUrl}/${preferences.getUserId()}",
-              data: req1,
-            );
-            debugPrint('update profile image req_______${req1}');
-            file.FileUpdateResModel response =
-                file.FileUpdateResModel.fromJson(res);
-
-            if (response.status == 200) {
-              preferences.setUserImageUrl(
-                  imageUrl: response.data!.client!.profileImage.toString());
-              debugPrint('update profile image req________${response}');
-              imgUrl = response.data!.client!.profileImage.toString();
-            } else {
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
-                      event.context),
-                  type: SnackBarType.FAILURE);
-              return;
-            }
-          } on ServerException {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                type: SnackBarType.FAILURE);
-            return;
-          } catch (e) {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                type: SnackBarType.FAILURE);
-            return;
-          }
-        }*/
-
+      }
+      else if (event is _updateProfileDetailsEvent) {
         debugPrint('imageurl_____$imgUrl');
         ProfileModel updatedProfileModel = ProfileModel(
           profileImage: state.image.path != '' ? imgUrl : state.UserImageUrl,
@@ -352,11 +300,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           return value == null;
         });
         try {
-          debugPrint('profile req = ${/*updatedProfileModel.toJson()*/ req}');
+          debugPrint('profile req = ${req}');
           emit(state.copyWith(isLoading: true));
           final res = await DioClient(event.context).post(
               AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
-              data: /*updatedProfileModel.toJson()*/ req,
+              data:req,
               options: Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
@@ -393,7 +341,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         } on ServerException {
           emit(state.copyWith(isLoading: false));
         }
-      } else if (event is _deleteFileEvent) {
+      }
+
+      else if (event is _deleteFileEvent) {
         try {
           if (state.UserImageUrl.isEmpty) {
             return;
@@ -408,15 +358,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             return;
           }
           emit(state.copyWith(isFileUploading: true));
-    /*      RemoveFormAndFileReqModel reqModel =
-              RemoveFormAndFileReqModel(path: state.UserImageUrl);
-          debugPrint('delete file req = ${reqModel.path}');
-          final res = await DioClient(event.context)
-              .post(AppUrls.removeFileUrl, data: reqModel);
-          RemoveFormAndFileResModel response =
-              RemoveFormAndFileResModel.fromJson(res);
-          debugPrint('delete file res = ${response.message}');*/
-
           ProfileModel updatedProfileModel = ProfileModel(
             profileImage: '',
             clientDetail: ClientDetail()
