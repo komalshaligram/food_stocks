@@ -35,9 +35,6 @@ import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
 
-import '../widget/delayed_widget.dart';
-
-
 class HomeRoute {
   static Widget get route =>  HomeScreen();
 }
@@ -1009,7 +1006,7 @@ class HomeScreenWidget extends StatelessWidget {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
       context: context,
       productId: productId,
-      isBarcode: isBarcode ?? false,
+      isBarcode: isBarcode,
       planoGramIndex: planoGramIndex,
     ));
     showModalBottomSheet(
@@ -1048,7 +1045,6 @@ class HomeScreenWidget extends StatelessWidget {
                         color: AppColors.whiteColor,
                       ),
                       clipBehavior: Clip.hardEdge,
-
                       child: state.isProductLoading
                           ? ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
@@ -1210,7 +1206,6 @@ class HomeScreenWidget extends StatelessWidget {
                             state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context)
                           ],
                         ),
-
                       ));
                 },
               ),
@@ -1244,7 +1239,7 @@ class HomeScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: 180,
+          height: AppConstants.relatedProductItemHeight,
           padding: EdgeInsets.only(left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1252,7 +1247,7 @@ class HomeScreenWidget extends StatelessWidget {
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
-                width: 140,
+                width: AppConstants.relatedProductItemWidth,
                 productImage:relatedProductList[i].mainImage,
                 productName: relatedProductList.elementAt(i).productName,
                 totalSaleCount: relatedProductList.elementAt(i).totalSale,
