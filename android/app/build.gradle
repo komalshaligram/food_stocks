@@ -67,13 +67,9 @@ android {
         dev {
             dimension "app"
             applicationId "com.foodstock.dev"
-            resValue "string", "app_name", "TAVILI"
+            resValue "string", "app_name", "TAVILI DEV"
         }
-        stag {
-            dimension "app"
-            applicationId "com.foodstock.stag"
-            resValue "string", "app_name", "TAVILI"
-        }
+
         prod {
             dimension "app"
             applicationId "com.foodstock"
