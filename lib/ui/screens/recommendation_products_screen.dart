@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/recommendation_products/recommendation_products_bloc.dart';
+import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/refresh_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -260,7 +261,13 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                         .recommendationProductsList[
                                                             index]
                                                         .id ??
-                                                    '');
+                                                    '',
+                                             productStock:  state
+                                                 .recommendationProductsList[
+                                             index]
+                                                 .productStock.toString() ??
+                                                 ''
+                                            );
                                           })
 
                                       ):   ListView.builder(
@@ -558,7 +565,9 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                             context: context,
                             // productStock: '1',
                             productId: scanResult,
-                            isBarcode: true);
+                            isBarcode: true,
+                            productStock: '1'
+                        );
                       }
                     },
                   ),
@@ -719,193 +728,164 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       color: AppColors.whiteColor,
                     ),
                     clipBehavior: Clip.hardEdge,
-                    child: SafeArea(
-                      child: Scaffold(
-                          body: state.isProductLoading
-                              ? ProductDetailsShimmerWidget()
-                              : state.productDetails.isEmpty
-                              ? Center(
-                            child: Text(
-                                AppLocalizations.of(context)!.no_product,
-                                style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.normalFont,
-                                  color: AppColors.redColor,
-                                  fontWeight: FontWeight.w500,
-                                )),
-                          )
-                              : SingleChildScrollView(
-                                child: CommonProductDetailsWidget(
-                                  qrCode:state.productDetails.first.qrcode ?? '' ,
-                                  isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
-                                  addToOrderTap: () {
-                                    context.read<RecommendationProductsBloc>().add(
-                                        RecommendationProductsEvent.addToCartProductEvent(
-                                            context: context1,
-                                            productId: productId
-                                        ));
-                                  },
-                                  isLoading: state.isLoading,
-                                  imageOnTap: (){
-                                    showDialog(
-                                      context: context,
-                                      builder: (dialogContext) {
-                                        return Stack(
-                                          children: [
-                                            Container(
-                                              height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
-                                              width: getScreenWidth(context),
-                                              child: GestureDetector(
-                                                onVerticalDragStart: (dragDetails) {
-                                                  print('onVerticalDragStart');
-                                                },
-                                                onVerticalDragUpdate: (dragDetails) {
-                                                  print('onVerticalDragUpdate');
-                                                },
-                                                onVerticalDragEnd: (endDetails) {
-                                                  print('onVerticalDragEnd');
-                                                  Navigator.pop(dialogContext);
-                                                },
-                                                child: PhotoView(
-                                                  imageProvider: CachedNetworkImageProvider(
-                                                    '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
-                                                  ),
-                                                ),
-                                              ),
+                    child:state.isProductLoading
+                        ? ProductDetailsShimmerWidget()
+                        : state.productDetails.isEmpty
+                        ? Center(
+                      child: Text(
+                          AppLocalizations.of(context)!.no_product,
+                          style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.normalFont,
+                            color: AppColors.redColor,
+                            fontWeight: FontWeight.w500,
+                          )),
+                    )
+                        : SingleChildScrollView(
+                      physics: NeverScrollableScrollPhysics(),
+                      child: Column(
+                        children: [
+                          CommonProductDetailsWidget(
+                            qrCode:state.productDetails.first.qrcode ?? '' ,
+                            addToOrderTap: () {
+                              context.read<RecommendationProductsBloc>().add(
+                                  RecommendationProductsEvent.addToCartProductEvent(
+                                      context: context1,
+                                      productId: productId
+                                  ));
+                            },
+                            isLoading: state.isLoading,
+                            imageOnTap: (){
+                              showDialog(
+                                context: context,
+                                builder: (dialogContext) {
+                                  return Stack(
+                                    children: [
+                                      Container(
+                                        height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                        width: getScreenWidth(context),
+                                        child: GestureDetector(
+                                          onVerticalDragStart: (dragDetails) {
+                                            print('onVerticalDragStart');
+                                          },
+                                          onVerticalDragUpdate: (dragDetails) {
+                                            print('onVerticalDragUpdate');
+                                          },
+                                          onVerticalDragEnd: (endDetails) {
+                                            print('onVerticalDragEnd');
+                                            Navigator.pop(dialogContext);
+                                          },
+                                          child: PhotoView(
+                                            imageProvider: CachedNetworkImageProvider(
+                                              '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                             ),
-                                                      
-                                            GestureDetector(
-                                                onTap: (){
-                                                  Navigator.pop(dialogContext);
-                                                },
-                                                child: Icon(Icons.close,
-                                                  color: Colors.white,
-                                                )),
-                                          ],
-                                        );
-                                      },);
-                                  },
-                                  context: context,
-                                  productImageIndex: state.imageIndex,
-                                  onPageChanged: (index, p1) {
-                                    context.read<RecommendationProductsBloc>().add(
-                                        RecommendationProductsEvent.updateImageIndexEvent(
-                                            index: index));
-                                  },
-                                  productImages: [
-                                    state.productDetails.first.mainImage ??
-                                        '',
-                                    ...state.productDetails.first.images
-                                        ?.map((image) =>
-                                    image.imageUrl ?? '') ??
-                                        []
-                                  ],
-                                  productPerUnit: state.productDetails.first
-                                      .numberOfUnit ?? 0,
-                                  productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
-                                  productName: state.productDetails.first
-                                      .productName ??
-                                      '',
-                                  productCompanyName: state
-                                      .productDetails.first.brandName ??
-                                      '',
-                                  productDescription: parse(state
-                                      .productDetails
-                                      .first
-                                      .productDescription ??
-                                      '')
-                                      .body
-                                      ?.text ??
-                                      '',
-                                  productSaleDescription: parse(state
-                                      .productDetails
-                                      .first
-                                      .productDescription ??
-                                      '')
-                                      .body
-                                      ?.text ??
-                                      '',
-                                  productPrice: state
-                                      .productStockList[
-                                  state.productStockUpdateIndex]
-                                      .totalPrice *
-                                      state
-                                          .productStockList[
-                                      state.productStockUpdateIndex]
-                                          .quantity *
-                                      (state.productDetails.first
-                                          .numberOfUnit ??
-                                          0) ,
-                                  productScaleType: state.productDetails
-                                      .first.scales?.scaleType ??
-                                      '',
-                                  productWeight: state
-                                      .productDetails.first.itemsWeight
-                                      ?.toDouble() ??
-                                      0.0,
-                                  productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
-                                  isRTL: context.rtl,
-                                  isSupplierAvailable:
-                                  state.productSupplierList.isEmpty
-                                      ? false
-                                      : true,
-                                  scrollController: scrollController,
-                                  productQuantity:  state
-                                      .productStockList[
-                                  state.productStockUpdateIndex]
-                                      .quantity,
-                                  onQuantityChanged: (quantity) {
-                                    context.read<RecommendationProductsBloc>().add(
-                                        RecommendationProductsEvent.updateQuantityOfProduct(
-                                            context: context1,
-                                            quantity: quantity));
-                                  },
-                                  onQuantityIncreaseTap: () {
-                                    context.read<RecommendationProductsBloc>().add(
-                                        RecommendationProductsEvent.increaseQuantityOfProduct(
-                                            context: context1));
-                                  },
-                                  onQuantityDecreaseTap: () {
-                                    if(state
-                                        .productStockList[
-                                    state.productStockUpdateIndex]
-                                        .quantity > 1){
-                                      context.read<RecommendationProductsBloc>().add(
-                                          RecommendationProductsEvent.decreaseQuantityOfProduct(
-                                              context: context1));
-                                    }
-                                  },
-                                ),
-                              ),
-                      
-                          bottomNavigationBar:
-                          state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width : state.isRelatedShimmering
-                              ? RelatedProductShimmerWidget() :
-                          Container(
-                            height: 200,
-                            padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemBuilder: (context2,i){
-                                return CommonProductItemWidget(
-                                  productStock:state.relatedProductList.elementAt(i).productStock.toString(),
-                                  width: 140,
-                                  productImage:state.relatedProductList[i].mainImage,
-                                  productName: state.relatedProductList.elementAt(i).productName,
-                                  totalSaleCount: state.relatedProductList.elementAt(i).totalSale,
-                                  price:state.relatedProductList.elementAt(i).productPrice,
-                                  onButtonTap: () {
-                                    Navigator.pop(context1);
-                                    showProductDetails(
-                                        context: context,
-                                        productId: state
-                                            .relatedProductList[i].id,
-                                        isBarcode: false,
-                                        productStock: (state.relatedProductList[i].productStock.toString())
-                                    );
-                                  },
-                                );},itemCount: state.relatedProductList.length,),
-                          )
+                                          ),
+                                        ),
+                                      ),
+
+                                      GestureDetector(
+                                          onTap: (){
+                                            Navigator.pop(dialogContext);
+                                          },
+                                          child: Icon(Icons.close,
+                                            color: Colors.white,
+                                          )),
+                                    ],
+                                  );
+                                },);
+                            },
+                            context: context,
+                            productImageIndex: state.imageIndex,
+                            onPageChanged: (index, p1) {
+                              context.read<RecommendationProductsBloc>().add(
+                                  RecommendationProductsEvent.updateImageIndexEvent(
+                                      index: index));
+                            },
+                            productImages: [
+                              state.productDetails.first.mainImage ??
+                                  '',
+                              ...state.productDetails.first.images
+                                  ?.map((image) =>
+                              image.imageUrl ?? '') ??
+                                  []
+                            ],
+                            productPerUnit: state.productDetails.first
+                                .numberOfUnit ?? 0,
+                            productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
+                            productName: state.productDetails.first
+                                .productName ??
+                                '',
+                            productCompanyName: state
+                                .productDetails.first.brandName ??
+                                '',
+                            productDescription: parse(state
+                                .productDetails
+                                .first
+                                .productDescription ??
+                                '')
+                                .body
+                                ?.text ??
+                                '',
+                            productSaleDescription: parse(state
+                                .productDetails
+                                .first
+                                .productDescription ??
+                                '')
+                                .body
+                                ?.text ??
+                                '',
+                            productPrice: state
+                                .productStockList[
+                            state.productStockUpdateIndex]
+                                .totalPrice *
+                                state
+                                    .productStockList[
+                                state.productStockUpdateIndex]
+                                    .quantity *
+                                (state.productDetails.first
+                                    .numberOfUnit ??
+                                    0) ,
+                            productScaleType: state.productDetails
+                                .first.scales?.scaleType ??
+                                '',
+                            productWeight: state
+                                .productDetails.first.itemsWeight
+                                ?.toDouble() ??
+                                0.0,
+                            productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                            isRTL: context.rtl,
+                            isSupplierAvailable:
+                            state.productSupplierList.isEmpty
+                                ? false
+                                : true,
+                            scrollController: scrollController,
+                            productQuantity:  state
+                                .productStockList[
+                            state.productStockUpdateIndex]
+                                .quantity,
+                            onQuantityChanged: (quantity) {
+                              context.read<RecommendationProductsBloc>().add(
+                                  RecommendationProductsEvent.updateQuantityOfProduct(
+                                      context: context1,
+                                      quantity: quantity));
+                            },
+                            onQuantityIncreaseTap: () {
+                              context.read<RecommendationProductsBloc>().add(
+                                  RecommendationProductsEvent.increaseQuantityOfProduct(
+                                      context: context1));
+                            },
+                            onQuantityDecreaseTap: () {
+                              if(state
+                                  .productStockList[
+                              state.productStockUpdateIndex]
+                                  .quantity > 1){
+                                context.read<RecommendationProductsBloc>().add(
+                                    RecommendationProductsEvent.decreaseQuantityOfProduct(
+                                        context: context1));
+                              }
+                            },
+                          ),
+                          state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context)
+                        ],
                       ),
                     ),
                   );
@@ -918,768 +898,54 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
       },
     );
   }
-  
-  
-/*  void showProductDetails(
-      {required BuildContext context, required String productId,
-       bool? isBarcode , String productStock = '0'
-      }) async {
-    context.read<RecommendationProductsBloc>().add(
-        RecommendationProductsEvent.getProductDetailsEvent(
-            context: context, productId: productId,
-        isBarcode: isBarcode ?? false
-        ));
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      isDismissible: true,
-      clipBehavior: Clip.hardEdge,
-      showDragHandle: true,
-      useSafeArea: true,
-      enableDrag: true,
-      builder: (context1) {
-        return BlocProvider.value(
-          value: context.read<RecommendationProductsBloc>(),
-          child: BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
-  builder: (blocContext, state) {
-    return DraggableScrollableSheet(
-            expand: true,
-      maxChildSize: 1 -
-          (MediaQuery.of(context).viewPadding.top /
-              getScreenHeight(context)),
 
-      minChildSize:  productStock == '0' ? 0.8 :  1 -
-          (MediaQuery.of(context).viewPadding.top /
-              getScreenHeight(context)),
-      initialChildSize:  productStock == '0' ? 0.8 :  1 -
-          (MediaQuery.of(context).viewPadding.top /
-              getScreenHeight(context)),
-            //shouldCloseOnMinExtent: true,
-            builder:
-                (BuildContext context1, ScrollController scrollController) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppConstants.radius_30),
-                        topRight: Radius.circular(AppConstants.radius_30),
-                      ),
-                      color: AppColors.whiteColor,
-                    ),
-                    clipBehavior: Clip.hardEdge,
-                    child: Scaffold(
-                      body: state.isProductLoading
-                          ? ProductDetailsShimmerWidget()
-                          : state.productDetails.isEmpty
-                          ? Center(
-                        child: Text(
-                            AppLocalizations.of(context)!.no_product,
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.normalFont,
-                              color: AppColors.redColor,
-                              fontWeight: FontWeight.w500,
-                            )),
-                      )
-                          : CommonProductDetailsWidget(
-                        qrCode:state.productDetails.first.qrcode ?? '' ,
-                        isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
-                        addToOrderTap: () {
-                          context.read<RecommendationProductsBloc>().add(
-                              RecommendationProductsEvent.addToCartProductEvent(
-                                  context: context1,
-                                  productId: productId
-                              ));
-                        },
-                        isLoading: state.isLoading,
-                        imageOnTap: (){
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Stack(
-                                children: [
-                                  Container(
-                                    height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
-                                    width: getScreenWidth(context),
-                                    child: GestureDetector(
-                                      onVerticalDragStart: (dragDetails) {
-                                        print('onVerticalDragStart');
-                                      },
-                                      onVerticalDragUpdate: (dragDetails) {
-                                        print('onVerticalDragUpdate');
-                                      },
-                                      onVerticalDragEnd: (endDetails) {
-                                        print('onVerticalDragEnd');
-                                        Navigator.pop(context);
-                                      },
-                                      child: PhotoView(
-                                        imageProvider: CachedNetworkImageProvider(
-                                          '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-
-                                  GestureDetector(
-                                      onTap: (){
-                                        Navigator.pop(context);
-                                      },
-                                      child: Icon(Icons.close,
-                                        color: Colors.white,
-                                      )),
-                                ],
-                              );
-                            },);
-
-                        },
-                        context: context,
-                        productImageIndex: state.imageIndex,
-                        onPageChanged: (index, p1) {
-                          context.read<RecommendationProductsBloc>().add(
-                              RecommendationProductsEvent.updateImageIndexEvent(
-                                  index: index));
-                        },
-                        productImages: [
-                          state.productDetails.first.mainImage ??
-                              '',
-                          ...state.productDetails.first.images
-                              ?.map((image) =>
-                          image.imageUrl ?? '') ??
-                              []
-                        ],
-                        productPerUnit: state.productDetails.first
-                            .numberOfUnit ?? 0,
-                        productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
-                        productName: state.productDetails.first
-                            .productName ??
-                            '',
-                        productCompanyName: state
-                            .productDetails.first.brandName ??
-                            '',
-                        productDescription: parse(state
-                            .productDetails
-                            .first
-                            .productDescription ??
-                            '')
-                            .body
-                            ?.text ??
-                            '',
-                        productSaleDescription: parse(state
-                            .productDetails
-                            .first
-                            .productDescription ??
-                            '')
-                            .body
-                            ?.text ??
-                            '',
-                        productPrice: state
-                            .productStockList[
-                        state.productStockUpdateIndex]
-                            .totalPrice *
-                            state
-                                .productStockList[
-                            state.productStockUpdateIndex]
-                                .quantity *
-                            (state.productDetails.first
-                                .numberOfUnit ??
-                                0) ,
-                        productScaleType: state.productDetails
-                            .first.scales?.scaleType ??
-                            '',
-                        productWeight: state
-                            .productDetails.first.itemsWeight
-                            ?.toDouble() ??
-                            0.0,
-                        productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
-                        isRTL: context.rtl,
-                        isSupplierAvailable:
-                        state.productSupplierList.isEmpty
-                            ? false
-                            : true,
-                        scrollController: scrollController,
-                        productQuantity:  state
-                            .productStockList[
-                        state.productStockUpdateIndex]
-                            .quantity,
-                        onQuantityChanged: (quantity) {
-                          context.read<RecommendationProductsBloc>().add(
-                              RecommendationProductsEvent.updateQuantityOfProduct(
-                                  context: context1,
-                                  quantity: quantity));
-                        },
-                        onQuantityIncreaseTap: () {
-                          context.read<RecommendationProductsBloc>().add(
-                              RecommendationProductsEvent.increaseQuantityOfProduct(
-                                  context: context1));
-                        },
-                        onQuantityDecreaseTap: () {
-                          if(state
-                              .productStockList[
-                          state.productStockUpdateIndex]
-                              .quantity > 1){
-                            context.read<RecommendationProductsBloc>().add(
-                                RecommendationProductsEvent.decreaseQuantityOfProduct(
-                                    context: context1));
-                          }
-
-                        },
-                      ),
-                      bottomNavigationBar: state.isRelatedShimmering ? RelatedProductShimmerWidget() :
-                      state.relatedProductList.isEmpty ? 0.width :
-                      Container(
-                        height: 200,
-                        padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemBuilder: (context,i){
-                            return CommonProductItemWidget(
-                              productStock:state.relatedProductList.elementAt(i).productStock.toString(),
-                              width: 140,
-                              productImage:state.relatedProductList[i].mainImage,
-                              productName: state.relatedProductList.elementAt(i).productName,
-                              totalSaleCount: state.relatedProductList.elementAt(i).totalSale,
-                              price:state.relatedProductList.elementAt(i).productPrice,
-                              onButtonTap: () {
-                                Navigator.of(context1).pop();
-                                showProductDetails(
-                                    context: context,
-                                    productId: state
-                                        .relatedProductList[i].id,
-                                    isBarcode: false,
-                                    productStock: (state.relatedProductList[i].productStock.toString() ?? '')
-                                );
-                              },
-                            );},itemCount: state.relatedProductList.length,),
-                      ),
-                    ),
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Align(
+          alignment:
+          context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
+            child: Text(
+              AppLocalizations.of(context)!.related_products,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.mediumFont,
+                  color: AppColors.blackColor),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        Container(
+          height: AppConstants.relatedProductItemHeight,
+          padding: EdgeInsets.only(left: 10,right: 10),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemBuilder: (context2,i){
+              return CommonProductItemWidget(
+                productStock:relatedProductList.elementAt(i).productStock.toString(),
+                width: AppConstants.relatedProductItemWidth,
+                productImage:relatedProductList[i].mainImage,
+                productName: relatedProductList.elementAt(i).productName,
+                totalSaleCount: relatedProductList.elementAt(i).totalSale,
+                price:relatedProductList.elementAt(i).productPrice,
+                onButtonTap: (){
+                  Navigator.pop(prevContext);
+                  showProductDetails(
+                      context: context,
+                      productId: relatedProductList[i].id,
+                      isBarcode: false,
+                      productStock: (relatedProductList[i].productStock.toString())
                   );
-            },
-          );
-  },
-),
-        );
-      },
-    );
-  }*/
-
-  Widget buildSupplierSelection({required BuildContext context}) {
-    return BlocProvider.value(
-      value: context.read<RecommendationProductsBloc>(),
-      child:
-      BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
-        builder: (context, state) {
-          return AnimatedCrossFade(
-              firstChild: Container(
-                width: getScreenWidth(context),
-                decoration: BoxDecoration(
-                    border: Border(
-                        top: BorderSide(
-                            color: AppColors.borderColor.withOpacity(0.5),
-                            width: 1))),
-                padding: const EdgeInsets.symmetric(
-                    vertical: AppConstants.padding_10,
-                    horizontal: AppConstants.padding_30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(bottom: AppConstants.padding_5),
-                      child: InkWell(
-                        onTap: () {
-                          context.read<RecommendationProductsBloc>().add(
-                              RecommendationProductsEvent
-                                  .changeSupplierSelectionExpansionEvent());
-                        },
-                        child: state.productSupplierList.length > 1 ?Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!.suppliers,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.mainColor,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            Icon(
-                              Icons.arrow_drop_down,
-                              size: 26,
-                              color: AppColors.blackColor,
-                            )
-                          ],
-                        ) : 0.width,
-                      ),
-                    ),
-                    state.productSupplierList
-                            .where((supplier) => supplier.selectedIndex != -1)
-                            .isEmpty
-                        ? InkWell(
-                            onTap: () {
-                              context.read<RecommendationProductsBloc>().add(
-                                  RecommendationProductsEvent
-                                      .changeSupplierSelectionExpansionEvent());
-                            },
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            child: Container(
-                              height: 60,
-                              width: getScreenWidth(context),
-                              alignment: Alignment.center,
-                              child: Text(
-                                '${AppLocalizations.of(context)!.select_supplier}',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.smallFont,
-                                    color: AppColors.blackColor),
-                              ),
-                            ))
-                        : ListView.builder(
-                            itemCount: state.productSupplierList
-                                    .where((supplier) =>
-                                        supplier.selectedIndex != -1)
-                                    .isNotEmpty
-                                ? 1
-                                : 0,
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                height: 85,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: AppConstants.padding_5,
-                                    horizontal: AppConstants.padding_10),
-                                margin: EdgeInsets.symmetric(
-                                    vertical: AppConstants.padding_5),
-                                decoration: BoxDecoration(
-                                  color: AppColors.iconBGColor,
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(AppConstants.radius_5)),
-                                  border: Border.all(
-                                      color: AppColors.borderColor
-                                          .withOpacity(0.8),
-                                      width: 1),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex != -1).companyName}',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_14,
-                                          color: AppColors.blackColor,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        width: getScreenWidth(context),
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: AppColors.borderColor
-                                                    .withOpacity(0.5),
-                                                width: 1),
-                                            color: AppColors.whiteColor,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                    AppConstants.radius_5))),
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: AppConstants.padding_3,
-                                            horizontal: AppConstants.padding_5),
-                                        margin: EdgeInsets.only(
-                                          top: AppConstants.padding_5,
-                                        ),
-                                        child: state.productSupplierList
-                                                    .firstWhere(
-                                                      (supplier) =>
-                                                          supplier
-                                                              .selectedIndex ==
-                                                          -2,
-                                                      orElse: () =>
-                                                          ProductSupplierModel(
-                                                              supplierId: '',
-                                                              companyName: ''),
-                                                    )
-                                                    .selectedIndex ==
-                                                -2
-                                            ? Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Text(
-                                                    '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency}${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(AppConstants.amountFrLength)}',
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .font_14,
-                                                            color: AppColors
-                                                                .blackColor),
-                                                  ),
-                                                ],
-                                              )
-                                            : Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Text(
-                                                    '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}',
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .font_12,
-                                                            color: AppColors
-                                                                .saleRedColor),
-                                                  ),
-                                                  2.height,
-                                                  Text(
-                                                    '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency}${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .font_14,
-                                                            color: AppColors
-                                                                .blackColor),
-                                                  ),
-                                                ],
-                                              ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          )
-                  ],
-                ),
-              ),
-              secondChild: state.productSupplierList.isEmpty
-                  ? Container(
-                      decoration: BoxDecoration(
-                          border: Border(
-                              top: BorderSide(
-                                  color: AppColors.borderColor.withOpacity(0.5),
-                                  width: 1))),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: AppConstants.padding_30),
-                      alignment: Alignment.center,
-                      child: Text(
-                        '${AppLocalizations.of(context)!.suppliers_not_available}',
-                        style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.smallFont,
-                            color: AppColors.textColor),
-                      ),
-                    )
-                  : ConstrainedBox(
-                      constraints: BoxConstraints(
-                          maxHeight: getScreenHeight(context) * 0.5,
-                          maxWidth: getScreenWidth(context)),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border(
-                                top: BorderSide(
-                                    color:
-                                        AppColors.borderColor.withOpacity(0.5),
-                                    width: 1))),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: AppConstants.padding_10,
-                            horizontal: AppConstants.padding_30),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: AppConstants.padding_5),
-                              child: InkWell(
-                                onTap: () {
-                                  context
-                                      .read<RecommendationProductsBloc>()
-                                      .add(RecommendationProductsEvent
-                                          .changeSupplierSelectionExpansionEvent());
-                                },
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      AppLocalizations.of(context)!.suppliers,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.mainColor,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Icon(
-                                      Icons.remove,
-                                      size: 26,
-                                      color: AppColors.blackColor,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Flexible(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: state.productSupplierList.length,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    height: 105,
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_5,
-                                        horizontal: AppConstants.padding_10),
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_10),
-                                    decoration: BoxDecoration(
-                                        color: AppColors.iconBGColor,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                                AppConstants.radius_10)),
-                                        boxShadow: [
-                                          state.productSupplierList[index]
-                                                      .selectedIndex !=
-                                                  -1
-                                              ? BoxShadow(
-                                                  color: AppColors.shadowColor
-                                                      .withOpacity(0.15),
-                                                  blurRadius:
-                                                      AppConstants.blur_10)
-                                              : BoxShadow()
-                                        ],
-                                        border: Border.all(
-                                            color: AppColors.lightBorderColor,
-                                            width: 1)),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          '${state.productSupplierList[index].companyName}',
-                                          style: AppStyles.rkRegularTextStyle(
-                                              size: AppConstants.font_14,
-                                              color: AppColors.blackColor,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        Expanded(
-                                          child: ListView.builder(
-                                            itemCount: state
-                                                    .productSupplierList[index]
-                                                    .supplierSales
-                                                    .length +
-                                                1,
-                                            scrollDirection: Axis.horizontal,
-                                            itemBuilder: (context, subIndex) {
-                                              return subIndex ==
-                                                      state
-                                                          .productSupplierList[
-                                                              index]
-                                                          .supplierSales
-                                                          .length
-                                                  ? InkWell(
-                                                      onTap: () {
-                                                        //for base price selection /without sale pass -2
-                                                        context
-                                                            .read<
-                                                                RecommendationProductsBloc>()
-                                                            .add(RecommendationProductsEvent
-                                                                .supplierSelectionEvent(
-                                                                    supplierIndex:
-                                                                        index,
-                                                                    context:
-                                                                        context,
-                                                                    supplierSaleIndex:
-                                                                        -2));
-                                                        context
-                                                            .read<
-                                                                RecommendationProductsBloc>()
-                                                            .add(RecommendationProductsEvent
-                                                                .changeSupplierSelectionExpansionEvent());
-                                                      },
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                            color: AppColors
-                                                                .whiteColor,
-                                                            borderRadius: BorderRadius.all(
-                                                                Radius.circular(
-                                                                    AppConstants
-                                                                        .radius_10)),
-                                                            border: Border.all(
-                                                                color: state
-                                                                            .productSupplierList[
-                                                                                index]
-                                                                            .selectedIndex ==
-                                                                        -2
-                                                                    ? AppColors
-                                                                        .mainColor
-                                                                        .withOpacity(
-                                                                            0.8)
-                                                                    : Colors
-                                                                        .transparent,
-                                                                width: 1.5)),
-                                                        padding: EdgeInsets.symmetric(
-                                                            vertical:
-                                                                AppConstants
-                                                                    .padding_3,
-                                                            horizontal:
-                                                                AppConstants
-                                                                    .padding_5),
-                                                        margin: EdgeInsets.only(
-                                                            top: AppConstants
-                                                                .padding_5,
-                                                            left: AppConstants
-                                                                .padding_5,
-                                                            right: AppConstants
-                                                                .padding_5),
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Text(
-                                                              '${AppLocalizations.of(context)!.price} : ${AppLocalizations.of(context)!.currency}${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}',
-                                                              style: AppStyles.rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .font_14,
-                                                                  color: AppColors
-                                                                      .blackColor),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : InkWell(
-                                                      onTap: () {
-                                                        context
-                                                            .read<
-                                                                RecommendationProductsBloc>()
-                                                            .add(RecommendationProductsEvent
-                                                                .supplierSelectionEvent(
-                                                                    supplierIndex:
-                                                                        index,
-                                                                    context:
-                                                                        context,
-                                                                    supplierSaleIndex:
-                                                                        subIndex));
-                                                        context
-                                                            .read<
-                                                                RecommendationProductsBloc>()
-                                                            .add(RecommendationProductsEvent
-                                                                .changeSupplierSelectionExpansionEvent());
-                                                      },
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                            color: AppColors
-                                                                .whiteColor,
-                                                            borderRadius: BorderRadius.all(
-                                                                Radius.circular(
-                                                                    AppConstants
-                                                                        .radius_10)),
-                                                            border: Border.all(
-                                                                color: state.productSupplierList[index].selectedIndex ==
-                                                                        subIndex
-                                                                    ? AppColors
-                                                                        .mainColor
-                                                                        .withOpacity(
-                                                                            0.8)
-                                                                    : Colors
-                                                                        .transparent,
-                                                                width: 1.5)),
-                                                        padding: EdgeInsets.symmetric(
-                                                            vertical:
-                                                                AppConstants
-                                                                    .padding_3,
-                                                            horizontal:
-                                                                AppConstants
-                                                                    .padding_5),
-                                                        margin: EdgeInsets.only(
-                                                            top: AppConstants
-                                                                .padding_5,
-                                                            left: AppConstants
-                                                                .padding_5,
-                                                            right: AppConstants
-                                                                .padding_5),
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Text(
-                                                              '${state.productSupplierList[index].supplierSales[subIndex].saleName}',
-                                                              style: AppStyles.rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .font_12,
-                                                                  color: AppColors
-                                                                      .saleRedColor),
-                                                            ),
-                                                            2.height,
-                                                            Text(
-                                                              '${AppLocalizations.of(context)!.price}  : ${AppLocalizations.of(context)!.currency}${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
-                                                              style: AppStyles.rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .font_14,
-                                                                  color: AppColors
-                                                                      .blackColor),
-                                                            ),
-                                                            2.height,
-                                                            GestureDetector(
-                                                                onTap: () {
-                                                                  showConditionDialog(
-                                                                      context:
-                                                                          context,
-                                                                      saleCondition:
-                                                                          '${state.productSupplierList[index].supplierSales[subIndex].saleDescription}');
-                                                                },
-                                                                child: Text(
-                                                                  '${AppLocalizations.of(context)!.read_condition}',
-                                                                  style: AppStyles.rkRegularTextStyle(
-                                                                      size: AppConstants
-                                                                          .font_10,
-                                                                      color: AppColors
-                                                                          .blueColor),
-                                                                )),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                            },
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-              crossFadeState: state.isSelectSupplier
-                  ? CrossFadeState.showSecond
-                  : CrossFadeState.showFirst,
-              duration: Duration(milliseconds: 300));
-        },
-      ),
+                },
+              );},itemCount: relatedProductList.length,),
+        )
+      ],
     );
   }
 

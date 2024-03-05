@@ -1,3 +1,4 @@
+
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,7 +9,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:food_stock/bloc/home/home_bloc.dart';
-import 'package:food_stock/data/model/product_supplier_model/product_supplier_model.dart';
+import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
+
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -27,13 +29,14 @@ import 'package:photo_view/photo_view.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/balance_indicator.dart';
-import '../widget/bottomsheet_related_product_shimmer_widget.dart';
-import '../widget/common_product_button_widget.dart';
+
 import '../widget/common_product_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
+
+import '../widget/delayed_widget.dart';
 
 
 class HomeRoute {
@@ -41,7 +44,7 @@ class HomeRoute {
 }
 
 class HomeScreen extends StatelessWidget {
-   HomeScreen({super.key});
+  HomeScreen({super.key});
 
 
   @override
@@ -53,8 +56,7 @@ class HomeScreen extends StatelessWidget {
         ..add(HomeEvent.getOrderCountEvent(context: context))
         ..add(HomeEvent.getWalletRecordEvent(context: context))
         ..add(HomeEvent.getMessageListEvent(context: context))
-        ..add(HomeEvent.getRecommendationProductsListEvent(context: context))
-       /*..add(HomeEvent.checkVersionOfAppEvent(context: context))*/,
+        ..add(HomeEvent.getRecommendationProductsListEvent(context: context)),
       child: HomeScreenWidget(),
     );
   }
@@ -123,47 +125,47 @@ class HomeScreenWidget extends StatelessWidget {
                               clipBehavior: Clip.hardEdge,
                               child: state.UserImageUrl.isNotEmpty
                                   ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: CachedNetworkImage(
-                                        placeholder: (context, url) => Center(
-                                            child:
-                                                const CupertinoActivityIndicator()),
-                                        imageUrl:
-                                            '${AppUrls.baseFileUrl}${state.UserImageUrl}',
-                                        fit: BoxFit.cover,
-                                        errorWidget: (context, url, error) {
-                                          return Container(
-                                            color: AppColors.whiteColor,
-                                          );
-                                        },
-                                      ),
-                                    )
+                                borderRadius: BorderRadius.circular(20),
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) => Center(
+                                      child:
+                                      const CupertinoActivityIndicator()),
+                                  imageUrl:
+                                  '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) {
+                                    return Container(
+                                      color: AppColors.whiteColor,
+                                    );
+                                  },
+                                ),
+                              )
                                   : Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: AppColors.whiteColor,
-                                              width: 5),
-                                          borderRadius:
-                                              BorderRadius.circular(40)),
-                                      child: SvgPicture.asset(
-                                        AppImagePath.placeholderProfile,
-                                        width: 80,
-                                        height: 80,
-                                        fit: BoxFit.scaleDown,
-                                      ),
-                                    ),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: AppColors.whiteColor,
+                                        width: 5),
+                                    borderRadius:
+                                    BorderRadius.circular(40)),
+                                child: SvgPicture.asset(
+                                  AppImagePath.placeholderProfile,
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
                             ),
                           ),
                           SvgPicture.asset(
-                                  AppImagePath.splashLogo,
-                                  fit: BoxFit.cover,
-                                  width: 100,
-                                  height: 100,
-                                ),
+                            AppImagePath.splashLogo,
+                            fit: BoxFit.cover,
+                            width: 100,
+                            height: 100,
+                          ),
                           Container(
                             height: 60,
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 3.0),
+                            const EdgeInsets.symmetric(horizontal: 3.0),
                             decoration: BoxDecoration(
                                 color: AppColors.whiteColor,
                                 boxShadow: [
@@ -195,16 +197,16 @@ class HomeScreenWidget extends StatelessWidget {
                                             AppConstants.radius_100)),
                                     onTap: () async {
                                       dynamic messageResult =
-                                          await Navigator.pushNamed(context,
-                                              RouteDefine.messageScreen.name);
+                                      await Navigator.pushNamed(context,
+                                          RouteDefine.messageScreen.name);
                                       debugPrint('delete = ${messageResult}');
                                       if (messageResult != null) {
                                         debugPrint(
                                             'delete = ${messageResult[AppStrings.messageIdListString]}');
                                         bloc.add(HomeEvent.updateMessageListEvent(
                                             messageIdList: messageResult[
-                                                    AppStrings
-                                                        .messageIdListString] ??
+                                            AppStrings
+                                                .messageIdListString] ??
                                                 ''));
                                       }
                                     },
@@ -225,32 +227,32 @@ class HomeScreenWidget extends StatelessWidget {
                                         state.messageCount <= 0
                                             ? 0.width
                                             : Positioned(
-                                                top: 8,
-                                                right: context.rtl ? null : 7,
-                                                left: context.rtl ? 7 : null,
-                                                child: Container(
-                                                  height: 18,
-                                                  width: 18,
-                                                  decoration: BoxDecoration(
-                                                      gradient: AppColors
-                                                          .appMainGradientColor,
-                                                      /*   color: AppColors
+                                            top: 8,
+                                            right: context.rtl ? null : 7,
+                                            left: context.rtl ? 7 : null,
+                                            child: Container(
+                                              height: 18,
+                                              width: 18,
+                                              decoration: BoxDecoration(
+                                                  gradient: AppColors
+                                                      .appMainGradientColor,
+                                                  /*   color: AppColors
                                                           .notificationColor,*/
-                                                      border: Border.all(
-                                                          color: AppColors
-                                                              .whiteColor,
-                                                          width: 1),
-                                                      shape: BoxShape.circle),
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                      '${state.messageCount <= 99 ? state.messageCount : '99+'}',
-                                                      style: AppStyles
-                                                          .rkRegularTextStyle(
-                                                              size: AppConstants
-                                                                  .font_8,
-                                                              color: AppColors
-                                                                  .whiteColor)),
-                                                ))
+                                                  border: Border.all(
+                                                      color: AppColors
+                                                          .whiteColor,
+                                                      width: 1),
+                                                  shape: BoxShape.circle),
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                  '${state.messageCount <= 99 ? state.messageCount : '99+'}',
+                                                  style: AppStyles
+                                                      .rkRegularTextStyle(
+                                                      size: AppConstants
+                                                          .font_8,
+                                                      color: AppColors
+                                                          .whiteColor)),
+                                            ))
                                       ],
                                     ),
                                   ),
@@ -434,52 +436,52 @@ class HomeScreenWidget extends StatelessWidget {
                                                   AppConstants.padding_5),
                                               itemBuilder: (context, index) =>
                                                   CommonProductItemWidget(
-                                                    productStock: state
-                                                        .recommendedProductsList[
-                                                    index]
-                                                        .productStock.toString(),
-                                                    height: 160,
-                                                    width:  140,
-                                                    productImage: state
-                                                        .recommendedProductsList[
-                                                    index]
-                                                        .mainImage ??
-                                                        '',
-                                                    productName: state
-                                                        .recommendedProductsList[
-                                                    index]
-                                                        .productName ??
-                                                        '',
-                                                    totalSaleCount: state
-                                                        .recommendedProductsList[
-                                                    index]
-                                                        .totalSale ??
-                                                        0,
-                                                    price: state
-                                                        .recommendedProductsList[
-                                                    index]
-                                                        .productPrice
-                                                        ?.toDouble() ??
-                                                        0.0,
-                                                    onButtonTap: () {
-debugPrint('recommendedProductsList id: ${ state
-    .recommendedProductsList[
-index]
-    .id}');
-                                                        showProductDetails(
-                                                            context: context,
-                                                            productId: state
-                                                                .recommendedProductsList[
-                                                            index]
-                                                                .id ??
-                                                                '',
-                                                        productStock:(state
+                                                      productStock: state
+                                                          .recommendedProductsList[
+                                                      index]
+                                                          .productStock.toString(),
+                                                      height: 160,
+                                                      width:  140,
+                                                      productImage: state
+                                                          .recommendedProductsList[
+                                                      index]
+                                                          .mainImage ??
+                                                          '',
+                                                      productName: state
+                                                          .recommendedProductsList[
+                                                      index]
+                                                          .productName ??
+                                                          '',
+                                                      totalSaleCount: state
+                                                          .recommendedProductsList[
+                                                      index]
+                                                          .totalSale ??
+                                                          0,
+                                                      price: state
+                                                          .recommendedProductsList[
+                                                      index]
+                                                          .productPrice
+                                                          ?.toDouble() ??
+                                                          0.0,
+                                                      onButtonTap: () {
+                                                        debugPrint('recommendedProductsList id: ${ state
                                                             .recommendedProductsList[
                                                         index]
-                                                            .productStock.toString()),
+                                                            .id}');
+                                                        showProductDetails(
+                                                          context: context,
+                                                          productId: state
+                                                              .recommendedProductsList[
+                                                          index]
+                                                              .id ??
+                                                              '',
+                                                          productStock:(state
+                                                              .recommendedProductsList[
+                                                          index]
+                                                              .productStock.toString()),
                                                         );
 
-                                                    }
+                                                      }
                                                   )
 
                                           ),
@@ -613,9 +615,9 @@ index]
                             onFilterTap: () {
                               bloc.add(HomeEvent.changeCategoryExpansion());
                             },
-                          onCloseTap: () {
-                            bloc.add(HomeEvent.changeCategoryExpansion(isOpened: false));
-                          },
+                            onCloseTap: () {
+                              bloc.add(HomeEvent.changeCategoryExpansion(isOpened: false));
+                            },
                             onSearchTap: () {
                               debugPrint('onSearchTap');
                               if(state.searchController.text.isNotEmpty){
@@ -631,20 +633,20 @@ index]
                             },
                             onSearchSubmit: (String search) {
                               debugPrint('onSearchSubmit');
-                             // bloc.add(HomeEvent.globalSearchEvent(context: context));
-                            Navigator.pushNamed(
-                                    context,
-                                    RouteDefine.supplierProductsScreen.name,
-                                    arguments: {
-                                      AppStrings.searchString: state.search,
-                                      AppStrings.searchType : SearchTypes.product.toString()
-                                    });
+                              // bloc.add(HomeEvent.globalSearchEvent(context: context));
+                              Navigator.pushNamed(
+                                  context,
+                                  RouteDefine.supplierProductsScreen.name,
+                                  arguments: {
+                                    AppStrings.searchString: state.search,
+                                    AppStrings.searchType : SearchTypes.product.toString()
+                                  });
                             },
                             onOutSideTap: () {
                               bloc.add(HomeEvent.changeCategoryExpansion(isOpened: false));
                             },
                             onSearchItemTap: () {
-                                bloc.add(HomeEvent.changeCategoryExpansion());
+                              bloc.add(HomeEvent.changeCategoryExpansion());
                             },
                             controller: state.searchController,
                             searchList: state.searchList,
@@ -663,7 +665,7 @@ index]
                               shrinkWrap: true,
                               itemBuilder: (listViewContext, index) {
                                 return _buildSearchItem(
-                                   numberOfUnits:state.searchList[index].numberOfUnits,
+                                    numberOfUnits:state.searchList[index].numberOfUnits,
                                     priceOfBox: state.searchList[index].priceOfBox,
                                     pricePerUnit: state.searchList[index].priceParUnit,
                                     productStock : state.searchList[index].productStock,
@@ -794,8 +796,9 @@ index]
                                             context: context,
                                             productId: state
                                                 .searchList[index].searchId,
-                                            isBarcode: true,
-                                          productStock: (state.searchList[index].productStock.toString())
+                                            isFromSearch: true,
+                                            isBarcode:  true,
+                                            productStock: (state.searchList[index].productStock.toString())
                                         );
                                       } else if (state
                                           .searchList[index].searchType ==
@@ -862,9 +865,10 @@ index]
                                 debugPrint('result = $scanResult');
                                 print("tap 5");
                                 showProductDetails(
-                                    context: context,
-                                    productId: scanResult,
-                                    isBarcode: true,
+                                  context: context,
+                                  productId: scanResult,
+                                  isBarcode: true,
+
                                 );
                               }
                             },
@@ -896,9 +900,9 @@ index]
 
   Widget titleRowWidget(
       {required BuildContext context,
-      required title,
-      required allContentTitle,
-      required void Function() onTap}) {
+        required title,
+        required allContentTitle,
+        required void Function() onTap}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
       child: Row(
@@ -926,13 +930,13 @@ index]
       ),
     );
   }
-  
+
 
   Padding buildListTitles(
       {required BuildContext context,
-      required String title,
-      required void Function() onTap,
-      required subTitle}) {
+        required String title,
+        required void Function() onTap,
+        required subTitle}) {
     return Padding(
       padding: const EdgeInsets.only(
         left: AppConstants.padding_10,
@@ -988,7 +992,7 @@ index]
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+          BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );
@@ -997,16 +1001,17 @@ index]
   void showProductDetails({
     required BuildContext context,
     required String productId,
-    bool? isBarcode,
+    bool isBarcode= false,
+    bool isFromSearch = false,
     String productStock  = '0',
     bool isRelated = false,
     int planoGramIndex = 0,
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
-        context: context,
-        productId: productId,
-        isBarcode: isBarcode ?? false,
-        planoGramIndex: planoGramIndex
+      context: context,
+      productId: productId,
+      isBarcode: isBarcode ?? false,
+      planoGramIndex: planoGramIndex,
     ));
     showModalBottomSheet(
       context: context,
@@ -1023,7 +1028,6 @@ index]
           maxChildSize: 1 -
               (MediaQuery.of(context).viewPadding.top /
                   getScreenHeight(context)),
-
           minChildSize:  productStock == '0' ? 0.8 :  1 -
               (MediaQuery.of(context).viewPadding.top /
                   getScreenHeight(context)),
@@ -1037,33 +1041,33 @@ index]
               child: BlocBuilder<HomeBloc, HomeState>(
                 builder: (blocContext, state) {
                   return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppConstants.radius_30),
-                        topRight: Radius.circular(AppConstants.radius_30),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(AppConstants.radius_30),
+                          topRight: Radius.circular(AppConstants.radius_30),
+                        ),
+                        color: AppColors.whiteColor,
                       ),
-                      color: AppColors.whiteColor,
-                    ),
-                    clipBehavior: Clip.hardEdge,
-                    child: SafeArea(
-                      child: Scaffold(
-                          body: state.isProductLoading
-                              ? ProductDetailsShimmerWidget()
-                              : state.productDetails.isEmpty
-                              ? Center(
-                            child: Text(
-                                AppLocalizations.of(context)!.no_product,
-                                style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.normalFont,
-                                  color: AppColors.redColor,
-                                  fontWeight: FontWeight.w500,
-                                )),
-                          )
-                              : SingleChildScrollView(
-                           // physics: AlwaysScrollableScrollPhysics(),
-                            child: CommonProductDetailsWidget(
+                      clipBehavior: Clip.hardEdge,
+
+                      child: state.isProductLoading
+                          ? ProductDetailsShimmerWidget()
+                          : state.productDetails.isEmpty
+                          ? Center(
+                        child: Text(
+                            AppLocalizations.of(context)!.no_product,
+                            style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.normalFont,
+                              color: AppColors.redColor,
+                              fontWeight: FontWeight.w500,
+                            )),
+                      )
+                          : SingleChildScrollView(
+                        physics: NeverScrollableScrollPhysics(),
+                        child: Column(
+                          children: [
+                            CommonProductDetailsWidget(
                               qrCode:state.productDetails.first.qrcode ?? '' ,
-                              isRelatedProduct: state.relatedProductList.isEmpty ? true : false,
                               addToOrderTap: () {
                                 context.read<HomeBloc>().add(
                                     HomeEvent.addToCartProductEvent(
@@ -1076,6 +1080,7 @@ index]
                                 showDialog(
                                   context: context,
                                   builder: (dialogContext) {
+                                    print('state.productStockList[state.productStockUpdateIndex].stock.toString() ${state.productStockUpdateIndex}');
                                     return Stack(
                                       children: [
                                         Container(
@@ -1170,7 +1175,7 @@ index]
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              productStock:int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty
@@ -1203,40 +1208,11 @@ index]
                                 }
                               },
                             ),
-                          ),
+                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context),
+                          ],
+                        ),
 
-                          bottomNavigationBar:
-                          state.productDetails.isEmpty ? 0.width : state.relatedProductList.isEmpty ? 0.width : state.isRelatedShimmering
-                              ? RelatedProductShimmerWidget() :
-                          Container(
-                            height: 200,
-                            padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemBuilder: (context2,i){
-                                return CommonProductItemWidget(
-                                  productStock:state.relatedProductList.elementAt(i).productStock.toString(),
-                                  width: 140,
-                                  productImage:state.relatedProductList[i].mainImage,
-                                  productName: state.relatedProductList.elementAt(i).productName,
-                                  totalSaleCount: state.relatedProductList.elementAt(i).totalSale,
-                                  price:state.relatedProductList.elementAt(i).productPrice,
-                                  onButtonTap: () {
-                                    Navigator.pop(context1);
-                                    showProductDetails(
-                                        context: context,
-                                        productId: state
-                                            .relatedProductList[i].id,
-                                        isBarcode: false,
-                                        productStock: (state.relatedProductList[i].productStock.toString())
-                                    );
-                                  },
-                                );},itemCount: state.relatedProductList.length,),
-                          )
-                      ),
-                    ),
-                  );
+                      ));
                 },
               ),
             );
@@ -1244,6 +1220,56 @@ index]
 
         );
       },
+    );
+  }
+
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Align(
+          alignment:
+          context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
+            child: Text(
+              AppLocalizations.of(context)!.related_products,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.mediumFont,
+                  color: AppColors.blackColor),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        Container(
+          height: AppConstants.relatedProductItemHeight,
+          padding: EdgeInsets.only(left: 10,right: 10),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemBuilder: (context2,i){
+              return CommonProductItemWidget(
+                productStock:relatedProductList.elementAt(i).productStock.toString(),
+                width: AppConstants.relatedProductItemWidth,
+                productImage:relatedProductList[i].mainImage,
+                productName: relatedProductList.elementAt(i).productName,
+                totalSaleCount: relatedProductList.elementAt(i).totalSale,
+                price:relatedProductList.elementAt(i).productPrice,
+                onButtonTap: (){
+                  Navigator.pop(prevContext);
+                  showProductDetails(
+                      context: context,
+                      productId: relatedProductList[i].id,
+                      isBarcode: false,
+                      productStock: (relatedProductList[i].productStock.toString())
+                  );
+                },
+              );},itemCount: relatedProductList.length,),
+        )
+      ],
     );
   }
 
@@ -1271,7 +1297,7 @@ index]
                 height: 16,
                 width: 16,
                 colorFilter:
-                    ColorFilter.mode(AppColors.blackColor, BlendMode.srcIn),
+                ColorFilter.mode(AppColors.blackColor, BlendMode.srcIn),
               ),
             ),
             10.width,

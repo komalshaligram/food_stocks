@@ -366,11 +366,11 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             }
           } on ServerException {
           } catch (e) {
-            CustomSnackBar.showSnackBar(
+          /*  CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),
               type: SnackBarType.FAILURE,
-            );
+            );*/
           }
         }
       }

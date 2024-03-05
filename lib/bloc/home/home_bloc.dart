@@ -127,7 +127,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           debugPrint('product details id = ${event.productId}');
           _isProductInCart = false;
           _cartProductId = '';
-          _productQuantity = 1;
+          _productQuantity = 0;
          // emit(state.copyWith(relatedProductList: []));
 
           try {
@@ -157,7 +157,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   .copyWith(
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
-                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0"),
+                stock: int.parse(response.product?.first.supplierSales?.first.productStock.toString() ?? "0"),
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',
@@ -170,19 +170,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     prefs: await SharedPreferences.getInstance());
                 final res = await DioClient(event.context).post(
                     '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                    options: Options(headers: {
-                      HttpHeaders.authorizationHeader:
-                      'Bearer ${preferences.getAuthToken()}'
-                    }));
+                  );
                 GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                 if (response.status == 200) {
                   debugPrint('cart before = ${response.data}');
                   debugPrint('state.productStockUpdateIndex = ${state.productStockList[state.productStockUpdateIndex].productId}');
+                  debugPrint('stock = ${state.productStockList[state.productStockUpdateIndex].stock}');
 
                   response.data?.data?.forEach((cartProduct) {
                     debugPrint('cart id : ${cartProduct.id}');
                     if (cartProduct.id == state.productStockList[state.productStockList.length-1].productId
-                        || cartProduct.id == event.productId) {
+                        || cartProduct.id == event.productId || cartProduct.id ==
+                        state.productStockList[state.productStockUpdateIndex]
+                            .productId) {
                       _isProductInCart = true;
                       _cartProductId = cartProduct.cartProductId ?? '';
                       _productQuantity = cartProduct.totalQuantity ?? 0;
@@ -195,10 +195,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 }
               } on ServerException {}
               if(response.product != null){
-                add(HomeEvent.RelatedProductsEvent(context: event.context, productId: event.productId));
+                add(HomeEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
-
-              if ((event.isBarcode )) {
+              if ((event.isBarcode ?? false )) {
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: false);
                 productStockList[productStockList
@@ -207,18 +206,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     .copyWith(
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '',
-                  stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0"),
+                  stock: int.parse(response.product?.first.supplierSales?.first.productStock.toString() ?? "0"),
                   productSaleId: '',
                   productSupplierIds: '',
                   note: '',
-                  isNoteOpen: false,
+                  isNoteOpen: false, totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
                 );
 
-                emit(state.copyWith(productStockList: productStockList));
+
                 debugPrint('new index = ${state.productStockList.last}');
                 productStockUpdateIndex =
                     productStockList.indexOf(productStockList.last);
-
+                emit(state.copyWith(productStockList: productStockList,productStockUpdateIndex : productStockUpdateIndex));
                 debugPrint('barcode stock = ${state.productStockList.last}');
                 debugPrint('barcode stock 1= ${state.productStockList.last.quantity}');
                 debugPrint(
@@ -227,6 +226,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 debugPrint(
                     'barcode stock update index = $productStockUpdateIndex');
               }
+
+
               debugPrint(
                   'product stock update index = $productStockUpdateIndex');
               debugPrint(
@@ -823,34 +824,30 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             final res = await DioClient(event.context).post(
                 AppUrls.getNotificationMessageUrl,
                 data: GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson(),
-                options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferences.getAuthToken()}',
-                  },
-                ));
+            );
+
             GetMessagesResModel response = GetMessagesResModel.fromJson(res);
             if (response.status == 200) {
               List<MessageData> messageList = [];
-              messageList.addAll(response.data
-                  ?.map((message) =>
-                  MessageData(
-                    id: message.id,
-                    isRead: message.isRead,
-                    message: Message(
-                        id: message.message?.id ?? '',
-                        title: message.message?.title ?? '',
-                        summary: message.message?.summary ?? '',
-                        body: message.message?.body ?? '',
-                        messageImage:
-                        message.message?.messageImage ?? ''),
-                    createdAt: message.createdAt,
-                    updatedAt: message.updatedAt,
-                  ))
-                  .toList() ??
-                  []);
-              /* messageList.removeWhere(
-                (message) => (message.isPushNotification ?? false) == false);*/
+              if(messageList.isNotEmpty){
+                messageList.addAll(response.data
+                    ?.map((message) =>
+                    MessageData(
+                      id: message.id,
+                      isRead: message.isRead,
+                      message: Message(
+                          id: message.message?.id ?? '',
+                          title: message.message?.title ?? '',
+                          summary: message.message?.summary ?? '',
+                          body: message.message?.body ?? '',
+                          messageImage:
+                          message.message?.messageImage ?? ''),
+                      createdAt: message.createdAt,
+                      updatedAt: message.updatedAt,
+                    ))
+                    .toList() ??
+                    []);
+              }
               debugPrint('new message list len = ${messageList.length}');
               emit(state.copyWith(
                   messageList: messageList, isMessageShimmering: false));
@@ -950,18 +947,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 ),
               );
             } else {
-              CustomSnackBar.showSnackBar(
+           /*   CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.FAILURE);*/
             }
           } on ServerException {
-
           } catch (e) {
-
           }
         }
 
@@ -997,14 +992,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   isShimmering: false));
             } else {
               emit(state.copyWith(isShimmering: false));
-              CustomSnackBar.showSnackBar(
+              /*CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
                 '${AppLocalizations.of(event.context)!
                     .something_is_wrong_try_again}',
                 type: SnackBarType.SUCCESS,
-
-              );
+              );*/
             }
           } on ServerException {
             emit(state.copyWith(isShimmering: false));
@@ -1232,7 +1226,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
 
         else if(event is _RelatedProductsEvent){
-          if(event.productId != ''){
+         print('productId____${event.productId}');
             emit(state.copyWith(isRelatedShimmering:true));
             final res = await DioClient(event.context).post(
                 AppUrls.relatedProductsUrl,
@@ -1248,7 +1242,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       (Product) =>
                       ProductStockModel(
                         productId: Product.id ,
-                        stock: Product.productStock ,
+                        stock: double.parse(Product.productStock.toString()).toInt(),
                       )) );
               emit(state.copyWith(
                   relatedProductList:response.data ?? [],
@@ -1264,7 +1258,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 type: SnackBarType.SUCCESS,
               );
             }
-          }
+
         }
         else if(event is _RemoveRelatedProductEvent){
           emit(state.copyWith(relatedProductList: []));

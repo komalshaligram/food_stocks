@@ -141,7 +141,7 @@ class PlanogramProductBloc
               }
             } on ServerException {}
             if(response.product != null){
-              add(PlanogramProductEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
+              add(PlanogramProductEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
@@ -1089,6 +1089,7 @@ class PlanogramProductBloc
         }
       }
       else if(event is _RelatedProductsEvent){
+        print('productId____${event.productId}');
         emit(state.copyWith(isRelatedShimmering:true));
         final res = await DioClient(event.context).post(
             AppUrls.relatedProductsUrl,
@@ -1104,7 +1105,7 @@ class PlanogramProductBloc
                   (Product) =>
                   ProductStockModel(
                     productId: Product.id,
-                    stock: Product.productStock ,
+                    stock: double.parse(Product.productStock.toString()).toInt()  ,
                   )) ??
               []);
 

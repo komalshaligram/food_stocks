@@ -214,7 +214,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               }
             } on ServerException {}
             if(response.product != null){
-              add(ReorderEvent.RelatedProductsEvent(context: event.context, productId: state.productStockList[state.productStockList.length-1].productId));
+              add(ReorderEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if ( (event.isBarcode )) {
               List<ProductStockModel> productStockList =
@@ -956,6 +956,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         }
       }
       else if(event is _RelatedProductsEvent){
+        print('productId____${event.productId}');
         emit(state.copyWith(isRelatedShimmering:true));
         final res = await DioClient(event.context).post(
             AppUrls.relatedProductsUrl,
@@ -972,7 +973,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   (Product) =>
                   ProductStockModel(
                     productId: Product.id ,
-                    stock: Product.productStock ,
+                    stock: double.parse(Product.productStock.toString()).toInt() ,
                   )) ??
               []);
 

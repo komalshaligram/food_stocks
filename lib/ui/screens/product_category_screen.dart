@@ -122,28 +122,12 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                       ],
                     ),
                   ):0.width,
-                  /*  SizedBox(
-                    height: 50,
-                    width: 25,
-                    child: Visibility(
-                      visible:state.duringCelebration,
-                      child: IgnorePointer(
-                        child: Confetti(
-                          isStopped:!state.duringCelebration,
-                          snippingsCount: 10,
-                          snipSize: 3.0,
-                          colors:[AppColors.mainColor],
-                        ),
-                      ),
-                    ),
-                  ),*/
                 ],
               ),
               backgroundColor:Colors.transparent,
               onPressed: () {
-                Navigator.pushNamed(context, RouteDefine.basketScreen.name,
-        arguments: {AppStrings.isBasketScreenString: 'true'}
-                );
+                Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
+                    arguments: {AppStrings.isBasketScreenString: 'true'});
               },
             ),
             backgroundColor: AppColors.pageColor,

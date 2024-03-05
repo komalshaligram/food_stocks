@@ -112,7 +112,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
 
             } else {
-               emit(state.copyWith(/*CartItemList: response,*/ isShimmering: false));
+               emit(state.copyWith( isShimmering: false));
             }
           } on ServerException {}
         }
@@ -528,7 +528,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       _productQuantity = cartProduct.totalQuantity ?? 0;
                       return;
                     }
-
                   });
 
                   debugPrint(
@@ -718,11 +717,11 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             // emit(state.copyWith(isProductLoading: false));
             Navigator.pop(event.context);
           } catch (e) {
-            CustomSnackBar.showSnackBar(
+         /*   CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),
               type: SnackBarType.FAILURE,
-            );
+            );*/
             //  Navigator.pop(event.context);
           }
         }
@@ -938,7 +937,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     (Product) =>
                     ProductStockModel(
                       productId: Product.id,
-                      stock: Product.productStock,
+                      stock: double.parse(Product.productStock.toString()).toInt() ,
                     )));
 
             emit(state.copyWith(
