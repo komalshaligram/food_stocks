@@ -62,17 +62,15 @@ dependencies:
   firebase_crashlytics: ^3.3.7
   firebase_core: ^2.17.0
   firebase_messaging: ^14.6.9
-  flutter_local_notifications: ^16.0.0+1
+  flutter_local_notifications: ^16.3.2
   package_info_plus: ^5.0.1
   appsflyer_sdk: ^6.12.2
-  platform_device_id: ^1.0.1
   flutter_dotenv: ^5.1.0
   fl_chart: ^0.64.0
   shimmer: ^3.0.0
   flutter_barcode_scanner: ^2.0.0
   flutter_date_range_picker: ^0.0.14
   html: ^0.15.4
-  device_info_plus: ^9.1.1
   carousel_slider: ^4.2.1
   pull_to_refresh: ^2.0.0
   vibration: ^1.8.4
