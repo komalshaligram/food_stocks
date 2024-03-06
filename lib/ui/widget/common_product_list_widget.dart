@@ -129,21 +129,21 @@ class CommonProductListWidget extends StatelessWidget {
                         color: AppColors.redColor,
                         fontWeight: FontWeight.w400),
                   ),
-                  numberOfUnits != '0' ? Text(
+                 !isGuestUser ? numberOfUnits != '0' ? Text(
                     '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
                     style: AppStyles.rkBoldTextStyle(
                         size: AppConstants.font_12,
                         color: AppColors.blackColor,
                         fontWeight: FontWeight.w400),
-                  ) : 0.width,
+                  ) : 0.width : 0.width,
 
-                  numberOfUnits !='0' && price != 0.0 ? Text(
+                  !isGuestUser? numberOfUnits !='0' && price != 0.0 ? Text(
                     '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(price * int.parse(numberOfUnits)).toStringAsFixed(2)}',
                     style: AppStyles.rkBoldTextStyle(
                         size: AppConstants.font_12,
                         color: AppColors.blueColor,
                         fontWeight: FontWeight.w400),
-                  ) : 0.width,
+                  ) : 0.width : 0.width,
                 ],
               ),
             ),

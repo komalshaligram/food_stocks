@@ -61,6 +61,7 @@ class SupplierProductsState with _$SupplierProductsState {
     productCategoryList: [],
     isCatVisible: false,
     relatedProductList: [],
-    isRelatedShimmering: false
+    isRelatedShimmering: false,
+
       );
 }

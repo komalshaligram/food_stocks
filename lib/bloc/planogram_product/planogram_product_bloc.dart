@@ -63,6 +63,8 @@ class PlanogramProductBloc
             planogramProductList: event.planogram.planogramproducts ?? [],
             productStockList: productStockList,
         isGridView: preferences.getPlanogramProductGrid(),
+          isGuestUser: preferences.getGuestUser(),
+
         ));
 
       }

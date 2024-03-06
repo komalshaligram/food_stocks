@@ -50,8 +50,8 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 24
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 16
-        versionName "1.0.9"
+        versionCode 17
+        versionName "1.0.10"
     }
 
     buildTypes {
@@ -67,14 +67,19 @@ android {
         dev {
             dimension "app"
             applicationId "com.foodstock.dev"
-            resValue "string", "app_name", "TAVILI DEV"
+            resValue "string", "app_name", "TAVILI"
         }
-
+        stag {
+            dimension "app"
+            applicationId "com.foodstock.stag"
+            resValue "string", "app_name", "TAVILI"
+        }
         prod {
             dimension "app"
             applicationId "com.foodstock"
             resValue "string", "app_name", "TAVILI"
         }
+
     }
 
 }

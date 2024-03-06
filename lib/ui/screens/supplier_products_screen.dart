@@ -199,6 +199,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                       horizontal: AppConstants.padding_5),
                                   itemBuilder: (context, index) => DelayedWidget(
                                     child: CommonProductListWidget(
+                                      isGuestUser: state.isGuestUser,
                                       numberOfUnits:  state.productList[index].numberOfUnit ?? '0',
                                         productStock: state.productList[index].productStock ?? 0,
                                         productImage: state.productList[index]
@@ -224,6 +225,9 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                   '',
               productStock: state.productList[index].productStock.toString(),
             );
+          }
+          else{
+            Navigator.pushNamed(context, RouteDefine.connectScreen.name);
           }
                                         }, totalSaleCount: 0,),
                                   ),
@@ -290,6 +294,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
+                          isGuestUser: state.isGuestUser,
                             numberOfUnits:state.searchList[index].numberOfUnits,
                             priceOfBox: state.searchList[index].priceOfBox,
                             productStock : state.searchList[index].productStock,
@@ -416,13 +421,20 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   state.searchList[index].searchType ==
                                       SearchTypes.product) {
                                 print("tap 4");
-                                showProductDetails(
-                                    context: context,
-                                    productStock: state.searchList[index].productStock.toString(),
-                                    productId: state
-                                        .searchList[index].searchId,
-                                    isBarcode: true
-                                );
+                                if(!state.isGuestUser){
+                                  showProductDetails(
+                                      context: context,
+                                      productStock: state.searchList[index].productStock.toString(),
+                                      productId: state
+                                          .searchList[index].searchId,
+                                      isBarcode: true
+                                  );
+                                }
+                                else {
+                                  Navigator.pushNamed(context,
+                                      RouteDefine.connectScreen.name);
+                                }
+
                               } else if (state
                                   .searchList[index].searchType ==
                                   SearchTypes.category) {
@@ -487,13 +499,20 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                         // -1 result for cancel scanning
                         debugPrint('result = $scanResult');
                         print("tap 5");
-                        showProductDetails(
-                            context: context,
-                            // productStock: '1',
-                            productId: scanResult,
-                            isBarcode: true,
-                            productStock: '1'
-                        );
+                        if(!state.isGuestUser){
+                          showProductDetails(
+                              context: context,
+                              // productStock: '1',
+                              productId: scanResult,
+                              isBarcode: true,
+                              productStock: '1'
+                          );
+                        }
+                        else {
+                          Navigator.pushNamed(context,
+                              RouteDefine.connectScreen.name);
+                        }
+
                       }
                     },
                   ),
@@ -1442,8 +1461,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             },
             buttonTitle: "${AppLocalizations.of(context)!.ok}"));
   }
-
   Widget _buildSearchItem({
+
     required BuildContext context,
     required String searchName,
     required String searchImage,
@@ -1453,6 +1472,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
     required void Function() onTap,
     required void Function() onSeeAllTap,
     bool? isLastItem, required int productStock,
+    bool isGuestUser = false,
     required int numberOfUnits,
     required double priceOfBox,
   }) {
@@ -1509,7 +1529,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != 0 ? 80 : 90,
+            height: !isGuestUser ? (productStock) != 0 ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 70,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1527,46 +1547,49 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             //     horizontal: AppConstants.padding_20,
             //     vertical: AppConstants.padding_5),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: !isGuestUser ? searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? MainAxisAlignment.start: MainAxisAlignment.spaceBetween :MainAxisAlignment.start ,
+
               children: [
                 Container(
-                  height: 60,
-                  width: 50,
-                  child: Image.network(
-                    '${AppUrls.baseFileUrl}$searchImage',
-                    fit: BoxFit.scaleDown,
-                    height: 60,
-                    width: 50,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return Container(
-                            height: 60,
-                            width: 50,
-                            child: CupertinoActivityIndicator())
-                        /*CommonShimmerWidget(
-                            child: Container(
-                              width: 40,
-                              height: 35,
-                              color: AppColors.whiteColor,
-                            ))*/
-                        ;
-                      }
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return searchType == SearchTypes.subCategory
-                          ? Image.asset(AppImagePath.imageNotAvailable5,
-                          height: 60, width: 50, fit: BoxFit.cover)
-                          : SvgPicture.asset(
-                        AppImagePath.splashLogo,
-                        fit: BoxFit.scaleDown,
-                        width: 60,
-                        height: 50,
-                      );
-                    },
+                  height: 80,
+                  width: 80,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20)
                   ),
+                  child: !isGuestUser ?  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      '${AppUrls.baseFileUrl}$searchImage',
+                      fit: BoxFit.fitHeight,
+                      height: 80,
+                      width: 80,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return Container(
+                              height: 80,
+                              width: 70,
+                              child: CupertinoActivityIndicator());
+                        }
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return searchType == SearchTypes.subCategory
+                            ? Image.asset(AppImagePath.imageNotAvailable5,
+                            height: 80,
+                            width: 70, fit: BoxFit.cover)
+                            : SvgPicture.asset(
+                          AppImagePath.splashLogo,
+                          fit: BoxFit.scaleDown,
+                          height: 80,
+                          width: 70,
+                        );
+                      },
+                    ),
+                  ) : Image.asset(AppImagePath.imageNotAvailable5,
+                    fit: BoxFit.cover, height: 80,
+                    width: 70,),
                 ),
                 10.width,
                 Column(
@@ -1574,23 +1597,24 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: 200,
+                      width: getScreenWidth(context) * 0.45,
                       child: Text(
                         searchName,
                         style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.blackColor,
+                            size: AppConstants.font_14,
+                            color: AppColors.blackColor,
+                            fontWeight: FontWeight.bold
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        // overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
                       ),
                     ),
-
+                    searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? 0.width :
                     Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          width: 200,
+                          width: getScreenWidth(context) * 0.45,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1603,24 +1627,24 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                     color: AppColors.redColor,
                                     fontWeight: FontWeight.w400),
                               ),
-                              numberOfUnits != 0 ? Text(
+                              !isGuestUser? numberOfUnits != 0 ? Text(
                                 '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.blackColor,
                                     fontWeight: FontWeight.w400),
-                              ) : 0.width,
-                              numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
+                              ) : 0.width : 0.width,
+                              !isGuestUser?numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
                                 '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.blueColor,
                                     fontWeight: FontWeight.w400),
-                              ) : 0.width,
+                              ) : 0.width: 0.width,
                             ],
                           ),
                         ),
-                        priceOfBox != 0.0 ? Container(
+                        !isGuestUser ? priceOfBox != 0.0 ? Container(
                           width: 60,
                           child: Text(
                             '${AppLocalizations.of(context)!.currency}${priceOfBox.toStringAsFixed(2)}',
@@ -1629,11 +1653,10 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                 color: AppColors.blueColor,
                                 fontWeight: FontWeight.w400),
                           ),
-                        ) : 0.width,
+                        ) : 0.width:0.width,
 
                       ],
                     ),
-
                   ],
                 ),
 
@@ -1644,5 +1667,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
       ],
     );
   }
+
 
 }
