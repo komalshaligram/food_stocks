@@ -25,6 +25,7 @@ class CommonProductItemWidget extends StatelessWidget {
 
 
 
+
   const CommonProductItemWidget(
       {super.key,
       this.height ,
@@ -36,7 +37,8 @@ class CommonProductItemWidget extends StatelessWidget {
       required this.onButtonTap, this.productStock = '0',
         this.isGuestUser = false,
         this.imageHeight = 70,
-        this.imageWidth = 70
+        this.imageWidth = 70,
+
       });
 
   @override

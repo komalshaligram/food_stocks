@@ -497,7 +497,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                 (context, index) {
                                               return CommonProductSaleItemWidget(
                                                   isGuestUser: state.isGuestUser,
-
                                                   height: 180,
                                                   width: 140,
                                                   productName: state.productSalesList[index].productName??'',
@@ -532,14 +531,20 @@ class StoreScreenWidget extends StatelessWidget {
                                                       0,
                                                   onButtonTap: () {
                                                     print("tap 1");
-                                                    showProductDetails(
-                                                      context: context,
-                                                      productId: state
-                                                          .productSalesList[
-                                                      index]
-                                                          .id ??
-                                                          '',
-                                                    );
+                                                    if(!state.isGuestUser){
+                                                      showProductDetails(
+                                                        context: context,
+                                                        productId: state
+                                                            .productSalesList[
+                                                        index]
+                                                            .id ??
+                                                            '',
+                                                      );
+                                                    }
+                                                    else{
+                                                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                    }
+
                                                   });
                                             },
                                           ),
@@ -611,20 +616,27 @@ class StoreScreenWidget extends StatelessWidget {
                                                         0.0,
                                                     onButtonTap: () {
                                                       print("tap 2");
-                                                      showProductDetails(
-                                                          context:
-                                                          context,
-                                                          productId: state
-                                                              .recommendedProductsList[
-                                                          index]
-                                                              .id ??
-                                                              '',
-                                                          productStock:  state
-                                                              .recommendedProductsList[
-                                                          index]
-                                                              .productStock.toString() ??
-                                                              ''
-                                                      );
+                                                      if(!state.isGuestUser){
+                                                        showProductDetails(
+                                                            context:
+                                                            context,
+                                                            productId: state
+                                                                .recommendedProductsList[
+                                                            index]
+                                                                .id ??
+                                                                '',
+                                                            productStock:  state
+                                                                .recommendedProductsList[
+                                                            index]
+                                                                .productStock.toString() ??
+                                                                ''
+                                                        );
+                                                      }
+                                                      else{
+                                                        Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                      }
+
+
                                                     },
                                                   )
                                           ),
@@ -700,18 +712,25 @@ class StoreScreenWidget extends StatelessWidget {
                                                         0.0,
                                                     onButtonTap: () {
                                                       print("tap 3");
-                                                      showProductDetails(
-                                                          context:
-                                                          context,
-                                                          productId: state
-                                                              .previousOrderProductsList[
-                                                          index]
-                                                              .id ?? '',
-                                                          productStock: state
-                                                              .previousOrderProductsList[
-                                                          index]
-                                                              .productStock.toString() ?? '0'
-                                                      );
+                                                      if(!state.isGuestUser){
+                                                        showProductDetails(
+                                                            context:
+                                                            context,
+                                                            productId: state
+                                                                .previousOrderProductsList[
+                                                            index]
+                                                                .id ?? '',
+                                                            productStock: state
+                                                                .previousOrderProductsList[
+                                                            index]
+                                                                .productStock.toString() ?? '0'
+                                                        );
+                                                      }
+                                                      else{
+                                                        Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                      }
+
+
                                                     },
                                                   )
                                           ),
@@ -759,13 +778,13 @@ class StoreScreenWidget extends StatelessWidget {
                       },
                       onSearchSubmit: (String search) {
                         // bloc.add(StoreEvent.globalSearchEvent(context: context));
-                        Navigator.pushNamed(
-                            context,
-                            RouteDefine.supplierProductsScreen.name,
-                            arguments: {
-                              AppStrings.searchString: state.search,
-                              AppStrings.searchType : SearchTypes.product.toString()
-                            });
+                          Navigator.pushNamed(
+                              context,
+                              RouteDefine.supplierProductsScreen.name,
+                              arguments: {
+                                AppStrings.searchString: state.search,
+                                AppStrings.searchType : SearchTypes.product.toString()
+                              });
                       },
                       onOutSideTap: () {
                         bloc.add(StoreEvent.changeCategoryExpansion(
@@ -819,6 +838,7 @@ class StoreScreenWidget extends StatelessWidget {
                                   : false,
                               onSeeAllTap: () async {
                                 debugPrint("searchType: ${state.searchList[index].searchType}");
+
                                 if (state.searchList[index].searchType ==
                                     SearchTypes.category) {
                                   dynamic searchResult =
@@ -903,7 +923,7 @@ class StoreScreenWidget extends StatelessWidget {
                                 }
                               },
                               onTap: () async {
-                                if(!state.isGuestUser){
+
                                   if (state.searchList[index].searchType ==
                                       SearchTypes.subCategory) {
                                     CustomSnackBar.showSnackBar(
@@ -919,13 +939,19 @@ class StoreScreenWidget extends StatelessWidget {
                                       state.searchList[index].searchType ==
                                           SearchTypes.product ) {
                                     print("tap 4");
-                                    showProductDetails(
-                                        context: context,
-                                        productId: state
-                                            .searchList[index].searchId,
-                                        isBarcode: true,
-                                        productStock: state.searchList[index].productStock.toString()
-                                    );
+                                    if(!state.isGuestUser){
+                                      showProductDetails(
+                                          context: context,
+                                          productId: state
+                                              .searchList[index].searchId,
+                                          isBarcode: true,
+                                          productStock: state.searchList[index].productStock.toString()
+                                      );
+                                    }
+                                   else{
+                                     Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                    }
+
                                   }
 
 
@@ -981,10 +1007,6 @@ class StoreScreenWidget extends StatelessWidget {
                                   }
                                   bloc.add(
                                       StoreEvent.changeCategoryExpansion());
-                                }
-                                else{
-                                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                }
 
                               });
                         },
@@ -1023,6 +1045,7 @@ class StoreScreenWidget extends StatelessWidget {
   }
 
   Widget _buildSearchItem({
+
     required BuildContext context,
     required String searchName,
     required String searchImage,
@@ -1089,7 +1112,7 @@ class StoreScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height:  (productStock) != 0 ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110,
+            height: !isGuestUser ? (productStock) != 0 ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 70,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1108,13 +1131,13 @@ class StoreScreenWidget extends StatelessWidget {
             //     vertical: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment:searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? MainAxisAlignment.start: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: !isGuestUser ? searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? MainAxisAlignment.start: MainAxisAlignment.spaceBetween :MainAxisAlignment.start ,
               children: [
                 Container(
                   height: 80,
                   width: 80,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20)
+                      borderRadius: BorderRadius.circular(20),
                   ),
                   child: !isGuestUser ?  ClipRRect(
                     borderRadius: BorderRadius.circular(10),
@@ -1147,8 +1170,8 @@ class StoreScreenWidget extends StatelessWidget {
                       },
                     ),
                   ) : Image.asset(AppImagePath.imageNotAvailable5,
-                    fit: BoxFit.cover, height: 80,
-                    width: 70,),
+                    fit: BoxFit.fitWidth, height: 80,
+                    width: 80,),
                 ),
                 10.width,
                 Column(
@@ -1186,24 +1209,24 @@ class StoreScreenWidget extends StatelessWidget {
                                     color: AppColors.redColor,
                                     fontWeight: FontWeight.w400),
                               ),
-                              numberOfUnits != 0 ? Text(
+                             !isGuestUser? numberOfUnits != 0 ? Text(
                                 '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.blackColor,
                                     fontWeight: FontWeight.w400),
-                              ) : 0.width,
-                              numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
+                              ) : 0.width : 0.width,
+                              !isGuestUser?numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
                                 '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.blueColor,
                                     fontWeight: FontWeight.w400),
-                              ) : 0.width,
+                              ) : 0.width: 0.width,
                             ],
                           ),
                         ),
-                        priceOfBox != 0.0 ? Container(
+                        !isGuestUser ? priceOfBox != 0.0 ? Container(
                           width: 60,
                           child: Text(
                             '${AppLocalizations.of(context)!.currency}${priceOfBox.toStringAsFixed(2)}',
@@ -1212,7 +1235,7 @@ class StoreScreenWidget extends StatelessWidget {
                                 color: AppColors.blueColor,
                                 fontWeight: FontWeight.w400),
                           ),
-                        ) : 0.width,
+                        ) : 0.width:0.width,
 
                       ],
                     ),
