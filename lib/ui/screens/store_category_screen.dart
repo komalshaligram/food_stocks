@@ -96,7 +96,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           child: Scaffold(
             floatingActionButtonLocation:
             FloatingActionButtonLocation.endContained,
-            floatingActionButton: FloatingActionButton(
+            floatingActionButton: !state.isGuestUser? FloatingActionButton(
               elevation: 0,
               child: Stack(
                 children: [
@@ -169,7 +169,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
                     arguments: {AppStrings.isBasketScreenString: 'true'});
               },
-            ),
+            ):0.width,
             backgroundColor: AppColors.pageColor,
             body: SafeArea(
               child: Stack(
@@ -590,13 +590,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     },
                     onSearchSubmit: (String search) {
                       // bloc.add(StoreCategoryEvent.globalSearchEvent(context: context));
-                      Navigator.pushNamed(
-                          context,
-                          RouteDefine.supplierProductsScreen.name,
-                          arguments: {
-                            AppStrings.searchString: state.search,
-                            AppStrings.searchType : SearchTypes.product.toString()
-                          });
+                        Navigator.pushNamed(
+                            context,
+                            RouteDefine.supplierProductsScreen.name,
+                            arguments: {
+                              AppStrings.searchString: state.search,
+                              AppStrings.searchType : SearchTypes.product.toString()
+                            });
                     },
                     onSearchTap: () {
                       print('search');
@@ -654,6 +654,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 ? true
                                 : false,
                             onSeeAllTap: () async {
+
                               if (state.searchList[index].searchType ==
                                   SearchTypes.category) {
                                 dynamic result =
@@ -700,13 +701,97 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     arguments: {AppStrings.searchString: state.searchController.text})
                                     : Navigator.pushNamed(
                                     context, RouteDefine.supplierProductsScreen.name,
-                                    arguments: {AppStrings.searchString: state.searchController.text});
+                                    arguments: {AppStrings.searchString: state.searchController.text,
+                                      AppStrings.searchType : SearchTypes.product.toString()
+                                    });
                               }
                               bloc.add(StoreCategoryEvent
                                   .changeCategoryExpansionEvent());
                             },
-                            onTap: () {
-                              if (!state.isGuestUser) {
+                            onTap: () async {
+                              if (state.searchList[index].searchType ==
+                                  SearchTypes.subCategory) {
+                                CustomSnackBar.showSnackBar(
+                                  context: context,
+                                  title: AppStrings.getLocalizedStrings(
+                                      'Oops! in progress', context),
+                                  type: SnackBarType.SUCCESS,
+                                );
+                                return;
+                              }
+                              if (state.searchList[index].searchType ==
+                                  SearchTypes.sale ||
+                                  state.searchList[index].searchType ==
+                                      SearchTypes.product) {
+                                print("tap 4");
+                                if(!state.isGuestUser){
+                                  showProductDetails(
+                                      context: context,
+                                      productStock: state.searchList[index].productStock.toString(),
+                                      productId: state
+                                          .searchList[index].searchId,
+                                      planoGramIndex: 0,
+                                      isBarcode: true);
+                                }
+                                else{
+                                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                }
+
+                              } else if (state
+                                  .searchList[index].searchType ==
+                                  SearchTypes.category) {
+                                dynamic searchResult =
+                                await Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .storeCategoryScreen.name,
+                                    arguments: {
+                                      AppStrings.categoryIdString: state
+                                          .searchList[index].searchId,
+                                      AppStrings.categoryNameString:
+                                      state.searchList[index].name,
+                                      AppStrings.searchString:
+                                      state.searchController.text,
+                                      AppStrings.searchResultString:
+                                      state.searchList
+                                    });
+                                if (searchResult != null) {
+                                  bloc.add(StoreCategoryEvent
+                                      .updateGlobalSearchEvent(
+                                      search: searchResult[
+                                      AppStrings.searchString],
+                                      searchList: searchResult[
+                                      AppStrings
+                                          .searchResultString], context: context));
+                                }
+                              } else {
+                                state.searchList[index].searchType ==
+                                    SearchTypes.company
+                                    ? Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .companyProductsScreen.name,
+                                    arguments: {
+                                      AppStrings.companyIdString:
+                                      state.searchList[index]
+                                          .searchId
+                                    })
+                                    : Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
+                                        .supplierProductsScreen
+                                        .name,
+                                    arguments: {
+                                      AppStrings.supplierIdString:
+                                      state.searchList[index]
+                                          .searchId
+                                    });
+                              }
+                              bloc.add(
+                                  StoreCategoryEvent.changeCategoryExpansionEvent());
+                            }
+                         /*   onTap: () {
+
                                 debugPrint('searchtype:${state.searchList[index]
                                     .searchType}');
                                 state.searchList[index].searchType ==
@@ -747,11 +832,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
                                 bloc.add(StoreCategoryEvent
                                     .changeCategoryExpansionEvent());
-                              } else {
-                                Navigator.pushNamed(context,
-                                    RouteDefine.connectScreen.name);
-                              }
-                            });
+
+                            }*/
+                            );
                       },
                     ),
                     onScanTap: () async {
@@ -854,7 +937,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height:  (productStock) != 0 ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110,
+            height: !isGuestUser ?  (productStock) != 0 ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 70,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -870,7 +953,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 bottom: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment:searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? MainAxisAlignment.start: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: !isGuestUser ? searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? MainAxisAlignment.start: MainAxisAlignment.spaceBetween :MainAxisAlignment.start ,
+
               children: [
                 Container(
                   height: 80,
@@ -948,24 +1032,24 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     color: AppColors.redColor,
                                     fontWeight: FontWeight.w400),
                               ),
-                              numberOfUnits != 0 ? Text(
+                              !isGuestUser?numberOfUnits != 0 ? Text(
                                 '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.blackColor,
                                     fontWeight: FontWeight.w400),
-                              ) : 0.width,
-                              numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
+                              ) : 0.width : 0.width,
+                              !isGuestUser ?numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
                                 '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.blueColor,
                                     fontWeight: FontWeight.w400),
-                              ) : 0.width,
+                              ) : 0.width :0.width,
                             ],
                           ),
                         ),
-                        priceOfBox != 0.0 ? Container(
+                        !isGuestUser ? priceOfBox != 0.0 ? Container(
                           width: 60,
                           child: Text(
                             '${AppLocalizations.of(context)!.currency}${priceOfBox.toStringAsFixed(2)}',
@@ -974,7 +1058,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 color: AppColors.blueColor,
                                 fontWeight: FontWeight.w400),
                           ),
-                        ) : 0.width,
+                        ) : 0.width : 0.width,
 
                       ],
                     ),

@@ -894,8 +894,6 @@ class BasketScreenWidget extends StatelessWidget {
                           )),
                     )
                         : SingleChildScrollView(
-
-
                       child: NotificationListener<ScrollNotification>(
                   onNotification: (notification) {
                   if(getScreenHeight(context)<700 ){

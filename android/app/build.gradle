@@ -55,8 +55,8 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 24
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 17
-        versionName "1.0.10"
+        versionCode 1
+        versionName "1.0.0"
     }
 
     buildTypes {
@@ -71,12 +71,12 @@ android {
     productFlavors {
         dev {
             dimension "app"
-            applicationId "com.foodstock.dev"
-            resValue "string", "app_name", "TAVILI"
+            applicationId "com.foodstock"
+            resValue "string", "app_name", "TAVILI DEV"
         }
         prod {
             dimension "app"
-            applicationId "com.foodstock"
+            applicationId "com.foodstock.dev" //this is playstore package name
             resValue "string", "app_name", "TAVILI"
         }
 

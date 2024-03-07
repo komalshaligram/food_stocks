@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -84,7 +86,7 @@ class ConnectScreenWidget extends StatelessWidget {
                     },
                   ),
                   20.height,
-                 GestureDetector(
+                 Platform.isIOS?GestureDetector(
                       onTap: (){
                         bloc.add(ConnectEvent.logInAsGuest(context: context));
                       },
@@ -92,7 +94,7 @@ class ConnectScreenWidget extends StatelessWidget {
                       fontSize: AppConstants.mediumFont
                       )
 
-                        ,))
+                        ,)):0.width
                 ],
               ),
             ),
