@@ -62,7 +62,7 @@ class CommonProductListWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            !isGuestUser ?  CachedNetworkImage(
+            !isGuestUser ? productImage.isNotEmpty?  CachedNetworkImage(
               imageUrl: "${AppUrls.baseFileUrl}$productImage",
               height: 70,
               width: 70,
@@ -81,7 +81,7 @@ class CommonProductListWidget extends StatelessWidget {
                 );
               },
               errorWidget: (context, error, stackTrace) {
-                // debugPrint('sale list image error : $error');
+                 debugPrint('sale list image error : $error');
                 return Container(
                   child: Image.asset(AppImagePath.imageNotAvailable5,
                       height: 70, width: 70, fit: BoxFit.cover),
@@ -89,6 +89,7 @@ class CommonProductListWidget extends StatelessWidget {
               },
             ) :
             Image.asset(AppImagePath.imageNotAvailable5 , height: 90,
+              width: 90, ) :  Image.asset(AppImagePath.imageNotAvailable5 , height: 90,
               width: 90, ),
             Container(
               padding: EdgeInsets.symmetric(

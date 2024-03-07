@@ -190,7 +190,7 @@ class SupplierScreenWidget extends StatelessWidget {
           child: Column(
             children: [
               Expanded(
-                child: CachedNetworkImage(
+                child: supplierLogo.isNotEmpty ? CachedNetworkImage(
                   imageUrl: "${AppUrls.baseFileUrl}$supplierLogo",
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.center,
@@ -215,7 +215,15 @@ class SupplierScreenWidget extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                ),
+                ) :Container(
+                  height: getScreenHeight(context),
+                  width: getScreenWidth(context),
+                  color: AppColors.whiteColor,
+                  child: Image.asset(
+                    AppImagePath.imageNotAvailable5,
+                    fit: BoxFit.cover,
+                  ),
+                ) ,
                 /*child: Image.network(
                   "${AppUrls.baseFileUrl}$supplierLogo",
                   fit: BoxFit.scaleDown,

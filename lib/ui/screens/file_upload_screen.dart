@@ -602,7 +602,9 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     color: AppColors.blackColor,
                                   ),
                                 ),
-                                errorWidget: (context, url, error) => Center(
+                                errorWidget: (context, url, error) {
+                                  debugPrint('file upload error : $error');
+                                  return Center(
                                   child: Text(
                                     AppStrings.failedToLoadString,
                                     style: AppStyles
@@ -612,7 +614,8 @@ class FileUploadScreenWidget extends StatelessWidget {
                                         color: AppColors
                                             .textColor),
                                   ),
-                                ),
+                                );
+                                },
                               ),
                              /* Image.network(
                                           "${AppUrls.baseFileUrl}$url",

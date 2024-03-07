@@ -178,7 +178,7 @@ class CompanyScreenWidget extends StatelessWidget {
           child: Column(
             children: [
               Expanded(
-                child: CachedNetworkImage(
+                child: companyLogo.isNotEmpty ? CachedNetworkImage(
                   imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.center,
@@ -196,7 +196,9 @@ class CompanyScreenWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  errorWidget: (context, url, error) => Container(
+                  errorWidget: (context, url, error) {
+                    debugPrint('company screen error : $error');
+                    return Container(
                     height: getScreenHeight(context),
                     width: getScreenWidth(context),
                     color: AppColors.whiteColor,
@@ -204,6 +206,15 @@ class CompanyScreenWidget extends StatelessWidget {
                       AppImagePath.imageNotAvailable5,
                       fit: BoxFit.cover,
                     ),
+                  );
+                  },
+                ) : Container(
+                  height: getScreenHeight(context),
+                  width: getScreenWidth(context),
+                  color: AppColors.whiteColor,
+                  child: Image.asset(
+                    AppImagePath.imageNotAvailable5,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),

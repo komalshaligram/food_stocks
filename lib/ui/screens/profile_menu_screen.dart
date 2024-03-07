@@ -108,6 +108,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                       placeholder: (context, url) =>
                                           CupertinoActivityIndicator(),
                                       errorWidget: (context, url, error) {
+                                        debugPrint('profile menu error : $error');
                                         return Container(
                                           color: AppColors.whiteColor,
                                         );
