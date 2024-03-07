@@ -852,7 +852,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             context: context,
                             productId: result,
                             planoGramIndex: 0,
-                            //  productStock: 1,
+                              productStock: '1',
                             isBarcode: true,
                           );
                         } else {
@@ -1398,7 +1398,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               Navigator.pop(context);
                                             },
                                             child: PhotoView(
-                                              imageProvider: CachedNetworkImageProvider(
+                                              imageProvider: NetworkImage(
                                                 '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                               ),
                                             ),

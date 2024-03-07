@@ -78,6 +78,7 @@ class HomeScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
+          print('productStockUpdateIndex____${state.productStockUpdateIndex}');
           return Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,
@@ -872,7 +873,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   context: context,
                                   productId: scanResult,
                                   isBarcode: true,
-
+                                  productStock: '1'
                                 );
                               }
                             },
@@ -918,9 +919,10 @@ class HomeScreenWidget extends StatelessWidget {
               print('subPage__home_${_subPage == null}');
               print('mainPage__home_${_mainPage}');
               print('ide__home_${_id == null}');
+              PushNotificationService().manageNavigation( true, _mainPage ?? '',_subPage ?? '' , _id ?? '' , );
             }
           }
-          PushNotificationService().manageNavigation( true, _mainPage ?? '',_subPage ?? '' , _id ?? '' , );
+
         }
       },
     );
@@ -1148,7 +1150,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 Navigator.pop(dialogContext);
                                               },
                                               child: PhotoView(
-                                                imageProvider: CachedNetworkImageProvider(
+                                                imageProvider: NetworkImage(
                                                   '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                 ),
                                               ),
@@ -1183,8 +1185,8 @@ class HomeScreenWidget extends StatelessWidget {
                               ],
                               productPerUnit: state.productDetails.first
                                   .numberOfUnit ?? 0,
-                              productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
-                              productName: state.productDetails.first
+                                productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
+                                productName: state.productDetails.first
                                   .productName ??
                                   '',
                               productCompanyName: state

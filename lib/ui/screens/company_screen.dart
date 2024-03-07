@@ -178,7 +178,7 @@ class CompanyScreenWidget extends StatelessWidget {
           child: Column(
             children: [
               Expanded(
-                child: CachedNetworkImage(
+                child: companyLogo.isNotEmpty ? CachedNetworkImage(
                   imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.center,
@@ -208,6 +208,14 @@ class CompanyScreenWidget extends StatelessWidget {
                     ),
                   );
                   },
+                ) : Container(
+                  height: getScreenHeight(context),
+                  width: getScreenWidth(context),
+                  color: AppColors.whiteColor,
+                  child: Image.asset(
+                    AppImagePath.imageNotAvailable5,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               Container(

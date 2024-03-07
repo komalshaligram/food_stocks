@@ -71,7 +71,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: !isGuestUser ? CachedNetworkImage(
+              child: !isGuestUser ? saleImage.isNotEmpty ? CachedNetworkImage(
                 imageUrl: "${AppUrls.baseFileUrl}$saleImage",
                 height: imageHeight,
                 fit: BoxFit.fitHeight,
@@ -101,6 +101,9 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                 },
               ) :
               Image.asset(AppImagePath.imageNotAvailable5,
+                height: imageHeight,
+                width: 70,
+              ) : Image.asset(AppImagePath.imageNotAvailable5,
                 height: imageHeight,
                 width: 70,
               ),

@@ -427,7 +427,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   .copyWith(
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '' ,
-                  stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0,
+                  stock: int.parse(response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ?? 0,
                   totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
               );
             }

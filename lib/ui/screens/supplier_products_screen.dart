@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -25,7 +25,6 @@ import '../../routes/app_routes.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
-import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
@@ -222,7 +221,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                                   productStock: state
                                                                       .productList[
                                                                           index]
-                                                                      .productStock,
+                                                                      .productStock.toString(),
                                                                 );
                                                               } else {
                                                                 Navigator.pushNamed(
@@ -626,7 +625,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
-              child: Image.network(
+              child: productImage.isNotEmpty ? Image.network(
                 "${AppUrls.baseFileUrl}$productImage",
                 height: 70,
                 fit: BoxFit.fitHeight,
@@ -654,6 +653,9 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                         height: 70, width: double.maxFinite, fit: BoxFit.cover),
                   );
                 },
+              ) : Container(
+                child: Image.asset(AppImagePath.imageNotAvailable5,
+                    height: 70, width: double.maxFinite, fit: BoxFit.cover),
               ),
             ),
             5.height,
@@ -669,17 +671,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             5.height,
             Expanded(
               child: 0.width,
-              // child: state.planoGramsList[index].planogramproducts?[subIndex].totalSale == 0
-              //     ? 0.width
-              //     : Text(
-              //   "${state.planoGramsList[index].planogramproducts?[subIndex].totalSale} ${AppLocalizations.of(context)!.discount}",
-              //   style: AppStyles.rkRegularTextStyle(
-              //       size: AppConstants.font_10,
-              //       color: AppColors.saleRedColor,
-              //       fontWeight: FontWeight.w600),
-              //   maxLines: 2,
-              //   overflow: TextOverflow.ellipsis,
-              // ),
             ),
             5.height,
             Center(
@@ -830,7 +821,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                       },
                                                       child: PhotoView(
                                                         imageProvider:
-                                                            CachedNetworkImageProvider(
+                                                            NetworkImage(
                                                           '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                         ),
                                                       ),
@@ -871,10 +862,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                         productPerUnit: state.productDetails
                                                 .first.numberOfUnit ??
                                             0,
-                                        productUnitPrice: state
-                                            .productStockList[
-                                                state.productStockUpdateIndex]
-                                            .totalPrice,
+                                        productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
                                         productName: state.productDetails.first
                                                 .productName ??
                                             '',
