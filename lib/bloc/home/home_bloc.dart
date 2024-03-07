@@ -128,7 +128,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           _isProductInCart = false;
           _cartProductId = '';
           _productQuantity = 0;
-         // emit(state.copyWith(relatedProductList: []));
+          // emit(state.copyWith(relatedProductList: []));
 
           try {
             emit(state.copyWith(
@@ -155,22 +155,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   .indexOf(productStockList.last)] = productStockList[
               productStockList.indexOf(productStockList.last)]
                   .copyWith(
-                quantity: _productQuantity,
-                productId: response.product?.first.id ?? '',
-                stock: int.parse(response.product?.first.supplierSales?.first.productStock.toString() ?? "0"),
-                productSaleId: '',
-                productSupplierIds: '',
-                note: '',
-                isNoteOpen: false,
-                totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
+                  quantity: _productQuantity,
+                  productId: response.product?.first.id ?? '',
+                  stock: int.parse(response.product?.first.supplierSales?.first.productStock.toString() ?? "0"),
+                  productSaleId: '',
+                  productSupplierIds: '',
+                  note: '',
+                  isNoteOpen: false,
+                  totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
               );
               emit(state.copyWith(productStockList: productStockList));
               try {
                 SharedPreferencesHelper preferences = SharedPreferencesHelper(
                     prefs: await SharedPreferences.getInstance());
                 final res = await DioClient(event.context).post(
-                    '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  );
+                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+                );
                 GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                 if (response.status == 200) {
                   debugPrint('cart before = ${response.data}');
@@ -197,20 +197,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               if(response.product != null){
                 add(HomeEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
-              if ((event.isBarcode ?? false )) {
+              if ((event.isBarcode )) {
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: false);
                 productStockList[productStockList
                     .indexOf(productStockList.last)] = productStockList[
                 productStockList.indexOf(productStockList.last)]
                     .copyWith(
-                  quantity: _productQuantity,
-                  productId: response.product?.first.id ?? '',
-                  stock: int.parse(response.product?.first.supplierSales?.first.productStock.toString() ?? "0"),
-                  productSaleId: '',
-                  productSupplierIds: '',
-                  note: '',
-                  isNoteOpen: false,
+                    quantity: _productQuantity,
+                    productId: response.product?.first.id ?? '',
+                    stock: int.parse(response.product?.first.supplierSales?.first.productStock.toString() ?? "0"),
+                    productSaleId: '',
+                    productSupplierIds: '',
+                    note: '',
+                    isNoteOpen: false,
                     totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
                 );
 
@@ -228,8 +228,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
 
 
-              debugPrint(
-                  'product stock update index = $productStockUpdateIndex');
+              emit(state.copyWith(productStockList: productStockList,productStockUpdateIndex : productStockUpdateIndex));
+
+              debugPrint('product stock update index = $productStockUpdateIndex');
+              debugPrint('product stock update index1 = ${state.productStockUpdateIndex}');
               debugPrint(
                   'product stock = ${state
                       .productStockList[productStockUpdateIndex].stock}');

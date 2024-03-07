@@ -404,5 +404,7 @@
   "refund_for_order" : "Refund for order",
   "related_products": "Related products",
   "search_result" : "Search Result",
-  "price_par_box" : "Price per box"
+  "price_par_box" : "Price per box",
+  "my_invoices": "My invoices",
+  "invoice number" : "Invoice Number"
 }

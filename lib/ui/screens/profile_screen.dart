@@ -577,14 +577,11 @@ class ProfileScreenWidget extends StatelessWidget {
                                   CustomFormField(
                                     context: context,
                                     controller: state.businessNameController,
-                                    inputformet: [
-                                      LengthLimitingTextInputFormatter(20)
-                                    ],
                                     keyboardType: TextInputType.text,
                                     hint: "",
                                     fillColor: Colors.transparent,
                                     textInputAction: TextInputAction.next,
-                                    validator: AppStrings.businessNameValString,
+                                    validator: '',
                                   ),
                                   7.height,
                                   CustomContainerWidget(
