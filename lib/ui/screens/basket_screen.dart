@@ -233,6 +233,14 @@ class BasketScreenWidget extends StatelessWidget {
             Divider(),
             basketRow('${AppLocalizations.of(context)!.total}', '${(formatNumber(value: vatCalculation(price: state.totalPayment, vat:state.vatPercentage,qty: state.bottleQty?.toDouble() ?? 0, deposit: state.bottleTax).toStringAsFixed(2), local: AppStrings.hebrewLocal))}',isTitle: true),
             Divider(),
+            Text('${AppLocalizations.of(context)!.note} : ${AppLocalizations.of(context)!.not_include_surfaces_price}',
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_14,
+                  color: AppColors
+                      .redColor),
+            ),
+
+            5.height,
             CustomButtonWidget(
               buttonText: AppLocalizations.of(context)!.submit,
               bGColor: AppColors.mainColor,
@@ -260,7 +268,7 @@ class BasketScreenWidget extends StatelessWidget {
         ));
   }
 
-  Widget basketRow(String title,String amount,{bool isTitle = false}){
+  Widget basketRow(String title,String amount,  {bool isTitle = false,double fontSize = 18} ){
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -274,7 +282,7 @@ class BasketScreenWidget extends StatelessWidget {
         Text(
           amount,
           style: AppStyles.rkRegularTextStyle(
-              size: AppConstants.mediumFont,
+              size: fontSize,
               color: AppColors
                   .blackColor,
               fontWeight: isTitle ?FontWeight.w700:FontWeight.w300),

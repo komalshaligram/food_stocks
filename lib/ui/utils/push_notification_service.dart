@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:food_stock/main.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
@@ -45,19 +46,47 @@ class PushNotificationService {
         _mainPage = message.data['data']['message']['mainPage'];
         _subPage = message.data['data']['message']['subPage'];
         _id = message.data['data']['message']['id'];
-        manageNavigation( true, _mainPage, _subPage , _id);
+        manageNavigation( true, _mainPage, _subPage , _id ,);
       },
     );
-    FirebaseMessaging.instance.getInitialMessage().then((message) {
+    FirebaseMessaging.instance.getInitialMessage().then((message) async {
+
       if (message != null) {
-        // DO YOUR THING HERE
-        debugPrint("onMessageOpenedApp_1: ${message}");
-        debugPrint("onMessageOpenedApp: ${message.data}");
-        _mainPage = message.data['data']['message']['mainPage'];
-        _subPage = message.data['data']['message']['subPage'];
-        _id = message.data['data']['message']['id'];
-        manageNavigation( true, _mainPage, _subPage , _id);
+        var data = json.decode(message.data['data'].toString());
+        final RemoteNotification? notification = message.notification;
+        final String? messageId = message.messageId;
+        debugPrint('messageId______${messageId}');
+        final AndroidNotification? android = message.notification?.android;
+        debugPrint('data:${data.toString()}');
+        if (data != null) {
+          String? title =
+          Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
+          String? body =
+          Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
+          String? mainPage = data['message']['mainPage'] ?? '';
+          String? subPage = data['message']['subPage'] ?? '';
+          String? id = data['message']['id'] ?? '';
+          _subPage = subPage ?? '';
+          _mainPage = mainPage ?? '';
+          _id = id ?? '';
+          print('subPage___${_subPage}');
+          print('mainPage___${_mainPage}');
+          print('ide___${_id }');
+          manageNavigation(true, _mainPage, _subPage , _id);
+
+        }
+
       }
+      /*    if (message != null) {
+          // DO YOUR THING HERE
+          debugPrint("onMessageOpenedApp_1: ${message}");
+          debugPrint("onMessageOpenedApp: ${message.data}");
+          //  NotificationModel notificationModel = NotificationModel.fromJson(message.data);
+          _mainPage = message.data['data'][0]['message']['mainPage'];
+          _subPage = message.data['data']['message']['subPage'];
+          _id = message.data['data']['message']['id'];
+          manageNavigation( true, _mainPage, _subPage , _id);
+        }*/
     });
     if (Platform.isIOS) {
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -129,7 +158,7 @@ class PushNotificationService {
         _mainPage = mainPage;
         _id = id;
         String imageUrl = data['message']['imageUrl'] ?? '';
-        print('hello______${imageUrl}');
+
 
         if (imageUrl.isNotEmpty) {
           final http.Response response;
@@ -227,13 +256,13 @@ class PushNotificationService {
     debugPrint('subPage   = ${subPage}');
     debugPrint('id = ${id}');
     debugPrint('isAppOpen = ${isAppOpen}');
-    if (isAppOpen) {
+    if (isAppOpen ?? false) {
       debugPrint('subPage  1 = ${subPage}');
       if(subPage == ''){
         if (mainPage == 'companyScreen') {
-          Navigator.pushNamed(navigatorKey.currentState!.context,
+           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.companyScreen.name,
-              arguments: {AppStrings.companyIdString: id});
+               arguments: {AppStrings.companyIdString: id});
         }
         if (mainPage == 'saleScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
@@ -290,6 +319,7 @@ class PushNotificationService {
          ));
     }
   }
+
 
   @pragma('vm:entry-point')
   Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {

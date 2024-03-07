@@ -176,11 +176,11 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                if(!state.isGuestUser){
                                                  showProductDetails(
                                                      context: context,
-                                                     productId: state.searchType == SearchTypes.product.toString()?state.productList[index].id??'':state
+                                                     productId: state.searchType == SearchTypes.product.toString()?state.productList[index].id ??'':state
                                                          .productList[index]
                                                          .productId ??
                                                          '',
-                                                     productStock : '0',
+                                                     productStock :state.productList[index].productStock.toString(),
                                                  );
                                                }
                                                else{
@@ -602,17 +602,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             5.height,
             Expanded(
               child: 0.width,
-              // child: state.planoGramsList[index].planogramproducts?[subIndex].totalSale == 0
-              //     ? 0.width
-              //     : Text(
-              //   "${state.planoGramsList[index].planogramproducts?[subIndex].totalSale} ${AppLocalizations.of(context)!.discount}",
-              //   style: AppStyles.rkRegularTextStyle(
-              //       size: AppConstants.font_10,
-              //       color: AppColors.saleRedColor,
-              //       fontWeight: FontWeight.w600),
-              //   maxLines: 2,
-              //   overflow: TextOverflow.ellipsis,
-              // ),
             ),
             5.height,
             Center(

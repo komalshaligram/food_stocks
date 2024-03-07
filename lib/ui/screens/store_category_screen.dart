@@ -24,7 +24,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
-import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_item_widget.dart';
@@ -64,21 +63,23 @@ class StoreCategoryScreen extends StatelessWidget {
             categoryName: args?[AppStrings.categoryNameString] ?? '',
             isSubCategory: args?[AppStrings.isSubCategory] ?? '',
             context: context)),
-      child: StoreCategoryScreenWidget(),
+      child: StoreCategoryScreenWidget(isSubCategory: args?[AppStrings.isSubCategory] ?? ''),
     );
   }
 }
 
 class StoreCategoryScreenWidget extends StatelessWidget {
-  StoreCategoryScreenWidget({
-    super.key,
+ final String isSubCategory ;
+  StoreCategoryScreenWidget({super.key,this.isSubCategory = ''
   });
+
 
   @override
   Widget build(BuildContext context) {
     StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
     return BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
       builder: (context, state) {
+
         return WillPopScope(
           onWillPop: () {
             if (state.isSubCategory) {
@@ -376,7 +377,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             .isEmpty &&
                                         !state
                                             .isPlanogramProductShimmering
-                                        ? Container(
+                                        ?  Container(
                                       height: getScreenHeight(
                                           context) -
                                           160,

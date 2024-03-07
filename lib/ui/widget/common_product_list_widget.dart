@@ -81,7 +81,7 @@ class CommonProductListWidget extends StatelessWidget {
                 );
               },
               errorWidget: (context, error, stackTrace) {
-                // debugPrint('sale list image error : $error');
+                 debugPrint('sale list image error : $error');
                 return Container(
                   child: Image.asset(AppImagePath.imageNotAvailable5,
                       height: 70, width: 70, fit: BoxFit.cover),

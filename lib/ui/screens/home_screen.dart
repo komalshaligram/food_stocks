@@ -1,6 +1,11 @@
 
+
+import 'dart:convert';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -78,7 +83,7 @@ class HomeScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-                handleMessageOnBackground();
+                handleMessageOnBackground(context);
                 bloc.add(HomeEvent.getPreferencesDataEvent());
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(
                     context: context));
@@ -132,6 +137,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   '${AppUrls.baseFileUrl}${state.UserImageUrl}',
                                   fit: BoxFit.cover,
                                   errorWidget: (context, url, error) {
+                                    debugPrint('home error : $error');
                                     return Container(
                                       color: AppColors.whiteColor,
                                     );
@@ -884,12 +890,37 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  void handleMessageOnBackground() {
+  void handleMessageOnBackground( BuildContext context) {
     PushNotificationService().firebaseMessaging.getInitialMessage().then(
-          (remoteMessage) {
-        if (remoteMessage != null) {
-          debugPrint("onMessageClosedApp: ${remoteMessage.data}");
-          PushNotificationService().manageNavigation( true, remoteMessage.data['message']['mainPage'], remoteMessage.data['message']['subPage'] , remoteMessage.data['_id']);
+          (message) {
+        if (message != null) {
+          String? _mainPage;
+          String? _subPage;
+          String? _id;
+
+          debugPrint("onMessageClosedApp: ${message.data}");
+          if (message.data.isNotEmpty) {
+            var data = json.decode(message.data['data'].toString());
+            final RemoteNotification? notification = message.notification;
+            final String? messageId = message.messageId;
+            debugPrint('messageId______${messageId}');
+            final AndroidNotification? android = message.notification?.android;
+            debugPrint('data:${data.toString()}');
+            if (data != null) {
+              String? title =
+              Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
+              String? body =
+              Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
+              String? _mainPage = data['message']['mainPage'] ?? '';
+              String? _subPage = data['message']['subPage'] ?? '';
+              String? _id = data['message']['id'] ?? '';
+
+              print('subPage__home_${_subPage == null}');
+              print('mainPage__home_${_mainPage}');
+              print('ide__home_${_id == null}');
+            }
+          }
+          PushNotificationService().manageNavigation( true, _mainPage ?? '',_subPage ?? '' , _id ?? '' , );
         }
       },
     );
@@ -1492,6 +1523,7 @@ class HomeScreenWidget extends StatelessWidget {
                       }
                     },
                     errorBuilder: (context, error, stackTrace) {
+                      print('home error 1_____${error}');
                       return searchType == SearchTypes.subCategory
                           ? Image.asset(AppImagePath.imageNotAvailable5,
                           height: 60, width: 50, fit: BoxFit.cover)

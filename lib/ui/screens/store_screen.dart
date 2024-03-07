@@ -1343,7 +1343,7 @@ class StoreScreenWidget extends StatelessWidget {
                     );
                   },
                   errorWidget: (context, error, stackTrace) {
-                    // debugPrint('product category list image error : $error');
+                     debugPrint('product category list image error : $error');
                     return Container(
                       // padding: EdgeInsets.only(
                       //     bottom: AppConstants.padding_10, top: 0),
@@ -1455,7 +1455,7 @@ class StoreScreenWidget extends StatelessWidget {
                   );
                 },
                 errorWidget: (context, error, stackTrace) {
-                  // debugPrint('sale list image error : $error');
+                   debugPrint('sale list image error : $error');
                   return Container(
                     child: Image.asset(AppImagePath.imageNotAvailable5,
                         height: 70, width: double.maxFinite, fit: BoxFit.cover),
@@ -1557,7 +1557,7 @@ class StoreScreenWidget extends StatelessWidget {
                   );
                 },
                 errorWidget: (context, error, stackTrace) {
-                  // debugPrint('sale list image error : $error');
+                   debugPrint('sale list image error : $error');
                   return Container(
                     child: Image.asset(AppImagePath.imageNotAvailable5,
                         height: 70, width: double.maxFinite, fit: BoxFit.cover),
@@ -1660,7 +1660,7 @@ class StoreScreenWidget extends StatelessWidget {
                   );
                 },
                 errorWidget: (context, error, stackTrace) {
-                  // debugPrint('product category list image error : $error');
+                   debugPrint('product category list image error : $error');
                   return Container(
                     child: Image.asset(
                       AppImagePath.imageNotAvailable5,

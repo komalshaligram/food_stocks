@@ -404,5 +404,6 @@
   "refund_for_order" : "Refund for order",
   "related_products": "Related products",
   "search_result" : "Search Result",
-  "price_par_box" : "Price per box"
+  "price_par_box" : "Price per box",
+  "not_include_surfaces_price":"This price does not include surfaces price"
 }

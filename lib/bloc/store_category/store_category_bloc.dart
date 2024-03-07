@@ -58,6 +58,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           prefs: await SharedPreferences.getInstance());
 
       if (event is _isCategoryEvent) {
+        print('isSubCategory_____${event.isSubCategory}');
         emit(state.copyWith(isSubCategory: event.isSubCategory ,isGridView: preferences.getIsGridView(),
             isGuestUser: preferences.getGuestUser()
         ));
@@ -91,6 +92,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
       } else if (event is _ChangeCategoryDetailsEvent) {
         print('categoryName   ${state.categoryName}');
+
         emit(state.copyWith(
             cartCount: preferences.getCartCount(),
             isSubCategory: state.isSubCategory,
@@ -467,7 +469,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             if(response.product != null){
               add(StoreCategoryEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
-            if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
+            if ( (event.isBarcode )) {
               // List<List<ProductStockModel>> productStockList =
               // state.productStockList.toList(growable: false);
               productStockList[0][0] =  productStockList[0][0]
@@ -1046,7 +1048,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
         await preferences.setIsAnimation(isAnimation: true);
-        debugPrint('cart count = ${preferences.getCartCount()}');
+        debugPrint('cart count store cate= ${preferences.getCartCount()}');
       }
       else if (event is _GlobalSearchEvent) {
         emit(state.copyWith(search: state.searchController.text));

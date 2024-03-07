@@ -733,7 +733,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
 
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
         await preferences.setIsAnimation(isAnimation: true);
-        debugPrint('cart count = ${preferences.getCartCount()}');
+        debugPrint('cart count reorder = ${preferences.getCartCount()}');
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
       } else if (event is _ToggleNoteEvent) {

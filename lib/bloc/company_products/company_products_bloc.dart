@@ -735,7 +735,7 @@ class CompanyProductsBloc
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
         await preferences.setIsAnimation(isAnimation: true);
-        debugPrint('cart count = ${preferences.getCartCount()}');
+        debugPrint('cart count company= ${preferences.getCartCount()}');
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
       } else if (event is _ToggleNoteEvent) {

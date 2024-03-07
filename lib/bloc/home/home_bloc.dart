@@ -197,7 +197,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               if(response.product != null){
                 add(HomeEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
-              if ((event.isBarcode ?? false )) {
+              if ((event.isBarcode )) {
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: false);
                 productStockList[productStockList
@@ -228,8 +228,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
 
 
-              debugPrint(
-                  'product stock update index = $productStockUpdateIndex');
+              emit(state.copyWith(productStockList: productStockList,productStockUpdateIndex : productStockUpdateIndex));
+
+              debugPrint('product stock update index = $productStockUpdateIndex');
+              debugPrint('product stock update index1 = ${state.productStockUpdateIndex}');
               debugPrint(
                   'product stock = ${state
                       .productStockList[productStockUpdateIndex].stock}');
@@ -754,7 +756,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           await preferences.setCartCount(count: preferences.getCartCount() + 1);
           emit(state.copyWith(cartCount: preferences.getCartCount()));
           await preferences.setIsAnimation(isAnimation: true);
-          debugPrint('cart count = ${state.cartCount}');
+          debugPrint('cart count home = ${state.cartCount}');
         }
         else if (event is _getWalletRecordEvent) {
           try {

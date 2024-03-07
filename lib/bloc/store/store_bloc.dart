@@ -887,7 +887,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
         await preferences.setIsAnimation(isAnimation: true);
-        debugPrint('cart count = ${preferences.getCartCount()}');
+        debugPrint('cart count store= ${preferences.getCartCount()}');
       }
       else if (event is _SupplierSelectionEvent) {
         debugPrint(

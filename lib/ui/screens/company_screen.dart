@@ -196,7 +196,9 @@ class CompanyScreenWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  errorWidget: (context, url, error) => Container(
+                  errorWidget: (context, url, error) {
+                    debugPrint('company screen error : $error');
+                    return Container(
                     height: getScreenHeight(context),
                     width: getScreenWidth(context),
                     color: AppColors.whiteColor,
@@ -204,7 +206,8 @@ class CompanyScreenWidget extends StatelessWidget {
                       AppImagePath.imageNotAvailable5,
                       fit: BoxFit.cover,
                     ),
-                  ),
+                  );
+                  },
                 ),
               ),
               Container(

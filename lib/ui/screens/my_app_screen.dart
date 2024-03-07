@@ -26,8 +26,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-
 class MyAppWidget extends StatefulWidget {
   const MyAppWidget({super.key});
 
@@ -49,7 +47,6 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    debugPrint('state____${state}');
     if(state == AppLifecycleState.resumed){
       context.read<MyAppBloc>().add(MyAppEvent.updateProfileDetailsEvent(context: context));
     }
