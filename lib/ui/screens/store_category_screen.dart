@@ -97,7 +97,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           child: Scaffold(
             floatingActionButtonLocation:
             FloatingActionButtonLocation.endContained,
-            floatingActionButton: FloatingActionButton(
+            floatingActionButton: !state.isGuestUser? FloatingActionButton(
               elevation: 0,
               child: Stack(
                 children: [
@@ -170,7 +170,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
                     arguments: {AppStrings.isBasketScreenString: 'true'});
               },
-            ),
+            ):0.width,
             backgroundColor: AppColors.pageColor,
             body: SafeArea(
               child: Stack(

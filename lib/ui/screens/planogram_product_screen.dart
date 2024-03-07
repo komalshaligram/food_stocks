@@ -65,7 +65,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
         return Scaffold(
           floatingActionButtonLocation:
           FloatingActionButtonLocation.endContained,
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:  !state.isGuestUser?FloatingActionButton(
             elevation: 0,
             child: Stack(
               children: [
@@ -137,7 +137,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
               Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
                   arguments: {AppStrings.isBasketScreenString: 'true'});
             },
-          ),
+          ):0.width,
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),

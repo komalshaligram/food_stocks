@@ -76,7 +76,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
 
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:  !state.isGuestUser?FloatingActionButton(
             elevation: 0,
             child:  Stack(
               children: [
@@ -154,7 +154,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                   arguments: {AppStrings.isBasketScreenString: 'true'}
               );
             },
-          ),
+          ):0.width,
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),

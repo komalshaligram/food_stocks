@@ -11,7 +11,7 @@ import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:platform_device_id/platform_device_id.dart';
+//import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 
@@ -39,7 +39,7 @@ class SplashScreen extends StatelessWidget {
 class SplashScreenWidget extends StatelessWidget {
   SplashScreenWidget({Key? key}) : super(key: key);
 
-  String? deviceId;
+  //String? deviceId;
 
   getVersion(SharedPreferencesHelper preferencesHelper) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -49,7 +49,7 @@ class SplashScreenWidget extends StatelessWidget {
     debugPrint("splash pref = ${preferencesHelper.getUserLoggedIn()}");
   }
 
-  getDeviceId() async {
+ /* getDeviceId() async {
     try {
       deviceId = await PlatformDeviceId.getDeviceId;
       debugPrint('deviceId:$deviceId');
@@ -57,7 +57,7 @@ class SplashScreenWidget extends StatelessWidget {
       deviceId = 'Failed to get deviceId.';
     }
     return deviceId;
-  }
+  }*/
 
 void appFlyerSetup() {
     AppsflyerSdk? _appsflyerSdk;
@@ -92,7 +92,7 @@ void appFlyerSetup() {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
           getVersion(preferencesHelper);
-          getDeviceId();
+          //getDeviceId();
 
           debugPrint('${preferencesHelper.getUserLoggedIn()}');
           if (preferencesHelper.getUserLoggedIn()) {
