@@ -1321,7 +1321,7 @@ class StoreScreenWidget extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(AppConstants.padding_10)),
-                child: CachedNetworkImage(
+                child: categoryImage.isNotEmpty ? CachedNetworkImage(
                   imageUrl: "${AppUrls.baseFileUrl}$categoryImage",
                   fit: BoxFit.cover,
                   height: 140,
@@ -1343,7 +1343,7 @@ class StoreScreenWidget extends StatelessWidget {
                     );
                   },
                   errorWidget: (context, error, stackTrace) {
-                    // debugPrint('product category list image error : $error');
+                     debugPrint('product category list image error : $error');
                     return Container(
                       // padding: EdgeInsets.only(
                       //     bottom: AppConstants.padding_10, top: 0),
@@ -1355,6 +1355,15 @@ class StoreScreenWidget extends StatelessWidget {
                       ),
                     );
                   },
+                ) : Container(
+                  // padding: EdgeInsets.only(
+                  //     bottom: AppConstants.padding_10, top: 0),
+                  child: Image.asset(
+                    AppImagePath.imageNotAvailable5,
+                    fit: BoxFit.cover,
+                    width: 140,
+                    height: 110,
+                  ),
                 ),
               ),
             ),
@@ -1433,7 +1442,7 @@ class StoreScreenWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: CachedNetworkImage(
+              child: saleImage.isNotEmpty ? CachedNetworkImage(
                 imageUrl: "${AppUrls.baseFileUrl}$saleImage",
                 height: 70,
                 fit: BoxFit.fitHeight,
@@ -1455,12 +1464,15 @@ class StoreScreenWidget extends StatelessWidget {
                   );
                 },
                 errorWidget: (context, error, stackTrace) {
-                  // debugPrint('sale list image error : $error');
+                   debugPrint('sale list image error : $error');
                   return Container(
                     child: Image.asset(AppImagePath.imageNotAvailable5,
                         height: 70, width: double.maxFinite, fit: BoxFit.cover),
                   );
                 },
+              ) :  Container(
+                child: Image.asset(AppImagePath.imageNotAvailable5,
+                    height: 70, width: double.maxFinite, fit: BoxFit.cover),
               ),
             ),
             5.height,
@@ -1539,7 +1551,7 @@ class StoreScreenWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
-              child: CachedNetworkImage(
+              child: productImage.isNotEmpty ? CachedNetworkImage(
                 imageUrl: "${AppUrls.baseFileUrl}$productImage",
                 height: 70,
                 fit: BoxFit.fitHeight,
@@ -1557,12 +1569,15 @@ class StoreScreenWidget extends StatelessWidget {
                   );
                 },
                 errorWidget: (context, error, stackTrace) {
-                  // debugPrint('sale list image error : $error');
+                   debugPrint('sale list image error : $error');
                   return Container(
                     child: Image.asset(AppImagePath.imageNotAvailable5,
                         height: 70, width: double.maxFinite, fit: BoxFit.cover),
                   );
                 },
+              ) : Container(
+                child: Image.asset(AppImagePath.imageNotAvailable5,
+                    height: 70, width: double.maxFinite, fit: BoxFit.cover),
               ),
             ),
             5.height,
@@ -1643,7 +1658,7 @@ class StoreScreenWidget extends StatelessWidget {
             Padding(
               padding:
               const EdgeInsets.only(bottom: AppConstants.padding_20),
-              child: CachedNetworkImage(
+              child: companyLogo.isNotEmpty ? CachedNetworkImage(
                 imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
                 fit: BoxFit.scaleDown,
                 height: 110,
@@ -1660,7 +1675,7 @@ class StoreScreenWidget extends StatelessWidget {
                   );
                 },
                 errorWidget: (context, error, stackTrace) {
-                  // debugPrint('product category list image error : $error');
+                   debugPrint('product category list image error : $error');
                   return Container(
                     child: Image.asset(
                       AppImagePath.imageNotAvailable5,
@@ -1670,6 +1685,13 @@ class StoreScreenWidget extends StatelessWidget {
                     ),
                   );
                 },
+              ) : Container(
+                child: Image.asset(
+                  AppImagePath.imageNotAvailable5,
+                  fit: BoxFit.cover,
+                  width: 110,
+                  height: 105,
+                ),
               ),
             ),
             Positioned(
@@ -1861,7 +1883,7 @@ class StoreScreenWidget extends StatelessWidget {
                                               Navigator.pop(dialogContext);
                                             },
                                             child: PhotoView(
-                                              imageProvider: CachedNetworkImageProvider(
+                                              imageProvider: NetworkImage(
                                                 '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                               ),
                                             ),
@@ -1896,7 +1918,7 @@ class StoreScreenWidget extends StatelessWidget {
                               ],
                               productPerUnit: state.productDetails.first
                                   .numberOfUnit ?? 0,
-                              productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
+                              productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
                               productName: state.productDetails.first
                                   .productName ??
                                   '',

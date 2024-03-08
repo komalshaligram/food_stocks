@@ -39,7 +39,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
           await Future.delayed(const Duration(milliseconds: 2000));
           emit(state.copyWith(duringCelebration:false,isAnimation: false));
         }
-        debugPrint('cart count = ${state.cartCount}');
+        debugPrint('cart count bottom= ${state.cartCount}');
       }
 
       else if(event is _NavigateToStoreScreenEvent){

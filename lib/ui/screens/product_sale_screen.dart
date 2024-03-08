@@ -336,7 +336,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                             },
                                             child: PhotoView(
                                               imageProvider:
-                                              CachedNetworkImageProvider(
+                                              NetworkImage(
                                                 '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                               ),
                                             ),

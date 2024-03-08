@@ -230,14 +230,13 @@ class CompanyProductsBloc
                 productSupplierIds: '',
                 note: '',
                 isNoteOpen: false,
+                //  totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
               );
 
-
-              emit(state.copyWith(productStockList: productStockList));
               debugPrint('new index = ${state.productStockList.last}');
               productStockUpdateIndex =
                   productStockList.indexOf(productStockList.last);
-
+              emit(state.copyWith(productStockList: productStockList,productStockUpdateIndex : productStockUpdateIndex));
               debugPrint('barcode stock = ${state.productStockList.last}');
                debugPrint('barcode stock 1= ${state.productStockList.last.quantity}');
               debugPrint(
@@ -265,8 +264,7 @@ class CompanyProductsBloc
                 ProductSupplierModel(
                   supplierId: supplier.supplierId ?? '',
                   companyName: supplier.supplierCompanyName ?? '',
-                  basePrice:
-                  double.parse(supplier.productPrice ?? '0.0'),
+                  basePrice: double.parse(supplier.productPrice ?? '0.0'),
                   stock: int.parse(supplier.productStock ?? '0'),
                   quantity: _productQuantity,
                   selectedIndex: (supplier.supplierId ?? '') ==
@@ -735,7 +733,7 @@ class CompanyProductsBloc
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
         await preferences.setIsAnimation(isAnimation: true);
-        debugPrint('cart count = ${preferences.getCartCount()}');
+        debugPrint('cart count company= ${preferences.getCartCount()}');
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
       } else if (event is _ToggleNoteEvent) {

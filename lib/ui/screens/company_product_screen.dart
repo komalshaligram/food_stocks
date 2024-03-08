@@ -837,7 +837,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                Navigator.pop(dialogContext);
                                              },
                                              child: PhotoView(
-                                               imageProvider: CachedNetworkImageProvider(
+                                               imageProvider: NetworkImage(
                                                  '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                ),
                                              ),
@@ -872,7 +872,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                ],
                                productPerUnit: state.productDetails.first
                                    .numberOfUnit ?? 0,
-                               productUnitPrice:  state.productStockList[state.productStockUpdateIndex].totalPrice,
+                               productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
                                productName: state.productDetails.first
                                    .productName ??
                                    '',
