@@ -156,7 +156,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   .copyWith(
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '',
-                  stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0"),
+                  stock: (response.product?.first.supplierSales!.first.productStock.toString() ?? "0"),
                   productSaleId: '',
                   productSupplierIds: '',
                   note: '',
@@ -208,7 +208,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     .copyWith(
                     quantity: _productQuantity,
                     productId: response.product?.first.id ?? '',
-                    stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0"),
+                    stock: (response.product?.first.supplierSales!.first.productStock.toString() ?? "0"),
                     productSaleId: '',
                     productSupplierIds: '',
                     note: '',
@@ -252,7 +252,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     companyName: supplier.supplierCompanyName ?? '',
                     basePrice:
                     double.parse(supplier.productPrice ?? '0.0'),
-                    stock: int.parse(supplier.productStock ?? '0'),
+                    stock: (supplier.productStock.toString() ?? '0'),
                     quantity: _productQuantity,
                     selectedIndex: (supplier.supplierId ?? '') ==
                         state
@@ -395,9 +395,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         else if (event is _IncreaseQuantityOfProduct) {
           List<ProductStockModel> productStockList =
           state.productStockList.toList(growable: false);
+          debugPrint( "stock : ${double.parse(productStockList[state.productStockUpdateIndex].stock.toString())}");
           if (state.productStockUpdateIndex != -1) {
             if (productStockList[state.productStockUpdateIndex].quantity <
-                productStockList[state.productStockUpdateIndex].stock) {
+                double.parse(productStockList[state.productStockUpdateIndex].stock.toString())) {
               if (productStockList[state.productStockUpdateIndex]
                   .productSupplierIds
                   .isEmpty) {
@@ -439,8 +440,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex].copyWith(
                       quantity: productStockList[state.productStockUpdateIndex]
-                          .quantity -
-                          1);
+                          .quantity - 1);
               debugPrint(
                   'product quantity = ${productStockList[state
                       .productStockUpdateIndex].quantity}');
@@ -459,7 +459,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             int newQuantity = int.tryParse(quantityString) ?? 0;
             debugPrint('new quantity = $newQuantity');
             if (newQuantity <=
-                productStockList[state.productStockUpdateIndex].stock) {
+                double.parse(productStockList[state.productStockUpdateIndex].stock.toString())) {
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex]
                       .copyWith(quantity: newQuantity);
@@ -520,7 +520,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 productStockList[state.productStockUpdateIndex].copyWith(
                     productSupplierIds:
                     supplierList[event.supplierIndex].supplierId,
-                    stock: supplierList[event.supplierIndex].stock,
+                    stock: supplierList[event.supplierIndex].stock.toString(),
                     quantity: supplierList[event.supplierIndex].quantity != 0 ? supplierList[event.supplierIndex].quantity :1,
                     totalPrice: event.supplierSaleIndex == -2
                         ? supplierList[event.supplierIndex].basePrice
@@ -986,7 +986,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       (recommendationProduct) =>
                       ProductStockModel(
                           productId: recommendationProduct.id ?? '',
-                          stock: recommendationProduct.productStock ?? 0,
+                          stock: recommendationProduct.productStock.toString(),
                       )) ??
                   []);
               //productStockList.add(barcodeStock);
@@ -1119,8 +1119,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       name: supplier.productName ?? '',
                       searchType: SearchTypes.product,
                       image: supplier.mainImage ?? '',
-                      productStock: int.parse(
-                          supplier.productStock ?? 0.toString()),
+                      productStock: supplier.productStock.toString(),
                     numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                     priceOfBox: double.parse(supplier.productPrice.toString()),
                   ))
@@ -1246,7 +1245,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       (Product) =>
                       ProductStockModel(
                         productId: Product.id ,
-                        stock: double.parse(Product.productStock.toString()).toInt(),
+                        stock: Product.productStock.toString(),
                       )) );
               emit(state.copyWith(
                   relatedProductList:response.data ?? [],

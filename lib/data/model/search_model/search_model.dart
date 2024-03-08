@@ -13,7 +13,7 @@ class SearchModel with _$SearchModel {
     @Default('') String image,
     @Default('') String categoryId,
     @Default('') String categoryName,
-    @Default(0) int productStock,
+    @Default('0') String productStock,
     @Default(0) int numberOfUnits,
     @Default(0.0) double priceParUnit,
     @Default(0.0) double priceOfBox,

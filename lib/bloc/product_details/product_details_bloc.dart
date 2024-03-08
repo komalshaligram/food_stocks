@@ -497,7 +497,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
                       productSupplierIds: '',
                         quantity: recommendationProduct.totalQuantity?? 0,
                         productId: recommendationProduct.id ?? '',
-                        stock: recommendationProduct.productStock ?? 0)) ??
+                        stock: recommendationProduct.productStock.toString() )) ??
                 []);
             print('productStockList____${productStockList}');
             await preferencesHelper.setCartCount(

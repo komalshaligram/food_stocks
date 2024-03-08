@@ -76,7 +76,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       ProductStockModel(
                         quantity: recommendationProduct.totalQuantity?? 0,
                           productId: recommendationProduct.id ?? '',
-                          stock: recommendationProduct.productStock ?? 0)) ??
+                          stock: recommendationProduct.productStock.toString())) ??
 
                   []);
               //productStockList.add(barcodeStock);
@@ -196,7 +196,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           state.productStockList.toList(growable: false);
        //   if (state.productStockUpdateIndex != -1) {
             if (productStockList[state.productStockUpdateIndex].quantity <
-                productStockList[state.productStockUpdateIndex].stock) {
+                double.parse(productStockList[state.productStockUpdateIndex].stock.toString())) {
             /*  if (productStockList[state.productStockUpdateIndex]
                   .productSupplierIds
                   .isEmpty) {
@@ -546,7 +546,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     .copyWith(
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '',
-                  stock: int.parse(response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
+                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
                   productSaleId: '',
                   productSupplierIds: '',
                   note: '',
@@ -588,7 +588,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     companyName: supplier.supplierCompanyName ?? '',
                     basePrice:
                     double.parse(supplier.productPrice ?? '0.0'),
-                    stock: int.parse(supplier.productStock ?? '0'),
+                    stock: supplier.productStock.toString(),
                     quantity: _productQuantity,
                     selectedIndex: (supplier.supplierId ?? '') ==
                         state
@@ -755,7 +755,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             int newQuantity = int.tryParse(quantityString) ?? 0;
             debugPrint('new quantity = $newQuantity');
             if (newQuantity <=
-                productStockList[state.productStockUpdateIndex].stock) {
+                double.parse(productStockList[state.productStockUpdateIndex].stock.toString())) {
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex]
                       .copyWith(quantity: newQuantity);
@@ -937,7 +937,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     (Product) =>
                     ProductStockModel(
                       productId: Product.id,
-                      stock: double.parse(Product.productStock.toString()).toInt() ,
+                      stock: Product.productStock.toString() ,
                     )));
 
             emit(state.copyWith(

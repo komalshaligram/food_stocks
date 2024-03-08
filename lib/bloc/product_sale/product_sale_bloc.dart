@@ -85,7 +85,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             productStockList.addAll(response.data?.map((saleProduct) =>
                     ProductStockModel(
                         productId: saleProduct.id ?? '',
-                        stock: int.parse(saleProduct.numberOfUnit ?? '0'))) ??
+                        stock:(saleProduct.numberOfUnit ?? '0'))) ??
                 []);
             debugPrint('new product sale list len = ${productSaleList.length}');
             debugPrint(
@@ -183,7 +183,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                           basePrice:
                               double.parse(supplier.productPrice ?? '0.0'),
                           quantity: _productQuantity,
-                          stock: int.parse(supplier.productStock ?? '0'),
+              stock: supplier.productStock.toString(),
                           selectedIndex: (supplier.supplierId ?? '') ==
                                   state
                                       .productStockList[productStockUpdateIndex]
@@ -304,7 +304,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
-              productStockList[state.productStockUpdateIndex].stock) {
+            double.parse ( productStockList[state.productStockUpdateIndex].stock.toString())) {
             if (productStockList[state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
@@ -358,7 +358,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           int newQuantity = int.tryParse(quantityString) ?? 0;
           debugPrint('new quantity = $newQuantity');
           if (newQuantity <=
-              productStockList[state.productStockUpdateIndex].stock) {
+              double.parse(productStockList[state.productStockUpdateIndex].stock.toString())) {
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex]
                     .copyWith(quantity: newQuantity);
@@ -653,7 +653,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                   (Product) =>
                   ProductStockModel(
                     productId: Product.id ,
-                    stock: double.parse(Product.productStock.toString()).toInt()  ,
+                    stock: (Product.productStock.toString()),
                   )));
 
           emit(state.copyWith(

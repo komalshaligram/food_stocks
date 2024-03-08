@@ -285,7 +285,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                 horizontal: AppConstants.padding_5),
                             itemBuilder: (context, index) => DelayedWidget(
                               child: CommonProductListWidget(
-                                  productStock: state.previousOrderProductsList[index].productStock ?? 0,
+                                  productStock: state.previousOrderProductsList[index].productStock.toString() ?? '0',
                                   productImage: state.previousOrderProductsList[index]
                                       .mainImage ??
                                       '',
@@ -886,7 +886,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              productStock: (state.productStockList[state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty
@@ -1522,7 +1522,7 @@ class ReorderScreenWidget extends StatelessWidget {
     required bool isMoreResults,
     required void Function() onTap,
     required void Function() onSeeAllTap,
-    bool? isLastItem, required int productStock,
+    bool? isLastItem, required String productStock,
     required int numberOfUnits,
     required double priceOfBox,
   }) {
@@ -1579,7 +1579,7 @@ class ReorderScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != 0 ? 80 : 90,
+            height: (productStock) != '0' ? 80 : 90,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1603,7 +1603,7 @@ class ReorderScreenWidget extends StatelessWidget {
                 Container(
                   height: 60,
                   width: 50,
-                  child: Image.network(
+                  child: searchImage.isNotEmpty ? Image.network(
                     '${AppUrls.baseFileUrl}$searchImage',
                     fit: BoxFit.scaleDown,
                     height: 60,
@@ -1636,7 +1636,8 @@ class ReorderScreenWidget extends StatelessWidget {
                         height: 50,
                       );
                     },
-                  ),
+                  ) : Image.asset(AppImagePath.imageNotAvailable5,
+                      height: 60, width: 50, fit: BoxFit.cover),
                 ),
                 10.width,
                 Column(
@@ -1665,7 +1666,7 @@ class ReorderScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              (productStock) != 0 ? 0.width : Text(
+                              (productStock) != '0' ? 0.width : Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(

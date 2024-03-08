@@ -115,9 +115,8 @@ class SupplierProductsBloc
                       ? product.id ?? ''
                       : product.productId ?? '',
                   stock: event.searchType == SearchTypes.product.toString()
-                      ? double.parse(product.productStock.toString()).toInt()
-                      : double.parse(product.productStock.toString() ?? '0')
-                      .toInt());
+                      ? product.productStock.toString()
+                      : (product.productStock.toString() ?? '0'));
             }) ??
 
                 []);
@@ -183,7 +182,7 @@ class SupplierProductsBloc
             productStockList.addAll(response.data?.map((product) =>
                 ProductStockModel(
                     productId: product.productId ?? '',
-                    stock: int.parse(product.productStock ?? '0'))) ??
+                    stock: (product.productStock.toString() ?? '0'))) ??
                 []);
             debugPrint('new product list len = ${productList.length}');
             debugPrint(
@@ -230,7 +229,7 @@ class SupplierProductsBloc
             productStockList: [],
             isBottomOfProducts: false));
         add(SupplierProductsEvent.getSupplierProductsListEvent(
-            context: event.context, searchType: ''));
+            context: event.context, searchType: state.searchType));
       }
       else if (event is _GetProductDetailsEvent) {
         add(SupplierProductsEvent.RemoveRelatedProductEvent());
@@ -268,9 +267,7 @@ class SupplierProductsBloc
                 .copyWith(
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
-                stock: int.parse(
-                    response.product?.first.supplierSales?.first.productStock
-                        .toString() ?? "0") ?? 0,
+                stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0"),
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',
@@ -314,10 +311,10 @@ class SupplierProductsBloc
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            //   if(response.product != null){
+
             add(SupplierProductsEvent.RelatedProductsEvent(
-                context: event.context, productId: state.productStockList[state.productStockList.length - 1].productId));
-            //   }
+                context: event.context, productId: response.product?.first.id ?? ''));
+
 
             if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ??
                 false)) {
@@ -329,9 +326,7 @@ class SupplierProductsBloc
                   .copyWith(
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
-                stock: int.parse(
-                    response.product?.first.supplierSales!.first.productStock
-                        .toString() ?? "0"),
+                stock:response.product?.first.supplierSales?.first.productStock.toString() ?? '0',
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',
@@ -367,9 +362,9 @@ class SupplierProductsBloc
                 ProductSupplierModel(
                   supplierId: supplier.supplierId ?? '',
                   companyName: supplier.supplierCompanyName ?? '',
-                  basePrice:
-                  double.parse(supplier.productPrice ?? '0.0'),
-                  stock: int.parse(supplier.productStock ?? '0'),
+                  basePrice: double.parse(supplier.productPrice ?? '0.0'),
+                //  stock: double.parse(supplier.productStock ?? '0').round().toInt(),
+                  stock: supplier.productStock.toString(),
                   quantity: _productQuantity,
                   selectedIndex: (supplier.supplierId ?? '') ==
                       state.productStockList[productStockUpdateIndex]
@@ -511,7 +506,7 @@ class SupplierProductsBloc
         state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
-              productStockList[state.productStockUpdateIndex].stock) {
+              double.parse(productStockList[state.productStockUpdateIndex].stock.toString())) {
             if (productStockList[state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
@@ -578,7 +573,7 @@ class SupplierProductsBloc
           int newQuantity = int.tryParse(quantityString) ?? 0;
           debugPrint('new quantity = $newQuantity');
           if (newQuantity <=
-              productStockList[state.productStockUpdateIndex].stock) {
+              double.parse(productStockList[state.productStockUpdateIndex].stock.toString())) {
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex]
                     .copyWith(quantity: newQuantity);
@@ -990,8 +985,7 @@ class SupplierProductsBloc
                   name: supplier.productName ?? '',
                   searchType: SearchTypes.product,
                   image: supplier.mainImage ?? '',
-                  productStock: int.parse(
-                      supplier.productStock ?? 0.toString()),
+                  productStock: supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ??
                       0,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ??
@@ -1054,7 +1048,7 @@ class SupplierProductsBloc
                     (Product) =>
                     ProductStockModel(
                       productId: Product.id ,
-                      stock: double.parse(Product.productStock.toString()).toInt() ,
+                      stock: Product.productStock.toString(),
                     )) );
 
             emit(state.copyWith(

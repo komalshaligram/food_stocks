@@ -410,7 +410,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                               productStock: state
                                   .productStockList[
                               state.productStockUpdateIndex]
-                                  .stock,
+                                  .stock.toString(),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty
