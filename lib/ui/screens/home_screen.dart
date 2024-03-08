@@ -891,7 +891,7 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  void handleMessageOnBackground( BuildContext context) {
+  void handleMessageOnBackground(BuildContext context) {
     PushNotificationService().firebaseMessaging.getInitialMessage().then(
           (message) {
         if (message != null) {

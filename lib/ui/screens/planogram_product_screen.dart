@@ -247,7 +247,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             ),
                           ),
                       )
-
                     ],
                     ),
                     CommonSearchWidget(
