@@ -558,7 +558,7 @@ class BasketScreenWidget extends StatelessWidget {
                                             .data
                                             ?.data?[index]
                                             .productStock ??
-                                            0) >=
+                                            0.0) >=
                                             state.basketProductList[index]
                                                 .totalQuantity! +
                                                 1) {
@@ -1035,7 +1035,7 @@ class BasketScreenWidget extends StatelessWidget {
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              productStock: (state.productStockList[state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty

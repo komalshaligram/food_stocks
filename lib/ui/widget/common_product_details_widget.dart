@@ -33,7 +33,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final void Function() imageOnTap;
   final void Function(String) onQuantityChanged;
   final bool isRTL;
-  final int productStock;
+  final String productStock;
   final bool isSupplierAvailable;
   final int productImageIndex;
   final dynamic Function(int, CarouselPageChangedReason)? onPageChanged;
@@ -170,7 +170,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                             items: productImages
                                 .map((productImage) => GestureDetector(
                                       onTap: imageOnTap,
-                                      child: Image.network(
+                                      child: productImage.isNotEmpty ? Image.network(
                                         "${AppUrls.baseFileUrl}$productImage",
                                         height: 150,
                                         fit: BoxFit.contain,
@@ -204,6 +204,11 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                             height: 150,
                                           );
                                         },
+                                      ) : Image.asset(
+                                        AppImagePath.imageNotAvailable5,
+                                        fit: BoxFit.cover,
+                                        // width: 90,
+                                        height: 150,
                                       ),
                                     ))
                                 .toList(),
@@ -320,7 +325,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   ),
                 ),
                 padding: EdgeInsets.fromLTRB(10, 10, 20, 0),
-                child: productStock == 0 || productStock == -1
+                child: productStock == '0' || productStock == "-1"
                     ? Column(
                         children: [
                           5.height,
@@ -527,7 +532,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                           CommonProductDetailsButton(
                               isLoading: isLoading,
                               isSupplierAvailable: true,
-                              productStock: productStock,
+                              productStock: (productStock.toString()),
                               onAddToOrderPressed:
                                   isLoading ? null : addToOrderTap),
                         ],

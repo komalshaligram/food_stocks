@@ -308,7 +308,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               stockList.addAll(response.data![i].planogramproducts?.map(
                       (product) => ProductStockModel(
                       productId: product.id ?? '',
-                      stock: product.productStock ?? 0)) ??
+                      stock: product.productStock.toString() ?? '0')) ??
                   []);
               // debugPrint('stockList[$i] = $stockList');
             }
@@ -427,7 +427,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   .copyWith(
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '' ,
-                  stock: int.parse(response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ?? 0,
+                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
                   totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
               );
             }
@@ -476,7 +476,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   .copyWith(
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '' ,
-                  stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
+                  stock: (response.product?.first.supplierSales!.first.productStock.toString() ?? "0")
               );
               // productStockList[productStockList.indexOf(productStockList.last)][0] = productStockList[
               // productStockList.indexOf(productStockList.last)][0]
@@ -512,7 +512,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               basePrice:
               double.parse(supplier.productPrice ?? '0.0'),
               quantity: _productQuantity,
-              stock: int.parse(supplier.productStock ?? '0'),
+              stock: supplier.productStock.toString(),
               selectedIndex: (supplier.supplierId ?? '') ==
                   state
                       .productStockList[planoGramIndex]
@@ -653,9 +653,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           if (productStockList[state.planoGramUpdateIndex]
           [state.productStockUpdateIndex]
               .quantity <
-              productStockList[state.planoGramUpdateIndex]
+              double.parse(productStockList[state.planoGramUpdateIndex]
               [state.productStockUpdateIndex]
-                  .stock) {
+                  .stock.toString())) {
             if (productStockList[state.planoGramUpdateIndex]
             [state.productStockUpdateIndex]
                 .productSupplierIds
@@ -725,9 +725,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           int newQuantity = int.tryParse(quantityString) ?? 0;
           debugPrint('new quantity = $newQuantity');
           if (newQuantity <=
-              productStockList[state.planoGramUpdateIndex]
+              double.parse(productStockList[state.planoGramUpdateIndex]
               [state.productStockUpdateIndex]
-                  .stock) {
+                  .stock.toString())) {
             productStockList[state.planoGramUpdateIndex]
             [state.productStockUpdateIndex] =
                 productStockList[state.planoGramUpdateIndex]
@@ -1117,7 +1117,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 searchId: supplier.productId ?? '',
                 name: supplier.productName ?? '',
                 searchType: SearchTypes.product,
-                productStock:  int.parse(supplier.productStock ?? 0.toString()),
+                productStock:  supplier.productStock.toString(),
                 numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
                 priceOfBox: double.parse(supplier.productPrice.toString()),
                 image: supplier.mainImage ?? '')).toList() ??
@@ -1255,7 +1255,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       debugPrint('product.product?.productStock  :${product.product?.productStock }');
                       return ProductStockModel(
                     productId: product.productId ?? '',
-                    stock: double.parse(product.product?.productStock.toString()??'0').toInt());
+                    stock:(product.product?.productStock.toString()??'0'));
                     }) ?? []);
             productStockList[3].addAll(stockList);
             debugPrint('page = ${stockList.length}');
@@ -1322,7 +1322,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   (product) {
                 return ProductStockModel(
                     productId: product.id ?? '',
-                    stock: double.parse(product.productStock.toString()).toInt() );
+                    stock:(product.productStock.toString()));
               }) );
           productStockList[3].addAll(stockList);
 

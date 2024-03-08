@@ -93,7 +93,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             productStockList.addAll(response.previousProductData?.map(
                     (recommendationProduct) => ProductStockModel(
                         productId: recommendationProduct.id ?? '',
-                        stock: recommendationProduct.productStock ?? 0)) ??
+                        stock: recommendationProduct.productStock.toString())) ??
                 []);
             debugPrint(
                 'new product list len = ${previousOrderProductsList.length}');
@@ -173,7 +173,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 .copyWith(
               quantity: _productQuantity,
               productId: response.product?.first.id ?? '',
-              stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ,
+              stock: (response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ,
               productSaleId: '',
               productSupplierIds: '',
               note: '',
@@ -225,7 +225,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   .copyWith(
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
-                stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ,
+                stock: (response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ,
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',
@@ -267,7 +267,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   companyName: supplier.supplierCompanyName ?? '',
                   basePrice:
                   double.parse(supplier.productPrice ?? '0.0'),
-                  stock: int.parse(supplier.productStock ?? '0'),
+                  stock: supplier.productStock.toString(),
                   quantity: _productQuantity,
                   selectedIndex: (supplier.supplierId ?? '') ==
                       state
@@ -411,7 +411,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
-              productStockList[state.productStockUpdateIndex].stock) {
+              double.parse(productStockList[state.productStockUpdateIndex].stock.toString())) {
             if (productStockList[state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
@@ -465,7 +465,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           int newQuantity = int.tryParse(quantityString) ?? 0;
           debugPrint('new quantity = $newQuantity');
           if (newQuantity <=
-              productStockList[state.productStockUpdateIndex].stock) {
+              double.parse(productStockList[state.productStockUpdateIndex].stock.toString())) {
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex]
                     .copyWith(quantity: newQuantity);
@@ -866,8 +866,8 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                     name: supplier.productName ?? '',
                     searchType: SearchTypes.product,
                     image: supplier.mainImage ?? '',
-                    productStock: int.parse(
-                        supplier.productStock ?? 0.toString()),
+                    productStock:
+                        supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
                   priceOfBox: double.parse(supplier.productPrice.toString()),
                 ))
@@ -973,7 +973,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   (Product) =>
                   ProductStockModel(
                     productId: Product.id ,
-                    stock: double.parse(Product.productStock.toString()).toInt() ,
+                    stock:(Product.productStock.toString()) ,
                   )) ??
               []);
 

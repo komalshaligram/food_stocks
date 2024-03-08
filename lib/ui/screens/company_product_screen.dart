@@ -379,7 +379,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                               isGuestUser: state.isGuestUser,
                                 numberOfUnits:state.searchList[index].numberOfUnits,
                                 priceOfBox: state.searchList[index].priceOfBox,
-                                productStock : state.searchList[index].productStock,
+                                productStock : state.searchList[index].productStock.toString(),
                                 context: context,
                                 searchName: state.searchList[index].name,
                                 searchImage: state.searchList[index].image,
@@ -913,7 +913,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                    .productDetails.first.itemsWeight
                                    ?.toDouble() ??
                                    0.0,
-                               productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                               productStock: (state.productStockList[state.productStockUpdateIndex].stock.toString()),
                                isRTL: context.rtl,
                                isSupplierAvailable:
                                state.productSupplierList.isEmpty
@@ -1543,7 +1543,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
      required bool isMoreResults,
      required void Function() onTap,
      required void Function() onSeeAllTap,
-     bool? isLastItem, required int productStock,
+     bool? isLastItem, required String productStock,
      bool isGuestUser = false,
      required int numberOfUnits,
      required double priceOfBox,
@@ -1601,7 +1601,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
          InkWell(
            onTap: onTap,
            child: Container(
-             height: !isGuestUser ? (productStock) != 0 ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 70,
+             height: !isGuestUser ? (productStock) != '0' ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 70,
 
              decoration: BoxDecoration(
                  color: AppColors.whiteColor,
@@ -1629,7 +1629,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                    decoration: BoxDecoration(
                        borderRadius: BorderRadius.circular(20)
                    ),
-                   child: !isGuestUser ?  ClipRRect(
+                   child: !isGuestUser ? searchImage.isNotEmpty ?  ClipRRect(
                      borderRadius: BorderRadius.circular(10),
                      child: Image.network(
                        '${AppUrls.baseFileUrl}$searchImage',
@@ -1661,6 +1661,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                      ),
                    ) : Image.asset(AppImagePath.imageNotAvailable5,
                      fit: BoxFit.cover, height: 80,
+                     width: 70,) : Image.asset(AppImagePath.imageNotAvailable5,
+                     fit: BoxFit.cover, height: 80,
                      width: 70,),
                  ),
                  10.width,
@@ -1691,7 +1693,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                              mainAxisAlignment: MainAxisAlignment.start,
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
-                               (productStock) != 0 ? 0.width : Text(
+                               (productStock) != '0' ? 0.width : Text(
                                  AppLocalizations.of(context)!
                                      .out_of_stock1,
                                  style: AppStyles.rkBoldTextStyle(
