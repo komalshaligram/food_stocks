@@ -533,7 +533,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                       '0',
                                                   isGuestUser: state
                                                       .isGuestUser,
-                                                  productStock: double.parse(state.planogramProductList[index].product!.productStock.toString()),
+                                                  productStock: (state.planogramProductList[index].product?.productStock.toString() ?? '0'),
                                                   productImage: state.planogramProductList[index].product?.mainImage ??
                                                       '',
                                                   productName: state.planogramProductList[index].product?.productName ??
@@ -631,7 +631,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             numberOfUnits:state.searchList[index].numberOfUnits,
                             priceOfBox: state.searchList[index].priceOfBox,
                             isGuestUser: state.isGuestUser,
-                            productStock:int.parse(state.searchList[index].productStock.toString()),
+                            productStock:(state.searchList[index].productStock.toString()),
                             context: context,
                             searchName: state.searchList[index].name,
                             searchImage: state.searchList[index].image,
@@ -880,7 +880,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     required bool isMoreResults,
     required void Function() onTap,
     required void Function() onSeeAllTap,
-    bool? isLastItem, required int productStock,
+    bool? isLastItem, required String productStock,
     bool isGuestUser = false,
     required int numberOfUnits,
     required double priceOfBox,
@@ -938,7 +938,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: !isGuestUser ?  (productStock) != 0 ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 70,
+            height: !isGuestUser ?  (productStock) != '0' ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 70,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -963,7 +963,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20)
                   ),
-                  child: !isGuestUser ?  ClipRRect(
+                  child: !isGuestUser ? searchImage.isNotEmpty?  ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
                       '${AppUrls.baseFileUrl}$searchImage',
@@ -995,7 +995,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     ),
                   ) : Image.asset(AppImagePath.imageNotAvailable5,
                     fit: BoxFit.cover, height: 80,
-                    width: 70,),
+                    width: 70) : Image.asset(AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover, height: 80,
+                      width: 70),
                 ),
                 10.width,
                 Column(
@@ -1025,7 +1027,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              (productStock) != 0 ? 0.width : Text(
+                              (productStock) != '0' ? 0.width : Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(
@@ -1468,7 +1470,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock: int.parse(state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock.toString()),
+                              productStock: (state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock.toString()),
                               productUnitPrice:
                               state
                                   .productStockList[

@@ -213,7 +213,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                               child: CommonProductListWidget(
                                 isGuestUser: state.isGuestUser,
                                   numberOfUnits: '0',
-                                  productStock: state.planogramProductList[index].productStock ?? 0,
+                                  productStock: state.planogramProductList[index].productStock.toString(),
                                   productImage: state.planogramProductList[index]
                                       .mainImage ??
                                       '',
@@ -757,7 +757,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock: int.parse(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              productStock: (state.productStockList[state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty
@@ -1399,7 +1399,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
     required bool isMoreResults,
     required void Function() onTap,
     required void Function() onSeeAllTap,
-    bool? isLastItem, required int productStock,
+    bool? isLastItem, required String productStock,
     bool isGuestUser = false,
     required int numberOfUnits,
     required double priceOfBox,
@@ -1457,7 +1457,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: !isGuestUser ? (productStock) != 0 ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 70,
+            height: !isGuestUser ? (productStock) != '0' ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 70,
 
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
@@ -1486,7 +1486,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20)
                   ),
-                  child: !isGuestUser ?  ClipRRect(
+                  child: !isGuestUser ? searchImage.isNotEmpty ?  ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
                       '${AppUrls.baseFileUrl}$searchImage',
@@ -1518,6 +1518,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                     ),
                   ) : Image.asset(AppImagePath.imageNotAvailable5,
                     fit: BoxFit.cover, height: 80,
+                    width: 70,) : Image.asset(AppImagePath.imageNotAvailable5,
+                    fit: BoxFit.cover, height: 80,
                     width: 70,),
                 ),
                 10.width,
@@ -1548,7 +1550,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              (productStock) != 0 ? 0.width : Text(
+                              (productStock) != '0' ? 0.width : Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(

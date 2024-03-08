@@ -17,7 +17,7 @@ class CommonProductListWidget extends StatelessWidget {
   final String productName;
   final int totalSaleCount;
   final dynamic price;
-  final dynamic productStock;
+  final String productStock;
   final void Function() onButtonTap;
   final bool isGuestUser;
   final String numberOfUnits;
@@ -30,7 +30,7 @@ class CommonProductListWidget extends StatelessWidget {
      required this.productName,
      required this.totalSaleCount,
      required this.price,
-     required this.onButtonTap, this.productStock = 0,
+     required this.onButtonTap, this.productStock = '0',
      this.isGuestUser = false,
      this.numberOfUnits = '0'
    });
@@ -122,7 +122,7 @@ class CommonProductListWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
-                  (productStock) != 0  ||   isGuestUser ? 0.width :Text(
+                  (productStock) != '0'  ||   isGuestUser ? 0.width :Text(
                     AppLocalizations.of(context)!
                         .out_of_stock1,
                     style: AppStyles.rkBoldTextStyle(

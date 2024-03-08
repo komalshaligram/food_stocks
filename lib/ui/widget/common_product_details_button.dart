@@ -9,7 +9,7 @@ import 'common_product_button_widget.dart';
 class CommonProductDetailsButton extends StatelessWidget {
   final bool isLoading;
   final bool isSupplierAvailable;
-  final int productStock;
+  final String productStock;
   final void Function()? onAddToOrderPressed;
 
   const CommonProductDetailsButton(
