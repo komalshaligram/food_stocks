@@ -34,6 +34,7 @@ class CompanyProductsState with _$CompanyProductsState {
     required int quantity,
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
+    required bool isClickable
 
   }) = _CompanyProductsState;
 
@@ -68,7 +69,8 @@ class CompanyProductsState with _$CompanyProductsState {
     duringCelebration: false,
     quantity: 0,
     relatedProductList: [],
-    isRelatedShimmering: false
+    isRelatedShimmering: false,
+    isClickable: false
 
       );
 }
