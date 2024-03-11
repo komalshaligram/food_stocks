@@ -11,7 +11,6 @@ class CompanyState with _$CompanyState {
     required bool isBottomOfCompanies,
     required RefreshController refreshController,
     required String language,
-
   }) = _CompanyState;
 
   factory CompanyState.initial() => CompanyState(
@@ -22,6 +21,6 @@ class CompanyState with _$CompanyState {
         isLoadMore: false,
         isBottomOfCompanies: false,
         refreshController: RefreshController(),
-        language: '',
+        language: ''
       );
 }

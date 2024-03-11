@@ -68,7 +68,6 @@ class CompanyProductsBloc
         try {
           emit(state.copyWith(
               isShimmering: state.pageNum == 0 ? true : false,
-              isClickable :false,
               isLoadMore: state.pageNum == 0 ? false : true));
           CompanyProductsReqModel request = CompanyProductsReqModel(
               brandId: state.companyId,
@@ -89,11 +88,10 @@ class CompanyProductsBloc
             productStockList.addAll(response.data?.map((product) =>
                     ProductStockModel(
                         productId: product.id ?? '',
-                        totalPrice: product.productPrice??0.0,
                         stock: product.productStock?.toString() ?? '0')) ?? [],
             );
             // debugPrint('new product list len = ${productList.length}');
-        /*    debugPrint(
+            debugPrint(
                 'new product stock list len = ${productStockList.length}');
             debugPrint(
                 'new product stock list quantity = ${productStockList.first.quantity}');
@@ -101,24 +99,19 @@ class CompanyProductsBloc
                 'new product stock list len = ${productStockList.where((element) {
               debugPrint('ids = ${element.productId}');
               return true;
-            })}}');*/
+            })}}');
 
             emit(state.copyWith(
                 productList: productList,
                 productStockList: productStockList,
                 pageNum: state.pageNum + 1,
                 isShimmering: false,
-                isClickable:true,
-                isBottomOfProducts: state.productList.length ==
-                    (response.metaData?.totalFilteredCount ?? 0)
-                    ? true
-                    : false,
                 isLoadMore: false));
-          /*  emit(state.copyWith(
+            emit(state.copyWith(
                 isBottomOfProducts: state.productList.length ==
                         (response.metaData?.totalFilteredCount ?? 0)
                     ? true
-                    : false));*/
+                    : false));
           } else {
             emit(state.copyWith(isLoadMore: false));
             CustomSnackBar.showSnackBar(
@@ -791,7 +784,7 @@ class CompanyProductsBloc
           debugPrint('sale len = ${response.data?.saleData?.length}');
           debugPrint('sup len = ${response.data?.supplierData?.length}');
           debugPrint(
-              'sup stag len = ${response.data?.supplierProductData?.length}');
+              'sup prod len = ${response.data?.supplierProductData?.length}');
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList.addAll(state.productCategoryList.map((category) =>

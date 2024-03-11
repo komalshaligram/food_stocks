@@ -253,20 +253,15 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                         .productPrice ??
                                                     0.0,
                                                 onButtonTap: () {
-
                                               if(!state.isGuestUser){
-                                                debugPrint('here 1');
-                                                if(state.isClickable){
-                                                  debugPrint('here 2');
-                                                  showProductDetails(
-                                                    context: context,
-                                                    productId: state
-                                                        .productList[index]
-                                                        .id ?? '',
-                                                    productStock: state.productList[index].productStock.toString(),
+                                                showProductDetails(
+                                                  context: context,
+                                                  productId: state
+                                                      .productList[index]
+                                                      .id ?? '',
+                                                  productStock: state.productList[index].productStock.toString(),
 
-                                                  );
-                                                }
+                                                );
                                               }
                                               else{
                                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);

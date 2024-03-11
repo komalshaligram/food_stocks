@@ -153,7 +153,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             );
 
             debugPrint(
-                'createIssue url  = ${DioClient.baseUrl}${AppUrls.createIssueUrl}${event.orderId}');
+                'createIssue url  = ${AppUrls.baseUrl}${AppUrls.createIssueUrl}${event.orderId}');
             debugPrint('createIssue Req  = $reqMap');
             debugPrint('[order Id ] = ${event.orderId}');
             if (response['status'] == 201) {
@@ -223,7 +223,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             );
 
             debugPrint(
-                'removeIssue url  = ${DioClient.baseUrl}${AppUrls.removeIssueUrl}${event.orderId}');
+                'removeIssue url  = ${AppUrls.baseUrl}${AppUrls.removeIssueUrl}${event.orderId}');
             debugPrint('removeIssue Req  = $reqMap');
             debugPrint('[order Id ] = ${event.orderId}');
             if (response['status'] == 200) {

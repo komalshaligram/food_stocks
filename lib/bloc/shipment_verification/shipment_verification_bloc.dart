@@ -55,7 +55,7 @@ class ShipmentVerificationBloc
                 },
               ),
             );
-            debugPrint('fileUpload url = ${DioClient.baseUrl}${AppUrls.fileUploadUrl}');
+            debugPrint('fileUpload url = ${AppUrls.baseUrl}${AppUrls.fileUploadUrl}');
             FileUploadModel signModel = FileUploadModel.fromJson(response);
             debugPrint('img url = ${signModel.filepath}');
             if (signModel.filepath != '') {
@@ -78,7 +78,7 @@ class ShipmentVerificationBloc
                     HttpHeaders.authorizationHeader: 'Bearer ${preferencesHelper.getAuthToken()}'
                   }));
 
-              debugPrint('delivery Confirm url  = ${DioClient.baseUrl}${AppUrls.deliveryConfirmUrl}${event.orderId}');
+              debugPrint('delivery Confirm url  = ${AppUrls.baseUrl}${AppUrls.deliveryConfirmUrl}${event.orderId}');
              debugPrint('delivery Confirm response model  = $response');
 
              if (response['status'] == 200) {

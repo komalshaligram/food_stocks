@@ -22,7 +22,9 @@ void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
+
     await PushNotificationService().setupInteractedMessage();
+    //await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     SharedPreferencesHelper preferencesHelper =
@@ -43,22 +45,9 @@ void main() async {
 }
 
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Tavili",
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('en', 'GB'),
-      ],
-    );
-  }
+@pragma('vm:entry-point')
+Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  debugPrint("Handling a background message:${message.messageId}");
+  debugPrint("Handling a background message:${message.data.toString()}");
 }
-
-
-
 

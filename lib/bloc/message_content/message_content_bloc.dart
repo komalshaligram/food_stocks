@@ -49,7 +49,7 @@ class MessageContentBloc
                   ));
 
           debugPrint(
-              'DeleteMessage url  = ${DioClient.baseUrl}${AppUrls.deleteMessageUrl}');
+              'DeleteMessage url  = ${AppUrls.baseUrl}${AppUrls.deleteMessageUrl}');
 
           debugPrint('DeleteMessage response  = ${response}');
 
@@ -86,7 +86,7 @@ class MessageContentBloc
               ));
 
           debugPrint(
-              'UpdateMessage  url  = ${DioClient.baseUrl}${AppUrls.updateMessageUrl}');
+              'UpdateMessage  url  = ${AppUrls.baseUrl}${AppUrls.updateMessageUrl}');
 
           debugPrint('UpdateMessage response  = ${response}');
 
