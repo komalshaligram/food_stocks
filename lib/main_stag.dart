@@ -1,28 +1,32 @@
 import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:food_stock/data/model/app_config.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
+import 'package:food_stock/env_config.dart';
+import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/ui/screens/my_app_screen.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shorebird_code_push/shorebird_code_push.dart';
 
 
-final shorebirdCodePush = ShorebirdCodePush();
-
-GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
-final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
-
-void main() async {
+Future<void> main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    //await dotenv.load(fileName: ".env");
+    AppConfig productionAppConfig = EnvironmentConfig().stagAppConfig;
+    Widget app = await initializeApp(productionAppConfig);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     await Firebase.initializeApp();
     await PushNotificationService().setupInteractedMessage();
+    DioClient.baseUrl = EnvironmentConfig().stagAppConfig.baseUrl;
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     SharedPreferencesHelper preferencesHelper =
@@ -34,31 +38,9 @@ void main() async {
         }
       });
     }
-    runApp(
-       MyApp(),
-    );
+    runApp(app);
   },
           (error, stack) =>
           FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
+
 }
-
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Tavili",
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('en', 'GB'),
-      ],
-    );
-  }
-}
-
-
-
-
