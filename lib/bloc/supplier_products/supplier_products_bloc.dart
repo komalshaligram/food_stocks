@@ -78,7 +78,9 @@ class SupplierProductsBloc
               onlySearch: event.searchType == SearchTypes.product.toString()
                   ? true
                   : false,
-              search: state.search);
+              search: state.search,
+            onlyApproved: true
+          );
           Map<String, dynamic> req = request.toJson();
           req.removeWhere((key, value) {
             if (value != null) {
@@ -94,14 +96,18 @@ class SupplierProductsBloc
                 .post(AppUrls.getPlanogramAllProductUrl, data: req);
             response =
                 SupplierProductsResModel.fromJson(res);
+
+            debugPrint('search url = ${AppUrls.getPlanogramAllProductUrl}');
           } else {
             final res = await DioClient(event.context)
                 .post(AppUrls.getSupplierProductsUrl, data: req);
             response =
                 SupplierProductsResModel.fromJson(res);
+            debugPrint('search url = ${AppUrls.getSupplierProductsUrl}');
           }
           emit(state.copyWith(searchType: event.searchType.toString()));
           debugPrint('supplier Products res = ${response.data}');
+
           if (response.status == 200) {
             List<SupplierProductsData> productList =
             state.productList.toList(growable: true);

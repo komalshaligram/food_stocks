@@ -1659,7 +1659,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(20)),
                   child: !isGuestUser
-                      ? searchImage.isNotEmpty ?ClipRRect(
+                      ? searchImage.isNotEmpty ? ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.network(
                             '${AppUrls.baseFileUrl}$searchImage',

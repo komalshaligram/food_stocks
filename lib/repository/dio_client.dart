@@ -28,7 +28,7 @@ class DioClient {
   DioClient(this._context)
       : _dio = Dio(
           BaseOptions(
-              baseUrl: baseUrl,
+              baseUrl: AppUrls.baseUrl,
               connectTimeout: const Duration(milliseconds: 60000),
               receiveTimeout: const Duration(milliseconds: 60000),
               headers: {
