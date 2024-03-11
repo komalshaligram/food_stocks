@@ -15,6 +15,7 @@ import '../../env_config.dart';
 import '../../data/services/locale_provider.dart';
 import '../../main.dart';
 
+/*
 Future<Widget> initializeApp(AppConfig appConfig) async {
   await _init(appConfig);
   return MyApp(appName: appConfig.appName);
@@ -25,6 +26,7 @@ _init(AppConfig appConfig) async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   });
 }
+*/
 
 class MyApp extends StatelessWidget {
   final String appName;
@@ -73,7 +75,7 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
           navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           locale: Provider.of<LocaleProvider>(context).locale,
-          title: widget.appName,
+          title:"TAVILI",
           initialRoute: RouteDefine.splashScreen.name,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,

@@ -791,50 +791,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               bloc.add(
                                   StoreCategoryEvent.changeCategoryExpansionEvent());
                             }
-                         /*   onTap: () {
 
-                                debugPrint('searchtype:${state.searchList[index]
-                                    .searchType}');
-                                state.searchList[index].searchType ==
-                                    SearchTypes.sale ||
-                                    (state.searchList[index]
-                                        .searchType ==
-                                        SearchTypes.product &&
-                                        !state.isGuestUser)
-                                    ? showProductDetails(
-                                    context: context,
-                                    productStock: state.searchList[index].productStock.toString(),
-                                    productId: state
-                                        .searchList[index].searchId,
-                                    planoGramIndex: 0,
-                                    isBarcode: true)
-                                    : state.searchList[index].searchType ==
-                                    SearchTypes.category
-                                    ? bloc.add(StoreCategoryEvent
-                                    .changeCategoryDetailsEvent(
-                                    categoryId: state
-                                        .searchList[index]
-                                        .searchId,
-                                    categoryName: state
-                                        .searchList[index]
-                                        .name,
-                                    context: context,
-                                    isSubCategory: ''))
-                                    : state.searchList[index]
-                                    .searchType ==
-                                    SearchTypes.company
-                                    ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {
-                                  AppStrings
-                                      .companyIdString:
-                                  state
-                                      .searchList[index]
-                                      .searchId,
-                                })
-                                    : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
-                                bloc.add(StoreCategoryEvent
-                                    .changeCategoryExpansionEvent());
-
-                            }*/
                             );
                       },
                     ),

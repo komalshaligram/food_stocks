@@ -35,7 +35,7 @@ void main() async {
       });
     }
     runApp(
-       MyApp(),
+       MyApp(appName: 'TAVILI'),
     );
   },
           (error, stack) =>
@@ -43,21 +43,7 @@ void main() async {
 }
 
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Tavili",
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('en', 'GB'),
-      ],
-    );
-  }
-}
 
 
 

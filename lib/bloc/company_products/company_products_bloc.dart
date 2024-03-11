@@ -507,12 +507,15 @@ class CompanyProductsBloc
                   .copyWith(note: /*event.newNote*/ state.noteController.text);
           emit(state.copyWith(productStockList: productStockList));
         }
-      } else if (event is _ChangeSupplierSelectionExpansionEvent) {
+      }
+      else if (event is _ChangeSupplierSelectionExpansionEvent)
+      {
         emit(state.copyWith(
             isSelectSupplier:
                 event.isSelectSupplier ?? !state.isSelectSupplier));
         debugPrint('supplier selection : ${state.isSelectSupplier}');
-      } else if (event is _SupplierSelectionEvent) {
+      }
+      else if (event is _SupplierSelectionEvent) {
         debugPrint(
             'supplier[${event.supplierIndex}][${event.supplierSaleIndex}]');
         if (event.supplierIndex >= 0) {
@@ -553,7 +556,8 @@ class CompanyProductsBloc
 
 
         }
-      } else if (event is _AddToCartProductEvent) {
+      }
+      else if (event is _AddToCartProductEvent) {
         if (state.productStockList[state.productListIndex][state.productStockUpdateIndex]
             .productSupplierIds.isEmpty) {
           CustomSnackBar.showSnackBar(
@@ -741,15 +745,18 @@ class CompanyProductsBloc
             emit(state.copyWith(isLoading: false));
           }
         }
-      } else if (event is _SetCartCountEvent) {
+      }
+      else if (event is _SetCartCountEvent) {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
         await preferences.setIsAnimation(isAnimation: true);
         debugPrint('cart count company= ${preferences.getCartCount()}');
-      } else if (event is _UpdateImageIndexEvent) {
+      }
+      else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
-      } else if (event is _ToggleNoteEvent) {
+      }
+      else if (event is _ToggleNoteEvent) {
        List <List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
         productStockList[state.productListIndex][state.productStockUpdateIndex] =

@@ -8,7 +8,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
     required bool isLoading,
     required bool isProductLoading,
     required List<Product> productDetails,
-    required List<ProductStockModel> productStockList,
+    required List<List<ProductStockModel>> productStockList,
     required int productStockUpdateIndex,
     required int pageNum,
     required bool isLoadMore,
@@ -30,6 +30,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
     required bool isGridView,
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
+    required int productListIndex,
   }) = _RecommendationProductsState;
 
   factory RecommendationProductsState.initial() => RecommendationProductsState(
@@ -39,7 +40,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [ProductStockModel(productId: '')],
+      productStockList: [[ProductStockModel(productId: '')],[],[]],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,
@@ -59,6 +60,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
     isCatVisible: false,
     isGridView: true,
     relatedProductList: [],
-    isRelatedShimmering: false
+    isRelatedShimmering: false,
+      productListIndex: -1
       );
 }
