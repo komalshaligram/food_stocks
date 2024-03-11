@@ -850,7 +850,7 @@ class RecommendationProductsBloc
                   searchId: sale.id ?? '',
                   name: sale.productName ?? '',
                   searchType: SearchTypes.sale,
-                  numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
+                  numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                   image: sale.mainImage ?? '',
 
                 ))
@@ -866,7 +866,8 @@ class RecommendationProductsBloc
                     image: supplier.mainImage ?? '',
                     productStock: supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
-                  priceOfBox: double.parse(supplier.productPrice.toString())
+                  priceOfBox: double.parse(supplier.productPrice.toString()),
+                    lowStock: supplier.lowStock.toString()
                 ))
                 .toList() ??
                 []);

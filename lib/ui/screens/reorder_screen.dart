@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -23,7 +23,6 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
-import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
@@ -230,52 +229,51 @@ class ReorderScreenWidget extends StatelessWidget {
                                                           .productGridAspectRatio
                                                       : AppConstants
                                                           .productGridAspectRatio1),
-                                      itemBuilder: (context, index) => DelayedWidget(
-                                            child: CommonProductItemWidget(
-                                              imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
-                                              imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
-                                              productStock: state
+                                      itemBuilder: (context, index) => CommonProductItemWidget(
+                                        lowStock: '',
+                                        imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
+                                        imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
+                                        productStock: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .productStock
+                                                .toString() ,
+                                        productImage: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .mainImage ??
+                                            '',
+                                        productName: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .productName ??
+                                            '',
+                                        totalSaleCount: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .totalSale ??
+                                            0,
+                                        price: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .productPrice ??
+                                            0.0,
+                                        onButtonTap: () {
+                                          showProductDetails(
+                                              context: context,
+                                              productId: state
                                                       .previousOrderProductsList[
                                                           index]
-                                                      .productStock
-                                                      .toString() ,
-                                              productImage: state
-                                                      .previousOrderProductsList[
-                                                          index]
-                                                      .mainImage ??
+                                                      .id ??
                                                   '',
-                                              productName: state
-                                                      .previousOrderProductsList[
-                                                          index]
-                                                      .productName ??
-                                                  '',
-                                              totalSaleCount: state
-                                                      .previousOrderProductsList[
-                                                          index]
-                                                      .totalSale ??
-                                                  0,
-                                              price: state
-                                                      .previousOrderProductsList[
-                                                          index]
-                                                      .productPrice ??
-                                                  0.0,
-                                              onButtonTap: () {
-                                                showProductDetails(
-                                                    context: context,
-                                                    productId: state
-                                                            .previousOrderProductsList[
-                                                                index]
-                                                            .id ??
-                                                        '',
-                                                isBarcode: false,
-                                                  productStock: state
-                                                      .previousOrderProductsList[
-                                                  index]
-                                                      .productStock.toString()
-                                                );
-                                              },
-                                            ),
-                                          )
+                                          isBarcode: false,
+                                            productStock: state
+                                                .previousOrderProductsList[
+                                            index]
+                                                .productStock.toString()
+                                          );
+                                        },
+                                      )
                                       ):
                           ListView.builder(
                             itemCount: state.previousOrderProductsList.length,
@@ -285,7 +283,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                 horizontal: AppConstants.padding_5),
                             itemBuilder: (context, index) => DelayedWidget(
                               child: CommonProductListWidget(
-                                  productStock: state.previousOrderProductsList[index].productStock.toString() ?? '0',
+                                  lowStock: '',
+                                  productStock: state.previousOrderProductsList[index].productStock.toString(),
                                   productImage: state.previousOrderProductsList[index]
                                       .mainImage ??
                                       '',
@@ -306,7 +305,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                           .previousOrderProductsList[index]
                                           .id ??
                                           '',
-                                      productStock: state.previousOrderProductsList[index].productStock.toString() ?? '0',
+                                      productStock: state.previousOrderProductsList[index].productStock.toString(),
                                     );
                                   }),
                             ),
@@ -372,6 +371,7 @@ class ReorderScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
+                            lowStock: state.searchList[index].lowStock.toString(),
                             numberOfUnits:state.searchList[index].numberOfUnits,
                             priceOfBox: state.searchList[index].priceOfBox,
                             productStock : state.searchList[index].productStock,
@@ -779,8 +779,8 @@ class ReorderScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:state.productDetails.first.qrcode ?? '' ,
-
                               addToOrderTap: () {
                                 context.read<ReorderBloc>().add(
                                     ReorderEvent.addToCartProductEvent(
@@ -964,6 +964,7 @@ class ReorderScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,
                 productImage:relatedProductList[i].mainImage,
@@ -1514,6 +1515,7 @@ class ReorderScreenWidget extends StatelessWidget {
   }
 
   Widget _buildSearchItem({
+    required String lowStock,
     required BuildContext context,
     required String searchName,
     required String searchImage,
@@ -1579,7 +1581,7 @@ class ReorderScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != '0' ? 80 : 90,
+            height: (productStock) != '0' || lowStock.isEmpty? 80 : 90,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1666,13 +1668,18 @@ class ReorderScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              (productStock) != '0' ? 0.width : Text(
+                              (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.redColor,
                                     fontWeight: FontWeight.w400),
+                              ) : Text(lowStock,
+                                  style: AppStyles.rkBoldTextStyle(
+                                      size: AppConstants.font_12,
+                                      color: AppColors.orangeColor,
+                                      fontWeight: FontWeight.w400)
                               ),
                               numberOfUnits != 0 ? Text(
                                 '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',

@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -24,7 +24,6 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
-import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_list_widget.dart';
@@ -177,6 +176,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     .productGridAspectRatio1
                             ),
                             itemBuilder: (context, index) => buildPlanoGramProductItem(
+                              lowStock: state.planogramProductList[index].lowStock.toString() ?? '',
                               isGuestUser: state.isGuestUser,
                                 productImage: state.planogramProductList[index].mainImage ?? '',
                                 productName:
@@ -189,7 +189,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   showProductDetails(
                                       context: context,
                                       productId: state.planogramProductList[index].id ?? '',
-                                      productStock: state.planogramProductList[index].productStock.toString() ?? '0'
+                                      productStock: state.planogramProductList[index].productStock.toString()
                                   );
                                 }
                                 else{
@@ -211,6 +211,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                 horizontal: AppConstants.padding_5),
                             itemBuilder: (context, index) => DelayedWidget(
                               child: CommonProductListWidget(
+                                lowStock: '',
                                 isGuestUser: state.isGuestUser,
                                   numberOfUnits: '0',
                                   productStock: state.planogramProductList[index].productStock.toString(),
@@ -305,6 +306,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (listViewContext, index) {
                           return _buildSearchItem(
+                              lowStock: state.searchList[index].lowStock.toString(),
                             isGuestUser: state.isGuestUser,
                               numberOfUnits:state.searchList[index].numberOfUnits,
                               priceOfBox: state.searchList[index].priceOfBox,
@@ -542,20 +544,20 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       required int totalSale,
       required void Function() onPressed,
       required bool isRTL, required int productStock,
-      required bool isGuestUser
+      required bool isGuestUser,
+        required String lowStock
       }) {
-    return DelayedWidget(
-        child: CommonProductItemWidget(
-          isGuestUser: isGuestUser,
-            imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
-            imageWidth: getScreenWidth(context) >= 700 ? 100 : 70,
-            productImage: productImage,
-            productName: productName,
-            totalSaleCount: totalSale,
-            price: productPrice,
-            productStock : productStock.toString(),
-            onButtonTap: onPressed)
-        );
+    return CommonProductItemWidget(
+      lowStock: lowStock,
+      isGuestUser: isGuestUser,
+        imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
+        imageWidth: getScreenWidth(context) >= 700 ? 100 : 70,
+        productImage: productImage,
+        productName: productName,
+        totalSaleCount: totalSale,
+        price: productPrice,
+        productStock : productStock.toString(),
+        onButtonTap: onPressed);
   }
 
   void showProductDetails({
@@ -650,6 +652,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:state.productDetails.first.qrcode ?? '' ,
                               addToOrderTap: () {
                                 context.read<PlanogramProductBloc>().add(
@@ -835,6 +838,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,
                 productImage:relatedProductList[i].mainImage,
@@ -1389,7 +1393,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
   }
 
   Widget _buildSearchItem({
-
+    required String lowStock,
     required BuildContext context,
     required String searchName,
     required String searchImage,
@@ -1456,8 +1460,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: !isGuestUser ? (productStock) != '0' ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 70,
-
+            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? 120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1477,7 +1480,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: !isGuestUser ? searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? MainAxisAlignment.start: MainAxisAlignment.spaceBetween :MainAxisAlignment.start ,
-
               children: [
                 Container(
                   height: 80,
@@ -1549,13 +1551,18 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              (productStock) != '0' ? 0.width : Text(
+                              (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.redColor,
                                     fontWeight: FontWeight.w400),
+                              ) : Text(lowStock,
+                                  style: AppStyles.rkBoldTextStyle(
+                                      size: AppConstants.font_12,
+                                      color: AppColors.orangeColor,
+                                      fontWeight: FontWeight.w400)
                               ),
                               !isGuestUser? numberOfUnits != 0 ? Text(
                                 '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',

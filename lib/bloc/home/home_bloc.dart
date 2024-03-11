@@ -252,7 +252,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     companyName: supplier.supplierCompanyName ?? '',
                     basePrice:
                     double.parse(supplier.productPrice ?? '0.0'),
-                    stock: (supplier.productStock.toString() ?? '0'),
+                    stock: supplier.productStock.toString() ,
                     quantity: _productQuantity,
                     selectedIndex: (supplier.supplierId ?? '') ==
                         state
@@ -1107,7 +1107,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     name: sale.productName ?? '',
                     searchType: SearchTypes.sale,
                     image: sale.mainImage ?? '',
-                    numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
+                    numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                   ))
                   .toList() ??
                   []);
@@ -1122,6 +1122,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       productStock: supplier.productStock.toString(),
                     numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                     priceOfBox: double.parse(supplier.productPrice.toString()),
+                    lowStock: supplier.lowStock.toString()
+
                   ))
                   .toList() ??
                   []);
@@ -1208,6 +1210,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         }
 
+/*
        else if (event is _checkVersionOfAppEvent) {
           final _checker = StoreVersionChecker();
          // PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -1227,6 +1230,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
           });
         }
+*/
 
         else if(event is _RelatedProductsEvent){
          print('productId____${event.productId}');
@@ -1248,7 +1252,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         stock: Product.productStock.toString(),
                       )) );
               emit(state.copyWith(
-                  relatedProductList:response.data ?? [],
+                  relatedProductList:response.data,
                   isRelatedShimmering: false,productStockList: productStockList));
               print('relatedProductList___${state.relatedProductList.length}');
             } else {

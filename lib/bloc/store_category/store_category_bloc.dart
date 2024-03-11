@@ -308,7 +308,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               stockList.addAll(response.data![i].planogramproducts?.map(
                       (product) => ProductStockModel(
                       productId: product.id ?? '',
-                      stock: product.productStock.toString() ?? '0')) ??
+                      stock: product.productStock.toString() )) ??
                   []);
               // debugPrint('stockList[$i] = $stockList');
             }
@@ -1118,6 +1118,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 name: supplier.productName ?? '',
                 searchType: SearchTypes.product,
                 productStock:  supplier.productStock.toString(),
+                lowStock: supplier.lowStock.toString(),
                 numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
                 priceOfBox: double.parse(supplier.productPrice.toString()),
                 image: supplier.mainImage ?? '')).toList() ??
@@ -1321,7 +1322,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           stockList.addAll(response.data.map(
                   (product) {
                 return ProductStockModel(
-                    productId: product.id ?? '',
+                    productId: product.id ,
                     stock:(product.productStock.toString()));
               }) );
           productStockList[3].addAll(stockList);

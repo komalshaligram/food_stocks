@@ -214,7 +214,7 @@ class CompanyProductsBloc
             if(response.product != null){
               add(CompanyProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
-            if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
+            if ( event.isBarcode) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
               productStockList[productStockList
@@ -870,6 +870,7 @@ class CompanyProductsBloc
                   productStock:  supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
+                    lowStock: supplier.lowStock.toString()
                 ))
                 .toList() ??
                 []);
@@ -984,8 +985,7 @@ class CompanyProductsBloc
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(
-                response.message.toLocalization() ??
-                    response.message,
+                response.message.toLocalization(),
                 event.context),
             type: SnackBarType.SUCCESS,
           );

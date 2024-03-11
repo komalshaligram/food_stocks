@@ -62,6 +62,7 @@ class CompanyData with _$CompanyData {
     @JsonKey(name: "totalSale") int? totalSale,
     @JsonKey(name: "productStock") dynamic productStock,
     @JsonKey(name: "productPrice") double? productPrice,
+    String? lowStock,
   }) = _CompanyData;
 
   factory CompanyData.fromJson(Map<String, dynamic> json) =>

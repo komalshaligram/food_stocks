@@ -21,6 +21,7 @@ class CommonProductListWidget extends StatelessWidget {
   final void Function() onButtonTap;
   final bool isGuestUser;
   final String numberOfUnits;
+  final String lowStock;
 
 
     CommonProductListWidget({super.key,
@@ -32,7 +33,8 @@ class CommonProductListWidget extends StatelessWidget {
      required this.price,
      required this.onButtonTap, this.productStock = '0',
      this.isGuestUser = false,
-     this.numberOfUnits = '0'
+     this.numberOfUnits = '0',
+      required this.lowStock,
    });
 
   @override
@@ -122,12 +124,19 @@ class CommonProductListWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
-                  (productStock) != '0'  ||   isGuestUser ? 0.width :Text(
+                  (productStock) != '0' && lowStock.isEmpty ||   isGuestUser ? 0.width :
+                  (productStock) == '0' && lowStock.isNotEmpty ?Text(
                     AppLocalizations.of(context)!
                         .out_of_stock1,
                     style: AppStyles.rkBoldTextStyle(
                         size: AppConstants.font_14,
                         color: AppColors.redColor,
+                        fontWeight: FontWeight.w400),
+                  ) : Text(
+                   lowStock,
+                    style: AppStyles.rkBoldTextStyle(
+                        size: AppConstants.font_14,
+                        color: AppColors.orangeColor,
                         fontWeight: FontWeight.w400),
                   ),
                  !isGuestUser ? numberOfUnits != '0' ? Text(

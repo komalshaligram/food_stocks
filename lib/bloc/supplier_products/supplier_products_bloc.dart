@@ -116,7 +116,7 @@ class SupplierProductsBloc
                       : product.productId ?? '',
                   stock: event.searchType == SearchTypes.product.toString()
                       ? product.productStock.toString()
-                      : (product.productStock.toString() ?? '0'));
+                      : (product.productStock.toString() ));
             }) ??
 
                 []);
@@ -182,7 +182,7 @@ class SupplierProductsBloc
             productStockList.addAll(response.data?.map((product) =>
                 ProductStockModel(
                     productId: product.productId ?? '',
-                    stock: (product.productStock.toString() ?? '0'))) ??
+                    stock: (product.productStock.toString()))) ??
                 []);
             debugPrint('new product list len = ${productList.length}');
             debugPrint(
@@ -316,8 +316,7 @@ class SupplierProductsBloc
                 context: event.context, productId: response.product?.first.id ?? ''));
 
 
-            if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ??
-                false)) {
+            if ( event.isBarcode) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
               productStockList[productStockList
@@ -971,7 +970,7 @@ class SupplierProductsBloc
                   searchId: sale.id ?? '',
                   name: sale.productName ?? '',
                   searchType: SearchTypes.sale,
-                  numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
+                  numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                   image: sale.mainImage ?? '',
 
                 ))
@@ -986,10 +985,9 @@ class SupplierProductsBloc
                   searchType: SearchTypes.product,
                   image: supplier.mainImage ?? '',
                   productStock: supplier.productStock.toString(),
-                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ??
-                      0,
-                  priceOfBox: double.parse(supplier.productPrice.toString()) ??
-                      0,
+                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
+                  priceOfBox: double.parse(supplier.productPrice.toString()),
+                    lowStock: supplier.lowStock.toString()
                 ))
                 .toList() ??
                 []);

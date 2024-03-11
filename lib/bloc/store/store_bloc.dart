@@ -1011,7 +1011,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         searchId: sale.id ?? '',
                         name: sale.productName ?? '',
                         searchType: SearchTypes.sale,
-              numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
+              numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                         image: sale.mainImage ?? '',
 
             ))
@@ -1025,8 +1025,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         searchType: SearchTypes.product,
                         image: supplier.mainImage ?? '',
               productStock: supplier.productStock.toString(),
-              numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ?? 0,
-              priceOfBox: double.parse(supplier.productPrice.toString()) ?? 0,
+              numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
+              priceOfBox: double.parse(supplier.productPrice.toString()) ,
+                lowStock: supplier.lowStock.toString()
             ))
                     .toList() ??
                 []);

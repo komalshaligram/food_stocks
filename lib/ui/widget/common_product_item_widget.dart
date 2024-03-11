@@ -22,24 +22,22 @@ class CommonProductItemWidget extends StatelessWidget {
   final bool isGuestUser;
   final double? imageHeight;
   final double? imageWidth;
-
-
-
+  final String lowStock;
 
   const CommonProductItemWidget(
       {super.key,
-      this.height ,
+      this.height,
       this.width,
       required this.productImage,
       required this.productName,
       required this.totalSaleCount,
       required this.price,
-      required this.onButtonTap, this.productStock = '0',
-        this.isGuestUser = false,
-        this.imageHeight = 70,
-        this.imageWidth = 70,
-
-      });
+      required this.onButtonTap,
+      this.productStock = '0',
+      this.isGuestUser = false,
+      this.imageHeight = 70,
+      this.imageWidth = 70,
+        required   this.lowStock });
 
   @override
   Widget build(BuildContext context) {
@@ -65,39 +63,52 @@ class CommonProductItemWidget extends StatelessWidget {
       child: InkWell(
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        onTap: onButtonTap ,
+        onTap: onButtonTap,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
-              child:!isGuestUser ? productImage.isNotEmpty ? CachedNetworkImage(
-                imageUrl: "${AppUrls.baseFileUrl}$productImage",
-                height: imageHeight,
-                fit: BoxFit.contain,
-                placeholder: (context, url) {
-                  return CommonShimmerWidget(
-                    child: Container(
+              child: !isGuestUser
+                  ? productImage.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: "${AppUrls.baseFileUrl}$productImage",
+                          height: imageHeight,
+                          fit: BoxFit.contain,
+                          placeholder: (context, url) {
+                            return CommonShimmerWidget(
+                              child: Container(
+                                height: imageHeight,
+                                width: imageWidth,
+                                decoration: BoxDecoration(
+                                  color: AppColors.whiteColor,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(AppConstants.radius_10)),
+                                ),
+                              ),
+                            );
+                          },
+                          errorWidget: (context, error, stackTrace) {
+                            debugPrint('sale list image error : $error');
+                            return Container(
+                              child: Image.asset(
+                                  AppImagePath.imageNotAvailable5,
+                                  height: imageHeight,
+                                  width: double.maxFinite,
+                                  fit: BoxFit.cover),
+                            );
+                          },
+                        )
+                      : Image.asset(
+                          AppImagePath.imageNotAvailable5,
+                          height: imageHeight,
+                          width: imageWidth,
+                        )
+                  : Image.asset(
+                      AppImagePath.imageNotAvailable5,
                       height: imageHeight,
                       width: imageWidth,
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(AppConstants.radius_10)),
-                      ),
                     ),
-                  );
-                },
-                errorWidget: (context, error, stackTrace) {
-                   debugPrint('sale list image error : $error');
-                  return Container(
-                    child: Image.asset(AppImagePath.imageNotAvailable5,
-                        height: imageHeight, width: double.maxFinite, fit: BoxFit.cover),
-                  );
-                },
-              ) : Image.asset(AppImagePath.imageNotAvailable5 , height: imageHeight,
-                width: imageWidth, ) : Image.asset(AppImagePath.imageNotAvailable5 , height: imageHeight,
-                width: imageWidth, ),
             ),
             5.height,
             Text(
@@ -124,27 +135,35 @@ class CommonProductItemWidget extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
             ),
-            (productStock) != '0' || isGuestUser ? 0.width :Text(
-              AppLocalizations.of(context)!
-                  .out_of_stock1,
-              style: AppStyles.rkBoldTextStyle(
-                  size: AppConstants.font_12,
-                  color: AppColors.redColor,
-                  fontWeight: FontWeight.w400),
-            ),
+            (productStock) != '0' && lowStock.isEmpty || isGuestUser
+                    ? 0.width
+                    : (productStock) == '0' && lowStock.isNotEmpty ?Text(
+                        AppLocalizations.of(context)!.out_of_stock1,
+                        style: AppStyles.rkBoldTextStyle(
+                            size: AppConstants.font_12,
+                            color: AppColors.redColor,
+                            fontWeight: FontWeight.w400),
+                      )
+                : Text(lowStock,
+                    style: AppStyles.rkBoldTextStyle(
+                        size: AppConstants.font_12,
+                        color: AppColors.orangeColor,
+                        fontWeight: FontWeight.w400)),
             3.height,
-            !isGuestUser? Center(
-              child: CommonProductButtonWidget(
-                width: 110,
-                title:
-                    "${AppLocalizations.of(context)!.currency}${price.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : price.toStringAsFixed(AppConstants.amountFrLength)}",
-                onPressed: onButtonTap,
-                textColor: AppColors.whiteColor,
-                bgColor: AppColors.mainColor,
-                borderRadius: AppConstants.radius_3,
-                textSize: AppConstants.font_14,
-              ),
-            ):0.width
+            !isGuestUser
+                ? Center(
+                    child: CommonProductButtonWidget(
+                      width: 110,
+                      title:
+                          "${AppLocalizations.of(context)!.currency}${price.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : price.toStringAsFixed(AppConstants.amountFrLength)}",
+                      onPressed: onButtonTap,
+                      textColor: AppColors.whiteColor,
+                      bgColor: AppColors.mainColor,
+                      borderRadius: AppConstants.radius_3,
+                      textSize: AppConstants.font_14,
+                    ),
+                  )
+                : 0.width
           ],
         ),
       ),

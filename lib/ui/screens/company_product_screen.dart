@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -24,7 +24,6 @@ import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
-import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
@@ -234,6 +233,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                           ),
                                       itemBuilder: (context, index) => DelayedWidget(
                                             child: CommonProductItemWidget(
+                                              lowStock: state.productList[index].lowStock.toString(),
                                               isGuestUser: state.isGuestUser,
                                             height:   160,
                                             width:  140,
@@ -278,9 +278,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                           horizontal: AppConstants.padding_5),
                                       itemBuilder: (context, index) => DelayedWidget(
                                           child: CommonProductListWidget(
+                                            lowStock: state.productList[index].lowStock.toString(),
                                             isGuestUser: state.isGuestUser,
                                             numberOfUnits: state.productList[index].numberOfUnit??'0',
-                                              productStock: state.productList[index].productStock ?? 0,
+                                              productStock: state.productList[index].productStock.toString() ?? '0',
                                               productImage: state.productList[index]
                                                   .mainImage ??
                                                   '',
@@ -302,7 +303,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                       .productList[index]
                                                       .id ??
                                                       '',
-                                                  productStock: state.productList[index].productStock.toString() ?? '0',
+                                                  productStock: state.productList[index].productStock.toString(),
 
                                                 );
                                               }
@@ -376,6 +377,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                           shrinkWrap: true,
                           itemBuilder: (listViewContext, index) {
                             return _buildSearchItem(
+                                lowStock: state.searchList[index].lowStock.toString(),
                               isGuestUser: state.isGuestUser,
                                 numberOfUnits:state.searchList[index].numberOfUnits,
                                 priceOfBox: state.searchList[index].priceOfBox,
@@ -806,6 +808,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                          child: Column(
                            children: [
                              CommonProductDetailsWidget(
+                               lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                                qrCode:state.productDetails.first.qrcode ?? '' ,
 
                                addToOrderTap: () {
@@ -991,6 +994,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
              shrinkWrap: true,
              itemBuilder: (context2,i){
                return CommonProductItemWidget(
+                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                  productStock:relatedProductList.elementAt(i).productStock.toString(),
                  width: AppConstants.relatedProductItemWidth,
                  productImage:relatedProductList[i].mainImage,
@@ -1534,7 +1538,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
             buttonTitle: '${AppLocalizations.of(context)!.ok}'));
   }
    Widget _buildSearchItem({
-
+     required String lowStock,
      required BuildContext context,
      required String searchName,
      required String searchImage,
@@ -1601,8 +1605,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
          InkWell(
            onTap: onTap,
            child: Container(
-             height: !isGuestUser ? (productStock) != '0' ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 70,
-
+             height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? 120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
              decoration: BoxDecoration(
                  color: AppColors.whiteColor,
                  border: Border(
@@ -1693,13 +1696,18 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                              mainAxisAlignment: MainAxisAlignment.start,
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
-                               (productStock) != '0' ? 0.width : Text(
+                               (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                  AppLocalizations.of(context)!
                                      .out_of_stock1,
                                  style: AppStyles.rkBoldTextStyle(
                                      size: AppConstants.font_12,
                                      color: AppColors.redColor,
                                      fontWeight: FontWeight.w400),
+                               ) : Text(lowStock,
+                                   style: AppStyles.rkBoldTextStyle(
+                                       size: AppConstants.font_12,
+                                       color: AppColors.orangeColor,
+                                       fontWeight: FontWeight.w400)
                                ),
                                !isGuestUser? numberOfUnits != 0 ? Text(
                                  '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',

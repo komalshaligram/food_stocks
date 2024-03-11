@@ -266,7 +266,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
         List<InsertCartModel.Product> updateList = [];
 
         state.orderBySupplierProduct.products?.forEach((element) {
-          for(int i = 0 ; i > (state.productStockList.length ?? 0) ; i++ ){
+          for(int i = 0 ; i > (state.productStockList.length) ; i++ ){
             if(element.productId == state.productStockList[i].productId){
               insertList.add(
                 InsertCartModel.Product(
