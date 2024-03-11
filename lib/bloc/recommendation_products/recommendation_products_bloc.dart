@@ -115,6 +115,10 @@ class RecommendationProductsBloc
                         (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
+            print('productList_length__1_${state.recommendationProductsList.length}');
+            print('productStockList_length_1__${state.productStockList.length}');
+
+
           } else {
             emit(state.copyWith(isLoadMore: false));
             CustomSnackBar.showSnackBar(

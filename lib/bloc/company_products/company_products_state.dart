@@ -9,7 +9,8 @@ class CompanyProductsState with _$CompanyProductsState {
     required bool isLoading,
     required bool isProductLoading,
     required List<Product> productDetails,
-    required List<ProductStockModel> productStockList,
+  //  required List<ProductStockModel> productStockList,
+    required List<List<ProductStockModel>> productStockList,
     required int productStockUpdateIndex,
     required int pageNum,
     required bool isLoadMore,
@@ -34,6 +35,8 @@ class CompanyProductsState with _$CompanyProductsState {
     required int quantity,
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
+    required bool isRefreshingProduct,
+    required int productListIndex,
 
   }) = _CompanyProductsState;
 
@@ -45,7 +48,8 @@ class CompanyProductsState with _$CompanyProductsState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [ProductStockModel(productId: '')],
+       // productStockList: [ProductStockModel(productId: '')],
+      productStockList: [[ProductStockModel(productId: '')],[],[]],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,
@@ -68,7 +72,9 @@ class CompanyProductsState with _$CompanyProductsState {
     duringCelebration: false,
     quantity: 0,
     relatedProductList: [],
-    isRelatedShimmering: false
+    isRelatedShimmering: false,
+    isRefreshingProduct: false,
+    productListIndex: -1
 
       );
 }
