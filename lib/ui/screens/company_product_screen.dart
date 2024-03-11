@@ -935,9 +935,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                },
                                onQuantityDecreaseTap: () {
                                  if(state
-                                     .productStockList[state.productListIndex][
-                                 state.productStockUpdateIndex]
-                                     .quantity > 1){
+                                     .productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1){
                                    context.read<CompanyProductsBloc>().add(
                                        CompanyProductsEvent.decreaseQuantityOfProduct(
                                            context: context1));
