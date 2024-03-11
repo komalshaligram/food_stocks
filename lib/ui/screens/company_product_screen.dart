@@ -206,7 +206,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                           RefreshWidget(),
                           footer: CustomFooter(
                             builder: (context, mode) =>
-                               state.isCompanyProductGrid ? SupplierProductsScreenShimmerWidget() :StoreCategoryScreenSubcategoryShimmerWidget(),
+                               (state.isCompanyProductGrid && !state.isShimmering && state.isRefreshingProduct) ? SupplierProductsScreenShimmerWidget() :(!state.isCompanyProductGrid && !state.isShimmering && state.isRefreshingProduct)?  StoreCategoryScreenSubcategoryShimmerWidget() : SizedBox(),
                           ),
                           enablePullUp: !state.isBottomOfProducts,
                           onRefresh: () {
@@ -232,43 +232,42 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                   .productGridAspectRatio: AppConstants
                                                   .productGridAspectRatio1
                                           ),
-                                      itemBuilder: (context, index) => DelayedWidget(
-                                            child: CommonProductItemWidget(
-                                              isGuestUser: state.isGuestUser,
-                                            height:   160,
-                                            width:  140,
-                                              imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
-                                              productStock: state.productList[index].productStock.toString(),
-                                                productImage: state.productList[index]
-                                                        .mainImage ??
-                                                    '',
-                                                productName: state.productList[index]
-                                                        .productName ??
-                                                    '',
-                                                totalSaleCount: state
-                                                        .productList[index]
-                                                        .totalSale ??
-                                                    0,
-                                                price: state.productList[index]
-                                                        .productPrice ??
-                                                    0.0,
-                                                onButtonTap: () {
-                                              if(!state.isGuestUser){
-                                                showProductDetails(
-                                                  context: context,
-                                                  productId: state
-                                                      .productList[index]
-                                                      .id ?? '',
-                                                  productStock: state.productList[index].productStock.toString(),
+                                      itemBuilder: (context, index) => CommonProductItemWidget(
+                                        isGuestUser: state.isGuestUser,
+                                      height:   160,
+                                      width:  140,
+                                        imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
+                                        productStock: state.productList[index].productStock.toString(),
+                                          productImage: state.productList[index]
+                                                  .mainImage ??
+                                              '',
+                                          productName: state.productList[index]
+                                                  .productName ??
+                                              '',
+                                          totalSaleCount: state
+                                                  .productList[index]
+                                                  .totalSale ??
+                                              0,
+                                          price: state.productList[index]
+                                                  .productPrice ??
+                                              0.0,
+                                          onButtonTap: () {
+                                            if(!state.isGuestUser){
+                                              showProductDetails(
+                                                context: context,
+                                                productId: state
+                                                    .productList[index]
+                                                    .id ?? '',
+                                                productStock: state.productList[index].productStock.toString(),
+                                                  productListIndex: 1
 
-                                                );
-                                              }
-                                              else{
-                                                Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                              }
+                                              );
+                                            }
+                                            else{
+                                              Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                            }
 
-                                                }),
-                                          )
+                                          })
                                       )
                               :ListView.builder(
                                       itemCount: state.productList.length,
@@ -276,42 +275,43 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       physics: const AlwaysScrollableScrollPhysics(),
                                       padding: EdgeInsets.symmetric(
                                           horizontal: AppConstants.padding_5),
-                                      itemBuilder: (context, index) => DelayedWidget(
-                                          child: CommonProductListWidget(
-                                            isGuestUser: state.isGuestUser,
-                                            numberOfUnits: state.productList[index].numberOfUnit??'0',
-                                              productStock: state.productList[index].productStock ?? 0,
-                                              productImage: state.productList[index]
-                                                  .mainImage ??
-                                                  '',
-                                              productName: state.productList[index]
-                                                  .productName ??
-                                                  '',
-                                              totalSaleCount: state
-                                                  .productList[index]
-                                                  .totalSale ??
-                                                  0,
-                                              price: state.productList[index]
-                                                  .productPrice ??
-                                                  0.0,
-                                              onButtonTap: () {
-                                              if(!state.isGuestUser){
-                                                showProductDetails(
-                                                  context: context,
-                                                  productId: state
-                                                      .productList[index]
-                                                      .id ??
-                                                      '',
-                                                  productStock: state.productList[index].productStock.toString() ?? '0',
+                                      itemBuilder: (context, index) => CommonProductListWidget(
+                                        isGuestUser: state.isGuestUser,
+                                        numberOfUnits: state.productList[index].numberOfUnit??'0',
+                                          productStock: state.productList[index].productStock.toString() ?? '0',
+                                          productImage: state.productList[index]
+                                              .mainImage ??
+                                              '',
+                                          productName: state.productList[index]
+                                              .productName ??
+                                              '',
+                                          totalSaleCount: state
+                                              .productList[index]
+                                              .totalSale ??
+                                              0,
+                                          price: state.productList[index]
+                                              .productPrice ??
+                                              0.0,
+                                          onButtonTap: () {
 
-                                                );
-                                              }
-                                              else{
-                                                Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                              }
+                                            if(!state.isGuestUser){
+                                              showProductDetails(
+                                                context: context,
+                                                productId: state
+                                                    .productList[index]
+                                                    .id ??
+                                                    '',
+                                                productStock: state.productList[index].productStock.toString() ?? '0',
+                                                  productListIndex: 1
 
-                                              }),
-                                  ),
+                                              );
+                                            }
+                                            else{
+                                              Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                            }
+
+
+                                          }),
                                 ),
                       ),),
                     ],
@@ -510,7 +510,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                           productStock: state.searchList[index].productStock.toString(),
                                           productId: state
                                               .searchList[index].searchId,
-                                          isBarcode: true
+                                          isBarcode: true,
+                                          productListIndex: 0
                                       );
                                     }
                                     else{
@@ -587,7 +588,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                   // productStock: '1',
                                   productId: scanResult,
                                   isBarcode: true,
-                                  productStock: '1'
+                                  productStock: '1',
+                                  productListIndex: 0
                               );
                             }
                             else{
@@ -719,12 +721,13 @@ class CompanyProductsScreenWidget extends StatelessWidget {
      bool? isBarcode,
      String productStock  = '0',
      bool isRelated = false,
-     int planoGramIndex = 0,
+     int productListIndex = -1,
    }) async {
      context.read<CompanyProductsBloc>().add(CompanyProductsEvent.getProductDetailsEvent(
          context: context,
          productId: productId,
          isBarcode: isBarcode ?? false,
+         productListIndex: productListIndex
          //planoGramIndex: planoGramIndex
      ));
      showModalBottomSheet(
@@ -737,7 +740,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
        useSafeArea: true,
        enableDrag: true,
        builder: (context1) {
-
          return DraggableScrollableSheet(
            expand: true,
            maxChildSize: 1 -
@@ -896,13 +898,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                    ?.text ??
                                    '',
                                productPrice: state
-                                   .productStockList[
-                               state.productStockUpdateIndex]
-                                   .totalPrice *
-                                   state
-                                       .productStockList[
-                                   state.productStockUpdateIndex]
-                                       .quantity *
+                                   .productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][
+                                   state.productStockUpdateIndex].quantity *
                                    (state.productDetails.first
                                        .numberOfUnit ??
                                        0) ,
@@ -913,16 +910,17 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                    .productDetails.first.itemsWeight
                                    ?.toDouble() ??
                                    0.0,
-                               productStock: (state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                               productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                isRTL: context.rtl,
                                isSupplierAvailable:
                                state.productSupplierList.isEmpty
                                    ? false
                                    : true,
                                scrollController: scrollController,
-                               productQuantity:  state
+                               productQuantity: state
                                    .productStockList[
-                               state.productStockUpdateIndex]
+                               state.productListIndex]
+                               [state.productStockUpdateIndex]
                                    .quantity,
                                onQuantityChanged: (quantity) {
                                  context.read<CompanyProductsBloc>().add(
@@ -937,7 +935,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                },
                                onQuantityDecreaseTap: () {
                                  if(state
-                                     .productStockList[
+                                     .productStockList[state.productListIndex][
                                  state.productStockUpdateIndex]
                                      .quantity > 1){
                                    context.read<CompanyProductsBloc>().add(
@@ -1003,7 +1001,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                        context: context,
                        productId: relatedProductList[i].id,
                        isBarcode: false,
-                       productStock: relatedProductList[i].productStock.toString()
+                       productStock: relatedProductList[i].productStock.toString(),
+                        productListIndex: 2
                    );
                  },
                );},itemCount: relatedProductList.length,),

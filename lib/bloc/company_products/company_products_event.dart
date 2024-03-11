@@ -11,7 +11,8 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
   const factory CompanyProductsEvent.getProductDetailsEvent(
       {required BuildContext context,
       required String productId,
-      required bool isBarcode
+      required bool isBarcode,
+        required int productListIndex
       }) = _GetProductDetailsEvent;
 
   const factory CompanyProductsEvent.increaseQuantityOfProduct(
