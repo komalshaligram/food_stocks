@@ -1187,8 +1187,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         }
 
-
-
        else if (event is _checkVersionOfAppEvent) {
           final _checker = StoreVersionChecker();
          // PackageInfo packageInfo = await PackageInfo.fromPlatform();
