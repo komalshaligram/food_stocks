@@ -39,7 +39,7 @@ class PushNotificationService {
       provisional: false,
       sound: true,
     );
-    print('User granted permission: ${settings.authorizationStatus}');
+     debugPrint('User granted permission: ${settings.authorizationStatus}');
 
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {
@@ -71,9 +71,9 @@ class PushNotificationService {
           _subPage = subPage ?? '';
           _mainPage = mainPage ?? '';
           _id = id ?? '';
-          print('subPage___${_subPage}');
-          print('mainPage___${_mainPage}');
-          print('ide___${_id }');
+           debugPrint('subPage___${_subPage}');
+           debugPrint('mainPage___${_mainPage}');
+           debugPrint('ide___${_id }');
           manageNavigation(false, _mainPage, _subPage , _id);
           if (imageUrl.isNotEmpty) {
             final http.Response response;
@@ -141,7 +141,7 @@ class PushNotificationService {
     String? fcmToken = '';
 
     fcmToken = await FirebaseMessaging.instance.getToken();
-    print("FCM Token: ${fcmToken}");
+     debugPrint("FCM Token: ${fcmToken}");
     SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     preferences.setFCMToken(fcmTokenId: fcmToken!);
@@ -150,7 +150,7 @@ class PushNotificationService {
     flutterLocalNotificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
-        print("details:${details}");
+         debugPrint("details:${details}");
         manageNavigation(true, _mainPage, _subPage , _id);
       },
     );
@@ -238,7 +238,7 @@ class PushNotificationService {
     ),
       // payload: message.data.toString(),
     );
-    print('fileName_____${fileName}');
+     debugPrint('fileName_____${fileName}');
     if(fileName != null){
       showImage(fileName);
     }
@@ -272,7 +272,7 @@ class PushNotificationService {
       debugPrint('subPage  1 = ${subPage}');
       if(subPage == ''){
         if (mainPage == 'companyScreen') {
-          print('companyScreen___');
+           debugPrint('companyScreen___');
            Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.companyScreen.name,
                arguments: {AppStrings.companyIdString: id});

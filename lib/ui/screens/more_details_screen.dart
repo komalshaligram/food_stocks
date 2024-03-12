@@ -74,7 +74,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
         builder: (context, state) {
-          print('ststacity____${state.selectCity}');
+           debugPrint('ststacity____${state.selectCity}');
           if (list.isEmpty) {
             list = [...state.cityList];
           }

@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -14,7 +14,6 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
@@ -24,7 +23,6 @@ import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
-import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
@@ -33,7 +31,6 @@ import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
-import '../widget/delayed_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
 import '../widget/supplier_products_screen_shimmer_widget.dart';
@@ -169,146 +166,154 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
             child: SafeArea(
               child: Stack(
                 children: [
-                  SmartRefresher(
-                    enablePullDown: /*state.isShimmering || state.isLoading ? false : */
-                        true,
-                    controller: state.refreshController,
-                    header: RefreshWidget(),
-                    footer: CustomFooter(
-                      builder: (context, mode) =>
-                         state.isGridView?  SupplierProductsScreenShimmerWidget() :StoreCategoryScreenSubcategoryShimmerWidget()
-                    ),
-                    enablePullUp: !state.isBottomOfProducts,
-                    onRefresh: () {
-                      context.read<RecommendationProductsBloc>().add(
-                          RecommendationProductsEvent.refreshListEvent(
-                              context: context));
-                    },
-                    onLoading: () {
-                      context.read<RecommendationProductsBloc>().add(
-                          RecommendationProductsEvent.getRecommendationProductsEvent(
-                              context: context));
-                    },
-                    child:
-                        SingleChildScrollView(
-                      physics: state.recommendationProductsList.isEmpty
-                          ? const NeverScrollableScrollPhysics()
-                          : null,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          100.height,
-                          state.isShimmering
-                              ? state.isGridView ? SupplierProductsScreenShimmerWidget() :
-                          StoreCategoryScreenSubcategoryShimmerWidget()
-                              : state.recommendationProductsList.isEmpty
-                                  ? Container(
-                                      height: getScreenHeight(context) - 80,
-                                      width: getScreenWidth(context),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '${AppLocalizations.of(context)!.recommendation_products_are_not_available}',
-                                        style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.smallFont,
-                                            color: AppColors.textColor),
-                                      ),
-                                    )
-                                  : state.isGridView ? GridView.builder(
-                                      itemCount:
-                                          state.recommendationProductsList.length,
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: AppConstants.padding_5),
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 3,
-                                              childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
-                                                  .productGridAspectRatio: AppConstants
-                                                  .productGridAspectRatio1),
-                                      itemBuilder: (context, index) => CommonProductItemWidget(
-                                          imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
-                                          imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
-                                          productStock: state
-                                                  .recommendationProductsList[
-                                                      index]
-                                                  .productStock.toString(),
-                                          productImage: state
-                                                  .recommendationProductsList[
-                                                      index]
-                                                  .mainImage ??
-                                              '',
-                                          productName: state
-                                                  .recommendationProductsList[
-                                                      index]
-                                                  .productName ??
-                                              '',
-                                          totalSaleCount: state
-                                                  .recommendationProductsList[
-                                                      index]
-                                                  .totalSale ??
-                                              0,
-                                          price: state
-                                                  .recommendationProductsList[
-                                                      index]
-                                                  .productPrice ??
-                                              0.0,
-                                          onButtonTap: () {
-                                            showProductDetails(
-                                                context: context,
-                                                productId: state
-                                                        .recommendationProductsList[
-                                                            index]
-                                                        .id ??
-                                                    '',
-                                             productStock:  state
-                                                 .recommendationProductsList[
-                                             index]
-                                                 .productStock.toString() ??
-                                                 '',
-                                              productListIndex: 1
-                                            );
-                                          })
-
-                                      ):   ListView.builder(
-                        itemCount: state.recommendationProductsList.length,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: EdgeInsets.symmetric(
-                    horizontal: AppConstants.padding_5),
-                              itemBuilder: (context, index) => CommonProductListWidget(
-                                  productStock: state.recommendationProductsList[index].productStock.toString(),
-                                  productImage: state.recommendationProductsList[index]
-                                      .mainImage ??
-                                      '',
-                                  productName: state.recommendationProductsList[index]
-                                      .productName ??
-                                      '',
-                                  totalSaleCount: state
-                                      .recommendationProductsList[index]
-                                      .totalSale ??
-                                      0,
-                                  price: state.recommendationProductsList[index]
-                                      .productPrice ??
-                                      0.0,
-                                  onButtonTap: () {
-                                    showProductDetails(
-                                      context: context,
-                                      productId: state
-                                          .recommendationProductsList[index]
-                                          .id ??
-                                          '',
-                                      productStock: state.recommendationProductsList[index].productStock.toString() ?? '0',
-                                      productListIndex: 1
-
-                                    );
-                                  }),
+                  Column(
+                    children: [
+                      100.height,
+                      Expanded(child:state.isShimmering
+                          ? state.isGridView ? SupplierProductsScreenShimmerWidget() :
+                      StoreCategoryScreenSubcategoryShimmerWidget()
+                          :  state.recommendationProductsList.isEmpty
+                          ? Container(
+                        height: getScreenHeight(context) - 80,
+                        width: getScreenWidth(context),
+                        margin: EdgeInsets.only(top: 30),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${AppLocalizations.of(context)!.recommendation_products_are_not_available}',
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
+                              color: AppColors.textColor),
                         ),
-                        ],
-                      ),
-                    ),
-                    // ),
+                      )
+                          :SmartRefresher(
+                        enablePullDown: /*state.isShimmering || state.isLoading ? false : */
+                        true,
+                        controller: state.refreshController,
+                        header: RefreshWidget(),
+                        footer: CustomFooter(
+                            builder: (context, mode) =>
+                            state.isGridView?  SupplierProductsScreenShimmerWidget() :StoreCategoryScreenSubcategoryShimmerWidget()
+                        ),
+                        enablePullUp: !state.isBottomOfProducts,
+                        onRefresh: () {
+                          context.read<RecommendationProductsBloc>().add(
+                              RecommendationProductsEvent.refreshListEvent(
+                                  context: context));
+                        },
+                        onLoading: () {
+                          context.read<RecommendationProductsBloc>().add(
+                              RecommendationProductsEvent.getRecommendationProductsEvent(
+                                  context: context));
+                        },
+                        child:
+                        SingleChildScrollView(
+                          physics: state.recommendationProductsList.isEmpty
+                              ? const NeverScrollableScrollPhysics()
+                              : null,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              state.isGridView ? GridView.builder(
+                                  itemCount:
+                                  state.recommendationProductsList.length,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: AppConstants.padding_5),
+                                  gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
+                                          .productGridAspectRatio: AppConstants
+                                          .productGridAspectRatio1),
+                                  itemBuilder: (context, index) => CommonProductItemWidget(
+                                      imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
+                                      imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
+                                      productStock: state
+                                          .recommendationProductsList[
+                                      index]
+                                          .productStock.toString(),
+                                      productImage: state
+                                          .recommendationProductsList[
+                                      index]
+                                          .mainImage ??
+                                          '',
+                                      productName: state
+                                          .recommendationProductsList[
+                                      index]
+                                          .productName ??
+                                          '',
+                                      totalSaleCount: state
+                                          .recommendationProductsList[
+                                      index]
+                                          .totalSale ??
+                                          0,
+                                      price: state
+                                          .recommendationProductsList[
+                                      index]
+                                          .productPrice ??
+                                          0.0,
+                                      onButtonTap: () {
+                                        showProductDetails(
+                                            context: context,
+                                            productId: state
+                                                .recommendationProductsList[
+                                            index]
+                                                .id ??
+                                                '',
+                                            productStock:  state
+                                                .recommendationProductsList[
+                                            index]
+                                                .productStock.toString() ??
+                                                '',
+                                            productListIndex: 1
+                                        );
+                                      })
+
+                              ):   ListView.builder(
+                                itemCount: state.recommendationProductsList.length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: AppConstants.padding_5),
+                                itemBuilder: (context, index) => CommonProductListWidget(
+                                    productStock: state.recommendationProductsList[index].productStock.toString(),
+                                    productImage: state.recommendationProductsList[index]
+                                        .mainImage ??
+                                        '',
+                                    productName: state.recommendationProductsList[index]
+                                        .productName ??
+                                        '',
+                                    totalSaleCount: state
+                                        .recommendationProductsList[index]
+                                        .totalSale ??
+                                        0,
+                                    price: state.recommendationProductsList[index]
+                                        .productPrice ??
+                                        0.0,
+                                    onButtonTap: () {
+                                      showProductDetails(
+                                          context: context,
+                                          productId: state
+                                              .recommendationProductsList[index]
+                                              .id ??
+                                              '',
+                                          productStock: state.recommendationProductsList[index].productStock.toString() ?? '0',
+                                          productListIndex: 1
+
+                                      );
+                                    }),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // ),
+                      ), )
+
+
+                    ],
+
                   ),
                   CommonSearchWidget(
                     onCloseTap: () {
@@ -333,7 +338,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       }
                     },
                     onSearchSubmit: (String search) {
-                     // bloc.add(RecommendationProductsEvent.globalSearchEvent(context: context));
+                      // bloc.add(RecommendationProductsEvent.globalSearchEvent(context: context));
                       Navigator.pushNamed(
                           context,
                           RouteDefine.supplierProductsScreen.name,
@@ -491,14 +496,14 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   SearchTypes.sale ||
                                   state.searchList[index].searchType ==
                                       SearchTypes.product) {
-                                print("tap 4");
+                                 debugPrint("tap 4");
                                 showProductDetails(
                                     context: context,
                                     productStock: state.searchList[index].productStock.toString(),
                                     productId: state
                                         .searchList[index].searchId,
                                     isBarcode: true,
-                                  productListIndex: 0
+                                    productListIndex: 0
                                 );
                               } else if (state
                                   .searchList[index].searchType ==
@@ -563,14 +568,14 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       if (scanResult != '-1') {
                         // -1 result for cancel scanning
                         debugPrint('result = $scanResult');
-                        print("tap 5");
+                         debugPrint("tap 5");
                         showProductDetails(
                             context: context,
                             // productStock: '1',
                             productId: scanResult,
                             isBarcode: true,
                             productStock: '1',
-                          productListIndex: 0
+                            productListIndex: 0
                         );
                       }
                     },
@@ -794,13 +799,13 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                           width: getScreenWidth(context),
                                           child: GestureDetector(
                                             onVerticalDragStart: (dragDetails) {
-                                              print('onVerticalDragStart');
+                                                debugPrint('onVerticalDragStart');
                                             },
                                             onVerticalDragUpdate: (dragDetails) {
-                                              print('onVerticalDragUpdate');
+                                                debugPrint('onVerticalDragUpdate');
                                             },
                                             onVerticalDragEnd: (endDetails) {
-                                              print('onVerticalDragEnd');
+                                               debugPrint('onVerticalDragEnd');
                                               Navigator.pop(dialogContext);
                                             },
                                             child: PhotoView(

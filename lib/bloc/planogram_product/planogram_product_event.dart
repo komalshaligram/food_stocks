@@ -8,7 +8,8 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
   const factory PlanogramProductEvent.getProductDetailsEvent(
       {required BuildContext context,
       required String productId,
-      required bool isBarcode
+      required bool isBarcode,
+        required int productListIndex
       }) = _GetProductDetailsEvent;
 
   const factory PlanogramProductEvent.increaseQuantityOfProduct(

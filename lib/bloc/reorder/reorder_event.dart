@@ -8,7 +8,8 @@ class ReorderEvent with _$ReorderEvent {
   const factory ReorderEvent.getProductDetailsEvent(
       {required BuildContext context,
       required String productId,
-      required bool isBarcode
+      required bool isBarcode,
+        required int productListIndex
       }) = _GetProductDetailsEvent;
 
   const factory ReorderEvent.increaseQuantityOfProduct(

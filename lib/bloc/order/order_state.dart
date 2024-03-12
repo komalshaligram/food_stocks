@@ -10,6 +10,7 @@ class OrderState with _$OrderState {
     required List<Datum> orderDetailsList,
     required bool isBottomOfProducts,
     required RefreshController refreshController,
+
   }) = _OrderState;
 
   factory OrderState.initial() => OrderState(
@@ -20,5 +21,6 @@ class OrderState with _$OrderState {
         orderDetailsList: [],
         isBottomOfProducts: false,
         refreshController: RefreshController(),
+
       );
 }
