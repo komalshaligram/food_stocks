@@ -45,7 +45,7 @@ class DioClient {
               contentType: Headers.jsonContentType,
               responseType: ResponseType.json),
         )..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
-            // print("app request data ${options.data}");
+            //  debugPrint("app request data ${options.data}");
             return handler.next(options);
           }, onResponse: (response, handler) async {
             if (kDebugMode) {
@@ -131,7 +131,7 @@ class DioClient {
     preferencesHelper.setUserLoggedIn(isLoggedIn: true);
     preferencesHelper.setAuthToken(accToken: res.data?.accessToken ?? '');
     preferencesHelper.setRefreshToken(refToken: res.data?.refreshToken ?? '');
-    print('accessToken_____${res.data?.accessToken ?? ''}');
+     debugPrint('accessToken_____${res.data?.accessToken ?? ''}');
     Options requestOptions = Options(headers: {
       HttpHeaders.authorizationHeader:
           'Bearer ${preferencesHelper.getAuthToken()}'
@@ -153,7 +153,7 @@ class DioClient {
           data: preferencesHelper.getRqPram(), options: requestOptions,queryParameters: queryParams,);
         break;
     }
-    print('res_______________________$response');
+     debugPrint('res_______________________$response');
     return response.data;
   }
 

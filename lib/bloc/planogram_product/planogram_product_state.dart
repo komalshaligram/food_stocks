@@ -8,7 +8,7 @@ class PlanogramProductState with _$PlanogramProductState {
     required bool isLoading,
     required bool isProductLoading,
     required List<Product> productDetails,
-    required List<ProductStockModel> productStockList,
+    required List<List<ProductStockModel>> productStockList,
     required int productStockUpdateIndex,
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
@@ -29,6 +29,7 @@ class PlanogramProductState with _$PlanogramProductState {
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
     required bool isGuestUser,
+    required int productListIndex
   }) = _PlanogramProductState;
 
   factory PlanogramProductState.initial() => PlanogramProductState(
@@ -38,7 +39,7 @@ class PlanogramProductState with _$PlanogramProductState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [ProductStockModel(productId: '')],
+      productStockList: [[ProductStockModel(productId: '')],[],[]],
         isSelectSupplier: false,
         productSupplierList: [],
         isCartCountChange: false,
@@ -57,6 +58,7 @@ class PlanogramProductState with _$PlanogramProductState {
     isShimmering: false,
     relatedProductList: [],
     isRelatedShimmering: false,
-    isGuestUser: false
+    isGuestUser: false,
+    productListIndex: -1
       );
 }

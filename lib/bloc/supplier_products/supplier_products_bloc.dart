@@ -122,7 +122,7 @@ class SupplierProductsBloc
                       : product.productId ?? '',
                   stock: event.searchType == SearchTypes.product.toString()
                       ? product.productStock.toString()
-                      : (product.productStock.toString() ?? '0'));
+                      : (product.productStock.toString() ));
             }) ??
 
                 []);
@@ -188,7 +188,7 @@ class SupplierProductsBloc
             productStockList.addAll(response.data?.map((product) =>
                 ProductStockModel(
                     productId: product.productId ?? '',
-                    stock: (product.productStock.toString() ?? '0'))) ??
+                    stock: (product.productStock.toString() ))) ??
                 []);
             debugPrint('new product list len = ${productList.length}');
             debugPrint(
@@ -251,8 +251,8 @@ class SupplierProductsBloc
               data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response =
           ProductDetailsResModel.fromJson(res);
-          print('ProductDetailsResModel______${response}');
-          print('_productQuantity______${_productQuantity}');
+           debugPrint('ProductDetailsResModel______${response}');
+           debugPrint('_productQuantity______${_productQuantity}');
           if (response.status == 200) {
             int productStockUpdateIndex = 0;
             if (event.isBarcode) {
@@ -322,8 +322,7 @@ class SupplierProductsBloc
                 context: event.context, productId: response.product?.first.id ?? ''));
 
 
-            if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ??
-                false)) {
+            if (event.isBarcode) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
               productStockList[productStockList
@@ -977,7 +976,7 @@ class SupplierProductsBloc
                   searchId: sale.id ?? '',
                   name: sale.productName ?? '',
                   searchType: SearchTypes.sale,
-                  numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
+                  numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                   image: sale.mainImage ?? '',
 
                 ))
@@ -992,10 +991,8 @@ class SupplierProductsBloc
                   searchType: SearchTypes.product,
                   image: supplier.mainImage ?? '',
                   productStock: supplier.productStock.toString(),
-                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ??
-                      0,
-                  priceOfBox: double.parse(supplier.productPrice.toString()) ??
-                      0,
+                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
+                  priceOfBox: double.parse(supplier.productPrice.toString()) ,
                 ))
                 .toList() ??
                 []);
@@ -1038,7 +1035,7 @@ class SupplierProductsBloc
             searchList: event.searchList));
       }
       else if (event is _RelatedProductsEvent) {
-        print('productId____${event.productId}');
+         debugPrint('productId____${event.productId}');
           emit(state.copyWith(isRelatedShimmering: true));
           final res = await DioClient(event.context).post(
               AppUrls.relatedProductsUrl,

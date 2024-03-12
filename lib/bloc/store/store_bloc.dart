@@ -79,7 +79,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         debugPrint('supplier selection : ${state.isSelectSupplier}');
       }
       else if (event is _GetProductCategoriesListEvent) {
-        print('getGuestUser_____${preferencesHelper.getGuestUser()}');
+         debugPrint('getGuestUser_____${preferencesHelper.getGuestUser()}');
         emit(state.copyWith(isGuestUser: preferencesHelper.getGuestUser()));
         try {
           emit(state.copyWith(isShimmering: true));
@@ -193,7 +193,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 ));
             RecommendationProductsResModel response =
             RecommendationProductsResModel.fromJson(res);
-            print('storeresponse____${response}');
+             debugPrint('storeresponse____${response}');
             if (response.status == 200) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: true);
@@ -240,7 +240,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           if (response.status == 200) {
             bool productVisible = response.data?.any((element) => element.supplierDetail?.isHomePreference==true)??true;
             emit(state.copyWith(isSupplierVisible: productVisible));
-//            print('supplier visible:$productVisible');
+//             debugPrint('supplier visible:$productVisible');
             emit(state.copyWith(suppliersList: response, isShimmering: false));
           } else {
             emit(state.copyWith(isShimmering: false));
@@ -582,7 +582,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
              double.parse( productStockList[state.productStockUpdateIndex].stock.toString())) {
-            print('productSupplierIds______${productStockList}');
+             debugPrint('productSupplierIds______${productStockList}');
             if (productStockList[state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
@@ -1011,7 +1011,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         searchId: sale.id ?? '',
                         name: sale.productName ?? '',
                         searchType: SearchTypes.sale,
-              numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
+              numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                         image: sale.mainImage ?? '',
 
             ))
@@ -1025,8 +1025,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         searchType: SearchTypes.product,
                         image: supplier.mainImage ?? '',
               productStock: supplier.productStock.toString(),
-              numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ?? 0,
-              priceOfBox: double.parse(supplier.productPrice.toString()) ?? 0,
+              numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
+              priceOfBox: double.parse(supplier.productPrice.toString()),
             ))
                     .toList() ??
                 []);
@@ -1169,8 +1169,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     ProductStockModel(
                       productId: Product.id ,
                       stock: (Product.productStock.toString()),
-                    )) ??
-                []);
+                    )) );
 
             emit(state.copyWith(
                 relatedProductList:response.data ,

@@ -637,7 +637,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         emit(state.copyWith(productStockList: productStockList));
       }
       else if(event is _RelatedProductsEvent){
-        print('productId____${event.productId}');
+         debugPrint('productId____${event.productId}');
         emit(state.copyWith(isRelatedShimmering:true));
         final res = await DioClient(event.context).post(
             AppUrls.relatedProductsUrl,

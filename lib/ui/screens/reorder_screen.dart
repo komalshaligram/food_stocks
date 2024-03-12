@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -23,7 +23,6 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
-import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
@@ -73,7 +72,6 @@ class ReorderScreenWidget extends StatelessWidget {
                 Container(
                   height: 50,
                   width: 50,
-                  // margin: EdgeInsets.only(bottom: 10),
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
                       border: Border.all(
@@ -104,7 +102,6 @@ class ReorderScreenWidget extends StatelessWidget {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: AppColors.mainColor,
-                          //gradient:AppColors.appMainGradientColor,
                           borderRadius: const BorderRadius.all(
                               Radius.circular(AppConstants.radius_100)),
                           border: Border.all(
@@ -267,6 +264,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                                                 index]
                                                             .id ??
                                                         '',
+                                                productListIndex: 1,
                                                 isBarcode: false,
                                                   productStock: state
                                                       .previousOrderProductsList[
@@ -306,6 +304,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                           .previousOrderProductsList[index]
                                           .id ??
                                           '',
+                                      productListIndex: 1,
                                       productStock: state.previousOrderProductsList[index].productStock.toString() ?? '0',
                                     );
                                   }),
@@ -497,13 +496,14 @@ class ReorderScreenWidget extends StatelessWidget {
                                   SearchTypes.sale ||
                                   state.searchList[index].searchType ==
                                       SearchTypes.product) {
-                                print("tap 4");
+                                 debugPrint("tap 4");
                                 showProductDetails(
                                     context: context,
                                     productStock: state.searchList[index].productStock.toString(),
                                     productId: state
                                         .searchList[index].searchId,
-                                    isBarcode: true
+                                    isBarcode: true,
+                                  productListIndex: 0
                                 );
                               } else if (state
                                   .searchList[index].searchType ==
@@ -568,13 +568,14 @@ class ReorderScreenWidget extends StatelessWidget {
                       if (scanResult != '-1') {
                         // -1 result for cancel scanning
                         debugPrint('result = $scanResult');
-                        print("tap 5");
+                         debugPrint("tap 5");
                         showProductDetails(
                             context: context,
                             // productStock: '1',
                             productId: scanResult,
                             isBarcode: true,
-                            productStock: '1'
+                            productStock: '1',
+                          productListIndex: 0
                         );
                       }
                     },
@@ -695,11 +696,13 @@ class ReorderScreenWidget extends StatelessWidget {
   }
   void showProductDetails({
     required BuildContext context, required String productId,
-    bool? isBarcode , String productStock = '0'
+    bool? isBarcode , String productStock = '0',
+    int productListIndex = -1
   }) async {
     context.read<ReorderBloc>().add(ReorderEvent.getProductDetailsEvent(
         context: context, productId: productId,
-        isBarcode: isBarcode ?? false
+        isBarcode: isBarcode ?? false,
+      productListIndex: productListIndex
     ));
     showModalBottomSheet(
       context: context,
@@ -800,13 +803,13 @@ class ReorderScreenWidget extends StatelessWidget {
                                           width: getScreenWidth(context),
                                           child: GestureDetector(
                                             onVerticalDragStart: (dragDetails) {
-                                              print('onVerticalDragStart');
+                                                debugPrint('onVerticalDragStart');
                                             },
                                             onVerticalDragUpdate: (dragDetails) {
-                                              print('onVerticalDragUpdate');
+                                                debugPrint('onVerticalDragUpdate');
                                             },
                                             onVerticalDragEnd: (endDetails) {
-                                              print('onVerticalDragEnd');
+                                               debugPrint('onVerticalDragEnd');
                                               Navigator.pop(dialogContext);
                                             },
                                             child: PhotoView(
@@ -869,11 +872,11 @@ class ReorderScreenWidget extends StatelessWidget {
                                   ?.text ??
                                   '',
                               productPrice: state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .totalPrice *
                                   state
-                                      .productStockList[
+                                      .productStockList[state.productListIndex][
                                   state.productStockUpdateIndex]
                                       .quantity *
                                   (state.productDetails.first
@@ -886,7 +889,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock: (state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty
@@ -894,7 +897,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                   : true,
                               scrollController: scrollController,
                               productQuantity:  state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .quantity,
                               onQuantityChanged: (quantity) {
@@ -910,7 +913,7 @@ class ReorderScreenWidget extends StatelessWidget {
                               },
                               onQuantityDecreaseTap: () {
                                 if(state
-                                    .productStockList[
+                                    .productStockList[state.productListIndex][
                                 state.productStockUpdateIndex]
                                     .quantity > 1){
                                   context.read<ReorderBloc>().add(
@@ -977,6 +980,7 @@ class ReorderScreenWidget extends StatelessWidget {
                       productId:
                           relatedProductList[i].id,
                       isBarcode: false,
+                      productListIndex: 2,
                       productStock: (relatedProductList[i].productStock.toString())
                   );
                 },

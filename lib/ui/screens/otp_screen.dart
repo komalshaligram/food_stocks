@@ -55,7 +55,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
     OtpBloc bloc = context.read<OtpBloc>();
     return BlocListener<OtpBloc, OtpState>(
       listener: (context, state) async {
-        print("state:$state");
+         debugPrint("state:$state");
         await SmsAutoFill().listenForCode();
       },
       child: BlocBuilder<OtpBloc, OtpState>(

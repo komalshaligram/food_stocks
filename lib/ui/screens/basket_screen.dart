@@ -949,13 +949,13 @@ class BasketScreenWidget extends StatelessWidget {
                                           width: getScreenWidth(context),
                                           child: GestureDetector(
                                             onVerticalDragStart: (dragDetails) {
-                                              print('onVerticalDragStart');
+                                                debugPrint('onVerticalDragStart');
                                             },
                                             onVerticalDragUpdate: (dragDetails) {
-                                              print('onVerticalDragUpdate');
+                                                debugPrint('onVerticalDragUpdate');
                                             },
                                             onVerticalDragEnd: (endDetails) {
-                                              print('onVerticalDragEnd');
+                                               debugPrint('onVerticalDragEnd');
                                               Navigator.pop(dialogContext);
                                             },
                                             child: PhotoView(
