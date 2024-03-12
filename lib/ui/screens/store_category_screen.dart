@@ -494,7 +494,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: MediaQuery.of(context).size.width > 370 ? AppConstants.productGridAspectRatio : AppConstants.productGridAspectRatio1),
                                               itemBuilder: (context, index) => CommonProductItemWidget(
-                                                lowStock: '',
+                                                lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
                                                   imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                                   isGuestUser: state.isGuestUser,
                                                   productStock: (state.planogramProductList[index].product?.productStock.toString() ?? '0'),
@@ -528,7 +528,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 (context,
                                                 index) {
                                               return CommonProductListWidget(
-                                                  lowStock: '',
+                                                  lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
                                                   numberOfUnits:state.planogramProductList[index].product?.numberOfUnit ??
                                                       '0',
                                                   isGuestUser: state
