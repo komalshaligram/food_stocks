@@ -22,9 +22,7 @@ void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-
     await PushNotificationService().setupInteractedMessage();
-    //await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     SharedPreferencesHelper preferencesHelper =
@@ -37,7 +35,7 @@ void main() async {
       });
     }
     runApp(
-       MyApp(),
+       MyApp(appName: 'TAVILI'),
     );
   },
           (error, stack) =>
@@ -45,9 +43,8 @@ void main() async {
 }
 
 
-@pragma('vm:entry-point')
-Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint("Handling a background message:${message.messageId}");
-  debugPrint("Handling a background message:${message.data.toString()}");
-}
+
+
+
+
 

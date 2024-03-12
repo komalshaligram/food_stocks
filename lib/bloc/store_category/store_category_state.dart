@@ -65,7 +65,7 @@ class StoreCategoryState with _$StoreCategoryState {
         subCategoryList: [],
         productCategoryList: [],
         planoGramsList: [],
-        productStockList: [[],[],[],[],[]],
+        productStockList: [[],[],[],[]],
         isPlanogramShimmering: false,
         isSubCategoryShimmering: false,
         isLoading: false,
@@ -105,7 +105,7 @@ class StoreCategoryState with _$StoreCategoryState {
     duringCelebration: false,
     allProductPageNum: 0,
     relatedProductList: [],
-    isRelatedShimmering: false
+    isRelatedShimmering: false,
 
       );
 }

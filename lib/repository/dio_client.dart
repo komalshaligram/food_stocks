@@ -23,7 +23,7 @@ class DioClient {
   final Dio _dio;
   late BuildContext _context;
   bool isLogOut = false;
-  bool isLoggedIn = true;
+  static String baseUrl = '';
 
   DioClient(this._context)
       : _dio = Dio(
@@ -45,7 +45,7 @@ class DioClient {
               contentType: Headers.jsonContentType,
               responseType: ResponseType.json),
         )..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
-            // print("app request data ${options.data}");
+            //  debugPrint("app request data ${options.data}");
             return handler.next(options);
           }, onResponse: (response, handler) async {
             if (kDebugMode) {
@@ -65,7 +65,7 @@ class DioClient {
       Options? options}) async {
     SharedPreferencesHelper preferencesHelper =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-    debugPrint('URL = ${AppUrls.baseUrl}$path');
+    debugPrint('URL = ${baseUrl}$path');
     debugPrint('token = ${preferencesHelper.getAuthToken()}');
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
@@ -131,7 +131,7 @@ class DioClient {
     preferencesHelper.setUserLoggedIn(isLoggedIn: true);
     preferencesHelper.setAuthToken(accToken: res.data?.accessToken ?? '');
     preferencesHelper.setRefreshToken(refToken: res.data?.refreshToken ?? '');
-    print('accessToken_____${res.data?.accessToken ?? ''}');
+     debugPrint('accessToken_____${res.data?.accessToken ?? ''}');
     Options requestOptions = Options(headers: {
       HttpHeaders.authorizationHeader:
           'Bearer ${preferencesHelper.getAuthToken()}'
@@ -153,7 +153,7 @@ class DioClient {
           data: preferencesHelper.getRqPram(), options: requestOptions,queryParameters: queryParams,);
         break;
     }
-    print('res_______________________$response');
+     debugPrint('res_______________________$response');
     return response.data;
   }
 
@@ -186,7 +186,7 @@ class DioClient {
     try {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      debugPrint('URL = ${AppUrls.baseUrl}$path');
+      debugPrint('URL = ${baseUrl}$path');
       final connectivityResult = await (Connectivity().checkConnectivity());
 
       if (connectivityResult == ConnectivityResult.mobile ||
@@ -229,7 +229,7 @@ class DioClient {
   Future<Map<String, dynamic>> uploadFileProgressWithFormData(
       {required String path, required FormData formData}) async {
     try {
-      debugPrint('URL = ${AppUrls.baseUrl}$path');
+      debugPrint('URL = ${baseUrl}$path');
       final response = await _dio.post(
         path,
         data: formData,
@@ -253,13 +253,13 @@ class DioClient {
     try {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      debugPrint('URL = ${AppUrls.baseUrl}$path');
+      debugPrint('URL = ${baseUrl}$path');
       final connectivityResult = await (Connectivity().checkConnectivity());
 
       if (connectivityResult == ConnectivityResult.mobile ||
           connectivityResult == ConnectivityResult.wifi) {
         try {
-          debugPrint('URL = ${AppUrls.baseUrl}$path');
+          debugPrint('URL = ${baseUrl}$path');
           final response = await _dio.put(path,
               data: data,
               queryParameters: query,

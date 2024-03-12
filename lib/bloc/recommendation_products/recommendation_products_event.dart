@@ -8,7 +8,8 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
   const factory RecommendationProductsEvent.getProductDetailsEvent(
       {required BuildContext context,
       required String productId,
-        required bool isBarcode
+        required bool isBarcode,
+        required int productListIndex
       }) = _GetProductDetailsEvent;
 
   const factory RecommendationProductsEvent.increaseQuantityOfProduct(

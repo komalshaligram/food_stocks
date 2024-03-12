@@ -78,7 +78,9 @@ class SupplierProductsBloc
               onlySearch: event.searchType == SearchTypes.product.toString()
                   ? true
                   : false,
-              search: state.search);
+              search: state.search,
+            onlyApproved: true
+          );
           Map<String, dynamic> req = request.toJson();
           req.removeWhere((key, value) {
             if (value != null) {
@@ -94,14 +96,18 @@ class SupplierProductsBloc
                 .post(AppUrls.getPlanogramAllProductUrl, data: req);
             response =
                 SupplierProductsResModel.fromJson(res);
+
+            debugPrint('search url = ${AppUrls.getPlanogramAllProductUrl}');
           } else {
             final res = await DioClient(event.context)
                 .post(AppUrls.getSupplierProductsUrl, data: req);
             response =
                 SupplierProductsResModel.fromJson(res);
+            debugPrint('search url = ${AppUrls.getSupplierProductsUrl}');
           }
           emit(state.copyWith(searchType: event.searchType.toString()));
           debugPrint('supplier Products res = ${response.data}');
+
           if (response.status == 200) {
             List<SupplierProductsData> productList =
             state.productList.toList(growable: true);
@@ -245,8 +251,8 @@ class SupplierProductsBloc
               data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response =
           ProductDetailsResModel.fromJson(res);
-          print('ProductDetailsResModel______${response}');
-          print('_productQuantity______${_productQuantity}');
+           debugPrint('ProductDetailsResModel______${response}');
+           debugPrint('_productQuantity______${_productQuantity}');
           if (response.status == 200) {
             int productStockUpdateIndex = 0;
             if (event.isBarcode) {
@@ -316,7 +322,7 @@ class SupplierProductsBloc
                 context: event.context, productId: response.product?.first.id ?? ''));
 
 
-            if ( event.isBarcode) {
+            if (event.isBarcode) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
               productStockList[productStockList
@@ -901,7 +907,7 @@ class SupplierProductsBloc
           debugPrint('sale len = ${response.data?.saleData?.length}');
           debugPrint('sup len = ${response.data?.supplierData?.length}');
           debugPrint(
-              'sup prod len = ${response.data?.supplierProductData?.length}');
+              'sup stag len = ${response.data?.supplierProductData?.length}');
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList.addAll(state.productCategoryList.map((category) =>
@@ -970,7 +976,7 @@ class SupplierProductsBloc
                   searchId: sale.id ?? '',
                   name: sale.productName ?? '',
                   searchType: SearchTypes.sale,
-                  numberOfUnits: int.parse(sale.numberOfUnit.toString()),
+                  numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                   image: sale.mainImage ?? '',
 
                 ))
@@ -985,9 +991,8 @@ class SupplierProductsBloc
                   searchType: SearchTypes.product,
                   image: supplier.mainImage ?? '',
                   productStock: supplier.productStock.toString(),
-                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
-                  priceOfBox: double.parse(supplier.productPrice.toString()),
-                    lowStock: supplier.lowStock.toString()
+                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
+                  priceOfBox: double.parse(supplier.productPrice.toString()) ,
                 ))
                 .toList() ??
                 []);
@@ -1030,7 +1035,7 @@ class SupplierProductsBloc
             searchList: event.searchList));
       }
       else if (event is _RelatedProductsEvent) {
-        print('productId____${event.productId}');
+         debugPrint('productId____${event.productId}');
           emit(state.copyWith(isRelatedShimmering: true));
           final res = await DioClient(event.context).post(
               AppUrls.relatedProductsUrl,

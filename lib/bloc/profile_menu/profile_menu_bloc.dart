@@ -58,7 +58,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 path: AppUrls.logOutUrl,
                 data: {"userId": preferences.getUserId()});
 
-            debugPrint('logOut url  = ${AppUrls.baseUrl}${AppUrls.logOutUrl}');
+            debugPrint('logOut url  = ${DioClient.baseUrl}${AppUrls.logOutUrl}');
 
             debugPrint('logOut response  = ${response}');
 

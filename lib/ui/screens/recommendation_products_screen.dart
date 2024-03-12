@@ -166,145 +166,154 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
             child: SafeArea(
               child: Stack(
                 children: [
-                  SmartRefresher(
-                    enablePullDown: /*state.isShimmering || state.isLoading ? false : */
-                        true,
-                    controller: state.refreshController,
-                    header: RefreshWidget(),
-                    footer: CustomFooter(
-                      builder: (context, mode) =>
-                         state.isGridView?  SupplierProductsScreenShimmerWidget() :StoreCategoryScreenSubcategoryShimmerWidget()
-                    ),
-                    enablePullUp: !state.isBottomOfProducts,
-                    onRefresh: () {
-                      context.read<RecommendationProductsBloc>().add(
-                          RecommendationProductsEvent.refreshListEvent(
-                              context: context));
-                    },
-                    onLoading: () {
-                      context.read<RecommendationProductsBloc>().add(
-                          RecommendationProductsEvent.getRecommendationProductsEvent(
-                              context: context));
-                    },
-                    child:
-                        SingleChildScrollView(
-                      physics: state.recommendationProductsList.isEmpty
-                          ? const NeverScrollableScrollPhysics()
-                          : null,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          100.height,
-                          state.isShimmering
-                              ? state.isGridView ? SupplierProductsScreenShimmerWidget() :
-                          StoreCategoryScreenSubcategoryShimmerWidget()
-                              : state.recommendationProductsList.isEmpty
-                                  ? Container(
-                                      height: getScreenHeight(context) - 80,
-                                      width: getScreenWidth(context),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '${AppLocalizations.of(context)!.recommendation_products_are_not_available}',
-                                        style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.smallFont,
-                                            color: AppColors.textColor),
-                                      ),
-                                    )
-                                  : state.isGridView ? GridView.builder(
-                                      itemCount:
-                                          state.recommendationProductsList.length,
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: AppConstants.padding_5),
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 3,
-                                              childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
-                                                  .productGridAspectRatio: AppConstants
-                                                  .productGridAspectRatio1),
-                                      itemBuilder: (context, index) => CommonProductItemWidget(
-                                        lowStock: '',
-                                          imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
-                                          imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
-                                          productStock: state
-                                                  .recommendationProductsList[
-                                                      index]
-                                                  .productStock.toString(),
-                                          productImage: state
-                                                  .recommendationProductsList[
-                                                      index]
-                                                  .mainImage ??
-                                              '',
-                                          productName: state
-                                                  .recommendationProductsList[
-                                                      index]
-                                                  .productName ??
-                                              '',
-                                          totalSaleCount: state
-                                                  .recommendationProductsList[
-                                                      index]
-                                                  .totalSale ??
-                                              0,
-                                          price: state
-                                                  .recommendationProductsList[
-                                                      index]
-                                                  .productPrice ??
-                                              0.0,
-                                          onButtonTap: () {
-                                            showProductDetails(
-                                                context: context,
-                                                productId: state
-                                                        .recommendationProductsList[
-                                                            index]
-                                                        .id ??
-                                                    '',
-                                             productStock:  state
-                                                 .recommendationProductsList[
-                                             index]
-                                                 .productStock.toString()
-                                            );
-                                          })
-
-                                      ):   ListView.builder(
-                        itemCount: state.recommendationProductsList.length,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: EdgeInsets.symmetric(
-                    horizontal: AppConstants.padding_5),
-                              itemBuilder: (context, index) => CommonProductListWidget(
-                                lowStock: '',
-                                  productStock: state.recommendationProductsList[index].productStock.toString(),
-                                  productImage: state.recommendationProductsList[index]
-                                      .mainImage ??
-                                      '',
-                                  productName: state.recommendationProductsList[index]
-                                      .productName ??
-                                      '',
-                                  totalSaleCount: state
-                                      .recommendationProductsList[index]
-                                      .totalSale ??
-                                      0,
-                                  price: state.recommendationProductsList[index]
-                                      .productPrice ??
-                                      0.0,
-                                  onButtonTap: () {
-                                    showProductDetails(
-                                      context: context,
-                                      productId: state
-                                          .recommendationProductsList[index]
-                                          .id ??
-                                          '',
-                                      productStock: state.recommendationProductsList[index].productStock.toString() ,
-
-                                    );
-                                  }),
+                  Column(
+                    children: [
+                      100.height,
+                      Expanded(child:state.isShimmering
+                          ? state.isGridView ? SupplierProductsScreenShimmerWidget() :
+                      StoreCategoryScreenSubcategoryShimmerWidget()
+                          :  state.recommendationProductsList.isEmpty
+                          ? Container(
+                        height: getScreenHeight(context) - 80,
+                        width: getScreenWidth(context),
+                        margin: EdgeInsets.only(top: 30),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${AppLocalizations.of(context)!.recommendation_products_are_not_available}',
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
+                              color: AppColors.textColor),
                         ),
-                        ],
-                      ),
-                    ),
-                    // ),
+                      )
+                          :SmartRefresher(
+                        enablePullDown: /*state.isShimmering || state.isLoading ? false : */
+                        true,
+                        controller: state.refreshController,
+                        header: RefreshWidget(),
+                        footer: CustomFooter(
+                            builder: (context, mode) =>
+                            state.isGridView?  SupplierProductsScreenShimmerWidget() :StoreCategoryScreenSubcategoryShimmerWidget()
+                        ),
+                        enablePullUp: !state.isBottomOfProducts,
+                        onRefresh: () {
+                          context.read<RecommendationProductsBloc>().add(
+                              RecommendationProductsEvent.refreshListEvent(
+                                  context: context));
+                        },
+                        onLoading: () {
+                          context.read<RecommendationProductsBloc>().add(
+                              RecommendationProductsEvent.getRecommendationProductsEvent(
+                                  context: context));
+                        },
+                        child:
+                        SingleChildScrollView(
+                          physics: state.recommendationProductsList.isEmpty
+                              ? const NeverScrollableScrollPhysics()
+                              : null,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              state.isGridView ? GridView.builder(
+                                  itemCount:
+                                  state.recommendationProductsList.length,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: AppConstants.padding_5),
+                                  gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
+                                          .productGridAspectRatio: AppConstants
+                                          .productGridAspectRatio1),
+                                  itemBuilder: (context, index) => CommonProductItemWidget(
+                                      imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
+                                      imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
+                                      productStock: state
+                                          .recommendationProductsList[
+                                      index]
+                                          .productStock.toString(),
+                                      productImage: state
+                                          .recommendationProductsList[
+                                      index]
+                                          .mainImage ??
+                                          '',
+                                      productName: state
+                                          .recommendationProductsList[
+                                      index]
+                                          .productName ??
+                                          '',
+                                      totalSaleCount: state
+                                          .recommendationProductsList[
+                                      index]
+                                          .totalSale ??
+                                          0,
+                                      price: state
+                                          .recommendationProductsList[
+                                      index]
+                                          .productPrice ??
+                                          0.0,
+                                      onButtonTap: () {
+                                        showProductDetails(
+                                            context: context,
+                                            productId: state
+                                                .recommendationProductsList[
+                                            index]
+                                                .id ??
+                                                '',
+                                            productStock:  state
+                                                .recommendationProductsList[
+                                            index]
+                                                .productStock.toString() ??
+                                                '',
+                                            productListIndex: 1
+                                        );
+                                      })
+
+                              ):   ListView.builder(
+                                itemCount: state.recommendationProductsList.length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: AppConstants.padding_5),
+                                itemBuilder: (context, index) => CommonProductListWidget(
+                                    productStock: state.recommendationProductsList[index].productStock.toString(),
+                                    productImage: state.recommendationProductsList[index]
+                                        .mainImage ??
+                                        '',
+                                    productName: state.recommendationProductsList[index]
+                                        .productName ??
+                                        '',
+                                    totalSaleCount: state
+                                        .recommendationProductsList[index]
+                                        .totalSale ??
+                                        0,
+                                    price: state.recommendationProductsList[index]
+                                        .productPrice ??
+                                        0.0,
+                                    onButtonTap: () {
+                                      showProductDetails(
+                                          context: context,
+                                          productId: state
+                                              .recommendationProductsList[index]
+                                              .id ??
+                                              '',
+                                          productStock: state.recommendationProductsList[index].productStock.toString() ?? '0',
+                                          productListIndex: 1
+
+                                      );
+                                    }),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // ),
+                      ), )
+
+
+                    ],
+
                   ),
                   CommonSearchWidget(
                     onCloseTap: () {
@@ -329,7 +338,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       }
                     },
                     onSearchSubmit: (String search) {
-                     // bloc.add(RecommendationProductsEvent.globalSearchEvent(context: context));
+                      // bloc.add(RecommendationProductsEvent.globalSearchEvent(context: context));
                       Navigator.pushNamed(
                           context,
                           RouteDefine.supplierProductsScreen.name,
@@ -362,7 +371,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
-                            lowStock: state.searchList[index].lowStock.toString(),
                             numberOfUnits:state.searchList[index].numberOfUnits,
                             priceOfBox: state.searchList[index].priceOfBox,
                             productStock : state.searchList[index].productStock,
@@ -488,13 +496,14 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   SearchTypes.sale ||
                                   state.searchList[index].searchType ==
                                       SearchTypes.product) {
-                                print("tap 4");
+                                 debugPrint("tap 4");
                                 showProductDetails(
                                     context: context,
                                     productStock: state.searchList[index].productStock.toString(),
                                     productId: state
                                         .searchList[index].searchId,
-                                    isBarcode: true
+                                    isBarcode: true,
+                                    productListIndex: 0
                                 );
                               } else if (state
                                   .searchList[index].searchType ==
@@ -559,13 +568,14 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       if (scanResult != '-1') {
                         // -1 result for cancel scanning
                         debugPrint('result = $scanResult');
-                        print("tap 5");
+                         debugPrint("tap 5");
                         showProductDetails(
                             context: context,
                             // productStock: '1',
                             productId: scanResult,
                             isBarcode: true,
-                            productStock: '1'
+                            productStock: '1',
+                            productListIndex: 0
                         );
                       }
                     },
@@ -684,11 +694,13 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
   }
   void showProductDetails({
     required BuildContext context, required String productId,
-    bool? isBarcode , String productStock = '0'
+    bool? isBarcode , String productStock = '0',
+    int productListIndex = -1
   }) async {
     context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.getProductDetailsEvent(
         context: context, productId: productId,
-        isBarcode: isBarcode ?? false
+        isBarcode: isBarcode ?? false,
+      productListIndex: productListIndex
     ));
     showModalBottomSheet(
       context: context,
@@ -767,7 +779,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
-                              lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:state.productDetails.first.qrcode ?? '' ,
                               addToOrderTap: () {
                                 context.read<RecommendationProductsBloc>().add(
@@ -788,13 +799,13 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                           width: getScreenWidth(context),
                                           child: GestureDetector(
                                             onVerticalDragStart: (dragDetails) {
-                                              print('onVerticalDragStart');
+                                                debugPrint('onVerticalDragStart');
                                             },
                                             onVerticalDragUpdate: (dragDetails) {
-                                              print('onVerticalDragUpdate');
+                                                debugPrint('onVerticalDragUpdate');
                                             },
                                             onVerticalDragEnd: (endDetails) {
-                                              print('onVerticalDragEnd');
+                                               debugPrint('onVerticalDragEnd');
                                               Navigator.pop(dialogContext);
                                             },
                                             child: PhotoView(
@@ -857,11 +868,11 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   ?.text ??
                                   '',
                               productPrice: state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .totalPrice *
                                   state
-                                      .productStockList[
+                                      .productStockList[state.productListIndex][
                                   state.productStockUpdateIndex]
                                       .quantity *
                                   (state.productDetails.first
@@ -874,7 +885,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock: (state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty
@@ -882,7 +893,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   : true,
                               scrollController: scrollController,
                               productQuantity:  state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .quantity,
                               onQuantityChanged: (quantity) {
@@ -898,7 +909,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               },
                               onQuantityDecreaseTap: () {
                                 if(state
-                                    .productStockList[
+                                    .productStockList[state.productListIndex][
                                 state.productStockUpdateIndex]
                                     .quantity > 1){
                                   context.read<RecommendationProductsBloc>().add(
@@ -952,7 +963,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
-                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,
                 productImage:relatedProductList[i].mainImage,
@@ -965,6 +975,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       context: context,
                       productId: relatedProductList[i].id,
                       isBarcode: false,
+                      productListIndex: 2,
                       productStock: (relatedProductList[i].productStock.toString())
                   );
                 },
@@ -988,7 +999,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
 
 
   Widget _buildSearchItem({
-    required String lowStock,
     required BuildContext context,
     required String searchName,
     required String searchImage,
@@ -1054,7 +1064,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != '0' || lowStock.isEmpty? 80 : 90,
+            height: (productStock) != '0' ? 80 : 90,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1141,18 +1151,13 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
+                              (productStock) != '0' ? 0.width : Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.redColor,
                                     fontWeight: FontWeight.w400),
-                              ) : Text(lowStock,
-                                  style: AppStyles.rkBoldTextStyle(
-                                      size: AppConstants.font_12,
-                                      color: AppColors.orangeColor,
-                                      fontWeight: FontWeight.w400)
                               ),
                               numberOfUnits != 0 ? Text(
                                 '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',

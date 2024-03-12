@@ -80,7 +80,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           );
 
           debugPrint(
-              'Order create url  = ${AppUrls.baseUrl}${AppUrls.createOrderUrl}');
+              'Order create url  = ${DioClient.baseUrl}${AppUrls.createOrderUrl}');
           OrderSendResModel response = OrderSendResModel.fromJson(res);
           debugPrint('OrderSendResModel  = $response');
 

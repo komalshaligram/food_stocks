@@ -795,7 +795,7 @@ class HomeScreenWidget extends StatelessWidget {
                                           SearchTypes.sale ||
                                           state.searchList[index].searchType ==
                                               SearchTypes.product) {
-                                        print("tap 4");
+                                         debugPrint("tap 4");
                                         showProductDetails(
                                             context: context,
                                             productId: state
@@ -867,7 +867,7 @@ class HomeScreenWidget extends StatelessWidget {
                               if (scanResult != '-1') {
                                 // -1 result for cancel scanning
                                 debugPrint('result = $scanResult');
-                                print("tap 5");
+                                 debugPrint("tap 5");
                                 showProductDetails(
                                   context: context,
                                   productId: scanResult,
@@ -911,9 +911,7 @@ class HomeScreenWidget extends StatelessWidget {
               String? _subPage = data['message']['subPage'] ?? '';
               String? _id = data['message']['id'] ?? '';
 
-              print('subPage__home_${_subPage == null}');
-              print('mainPage__home_${_mainPage}');
-              print('ide__home_${_id == null}');
+
               PushNotificationService().manageNavigation( true, _mainPage ?? '',_subPage ?? '' , _id ?? '' , );
             }
           }
@@ -1129,13 +1127,13 @@ class HomeScreenWidget extends StatelessWidget {
                                             width: getScreenWidth(context),
                                             child: GestureDetector(
                                               onVerticalDragStart: (dragDetails) {
-                                                print('onVerticalDragStart');
+                                                  debugPrint('onVerticalDragStart');
                                               },
                                               onVerticalDragUpdate: (dragDetails) {
-                                                print('onVerticalDragUpdate');
+                                                  debugPrint('onVerticalDragUpdate');
                                               },
                                               onVerticalDragEnd: (endDetails) {
-                                                print('onVerticalDragEnd');
+                                                 debugPrint('onVerticalDragEnd');
                                                 Navigator.pop(dialogContext);
                                               },
                                               child: PhotoView(
@@ -1516,7 +1514,7 @@ class HomeScreenWidget extends StatelessWidget {
                       }
                     },
                     errorBuilder: (context, error, stackTrace) {
-                      print('home error 1_____${error}');
+                       debugPrint('home error 1_____${error}');
                       return searchType == SearchTypes.subCategory
                           ? Image.asset(AppImagePath.imageNotAvailable5,
                           height: 60, width: 50, fit: BoxFit.cover)

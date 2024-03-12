@@ -112,7 +112,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                           newModel[AppStrings.filesString] != null ) {
                         List<FormAndFileModel> formsAndFilesList =
                             state.formsAndFilesList.toList(growable: true);
-                        print('list__${formsAndFilesList.length}');
+                         debugPrint('list__${formsAndFilesList.length}');
 
                           for (int i = 0; i < formsAndFilesList.length; i++) {
                             if (newModel[AppStrings.filesString] != '' && newModel[AppStrings.filesString] != null &&
@@ -308,7 +308,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
 
             if(pickedFile!=null){
               extension = croppedImage?.path!=null? croppedImage?.path.split(".")[1].toString():pickedFile.path.split(".")[1].toString();
-              print('extension:$extension');
+               debugPrint('extension:$extension');
               if(extension =='pdf'){
                 contentType = 'pdf';
                 type = 'application';
@@ -319,7 +319,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 contentType ='png';
                 type = 'image';
               }
-              print('contentType:$contentType');
+               debugPrint('contentType:$contentType');
                formData = FormData.fromMap({
                 formAndFileList[event.fileIndex].isForm ?? false
                     ? AppStrings.formString
@@ -346,7 +346,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 contentType ='png';
                 type = 'image';
               }
-              print('contentType:$contentType');
+               debugPrint('contentType:$contentType');
                formData = FormData.fromMap({
                 formAndFileList[event.fileIndex].isForm ?? false
                     ? AppStrings.formString

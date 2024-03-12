@@ -108,7 +108,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
               );
             }else if(response.status == 400){
-              print('here 1');
+               debugPrint('here 1');
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
@@ -121,7 +121,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               ));
             }
             else {
-              print('here');
+               debugPrint('here');
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -183,7 +183,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               Navigator.pushNamed(event.context, RouteDefine.profileScreen.name,
                   arguments: {AppStrings.contactString: event.contact});
             }else if(response.status == 400){
-              print('here 1');
+               debugPrint('here 1');
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
@@ -245,7 +245,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 userPhoneNumber: event.contactNumber);
             emit(state.copyWith(/*isLoginSuccess: true, */isLoading: false));
           } else if(response.status == 403){
-            print('here 1');
+             debugPrint('here 1');
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: response.message??'',

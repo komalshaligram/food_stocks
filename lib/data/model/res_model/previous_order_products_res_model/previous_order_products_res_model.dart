@@ -34,7 +34,7 @@ class PreviousOrderProductsResModel with _$PreviousOrderProductsResModel {
 class PreviousOrderProductData with _$PreviousOrderProductData {
   const factory PreviousOrderProductData({
     @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "productStock") int? productStock,
+    @JsonKey(name: "productStock") double? productStock,
     @JsonKey(name: "totalSale") int? totalSale,
     @JsonKey(name: "productPrice") double? productPrice,
     @JsonKey(name: "mainImage") String? mainImage,

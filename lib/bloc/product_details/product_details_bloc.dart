@@ -266,7 +266,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
         List<InsertCartModel.Product> updateList = [];
 
         state.orderBySupplierProduct.products?.forEach((element) {
-          for(int i = 0 ; i > (state.productStockList.length) ; i++ ){
+          for(int i = 0 ; i > (state.productStockList.length ) ; i++ ){
             if(element.productId == state.productStockList[i].productId){
               insertList.add(
                 InsertCartModel.Product(
@@ -499,7 +499,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
                         productId: recommendationProduct.id ?? '',
                         stock: recommendationProduct.productStock.toString() )) ??
                 []);
-            print('productStockList____${productStockList}');
+             debugPrint('productStockList____${productStockList}');
             await preferencesHelper.setCartCount(
                 count: temp.isEmpty
                     ? preferencesHelper.getCartCount()

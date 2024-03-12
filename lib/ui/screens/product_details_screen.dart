@@ -1164,7 +1164,7 @@ class _ProductDetailsScreenWidgetState
         builder: (context, state) {
           quantity =
               (state.quantity == 0 ? missingQuantity : state.quantity) ?? 0;
-          print('value_____$groupValue');
+           debugPrint('value_____$groupValue');
           return Container(
 
             height: value == 4 ? 165 : 60,

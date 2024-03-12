@@ -39,7 +39,7 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
           emit(state.copyWith(
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
-          print('state.search___${state.search}');
+           debugPrint('state.search___${state.search}');
           final res = await DioClient(event.context).post(
               AppUrls.getCompaniesUrl,
               data: CompanyReqModel(
