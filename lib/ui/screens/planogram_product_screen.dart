@@ -212,7 +212,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                 horizontal: AppConstants.padding_5),
                             itemBuilder: (context, index) => DelayedWidget(
                               child: CommonProductListWidget(
-                                lowStock: '',
+                                lowStock: state.planogramProductList[index].lowStock.toString(),
                                 isGuestUser: state.isGuestUser,
                                   numberOfUnits: '0',
                                   productStock: state.planogramProductList[index].productStock.toString(),
@@ -748,7 +748,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   ?.text ??
                                   '',
                               productPrice: state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .totalPrice *
                                   state

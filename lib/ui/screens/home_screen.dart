@@ -671,7 +671,6 @@ class HomeScreenWidget extends StatelessWidget {
                                   lowStock: state.searchList[index].lowStock.toString(),
                                     numberOfUnits:state.searchList[index].numberOfUnits,
                                     priceOfBox: state.searchList[index].priceOfBox,
-                                    pricePerUnit: state.searchList[index].priceParUnit,
                                     productStock : state.searchList[index].productStock.toString(),
                                     context: context,
                                     searchName: state.searchList[index].name,
@@ -1421,7 +1420,6 @@ class HomeScreenWidget extends StatelessWidget {
     bool? isLastItem, required String productStock,
     required int numberOfUnits,
     required double priceOfBox,
-    required double pricePerUnit,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,

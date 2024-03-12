@@ -301,6 +301,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                       0.0,
                                   onButtonTap: () {
                                     showProductDetails(
+                                      productListIndex: 1,
                                       context: context,
                                       productId: state
                                           .previousOrderProductsList[index]
@@ -698,11 +699,14 @@ class ReorderScreenWidget extends StatelessWidget {
   }
   void showProductDetails({
     required BuildContext context, required String productId,
-    bool? isBarcode , String productStock = '0'
+    bool? isBarcode , String productStock = '0',
+    required int productListIndex
+
   }) async {
     context.read<ReorderBloc>().add(ReorderEvent.getProductDetailsEvent(
         context: context, productId: productId,
-        isBarcode: isBarcode ?? false
+        isBarcode: isBarcode ?? false,
+      productListIndex: productListIndex
     ));
     showModalBottomSheet(
       context: context,
@@ -782,8 +786,8 @@ class ReorderScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:state.productDetails.first.qrcode ?? '' ,
-
                               addToOrderTap: () {
                                 context.read<ReorderBloc>().add(
                                     ReorderEvent.addToCartProductEvent(
@@ -872,11 +876,11 @@ class ReorderScreenWidget extends StatelessWidget {
                                   ?.text ??
                                   '',
                               productPrice: state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .totalPrice *
                                   state
-                                      .productStockList[
+                                      .productStockList[state.productListIndex][
                                   state.productStockUpdateIndex]
                                       .quantity *
                                   (state.productDetails.first
@@ -889,7 +893,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock: (state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty
@@ -897,7 +901,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                   : true,
                               scrollController: scrollController,
                               productQuantity:  state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .quantity,
                               onQuantityChanged: (quantity) {
@@ -913,7 +917,7 @@ class ReorderScreenWidget extends StatelessWidget {
                               },
                               onQuantityDecreaseTap: () {
                                 if(state
-                                    .productStockList[
+                                    .productStockList[state.productListIndex][
                                 state.productStockUpdateIndex]
                                     .quantity > 1){
                                   context.read<ReorderBloc>().add(
@@ -967,6 +971,7 @@ class ReorderScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,
                 productImage:relatedProductList[i].mainImage,
@@ -976,6 +981,7 @@ class ReorderScreenWidget extends StatelessWidget {
                 onButtonTap: (){
                   Navigator.pop(prevContext);
                   showProductDetails(
+                    productListIndex: 2,
                       context: context,
                       productId:
                           relatedProductList[i].id,
@@ -1515,8 +1521,8 @@ class ReorderScreenWidget extends StatelessWidget {
             },
             buttonTitle: "${AppLocalizations.of(context)!.ok}"));
   }
-
   Widget _buildSearchItem({
+    required String lowStock,
     required BuildContext context,
     required String searchName,
     required String searchImage,
@@ -1528,6 +1534,7 @@ class ReorderScreenWidget extends StatelessWidget {
     bool? isLastItem, required String productStock,
     required int numberOfUnits,
     required double priceOfBox,
+
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1582,7 +1589,7 @@ class ReorderScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != '0' ? 80 : 90,
+            height: (productStock) != '0' || lowStock.isEmpty ? 80 : 90,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1596,9 +1603,6 @@ class ReorderScreenWidget extends StatelessWidget {
                 left: AppConstants.padding_20,
                 right: AppConstants.padding_20,
                 bottom: AppConstants.padding_5),
-            // padding: EdgeInsets.symmetric(
-            //     horizontal: AppConstants.padding_20,
-            //     vertical: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1606,7 +1610,7 @@ class ReorderScreenWidget extends StatelessWidget {
                 Container(
                   height: 60,
                   width: 50,
-                  child: searchImage.isNotEmpty ? Image.network(
+                  child: Image.network(
                     '${AppUrls.baseFileUrl}$searchImage',
                     fit: BoxFit.scaleDown,
                     height: 60,
@@ -1619,16 +1623,11 @@ class ReorderScreenWidget extends StatelessWidget {
                             height: 60,
                             width: 50,
                             child: CupertinoActivityIndicator())
-                        /*CommonShimmerWidget(
-                            child: Container(
-                              width: 40,
-                              height: 35,
-                              color: AppColors.whiteColor,
-                            ))*/
                         ;
                       }
                     },
                     errorBuilder: (context, error, stackTrace) {
+                      debugPrint('home error 1_____${error}');
                       return searchType == SearchTypes.subCategory
                           ? Image.asset(AppImagePath.imageNotAvailable5,
                           height: 60, width: 50, fit: BoxFit.cover)
@@ -1639,8 +1638,7 @@ class ReorderScreenWidget extends StatelessWidget {
                         height: 50,
                       );
                     },
-                  ) : Image.asset(AppImagePath.imageNotAvailable5,
-                      height: 60, width: 50, fit: BoxFit.cover),
+                  ),
                 ),
                 10.width,
                 Column(
@@ -1648,7 +1646,7 @@ class ReorderScreenWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: 200,
+                      width: getScreenWidth(context) * 0.45,
                       child: Text(
                         searchName,
                         style: AppStyles.rkRegularTextStyle(
@@ -1669,13 +1667,18 @@ class ReorderScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              (productStock) != '0' ? 0.width : Text(
+                              (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.redColor,
                                     fontWeight: FontWeight.w400),
+                              ) : Text(lowStock,
+                                  style: AppStyles.rkBoldTextStyle(
+                                      size: AppConstants.font_12,
+                                      color: AppColors.orangeColor,
+                                      fontWeight: FontWeight.w400)
                               ),
                               numberOfUnits != 0 ? Text(
                                 '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
@@ -1697,7 +1700,7 @@ class ReorderScreenWidget extends StatelessWidget {
                         priceOfBox != 0.0 ? Container(
                           width: 60,
                           child: Text(
-                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toStringAsFixed(2)}',
+                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
                             style: AppStyles.rkBoldTextStyle(
                                 size: AppConstants.font_12,
                                 color: AppColors.blueColor,

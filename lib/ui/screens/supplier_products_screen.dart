@@ -1239,31 +1239,19 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    (productStock) != '0' && lowStock.isEmpty
-                                        ? 0.width
-                                        : productStock == '0' &&
-                                                lowStock.isNotEmpty
-                                            ? Text(
-                                                AppLocalizations.of(context)!
-                                                    .out_of_stock1,
-                                                style:
-                                                    AppStyles.rkBoldTextStyle(
-                                                        size: AppConstants
-                                                            .font_12,
-                                                        color:
-                                                            AppColors.redColor,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                              )
-                                            : Text(lowStock,
-                                                style:
-                                                    AppStyles.rkBoldTextStyle(
-                                                        size: AppConstants
-                                                            .font_12,
-                                                        color: AppColors
-                                                            .orangeColor,
-                                                        fontWeight:
-                                                            FontWeight.w400)),
+                                    (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
+                                      AppLocalizations.of(context)!
+                                          .out_of_stock1,
+                                      style: AppStyles.rkBoldTextStyle(
+                                          size: AppConstants.font_12,
+                                          color: AppColors.redColor,
+                                          fontWeight: FontWeight.w400),
+                                    ) : Text(lowStock,
+                                        style: AppStyles.rkBoldTextStyle(
+                                            size: AppConstants.font_12,
+                                            color: AppColors.orangeColor,
+                                            fontWeight: FontWeight.w400)
+                                    ),
                                     !isGuestUser
                                         ? numberOfUnits != 0
                                             ? Text(

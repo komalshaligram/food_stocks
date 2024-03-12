@@ -817,6 +817,7 @@ class PlanogramProductBloc
                         supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
+                  lowStock: supplier.lowStock.toString()
                 ))
                 .toList() ??
                 []);
