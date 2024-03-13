@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -809,35 +808,43 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } on ServerException {} catch (e) {}
         }
         else if (event is _GetMessageListEvent) {
+          emit(state.copyWith(messageList: []));
           try {
-            emit(state.copyWith(isMessageShimmering: true));
             final res = await DioClient(event.context).post(
                 AppUrls.getNotificationMessageUrl,
-                data: GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson(),
-            );
+                data: GetMessagesReqModel(
+                    pageNum: 1,
+                    pageLimit: 2).toJson(),
+              );
 
             GetMessagesResModel response = GetMessagesResModel.fromJson(res);
+            debugPrint(
+                'getMessage   url  = ${DioClient.baseUrl}${AppUrls.getNotificationMessageUrl}');
+
+            debugPrint('getMessage response  = ${response}');
             if (response.status == 200) {
-              List<MessageData> messageList = [];
-              if(messageList.isNotEmpty){
-                messageList.addAll(response.data
-                    ?.map((message) =>
-                    MessageData(
-                      id: message.id,
-                      isRead: message.isRead,
-                      message: Message(
-                          id: message.message?.id ?? '',
-                          title: message.message?.title ?? '',
-                          summary: message.message?.summary ?? '',
-                          body: message.message?.body ?? '',
-                          messageImage:
-                          message.message?.messageImage ?? ''),
-                      createdAt: message.createdAt,
-                      updatedAt: message.updatedAt,
-                    ))
-                    .toList() ??
-                    []);
-              }
+              List<MessageData> messageList =
+              state.messageList.toList(growable: true);
+              messageList.addAll(response.data
+                  ?.map((message) => MessageData(
+                id: message.id,
+                isRead: message.isRead,
+                message: Message(
+                    id: message.message?.id ?? '',
+                    title: message.message?.title ?? '',
+                    summary: message.message?.summary ?? '',
+                    body: message.message?.body ?? '',
+                    messageImage: message.message?.messageImage ?? '',
+                    subPage: message.message?.subPage?? '',
+                    mainPage: message.message?.mainPage ?? '',
+                    navigationId: message.message?.navigationId ?? ''
+                ),
+                createdAt: message.createdAt,
+                updatedAt: message.updatedAt,
+              ))
+                  .toList() ??
+                  []);
+
               debugPrint('new message list len = ${messageList.length}');
               emit(state.copyWith(
                   messageList: messageList, isMessageShimmering: false));

@@ -49,6 +49,8 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         else if(event.storeScreen != ''){
           emit(state.copyWith(index: 1));
         }
+
+
       }
     });
   }

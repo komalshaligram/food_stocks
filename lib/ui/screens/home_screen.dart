@@ -78,6 +78,7 @@ class HomeScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
+          print('state.messageList____${state.messageList.length}');
           return Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,
@@ -539,7 +540,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         }),
                                     10.height,
                                     ListView.builder(
-                                      itemCount: state.messageList.length,
+                                      itemCount: 2,
                                       physics: NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemBuilder: (context, index) =>

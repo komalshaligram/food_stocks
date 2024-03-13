@@ -272,9 +272,14 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         showProductDetails(
                                                           context: context,
                                                           productId: state
-                                                                  .productList[
-                                                                      index]
-                                                                  .id ??
+                                                              .searchType ==
+                                                              SearchTypes
+                                                                  .product
+                                                                  .toString()
+                                                              ? state.productList[index].id ??
+                                                              ''
+                                                              : state.productList[index]
+                                                              .productId ??
                                                               '',
                                                           productStock: state
                                                               .productList[
