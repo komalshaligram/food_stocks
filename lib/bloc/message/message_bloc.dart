@@ -76,7 +76,11 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
                             title: message.message?.title ?? '',
                             summary: message.message?.summary ?? '',
                             body: message.message?.body ?? '',
-                            messageImage: message.message?.messageImage ?? ''
+                            messageImage: message.message?.messageImage ?? '',
+                            subPage: message.message?.subPage?? '',
+                            mainPage: message.message?.mainPage ?? '',
+                            navigationId: message.message?.navigationId ?? ''
+
                           ),
                           createdAt: message.createdAt,
                           updatedAt: message.updatedAt,
