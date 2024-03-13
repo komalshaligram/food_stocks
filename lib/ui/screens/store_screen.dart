@@ -585,7 +585,10 @@ class StoreScreenWidget extends StatelessWidget {
                                               itemBuilder: (context,
                                                   index) =>
                                                   CommonProductItemWidget(
-                                                    lowStock: '',
+                                                    lowStock: state
+                                                        .recommendedProductsList[
+                                                    index]
+                                                        .lowStock.toString(),
                                                     productStock: state
                                                         .recommendedProductsList[
                                                     index]
@@ -681,7 +684,10 @@ class StoreScreenWidget extends StatelessWidget {
                                               itemBuilder: (context,
                                                   index) =>
                                                   CommonProductItemWidget(
-                                                    lowStock: '',
+                                                    lowStock: state
+                                                        .previousOrderProductsList[
+                                                    index]
+                                                        .lowStock.toString(),
                                                     height: 160,
                                                     width: 140,
                                                     productStock: state

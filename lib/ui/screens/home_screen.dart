@@ -439,7 +439,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                   AppConstants.padding_5),
                                               itemBuilder: (context, index) =>
                                                   CommonProductItemWidget(
-                                                    lowStock: '',
+                                                    lowStock: state
+                                                        .recommendedProductsList[
+                                                    index]
+                                                        .lowStock.toString(),
                                                       productStock: state
                                                           .recommendedProductsList[
                                                       index]

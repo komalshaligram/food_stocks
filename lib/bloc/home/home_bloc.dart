@@ -808,7 +808,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } on ServerException {} catch (e) {}
         }
         else if (event is _GetMessageListEvent) {
-          emit(state.copyWith(messageList: []));
+
           try {
             final res = await DioClient(event.context).post(
                 AppUrls.getNotificationMessageUrl,
