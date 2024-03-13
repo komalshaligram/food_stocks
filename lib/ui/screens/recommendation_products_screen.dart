@@ -228,7 +228,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                           .productGridAspectRatio: AppConstants
                                           .productGridAspectRatio1),
                                   itemBuilder: (context, index) => CommonProductItemWidget(
-                                    lowStock:  '',
+                                    lowStock:  state.recommendationProductsList[index].lowStock.toString(),
                                       imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
                                       imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                       productStock: state
@@ -279,7 +279,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: AppConstants.padding_5),
                                 itemBuilder: (context, index) => CommonProductListWidget(
-                                  lowStock: '',
+                                  lowStock: state.recommendationProductsList[index].lowStock.toString(),
                                     productStock: state.recommendationProductsList[index].productStock.toString(),
                                     productImage: state.recommendationProductsList[index]
                                         .mainImage ??

@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -229,7 +229,10 @@ class ReorderScreenWidget extends StatelessWidget {
                                                           .productGridAspectRatio1),
                                       itemBuilder: (context, index) => DelayedWidget(
                                             child: CommonProductItemWidget(
-                                              lowStock: '',
+                                              lowStock: state
+                                                  .previousOrderProductsList[
+                                              index]
+                                                  .lowStock.toString(),
                                               imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
                                               imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                               productStock: state
@@ -284,7 +287,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                 horizontal: AppConstants.padding_5),
                             itemBuilder: (context, index) => DelayedWidget(
                               child: CommonProductListWidget(
-                                  lowStock: '',
+                                  lowStock: state.previousOrderProductsList[index].lowStock.toString(),
                                   productStock: state.previousOrderProductsList[index].productStock.toString(),
                                   productImage: state.previousOrderProductsList[index]
                                       .mainImage ??
