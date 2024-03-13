@@ -317,7 +317,7 @@ class _ProductDetailsScreenWidgetState
                                           children: <TextSpan>[
                                             TextSpan(
                                                 text:
-                                                '${': '}${widget.orderNumber ?? '0'}',
+                                                '${': '}${widget.orderNumber}',
                                                 style: AppStyles
                                                     .rkRegularTextStyle(
                                                     color: AppColors

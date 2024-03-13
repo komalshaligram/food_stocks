@@ -478,30 +478,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
               );
-              // productStockList[productStockList.indexOf(productStockList.last)][0] = productStockList[
-              // productStockList.indexOf(productStockList.last)][0]
-              //     .copyWith(
-              //     quantity: _productQuantity,
-              //     productId: response.product?.first.id ?? '' ,
-              //     stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
-              // );
+
               emit(state.copyWith(productStockList: productStockList));
-              // debugPrint('new index = ${state.productStockList.last}');
-              // productStockUpdateIndex = 0;
-              // planoGramIndex = productStockList.indexOf(productStockList.last);
-              // /*productStockList[planoGramIndex].indexOf(productStockList[planoGramIndex].last);*/
-              // debugPrint(
-              //     'new index = ${planoGramIndex},$productStockUpdateIndex');
+
             }
 
-            
-            // productStockList[planoGramIndex][productStockUpdateIndex] =
-            //     productStockList[planoGramIndex][productStockUpdateIndex]
-            //         .copyWith(stock: response.product?.first.numberOfUnit ?? 0);
-            // debugPrint(
-            //     'stock ${productStockList[planoGramIndex][productStockUpdateIndex].stock}');
-            // debugPrint(
-            //     'supplier list stock = ${response.product?.first.supplierSales?.map((e) => e.productStock)}');
             List<ProductSupplierModel> supplierList = [];
             // debugPrint(
             //     'supplier id = ${state.productStockList[planoGramIndex][productStockUpdateIndex].productSupplierIds}');
@@ -1112,6 +1093,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 name: supplier.productName ?? '',
                 searchType: SearchTypes.product,
                 productStock:  supplier.productStock.toString(),
+                lowStock: supplier.lowStock.toString(),
                 numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
                 priceOfBox: double.parse(supplier.productPrice.toString()),
                 image: supplier.mainImage ?? '')).toList() ??
@@ -1224,18 +1206,18 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               pageNum: state.subProductPageNum + 1,
               pageLimit: AppConstants.orderPageLimit,
             );
-          debugPrint('getAllProductUrl_____${AppUrls.getsubCategoryProductsUrl}');
-          debugPrint('getAllProductUrl req_____${getSubCategoriesProductReqModel}');
+          debugPrint('getSubCategoriesProduct_____${AppUrls.getsubCategoryProductsUrl}');
+          debugPrint('getSubCategoriesProduct req_____${getSubCategoriesProductReqModel}');
           final  res = await DioClient(event.context)
                 .post('${AppUrls.getsubCategoryProductsUrl}',
                 data: getSubCategoriesProductReqModel
             );
 
 
-           debugPrint('getAllProduct_____$res');
+          print('getAllProduct_____$res');
           GetPlanogramProductModel response = GetPlanogramProductModel.fromJson(res);
-          debugPrint('getAllProduct response_____${response}');
-          debugPrint('getAllProduct response count_____${response.metaData?.totalFilteredCount}');
+          debugPrint('getSubCategoriesProduct response_____${response}');
+          debugPrint('getSubCategoriesProduct response count_____${response.metaData?.totalFilteredCount}');
 
           if(response.status == 200){
             List<List<ProductStockModel>> productStockList =

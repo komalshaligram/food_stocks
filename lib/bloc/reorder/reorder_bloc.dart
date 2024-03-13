@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -131,7 +130,11 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         emit(state.copyWith(
             pageNum: 0,
             previousOrderProductsList: [],
-            productStockList: [],
+            productStockList: [
+              state.productStockList[0],
+              [],
+              [],
+            ],
             isBottomOfProducts: false));
         add(ReorderEvent.getPreviousOrderProductsEvent(context: event.context));
       }
@@ -879,6 +882,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                         supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
                   priceOfBox: double.parse(supplier.productPrice.toString()),
+                    lowStock: supplier.lowStock.toString()
                 ))
                 .toList() ??
                 []);

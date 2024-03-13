@@ -188,7 +188,7 @@ class SupplierProductsBloc
             productStockList.addAll(response.data?.map((product) =>
                 ProductStockModel(
                     productId: product.productId ?? '',
-                    stock: (product.productStock.toString() ))) ??
+                    stock: (product.productStock.toString()))) ??
                 []);
             debugPrint('new product list len = ${productList.length}');
             debugPrint(
@@ -993,6 +993,7 @@ class SupplierProductsBloc
                   productStock: supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
+                  lowStock: supplier.lowStock.toString()
                 ))
                 .toList() ??
                 []);

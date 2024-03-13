@@ -808,7 +808,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } on ServerException {} catch (e) {}
         }
         else if (event is _GetMessageListEvent) {
-          emit(state.copyWith(messageList: []));
+
           try {
             final res = await DioClient(event.context).post(
                 AppUrls.getNotificationMessageUrl,
@@ -1093,7 +1093,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     name: sale.productName ?? '',
                     searchType: SearchTypes.sale,
                     image: sale.mainImage ?? '',
-                    numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
+                    numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                   ))
                   .toList() ??
                   []);
@@ -1108,6 +1108,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       productStock: supplier.productStock.toString(),
                     numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                     priceOfBox: double.parse(supplier.productPrice.toString()),
+                    lowStock: supplier.lowStock.toString()
+
                   ))
                   .toList() ??
                   []);
@@ -1199,7 +1201,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
          // PackageInfo packageInfo = await PackageInfo.fromPlatform();
           _checker.checkUpdate().then((value) {
             debugPrint('update available');
-             print(value.canUpdate); //return true if update is available
+            print(value.canUpdate); //return true if update is available
             debugPrint(value.currentVersion); //return current app version
             debugPrint(value.newVersion); //return the new app version
             debugPrint(value.appURL); //return the app url
@@ -1213,8 +1215,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
           });
         }
-
-
 
         else if(event is _RelatedProductsEvent){
           debugPrint('productId____${event.productId}');

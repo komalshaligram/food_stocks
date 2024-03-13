@@ -172,6 +172,10 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                             .productGridAspectRatio1),
                                                 itemBuilder: (context, index) {
                                                   return CommonProductItemWidget(
+                                                      lowStock: state
+                                                          .productList[index]
+                                                          .lowStock
+                                                          .toString(),
                                                       imageHeight:
                                                           getScreenHeight(context) >= 1000
                                                               ? getScreenHeight(context) *
@@ -239,64 +243,61 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                     horizontal:
                                                         AppConstants.padding_5),
                                                 itemBuilder: (context, index) =>
-                                                    DelayedWidget(
-                                                  child:
-                                                      CommonProductListWidget(
-                                                    isGuestUser:
-                                                        state.isGuestUser,
-                                                    numberOfUnits: state
+                                                    CommonProductListWidget(
+                                                  lowStock: state
+                                                      .productList[index]
+                                                      .lowStock
+                                                      .toString(),
+                                                  isGuestUser:
+                                                      state.isGuestUser,
+                                                  numberOfUnits: state
+                                                          .productList[index]
+                                                          .numberOfUnit ??
+                                                      '0',
+                                                  productStock: state
+                                                      .productList[index]
+                                                      .productStock
+                                                      .toString(),
+                                                  productImage: state
+                                                          .productList[index]
+                                                          .mainImage ??
+                                                      '',
+                                                  productName: state
+                                                          .productList[index]
+                                                          .productName ??
+                                                      '',
+                                                  price: double.parse(state
+                                                      .productList[index]
+                                                      .productPrice
+                                                      .toString()),
+                                                  onButtonTap: () {
+                                                    if (!state.isGuestUser) {
+                                                      showProductDetails(
+                                                        context: context,
+                                                        productId: state
+                                                            .searchType ==
+                                                            SearchTypes
+                                                                .product
+                                                                .toString()
+                                                            ? state.productList[index].id ??
+                                                            ''
+                                                            : state.productList[index]
+                                                            .productId ??
+                                                            '',
+                                                        productStock: state
                                                             .productList[index]
-                                                            .numberOfUnit ??
-                                                        '0',
-                                                    productStock: state
-                                                            .productList[index]
-                                                            .productStock.toString() ,
-                                                    productImage: state
-                                                            .productList[index]
-                                                            .mainImage ??
-                                                        '',
-                                                    productName: state
-                                                            .productList[index]
-                                                            .productName ??
-                                                        '',
-                                                    /*totalSaleCount: state
-                                            .productList[index]
-                                            .totalSale ??
-                                            0,*/
-                                                    price: double.parse(state
-                                                        .productList[index]
-                                                        .productPrice
-                                                        .toString()),
-                                                    onButtonTap: () {
-                                                      if (!state.isGuestUser) {
-                                                        showProductDetails(
-                                                          context: context,
-                                                          productId: state
-                                                              .searchType ==
-                                                              SearchTypes
-                                                                  .product
-                                                                  .toString()
-                                                              ? state.productList[index].id ??
-                                                              ''
-                                                              : state.productList[index]
-                                                              .productId ??
-                                                              '',
-                                                          productStock: state
-                                                              .productList[
-                                                                  index]
-                                                              .productStock
-                                                              .toString(),
-                                                        );
-                                                      } else {
-                                                        Navigator.pushNamed(
-                                                            context,
-                                                            RouteDefine
-                                                                .connectScreen
-                                                                .name);
-                                                      }
-                                                    },
-                                                    totalSaleCount: 0,
-                                                  ),
+                                                            .productStock
+                                                            .toString(),
+                                                      );
+                                                    } else {
+                                                      Navigator.pushNamed(
+                                                          context,
+                                                          RouteDefine
+                                                              .connectScreen
+                                                              .name);
+                                                    }
+                                                  },
+                                                  totalSaleCount: 0,
                                                 ),
                                               ),
                               ],
@@ -363,12 +364,14 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             shrinkWrap: true,
                             itemBuilder: (listViewContext, index) {
                               return _buildSearchItem(
+                                  lowStock: state.searchList[index].lowStock
+                                      .toString(),
                                   isGuestUser: state.isGuestUser,
                                   numberOfUnits:
                                       state.searchList[index].numberOfUnits,
                                   priceOfBox:
                                       state.searchList[index].priceOfBox,
-                                  productStock: state.searchList[index].productStock,
+                                  productStock: state.searchList[index].productStock.toString(),
                                   context: context,
                                   searchName: state.searchList[index].name,
                                   searchImage: state.searchList[index].image,
@@ -624,38 +627,44 @@ class SupplierProductsScreenWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
-              child: productImage.isNotEmpty ? Image.network(
-                "${AppUrls.baseFileUrl}$productImage",
-                height: 70,
-                fit: BoxFit.fitHeight,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress?.cumulativeBytesLoaded !=
-                      loadingProgress?.expectedTotalBytes) {
-                    return CommonShimmerWidget(
-                      child: Container(
-                        height: 70,
-                        width: 70,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(AppConstants.radius_10)),
-                        ),
-                      ),
-                    );
-                  }
-                  return child;
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  // debugPrint('sale list image error : $error');
-                  return Container(
-                    child: Image.asset(AppImagePath.imageNotAvailable5,
-                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                  );
-                },
-              ) : Container(
-                child: Image.asset(AppImagePath.imageNotAvailable5,
-                    height: 70, width: double.maxFinite, fit: BoxFit.cover),
-              ),
+              child: productImage.isNotEmpty
+                  ? Image.network(
+                      "${AppUrls.baseFileUrl}$productImage",
+                      height: 70,
+                      fit: BoxFit.fitHeight,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress?.cumulativeBytesLoaded !=
+                            loadingProgress?.expectedTotalBytes) {
+                          return CommonShimmerWidget(
+                            child: Container(
+                              height: 70,
+                              width: 70,
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(AppConstants.radius_10)),
+                              ),
+                            ),
+                          );
+                        }
+                        return child;
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        // debugPrint('sale list image error : $error');
+                        return Container(
+                          child: Image.asset(AppImagePath.imageNotAvailable5,
+                              height: 70,
+                              width: double.maxFinite,
+                              fit: BoxFit.cover),
+                        );
+                      },
+                    )
+                  : Container(
+                      child: Image.asset(AppImagePath.imageNotAvailable5,
+                          height: 70,
+                          width: double.maxFinite,
+                          fit: BoxFit.cover),
+                    ),
             ),
             5.height,
             Text(
@@ -774,6 +783,10 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       CommonProductDetailsWidget(
+                                        lowStock: state.productDetails.first
+                                                .supplierSales?.first.lowStock
+                                                .toString() ??
+                                            '',
                                         qrCode:
                                             state.productDetails.first.qrcode ??
                                                 '',
@@ -994,6 +1007,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2, i) {
               return CommonProductItemWidget(
+                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:
                     relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,
@@ -1034,6 +1048,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
   }
 
   Widget _buildSearchItem({
+    required String lowStock,
     required BuildContext context,
     required String searchName,
     required String searchImage,
@@ -1101,15 +1116,15 @@ class SupplierProductsScreenWidget extends StatelessWidget {
           onTap: onTap,
           child: Container(
             height: !isGuestUser
-                ? (productStock) != '0'
-                    ? 100
+                ? lowStock.isNotEmpty || (productStock) != '0'
+                    ? 120
                     : searchType == SearchTypes.category ||
                             searchType == SearchTypes.subCategory ||
                             searchType == SearchTypes.company ||
                             searchType == SearchTypes.supplier
                         ? 80
                         : 110
-                : 70,
+                : 80,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1216,16 +1231,19 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    (productStock) != '0'
-                                        ? 0.width
-                                        : Text(
-                                            AppLocalizations.of(context)!
-                                                .out_of_stock1,
-                                            style: AppStyles.rkBoldTextStyle(
-                                                size: AppConstants.font_12,
-                                                color: AppColors.redColor,
-                                                fontWeight: FontWeight.w400),
-                                          ),
+                                    (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
+                                      AppLocalizations.of(context)!
+                                          .out_of_stock1,
+                                      style: AppStyles.rkBoldTextStyle(
+                                          size: AppConstants.font_12,
+                                          color: AppColors.redColor,
+                                          fontWeight: FontWeight.w400),
+                                    ) : Text(lowStock,
+                                        style: AppStyles.rkBoldTextStyle(
+                                            size: AppConstants.font_12,
+                                            color: AppColors.orangeColor,
+                                            fontWeight: FontWeight.w400)
+                                    ),
                                     !isGuestUser
                                         ? numberOfUnits != 0
                                             ? Text(

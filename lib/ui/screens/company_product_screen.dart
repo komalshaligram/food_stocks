@@ -233,6 +233,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                           ),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
                                         isGuestUser: state.isGuestUser,
+                                          lowStock: state.productList[index].lowStock.toString(),
                                       height:   160,
                                       width:  140,
                                         imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
@@ -260,14 +261,15 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                 productStock: state.productList[index].productStock.toString(),
                                                   productListIndex: 1
 
-                                              );
-                                            }
-                                            else{
-                                              Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                            }
+                                                );
+                                              }
+                                              else{
+                                                Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                              }
 
-                                          })
-                                      )
+                                                }),
+                                          )
+
                               :ListView.builder(
                                       itemCount: state.productList.length,
                                       shrinkWrap: true,
@@ -276,6 +278,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                           horizontal: AppConstants.padding_5),
                                       itemBuilder: (context, index) => CommonProductListWidget(
                                         isGuestUser: state.isGuestUser,
+                                          lowStock: state.productList[index].lowStock.toString(),
                                         numberOfUnits: state.productList[index].numberOfUnit??'0',
                                           productStock: state.productList[index].productStock.toString() ?? '0',
                                           productImage: state.productList[index]
@@ -303,16 +306,16 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                 productStock: state.productList[index].productStock.toString() ?? '0',
                                                   productListIndex: 1
 
-                                              );
-                                            }
-                                            else{
-                                              Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                            }
+                                                );
+                                              }
+                                              else{
+                                                Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                              }
 
-
-                                          }),
+                                              }),
+                                  ),
                                 ),
-                      ),),
+                      ),
                     ],
                   ),
                       CommonSearchWidget(
@@ -375,6 +378,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                           shrinkWrap: true,
                           itemBuilder: (listViewContext, index) {
                             return _buildSearchItem(
+                                lowStock: state.searchList[index].lowStock.toString(),
                               isGuestUser: state.isGuestUser,
                                 numberOfUnits:state.searchList[index].numberOfUnits,
                                 priceOfBox: state.searchList[index].priceOfBox,
@@ -615,101 +619,99 @@ class CompanyProductsScreenWidget extends StatelessWidget {
       required int totalSale,
       required void Function() onPressed,
       required bool isRTL}) {
-    return DelayedWidget(
-      child: Container(
-        // height: 150,
-        // width: 130,
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15),
-                blurRadius: AppConstants.blur_10),
-          ],
-        ),
-        clipBehavior: Clip.hardEdge,
-        margin: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_10,
-            horizontal: AppConstants.padding_5),
-        padding: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_5,
-            horizontal: AppConstants.padding_10),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: Image.network(
-                "${AppUrls.baseFileUrl}$productImage",
-                height: 70,
-                fit: BoxFit.fitHeight,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress?.cumulativeBytesLoaded !=
-                      loadingProgress?.expectedTotalBytes) {
-                    return CommonShimmerWidget(
-                      child: Container(
-                        height: 70,
-                        width: 70,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(AppConstants.radius_10)),
-                        ),
+    return Container(
+      // height: 150,
+      // width: 130,
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius:
+            BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.shadowColor.withOpacity(0.15),
+              blurRadius: AppConstants.blur_10),
+        ],
+      ),
+      clipBehavior: Clip.hardEdge,
+      margin: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_10,
+          horizontal: AppConstants.padding_5),
+      padding: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_5,
+          horizontal: AppConstants.padding_10),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Image.network(
+              "${AppUrls.baseFileUrl}$productImage",
+              height: 70,
+              fit: BoxFit.fitHeight,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress?.cumulativeBytesLoaded !=
+                    loadingProgress?.expectedTotalBytes) {
+                  return CommonShimmerWidget(
+                    child: Container(
+                      height: 70,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.radius_10)),
                       ),
-                    );
-                  }
-                  return child;
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  // debugPrint('sale list image error : $error');
-                  return Container(
-                    child: Image.asset(AppImagePath.imageNotAvailable5,
-                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                  );
-                },
-              ),
-            ),
-            5.height,
-            Text(
-              productName,
-              style: AppStyles.rkBoldTextStyle(
-                  size: AppConstants.font_12,
-                  color: AppColors.blackColor,
-                  fontWeight: FontWeight.w600),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            5.height,
-            Expanded(
-              child: totalSale == 0
-                  ? 0.width
-                  : Text(
-                "$totalSale ${AppLocalizations.of(context)!.discount}",
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_10,
-                          color: AppColors.saleRedColor,
-                          fontWeight: FontWeight.w600),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
+                  );
+                }
+                return child;
+              },
+              errorBuilder: (context, error, stackTrace) {
+                // debugPrint('sale list image error : $error');
+                return Container(
+                  child: Image.asset(AppImagePath.imageNotAvailable5,
+                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                );
+              },
             ),
-            5.height,
-            Center(
-              child: CommonProductButtonWidget(
-                title:
-                    "${AppLocalizations
-                        .of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}",
-                onPressed: onPressed,
-                textColor: AppColors.whiteColor,
-                bgColor: AppColors.mainColor,
-                borderRadius: AppConstants.radius_3,
-                textSize: AppConstants.font_12,
-              ),
-            )
-          ],
-        ),
+          ),
+          5.height,
+          Text(
+            productName,
+            style: AppStyles.rkBoldTextStyle(
+                size: AppConstants.font_12,
+                color: AppColors.blackColor,
+                fontWeight: FontWeight.w600),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          5.height,
+          Expanded(
+            child: totalSale == 0
+                ? 0.width
+                : Text(
+              "$totalSale ${AppLocalizations.of(context)!.discount}",
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_10,
+                        color: AppColors.saleRedColor,
+                        fontWeight: FontWeight.w600),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+          ),
+          5.height,
+          Center(
+            child: CommonProductButtonWidget(
+              title:
+                  "${AppLocalizations
+                      .of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}",
+              onPressed: onPressed,
+              textColor: AppColors.whiteColor,
+              bgColor: AppColors.mainColor,
+              borderRadius: AppConstants.radius_3,
+              textSize: AppConstants.font_12,
+            ),
+          )
+        ],
       ),
     );
   }
@@ -721,6 +723,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
      String productStock  = '0',
      bool isRelated = false,
      int productListIndex = -1,
+
    }) async {
      context.read<CompanyProductsBloc>().add(CompanyProductsEvent.getProductDetailsEvent(
          context: context,
@@ -739,6 +742,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
        useSafeArea: true,
        enableDrag: true,
        builder: (context1) {
+
          return DraggableScrollableSheet(
            expand: true,
            maxChildSize: 1 -
@@ -807,8 +811,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                          child: Column(
                            children: [
                              CommonProductDetailsWidget(
+                               lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                                qrCode:state.productDetails.first.qrcode ?? '' ,
-
                                addToOrderTap: () {
                                  context.read<CompanyProductsBloc>().add(
                                      CompanyProductsEvent.addToCartProductEvent(
@@ -988,6 +992,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
              shrinkWrap: true,
              itemBuilder: (context2,i){
                return CommonProductItemWidget(
+                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                  productStock:relatedProductList.elementAt(i).productStock.toString(),
                  width: AppConstants.relatedProductItemWidth,
                  productImage:relatedProductList[i].mainImage,
@@ -1024,7 +1029,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
             buttonTitle: '${AppLocalizations.of(context)!.ok}'));
   }
    Widget _buildSearchItem({
-
+     required String lowStock,
      required BuildContext context,
      required String searchName,
      required String searchImage,
@@ -1091,8 +1096,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
          InkWell(
            onTap: onTap,
            child: Container(
-             height: !isGuestUser ? (productStock) != '0' ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 70,
-
+             height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? 120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
              decoration: BoxDecoration(
                  color: AppColors.whiteColor,
                  border: Border(
@@ -1183,13 +1187,18 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                              mainAxisAlignment: MainAxisAlignment.start,
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
-                               (productStock) != '0' ? 0.width : Text(
+                               (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                  AppLocalizations.of(context)!
                                      .out_of_stock1,
                                  style: AppStyles.rkBoldTextStyle(
                                      size: AppConstants.font_12,
                                      color: AppColors.redColor,
                                      fontWeight: FontWeight.w400),
+                               ) : Text(lowStock,
+                                   style: AppStyles.rkBoldTextStyle(
+                                       size: AppConstants.font_12,
+                                       color: AppColors.orangeColor,
+                                       fontWeight: FontWeight.w400)
                                ),
                                !isGuestUser? numberOfUnits != 0 ? Text(
                                  '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
@@ -1231,200 +1240,5 @@ class CompanyProductsScreenWidget extends StatelessWidget {
        ],
      );
    }
-  /* Widget _buildSearchItem({
-     required bool isGuestUser,
-     required BuildContext context,
-     required String searchName,
-     required String searchImage,
-     required SearchTypes searchType,
-     required bool isShowSearchLabel,
-     required bool isMoreResults,
-     required void Function() onTap,
-     required void Function() onSeeAllTap,
-     bool? isLastItem, required int productStock,
-     required int numberOfUnits,
-     required double priceOfBox,
-   }) {
-     return Column(
-       mainAxisSize: MainAxisSize.min,
-       crossAxisAlignment: CrossAxisAlignment.start,
-       children: [
-         isShowSearchLabel
-             ? Padding(
-           padding: const EdgeInsets.only(
-               left: AppConstants.padding_20,
-               right: AppConstants.padding_20,
-               top: AppConstants.padding_15,
-               bottom: AppConstants.padding_5),
-           child: Row(
-             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-             crossAxisAlignment: CrossAxisAlignment.end,
-             children: [
-               Text(
-                 searchType == SearchTypes.category
-                     ? AppLocalizations.of(context)!.categories
-                     : searchType == SearchTypes.subCategory
-                     ? AppLocalizations.of(context)!.sub_categories
-                     : searchType == SearchTypes.company
-                     ? AppLocalizations.of(context)!.companies
-                     : searchType == SearchTypes.sale
-                     ? AppLocalizations.of(context)!.sales
-                     : searchType == SearchTypes.supplier
-                     ? AppLocalizations.of(context)!
-                     .suppliers
-                     : AppLocalizations.of(context)!
-                     .products,
-                 style: AppStyles.rkBoldTextStyle(
-                     size: AppConstants.smallFont,
-                     color: AppColors.blackColor,
-                     fontWeight: FontWeight.w500),
-               ),
 
-               isMoreResults
-                   ? GestureDetector(
-                 onTap: onSeeAllTap,
-                 child: Text(
-                   AppLocalizations.of(context)!.see_all,
-                   style: AppStyles.rkBoldTextStyle(
-                       size: AppConstants.font_14,
-                       color: AppColors.mainColor),
-                 ),
-               )
-                   : 0.width,
-             ],
-           ),
-         )
-             : 0.width,
-         InkWell(
-           onTap: onTap,
-           child: Container(
-             height: (productStock) != 0 ? 80 : 90,
-             decoration: BoxDecoration(
-                 color: AppColors.whiteColor,
-                 border: Border(
-                     bottom: (isLastItem ?? false)
-                         ? BorderSide.none
-                         : BorderSide(
-                         color: AppColors.borderColor.withOpacity(0.5),
-                         width: 1))),
-             padding: EdgeInsets.only(
-                 top: AppConstants.padding_5,
-                 left: AppConstants.padding_20,
-                 right: AppConstants.padding_20,
-                 bottom: AppConstants.padding_5),
-             // padding: EdgeInsets.symmetric(
-             //     horizontal: AppConstants.padding_20,
-             //     vertical: AppConstants.padding_5),
-             child: Row(
-               crossAxisAlignment: CrossAxisAlignment.start,
-               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               children: [
-                 Container(
-                   height: 60,
-                   width: 50,
-                   child: !isGuestUser ? Image.network(
-                     '${AppUrls.baseFileUrl}$searchImage',
-                     fit: BoxFit.scaleDown,
-                     height: 60,
-                     width: 50,
-                     loadingBuilder: (context, child, loadingProgress) {
-                       if (loadingProgress == null) {
-                         return child;
-                       } else {
-                         return Container(
-                             height: 60,
-                             width: 50,
-                             child: CupertinoActivityIndicator());
-                       }
-                     },
-                     errorBuilder: (context, error, stackTrace) {
-                       return searchType == SearchTypes.subCategory
-                           ? Image.asset(AppImagePath.imageNotAvailable5,
-                           height: 60, width: 50, fit: BoxFit.cover)
-                           : SvgPicture.asset(
-                         AppImagePath.splashLogo,
-                         fit: BoxFit.scaleDown,
-                         width: 60,
-                         height: 50,
-                       );
-                     },
-                   ) :Image.asset(AppImagePath.imageNotAvailable5,
-                       height: 60, width: 50, fit: BoxFit.cover),
-                 ),
-                 10.width,
-                 Column(
-                   mainAxisAlignment: MainAxisAlignment.start,
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: [
-                     Container(
-                       width: 200,
-                       child: Text(
-                         searchName,
-                         style: AppStyles.rkRegularTextStyle(
-                           size: AppConstants.font_12,
-                           color: AppColors.blackColor,
-                         ),
-                         maxLines: 1,
-                         overflow: TextOverflow.ellipsis,
-                       ),
-                     ),
-
-                     Row(
-                       //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children: [
-                         Container(
-                           width: 200,
-                           child: Column(
-                             mainAxisAlignment: MainAxisAlignment.start,
-                             crossAxisAlignment: CrossAxisAlignment.start,
-                             children: [
-                               (productStock) != 0 ? 0.width : Text(
-                                 AppLocalizations.of(context)!
-                                     .out_of_stock1,
-                                 style: AppStyles.rkBoldTextStyle(
-                                     size: AppConstants.font_12,
-                                     color: AppColors.redColor,
-                                     fontWeight: FontWeight.w400),
-                               ),
-                              ! isGuestUser ? numberOfUnits != 0 ? Text(
-                                 '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
-                                 style: AppStyles.rkBoldTextStyle(
-                                     size: AppConstants.font_12,
-                                     color: AppColors.blackColor,
-                                     fontWeight: FontWeight.w400),
-                               ) : 0.width : 0.width,
-                               !isGuestUser?  numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
-                                 '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
-                                 style: AppStyles.rkBoldTextStyle(
-                                     size: AppConstants.font_12,
-                                     color: AppColors.blueColor,
-                                     fontWeight: FontWeight.w400),
-                               ) : 0.width : 0.width,
-                             ],
-                           ),
-                         ),
-                         !isGuestUser ? priceOfBox != 0.0 ? Container(
-                           width: 60,
-                           child: Text(
-                             '${AppLocalizations.of(context)!.currency}${priceOfBox.toStringAsFixed(2)}',
-                             style: AppStyles.rkBoldTextStyle(
-                                 size: AppConstants.font_12,
-                                 color: AppColors.blueColor,
-                                 fontWeight: FontWeight.w400),
-                           ),
-                         ) : 0.width : 0.width,
-
-                       ],
-                     ),
-
-                   ],
-                 ),
-
-               ],
-             ),
-           ),
-         ),
-       ],
-     );
-   }*/
 }
