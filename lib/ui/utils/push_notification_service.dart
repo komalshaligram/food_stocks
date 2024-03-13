@@ -305,7 +305,7 @@ class PushNotificationService {
         else if (subPage == 'supplierProductsScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.supplierProductsScreen.name,
-              arguments: {AppStrings.companyIdString: id});
+              arguments: {AppStrings.supplierIdString: id});
         }
       else if (subPage == 'catagoryScreen' || subPage == 'storeCategoryScreen') {
            Navigator.pushNamed(navigatorKey.currentState!.context,

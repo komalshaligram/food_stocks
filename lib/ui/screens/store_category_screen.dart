@@ -187,11 +187,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             80.height,
                             state.isSubCategory
                                 ? buildTopNavigation(
+                              isSubCategory: isSubCategory,
                                 context: context,
                                 categoryName: state.categoryName,
                                 search: state.searchController.text,
                                 searchList: state.searchList)
                                 : buildTopNavigation(
+                              isSubCategory: isSubCategory,
                                 context: context,
                                 categoryName: state.categoryName,
                                 subCategoryName: state.subCategoryName,
@@ -1566,6 +1568,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         required String categoryName,
         String? subCategoryName,
         required String search,
+        required String isSubCategory,
         required List<SearchModel> searchList}) {
     debugPrint('subCategoryName:$subCategoryName');
     return Container(
@@ -1582,10 +1585,17 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.pop(context, {
-                AppStrings.searchString: search,
-                AppStrings.searchResultString: searchList
-              });
+              if(isSubCategory.isEmpty){
+                Navigator.pop(context, {
+                  AppStrings.searchString: search,
+                  AppStrings.searchResultString: searchList
+                });
+              }
+              else{
+                Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
+                    arguments: {AppStrings.pushNavigationString: 'store'});
+              }
+
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,

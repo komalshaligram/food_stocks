@@ -178,8 +178,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                           .toString(),
                                                       imageHeight:
                                                           getScreenHeight(context) >= 1000
-                                                              ? getScreenHeight(
-                                                                      context) *
+                                                              ? getScreenHeight(context) *
                                                                   0.17
                                                               : 70,
                                                       imageWidth:
@@ -187,46 +186,43 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                               ? getScreenWidth(context) *
                                                                   100
                                                               : 70,
-                                                      isGuestUser:
-                                                          state.isGuestUser,
+                                                      isGuestUser: state
+                                                          .isGuestUser,
                                                       productStock: state
-                                                          .productList[index]
-                                                          .productStock
-                                                          .toString(),
+                                                          .productList[
+                                                              index]
+                                                          .productStock.toString(),
                                                       productImage:
                                                           state.productList[index].mainImage ??
                                                               '',
-                                                      productName: state
-                                                              .productList[index]
-                                                              .productName ??
-                                                          '',
+                                                      productName:
+                                                          state.productList[index].productName ??
+                                                              '',
                                                       totalSaleCount: 0,
-                                                      price: double.parse(state.productList[index].productPrice.toString()),
+                                                      price: double.parse(state
+                                                          .productList[index]
+                                                          .productPrice
+                                                          .toString()),
                                                       onButtonTap: () {
                                                         if (!state
                                                             .isGuestUser) {
                                                           showProductDetails(
-                                                            context: context,
+                                                            context:
+                                                                context,
                                                             productId: state
                                                                         .searchType ==
                                                                     SearchTypes
                                                                         .product
                                                                         .toString()
-                                                                ? state
-                                                                        .productList[
-                                                                            index]
-                                                                        .id ??
+                                                                ? state.productList[index].id ??
                                                                     ''
-                                                                : state
-                                                                        .productList[
-                                                                            index]
+                                                                : state.productList[index]
                                                                         .productId ??
                                                                     '',
                                                             productStock: state
                                                                 .productList[
                                                                     index]
-                                                                .productStock
-                                                                .toString(),
+                                                                .productStock.toString(),
                                                           );
                                                         } else {
                                                           Navigator.pushNamed(
@@ -279,9 +275,14 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                       showProductDetails(
                                                         context: context,
                                                         productId: state
-                                                                .productList[
-                                                                    index]
-                                                                .id ??
+                                                            .searchType ==
+                                                            SearchTypes
+                                                                .product
+                                                                .toString()
+                                                            ? state.productList[index].id ??
+                                                            ''
+                                                            : state.productList[index]
+                                                            .productId ??
                                                             '',
                                                         productStock: state
                                                             .productList[index]
@@ -370,8 +371,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                       state.searchList[index].numberOfUnits,
                                   priceOfBox:
                                       state.searchList[index].priceOfBox,
-                                  productStock:
-                                      state.searchList[index].productStock,
+                                  productStock: state.searchList[index].productStock.toString(),
                                   context: context,
                                   searchName: state.searchList[index].name,
                                   searchImage: state.searchList[index].image,
@@ -874,14 +874,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                         productPerUnit: state.productDetails
                                                 .first.numberOfUnit ??
                                             0,
-                                        productUnitPrice: double.parse(state
-                                                .productDetails
-                                                .first
-                                                .supplierSales
-                                                ?.first
-                                                .productPrice
-                                                .toString() ??
-                                            '0'),
+                                        productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
                                         productName: state.productDetails.first
                                                 .productName ??
                                             '',
@@ -925,8 +918,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                         productStock: (state
                                             .productStockList[
                                                 state.productStockUpdateIndex]
-                                            .stock
-                                            .toString()),
+                                            .stock.toString()),
                                         isRTL: context.rtl,
                                         isSupplierAvailable:
                                             state.productSupplierList.isEmpty
