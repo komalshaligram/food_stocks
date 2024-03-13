@@ -23,7 +23,7 @@ class AppConfig {
 
   factory AppConfig.stag() {
     return AppConfig(
-        flavor: 'stag',
+        flavor: 'prod',
         appName: 'Tavili',
         appBaseUrl: 'https://api.foodstock.shtibel.com/api',
         primaryColor: Colors.red);
@@ -37,7 +37,7 @@ class AppConfig {
       case 'dev':
         AppConfigManager.setAppConfig(AppConfig.dev());
         break;
-      case 'stag':
+      case 'prod':
         AppConfigManager.setAppConfig(AppConfig.stag());
         break;
 
@@ -56,7 +56,7 @@ class AppConfig {
    switch (flavor) {
      case 'dev':
        return AppConfig.dev().appBaseUrl;
-     case 'stag':
+     case 'prod':
        return AppConfig.stag().appBaseUrl;
 
      default:

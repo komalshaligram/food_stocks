@@ -249,7 +249,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                   .totalSale ??
                                               0,
                                           price: state.productList[index]
-                                                  .productPrice ??
+                                                   .productPrice ??
                                               0.0,
                                           onButtonTap: () {
                                             if(!state.isGuestUser){

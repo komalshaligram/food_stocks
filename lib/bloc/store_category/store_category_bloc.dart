@@ -1326,9 +1326,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     productId: product.id ?? '',
                     stock:(product.productStock.toString()));
               }) );
+          print('productStockList____${productStockList[3].length}');
           productStockList[3].addAll(stockList);
-
-
 
           emit(state.copyWith(
               relatedProductList:response.data ?? [],

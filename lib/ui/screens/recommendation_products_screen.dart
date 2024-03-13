@@ -266,7 +266,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                  .recommendationProductsList[
                                              index]
                                                  .productStock.toString() ??
-                                                 ''
+                                                 '',
+                                              productListIndex: 1
                                             );
                                           })
 
@@ -299,6 +300,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                           .id ??
                                           '',
                                       productStock: state.recommendationProductsList[index].productStock.toString() ?? '0',
+                                      productListIndex: 1
 
                                     );
                                   }),
@@ -495,7 +497,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                     productStock: state.searchList[index].productStock.toString(),
                                     productId: state
                                         .searchList[index].searchId,
-                                    isBarcode: true
+                                    isBarcode: true,
+                                  productListIndex: 0
                                 );
                               } else if (state
                                   .searchList[index].searchType ==
@@ -566,7 +569,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                             // productStock: '1',
                             productId: scanResult,
                             isBarcode: true,
-                            productStock: '1'
+                            productStock: '1',
+                          productListIndex: 0
                         );
                       }
                     },
@@ -685,11 +689,13 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
   }
   void showProductDetails({
     required BuildContext context, required String productId,
-    bool? isBarcode , String productStock = '0'
+    bool? isBarcode , String productStock = '0',
+    int productListIndex = -1
   }) async {
     context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.getProductDetailsEvent(
         context: context, productId: productId,
-        isBarcode: isBarcode ?? false
+        isBarcode: isBarcode ?? false,
+      productListIndex: productListIndex
     ));
     showModalBottomSheet(
       context: context,
@@ -857,11 +863,11 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   ?.text ??
                                   '',
                               productPrice: state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .totalPrice *
                                   state
-                                      .productStockList[
+                                      .productStockList[state.productListIndex][
                                   state.productStockUpdateIndex]
                                       .quantity *
                                   (state.productDetails.first
@@ -874,7 +880,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock: (state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty
@@ -882,7 +888,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   : true,
                               scrollController: scrollController,
                               productQuantity:  state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .quantity,
                               onQuantityChanged: (quantity) {
@@ -898,7 +904,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               },
                               onQuantityDecreaseTap: () {
                                 if(state
-                                    .productStockList[
+                                    .productStockList[state.productListIndex][
                                 state.productStockUpdateIndex]
                                     .quantity > 1){
                                   context.read<RecommendationProductsBloc>().add(
@@ -964,6 +970,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       context: context,
                       productId: relatedProductList[i].id,
                       isBarcode: false,
+                      productListIndex: 2,
                       productStock: (relatedProductList[i].productStock.toString())
                   );
                 },

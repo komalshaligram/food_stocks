@@ -1228,8 +1228,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
           });
         }
-
-
         else if(event is _RelatedProductsEvent){
          print('productId____${event.productId}');
             emit(state.copyWith(isRelatedShimmering:true));

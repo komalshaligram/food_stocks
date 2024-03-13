@@ -134,25 +134,12 @@ class SupplierScreenWidget extends StatelessWidget {
                                               });
                                         }),
                               ),
-                    // state.isLoadMore ? SupplierScreenShimmerWidget() : 0.width,
-                    // state.isBottomOfSuppliers
-                    //     ? CommonPaginationEndWidget(
-                    //         pageEndText: 'No more Suppliers')
-                    //     : 0.width,
+
                   ],
                 ),
               ),
             ),
-            //   onNotification: (notification) {
-            //     if (notification.metrics.pixels ==
-            //         notification.metrics.maxScrollExtent) {
-            //       context
-            //           .read<SupplierBloc>()
-            //           .add(SupplierEvent.getSuppliersListEvent(context: context));
-            //     }
-            //     return true;
-            //   },
-            // ),
+
           ),
         );
       },
@@ -224,43 +211,6 @@ class SupplierScreenWidget extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ) ,
-                /*child: Image.network(
-                  "${AppUrls.baseFileUrl}$supplierLogo",
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.center,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress?.cumulativeBytesLoaded !=
-                        loadingProgress?.expectedTotalBytes) {
-                      return CommonShimmerWidget(
-                        child: Container(
-                          height: getScreenHeight(context),
-                          width: getScreenWidth(context),
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: BorderRadius.only(
-                                topLeft:
-                                    Radius.circular(AppConstants.radius_10),
-                                topRight:
-                                    Radius.circular(AppConstants.radius_10)),
-                          ),
-                        ),
-                      );
-                    }
-                    return child;
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    // debugPrint('product category list image error : $error');
-                    return Container(
-                      height: getScreenHeight(context),
-                      width: getScreenWidth(context),
-                      color: AppColors.whiteColor,
-                      child: Image.asset(
-                        AppImagePath.imageNotAvailable5,
-                        fit: BoxFit.cover,
-                      ),
-                    );
-                  },
-                ),*/
               ),
               Container(
                 alignment: Alignment.center,
