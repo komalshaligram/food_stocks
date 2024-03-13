@@ -478,30 +478,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
               );
-              // productStockList[productStockList.indexOf(productStockList.last)][0] = productStockList[
-              // productStockList.indexOf(productStockList.last)][0]
-              //     .copyWith(
-              //     quantity: _productQuantity,
-              //     productId: response.product?.first.id ?? '' ,
-              //     stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
-              // );
+
               emit(state.copyWith(productStockList: productStockList));
-              // debugPrint('new index = ${state.productStockList.last}');
-              // productStockUpdateIndex = 0;
-              // planoGramIndex = productStockList.indexOf(productStockList.last);
-              // /*productStockList[planoGramIndex].indexOf(productStockList[planoGramIndex].last);*/
-              // debugPrint(
-              //     'new index = ${planoGramIndex},$productStockUpdateIndex');
+
             }
 
-            
-            // productStockList[planoGramIndex][productStockUpdateIndex] =
-            //     productStockList[planoGramIndex][productStockUpdateIndex]
-            //         .copyWith(stock: response.product?.first.numberOfUnit ?? 0);
-            // debugPrint(
-            //     'stock ${productStockList[planoGramIndex][productStockUpdateIndex].stock}');
-            // debugPrint(
-            //     'supplier list stock = ${response.product?.first.supplierSales?.map((e) => e.productStock)}');
             List<ProductSupplierModel> supplierList = [];
             // debugPrint(
             //     'supplier id = ${state.productStockList[planoGramIndex][productStockUpdateIndex].productSupplierIds}');

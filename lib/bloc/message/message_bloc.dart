@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,15 +7,12 @@ import 'package:food_stock/data/model/res_model/get_messages_res_model/get_messa
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/delete_message_req/delete_message_req.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
-
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_constants.dart';
-
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
@@ -80,7 +76,6 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
                             subPage: message.message?.subPage?? '',
                             mainPage: message.message?.mainPage ?? '',
                             navigationId: message.message?.navigationId ?? ''
-
                           ),
                           createdAt: message.createdAt,
                           updatedAt: message.updatedAt,
@@ -166,12 +161,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           final response =
           await DioClient(event.context).post(AppUrls.deleteMessageUrl,
               data: reqMap,
-              options: Options(
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                  'Bearer ${preferences.getAuthToken()}',
-                },
-              ));
+            );
 
           debugPrint(
               'DeleteMessage url  = ${DioClient.baseUrl}${AppUrls.deleteMessageUrl}');
@@ -193,13 +183,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           }
         } on ServerException {}
         catch(e){
-     /*      CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: e.toString(),
-                type: SnackBarType.FAILURE);*/
         }
-
-
       }
     });
   }
