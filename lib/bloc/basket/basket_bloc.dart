@@ -72,11 +72,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
              // ProductStockModel barcodeStock = productStockList.removeLast();
               productStockList.clear();
               productStockList.addAll(response.data?.data?.map(
-                      (recommendationProduct) =>
+                      (product) =>
                       ProductStockModel(
-                        quantity: recommendationProduct.totalQuantity?? 0,
-                          productId: recommendationProduct.id ?? '',
-                          stock: recommendationProduct.productStock.toString())) ??
+                        quantity: product.totalQuantity?? 0,
+                          productId: product.id ?? '',
+                          stock: product.productStock.toString(),
+                        lowStock: product.lowStock.toString()
+                      )) ??
 
                   []);
               //productStockList.add(barcodeStock);
@@ -90,6 +92,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   cartProductId: element.cartProductId ?? '',
                   scales: element.productDetails?.scales ?? '',
                   weight: element.productDetails?.itemsWeight ?? 0,
+                  lowStock: element.lowStock ?? '',
+                  productStock: element.productStock ?? 0,
                 ));
               });
 
@@ -291,21 +295,15 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 type: SnackBarType.FAILURE);
             return;
           }
-          // List<String> cartProductList = preferences.getCartProductList();
-          // List<String> cartProductIdList = preferences.getCartProductIdList();
-          // List<String> cartProductQuantityList =
-          //     preferences.getCartProductQuantityList();
+
           //update or insert cart API
-          if (_isProductInCart /*cartProductList.contains(
-            state.productStockList[state.productStockUpdateIndex].productId)*/
+          if (_isProductInCart
           ) {
             debugPrint('update cart');
             debugPrint('quantity__${state.productStockList[state.productStockUpdateIndex]
                 .quantity}');
             try {
-              // int lastQuantityIndex = cartProductList.indexOf(state
-              //     .productStockList[state.productStockUpdateIndex].productId);
-              // debugPrint('last quantity = $lastQuantityIndex');
+
               emit(state.copyWith(isLoading: true));
               UpdateCartReqModel request = UpdateCartReqModel(
                 productId: event.productId,
@@ -319,10 +317,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     : state.productStockList[state.productStockUpdateIndex]
                     .productSaleId,
                 quantity: state.productStockList[state.productStockUpdateIndex]
-                    .quantity/* + _productQuantity */,
+                    .quantity,
                 cartProductId:
-                _cartProductId /*cartProductIdList[cartProductList.indexOf(state
-                  .productStockList[state.productStockUpdateIndex].productId)]*/,
+                _cartProductId,
               );
 
                debugPrint('UpdateCartReqModel_____${request}');
@@ -333,11 +330,11 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               );
               UpdateCartResModel response = UpdateCartResModel.fromJson(res);
               if (response.status == 201) {
+                Navigator.pop(event.context);
                 Vibration.vibrate();
                 add(BasketEvent.getAllCartEvent(
                   context: event.context,
                 ));
-                Navigator.pop(event.context);
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
                 productStockList[state.productStockUpdateIndex] =
@@ -421,19 +418,14 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               final res = await DioClient(event.context).post(
                   '${AppUrls.insertProductInCartUrl}${preferencesHelper
                       .getCartId()}',
-                  data: req,
-                  options: Options(
-                    headers: {
-                      HttpHeaders.authorizationHeader:
-                      'Bearer ${preferencesHelper.getAuthToken()}',
-                    },
-                  ));
+                  data: req,);
               InsertCartResModel response = InsertCartResModel.fromJson(res);
               if (response.status == 201) {
                 //await HapticFeedback.heavyImpact();
                 //
                 Vibration.vibrate();
                 add(BasketEvent.getAllCartEvent(context: event.context));
+                Navigator.pop(event.context);
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
                 productStockList[state.productStockUpdateIndex] =
@@ -452,7 +444,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     isCartCountChange: true));
                 emit(state.copyWith(isCartCountChange: false));
                 add(BasketEvent.setCartCountEvent(isClearCart: false));
-                Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
