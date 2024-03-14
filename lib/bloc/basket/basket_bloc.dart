@@ -93,7 +93,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 ));
               });
 
-              print('productStockList____${productStockList}');
+               debugPrint('productStockList____${productStockList}');
 
               await preferencesHelper.setCartCount(
                   count: temp.isEmpty
@@ -141,7 +141,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               );
             }
 
-            print('UpdateCart reqMap    ${reqMap}');
+             debugPrint('UpdateCart reqMap    ${reqMap}');
 
             final res = await DioClient(event.context).post(
               '${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}',
@@ -325,8 +325,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   .productStockList[state.productStockUpdateIndex].productId)]*/,
               );
 
-              print('UpdateCartReqModel_____${request}');
-              print('getCartId_____${preferencesHelper.getCartId()}');
+               debugPrint('UpdateCartReqModel_____${request}');
+               debugPrint('getCartId_____${preferencesHelper.getCartId()}');
               final res = await DioClient(event.context).post(
                 '${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}',
                 data: request,
@@ -494,15 +494,15 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 data: ProductDetailsReqModel(params: event.productId).toJson());
             ProductDetailsResModel response =
             ProductDetailsResModel.fromJson(res);
-            print('ProductDetailsResModel______${response}');
-            print('_productQuantity______${_productQuantity}');
+             debugPrint('ProductDetailsResModel______${response}');
+             debugPrint('_productQuantity______${_productQuantity}');
             if (response.status == 200) {
               int productStockUpdateIndex = 0;
                 productStockUpdateIndex = state.productStockList.indexWhere(
                       (productStock) =>
                   productStock.productId == event.productId,);
 
-              print('productStockUpdateIndex____${productStockUpdateIndex}');
+               debugPrint('productStockUpdateIndex____${productStockUpdateIndex}');
               emit(state.copyWith(productStockUpdateIndex: productStockUpdateIndex ));
               try {
                 SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -921,7 +921,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         }
         else if(event is _RelatedProductsEvent){
           emit(state.copyWith(isRelatedShimmering:true));
-          print('productId____${event.productId}');
+           debugPrint('productId____${event.productId}');
           final res = await DioClient(event.context).post(
               AppUrls.relatedProductsUrl,
               data: {'mainProductId':event.productId});

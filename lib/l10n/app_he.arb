@@ -408,10 +408,6 @@
   "price_par_box" : "מחיר למארז",
   "my_invoices": "החשבוניות שלי",
   "invoice_number" : "מס' חשבונית",
-  "not_include_surfaces_price":"הסכום אינו כולל עלות משטחים"
-
-
-
-
-
+  "not_include_surfaces_price":"הסכום אינו כולל עלות משטחים",
+  "open":"open"
 }

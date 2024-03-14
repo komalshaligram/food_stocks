@@ -11,7 +11,6 @@ part 'activity_time_req_model.g.dart';
 @freezed
 class ActivityTimeReqModel with _$ActivityTimeReqModel {
   const factory ActivityTimeReqModel({
-    @JsonKey(name: "operationTime")
     List<OperationTime>? operationTime,
   }) = _ActivityTimeReqModel;
 

@@ -175,7 +175,7 @@ Future<String> scanBarcodeOrQRCode(
   try {
     barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode(
         '#ff20BF6B', cancelText, true, scanMode);
-    print(barcodeSOrQRScanRes);
+     debugPrint(barcodeSOrQRScanRes);
   } on PlatformException {
     barcodeSOrQRScanRes = 'Failed to get platform version.';
   }

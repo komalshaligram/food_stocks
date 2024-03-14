@@ -11,7 +11,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
 
-
 final shorebirdCodePush = ShorebirdCodePush();
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -36,14 +35,11 @@ void main() async {
         }
       });
     }
-    runApp(
-       MyApp(),
-    );
+    runApp(MyApp());
   },
           (error, stack) =>
           FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
-
 
 @pragma('vm:entry-point')
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {

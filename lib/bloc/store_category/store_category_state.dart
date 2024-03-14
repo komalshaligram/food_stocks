@@ -53,7 +53,6 @@ class StoreCategoryState with _$StoreCategoryState {
     required int allProductPageNum,
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
-    required bool isRelatedShimmering1,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -107,7 +106,6 @@ class StoreCategoryState with _$StoreCategoryState {
     allProductPageNum: 0,
     relatedProductList: [],
     isRelatedShimmering: false,
-    isRelatedShimmering1: false
 
       );
 }

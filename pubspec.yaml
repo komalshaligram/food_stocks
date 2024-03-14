@@ -17,8 +17,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
 
-version: 1.0.14+1
-#version: 1.0.0+15
+#version: 1.0.14+1
+version: 1.0.0+15
 
 
 environment:
@@ -29,7 +29,7 @@ environment:
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
+# versions available, run `flzutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter

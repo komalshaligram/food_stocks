@@ -216,7 +216,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         } else {
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           String version = packageInfo.version;
-          print('version____${version}');
+           debugPrint('version____${version}');
 
           ProfileModel reqMap = ProfileModel(
               profileImage: profileModel.profileImage,
@@ -334,7 +334,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
          );
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
-            print('ProfileDetails Response     =   ${response}');
+             debugPrint('ProfileDetails Response     =   ${response}');
             if (response.status == 200) {
               debugPrint(
                   'update city : ${response.data?.clients?.first.city?.cityName}');

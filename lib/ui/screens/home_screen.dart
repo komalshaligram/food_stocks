@@ -5,7 +5,6 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -15,7 +14,6 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:food_stock/bloc/home/home_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
-
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -78,7 +76,7 @@ class HomeScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          print('productStockUpdateIndex____${state.productStockUpdateIndex}');
+          print('state.messageList____${state.messageList.length}');
           return Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,
@@ -441,6 +439,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                   AppConstants.padding_5),
                                               itemBuilder: (context, index) =>
                                                   CommonProductItemWidget(
+                                                    lowStock: state
+                                                        .recommendedProductsList[
+                                                    index]
+                                                        .lowStock.toString(),
                                                       productStock: state
                                                           .recommendedProductsList[
                                                       index]
@@ -540,7 +542,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         }),
                                     10.height,
                                     ListView.builder(
-                                      itemCount: state.messageList.length,
+                                      itemCount: 2,
                                       physics: NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemBuilder: (context, index) =>
@@ -670,9 +672,9 @@ class HomeScreenWidget extends StatelessWidget {
                               shrinkWrap: true,
                               itemBuilder: (listViewContext, index) {
                                 return _buildSearchItem(
+                                  lowStock: state.searchList[index].lowStock.toString(),
                                     numberOfUnits:state.searchList[index].numberOfUnits,
                                     priceOfBox: state.searchList[index].priceOfBox,
-                                    pricePerUnit: state.searchList[index].priceParUnit,
                                     productStock : state.searchList[index].productStock.toString(),
                                     context: context,
                                     searchName: state.searchList[index].name,
@@ -796,7 +798,7 @@ class HomeScreenWidget extends StatelessWidget {
                                           SearchTypes.sale ||
                                           state.searchList[index].searchType ==
                                               SearchTypes.product) {
-                                        print("tap 4");
+                                         debugPrint("tap 4");
                                         showProductDetails(
                                             context: context,
                                             productId: state
@@ -868,7 +870,7 @@ class HomeScreenWidget extends StatelessWidget {
                               if (scanResult != '-1') {
                                 // -1 result for cancel scanning
                                 debugPrint('result = $scanResult');
-                                print("tap 5");
+                                 debugPrint("tap 5");
                                 showProductDetails(
                                   context: context,
                                   productId: scanResult,
@@ -895,10 +897,6 @@ class HomeScreenWidget extends StatelessWidget {
     PushNotificationService().firebaseMessaging.getInitialMessage().then(
           (message) {
         if (message != null) {
-          String? _mainPage;
-          String? _subPage;
-          String? _id;
-
           debugPrint("onMessageClosedApp: ${message.data}");
           if (message.data.isNotEmpty) {
             var data = json.decode(message.data['data'].toString());
@@ -916,9 +914,7 @@ class HomeScreenWidget extends StatelessWidget {
               String? _subPage = data['message']['subPage'] ?? '';
               String? _id = data['message']['id'] ?? '';
 
-              print('subPage__home_${_subPage == null}');
-              print('mainPage__home_${_mainPage}');
-              print('ide__home_${_id == null}');
+
               PushNotificationService().manageNavigation( true, _mainPage ?? '',_subPage ?? '' , _id ?? '' , );
             }
           }
@@ -1039,7 +1035,7 @@ class HomeScreenWidget extends StatelessWidget {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
       context: context,
       productId: productId,
-      isBarcode: isBarcode ?? false,
+      isBarcode: isBarcode,
       planoGramIndex: planoGramIndex,
     ));
     showModalBottomSheet(
@@ -1099,19 +1095,12 @@ class HomeScreenWidget extends StatelessWidget {
                   final metrices = notification.metrics;
                   if (metrices.atEdge && metrices.pixels == 0) {
                     Navigator.pop(context);
-
                   }
-
                   if (metrices.pixels == metrices.minScrollExtent) {
-
                   }
-
                   if (metrices.atEdge && metrices.pixels > 0) {
-
                   }
-
                   if (metrices.pixels >= metrices.maxScrollExtent) {
-
                   }
 
                 }
@@ -1120,6 +1109,7 @@ class HomeScreenWidget extends StatelessWidget {
                             child: Column(
                             children: [
                               CommonProductDetailsWidget(
+                                lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                                 qrCode:state.productDetails.first.qrcode ?? '' ,
                                 addToOrderTap: () {
                                   context.read<HomeBloc>().add(
@@ -1140,13 +1130,13 @@ class HomeScreenWidget extends StatelessWidget {
                                             width: getScreenWidth(context),
                                             child: GestureDetector(
                                               onVerticalDragStart: (dragDetails) {
-                                                print('onVerticalDragStart');
+                                                  debugPrint('onVerticalDragStart');
                                               },
                                               onVerticalDragUpdate: (dragDetails) {
-                                                print('onVerticalDragUpdate');
+                                                  debugPrint('onVerticalDragUpdate');
                                               },
                                               onVerticalDragEnd: (endDetails) {
-                                                print('onVerticalDragEnd');
+                                                 debugPrint('onVerticalDragEnd');
                                                 Navigator.pop(dialogContext);
                                               },
                                               child: PhotoView(
@@ -1311,6 +1301,7 @@ class HomeScreenWidget extends StatelessWidget {
               shrinkWrap: true,
               itemBuilder: (context2,i){
                 return CommonProductItemWidget(
+                  lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                   productStock:relatedProductList.elementAt(i).productStock.toString(),
                   width: AppConstants.relatedProductItemWidth,
                   productImage:relatedProductList[i].mainImage,
@@ -1421,6 +1412,7 @@ class HomeScreenWidget extends StatelessWidget {
   }
 
   Widget _buildSearchItem({
+    required String lowStock,
     required BuildContext context,
     required String searchName,
     required String searchImage,
@@ -1432,7 +1424,6 @@ class HomeScreenWidget extends StatelessWidget {
     bool? isLastItem, required String productStock,
     required int numberOfUnits,
     required double priceOfBox,
-    required double pricePerUnit,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1487,7 +1478,7 @@ class HomeScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != '0' ? 80 : 90,
+            height: (productStock) != '0' || lowStock.isEmpty ? 80 : 90,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1525,7 +1516,7 @@ class HomeScreenWidget extends StatelessWidget {
                       }
                     },
                     errorBuilder: (context, error, stackTrace) {
-                      print('home error 1_____${error}');
+                       debugPrint('home error 1_____${error}');
                       return searchType == SearchTypes.subCategory
                           ? Image.asset(AppImagePath.imageNotAvailable5,
                           height: 60, width: 50, fit: BoxFit.cover)
@@ -1565,13 +1556,18 @@ class HomeScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              (productStock) != '0' ? 0.width : Text(
+                               (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.redColor,
                                     fontWeight: FontWeight.w400),
+                              ) : Text(lowStock,
+                                  style: AppStyles.rkBoldTextStyle(
+                                      size: AppConstants.font_12,
+                                      color: AppColors.orangeColor,
+                                      fontWeight: FontWeight.w400)
                               ),
                               numberOfUnits != 0 ? Text(
                                 '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',

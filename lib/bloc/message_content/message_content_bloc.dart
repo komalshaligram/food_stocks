@@ -41,12 +41,7 @@ class MessageContentBloc
           final response =
               await DioClient(event.context).post(AppUrls.deleteMessageUrl,
                   data: reqMap,
-                  options: Options(
-                    headers: {
-                      HttpHeaders.authorizationHeader:
-                          'Bearer ${preferences.getAuthToken()}',
-                    },
-                  ));
+                );
 
           debugPrint(
               'DeleteMessage url  = ${AppUrls.baseUrl}${AppUrls.deleteMessageUrl}');

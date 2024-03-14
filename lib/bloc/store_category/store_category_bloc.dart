@@ -58,7 +58,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           prefs: await SharedPreferences.getInstance());
 
       if (event is _isCategoryEvent) {
-        print('isSubCategory_____${event.isSubCategory}');
+         debugPrint('isSubCategory_____${event.isSubCategory}');
         emit(state.copyWith(isSubCategory: event.isSubCategory ,isGridView: preferences.getIsGridView(),
             isGuestUser: preferences.getGuestUser()
         ));
@@ -91,7 +91,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
 
       } else if (event is _ChangeCategoryDetailsEvent) {
-        print('categoryName   ${state.categoryName}');
+         debugPrint('categoryName   ${state.categoryName}');
 
         emit(state.copyWith(
             cartCount: preferences.getCartCount(),
@@ -272,8 +272,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           final res = await DioClient(event.context)
               .post(AppUrls.getPlanogramProductsUrl, data: req);
           PlanogramResModel response = PlanogramResModel.fromJson(res);
-          print('state.issubcat:${state.isSubCategory}');
-          print('GetPlanoGramProductsEvent   response :${response}');
+           debugPrint('state.issubcat:${state.isSubCategory}');
+           debugPrint('GetPlanoGramProductsEvent   response :${response}');
           if (response.status == 200) {
             if(state.isSubCategory){
               add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
@@ -308,7 +308,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               stockList.addAll(response.data![i].planogramproducts?.map(
                       (product) => ProductStockModel(
                       productId: product.id ?? '',
-                      stock: product.productStock.toString() ?? '0')) ??
+                      stock: product.productStock.toString())) ??
                   []);
               // debugPrint('stockList[$i] = $stockList');
             }
@@ -391,7 +391,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           ProductDetailsResModel response =
           ProductDetailsResModel.fromJson(res);
 
-          print('GetProductDetails_____${response}');
+           debugPrint('GetProductDetails_____${response}');
           if (response.status == 200) {
             // 0 planogram
             //1 product
@@ -406,10 +406,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             state.productStockList.toList(growable: true);
             int planoGramIndex  = event.planoGramIndex;
 
-            print('productStockList___${productStockList[1]}');
-            print('productStockList___${productStockList[2]}');
-            print('productStockList___${productStockList[3]}');
-            print('planoGramIndex___${event.planoGramIndex}');
+             debugPrint('productStockList___${productStockList[1]}');
+             debugPrint('productStockList___${productStockList[2]}');
+             debugPrint('productStockList___${productStockList[3]}');
+             debugPrint('planoGramIndex___${event.planoGramIndex}');
             int productStockUpdateIndex = 0;
             /*   if(planoGramIndex == 1){
               productStockUpdateIndex = state.productStockList[planoGramIndex]
@@ -422,7 +422,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
-              print('responseproductid____${response.product?.first.id}');
+               debugPrint('responseproductid____${response.product?.first.id}');
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                   quantity: _productQuantity,
@@ -438,8 +438,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             }
 
             emit(state.copyWith(planoGramUpdateIndex:planoGramIndex,productStockUpdateIndex:productStockUpdateIndex));
-            print('planoGramUpdateIndex___${state.planoGramUpdateIndex}');
-            print('productStockUpdateIndex___${state.productStockUpdateIndex}');
+             debugPrint('planoGramUpdateIndex___${state.planoGramUpdateIndex}');
+             debugPrint('productStockUpdateIndex___${state.productStockUpdateIndex}');
             try {
 
               final res = await DioClient(event.context).post(
@@ -478,30 +478,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
               );
-              // productStockList[productStockList.indexOf(productStockList.last)][0] = productStockList[
-              // productStockList.indexOf(productStockList.last)][0]
-              //     .copyWith(
-              //     quantity: _productQuantity,
-              //     productId: response.product?.first.id ?? '' ,
-              //     stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
-              // );
+
               emit(state.copyWith(productStockList: productStockList));
-              // debugPrint('new index = ${state.productStockList.last}');
-              // productStockUpdateIndex = 0;
-              // planoGramIndex = productStockList.indexOf(productStockList.last);
-              // /*productStockList[planoGramIndex].indexOf(productStockList[planoGramIndex].last);*/
-              // debugPrint(
-              //     'new index = ${planoGramIndex},$productStockUpdateIndex');
+
             }
 
-            
-            // productStockList[planoGramIndex][productStockUpdateIndex] =
-            //     productStockList[planoGramIndex][productStockUpdateIndex]
-            //         .copyWith(stock: response.product?.first.numberOfUnit ?? 0);
-            // debugPrint(
-            //     'stock ${productStockList[planoGramIndex][productStockUpdateIndex].stock}');
-            // debugPrint(
-            //     'supplier list stock = ${response.product?.first.supplierSales?.map((e) => e.productStock)}');
             List<ProductSupplierModel> supplierList = [];
             // debugPrint(
             //     'supplier id = ${state.productStockList[planoGramIndex][productStockUpdateIndex].productSupplierIds}');
@@ -880,7 +861,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == 201) {
               Vibration.vibrate();
-              Navigator.pop(event.context,{AppStrings.isCartCountString : 'true'});
+              Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.planoGramUpdateIndex]
@@ -974,12 +955,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             final res = await DioClient(event.context).post(
                 '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
-                options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferencesHelper.getAuthToken()}',
-                  },
-                ));
+                );
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
               Vibration.vibrate();
@@ -1106,7 +1082,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 searchId: sale.id ?? '',
                 name: sale.productName ?? '',
                 searchType: SearchTypes.sale,
-                numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
+                numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                 image: sale.mainImage ?? ''))
                 .toList() ??
                 []);
@@ -1117,6 +1093,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 name: supplier.productName ?? '',
                 searchType: SearchTypes.product,
                 productStock:  supplier.productStock.toString(),
+                lowStock: supplier.lowStock.toString(),
                 numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
                 priceOfBox: double.parse(supplier.productPrice.toString()),
                 image: supplier.mainImage ?? '')).toList() ??
@@ -1229,8 +1206,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               pageNum: state.subProductPageNum + 1,
               pageLimit: AppConstants.orderPageLimit,
             );
-          debugPrint('getAllProductUrl_____${AppUrls.getsubCategoryProductsUrl}');
-          debugPrint('getAllProductUrl req_____${getSubCategoriesProductReqModel}');
+          debugPrint('getSubCategoriesProduct_____${AppUrls.getsubCategoryProductsUrl}');
+          debugPrint('getSubCategoriesProduct req_____${getSubCategoriesProductReqModel}');
           final  res = await DioClient(event.context)
                 .post('${AppUrls.getsubCategoryProductsUrl}',
                 data: getSubCategoriesProductReqModel
@@ -1239,8 +1216,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
           print('getAllProduct_____$res');
           GetPlanogramProductModel response = GetPlanogramProductModel.fromJson(res);
-          debugPrint('getAllProduct response_____${response}');
-          debugPrint('getAllProduct response count_____${response.metaData?.totalFilteredCount}');
+          debugPrint('getSubCategoriesProduct response_____${response}');
+          debugPrint('getSubCategoriesProduct response count_____${response.metaData?.totalFilteredCount}');
 
           if(response.status == 200){
             List<List<ProductStockModel>> productStockList =
@@ -1258,19 +1235,19 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     }) ?? []);
             productStockList[3].addAll(stockList);
 
-            print('productList_length1___${state.planogramProductList.length}');
-            print('productStockList_length1___${state.productStockList[3].length}');
+             debugPrint('productList_length1___${state.planogramProductList.length}');
+             debugPrint('productStockList_length1___${state.productStockList[3].length}');
             debugPrint('page = ${stockList.length}');
             debugPrint('page = ${productStockList[3].length}');
             debugPrint('page = ${productStockList[2].length}');
             // productStockList.add(barcodeStock);
             planogramProductList.addAll(response.data ?? []);
 
-            print('planogramProductList.length_____${ planogramProductList.length}');
+             debugPrint('planogramProductList.length_____${ planogramProductList.length}');
             emit(state.copyWith(planogramProductList: planogramProductList,productStockList: productStockList,
                 isPlanogramProductShimmering: false,isPlanogramShimmering: false,subProductPageNum: state.subProductPageNum + 1,
             ));
-            print('isBottomOfProducts____${ planogramProductList.length >=
+             debugPrint('isBottomOfProducts____${ planogramProductList.length >=
                 (response.metaData?.totalFilteredCount ?? 0)
                 ? true
                 : false}');
@@ -1305,7 +1282,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       }
       else if(event is _RelatedProductsEvent){
         emit(state.copyWith(isRelatedShimmering:true));
-        print('event.productId____${event.productId}');
+         debugPrint('event.productId____${event.productId}');
         final res = await DioClient(event.context).post(
             AppUrls.relatedProductsUrl,
             data: {'mainProductId':event.productId});
@@ -1323,14 +1300,14 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           stockList.addAll(response.data.map(
                   (product) {
                 return ProductStockModel(
-                    productId: product.id ?? '',
+                    productId: product.id ,
                     stock:(product.productStock.toString()));
               }) );
-          print('productStockList____${productStockList[3].length}');
+           debugPrint('productStockList____${productStockList[3].length}');
           productStockList[3].addAll(stockList);
 
           emit(state.copyWith(
-              relatedProductList:response.data ?? [],
+              relatedProductList:response.data ,
               isRelatedShimmering: false,productStockList: productStockList));
         } else {
           emit(state.copyWith(isRelatedShimmering: false));

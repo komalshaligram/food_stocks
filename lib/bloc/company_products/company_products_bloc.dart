@@ -160,7 +160,7 @@ class CompanyProductsBloc
           ProductDetailsResModel response =
           ProductDetailsResModel.fromJson(res);
 
-          print('GetProductDetails_____${response}');
+           debugPrint('GetProductDetails_____${response}');
           if (response.status == 200) {
 
             //new chanegs
@@ -172,17 +172,17 @@ class CompanyProductsBloc
             state.productStockList.toList(growable: true);
             int productListIndex  = event.productListIndex;
 
-            print('productStockList___${productStockList[1]}');
-            print('productStockList___${productStockList[2].length}');
-            print('productStockList___${productStockList[0]}');
+             debugPrint('productStockList___${productStockList[1]}');
+             debugPrint('productStockList___${productStockList[2].length}');
+             debugPrint('productStockList___${productStockList[0]}');
 
-            print('productListIndex___${event.productListIndex}');
+             debugPrint('productListIndex___${event.productListIndex}');
             int productStockUpdateIndex = 0;
 
 
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
-              print('responseproductid____${response.product?.first.id}');
+               debugPrint('responseproductid____${response.product?.first.id}');
               productStockList[0][0] =productStockList[0][0].copyWith(
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '' ,
@@ -197,8 +197,8 @@ class CompanyProductsBloc
             }
 
             emit(state.copyWith(productListIndex:productListIndex,productStockUpdateIndex:productStockUpdateIndex));
-            print('planoGramUpdateIndex___${state.productListIndex}');
-            print('productStockUpdateIndex___${state.productStockUpdateIndex}');
+             debugPrint('planoGramUpdateIndex___${state.productListIndex}');
+             debugPrint('productStockUpdateIndex___${state.productStockUpdateIndex}');
             try {
 
               final res = await DioClient(event.context).post(
@@ -508,8 +508,8 @@ class CompanyProductsBloc
           emit(state.copyWith(productStockList: productStockList));
         }
       }
-      else if (event is _ChangeSupplierSelectionExpansionEvent)
-      {
+
+      else if (event is _ChangeSupplierSelectionExpansionEvent) {
         emit(state.copyWith(
             isSelectSupplier:
                 event.isSelectSupplier ?? !state.isSelectSupplier));
@@ -602,6 +602,7 @@ class CompanyProductsBloc
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == 201) {
               Vibration.vibrate();
+              Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
                   state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
@@ -616,7 +617,7 @@ class CompanyProductsBloc
               );
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
-              Navigator.pop(event.context);
+
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
 
@@ -695,9 +696,10 @@ class CompanyProductsBloc
             if (response.status == 201) {
               add(CompanyProductsEvent.setCartCountEvent());
               Vibration.vibrate();
+              Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
                   state.productStockList.toList(growable: true);
-              print('quandjfd____${state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+               debugPrint('quandjfd____${state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
@@ -708,7 +710,7 @@ class CompanyProductsBloc
                 productSaleId: '',
               );
               add(CompanyProductsEvent.getCartCountEvent());
-              Navigator.pop(event.context);
+
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,duringCelebration: true));
               await Future.delayed(const Duration(milliseconds: 500));
@@ -892,6 +894,7 @@ class CompanyProductsBloc
                   productStock:  supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
+                  lowStock: supplier.lowStock.toString(),
                 ))
                 .toList() ??
                 []);
@@ -980,7 +983,7 @@ class CompanyProductsBloc
 
       else if(event is _RelatedProductsEvent){
         emit(state.copyWith(isRelatedShimmering:true));
-        print('productId____${event.productId}');
+         debugPrint('productId____${event.productId}');
         final res = await DioClient(event.context).post(
             AppUrls.relatedProductsUrl,
             data: {'mainProductId':event.productId});

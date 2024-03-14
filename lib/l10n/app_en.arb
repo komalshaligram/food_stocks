@@ -407,5 +407,6 @@
   "price_par_box" : "Price per box",
   "my_invoices": "My invoices",
   "invoice_number" : "Invoice Number",
-  "not_include_surfaces_price":"This price does not include surfaces price"
+  "not_include_surfaces_price":"This price does not include surfaces price",
+   "open":"open"
 }

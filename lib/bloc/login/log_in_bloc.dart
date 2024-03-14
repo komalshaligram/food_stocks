@@ -52,7 +52,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           if (response.status == 200) {
 
             await SmsAutoFill().listenForCode();
-            print('getAppSignature_______${SmsAutoFill().getAppSignature}');
+             debugPrint('getAppSignature_______${SmsAutoFill().getAppSignature}');
             preferencesHelper.setUserId(id: response.user?.id ?? '');
             preferencesHelper.setIsGuestUser(isGuestUser: false);
             preferencesHelper.setPhoneNumber(
@@ -63,7 +63,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             });
             emit(state.copyWith(isLoginSuccess: true, isLoading: false));
           } else if(response.status == 403){
-            print('here');
+             debugPrint('here');
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -76,7 +76,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             ));
           }
           else {
-            print('here 1');
+             debugPrint('here 1');
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -102,12 +102,12 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         final _checker = StoreVersionChecker();
         // PackageInfo packageInfo = await PackageInfo.fromPlatform();
         _checker.checkUpdate().then((value) {
-          print('update available');
-          print(value.canUpdate); //return true if update is available
-          print(value.currentVersion); //return current app version
-          print(value.newVersion); //return the new app version
-          print(value.appURL); //return the app url
-          print(value.errorMessage);
+          debugPrint('update available');
+           print(value.canUpdate); //return true if update is available
+          debugPrint(value.currentVersion); //return current app version
+          debugPrint(value.newVersion); //return the new app version
+          debugPrint(value.appURL); //return the app url
+          debugPrint(value.errorMessage);
           if(value.canUpdate && Platform.isAndroid){
             customShowUpdateDialog(
                 event.context, preferencesHelper.getAppLanguage(),value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -135,8 +134,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 data: ProductDetailsReqModel(params: event.productId).toJson());
             ProductDetailsResModel response =
             ProductDetailsResModel.fromJson(res);
-            print('ProductDetailsResModel______${response}');
-            print('_productQuantity______${_productQuantity}');
+            debugPrint('ProductDetailsResModel______${response}');
+
             if (response.status == 200) {
               int productStockUpdateIndex = 0;
               if(event.isBarcode){
@@ -199,7 +198,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               if(response.product != null){
                 add(HomeEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
-              if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode ?? false)) {
+              if (event.isBarcode) {
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: false);
                 productStockList[productStockList
@@ -252,7 +251,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     companyName: supplier.supplierCompanyName ?? '',
                     basePrice:
                     double.parse(supplier.productPrice ?? '0.0'),
-                    stock: (supplier.productStock.toString() ?? '0'),
+                    stock: (supplier.productStock.toString() ),
                     quantity: _productQuantity,
                     selectedIndex: (supplier.supplierId ?? '') ==
                         state
@@ -568,19 +567,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 type: SnackBarType.FAILURE);
             return;
           }
-          // List<String> cartProductList = preferences.getCartProductList();
-          // List<String> cartProductIdList = preferences.getCartProductIdList();
-          // List<String> cartProductQuantityList =
-          //     preferences.getCartProductQuantityList();
+
           //update or insert cart API
-          if (_isProductInCart /*cartProductList.contains(
-            state.productStockList[state.productStockUpdateIndex].productId)*/
+          if (_isProductInCart
           ) {
             debugPrint('update cart');
             try {
-              // int lastQuantityIndex = cartProductList.indexOf(state
-              //     .productStockList[state.productStockUpdateIndex].productId);
-              // debugPrint('last quantity = $lastQuantityIndex');
+
               emit(state.copyWith(isLoading: true));
               UpdateCartReqModel request = UpdateCartReqModel(
                 productId: state.productStockList[state.productStockUpdateIndex].productId == ''? event.productId :state.productStockList[state.productStockUpdateIndex].productId,
@@ -594,10 +587,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     : state.productStockList[state.productStockUpdateIndex]
                     .productSaleId,
                 quantity: state.productStockList[state.productStockUpdateIndex]
-                    .quantity/* + _productQuantity */,
+                    .quantity,
                 cartProductId:
-                _cartProductId /*cartProductIdList[cartProductList.indexOf(state
-                  .productStockList[state.productStockUpdateIndex].productId)]*/
+                _cartProductId
                 ,
               );
               final res = await DioClient(event.context).post(
@@ -621,8 +613,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     );
                 emit(state.copyWith(
                     isLoading: false, productStockList: productStockList));
-
-
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
@@ -702,10 +692,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   ));
               InsertCartResModel response = InsertCartResModel.fromJson(res);
               if (response.status == 201) {
-                //await HapticFeedback.heavyImpact();
-                //
                 Vibration.vibrate();
-
+                Navigator.pop(event.context);
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
                 productStockList[state.productStockUpdateIndex] =
@@ -724,9 +712,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     isCartCountChange: true));
                 emit(state.copyWith(isCartCountChange: false));
                 add(HomeEvent.setCartCountEvent());
-
-
-                Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
@@ -823,35 +808,45 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } on ServerException {} catch (e) {}
         }
         else if (event is _GetMessageListEvent) {
+
           try {
-            emit(state.copyWith(isMessageShimmering: true));
             final res = await DioClient(event.context).post(
                 AppUrls.getNotificationMessageUrl,
-                data: GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson(),
-            );
+                data: GetMessagesReqModel(
+                    pageNum: 1,
+                    pageLimit: 2).toJson(),
+              );
 
             GetMessagesResModel response = GetMessagesResModel.fromJson(res);
+
+
+            debugPrint('getMessage response  = ${response}');
             if (response.status == 200) {
-              List<MessageData> messageList = [];
+              List<MessageData> messageList =
+              state.messageList.toList(growable: true);
               if(messageList.isNotEmpty){
                 messageList.addAll(response.data
-                    ?.map((message) =>
-                    MessageData(
-                      id: message.id,
-                      isRead: message.isRead,
-                      message: Message(
-                          id: message.message?.id ?? '',
-                          title: message.message?.title ?? '',
-                          summary: message.message?.summary ?? '',
-                          body: message.message?.body ?? '',
-                          messageImage:
-                          message.message?.messageImage ?? ''),
-                      createdAt: message.createdAt,
-                      updatedAt: message.updatedAt,
-                    ))
+                    ?.map((message) => MessageData(
+                  id: message.id,
+                  isRead: message.isRead,
+                  message: Message(
+                      id: message.message?.id ?? '',
+                      title: message.message?.title ?? '',
+                      summary: message.message?.summary ?? '',
+                      body: message.message?.body ?? '',
+                      messageImage: message.message?.messageImage ?? '',
+                      subPage: message.message?.subPage?? '',
+                      mainPage: message.message?.mainPage ?? '',
+                      navigationId: message.message?.navigationId ?? ''
+                  ),
+                  createdAt: message.createdAt,
+                  updatedAt: message.updatedAt,
+                ))
                     .toList() ??
                     []);
               }
+
+
               debugPrint('new message list len = ${messageList.length}');
               emit(state.copyWith(
                   messageList: messageList, isMessageShimmering: false));
@@ -951,13 +946,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 ),
               );
             } else {
-           /*   CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          response.message!,
-                      event.context),
-                  type: SnackBarType.FAILURE);*/
+
             }
           } on ServerException {
           } catch (e) {
@@ -975,8 +964,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             );
             RecommendationProductsResModel response =
             RecommendationProductsResModel.fromJson(res);
-            debugPrint('getRecommendationProductsUrl       ${AppUrls
-                .getRecommendationProductsUrl}');
+            debugPrint('getRecommendationProductsUrl       ${AppUrls.baseUrl}${AppUrls.getRecommendationProductsUrl}');
             debugPrint('response       ${response.status}');
             if (response.status == 200) {
               List<ProductStockModel> productStockList =
@@ -1037,7 +1025,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             debugPrint('sale len = ${response.data?.saleData?.length}');
             debugPrint('sup len = ${response.data?.supplierData?.length}');
             debugPrint(
-                'sup prod len = ${response.data?.supplierProductData?.length}');
+                'sup stag len = ${response.data?.supplierProductData?.length}');
             if (state.searchController.text == '') {
               List<SearchModel> searchList = [];
               searchList.addAll(state.productCategoryList.map((category) =>
@@ -1107,7 +1095,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     name: sale.productName ?? '',
                     searchType: SearchTypes.sale,
                     image: sale.mainImage ?? '',
-                    numberOfUnits: int.parse(sale.numberOfUnit.toString()) ?? 0,
+                    numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                   ))
                   .toList() ??
                   []);
@@ -1122,6 +1110,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       productStock: supplier.productStock.toString(),
                     numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                     priceOfBox: double.parse(supplier.productPrice.toString()),
+                    lowStock: supplier.lowStock.toString()
+
                   ))
                   .toList() ??
                   []);
@@ -1185,7 +1175,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   element) => element.isHomePreference == true) ?? true;
               emit(state.copyWith(isCatVisible: productVisible));
               emit(state.copyWith(
-
                   productCategoryList: response.data?.categories ?? [],
                   searchList: searchList,
                   isShimmering: false));
@@ -1208,7 +1197,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         }
 
-
        else if (event is _checkVersionOfAppEvent) {
           final _checker = StoreVersionChecker();
          // PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -1228,8 +1216,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
           });
         }
+
         else if(event is _RelatedProductsEvent){
-         print('productId____${event.productId}');
+          debugPrint('productId____${event.productId}');
             emit(state.copyWith(isRelatedShimmering:true));
             final res = await DioClient(event.context).post(
                 AppUrls.relatedProductsUrl,
@@ -1248,9 +1237,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         stock: Product.productStock.toString(),
                       )) );
               emit(state.copyWith(
-                  relatedProductList:response.data ?? [],
+                  relatedProductList:response.data ,
                   isRelatedShimmering: false,productStockList: productStockList));
-              print('relatedProductList___${state.relatedProductList.length}');
+               debugPrint('relatedProductList___${state.relatedProductList.length}');
             } else {
               emit(state.copyWith(isRelatedShimmering: false));
               CustomSnackBar.showSnackBar(

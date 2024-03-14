@@ -35,19 +35,19 @@ class BottomNavScreen extends StatelessWidget {
         ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint('bottom nav args = $args');
     return BlocProvider(
-      create: (context) => BottomNavBloc()..add(BottomNavEvent.NavigateToStoreScreenEvent(context: context, storeScreen: args?[AppStrings.pushNavigationString] ?? '',basketScreen:  args?[AppStrings.isBasketScreenString] ?? '')),
-      child: BottomNavScreenWidget(storeScreen: args?[AppStrings.pushNavigationString] ?? '',
-       basketScreen: args?[AppStrings.isBasketScreenString] ?? '',
+      create: (context) => BottomNavBloc()..add(BottomNavEvent.NavigateToStoreScreenEvent(context: context, storeScreen: args?[AppStrings.pushNavigationString] ?? '',
+          basketScreen:  args?[AppStrings.isBasketScreenString] ?? '',
+      )),
+      child: BottomNavScreenWidget(
       ),
     );
   }
 }
 
 class BottomNavScreenWidget extends StatelessWidget {
-  String storeScreen;
-  String basketScreen;
 
-  BottomNavScreenWidget({super.key, this.storeScreen = '' , this.basketScreen = ''});
+
+  BottomNavScreenWidget({super.key,});
 
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
@@ -82,7 +82,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                 ]),
                 child: CurvedNavigationBar(
                   key: _bottomNavigationKey,
-                  index:  storeScreen != '' ? 1 : basketScreen != '' ? 2 : state.index,
+                  index: state.index,
                   height: 65.0,
                 cartCount: state.cartCount,
                 isRTL: context.rtl,
@@ -125,8 +125,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                   animationCurve: Curves.decelerate,
                   animationDuration: Duration(milliseconds: 600),
                   onTap: (index) async {
-                    storeScreen = '';
-                    basketScreen = '';
+
                     SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                         prefs: await SharedPreferences.getInstance());
                     if(preferencesHelper.getGuestUser()){
@@ -179,7 +178,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       height: screenHeight,
       width: screenWidth,
       child: FadeIndexedStack(
-        index: storeScreen != '' ? 1 : basketScreen != '' ? 2 : state.index,
+        index:  state.index,
         children: [
           HomeScreen() ,
           StoreScreen(),
@@ -205,7 +204,7 @@ class BottomNavScreenWidget extends StatelessWidget {
             width: 50,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-              gradient: pos == (storeScreen != '' ? 1 : basketScreen != '' ? 2 : state.index )?AppColors.appMainGradientColor:LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]),
+              gradient: pos == ( state.index )?AppColors.appMainGradientColor:LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]),
                 borderRadius: const BorderRadius.all(
                     Radius.circular(AppConstants.radius_100))),
             child: Center(
@@ -218,7 +217,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                 width: 26,
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  pos == (storeScreen != '' ? 1 : basketScreen != '' ? 2 : state.index)
+                  pos == (state.index)
                       ? AppColors.whiteColor
                       : AppColors.navSelectedColor,
                   BlendMode.srcIn,

@@ -14,7 +14,7 @@ class AppColors {
   static Color iconBGColor = const Color(0xffF6F6F6);
   static Color saleRedColor = const Color(0xffF03E3E);
   static Color lightGreyColor = const Color(0xffADB5BD);
-  static Color orangeColor = const Color(0xffF2994A);
+  static Color orangeColor = const Color(0xffFD7E14);
   static Color lightBorderColor = const Color(0xffF0F2F5);
   static Color greyColor = const Color(0xff828282);
   static Color redColor = const Color(0xffFF4D4F);
