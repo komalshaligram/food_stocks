@@ -8,7 +8,6 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -307,173 +306,85 @@ class MessageScreenWidget extends StatelessWidget {
     required void Function() onTap,
     required bool isRead,
   }) {
-    return DelayedWidget(
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15),
-                blurRadius: AppConstants.blur_10),
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius:
+            BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.shadowColor.withOpacity(0.15),
+              blurRadius: AppConstants.blur_10),
+        ],
+      ),
+      margin: EdgeInsets.symmetric(
+          horizontal: AppConstants.padding_10,
+          vertical: AppConstants.padding_5),
+      padding: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_10,
+          horizontal: AppConstants.padding_10),
+      child: InkWell(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onTap: onTap,
+        child: Row(
+          children: [
+            Container(
+              height: 16,
+              width: 16,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isRead ? Colors.transparent : AppColors.mainColor,
+              ),
+              margin: EdgeInsets.only(
+                  left: context.rtl ? AppConstants.padding_10 : 0,
+                  right: context.rtl ? 0 : AppConstants.padding_10),
+            ),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.smallFont,
+                        color: AppColors.blackColor,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  5.height,
+                  Text(
+                    content,
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_12,
+                        color: AppColors.blackColor),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  5.height,
+                  Text(
+                    '${dateTime}',
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_10,
+                        color: AppColors.textColor),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: 40,
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.arrow_forward_ios_sharp,
+                color: AppColors.blackColor,
+              ),
+            )
           ],
-        ),
-        margin: EdgeInsets.symmetric(
-            horizontal: AppConstants.padding_10,
-            vertical: AppConstants.padding_5),
-        padding: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_10,
-            horizontal: AppConstants.padding_10),
-        child: InkWell(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onTap: onTap,
-          child: Row(
-            children: [
-              Container(
-                height: 16,
-                width: 16,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isRead ? Colors.transparent : AppColors.mainColor,
-                ),
-                margin: EdgeInsets.only(
-                    left: context.rtl ? AppConstants.padding_10 : 0,
-                    right: context.rtl ? 0 : AppConstants.padding_10),
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.smallFont,
-                          color: AppColors.blackColor,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    5.height,
-                    Text(
-                      content,
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.blackColor),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    5.height,
-                    Text(
-                      '${dateTime}',
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_10,
-                          color: AppColors.textColor),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: 40,
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.arrow_forward_ios_sharp,
-                  color: AppColors.blackColor,
-                ),
-              )
-            ],
-          ),
         ),
       ),
     );
   }
 
-/*  void deleteDialog({
-    required BuildContext context,
-    required String messageId,
-    required int listIndex,
-
-  }) {
-    MessageBloc bloc = context.read<MessageBloc>();
-    showDialog(
-        context: context,
-        builder: (context1) => BlocProvider.value(
-          value: context.read<MessageBloc>(),
-          child: BlocBuilder<MessageBloc, MessageState>(
-            builder: (context, state) {
-              return AbsorbPointer(
-                absorbing: state.isRemoveProcess ? true : false,
-                child: AlertDialog(
-                  backgroundColor: AppColors.pageColor,
-                  contentPadding: EdgeInsets.all(20.0),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0)),
-                  title: Text(
-                       '${AppLocalizations.of(context)!.you_want_delete_product}',
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.mediumFont,
-                          color: AppColors.blackColor,
-                          fontWeight: FontWeight.w400)),
-                  actionsPadding: EdgeInsets.only(
-                      right: AppConstants.padding_20,
-                      bottom: AppConstants.padding_20,
-                      left: AppConstants.padding_20),
-                  actions: [
-                    InkWell(
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      onTap: () {
-                      bloc.add(MessageEvent.MessageDeleteEvent(
-                            context: context,
-                            messageId: messageId,
-                            dialogContext: context1,
-                            ));
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 14.0, vertical: 10.0),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0)),
-                        width: 80,
-                        child: Text(
-                          '${AppLocalizations.of(context)!.yes}',
-                          style: AppStyles.rkRegularTextStyle(
-                              color: AppColors.mainColor.withOpacity(0.9),
-                              size: AppConstants.smallFont),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      onTap: () {
-                       bloc.add(MessageEvent.refreshListEvent(
-                            context: context1));
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 14.0, vertical: 10.0),
-                        alignment: Alignment.center,
-                        width: 80,
-                        decoration: BoxDecoration(
-                            color: AppColors.mainColor.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(8.0)),
-                        child: Text(
-                          '${AppLocalizations.of(context)!.no}',
-                          style: AppStyles.rkRegularTextStyle(
-                              color: AppColors.whiteColor,
-                              size: AppConstants.smallFont),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
-        ));
-  }*/
 
 
 }

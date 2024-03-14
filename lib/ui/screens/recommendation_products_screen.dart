@@ -192,7 +192,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                         header: RefreshWidget(),
                         footer: CustomFooter(
                             builder: (context, mode) =>
-                            state.isGridView?  SupplierProductsScreenShimmerWidget() :StoreCategoryScreenSubcategoryShimmerWidget()
+                            state.isGridView ? SupplierProductsScreenShimmerWidget() :StoreCategoryScreenSubcategoryShimmerWidget()
                         ),
                         enablePullUp: !state.isBottomOfProducts,
                         onRefresh: () {
@@ -227,9 +227,10 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                       childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
                                           .productGridAspectRatio: AppConstants
                                           .productGridAspectRatio1),
-                                  itemBuilder: (context, index) => CommonProductItemWidget(
+                                  itemBuilder: (context, index) {
+                                    return CommonProductItemWidget(
                                     lowStock:  state.recommendationProductsList[index].lowStock.toString(),
-                                      imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
+                                      imageWidth: getScreenWidth(context) >= 700 ? 100 : 70,
                                       imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                       productStock: state
                                           .recommendationProductsList[
@@ -270,15 +271,16 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                 '',
                                             productListIndex: 1
                                         );
-                                      })
-
-                              ):   ListView.builder(
+                                      });
+                                  }
+                              ):ListView.builder(
                                 itemCount: state.recommendationProductsList.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 padding: EdgeInsets.symmetric(
                                     horizontal: AppConstants.padding_5),
                                 itemBuilder: (context, index) => CommonProductListWidget(
+                                  numberOfUnits: state.recommendationProductsList[index].numberOfUnit.toString(),
                                   lowStock: state.recommendationProductsList[index].lowStock.toString(),
                                     productStock: state.recommendationProductsList[index].productStock.toString(),
                                     productImage: state.recommendationProductsList[index]
@@ -301,7 +303,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                               .recommendationProductsList[index]
                                               .id ??
                                               '',
-                                          productStock: state.recommendationProductsList[index].productStock.toString() ?? '0',
+                                          productStock: state.recommendationProductsList[index].productStock.toString(),
                                           productListIndex: 1
 
                                       );

@@ -825,26 +825,27 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             if (response.status == 200) {
               List<MessageData> messageList =
               state.messageList.toList(growable: true);
-              messageList.addAll(response.data
-                  ?.map((message) => MessageData(
-                id: message.id,
-                isRead: message.isRead,
-                message: Message(
-                    id: message.message?.id ?? '',
-                    title: message.message?.title ?? '',
-                    summary: message.message?.summary ?? '',
-                    body: message.message?.body ?? '',
-                    messageImage: message.message?.messageImage ?? '',
-                    subPage: message.message?.subPage?? '',
-                    mainPage: message.message?.mainPage ?? '',
-                    navigationId: message.message?.navigationId ?? ''
-                ),
-                createdAt: message.createdAt,
-                updatedAt: message.updatedAt,
-              ))
-                  .toList() ??
-                  []);
-
+              if(response.data?.isNotEmpty  ?? false){
+                messageList.addAll(response.data
+                    ?.map((message) => MessageData(
+                  id: message.id,
+                  isRead: message.isRead,
+                  message: Message(
+                      id: message.message?.id ?? '',
+                      title: message.message?.title ?? '',
+                      summary: message.message?.summary ?? '',
+                      body: message.message?.body ?? '',
+                      messageImage: message.message?.messageImage ?? '',
+                      subPage: message.message?.subPage?? '',
+                      mainPage: message.message?.mainPage ?? '',
+                      navigationId: message.message?.navigationId ?? ''
+                  ),
+                  createdAt: message.createdAt,
+                  updatedAt: message.updatedAt,
+                ))
+                    .toList() ??
+                    []);
+              }
               debugPrint('new message list len = ${messageList.length}');
               emit(state.copyWith(
                   messageList: messageList, isMessageShimmering: false));

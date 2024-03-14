@@ -153,62 +153,51 @@ class CompanyScreenWidget extends StatelessWidget {
       required String companyName,
       required BuildContext context,
       required void Function() onTap}) {
-    return DelayedWidget(
-      child: Container(
-        height: getScreenHeight(context),
-        width: getScreenWidth(context),
-        clipBehavior: Clip.hardEdge,
-        margin: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_10,
-            horizontal: AppConstants.padding_5),
-        decoration: BoxDecoration(
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-          color: AppColors.whiteColor,
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15),
-                blurRadius: AppConstants.blur_10)
-          ],
-        ),
-        child: InkWell(
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-          onTap: onTap,
-          child: Column(
-            children: [
-              Expanded(
-                child: companyLogo.isNotEmpty ? CachedNetworkImage(
-                  imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.center,
-                  placeholder: (context, url) => CommonShimmerWidget(
-                    child: Container(
-                      height: getScreenHeight(context),
-                      width: getScreenWidth(context),
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        borderRadius: BorderRadius.only(
-                            topLeft:
-                            Radius.circular(AppConstants.radius_10),
-                            topRight:
-                            Radius.circular(AppConstants.radius_10)),
-                      ),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) {
-                    debugPrint('company screen error : $error');
-                    return Container(
+    return Container(
+      height: getScreenHeight(context),
+      width: getScreenWidth(context),
+      clipBehavior: Clip.hardEdge,
+      margin: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_10,
+          horizontal: AppConstants.padding_5),
+      decoration: BoxDecoration(
+        borderRadius:
+            BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        color: AppColors.whiteColor,
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.shadowColor.withOpacity(0.15),
+              blurRadius: AppConstants.blur_10)
+        ],
+      ),
+      child: InkWell(
+        borderRadius:
+            BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        onTap: onTap,
+        child: Column(
+          children: [
+            Expanded(
+              child: companyLogo.isNotEmpty ? CachedNetworkImage(
+                imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.center,
+                placeholder: (context, url) => CommonShimmerWidget(
+                  child: Container(
                     height: getScreenHeight(context),
                     width: getScreenWidth(context),
-                    color: AppColors.whiteColor,
-                    child: Image.asset(
-                      AppImagePath.imageNotAvailable5,
-                      fit: BoxFit.cover,
+                    decoration: BoxDecoration(
+                      color: AppColors.whiteColor,
+                      borderRadius: BorderRadius.only(
+                          topLeft:
+                          Radius.circular(AppConstants.radius_10),
+                          topRight:
+                          Radius.circular(AppConstants.radius_10)),
                     ),
-                  );
-                  },
-                ) : Container(
+                  ),
+                ),
+                errorWidget: (context, url, error) {
+                  debugPrint('company screen error : $error');
+                  return Container(
                   height: getScreenHeight(context),
                   width: getScreenWidth(context),
                   color: AppColors.whiteColor,
@@ -216,32 +205,41 @@ class CompanyScreenWidget extends StatelessWidget {
                     AppImagePath.imageNotAvailable5,
                     fit: BoxFit.cover,
                   ),
+                );
+                },
+              ) : Container(
+                height: getScreenHeight(context),
+                width: getScreenWidth(context),
+                color: AppColors.whiteColor,
+                child: Image.asset(
+                  AppImagePath.imageNotAvailable5,
+                  fit: BoxFit.cover,
                 ),
               ),
-              Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.symmetric(
-                    vertical: AppConstants.padding_5,
-                    horizontal: AppConstants.padding_5),
-                decoration: BoxDecoration(
-                  //color: AppColors.mainColor,
-                  gradient: AppColors.appMainGradientColor,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(AppConstants.radius_10),
-                      bottomRight: Radius.circular(AppConstants.radius_10)),
-                  // border: Border.all(color: AppColors.whiteColor, width: 1),
-                ),
-                child: Text(
-                  companyName,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_14, color: AppColors.whiteColor),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(
+                  vertical: AppConstants.padding_5,
+                  horizontal: AppConstants.padding_5),
+              decoration: BoxDecoration(
+                //color: AppColors.mainColor,
+                gradient: AppColors.appMainGradientColor,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(AppConstants.radius_10),
+                    bottomRight: Radius.circular(AppConstants.radius_10)),
+                // border: Border.all(color: AppColors.whiteColor, width: 1),
               ),
-            ],
-          ),
+              child: Text(
+                companyName,
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_14, color: AppColors.whiteColor),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
         ),
       ),
     );

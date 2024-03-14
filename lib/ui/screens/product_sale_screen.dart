@@ -202,20 +202,19 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required void Function() onButtonTap,
     required bool isGuestUser,
   }) {
-    return DelayedWidget(
-        child: CommonProductSaleItemWidget(
-      imageHeight: getScreenHeight(context) >= 1000
-          ? getScreenHeight(context) * 0.17
-          : 70,
-      isGuestUser: isGuestUser,
-      saleImage: saleImage,
-      title: title,
-      description: description,
-      salePercentage: salePercentage,
-      onButtonTap: onButtonTap,
-      productName: productName,
-      discountedPrice: discountedPrice,
-    ));
+    return CommonProductSaleItemWidget(
+          imageHeight: getScreenHeight(context) >= 1000
+      ? getScreenHeight(context) * 0.17
+      : 70,
+          isGuestUser: isGuestUser,
+          saleImage: saleImage,
+          title: title,
+          description: description,
+          salePercentage: salePercentage,
+          onButtonTap: onButtonTap,
+          productName: productName,
+          discountedPrice: discountedPrice,
+        );
   }
 
   void showProductDetails({

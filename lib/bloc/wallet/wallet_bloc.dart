@@ -44,12 +44,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       DateTime firstDayCurrentMonth = DateTime.utc(DateTime.now().year, DateTime.now().month, 1);
 
       DateTime lastDayCurrentMonth = DateTime.utc(DateTime.now().year, DateTime.now().month + 1).subtract(Duration(days: 1));
-      if(preferencesHelper.getGuestUser()){
 
-
-      }
-      else{
-
+      if(!preferencesHelper.getGuestUser()){
         if (event is _checkLanguage) {
           emit(state.copyWith(language: preferencesHelper.getAppLanguage(),isExportComplete: false));
         }
@@ -78,7 +74,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               data: reqMap,
             );
 
-            debugPrint('WalletRecord url  = ${AppUrls.walletRecordUrl}');
+            debugPrint('WalletRecord url  = ${AppUrls.baseUrl}${AppUrls.walletRecordUrl}');
             WalletRecordResModel response = WalletRecordResModel.fromJson(res);
             //    debugPrint('WalletRecordResModel  = $response');
 
@@ -115,7 +111,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             );
 
             debugPrint(
-                'totalExpenseByYearUrl url  = ${AppUrls.totalExpenseByYearUrl}');
+                'totalExpenseByYearUrl url  = ${AppUrls.baseUrl}${AppUrls.totalExpenseByYearUrl}');
             expense.TotalExpenseResModel response =
             expense.TotalExpenseResModel.fromJson(res);
             //  debugPrint('TotalExpenseResModel  = $response');
@@ -199,14 +195,12 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             );
 
             debugPrint(
-                'AllWalletTransaction url  = ${AppUrls.getAllWalletTransactionUrl}');
+                'AllWalletTransaction url  = ${AppUrls.baseUrl}${AppUrls.getAllWalletTransactionUrl}');
             AllWalletTransactionResModel response =
             AllWalletTransactionResModel.fromJson(res);
             // debugPrint('AllWalletTransactionResModel  = $response');
 
             if (response.status == 200) {
-              //   debugPrint('[filter count]     ${response.metaData?.totalFilteredCount}');
-
               List<Datum> temp =
               state.walletTransactionsList.toList(growable: true);
               if ((response.metaData?.totalFilteredCount ?? 1) >
@@ -290,7 +284,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 .post(AppUrls.exportWalletTransactionUrl, data: reqMap);
 
             debugPrint(
-                'exportWalletTransaction url  = ${AppUrls.exportWalletTransactionUrl}');
+                'exportWalletTransaction url  = ${AppUrls.baseUrl}${AppUrls.exportWalletTransactionUrl}');
 
             ExportWalletTransactionsResModel response =
             ExportWalletTransactionsResModel.fromJson(res);
@@ -358,7 +352,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               data: reqMap,
             );
 
-            debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
+            debugPrint('getOrdersCountUrl url  = ${AppUrls.baseUrl}${AppUrls.getOrdersCountUrl}');
             GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
             //   debugPrint('getOrdersCount response  = ${response}');
             if (response.status == 200) {

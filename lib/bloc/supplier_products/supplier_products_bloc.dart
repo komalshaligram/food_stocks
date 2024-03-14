@@ -97,13 +97,13 @@ class SupplierProductsBloc
             response =
                 SupplierProductsResModel.fromJson(res);
 
-            debugPrint('search url = ${AppUrls.getPlanogramAllProductUrl}');
+            debugPrint('search url = ${AppUrls.baseUrl}${AppUrls.getPlanogramAllProductUrl}');
           } else {
             final res = await DioClient(event.context)
                 .post(AppUrls.getSupplierProductsUrl, data: req);
             response =
                 SupplierProductsResModel.fromJson(res);
-            debugPrint('search url = ${AppUrls.getSupplierProductsUrl}');
+            debugPrint('search url = ${AppUrls.baseUrl}${AppUrls.getSupplierProductsUrl}');
           }
           emit(state.copyWith(searchType: event.searchType.toString()));
           debugPrint('supplier Products res = ${response.data}');
@@ -177,8 +177,8 @@ class SupplierProductsBloc
               data: planogramReqModel);
           SupplierProductsResModel response =
           SupplierProductsResModel.fromJson(res);
-          debugPrint(
-              'product categories = ${response.data!.length.toString()}');
+          debugPrint('product categories = ${response.data!.length.toString()}');
+          debugPrint('getPlanogramAllProductUrl = ${AppUrls.baseUrl}${AppUrls.getPlanogramAllProductUrl}');
           if (response.status == 200) {
             List<SupplierProductsData> productList =
             state.productList.toList(growable: true);
@@ -252,7 +252,7 @@ class SupplierProductsBloc
           ProductDetailsResModel response =
           ProductDetailsResModel.fromJson(res);
            debugPrint('ProductDetailsResModel______${response}');
-           debugPrint('_productQuantity______${_productQuantity}');
+           debugPrint('_productQuantity______${AppUrls.baseUrl}${AppUrls.getProductDetailsUrl}');
           if (response.status == 200) {
             int productStockUpdateIndex = 0;
             if (event.isBarcode) {

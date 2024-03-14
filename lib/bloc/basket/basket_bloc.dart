@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:food_stock/data/model/product_stock_model/product_stock_model.dart';
 import 'package:food_stock/data/model/product_supplier_model/product_supplier_model.dart';
 import 'package:food_stock/data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart' as InsertCartModel;
-
 import 'package:food_stock/data/model/req_model/order_send_req_model/order_send_req_model.dart' as OrderSendModel;
 import 'package:food_stock/data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import 'package:food_stock/data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
@@ -20,7 +19,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/order_model/product_details_model.dart';
-
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/order_send_res_model/order_send_res_model.dart';
@@ -517,7 +515,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               if(response.product != null){
                 add(BasketEvent.RelatedProductsEvent(productId: event.productId,context: event.context));
               }
-              if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode)) {
+              if (event.isBarcode) {
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: false);
                 productStockList[productStockList

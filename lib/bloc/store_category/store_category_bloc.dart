@@ -272,7 +272,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           final res = await DioClient(event.context)
               .post(AppUrls.getPlanogramProductsUrl, data: req);
           PlanogramResModel response = PlanogramResModel.fromJson(res);
-           debugPrint('state.issubcat:${state.isSubCategory}');
+           debugPrint('getPlanogramProductsUrl  :${AppUrls.baseUrl}${AppUrls.getPlanogramProductsUrl}');
            debugPrint('GetPlanoGramProductsEvent   response :${response}');
           if (response.status == 200) {
             if(state.isSubCategory){
@@ -1162,7 +1162,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               .get(path: '${AppUrls.getPlanoramByIdUrl}${categoryId}');
 
 
-          debugPrint('url_____${AppUrls.getPlanoramByIdUrl}${categoryId}');
+          debugPrint('url_____${AppUrls.baseUrl}${AppUrls.getPlanoramByIdUrl}${categoryId}');
 
           GetPlanogramByIdModel response = GetPlanogramByIdModel.fromJson(res);
 
@@ -1206,7 +1206,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               pageNum: state.subProductPageNum + 1,
               pageLimit: AppConstants.orderPageLimit,
             );
-          debugPrint('getSubCategoriesProduct_____${AppUrls.getsubCategoryProductsUrl}');
+          debugPrint('getSubCategoriesProduct_____${AppUrls.baseUrl}${AppUrls.getsubCategoryProductsUrl}');
           debugPrint('getSubCategoriesProduct req_____${getSubCategoriesProductReqModel}');
           final  res = await DioClient(event.context)
                 .post('${AppUrls.getsubCategoryProductsUrl}',
