@@ -39,9 +39,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
     on<FileUploadEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
+
       if (event is _getFormsListEvent) {
         emit(state.copyWith(
             isLoading: true, isShimmering: true, isUpdate: event.isUpdate , language: preferencesHelper.getAppLanguage()));
+        print('update___${state.isUpdate}');
         try {
           final res =
               await DioClient(event.context).get(path: AppUrls.formsListUrl);
@@ -58,7 +60,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   name: response.data?.clientForms?[i].formName));
               debugPrint('formList[$i] = ${formsList[i].name}');
             }
-            emit(state.copyWith(formsAndFilesList: formsList));
+           // emit(state.copyWith(formsAndFilesList: formsList));
             try {
               final res = await DioClient(event.context)
                   .get(path: AppUrls.filesListUrl);
@@ -68,6 +70,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     state.formsAndFilesList.toList(growable: true);
                 int len = response.data?.clientFiles?.toList().length ?? 0;
                 for (int i = 0; i < len; i++) {
+                  filesList.add(FormAndFileModel(
+                      id: response.data?.clientFiles?[i].id,
+                      isForm: false,
+                      // isDownloadable: true,
+                      name: response.data?.clientFiles?[i].fileName));
                   filesList.add(FormAndFileModel(
                       id: response.data?.clientFiles?[i].id,
                       isForm: false,

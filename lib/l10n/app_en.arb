@@ -408,5 +408,37 @@
   "my_invoices": "My invoices",
   "invoice_number" : "Invoice Number",
   "not_include_surfaces_price":"This price does not include surfaces price",
-   "open":"open"
+   "open":"open",
+  "data_for_form":"Data for forms",
+  "select_agent":"Select agent",
+  "owner1_full_name":"Owner 1 full name",
+  "owner_1_israel_id":"Owner 1 Israel ID number",
+  "owner2_full_name":"Owner 2 full name",
+  "owner_2_israel_id":"Owner 2 Israel ID number",
+  "guarantee_1_full_name":"Guarantee 1 full name",
+  "guarantee_1_israel_id":"Guarantee 1 Israel ID number",
+  "guarantee_2_full_name":"Guarantee 2 full name",
+  "guarantee_2_israel_id":"Guarantee 2 Israel ID number",
+  "guarantee_1_address":"Guarantee 1 Address",
+  "guarantee_2_address":"Guarantee 2 Address",
+  "guarantee_1_phone_number":"Guarantee 1 phone number",
+  "guarantee_2_phone_number":"Guarantee 2 phone number",
+  "bank_info":"Bank information",
+  "name_of_bank":"Name of bank",
+  "branch_number":"Branch number",
+  "account_number":"Account number",
+  "please_enter_guarantee1_name":"Please Enter Guarantee1 Name",
+  "please_select_agent":"Please select agent",
+  "please_enter_branch_number":"Please enter branch number",
+  "please_enter_account_number":"Please enter account number",
+  "privacy_policy":"Service Use Agreement - TAVILI"
+
+
+
+
+
+
+
+
+
 }

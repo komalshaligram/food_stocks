@@ -145,13 +145,25 @@ class FormFieldValidation {
     return null;
   }
 
-  String? cityNameField(String value,BuildContext context) {
+  String? guaranteeNameField(String value,BuildContext context) {
     if (value.isEmpty) {
-      return '${AppLocalizations.of(context)!.please_enter_owner_name}';
+      return '${AppLocalizations.of(context)!.please_enter_guarantee1_name}';
     }
     return null;
   }
 
+  String? branchNumberField(String value,BuildContext context) {
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.please_enter_branch_number}';
+    }
+    return null;
+  }
+  String? accountNumberField(String value,BuildContext context) {
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.please_enter_account_number}';
+    }
+    return null;
+  }
 
 
 }

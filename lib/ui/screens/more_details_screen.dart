@@ -74,7 +74,6 @@ class MoreDetailsScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
         builder: (context, state) {
-           debugPrint('ststacity____${state.selectCity}');
           if (list.isEmpty) {
             list = [...state.cityList];
           }
@@ -85,7 +84,6 @@ class MoreDetailsScreenWidget extends StatelessWidget {
               leading: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
-                  //  bloc.add(MoreDetailsEvent.manageDataInBackEvent(context: context));
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Align(
@@ -102,10 +100,10 @@ class MoreDetailsScreenWidget extends StatelessWidget {
             ),
             body: state.isShimmering
                 ? MoreDetailsScreenShimmerWidget()
-                : Stack(
-                    children: [
-                      SafeArea(
-                        child: SingleChildScrollView(
+                : SingleChildScrollView(
+                  child: Column(
+                      children: [
+                        SafeArea(
                           child: Padding(
                             padding: EdgeInsets.only(
                                 left: getScreenWidth(context) * 0.1,
@@ -802,20 +800,20 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                      ),
-                      state.isUpdating
-                          ? Container(
-                              color: Color.fromARGB(10, 0, 0, 0),
-                              height: getScreenHeight(context),
-                              width: getScreenWidth(context),
-                              alignment: Alignment.center,
-                              child: CupertinoActivityIndicator(
-                                color: AppColors.blackColor,
-                              ),
-                            )
-                          : 0.width,
-                    ],
-                  ),
+                        state.isUpdating
+                            ? Container(
+                                color: Color.fromARGB(10, 0, 0, 0),
+                                height: getScreenHeight(context),
+                                width: getScreenWidth(context),
+                                alignment: Alignment.center,
+                                child: CupertinoActivityIndicator(
+                                  color: AppColors.blackColor,
+                                ),
+                              )
+                            : 0.width,
+                      ],
+                    ),
+                ),
           );
         },
       ),

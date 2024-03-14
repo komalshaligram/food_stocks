@@ -409,10 +409,29 @@
   "my_invoices": "החשבוניות שלי",
   "invoice_number" : "מס' חשבונית",
   "not_include_surfaces_price":"הסכום אינו כולל עלות משטחים",
-  "open":"open"
-
-
-
-
+  "open":"open",
+  "data_for_form":"נתונים עבור טפסים",
+  "select_agent" :"הסוכן שלי",
+  "owner1_full_name": "שם בעלים 1",
+  "owner_1_israel_id":"ת.ז. בעלים 1",
+  "owner2_full_name":"שם בעלים 2",
+  "owner_2_israel_id":"ת.ז. בעלים 2",
+  "guarantee_1_full_name":"שם ערב 1",
+  "guarantee_1_israel_id":"ת.ז. ערב 1",
+ "guarantee_2_full_name":"שם ערב 2",
+  "guarantee_2_israel_id":"ת.ז. ערב 2",
+  "guarantee_1_address":"Guarantee 1 Address",
+  "guarantee_2_address":"Guarantee 2 Address",
+  "guarantee_1_phone_number":"Guarantee 1 phone number",
+  "guarantee_2_phone_number":"Guarantee 2 phone number",
+  "bank_info":"פרטי חשבון בנק",
+  "name_of_bank":"שם בנק",
+  "branch_number":"מספר סניף",
+  "account_number":"מספר חשבון",
+  "please_enter_guarantee1_name":"please Enter Guarantee1 Name",
+  "please_select_agent":"Please select agent",
+   "please_enter_branch_number":"Please enter branch number",
+    "please_enter_account_number":"Please enter account number",
+  "privacy_policy":"הסכם שימוש בשירות - TAVILI"
 
 }

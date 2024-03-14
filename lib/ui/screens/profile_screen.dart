@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +18,7 @@ import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/common_alert_dialog.dart';
+import '../widget/common_drop_down_button.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
@@ -111,10 +111,10 @@ class ProfileScreenWidget extends StatelessWidget {
             ),
             body: state.isShimmering
                 ? ProfileScreenShimmerWidget()
-                : Stack(
-                    children: [
-                      SafeArea(
-                        child: SingleChildScrollView(
+                : SingleChildScrollView(
+                  child: Column(
+                      children: [
+                        SafeArea(
                           child: Padding(
                             padding: EdgeInsets.only(
                                 left: getScreenWidth(context1) * 0.1,
@@ -511,63 +511,24 @@ class ProfileScreenWidget extends StatelessWidget {
                                     name: AppLocalizations.of(context)!
                                         .type_of_business,
                                   ),
-                                  SizedBox(
-                                    // height: AppConstants.textFormFieldHeight,
-                                    child: DropdownButtonFormField<String>(
-                                      icon: Icon(
-                                        Icons.keyboard_arrow_down,
-                                        color: AppColors.blackColor,
-                                      ),
-                                      alignment: Alignment.bottomCenter,
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.only(
-                                            left: AppConstants.padding_10,
-                                            right: AppConstants.padding_10),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.radius_3),
-                                          borderSide: BorderSide(
-                                            color: AppColors.borderColor,
-                                          ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.radius_3),
-                                          borderSide: BorderSide(
-                                            color: AppColors.borderColor,
-                                          ),
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.radius_3),
-                                          borderSide: BorderSide(
-                                            color: AppColors.borderColor,
-                                          ),
-                                        ),
-                                      ),
-                                      isExpanded: true,
-                                      elevation: 0,
-                                      style: TextStyle(
-                                        fontSize: AppConstants.smallFont,
-                                        color: AppColors.blackColor,
-                                      ),
-                                      value: state.selectedBusinessType,
-                                      items: state
-                                          .businessTypeList.data?.clientTypes
-                                          ?.map((businessType) {
-                                        return DropdownMenuItem<String>(
-                                          value: businessType.businessType,
-                                          child: Text(
-                                              "${businessType.businessType}"),
-                                        );
-                                      }).toList(),
-                                      onChanged: (newBusinessType) {
-                                        bloc.add(ProfileEvent
-                                            .changeBusinessTypeEvent(
-                                                newBusinessType:
-                                                    newBusinessType!));
-                                      },
-                                    ),
+
+                                  CommonDropDownButton(
+                                    items: state
+                                        .businessTypeList.data?.clientTypes
+                                        ?.map((businessType) {
+                                      return DropdownMenuItem<String>(
+                                        value: businessType.businessType,
+                                        child: Text(
+                                            "${businessType.businessType}"),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newBusinessType) {
+                                      bloc.add(ProfileEvent
+                                          .changeBusinessTypeEvent(
+                                          newBusinessType:
+                                          newBusinessType!));
+                                    },
+                                    value: state.selectedBusinessType,
                                   ),
                                   7.height,
                                   CustomContainerWidget(
@@ -716,20 +677,20 @@ class ProfileScreenWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                      ),
-                      state.isUpdating
-                          ? Container(
-                              color: Color.fromARGB(10, 0, 0, 0),
-                              height: getScreenHeight(context),
-                              width: getScreenWidth(context),
-                              alignment: Alignment.center,
-                              child: CupertinoActivityIndicator(
-                                color: AppColors.blackColor,
-                              ),
-                            )
-                          : 0.width,
-                    ],
-                  ),
+                        state.isUpdating
+                            ? Container(
+                                color: Color.fromARGB(10, 0, 0, 0),
+                                height: getScreenHeight(context),
+                                width: getScreenWidth(context),
+                                alignment: Alignment.center,
+                                child: CupertinoActivityIndicator(
+                                  color: AppColors.blackColor,
+                                ),
+                              )
+                            : 0.width,
+                      ],
+                    ),
+                ),
           );
         },
       ),

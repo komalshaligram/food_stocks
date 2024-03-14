@@ -81,6 +81,10 @@ class AppStrings {
   static const generalValString = 'generalVal';
   static const mobileValString = 'mobileVal';
   static const cityValString = 'cityVal';
+  static const guaranteeNameString = 'guaranteeNameString';
+  static const branchValString = 'branchValString';
+  static const accountValString = 'accountValString';
+
 
   static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
 

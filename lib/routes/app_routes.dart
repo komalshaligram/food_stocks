@@ -18,15 +18,18 @@ import 'package:food_stock/ui/screens/reorder_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
 import 'package:food_stock/ui/screens/store_category_screen.dart';
 import 'package:food_stock/ui/screens/supplier_products_screen.dart';
+import '../ui/screens/bank_info_screen.dart';
 import '../ui/screens/basket_screen.dart';
 import '../ui/screens/company_product_screen.dart';
 import '../ui/screens/company_screen.dart';
 import '../ui/screens/connect_screen.dart';
+import '../ui/screens/form_data_screen.dart';
 import '../ui/screens/menu_screen.dart';
 import '../ui/screens/file_upload_screen.dart';
 import '../ui/screens/order_details_screen.dart';
 import '../ui/screens/order_successful_screen.dart';
 import '../ui/screens/order_summary_screen.dart';
+import '../ui/screens/privacy_policy_screen.dart';
 import '../ui/screens/product_details_screen.dart';
 import '../ui/screens/profile_screen.dart';
 import '../ui/screens/more_details_screen.dart';
@@ -74,6 +77,8 @@ enum RouteDefine {
   companyProductsScreen,
   recommendationProductsScreen,
   reorderScreen,
+  formDataScreen,
+  bankInfoScreen, privacyPolicyScreen
 
 }
 
@@ -121,6 +126,9 @@ class AppRouting {
       RouteDefine.recommendationProductsScreen.name: (_) =>
           RecommendationProductsRoute.route,
       RouteDefine.reorderScreen.name: (_) => ReorderRoute.route,
+      RouteDefine.formDataScreen.name: (_) => FormDataRoute.route,
+      RouteDefine.bankInfoScreen.name: (_) => BankInfoRoute.route,
+      RouteDefine.privacyPolicyScreen.name: (_) => PrivacyPolicyRoute.route,
     };
 
     final routeBuilder = routes[settings.name];
