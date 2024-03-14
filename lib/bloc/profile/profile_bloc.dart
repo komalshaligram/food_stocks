@@ -122,7 +122,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 path: AppUrls.logOutUrl,
                 data: {"userId": preferences.getUserId()});
 
-            debugPrint('logOut url  = ${DioClient.baseUrl}${AppUrls.logOutUrl}');
+            debugPrint('logOut url  = ${AppUrls.baseUrl}${AppUrls.logOutUrl}');
 
             debugPrint('logOut response  = ${response}');
 

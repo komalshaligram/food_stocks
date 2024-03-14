@@ -947,7 +947,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           debugPrint('sale len = ${response.data?.saleData?.length}');
           debugPrint('sup len = ${response.data?.supplierData?.length}');
           debugPrint(
-              'sup stag len = ${response.data?.supplierProductData?.length}');
+              'sup prod len = ${response.data?.supplierProductData?.length}');
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList.addAll(state.productCategoryList.map((category) =>

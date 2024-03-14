@@ -23,7 +23,7 @@ class DioClient {
   final Dio _dio;
   late BuildContext _context;
   bool isLogOut = false;
-  static String baseUrl = '';
+  bool isLoggedIn = true;
 
   DioClient(this._context)
       : _dio = Dio(
@@ -65,7 +65,7 @@ class DioClient {
       Options? options}) async {
     SharedPreferencesHelper preferencesHelper =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-    debugPrint('URL = ${baseUrl}$path');
+    debugPrint('URL = ${AppUrls.baseUrl}$path');
     debugPrint('token = ${preferencesHelper.getAuthToken()}');
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
@@ -186,7 +186,7 @@ class DioClient {
     try {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      debugPrint('URL = ${baseUrl}$path');
+      debugPrint('URL = ${AppUrls.baseUrl}$path');
       final connectivityResult = await (Connectivity().checkConnectivity());
 
       if (connectivityResult == ConnectivityResult.mobile ||
@@ -229,7 +229,7 @@ class DioClient {
   Future<Map<String, dynamic>> uploadFileProgressWithFormData(
       {required String path, required FormData formData}) async {
     try {
-      debugPrint('URL = ${baseUrl}$path');
+      debugPrint('URL = ${AppUrls.baseUrl}$path');
       final response = await _dio.post(
         path,
         data: formData,
@@ -253,13 +253,13 @@ class DioClient {
     try {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      debugPrint('URL = ${baseUrl}$path');
+      debugPrint('URL = ${AppUrls.baseUrl}$path');
       final connectivityResult = await (Connectivity().checkConnectivity());
 
       if (connectivityResult == ConnectivityResult.mobile ||
           connectivityResult == ConnectivityResult.wifi) {
         try {
-          debugPrint('URL = ${baseUrl}$path');
+          debugPrint('URL = ${AppUrls.baseUrl}$path');
           final response = await _dio.put(path,
               data: data,
               queryParameters: query,

@@ -56,7 +56,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
               ));
           GetMessagesResModel response = GetMessagesResModel.fromJson(res);
           debugPrint(
-              'getMessage   url  = ${DioClient.baseUrl}${AppUrls.getNotificationMessageUrl}');
+              'getMessage   url  = ${AppUrls.baseUrl}${AppUrls.getNotificationMessageUrl}');
 
           debugPrint('getMessage response  = ${response}');
 
@@ -164,7 +164,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
             );
 
           debugPrint(
-              'DeleteMessage url  = ${DioClient.baseUrl}${AppUrls.deleteMessageUrl}');
+              'DeleteMessage url  = ${AppUrls.baseUrl}${AppUrls.deleteMessageUrl}');
 
           debugPrint('DeleteMessage response  = ${response}');
 

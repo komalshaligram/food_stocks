@@ -249,7 +249,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                   .totalSale ??
                                               0,
                                           price: state.productList[index]
-                                                  .productPrice ??
+                                                   .productPrice ??
                                               0.0,
                                           onButtonTap: () {
                                             if(!state.isGuestUser){
@@ -938,9 +938,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                },
                                onQuantityDecreaseTap: () {
                                  if(state
-                                     .productStockList[state.productListIndex][
-                                 state.productStockUpdateIndex]
-                                     .quantity > 1){
+                                     .productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1){
                                    context.read<CompanyProductsBloc>().add(
                                        CompanyProductsEvent.decreaseQuantityOfProduct(
                                            context: context1));

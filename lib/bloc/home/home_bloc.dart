@@ -818,32 +818,34 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               );
 
             GetMessagesResModel response = GetMessagesResModel.fromJson(res);
-            debugPrint(
-                'getMessage   url  = ${DioClient.baseUrl}${AppUrls.getNotificationMessageUrl}');
+
 
             debugPrint('getMessage response  = ${response}');
             if (response.status == 200) {
               List<MessageData> messageList =
               state.messageList.toList(growable: true);
-              messageList.addAll(response.data
-                  ?.map((message) => MessageData(
-                id: message.id,
-                isRead: message.isRead,
-                message: Message(
-                    id: message.message?.id ?? '',
-                    title: message.message?.title ?? '',
-                    summary: message.message?.summary ?? '',
-                    body: message.message?.body ?? '',
-                    messageImage: message.message?.messageImage ?? '',
-                    subPage: message.message?.subPage?? '',
-                    mainPage: message.message?.mainPage ?? '',
-                    navigationId: message.message?.navigationId ?? ''
-                ),
-                createdAt: message.createdAt,
-                updatedAt: message.updatedAt,
-              ))
-                  .toList() ??
-                  []);
+              if(messageList.isNotEmpty){
+                messageList.addAll(response.data
+                    ?.map((message) => MessageData(
+                  id: message.id,
+                  isRead: message.isRead,
+                  message: Message(
+                      id: message.message?.id ?? '',
+                      title: message.message?.title ?? '',
+                      summary: message.message?.summary ?? '',
+                      body: message.message?.body ?? '',
+                      messageImage: message.message?.messageImage ?? '',
+                      subPage: message.message?.subPage?? '',
+                      mainPage: message.message?.mainPage ?? '',
+                      navigationId: message.message?.navigationId ?? ''
+                  ),
+                  createdAt: message.createdAt,
+                  updatedAt: message.updatedAt,
+                ))
+                    .toList() ??
+                    []);
+              }
+
 
               debugPrint('new message list len = ${messageList.length}');
               emit(state.copyWith(
@@ -1173,7 +1175,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   element) => element.isHomePreference == true) ?? true;
               emit(state.copyWith(isCatVisible: productVisible));
               emit(state.copyWith(
-
                   productCategoryList: response.data?.categories ?? [],
                   searchList: searchList,
                   isShimmering: false));
