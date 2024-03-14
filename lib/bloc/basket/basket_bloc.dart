@@ -198,20 +198,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if (event is _IncreaseQuantityOfProduct) {
           List<ProductStockModel> productStockList =
           state.productStockList.toList(growable: false);
-       //   if (state.productStockUpdateIndex != -1) {
+
             if (productStockList[state.productStockUpdateIndex].quantity <
                 double.parse(productStockList[state.productStockUpdateIndex].stock.toString())) {
-            /*  if (productStockList[state.productStockUpdateIndex]
-                  .productSupplierIds
-                  .isEmpty) {
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title:
-                    '${AppLocalizations.of(event.context)!
-                        .please_select_supplier}',
-                    type: SnackBarType.FAILURE);
-                return;
-              }*/
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex].copyWith(
                       quantity: productStockList[state.productStockUpdateIndex]
@@ -229,10 +218,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       .this_supplier_have}${productStockList[state
                       .productStockUpdateIndex].stock}${AppLocalizations.of(
                       event.context)!.quantity_in_stock}",
-                  // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
+
                   type: SnackBarType.FAILURE);
             }
-          //}
+
         }
         else if (event is _SupplierSelectionEvent) {
           debugPrint(
