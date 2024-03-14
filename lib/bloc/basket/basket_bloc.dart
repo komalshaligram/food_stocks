@@ -859,7 +859,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             );
 
             debugPrint(
-                'Order create url  = ${DioClient.baseUrl}${AppUrls.createOrderUrl}');
+                'Order create url  = ${AppUrls.baseUrl}${AppUrls.createOrderUrl}');
             OrderSendResModel response = OrderSendResModel.fromJson(res);
             debugPrint('OrderSendResModel  = $response');
 

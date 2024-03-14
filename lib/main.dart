@@ -11,7 +11,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
 
-
 final shorebirdCodePush = ShorebirdCodePush();
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -22,7 +21,9 @@ void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
+
     await PushNotificationService().setupInteractedMessage();
+    //await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     SharedPreferencesHelper preferencesHelper =
@@ -34,17 +35,15 @@ void main() async {
         }
       });
     }
-    runApp(
-       MyApp(appName: 'TAVILI'),
-    );
+    runApp(MyApp());
   },
           (error, stack) =>
           FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
 
-
-
-
-
-
+@pragma('vm:entry-point')
+Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  debugPrint("Handling a background message:${message.messageId}");
+  debugPrint("Handling a background message:${message.data.toString()}");
+}
 

@@ -818,8 +818,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               );
 
             GetMessagesResModel response = GetMessagesResModel.fromJson(res);
-            debugPrint(
-                'getMessage   url  = ${DioClient.baseUrl}${AppUrls.getNotificationMessageUrl}');
+
 
             debugPrint('getMessage response  = ${response}');
             if (response.status == 200) {

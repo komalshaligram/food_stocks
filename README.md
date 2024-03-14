@@ -38,3 +38,4 @@ samples, guidance on mobile development, and a full API reference.
   🚀 To push an update use: "shorebird patch".
   👀 To preview a release use: "shorebird preview".
   🚀 To make this patch available to your users : "shorebird patch ios-alpha".
+  
