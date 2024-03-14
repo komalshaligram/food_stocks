@@ -20,10 +20,10 @@ String previousOrderProductsResModelToJson(
 @freezed
 class PreviousOrderProductsResModel with _$PreviousOrderProductsResModel {
   const factory PreviousOrderProductsResModel({
-    @JsonKey(name: "status") int? status,
-    @JsonKey(name: "message") String? message,
+     int? status,
+    String? message,
     @JsonKey(name: "data") List<PreviousOrderProductData>? previousProductData,
-    @JsonKey(name: "metaData") MetaData? metaData,
+     MetaData? metaData,
   }) = _PreviousOrderProductsResModel;
 
   factory PreviousOrderProductsResModel.fromJson(Map<String, dynamic> json) =>
@@ -34,11 +34,12 @@ class PreviousOrderProductsResModel with _$PreviousOrderProductsResModel {
 class PreviousOrderProductData with _$PreviousOrderProductData {
   const factory PreviousOrderProductData({
     @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "productStock") double? productStock,
-    @JsonKey(name: "totalSale") int? totalSale,
-    @JsonKey(name: "productPrice") double? productPrice,
-    @JsonKey(name: "mainImage") String? mainImage,
-    @JsonKey(name: "productName") String? productName,
+     double? productStock,
+     int? totalSale,
+     double? productPrice,
+     String? mainImage,
+    String? productName,
+    int? numberOfUnit,
     String? lowStock,
   }) = _PreviousOrderProductData;
 
@@ -49,9 +50,9 @@ class PreviousOrderProductData with _$PreviousOrderProductData {
 @freezed
 class MetaData with _$MetaData {
   const factory MetaData({
-    @JsonKey(name: "currentPage") int? currentPage,
-    @JsonKey(name: "totalFilteredCount") int? totalFilteredCount,
-    @JsonKey(name: "totalFilteredPage") int? totalFilteredPage,
+     int? currentPage,
+     int? totalFilteredCount,
+     int? totalFilteredPage,
   }) = _MetaData;
 
   factory MetaData.fromJson(Map<String, dynamic> json) =>

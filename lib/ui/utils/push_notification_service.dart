@@ -272,7 +272,6 @@ class PushNotificationService {
       debugPrint('subPage  1 = ${subPage}');
       if(subPage == ''){
         if (mainPage == 'companyScreen') {
-           debugPrint('companyScreen___');
            Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.companyScreen.name,
                arguments: {AppStrings.companyIdString: id});

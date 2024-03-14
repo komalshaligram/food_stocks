@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:food_stock/data/model/product_stock_model/product_stock_model.dart';
 import 'package:food_stock/data/model/product_supplier_model/product_supplier_model.dart';
 import 'package:food_stock/data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart' as InsertCartModel;
-
 import 'package:food_stock/data/model/req_model/order_send_req_model/order_send_req_model.dart' as OrderSendModel;
 import 'package:food_stock/data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import 'package:food_stock/data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
@@ -20,7 +19,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/order_model/product_details_model.dart';
-
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/order_send_res_model/order_send_res_model.dart';
@@ -72,11 +70,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
              // ProductStockModel barcodeStock = productStockList.removeLast();
               productStockList.clear();
               productStockList.addAll(response.data?.data?.map(
-                      (recommendationProduct) =>
+                      (product) =>
                       ProductStockModel(
-                        quantity: recommendationProduct.totalQuantity?? 0,
-                          productId: recommendationProduct.id ?? '',
-                          stock: recommendationProduct.productStock.toString())) ??
+                        quantity: product.totalQuantity?? 0,
+                          productId: product.id ?? '',
+                          stock: product.productStock.toString(),
+                        lowStock: product.lowStock.toString()
+                      )) ??
 
                   []);
               //productStockList.add(barcodeStock);
@@ -90,6 +90,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   cartProductId: element.cartProductId ?? '',
                   scales: element.productDetails?.scales ?? '',
                   weight: element.productDetails?.itemsWeight ?? 0,
+                  lowStock: element.lowStock ?? '',
+                  productStock: element.productStock ?? 0,
                 ));
               });
 
@@ -194,20 +196,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if (event is _IncreaseQuantityOfProduct) {
           List<ProductStockModel> productStockList =
           state.productStockList.toList(growable: false);
-       //   if (state.productStockUpdateIndex != -1) {
+
             if (productStockList[state.productStockUpdateIndex].quantity <
                 double.parse(productStockList[state.productStockUpdateIndex].stock.toString())) {
-            /*  if (productStockList[state.productStockUpdateIndex]
-                  .productSupplierIds
-                  .isEmpty) {
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title:
-                    '${AppLocalizations.of(event.context)!
-                        .please_select_supplier}',
-                    type: SnackBarType.FAILURE);
-                return;
-              }*/
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex].copyWith(
                       quantity: productStockList[state.productStockUpdateIndex]
@@ -225,10 +216,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       .this_supplier_have}${productStockList[state
                       .productStockUpdateIndex].stock}${AppLocalizations.of(
                       event.context)!.quantity_in_stock}",
-                  // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
+
                   type: SnackBarType.FAILURE);
             }
-          //}
+
         }
         else if (event is _SupplierSelectionEvent) {
           debugPrint(
@@ -291,21 +282,15 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 type: SnackBarType.FAILURE);
             return;
           }
-          // List<String> cartProductList = preferences.getCartProductList();
-          // List<String> cartProductIdList = preferences.getCartProductIdList();
-          // List<String> cartProductQuantityList =
-          //     preferences.getCartProductQuantityList();
+
           //update or insert cart API
-          if (_isProductInCart /*cartProductList.contains(
-            state.productStockList[state.productStockUpdateIndex].productId)*/
+          if (_isProductInCart
           ) {
             debugPrint('update cart');
             debugPrint('quantity__${state.productStockList[state.productStockUpdateIndex]
                 .quantity}');
             try {
-              // int lastQuantityIndex = cartProductList.indexOf(state
-              //     .productStockList[state.productStockUpdateIndex].productId);
-              // debugPrint('last quantity = $lastQuantityIndex');
+
               emit(state.copyWith(isLoading: true));
               UpdateCartReqModel request = UpdateCartReqModel(
                 productId: event.productId,
@@ -319,10 +304,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     : state.productStockList[state.productStockUpdateIndex]
                     .productSaleId,
                 quantity: state.productStockList[state.productStockUpdateIndex]
-                    .quantity/* + _productQuantity */,
+                    .quantity,
                 cartProductId:
-                _cartProductId /*cartProductIdList[cartProductList.indexOf(state
-                  .productStockList[state.productStockUpdateIndex].productId)]*/,
+                _cartProductId,
               );
 
                debugPrint('UpdateCartReqModel_____${request}');
@@ -333,11 +317,11 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               );
               UpdateCartResModel response = UpdateCartResModel.fromJson(res);
               if (response.status == 201) {
+                Navigator.pop(event.context);
                 Vibration.vibrate();
                 add(BasketEvent.getAllCartEvent(
                   context: event.context,
                 ));
-                Navigator.pop(event.context);
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
                 productStockList[state.productStockUpdateIndex] =
@@ -421,19 +405,14 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               final res = await DioClient(event.context).post(
                   '${AppUrls.insertProductInCartUrl}${preferencesHelper
                       .getCartId()}',
-                  data: req,
-                  options: Options(
-                    headers: {
-                      HttpHeaders.authorizationHeader:
-                      'Bearer ${preferencesHelper.getAuthToken()}',
-                    },
-                  ));
+                  data: req,);
               InsertCartResModel response = InsertCartResModel.fromJson(res);
               if (response.status == 201) {
                 //await HapticFeedback.heavyImpact();
                 //
                 Vibration.vibrate();
                 add(BasketEvent.getAllCartEvent(context: event.context));
+                Navigator.pop(event.context);
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
                 productStockList[state.productStockUpdateIndex] =
@@ -452,7 +431,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     isCartCountChange: true));
                 emit(state.copyWith(isCartCountChange: false));
                 add(BasketEvent.setCartCountEvent(isClearCart: false));
-                Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
@@ -537,7 +515,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               if(response.product != null){
                 add(BasketEvent.RelatedProductsEvent(productId: event.productId,context: event.context));
               }
-              if (/*productStockUpdateIndex == -1 &&*/ (event.isBarcode)) {
+              if (event.isBarcode) {
                 List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: false);
                 productStockList[productStockList

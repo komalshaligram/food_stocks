@@ -53,6 +53,7 @@ class Planogramproduct with _$Planogramproduct {
     @JsonKey(name: "mainImage") String? mainImage,
     @JsonKey(name: "productName") String? productName,
     @JsonKey(name: "order") int? order,
+    int? numberOfUnit,
     String? lowStock,
   }) = _Planogramproduct;
 

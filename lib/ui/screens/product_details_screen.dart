@@ -837,7 +837,6 @@ class _ProductDetailsScreenWidgetState
           maxChildSize: 1 -
               (MediaQuery.of(context).viewPadding.top /
                   getScreenHeight(context)),
-          //maxChildSize: state.relatedProductList.isEmpty ? AppConstants.bottomSheetMaxHeight : 1,
           minChildSize: 1 -
               (MediaQuery.of(context).viewPadding.top /
                   getScreenHeight(context)),
@@ -1164,7 +1163,6 @@ class _ProductDetailsScreenWidgetState
         builder: (context, state) {
           quantity =
               (state.quantity == 0 ? missingQuantity : state.quantity) ?? 0;
-           debugPrint('value_____$groupValue');
           return Container(
 
             height: value == 4 ? 165 : 60,

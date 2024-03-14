@@ -227,57 +227,55 @@ class ReorderScreenWidget extends StatelessWidget {
                                                           .productGridAspectRatio
                                                       : AppConstants
                                                           .productGridAspectRatio1),
-                                      itemBuilder: (context, index) => DelayedWidget(
-                                            child: CommonProductItemWidget(
-                                              lowStock: state
-                                                  .previousOrderProductsList[
-                                              index]
-                                                  .lowStock.toString(),
-                                              imageWidth: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 100 : 70,
-                                              imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
-                                              productStock: state
+                                      itemBuilder: (context, index) => CommonProductItemWidget(
+                                        lowStock: state
+                                            .previousOrderProductsList[
+                                        index]
+                                            .lowStock.toString(),
+                                        imageWidth: getScreenWidth(context) >= 700 ?100 : 70,
+                                        imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
+                                        productStock: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .productStock
+                                                .toString() ,
+                                        productImage: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .mainImage ??
+                                            '',
+                                        productName: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .productName ??
+                                            '',
+                                        totalSaleCount: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .totalSale ??
+                                            0,
+                                        price: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .productPrice ??
+                                            0.0,
+                                        onButtonTap: () {
+                                          showProductDetails(
+                                              context: context,
+                                              productId: state
                                                       .previousOrderProductsList[
                                                           index]
-                                                      .productStock
-                                                      .toString() ,
-                                              productImage: state
-                                                      .previousOrderProductsList[
-                                                          index]
-                                                      .mainImage ??
+                                                      .id ??
                                                   '',
-                                              productName: state
-                                                      .previousOrderProductsList[
-                                                          index]
-                                                      .productName ??
-                                                  '',
-                                              totalSaleCount: state
-                                                      .previousOrderProductsList[
-                                                          index]
-                                                      .totalSale ??
-                                                  0,
-                                              price: state
-                                                      .previousOrderProductsList[
-                                                          index]
-                                                      .productPrice ??
-                                                  0.0,
-                                              onButtonTap: () {
-                                                showProductDetails(
-                                                    context: context,
-                                                    productId: state
-                                                            .previousOrderProductsList[
-                                                                index]
-                                                            .id ??
-                                                        '',
-                                                productListIndex: 1,
-                                                isBarcode: false,
-                                                  productStock: state
-                                                      .previousOrderProductsList[
-                                                  index]
-                                                      .productStock.toString()
-                                                );
-                                              },
-                                            ),
-                                          )
+                                          productListIndex: 1,
+                                          isBarcode: false,
+                                            productStock: state
+                                                .previousOrderProductsList[
+                                            index]
+                                                .productStock.toString()
+                                          );
+                                        },
+                                      )
                                       ):
                           ListView.builder(
                             itemCount: state.previousOrderProductsList.length,
@@ -285,35 +283,34 @@ class ReorderScreenWidget extends StatelessWidget {
                             physics: const NeverScrollableScrollPhysics(),
                             padding: EdgeInsets.symmetric(
                                 horizontal: AppConstants.padding_5),
-                            itemBuilder: (context, index) => DelayedWidget(
-                              child: CommonProductListWidget(
-                                  lowStock: state.previousOrderProductsList[index].lowStock.toString(),
-                                  productStock: state.previousOrderProductsList[index].productStock.toString(),
-                                  productImage: state.previousOrderProductsList[index]
-                                      .mainImage ??
-                                      '',
-                                  productName: state.previousOrderProductsList[index]
-                                      .productName ??
-                                      '',
-                                  totalSaleCount: state
-                                      .previousOrderProductsList[index]
-                                      .totalSale ??
-                                      0,
-                                  price: state.previousOrderProductsList[index]
-                                      .productPrice ??
-                                      0.0,
-                                  onButtonTap: () {
-                                    showProductDetails(
-                                      productListIndex: 1,
-                                      context: context,
-                                      productId: state
-                                          .previousOrderProductsList[index]
-                                          .id ??
-                                          '',
-                                      productStock: state.previousOrderProductsList[index].productStock.toString(),
-                                    );
-                                  }),
-                            ),
+                            itemBuilder: (context, index) => CommonProductListWidget(
+                             numberOfUnits: state.previousOrderProductsList[index].numberOfUnit.toString(),
+                                lowStock: state.previousOrderProductsList[index].lowStock.toString(),
+                                productStock: state.previousOrderProductsList[index].productStock.toString(),
+                                productImage: state.previousOrderProductsList[index]
+                                    .mainImage ??
+                                    '',
+                                productName: state.previousOrderProductsList[index]
+                                    .productName ??
+                                    '',
+                                totalSaleCount: state
+                                    .previousOrderProductsList[index]
+                                    .totalSale ??
+                                    0,
+                                price: state.previousOrderProductsList[index]
+                                    .productPrice ??
+                                    0.0,
+                                onButtonTap: () {
+                                  showProductDetails(
+                                    productListIndex: 1,
+                                    context: context,
+                                    productId: state
+                                        .previousOrderProductsList[index]
+                                        .id ??
+                                        '',
+                                    productStock: state.previousOrderProductsList[index].productStock.toString(),
+                                  );
+                                }),
                           ),
                         ],
                       ),
@@ -606,97 +603,95 @@ class ReorderScreenWidget extends StatelessWidget {
     required void Function() onPressed,
     required bool isRTL,
   }) {
-    return DelayedWidget(
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15),
-                blurRadius: AppConstants.blur_10),
-          ],
-        ),
-        clipBehavior: Clip.hardEdge,
-        margin: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_10,
-            horizontal: AppConstants.padding_5),
-        padding: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_5,
-            horizontal: AppConstants.padding_10),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: Image.network(
-                "${AppUrls.baseFileUrl}$productImage",
-                height: 70,
-                fit: BoxFit.fitHeight,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress?.cumulativeBytesLoaded !=
-                      loadingProgress?.expectedTotalBytes) {
-                    return CommonShimmerWidget(
-                      child: Container(
-                        height: 70,
-                        width: 70,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(AppConstants.radius_10)),
-                        ),
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius:
+            BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.shadowColor.withOpacity(0.15),
+              blurRadius: AppConstants.blur_10),
+        ],
+      ),
+      clipBehavior: Clip.hardEdge,
+      margin: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_10,
+          horizontal: AppConstants.padding_5),
+      padding: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_5,
+          horizontal: AppConstants.padding_10),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Image.network(
+              "${AppUrls.baseFileUrl}$productImage",
+              height: 70,
+              fit: BoxFit.fitHeight,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress?.cumulativeBytesLoaded !=
+                    loadingProgress?.expectedTotalBytes) {
+                  return CommonShimmerWidget(
+                    child: Container(
+                      height: 70,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.radius_10)),
                       ),
-                    );
-                  }
-                  return child;
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    child: Image.asset(AppImagePath.imageNotAvailable5,
-                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                  );
-                },
-              ),
-            ),
-            5.height,
-            Text(
-              productName,
-              style: AppStyles.rkBoldTextStyle(
-                  size: AppConstants.font_12,
-                  color: AppColors.blackColor,
-                  fontWeight: FontWeight.w600),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            5.height,
-            Expanded(
-              child: totalSale == 0
-                  ? 0.width
-                  : Text(
-                      "${totalSale} ${AppLocalizations.of(context)!.discount}",
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_10,
-                          color: AppColors.saleRedColor,
-                          fontWeight: FontWeight.w600),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
+                  );
+                }
+                return child;
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  child: Image.asset(AppImagePath.imageNotAvailable5,
+                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                );
+              },
             ),
-            5.height,
-            Center(
-              child: CommonProductButtonWidget(
-                title:
-                    "${AppLocalizations.of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}",
-                onPressed: onPressed,
-                textColor: AppColors.whiteColor,
-                bgColor: AppColors.mainColor,
-                borderRadius: AppConstants.radius_3,
-                textSize: AppConstants.font_12,
-              ),
-            )
-          ],
-        ),
+          ),
+          5.height,
+          Text(
+            productName,
+            style: AppStyles.rkBoldTextStyle(
+                size: AppConstants.font_12,
+                color: AppColors.blackColor,
+                fontWeight: FontWeight.w600),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          5.height,
+          Expanded(
+            child: totalSale == 0
+                ? 0.width
+                : Text(
+                    "${totalSale} ${AppLocalizations.of(context)!.discount}",
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_10,
+                        color: AppColors.saleRedColor,
+                        fontWeight: FontWeight.w600),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+          ),
+          5.height,
+          Center(
+            child: CommonProductButtonWidget(
+              title:
+                  "${AppLocalizations.of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}",
+              onPressed: onPressed,
+              textColor: AppColors.whiteColor,
+              bgColor: AppColors.mainColor,
+              borderRadius: AppConstants.radius_3,
+              textSize: AppConstants.font_12,
+            ),
+          )
+        ],
       ),
     );
   }

@@ -16,7 +16,6 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_search_widget.dart';
-import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
 import 'package:photo_view/photo_view.dart';
@@ -1754,39 +1753,37 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         required BuildContext context,
         required String subCategoryName,
         required void Function()? onTap}) {
-    return DelayedWidget(
-      child: InkWell(
-        onTap: onTap,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        child: Container(
-          decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-              boxShadow: [
-                BoxShadow(
-                    color: AppColors.shadowColor.withOpacity(0.1),
-                    blurRadius: AppConstants.blur_10),
-              ]),
-          margin: EdgeInsets.symmetric(
-              vertical: AppConstants.padding_5,
-              horizontal: AppConstants.padding_10),
-          padding: EdgeInsets.symmetric(
-              horizontal: AppConstants.padding_15,
-              vertical: AppConstants.padding_15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text(
-                subCategoryName,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.smallFont, color: AppColors.blackColor),
-                maxLines: 1,
-              ),
-            ],
-          ),
+    return InkWell(
+      onTap: onTap,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      child: Container(
+        decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            borderRadius:
+            BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            boxShadow: [
+              BoxShadow(
+                  color: AppColors.shadowColor.withOpacity(0.1),
+                  blurRadius: AppConstants.blur_10),
+            ]),
+        margin: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_5,
+            horizontal: AppConstants.padding_10),
+        padding: EdgeInsets.symmetric(
+            horizontal: AppConstants.padding_15,
+            vertical: AppConstants.padding_15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Text(
+              subCategoryName,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.smallFont, color: AppColors.blackColor),
+              maxLines: 1,
+            ),
+          ],
         ),
       ),
     );

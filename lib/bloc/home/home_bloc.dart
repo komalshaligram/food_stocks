@@ -824,7 +824,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             if (response.status == 200) {
               List<MessageData> messageList =
               state.messageList.toList(growable: true);
-              if(messageList.isNotEmpty){
+              if(response.data?.isNotEmpty  ?? false){
                 messageList.addAll(response.data
                     ?.map((message) => MessageData(
                   id: message.id,
@@ -845,8 +845,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     .toList() ??
                     []);
               }
-
-
               debugPrint('new message list len = ${messageList.length}');
               emit(state.copyWith(
                   messageList: messageList, isMessageShimmering: false));
@@ -1175,6 +1173,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   element) => element.isHomePreference == true) ?? true;
               emit(state.copyWith(isCatVisible: productVisible));
               emit(state.copyWith(
+
                   productCategoryList: response.data?.categories ?? [],
                   searchList: searchList,
                   isShimmering: false));

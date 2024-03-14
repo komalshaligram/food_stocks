@@ -76,7 +76,6 @@ class HomeScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          print('state.messageList____${state.messageList.length}');
           return Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,

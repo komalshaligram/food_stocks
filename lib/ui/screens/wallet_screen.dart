@@ -646,7 +646,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      bottom: getScreenHeight(context) * 0.12),
+                                      bottom: 10
+                                  ),
                                   child: state.isShimmering
                                       ? OrderSummaryScreenShimmerWidget()
                                       : state.walletTransactionsList.length != 0

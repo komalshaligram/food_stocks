@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +8,6 @@ import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
-
 import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
@@ -169,15 +167,9 @@ class RecommendationProductsBloc
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             int productListIndex  = event.productListIndex;
-
-             debugPrint('productStockList___${productStockList[1]}');
              debugPrint('productStockList___${productStockList[2].length}');
-             debugPrint('productStockList___${productStockList[0]}');
-
              debugPrint('productListIndex___${event.productListIndex}');
             int productStockUpdateIndex = 0;
-
-
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
                debugPrint('responseproductid____${response.product?.first.id}');

@@ -12,11 +12,9 @@ import 'package:food_stock/data/model/res_model/related_product_res_model/relate
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
-import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:photo_view/photo_view.dart';
-import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
@@ -196,9 +194,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                 else{
                                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                 }
-
-
-
                                 },
                                 productStock :state.planogramProductList[index].productStock ?? 0,
                                 context: context,
@@ -210,44 +205,42 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             physics: const AlwaysScrollableScrollPhysics(),
                             padding: EdgeInsets.symmetric(
                                 horizontal: AppConstants.padding_5),
-                            itemBuilder: (context, index) => DelayedWidget(
-                              child: CommonProductListWidget(
-                                lowStock: state.planogramProductList[index].lowStock.toString(),
-                                isGuestUser: state.isGuestUser,
-                                  numberOfUnits: '0',
-                                  productStock: state.planogramProductList[index].productStock.toString(),
-                                  productImage: state.planogramProductList[index]
-                                      .mainImage ??
-                                      '',
-                                  productName: state.planogramProductList[index]
-                                      .productName ??
-                                      '',
-                                  totalSaleCount: state
-                                      .planogramProductList[index]
-                                      .totalSale ??
-                                      0,
-                                  price: state.planogramProductList[index]
-                                      .productPrice ??
-                                      0.0,
-                                  onButtonTap: () {
-                                  if(!state.isGuestUser){
-                                    showProductDetails(
-                                      context: context,
-                                      productId: state
-                                          .planogramProductList[index]
-                                          .id ??
-                                          '',
-                                      productStock: state.planogramProductList[index].productStock.toString(),
-                                      productListIndex: 1
+                            itemBuilder: (context, index) => CommonProductListWidget(
+                              lowStock: state.planogramProductList[index].lowStock.toString(),
+                              isGuestUser: state.isGuestUser,
+                                numberOfUnits: state.planogramProductList[index].numberOfUnit.toString(),
+                                productStock: state.planogramProductList[index].productStock.toString(),
+                                productImage: state.planogramProductList[index]
+                                    .mainImage ??
+                                    '',
+                                productName: state.planogramProductList[index]
+                                    .productName ??
+                                    '',
+                                totalSaleCount: state
+                                    .planogramProductList[index]
+                                    .totalSale ??
+                                    0,
+                                price: state.planogramProductList[index]
+                                    .productPrice ??
+                                    0.0,
+                                onButtonTap: () {
+                                if(!state.isGuestUser){
+                                  showProductDetails(
+                                    context: context,
+                                    productId: state
+                                        .planogramProductList[index]
+                                        .id ??
+                                        '',
+                                    productStock: state.planogramProductList[index].productStock.toString(),
+                                    productListIndex: 1
 
-                                    );
-                                  }
-                                  else{
-                                    Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                  }
+                                  );
+                                }
+                                else{
+                                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                }
 
-                                  }),
-                            ),
+                                }),
                           ),
                       )
                     ],
