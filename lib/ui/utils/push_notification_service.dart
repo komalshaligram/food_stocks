@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as ui;
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
 import 'package:food_stock/main.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
@@ -26,6 +29,8 @@ class PushNotificationService {
   String _subPage = '';
   String _mainPage = '';
   String _id = '';
+  String imageUrl = '';
+  Uint8List? imageByte;
 
    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   Future<void> setupInteractedMessage() async {
@@ -42,12 +47,52 @@ class PushNotificationService {
      debugPrint('User granted permission: ${settings.authorizationStatus}');
 
     FirebaseMessaging.onMessageOpenedApp.listen(
-      (RemoteMessage message) {
-        debugPrint("onMessageOpenedApp: ${message.data}");
-        _mainPage = message.data['data']['message']['mainPage'];
-        _subPage = message.data['data']['message']['subPage'];
-        _id = message.data['data']['message']['id'];
-        manageNavigation( true, _mainPage, _subPage , _id ,);
+      (RemoteMessage message) async {
+        final AndroidNotificationChannel channel = androidNotificationChannel();
+        if (message != null) {
+          var data = json.decode(message.data['data'].toString());
+          final RemoteNotification? notification = message.notification;
+          final String? messageId = message.messageId;
+          debugPrint('messageId__1____${messageId}');
+          final AndroidNotification? android = message.notification?.android;
+          debugPrint('data:${data.toString()}');
+          if (data != null) {
+            String? title =
+            Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
+            String? body =
+            Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
+            String? mainPage = data['message']['mainPage'] ?? '';
+            String? subPage = data['message']['subPage'] ?? '';
+            String? id = data['message']['id'] ?? '';
+            String imageUrl = data['message']['imageUrl'] ?? '';
+            _subPage = subPage ?? '';
+            _mainPage = mainPage ?? '';
+            _id = id ?? '';
+            debugPrint('subPage___${_subPage}');
+            debugPrint('mainPage___${_mainPage}');
+            debugPrint('ide___${_id }');
+            manageNavigation(false, _mainPage, _subPage , _id);
+            if (imageUrl.isNotEmpty) {
+              final http.Response response;
+              response = await http
+                  .get(Uri.parse(AppUrls.baseFileUrl + imageUrl.toString()));
+              Directory dir;
+              if (Platform.isAndroid) {
+                dir = await getTemporaryDirectory();
+              } else {
+                dir = await getApplicationDocumentsDirectory();
+              }
+              // Create an image name
+              fileName = '${dir.path}/image.png';
+              // Save to filesystem
+              final file = File(fileName);
+              await file.writeAsBytes(response.bodyBytes);
+              imageByte = response.bodyBytes;
+            }
+
+          }
+
+        }
       },
     );
     FirebaseMessaging.instance.getInitialMessage().then((message) async {
@@ -56,7 +101,7 @@ class PushNotificationService {
         var data = json.decode(message.data['data'].toString());
         final RemoteNotification? notification = message.notification;
         final String? messageId = message.messageId;
-        debugPrint('messageId______${messageId}');
+        debugPrint('messageId___2___${messageId}');
         final AndroidNotification? android = message.notification?.android;
         debugPrint('data:${data.toString()}');
         if (data != null) {
@@ -90,6 +135,7 @@ class PushNotificationService {
             // Save to filesystem
             final file = File(fileName);
             await file.writeAsBytes(response.bodyBytes);
+            imageByte = response.bodyBytes;
           }
           showNotification(
             notification.hashCode,
@@ -160,7 +206,7 @@ class PushNotificationService {
       var data = json.decode(message!.data['data'].toString());
       final RemoteNotification? notification = message.notification;
       final String? messageId = message.messageId;
-      debugPrint('messageId______${messageId}');
+      debugPrint('messageId___3___${messageId}');
       final AndroidNotification? android = message.notification?.android;
       debugPrint('data:${data.toString()}');
       if (data != null) {
@@ -176,24 +222,26 @@ class PushNotificationService {
         _id = id;
         String imageUrl = data['message']['imageUrl'] ?? '';
 
+       if (imageUrl.isNotEmpty) {
+         final http.Response response;
+         response = await http
+             .get(Uri.parse(AppUrls.baseFileUrl + imageUrl.toString()));
+         Directory dir;
+         if (Platform.isAndroid) {
+           dir = await getTemporaryDirectory();
+         } else {
+           dir = await getApplicationDocumentsDirectory();
+         }
+         // Create an image name
+         fileName = '${dir.path}/image.png';
+         // Save to filesystem
+         final file = File(fileName);
+         print('response____${response.bodyBytes}');
+         await file.writeAsBytes(response.bodyBytes);
+         imageByte = response.bodyBytes;
 
-      /*  if (imageUrl.isNotEmpty) {
-          final http.Response response;
-          response = await http
-              .get(Uri.parse(AppUrls.baseFileUrl + imageUrl.toString()));
-          Directory dir;
-          if (Platform.isAndroid) {
-            dir = await getTemporaryDirectory();
-          } else {
-            dir = await getApplicationDocumentsDirectory();
-          }
-          // Create an image name
-          fileName = '${dir.path}/image.png';
-          // Save to filesystem
-          final file = File(fileName);
-          await file.writeAsBytes(response.bodyBytes);
-        }
 
+       }
         showNotification(
           notification.hashCode,
           title,
@@ -202,7 +250,7 @@ class PushNotificationService {
           channel.name,
           channel.description ?? '',
           android?.smallIcon??'',
-        );*/
+        );
       }
     });
   }
@@ -214,14 +262,14 @@ class PushNotificationService {
       title,
       body,
     Platform.isAndroid ?  flutter_local_notifications.NotificationDetails(
-        android: fileName != null
+        android: imageByte != null
             ? AndroidNotificationDetails(
                 channelId,
                 channelName,
                 channelDescription: channelDesc,
                 icon: androidIcon ??'',
                 channelShowBadge: true,
-               largeIcon: ByteArrayAndroidBitmap(fileName)
+          largeIcon: ByteArrayAndroidBitmap(imageByte!),
               )
             : AndroidNotificationDetails(
                 channelId,
@@ -239,8 +287,8 @@ class PushNotificationService {
       // payload: message.data.toString(),
     );
      debugPrint('fileName_____${fileName}');
-    if(fileName != null){
-      showImage(fileName);
+    if(imageUrl.isNotEmpty){
+      showImage(imageUrl);
     }
   }
 

@@ -75,11 +75,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                       isForm: false,
                       // isDownloadable: true,
                       name: response.data?.clientFiles?[i].fileName));
-                  filesList.add(FormAndFileModel(
-                      id: response.data?.clientFiles?[i].id,
-                      isForm: false,
-                      // isDownloadable: true,
-                      name: response.data?.clientFiles?[i].fileName));
                   debugPrint('fileList[$i] = ${filesList[i].name}');
                 }
                 emit(state.copyWith(
