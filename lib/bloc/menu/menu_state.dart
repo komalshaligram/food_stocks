@@ -19,6 +19,5 @@ class MenuState with _$MenuState {
         isLoadMore: false,
         isBottomOfAppContents: false,
         refreshController: RefreshController(),
-
       );
 }

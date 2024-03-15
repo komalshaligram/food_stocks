@@ -359,11 +359,9 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     selectTimeZone.isBefore(end)) {
                   shortVar.removeAt(event.timeIndex);
                   shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
-                 // shortVar.add(Day(from: selectedTime, until: closingTime));
                 } else if (closingTime == AppStrings.timeString) {
                   shortVar.removeAt(event.timeIndex);
                   shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
-                  //shortVar.add(Day(from: selectedTime, until: closingTime));
                 } else {
                   CustomSnackBar.showSnackBar(
                       context: event.context,
@@ -390,7 +388,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 }
                 else if(shortVar.length > 1   && selectTimeZone.isAfter(start) &&
                     selectTimeZone.isBefore(afterStart)){
-
                   shortVar.removeAt(event.timeIndex);
                   shortVar.insert(event.timeIndex,Day(from: openingTime, until: selectedTime));
 
@@ -474,8 +471,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       }
 
       if (event is _activityTimeApiEvent) {
-        bool isSnackbarActive = false;
-
+        bool isSnackBarActive = false;
 
         for (int i = 0; i < state.OperationTimeList.length; i++) {
 
@@ -493,7 +489,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   title:
                   '${AppLocalizations.of(event.context)!.please_fill_up_closing_time}',
                   type: SnackBarType.FAILURE);
-              isSnackbarActive = true;
+              isSnackBarActive = true;
             }
             for (int j = 1; j < state.OperationTimeList[i].monday.length; j++) {
               if (state.OperationTimeList[i].monday[j] ==
@@ -513,13 +509,13 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     title:
                     '${AppLocalizations.of(event.context)!.please_fill_up_closing_time}',
                     type: SnackBarType.FAILURE);
-                isSnackbarActive = true;
+                isSnackBarActive = true;
               }
             }
           }
         }
 
-        if (isSnackbarActive == false) {
+        if (isSnackBarActive == false) {
 
           sundayList.addAll(
             state.OperationTimeList[0].monday,
@@ -570,19 +566,12 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   Friday: fridayAndHolidayEvesList,
                 ),
                 OperationTime(Saturday: saturdayAndHolidaysList),
-
-                /*   Tuesday: tuesdayList,
-                  Wednesday: wednesdayList,
-                  Thursday: thursdayList,
-                  Friday: fridayAndHolidayEvesList,
-                  Saturday: saturdayAndHolidaysList,*/
               ]);
 
               debugPrint('operation time reqMap + $reqMap');
               try {
                 final response1 = await DioClient(event.context).post(
                     AppUrls.operationTimeUrl + '/' + preferences.getUserId(),
-                    //  AppUrls.operationTimeUrl + '/' + '651ff55af3c2b715fe5f1ba8',
                     data: reqMap);
                 res.ActivityTimeResModel operationTimeResModel =
                     res.ActivityTimeResModel.fromJson(response1);
@@ -649,7 +638,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             try {
               final res = await DioClient(event.context).post(
                 AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
-                data: /*reqMap.toJson()*/ req,
+                data:req,
               );
 
               debugPrint('operation update req _____${req}');

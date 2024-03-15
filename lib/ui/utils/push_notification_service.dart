@@ -26,6 +26,7 @@ class PushNotificationService {
   String _subPage = '';
   String _mainPage = '';
   String _id = '';
+   AndroidNotificationChannel? channel;
 
    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   Future<void> setupInteractedMessage() async {
@@ -51,7 +52,7 @@ class PushNotificationService {
       },
     );
     FirebaseMessaging.instance.getInitialMessage().then((message) async {
-      final AndroidNotificationChannel channel = androidNotificationChannel();
+      channel = androidNotificationChannel();
       if (message != null) {
         var data = json.decode(message.data['data'].toString());
         final RemoteNotification? notification = message.notification;
@@ -76,6 +77,7 @@ class PushNotificationService {
            debugPrint('ide___${_id }');
           manageNavigation(false, _mainPage, _subPage , _id);
           if (imageUrl.isNotEmpty) {
+
             final http.Response response;
             response = await http
                 .get(Uri.parse(AppUrls.baseFileUrl + imageUrl.toString()));
@@ -95,9 +97,9 @@ class PushNotificationService {
             notification.hashCode,
             title,
             body,
-            channel.id,
-            channel.name,
-            channel.description ?? '',
+            channel!.id,
+            channel!.name,
+            channel!.description ?? '',
             android?.smallIcon??'',
           );
         }
@@ -121,16 +123,7 @@ class PushNotificationService {
 
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@drawable/ic_launcher1');
-   /* if (Platform.isIOS) {
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
-    }*/
+
     const DarwinInitializationSettings iOSSettings =
         DarwinInitializationSettings(
       requestSoundPermission: true,
@@ -154,6 +147,7 @@ class PushNotificationService {
         manageNavigation(true, _mainPage, _subPage , _id);
       },
     );
+
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
 
@@ -177,7 +171,7 @@ class PushNotificationService {
         String imageUrl = data['message']['imageUrl'] ?? '';
 
 
-      /*  if (imageUrl.isNotEmpty) {
+        if (imageUrl.isNotEmpty) {
           final http.Response response;
           response = await http
               .get(Uri.parse(AppUrls.baseFileUrl + imageUrl.toString()));
@@ -202,7 +196,7 @@ class PushNotificationService {
           channel.name,
           channel.description ?? '',
           android?.smallIcon??'',
-        );*/
+        );
       }
     });
   }

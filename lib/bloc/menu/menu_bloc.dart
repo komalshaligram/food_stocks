@@ -22,10 +22,6 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
   MenuBloc() : super(MenuState.initial()) {
     on<MenuEvent>((event, emit) async {
       if (event is _GetAppContentListEvent) {
-
-
-
-
         if (state.isLoadMore) {
           return;
         }
