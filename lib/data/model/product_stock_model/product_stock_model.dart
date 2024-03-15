@@ -15,7 +15,7 @@ class ProductStockModel with _$ProductStockModel {
     @Default(false) bool isNoteOpen,
     @Default('0') String stock,
     @Default(0.0) double totalPrice,
-    // @Default(false) bool isBarcodeProduct,
+    @Default('') String lowStock,
   }) = _ProductStockModel;
 
   factory ProductStockModel.fromJson(Map<String, dynamic> json) =>

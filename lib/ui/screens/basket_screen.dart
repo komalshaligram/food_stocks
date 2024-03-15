@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -176,6 +176,9 @@ class BasketScreenWidget extends StatelessWidget {
                                       child: basketListItem(
                                         index: index,
                                         context: context,
+                                        lowStock: state.basketProductList[index].lowStock.toString(),
+                                        productStock: state.basketProductList[index].productStock ?? 0
+
                                       ),
                                     ),
                                   ),
@@ -293,7 +296,8 @@ class BasketScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget basketListItem({required int index, required BuildContext context}) {
+  Widget basketListItem({required int index, required BuildContext context,
+    required String lowStock, required double productStock}) {
     return BlocBuilder<BasketBloc, BasketState>(
       builder: (context, state) {
         BasketBloc bloc = context.read<BasketBloc>();
@@ -441,306 +445,321 @@ class BasketScreenWidget extends StatelessWidget {
               borderRadius:
               BorderRadius.all(Radius.circular(AppConstants.radius_5)),
             ),
-            child: Column(
-              children: [
-                state.basketProductList[index].isProcess == true
-                    ? LinearProgressIndicator(
-                  color: AppColors.mainColor,
-                  minHeight: 3,
-                  backgroundColor: AppColors.mainColor.withOpacity(0.5),
-                )
-                    : 3.height,
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: AppConstants.padding_10,
-                      horizontal: AppConstants.padding_10),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      state.basketProductList[index].mainImage == ''
-                          ? GestureDetector(
-                        onTap: () {
-                          showProductDetails(
-                              context: context,
-                              cartProductId: state.CartItemList.data?.data?[index].id ?? ''
+            child: GestureDetector(
+              onTap: (){
+                showProductDetails(
+                    context: context,
+                    cartProductId: state.CartItemList.data?.data?[index].id ?? ''
+                );
+              },
+              child: Column(
+                children: [
+                  state.basketProductList[index].isProcess == true
+                      ? LinearProgressIndicator(
+                    color: AppColors.mainColor,
+                    minHeight: 3,
+                    backgroundColor: AppColors.mainColor.withOpacity(0.5),
+                  )
+                      : 3.height,
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: AppConstants.padding_10,
+                        horizontal: AppConstants.padding_10),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        state.basketProductList[index].mainImage == ''
+                            ? GestureDetector(
+                          onTap: () {
+                            showProductDetails(
+                                context: context,
+                                cartProductId: state.CartItemList.data?.data?[index].id ?? ''
 
-                          );
-                        },
-                        child: Image.asset(
-                          AppImagePath.imageNotAvailable5,
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.fitWidth,
-                        ),
-                      )
-                          : GestureDetector(
-                        onTap: () {
-                          showProductDetails(
-                              context: context,
-                              cartProductId: state.CartItemList.data?.data?[index].id ?? ''
-                          );
-                        },
-                        child: Image.network(
-                          '${AppUrls.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.contain,
-                          loadingBuilder:
-                              (context, child, loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            } else {
-                              return Center(
-                                child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  child: CupertinoActivityIndicator(
-                                    color: AppColors.blackColor,
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                                width: 100,
-                                height: 100,
-                                color: AppColors.whiteColor,
-                                alignment: Alignment.center,
-                                child: Image.asset(AppImagePath.imageNotAvailable5)
                             );
                           },
-                        ),
-                      ),
-                      20.width,
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  showProductDetails(
-                                      context: context,
-                                      cartProductId: state.CartItemList.data?.data?[index].id ?? ''
-                                  );
-                                },
-                                child: Container(
-                                  child: Text(
-                                    state.basketProductList[index].productName ?? '',
-                                    style: TextStyle(
-                                        color: AppColors.blackColor,
-                                        fontSize: AppConstants.smallFont,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                              5.height,
-
-                              Text(
-                                '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal)}',
-                                style: TextStyle(
-                                    color: AppColors.blackColor,
-                                    fontSize: AppConstants.smallFont,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              10.height,
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (!state.isLoading) {
-                                        if ((state
-                                            .CartItemList
-                                            .data
-                                            ?.data?[index]
-                                            .productStock ??
-                                            0.0) >=
-                                            state.basketProductList[index]
-                                                .totalQuantity! +
-                                                1) {
-                                          bloc.add(
-                                              BasketEvent.productUpdateEvent(
-                                                listIndex: index,
-                                                isFromCart: false,
-                                                productWeight: state.basketProductList[index].totalQuantity! +
-                                                    1,
-                                                context: context,
-                                                productId: state
-                                                    .CartItemList
-                                                    .data
-                                                    ?.data?[index]
-                                                    .productDetails
-                                                    ?.id ??
-                                                    '',
-                                                supplierId: state
-                                                    .CartItemList
-                                                    .data
-                                                    ?.data?[index]
-                                                    .suppliers
-                                                    ?.first
-                                                    .id ??
-                                                    '',
-                                                cartProductId: state
-                                                    .CartItemList
-                                                    .data
-                                                    ?.data?[index]
-                                                    .cartProductId ??
-                                                    '',
-                                                totalPayment: state.totalPayment,
-                                                saleId: ((state
-                                                    .CartItemList
-                                                    .data
-                                                    ?.data?[index]
-                                                    .sales
-                                                    ?.length ==
-                                                    0)
-                                                    ? ''
-                                                    : (state
-                                                    .CartItemList
-                                                    .data
-                                                    ?.data?[index]
-                                                    .sales
-                                                    ?.first
-                                                    .id ??
-                                                    '')),
-                                              ));
-                                        } else {
-                                          CustomSnackBar.showSnackBar(
-                                              context: context,
-                                              title:
-                                              '${AppLocalizations.of(context)!.out_of_stock}',
-                                              type: SnackBarType.FAILURE);
-                                        }
-                                      }
-                                    },
-                                    child: Container(
-                                      width: AppConstants.containerSize_35,
-                                      height: AppConstants.containerSize_35,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.radius_4),
-                                          border: Border.all(
-                                              color:
-                                              AppColors.navSelectedColor),
-                                          color: AppColors.pageColor),
-                                      child: Icon(
-                                        Icons.add,
-                                        size: 20,
-                                        color: AppColors.blackColor,
-                                      ),
-                                    ),
-                                  ),
-                                  10.width,
-                                  Text(
-                                    '${state.basketProductList[index].totalQuantity}${' '}${state.basketProductList[index].scales}',
-                                    style: TextStyle(
+                          child: Image.asset(
+                            AppImagePath.imageNotAvailable5,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.fitWidth,
+                          ),
+                        )
+                            : GestureDetector(
+                          onTap: () {
+                            showProductDetails(
+                                context: context,
+                                cartProductId: state.CartItemList.data?.data?[index].id ?? ''
+                            );
+                          },
+                          child: Image.network(
+                            '${AppUrls.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.contain,
+                            loadingBuilder:
+                                (context, child, loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              } else {
+                                return Center(
+                                  child: Container(
+                                    width: 100,
+                                    height: 100,
+                                    child: CupertinoActivityIndicator(
                                       color: AppColors.blackColor,
-                                      fontSize: AppConstants.smallFont,
                                     ),
                                   ),
-                                  10.width,
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (!state.isLoading) {
-                                        if (state.basketProductList[index]
-                                            .totalQuantity! >
-                                            1) {
-                                          bloc.add(
-                                              BasketEvent.productUpdateEvent(
-                                                listIndex: index,
-                                                isFromCart: false,
-                                                productWeight: state
-                                                    .basketProductList[index]
-                                                    .totalQuantity! -
-                                                    1,
-                                                context: context,
-                                                productId: state
-                                                    .CartItemList
-                                                    .data
-                                                    ?.data?[index]
-                                                    .productDetails
-                                                    ?.id ??
-                                                    '',
-                                                supplierId: state
-                                                    .CartItemList
-                                                    .data
-                                                    ?.data?[index]
-                                                    .suppliers
-                                                    ?.first
-                                                    .id ??
-                                                    '',
-                                                cartProductId: state
-                                                    .CartItemList
-                                                    .data
-                                                    ?.data?[index]
-                                                    .cartProductId ??
-                                                    '',
-                                                totalPayment: state.totalPayment,
-                                                saleId: ((state
-                                                    .CartItemList
-                                                    .data
-                                                    ?.data?[index]
-                                                    .sales
-                                                    ?.length ==
-                                                    0)
-                                                    ? ''
-                                                    : (state
-                                                    .CartItemList
-                                                    .data
-                                                    ?.data?[index]
-                                                    .sales
-                                                    ?.first
-                                                    .id ??
-                                                    '')),
-                                              ));
-                                        }
-                                        else{
-                                          deleteDialog(
-                                              context: context,
-                                              updateClearString: '',
-                                              cartProductId: state
-                                                  .CartItemList
-                                                  .data
-                                                  ?.data?[index]
-                                                  .cartProductId ?? '',
-                                              listIndex: index,
-                                              totalAmount: state.totalPayment
-                                          );
-                                        }
-                                      }
-                                    },
-                                    child: Container(
-                                      width: AppConstants.containerSize_35,
-                                      height: AppConstants.containerSize_35,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.radius_4),
-                                          border: Border.all(
-                                              color:
-                                              AppColors.navSelectedColor),
-                                          color: AppColors.pageColor),
-                                      child: Icon(
-                                        Icons.remove,
-                                        size: 20,
-                                        color: AppColors.blackColor,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                );
+                              }
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                  width: 100,
+                                  height: 100,
+                                  color: AppColors.whiteColor,
+                                  alignment: Alignment.center,
+                                  child: Image.asset(AppImagePath.imageNotAvailable5)
+                              );
+                            },
                           ),
                         ),
-                      ),
-                    ],
+                        20.width,
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    showProductDetails(
+                                        context: context,
+                                        cartProductId: state.CartItemList.data?.data?[index].id ?? ''
+                                    );
+                                  },
+                                  child: Container(
+                                    child: Text(
+                                      state.basketProductList[index].productName ?? '',
+                                      style: TextStyle(
+                                          color: AppColors.blackColor,
+                                          fontSize: AppConstants.smallFont,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                5.height,
+                                lowStock.isNotEmpty ? Text(
+                                 lowStock,
+                                  style: TextStyle(
+                                      color: AppColors.orangeColor,
+                                      fontSize: AppConstants.smallFont,
+                                      ),
+                                ) : 0.width,
+                                5.height,
+                                Text(
+                                  '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal)}',
+                                  style: TextStyle(
+                                      color: AppColors.blackColor,
+                                      fontSize: AppConstants.smallFont,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                10.height,
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (!state.isLoading) {
+                                          if ((state
+                                              .CartItemList
+                                              .data
+                                              ?.data?[index]
+                                              .productStock ??
+                                              0.0) >=
+                                              state.basketProductList[index]
+                                                  .totalQuantity! +
+                                                  1) {
+                                            bloc.add(
+                                                BasketEvent.productUpdateEvent(
+                                                  listIndex: index,
+                                                  isFromCart: false,
+                                                  productWeight: state.basketProductList[index].totalQuantity! +
+                                                      1,
+                                                  context: context,
+                                                  productId: state
+                                                      .CartItemList
+                                                      .data
+                                                      ?.data?[index]
+                                                      .productDetails
+                                                      ?.id ??
+                                                      '',
+                                                  supplierId: state
+                                                      .CartItemList
+                                                      .data
+                                                      ?.data?[index]
+                                                      .suppliers
+                                                      ?.first
+                                                      .id ??
+                                                      '',
+                                                  cartProductId: state
+                                                      .CartItemList
+                                                      .data
+                                                      ?.data?[index]
+                                                      .cartProductId ??
+                                                      '',
+                                                  totalPayment: state.totalPayment,
+                                                  saleId: ((state
+                                                      .CartItemList
+                                                      .data
+                                                      ?.data?[index]
+                                                      .sales
+                                                      ?.length ==
+                                                      0)
+                                                      ? ''
+                                                      : (state
+                                                      .CartItemList
+                                                      .data
+                                                      ?.data?[index]
+                                                      .sales
+                                                      ?.first
+                                                      .id ??
+                                                      '')),
+                                                ));
+                                          } else {
+                                            CustomSnackBar.showSnackBar(
+                                                context: context,
+                                                title:
+                                                '${AppLocalizations.of(context)!.out_of_stock}',
+                                                type: SnackBarType.FAILURE);
+                                          }
+                                        }
+                                      },
+                                      child: Container(
+                                        width: AppConstants.containerSize_35,
+                                        height: AppConstants.containerSize_35,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                AppConstants.radius_4),
+                                            border: Border.all(
+                                                color:
+                                                AppColors.navSelectedColor),
+                                            color: AppColors.pageColor),
+                                        child: Icon(
+                                          Icons.add,
+                                          size: 20,
+                                          color: AppColors.blackColor,
+                                        ),
+                                      ),
+                                    ),
+                                    10.width,
+                                    Text(
+                                      '${state.basketProductList[index].totalQuantity}${' '}${state.basketProductList[index].scales}',
+                                      style: TextStyle(
+                                        color: AppColors.blackColor,
+                                        fontSize: AppConstants.smallFont,
+                                      ),
+                                    ),
+                                    10.width,
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (!state.isLoading) {
+                                          if (state.basketProductList[index]
+                                              .totalQuantity! >
+                                              1) {
+                                            bloc.add(
+                                                BasketEvent.productUpdateEvent(
+                                                  listIndex: index,
+                                                  isFromCart: false,
+                                                  productWeight: state
+                                                      .basketProductList[index]
+                                                      .totalQuantity! -
+                                                      1,
+                                                  context: context,
+                                                  productId: state
+                                                      .CartItemList
+                                                      .data
+                                                      ?.data?[index]
+                                                      .productDetails
+                                                      ?.id ??
+                                                      '',
+                                                  supplierId: state
+                                                      .CartItemList
+                                                      .data
+                                                      ?.data?[index]
+                                                      .suppliers
+                                                      ?.first
+                                                      .id ??
+                                                      '',
+                                                  cartProductId: state
+                                                      .CartItemList
+                                                      .data
+                                                      ?.data?[index]
+                                                      .cartProductId ??
+                                                      '',
+                                                  totalPayment: state.totalPayment,
+                                                  saleId: ((state
+                                                      .CartItemList
+                                                      .data
+                                                      ?.data?[index]
+                                                      .sales
+                                                      ?.length ==
+                                                      0)
+                                                      ? ''
+                                                      : (state
+                                                      .CartItemList
+                                                      .data
+                                                      ?.data?[index]
+                                                      .sales
+                                                      ?.first
+                                                      .id ??
+                                                      '')),
+                                                ));
+                                          }
+                                          else{
+                                            deleteDialog(
+                                                context: context,
+                                                updateClearString: '',
+                                                cartProductId: state
+                                                    .CartItemList
+                                                    .data
+                                                    ?.data?[index]
+                                                    .cartProductId ?? '',
+                                                listIndex: index,
+                                                totalAmount: state.totalPayment
+                                            );
+                                          }
+                                        }
+                                      },
+                                      child: Container(
+                                        width: AppConstants.containerSize_35,
+                                        height: AppConstants.containerSize_35,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                AppConstants.radius_4),
+                                            border: Border.all(
+                                                color:
+                                                AppColors.navSelectedColor),
+                                            color: AppColors.pageColor),
+                                        child: Icon(
+                                          Icons.remove,
+                                          size: 20,
+                                          color: AppColors.blackColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -929,6 +948,7 @@ class BasketScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:state.productDetails.first.qrcode ?? '' ,
                               addToOrderTap: () {
                                 context.read<BasketBloc>().add(
@@ -1114,6 +1134,7 @@ class BasketScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,
                 productImage:relatedProductList[i].mainImage,

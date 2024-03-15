@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -131,7 +130,11 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         emit(state.copyWith(
             pageNum: 0,
             previousOrderProductsList: [],
-            productStockList: [],
+            productStockList: [
+              state.productStockList[0],
+              [],
+              [],
+            ],
             isBottomOfProducts: false));
         add(ReorderEvent.getPreviousOrderProductsEvent(context: event.context));
       }
@@ -194,10 +197,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
 
               final res = await DioClient(event.context).post(
                   '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferences.getAuthToken()}'
-                  }));
+                );
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
               if (response.status == 200) {
                 debugPrint('cart before = ${response.data}');
@@ -792,7 +792,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           debugPrint('sale len = ${response.data?.saleData?.length}');
           debugPrint('sup len = ${response.data?.supplierData?.length}');
           debugPrint(
-              'sup stag len = ${response.data?.supplierProductData?.length}');
+              'sup prod len = ${response.data?.supplierProductData?.length}');
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList.addAll(state.productCategoryList.map((category) =>
@@ -879,6 +879,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                         supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
                   priceOfBox: double.parse(supplier.productPrice.toString()),
+                    lowStock: supplier.lowStock.toString()
                 ))
                 .toList() ??
                 []);

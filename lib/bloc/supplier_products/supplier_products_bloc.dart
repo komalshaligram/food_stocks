@@ -97,13 +97,13 @@ class SupplierProductsBloc
             response =
                 SupplierProductsResModel.fromJson(res);
 
-            debugPrint('search url = ${AppUrls.getPlanogramAllProductUrl}');
+            debugPrint('search url = ${AppUrls.baseUrl}${AppUrls.getPlanogramAllProductUrl}');
           } else {
             final res = await DioClient(event.context)
                 .post(AppUrls.getSupplierProductsUrl, data: req);
             response =
                 SupplierProductsResModel.fromJson(res);
-            debugPrint('search url = ${AppUrls.getSupplierProductsUrl}');
+            debugPrint('search url = ${AppUrls.baseUrl}${AppUrls.getSupplierProductsUrl}');
           }
           emit(state.copyWith(searchType: event.searchType.toString()));
           debugPrint('supplier Products res = ${response.data}');
@@ -177,8 +177,8 @@ class SupplierProductsBloc
               data: planogramReqModel);
           SupplierProductsResModel response =
           SupplierProductsResModel.fromJson(res);
-          debugPrint(
-              'product categories = ${response.data!.length.toString()}');
+          debugPrint('product categories = ${response.data!.length.toString()}');
+          debugPrint('getPlanogramAllProductUrl = ${AppUrls.baseUrl}${AppUrls.getPlanogramAllProductUrl}');
           if (response.status == 200) {
             List<SupplierProductsData> productList =
             state.productList.toList(growable: true);
@@ -188,7 +188,7 @@ class SupplierProductsBloc
             productStockList.addAll(response.data?.map((product) =>
                 ProductStockModel(
                     productId: product.productId ?? '',
-                    stock: (product.productStock.toString() ))) ??
+                    stock: (product.productStock.toString()))) ??
                 []);
             debugPrint('new product list len = ${productList.length}');
             debugPrint(
@@ -252,7 +252,7 @@ class SupplierProductsBloc
           ProductDetailsResModel response =
           ProductDetailsResModel.fromJson(res);
            debugPrint('ProductDetailsResModel______${response}');
-           debugPrint('_productQuantity______${_productQuantity}');
+           debugPrint('_productQuantity______${AppUrls.baseUrl}${AppUrls.getProductDetailsUrl}');
           if (response.status == 200) {
             int productStockUpdateIndex = 0;
             if (event.isBarcode) {
@@ -907,7 +907,7 @@ class SupplierProductsBloc
           debugPrint('sale len = ${response.data?.saleData?.length}');
           debugPrint('sup len = ${response.data?.supplierData?.length}');
           debugPrint(
-              'sup stag len = ${response.data?.supplierProductData?.length}');
+              'sup prod len = ${response.data?.supplierProductData?.length}');
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList.addAll(state.productCategoryList.map((category) =>
@@ -993,6 +993,7 @@ class SupplierProductsBloc
                   productStock: supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
+                  lowStock: supplier.lowStock.toString()
                 ))
                 .toList() ??
                 []);

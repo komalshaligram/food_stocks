@@ -52,7 +52,7 @@ class BalanceIndicator extends StatelessWidget {
                 animationType: AnimationType.ease,
                 cornerStyle: CornerStyle.bothCurve,
                 value: expense.toDouble(),
-                width: 6,
+                width: 8,
               ),
             ],
           ),

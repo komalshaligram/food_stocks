@@ -52,6 +52,7 @@ class RelatedProductDatum with _$RelatedProductDatum {
     required String productStock,
     required double productPrice,
     required int totalSale,
+    required String lowStock
   }) = _Datum;
 
   factory RelatedProductDatum.fromJson(Map<String, dynamic> json) => _$RelatedProductDatumFromJson(json);

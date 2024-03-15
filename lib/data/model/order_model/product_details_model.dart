@@ -11,7 +11,8 @@ class ProductDetailsModel{
   String scales;
   double weight;
   bool? isProcess;
- // double discountPercentage;
+ String? lowStock;
+ double? productStock;
 
 
 
@@ -26,6 +27,8 @@ class ProductDetailsModel{
     required this.scales,
     required this.weight,
      this.isProcess = false,
+    this.lowStock = '',
+    this.productStock = 0
 
    //required this.discountPercentage,
   });

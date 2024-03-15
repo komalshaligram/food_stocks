@@ -808,7 +808,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } on ServerException {} catch (e) {}
         }
         else if (event is _GetMessageListEvent) {
-          emit(state.copyWith(messageList: []));
+
           try {
             final res = await DioClient(event.context).post(
                 AppUrls.getNotificationMessageUrl,
@@ -818,33 +818,33 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               );
 
             GetMessagesResModel response = GetMessagesResModel.fromJson(res);
-            debugPrint(
-                'getMessage   url  = ${DioClient.baseUrl}${AppUrls.getNotificationMessageUrl}');
+
 
             debugPrint('getMessage response  = ${response}');
             if (response.status == 200) {
               List<MessageData> messageList =
               state.messageList.toList(growable: true);
-              messageList.addAll(response.data
-                  ?.map((message) => MessageData(
-                id: message.id,
-                isRead: message.isRead,
-                message: Message(
-                    id: message.message?.id ?? '',
-                    title: message.message?.title ?? '',
-                    summary: message.message?.summary ?? '',
-                    body: message.message?.body ?? '',
-                    messageImage: message.message?.messageImage ?? '',
-                    subPage: message.message?.subPage?? '',
-                    mainPage: message.message?.mainPage ?? '',
-                    navigationId: message.message?.navigationId ?? ''
-                ),
-                createdAt: message.createdAt,
-                updatedAt: message.updatedAt,
-              ))
-                  .toList() ??
-                  []);
-
+              if(response.data?.isNotEmpty  ?? false){
+                messageList.addAll(response.data
+                    ?.map((message) => MessageData(
+                  id: message.id,
+                  isRead: message.isRead,
+                  message: Message(
+                      id: message.message?.id ?? '',
+                      title: message.message?.title ?? '',
+                      summary: message.message?.summary ?? '',
+                      body: message.message?.body ?? '',
+                      messageImage: message.message?.messageImage ?? '',
+                      subPage: message.message?.subPage?? '',
+                      mainPage: message.message?.mainPage ?? '',
+                      navigationId: message.message?.navigationId ?? ''
+                  ),
+                  createdAt: message.createdAt,
+                  updatedAt: message.updatedAt,
+                ))
+                    .toList() ??
+                    []);
+              }
               debugPrint('new message list len = ${messageList.length}');
               emit(state.copyWith(
                   messageList: messageList, isMessageShimmering: false));
@@ -1093,7 +1093,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     name: sale.productName ?? '',
                     searchType: SearchTypes.sale,
                     image: sale.mainImage ?? '',
-                    numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
+                    numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                   ))
                   .toList() ??
                   []);
@@ -1108,6 +1108,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       productStock: supplier.productStock.toString(),
                     numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                     priceOfBox: double.parse(supplier.productPrice.toString()),
+                    lowStock: supplier.lowStock.toString()
+
                   ))
                   .toList() ??
                   []);
@@ -1199,7 +1201,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
          // PackageInfo packageInfo = await PackageInfo.fromPlatform();
           _checker.checkUpdate().then((value) {
             debugPrint('update available');
-             print(value.canUpdate); //return true if update is available
+            print(value.canUpdate); //return true if update is available
             debugPrint(value.currentVersion); //return current app version
             debugPrint(value.newVersion); //return the new app version
             debugPrint(value.appURL); //return the app url
@@ -1213,8 +1215,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
           });
         }
-
-
 
         else if(event is _RelatedProductsEvent){
           debugPrint('productId____${event.productId}');

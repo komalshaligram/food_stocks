@@ -73,6 +73,7 @@ class Datum with _$Datum {
     double? totalAmount,
     @JsonKey(name: "note")
     String? note,
+    String? lowStock,
   }) = _Datum;
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);

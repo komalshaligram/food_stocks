@@ -43,6 +43,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final Function() addToOrderTap;
   final bool isLoading;
   final String qrCode;
+  final String lowStock;
 
   const CommonProductDetailsWidget(
       {super.key,
@@ -73,13 +74,15 @@ class CommonProductDetailsWidget extends StatelessWidget {
       this.isLoading = false,
       required this.imageOnTap,
       required this.addToOrderTap,
-      required this.qrCode});
+      required this.qrCode,
+        required this.lowStock,
+      });
 
   @override
   Widget build(BuildContext context) {
     debugPrint('qrCode_____${qrCode}');
     debugPrint('stock_____${productStock}');
-    debugPrint('productUnitPrice${productUnitPrice}');
+    debugPrint('lowStock${lowStock}');
     return Container(
      // height: getScreenHeight(context) / 1.5,
       decoration: BoxDecoration(
@@ -529,6 +532,11 @@ class CommonProductDetailsWidget extends StatelessWidget {
                               ),
                             ],
                           ),
+                          lowStock.isNotEmpty && productStock != '0' ? Text(
+                            lowStock,
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.smallFont, color: AppColors.orangeColor),
+                          ) : 0.width,
                           CommonProductDetailsButton(
                               isLoading: isLoading,
                               isSupplierAvailable: true,

@@ -569,7 +569,7 @@ class StoreScreenWidget extends StatelessWidget {
                                             }),
                                         SizedBox(
                                           width: getScreenWidth(context),
-                                          height: 175,
+                                          height: 180,
                                           child: ListView.builder(
                                               itemCount: state
                                                   .recommendedProductsList
@@ -585,6 +585,10 @@ class StoreScreenWidget extends StatelessWidget {
                                               itemBuilder: (context,
                                                   index) =>
                                                   CommonProductItemWidget(
+                                                    lowStock: state
+                                                        .recommendedProductsList[
+                                                    index]
+                                                        .lowStock.toString(),
                                                     productStock: state
                                                         .recommendedProductsList[
                                                     index]
@@ -664,7 +668,7 @@ class StoreScreenWidget extends StatelessWidget {
                                             }),
                                         SizedBox(
                                           width: getScreenWidth(context),
-                                          height: 175,
+                                          height: 180,
                                           child: ListView.builder(
                                               itemCount: state
                                                   .previousOrderProductsList
@@ -680,6 +684,10 @@ class StoreScreenWidget extends StatelessWidget {
                                               itemBuilder: (context,
                                                   index) =>
                                                   CommonProductItemWidget(
+                                                    lowStock: state
+                                                        .previousOrderProductsList[
+                                                    index]
+                                                        .lowStock.toString(),
                                                     height: 160,
                                                     width: 140,
                                                     productStock: state
@@ -807,6 +815,7 @@ class StoreScreenWidget extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (listViewContext, index) {
                           return _buildSearchItem(
+                              lowStock: state.searchList[index].lowStock.toString(),
                               numberOfUnits:state.searchList[index].numberOfUnits,
                               priceOfBox: state.searchList[index].priceOfBox,
                               isGuestUser: state.isGuestUser,
@@ -1042,7 +1051,7 @@ class StoreScreenWidget extends StatelessWidget {
   }
 
   Widget _buildSearchItem({
-
+    required String lowStock,
     required BuildContext context,
     required String searchName,
     required String searchImage,
@@ -1109,7 +1118,7 @@ class StoreScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: !isGuestUser ? (productStock) != '0' ? 100 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 70,
+            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? 120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1178,7 +1187,7 @@ class StoreScreenWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: getScreenWidth(context) * 0.45,
+                      width: getScreenWidth(context) * 0.46,
                       child: Text(
                         searchName,
                         style: AppStyles.rkRegularTextStyle(
@@ -1200,13 +1209,18 @@ class StoreScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              (productStock) != '0' ? 0.width : Text(
+                              (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.redColor,
                                     fontWeight: FontWeight.w400),
+                              ) : Text(lowStock,
+                                  style: AppStyles.rkBoldTextStyle(
+                                      size: AppConstants.font_12,
+                                      color: AppColors.orangeColor,
+                                      fontWeight: FontWeight.w400)
                               ),
                              !isGuestUser? numberOfUnits != 0 ? Text(
                                 '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
@@ -1852,6 +1866,7 @@ class StoreScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:state.productDetails.first.qrcode ?? '' ,
                               addToOrderTap: () {
                                 context.read<StoreBloc>().add(
@@ -2037,6 +2052,7 @@ class StoreScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,
                 productImage:relatedProductList[i].mainImage,

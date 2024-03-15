@@ -52,6 +52,7 @@ class SupplierProductsData with _$SupplierProductsData {
     @JsonKey(name: "supplierId") String? supplierId,
     @JsonKey(name: "productPrice") dynamic productPrice,
     @JsonKey(name: "productStock") dynamic productStock,
+    String? lowStock,
   }) = _SupplierProductsData;
 
   factory SupplierProductsData.fromJson(Map<String, dynamic> json) =>
