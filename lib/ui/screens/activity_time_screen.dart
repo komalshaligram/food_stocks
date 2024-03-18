@@ -67,6 +67,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                       size: AppConstants.smallFont,
                       color: AppColors.blackColor)),
             ),
+
             leading: GestureDetector(
                 onTap: () {
                   if (!state.isUpdate) {
