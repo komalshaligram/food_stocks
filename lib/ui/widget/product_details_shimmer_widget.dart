@@ -168,6 +168,10 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                   ],
                 ),
               ),
+              Container(
+                  padding: EdgeInsets.only(left:10,right:10),
+                  alignment: Alignment.center,
+                  child: buildTextTitle(width: 80)),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: CommonShimmerWidget(
