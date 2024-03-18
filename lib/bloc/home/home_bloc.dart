@@ -1249,16 +1249,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 type: SnackBarType.SUCCESS,
               );
             }
-
         }
         else if(event is _RemoveRelatedProductEvent){
           emit(state.copyWith(relatedProductList: []));
         }
-
-
       }
     });
   }
-
-
 }

@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/company/company_bloc.dart';
-import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';

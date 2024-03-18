@@ -5,7 +5,7 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/product_category/product_category_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_marquee_widget.dart';
-import 'package:food_stock/ui/widget/delayed_widget.dart';
+
 import 'package:food_stock/ui/widget/product_category_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';

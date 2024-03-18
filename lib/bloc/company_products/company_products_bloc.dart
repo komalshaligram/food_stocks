@@ -1010,8 +1010,7 @@ class CompanyProductsBloc
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(
-                response.message.toLocalization() ??
-                    response.message,
+                response.message.toLocalization(),
                 event.context),
             type: SnackBarType.SUCCESS,
           );

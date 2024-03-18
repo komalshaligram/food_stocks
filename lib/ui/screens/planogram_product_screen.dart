@@ -174,7 +174,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     .productGridAspectRatio1
                             ),
                             itemBuilder: (context, index) => buildPlanoGramProductItem(
-                              lowStock: state.planogramProductList[index].lowStock.toString() ?? '',
+                              lowStock: state.planogramProductList[index].lowStock.toString(),
                               isGuestUser: state.isGuestUser,
                                 productImage: state.planogramProductList[index].mainImage ?? '',
                                 productName:

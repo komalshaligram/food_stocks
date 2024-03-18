@@ -267,8 +267,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                             productStock:  state
                                                 .recommendationProductsList[
                                             index]
-                                                .productStock.toString() ??
-                                                '',
+                                                .productStock.toString(),
                                             productListIndex: 1
                                         );
                                       });

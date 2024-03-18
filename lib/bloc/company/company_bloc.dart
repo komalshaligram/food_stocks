@@ -25,7 +25,7 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _GetCompaniesListEvent) {
-  emit(state.copyWith(language: preferencesHelper.getAppLanguage()));
+        emit(state.copyWith(language: preferencesHelper.getAppLanguage()));
         if (state.isLoadMore) {
           return;
         }
@@ -57,12 +57,16 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
                 companiesList: companiesList,
                 pageNum: state.pageNum + 1,
                 isLoadMore: false,
+                isBottomOfCompanies: state.companiesList.length ==
+                    (response.data?.totalRecords ?? 0)
+                    ? true
+                    : false,
                 isShimmering: false));
-            emit(state.copyWith(
+            /*emit(state.copyWith(
                 isBottomOfCompanies: state.companiesList.length ==
                         (response.data?.totalRecords ?? 0)
                     ? true
-                    : false));
+                    : false));*/
           } else {
             emit(state.copyWith(isLoadMore: false));
             CustomSnackBar.showSnackBar(
