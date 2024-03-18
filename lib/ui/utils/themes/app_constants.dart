@@ -4,6 +4,8 @@ class AppConstants{
   static const double buttonHeightSmall = 27;
   static const double containerHeight = 40;
   static const double appBarHeight = 56;
+  static const double textFormFieldHeight = 40;
+  static const double relatedProductItemHeight = 190;
   static const double containerHeight_80 = 80;
   static const double containerHeight_60 = 60;
   static const double containerHeight_65 = 65;
@@ -11,10 +13,9 @@ class AppConstants{
   static const double containerSize_25 = 25;
   static const double containerSize_35 = 32;
 
-  static const double textFormFieldHeight = 40;
-  static const double relatedProductItemHeight = 190;
   static const double relatedProductItemWidth = 140;
 
+  //padding
   static const double padding_5 = 5;
   static const double padding_10 = 10;
   static const double padding_15 = 15;
@@ -30,6 +31,7 @@ class AppConstants{
   static const double padding_70 = 70;
   static const double padding_11 = 11;
 
+  //radius
   static const double radius_3 = 3;
   static const double radius_4 = 4;
   static const double radius_5 = 5;
@@ -44,7 +46,7 @@ class AppConstants{
   static const double radius_20 = 20;
   static const double radius_25 = 25;
 
-//font size
+ //font size
   static const double normalFont = 20;
   static const double smallFont = 16;
   static const double mediumFont = 18;
@@ -105,4 +107,6 @@ class AppConstants{
   static const int appContentPageLimit = 10;
   static const int orderPageLimit = 15;
   static const int walletLimit = 10;
+
+
 }

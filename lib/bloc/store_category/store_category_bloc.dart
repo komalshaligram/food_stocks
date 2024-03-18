@@ -1189,10 +1189,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               pageNum: state.subProductPageNum + 1,
               pageLimit: AppConstants.orderPageLimit,
             );
-          debugPrint('getSubCategoriesProduct_____${AppUrls.baseUrl}${AppUrls.getsubCategoryProductsUrl}');
+          debugPrint('getSubCategoriesProduct_____${AppUrls.baseUrl}${AppUrls.getSubCategoryProductsUrl}');
           debugPrint('getSubCategoriesProduct req_____${getSubCategoriesProductReqModel}');
           final  res = await DioClient(event.context)
-                .post('${AppUrls.getsubCategoryProductsUrl}',
+                .post('${AppUrls.getSubCategoryProductsUrl}',
                 data: getSubCategoriesProductReqModel
             );
 

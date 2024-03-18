@@ -177,7 +177,6 @@ class AboutAppScreenWidget extends StatelessWidget {
 
     switch (id) {
       case '658d0e87a1bb68d47f70dd09':
-
         debugPrint(
             '______ about the app');
         break;

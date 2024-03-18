@@ -81,7 +81,7 @@ class HomeScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-                handleMessageOnBackground(context);
+                //handleMessageOnBackground(context);
                 bloc.add(HomeEvent.getPreferencesDataEvent());
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(
                     context: context));
@@ -892,7 +892,7 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  void handleMessageOnBackground(BuildContext context) {
+/*  void handleMessageOnBackground(BuildContext context) {
     PushNotificationService().firebaseMessaging.getInitialMessage().then(
           (message) {
         if (message != null) {
@@ -921,7 +921,7 @@ class HomeScreenWidget extends StatelessWidget {
         }
       },
     );
-  }
+  }*/
 
   Widget titleRowWidget(
       {required BuildContext context,

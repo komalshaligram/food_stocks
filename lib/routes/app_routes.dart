@@ -22,7 +22,6 @@ import '../ui/screens/basket_screen.dart';
 import '../ui/screens/company_product_screen.dart';
 import '../ui/screens/company_screen.dart';
 import '../ui/screens/connect_screen.dart';
-import '../ui/screens/menu_screen.dart';
 import '../ui/screens/file_upload_screen.dart';
 import '../ui/screens/order_details_screen.dart';
 import '../ui/screens/order_successful_screen.dart';
@@ -90,7 +89,6 @@ class AppRouting {
       RouteDefine.loginScreen.name: (_) => LogInRoute.route,
       RouteDefine.bottomNavScreen.name: (_) => BottomNavRoute.route,
       RouteDefine.homeScreen.name: (_) => HomeRoute.route,
-      RouteDefine.menuScreen.name: (_) => MenuRoute.route,
       RouteDefine.basketScreen.name: (_) => BasketRoute.route,
       RouteDefine.walletScreen.name: (_) => WalletRoute.route,
       RouteDefine.storeScreen.name: (_) => StoreRoute.route,

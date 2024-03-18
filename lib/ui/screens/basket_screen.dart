@@ -46,7 +46,7 @@ class BasketScreen extends StatelessWidget {
 class BasketScreenWidget extends StatelessWidget {
   BasketScreenWidget({Key? key}) : super(key: key);
 
-    bool isRemoveProcess = false;
+  bool isRemoveProcess = false;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,7 @@ class BasketScreenWidget extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     SvgPicture.asset(
-                                      AppImagePath.delete,colorFilter: ColorFilter.mode(AppColors.redColor, BlendMode.srcIn)),
+                                      AppImagePath.delete,color: AppColors.redColor,),
                                     5.width,
                                     Text(
                                       AppLocalizations.of(context)!.empty,

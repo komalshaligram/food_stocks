@@ -65,7 +65,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       if (preferences.getGuestUser()) {
 
-
       }
       else {
         if (event is _getPreferencesDataEvent) {
@@ -80,8 +79,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
             messageCount: preferences.getMessageCount(),
             cartCount: preferences.getCartCount(),
-
-
           ));
         }
         else if (event is _GetCartCountEvent) {
@@ -384,7 +381,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               context: event.context,
               title: e.toString(),
               type: SnackBarType.FAILURE,
-
             );
             //  Navigator.pop(event.context);
           }
@@ -569,8 +565,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
 
           //update or insert cart API
-          if (_isProductInCart
-          ) {
+          if (_isProductInCart) {
             debugPrint('update cart');
             try {
 
@@ -710,7 +705,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     isLoading: false,
                     productStockList: productStockList,
                     isCartCountChange: true));
-                emit(state.copyWith(isCartCountChange: false));
+
                 add(HomeEvent.setCartCountEvent());
                 CustomSnackBar.showSnackBar(
                     context: event.context,
@@ -1198,7 +1193,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
        else if (event is _checkVersionOfAppEvent) {
           final _checker = StoreVersionChecker();
-         // PackageInfo packageInfo = await PackageInfo.fromPlatform();
           _checker.checkUpdate().then((value) {
             debugPrint('update available');
             print(value.canUpdate); //return true if update is available

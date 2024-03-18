@@ -84,7 +84,7 @@ customShowUpdateDialog(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                 alignment: Alignment.center,
-                width: 80,
+                width: AppConstants.containerHeight_80,
                 decoration: BoxDecoration(
                     gradient: AppColors.appMainGradientColor,
                     borderRadius: BorderRadius.circular(8.0)),
@@ -114,9 +114,6 @@ Future<void> _launchUrl(String storeUrl) async {
     } finally {
       launchUrl(_url);
     }
-    /*  if (!await launchUrl(_url)) {
-        throw Exception('Could not launch $_url');
-      }*/
 }
 
 Future<CroppedFile?> cropImage(
@@ -144,7 +141,6 @@ Future<CroppedFile?> cropImage(
       IOSUiSettings(
         title: AppStrings.cropImageString,
         aspectRatioLockEnabled: true,
-        // showCancelConfirmationDialog: true,
         hidesNavigationBar: true,
         resetButtonHidden: true,
         rotateButtonsHidden: true,
@@ -186,53 +182,12 @@ Future<String> scanBarcodeOrQRCode(
 bool isRTLContent({required BuildContext context}) {
   Locale locale = Localizations.localeOf(context);
   List<Locale> rtlLocales = [Locale('he')];
-  // debugPrint('rtl = ${rtlLocales.contains(locale) ? "true" : "false"}');
   return rtlLocales.contains(locale) ? true : false;
 }
 
 extension RTLExtension on BuildContext {
   bool get rtl =>
       [Locale('he')].contains(Localizations.localeOf(this)) ? true : false;
-}
-
-String formatter(String currentBalance) {
-  double value = double.parse(currentBalance);
-  if (value < 1000) {
-    return (splitNumber(value.toStringAsFixed(2)));
-  } else if (value < 10000 && value >= 1000) {
-    double result = (value / 1000);
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return ((result1.toString() + "K" + " "));
-  } else if (value < 100000 && value >= 10000) {
-    double result = value / 1000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return ((result1.toString() + "K" + " "));
-  } else if (value < 1000000 && value >= 100000) {
-    double result = value / 100000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "L" + "");
-  } else if (value < 10000000 && value >= 1000000) {
-    // less than 100 million
-    double result = value / 1000000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "M" + " ");
-  } else if (value < 100000000 && value >= 10000000) {
-    // less than 100 million
-    double result = value / 1000000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "M" + " ");
-  } else if (value < 1000000000 && value >= 100000000) {
-    // less than 100 million
-    double result = value / 1000000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "M" + " ");
-  } else if (value >= 1000000000) {
-    // less than 100 million
-    double result = value / 1000000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "M" + " ");
-  }
-  return '';
 }
 
 String splitNumber(String price) {

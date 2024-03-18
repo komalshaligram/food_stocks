@@ -29,4 +29,10 @@ class AppColors {
       begin: Alignment.centerLeft,
       end: Alignment.centerRight,
       colors: [Color(0xff1D5499), Color(0xff8BC53F)]);
+
+  static Gradient connectGradientColor =  LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [AppColors.whiteColor,AppColors.whiteColor]);
+
 }
