@@ -6,10 +6,12 @@ class PrivacyPolicyState with _$PrivacyPolicyState{
   const factory PrivacyPolicyState({
     required bool SignaturePadDialog,
 
+
   }) = _PrivacyPolicyState;
 
-  factory PrivacyPolicyState.initial()=> const PrivacyPolicyState(
-    SignaturePadDialog: false
+  factory PrivacyPolicyState.initial()=>  PrivacyPolicyState(
+    SignaturePadDialog: false,
+
 
   );
 
