@@ -135,7 +135,7 @@ class CommonProductItemWidget extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
             ),
-            int.parse(productStock) > 0 && lowStock.isEmpty || isGuestUser
+            double.parse(productStock) > 0 && lowStock.isEmpty || isGuestUser
                     ? 0.width
                     : (productStock) == '0' && lowStock.isNotEmpty ?Text(
                         AppLocalizations.of(context)!.out_of_stock1,

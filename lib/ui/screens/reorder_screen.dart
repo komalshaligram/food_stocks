@@ -231,7 +231,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                             .previousOrderProductsList[
                                         index]
                                             .lowStock.toString(),
-                                        imageWidth: getScreenWidth(context) >= 700 ?100 : 70,
+                                        imageWidth: getScreenWidth(context) >= 700 ? 100 : 70,
                                         imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                         productStock: state
                                                 .previousOrderProductsList[
@@ -1664,7 +1664,7 @@ class ReorderScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              int.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
+                              double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(
