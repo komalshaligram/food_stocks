@@ -32,7 +32,6 @@ import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
-import '../widget/delayed_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
 import '../widget/supplier_products_screen_shimmer_widget.dart';
@@ -232,7 +231,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                             .previousOrderProductsList[
                                         index]
                                             .lowStock.toString(),
-                                        imageWidth: getScreenWidth(context) >= 700 ?100 : 70,
+                                        imageWidth: getScreenWidth(context) >= 700 ? 100 : 70,
                                         imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                         productStock: state
                                                 .previousOrderProductsList[
@@ -1665,7 +1664,7 @@ class ReorderScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
+                              double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(

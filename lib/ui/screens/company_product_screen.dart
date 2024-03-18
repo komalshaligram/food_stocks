@@ -9,12 +9,12 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/company_products/company_products_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
-import 'package:food_stock/ui/widget/delayed_widget.dart';
+
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../../data/model/product_supplier_model/product_supplier_model.dart';
+
 import '../../data/model/search_model/search_model.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
@@ -113,7 +113,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: AppColors.mainColor,
-                          //gradient:AppColors.appMainGradientColor,
                           borderRadius: const BorderRadius.all(
                               Radius.circular(AppConstants.radius_100)),
                           border: Border.all(
@@ -280,7 +279,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                         isGuestUser: state.isGuestUser,
                                           lowStock: state.productList[index].lowStock.toString(),
                                         numberOfUnits: state.productList[index].numberOfUnit??'0',
-                                          productStock: state.productList[index].productStock.toString() ?? '0',
+                                          productStock: state.productList[index].productStock.toString(),
                                           productImage: state.productList[index]
                                               .mainImage ??
                                               '',
@@ -303,7 +302,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                     .productList[index]
                                                     .id ??
                                                     '',
-                                                productStock: state.productList[index].productStock.toString() ?? '0',
+                                                productStock: state.productList[index].productStock.toString(),
                                                   productListIndex: 1
 
                                                 );
@@ -1185,7 +1184,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                              mainAxisAlignment: MainAxisAlignment.start,
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
-                               (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
+                               double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                  AppLocalizations.of(context)!
                                      .out_of_stock1,
                                  style: AppStyles.rkBoldTextStyle(

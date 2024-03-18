@@ -81,7 +81,7 @@ class HomeScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-                handleMessageOnBackground(context);
+                //handleMessageOnBackground(context);
                 bloc.add(HomeEvent.getPreferencesDataEvent());
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(
                     context: context));
@@ -892,7 +892,7 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  void handleMessageOnBackground(BuildContext context) {
+/*  void handleMessageOnBackground(BuildContext context) {
     PushNotificationService().firebaseMessaging.getInitialMessage().then(
           (message) {
         if (message != null) {
@@ -913,7 +913,7 @@ class HomeScreenWidget extends StatelessWidget {
               String? _subPage = data['message']['subPage'] ?? '';
               String? _id = data['message']['id'] ?? '';
 
-
+//PushNotificationService().showNotification( notification.hashCode, title, body, channelId, channelName, channelDesc, androidIcon);
               PushNotificationService().manageNavigation( true, _mainPage ?? '',_subPage ?? '' , _id ?? '' , );
             }
           }
@@ -921,7 +921,7 @@ class HomeScreenWidget extends StatelessWidget {
         }
       },
     );
-  }
+  }*/
 
   Widget titleRowWidget(
       {required BuildContext context,
@@ -1555,7 +1555,7 @@ class HomeScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                               (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
+                              double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(

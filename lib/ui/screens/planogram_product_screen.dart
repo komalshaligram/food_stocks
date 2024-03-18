@@ -174,7 +174,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     .productGridAspectRatio1
                             ),
                             itemBuilder: (context, index) => buildPlanoGramProductItem(
-                              lowStock: state.planogramProductList[index].lowStock.toString() ?? '',
+                              lowStock: state.planogramProductList[index].lowStock.toString(),
                               isGuestUser: state.isGuestUser,
                                 productImage: state.planogramProductList[index].mainImage ?? '',
                                 productName:
@@ -1032,7 +1032,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
+                              double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(

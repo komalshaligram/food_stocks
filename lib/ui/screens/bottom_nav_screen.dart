@@ -47,9 +47,9 @@ class BottomNavScreen extends StatelessWidget {
 class BottomNavScreenWidget extends StatelessWidget {
 
 
-  BottomNavScreenWidget({super.key,});
+   BottomNavScreenWidget({super.key,});
 
-  GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {

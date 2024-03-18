@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class FormFieldValidation {
+
   String? emailField(String value,BuildContext context) {
     RegExp regex = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
@@ -15,14 +16,6 @@ class FormFieldValidation {
     }
   }
 
-  // phoneNumField(String value) {
-  //   RegExp regex = RegExp(r'^(?:[+0]9)?[0-9]{10}$');
-  //   if (value.length < 10 || !regex.hasMatch(value)) {
-  //     return false;
-  //   } else {
-  //     return true;
-  //   }
-  // }
 
   String? mobileField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[a-zA-Z.!#$%&'*+-/=?^_`{|}~]).*$");
@@ -45,7 +38,6 @@ class FormFieldValidation {
       return null;
     }
   }
-
 
   String? businessNameField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*₹+-/=?^_`{|}~]).*$");
@@ -151,7 +143,4 @@ class FormFieldValidation {
     }
     return null;
   }
-
-
-
 }
