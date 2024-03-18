@@ -709,8 +709,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 emit(state.copyWith(
                     isLoading: false,
                     productStockList: productStockList,
-                    isCartCountChange: true));
-                emit(state.copyWith(isCartCountChange: false));
+                    /*isCartCountChange: true*/
+                ));
+              //  emit(state.copyWith(isCartCountChange: false));
                 add(HomeEvent.setCartCountEvent());
                 CustomSnackBar.showSnackBar(
                     context: event.context,
@@ -1207,7 +1208,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             debugPrint(value.appURL); //return the app url
             debugPrint(value.errorMessage);
             if(value.canUpdate && Platform.isAndroid){
-              customShowUpdateDialog(
+               customShowUpdateDialog(
                   event.context, preferences.getAppLanguage(),value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
             }else if(value.canUpdate && Platform.isIOS){
                 customShowUpdateDialog(

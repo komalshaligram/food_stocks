@@ -120,7 +120,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
           onTap: () {
             Navigator.push(context,   PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(orderNumber: orderNumber,orderId: orderId,isNavigateToProductDetailString: false,
-              productData: orderByIdList.data!.ordersBySupplier![index],
+              productData: orderByIdList.data?.ordersBySupplier?[index],
             ),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(0.0, 1.0);

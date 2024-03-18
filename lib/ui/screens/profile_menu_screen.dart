@@ -166,6 +166,15 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                       );
                                     }),
                                 profileMenuTiles(
+                                    title:
+                                    AppLocalizations.of(context)!.my_invoices,
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        RouteDefine.invoiceScreen.name,
+                                      );
+                                    }),
+                                profileMenuTiles(
                                     title: AppLocalizations.of(context)!
                                         .business_details,
                                     onTap: () {

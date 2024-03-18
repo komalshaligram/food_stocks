@@ -40,6 +40,7 @@ class HomeState with _$HomeState {
     required bool isIgnorePointer,
     required bool isRelatedShimmering,
     required List<RelatedProductDatum> relatedProductList,
+
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -80,5 +81,6 @@ class HomeState with _$HomeState {
     isIgnorePointer: false,
       isRelatedShimmering:false,
       relatedProductList: [],
+
       );
 }

@@ -69,39 +69,40 @@ customShowUpdateDialog(
     barrierDismissible: false,
     context: context,
     builder: (context1) {
-      return AlertDialog(
-        title: Text(AppLocalizations.of(context)!.new_version_app_update,
-            style: AppStyles.rkRegularTextStyle(
-                color: AppColors.blackColor, size: AppConstants.mediumFont)),
-        actions: [
-          Align(
-            alignment: Alignment.center,
-            child: GestureDetector(
-              onTap: () {
-                debugPrint(storeUrl);
-                _launchUrl(storeUrl);
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                alignment: Alignment.center,
-                width: 80,
-                decoration: BoxDecoration(
-                    gradient: AppColors.appMainGradientColor,
-                    borderRadius: BorderRadius.circular(8.0)),
-                child: Text(
-                  AppLocalizations.of(context)!.update,
-                  style: AppStyles.rkRegularTextStyle(
-                      color: AppColors.whiteColor, size: AppConstants.font_14),
+      return PopScope(
+        canPop: false,
+        child: AlertDialog(
+          title: Text(AppLocalizations.of(context)!.new_version_app_update,
+              style: AppStyles.rkRegularTextStyle(
+                  color: AppColors.blackColor, size: AppConstants.mediumFont)),
+          actions: [
+            Align(
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: () {
+                  debugPrint(storeUrl);
+                  _launchUrl(storeUrl);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                  alignment: Alignment.center,
+                  width: 80,
+                  decoration: BoxDecoration(
+                      gradient: AppColors.appMainGradientColor,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  child: Text(
+                    AppLocalizations.of(context)!.update,
+                    style: AppStyles.rkRegularTextStyle(
+                        color: AppColors.whiteColor, size: AppConstants.font_14),
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       );
     },
-  ).then((value) {
-
-  });
+  );
 }
 
 Future<void> _launchUrl(String storeUrl) async {

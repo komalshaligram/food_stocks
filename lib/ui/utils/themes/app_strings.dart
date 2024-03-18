@@ -127,6 +127,7 @@ class AppStrings {
   static const messageIdString = 'messageId';
   static const messageIdListString = 'messageIdList';
   static const isReadMoreString = 'isReadMore';
+  static const invoiceListString = 'invoiceListString';
 
   static String getLocalizedStrings(String key,BuildContext context){
     switch(key){

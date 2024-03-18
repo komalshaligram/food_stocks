@@ -50,11 +50,11 @@ dependencies:
   dartz: ^0.10.1
   dotted_border: ^2.0.0+3
   image_picker: ^1.0.4
-  syncfusion_flutter_signaturepad: ^23.1.39
+  syncfusion_flutter_signaturepad: ^24.2.9
   cached_network_image: ^3.3.0
   easy_localization: ^3.0.3
   shared_preferences: ^2.2.1
-  syncfusion_flutter_gauges: ^23.1.36
+  syncfusion_flutter_gauges: ^24.2.9
   flutter_otp_text_field: ^1.1.1
   focus_detector: ^2.0.1
   image_cropper: ^5.0.0
@@ -88,6 +88,8 @@ dependencies:
   #flutter_app_badger: ^1.5.0
   store_version_checker: ^1.0.1
   photo_view: ^0.14.0
+  syncfusion_flutter_pdfviewer: ^24.2.8
+
 
 
   #mime: ^1.0.5

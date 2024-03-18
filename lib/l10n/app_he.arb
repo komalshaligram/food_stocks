@@ -409,5 +409,21 @@
   "my_invoices": "החשבוניות שלי",
   "invoice_number" : "מס' חשבונית",
   "not_include_surfaces_price":"הסכום אינו כולל עלות משטחים",
-  "open":"open"
+  "open":"open",
+  "my_invoices" : "החשבוניות שלי",
+  "rivchit_invoice_number" : "מס' חשבונית",
+  "payment_invoice" : "חשבונית תשלום",
+  "refund_invoice" : "חשבונית זיכוי",
+  "payed" : "שולם",
+  "pending" :"ממתין",
+  "my_invoices" :"החשבוניות שלי",
+  "invoice_date" : "Invoice date",
+   "invoice_type" : "Invoice type",
+   "invoice_statue" : "Invoice statue",
+   "invoice_amount" : "Invoice amount"
+
+
+
+
+
 }

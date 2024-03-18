@@ -408,5 +408,18 @@
   "my_invoices": "My invoices",
   "invoice_number" : "Invoice Number",
   "not_include_surfaces_price":"This price does not include surfaces price",
-   "open":"open"
+  "open":"open",
+  "my_invoices" : "My invoices",
+  "rivchit_invoice_number" : "Rivchit Invoice number",
+  "payment_invoice" : "Payment invoice",
+  "refund_invoice" : "Refund invoice",
+  "payed" :"Payed",
+  "pending" :"Pending",
+  "my_invoices" :"My invoices",
+  "invoice_date" : "Invoice date",
+  "invoice_type" : "Invoice type",
+  "invoice_statue" : "Invoice statue",
+  "invoice_amount" : "Invoice amount"
+
+
 }
