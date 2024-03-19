@@ -44,7 +44,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
     on<MoreDetailsEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      String? city ;
+
       if (event is _getProfileModelEvent) {
         profileModel = event.profileModel;
         try {
@@ -337,7 +337,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             if (response.status == 200) {
               debugPrint(
                   'update city : ${response.data?.clients?.first.city?.cityName}');
-              city = response.data?.clients?.first.city?.cityName ?? '';
               emit(state.copyWith(
                 isUpdating: false,
                 selectCity: response.data?.clients?.first.city?.cityName ?? '',
