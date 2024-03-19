@@ -40,7 +40,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
   ProfileModel profileModel = ProfileModel();
   String imgUrl = '';
 
-
   MoreDetailsBloc() : super(MoreDetailsState.initial()) {
     on<MoreDetailsEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
