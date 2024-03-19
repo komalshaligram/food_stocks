@@ -174,7 +174,6 @@ class AboutAppScreenWidget extends StatelessWidget {
   }
 
   void buttonEvent(String id) {
-
     switch (id) {
       case '658d0e87a1bb68d47f70dd09':
         debugPrint(

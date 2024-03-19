@@ -78,6 +78,6 @@ class AppUrls {
   static const String removeIssueUrl = '/v1/orders/issues/removeIssue';
   static const String getPlanogramAllProductForGuestUserUrl = '/v1/store/getAllProducts';
   static const String deleteAccountUrl = '/v1/clients/deleteAccount/';
- static const String relatedProductsUrl = '/v1/products/getRelatedProducts';
-  static const String getsubCategoryProductsUrl = '/v1/store/getsubCategoryProducts';
+  static const String relatedProductsUrl = '/v1/products/getRelatedProducts';
+  static const String getSubCategoryProductsUrl = '/v1/store/getsubCategoryProducts';
 }
