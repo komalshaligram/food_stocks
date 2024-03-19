@@ -105,7 +105,8 @@ class BasketScreenWidget extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     SvgPicture.asset(
-                                      AppImagePath.delete,color: AppColors.redColor,),
+                                      AppImagePath.delete,colorFilter:ColorFilter.mode(
+                                        AppColors.greyColor, BlendMode.srcIn),),
                                     5.width,
                                     Text(
                                       AppLocalizations.of(context)!.empty,
@@ -137,7 +138,10 @@ class BasketScreenWidget extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     SvgPicture.asset(
-                                      AppImagePath.delete,color: AppColors.whiteColor,),
+                                      AppImagePath.delete,
+                                      colorFilter: ColorFilter.mode(
+                                          AppColors.whiteColor, BlendMode.srcIn),
+                                     ),
                                     5.width,
                                     Text(
                                       AppLocalizations.of(context)!.empty,
@@ -331,7 +335,8 @@ class BasketScreenWidget extends StatelessWidget {
                 },
                 child: SvgPicture.asset(
                   AppImagePath.delete,
-                  color: AppColors.whiteColor,
+                  colorFilter: ColorFilter.mode(
+                      AppColors.whiteColor, BlendMode.srcIn),
                   height: 30,
                   width: 30,
                 ),

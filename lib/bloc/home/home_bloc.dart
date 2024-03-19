@@ -1166,9 +1166,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               debugPrint('store search list = ${searchList.length}');
               bool productVisible = response.data?.categories?.any((
                   element) => element.isHomePreference == true) ?? true;
-              emit(state.copyWith(isCatVisible: productVisible));
-              emit(state.copyWith(
 
+              emit(state.copyWith(
+                  isCatVisible: productVisible,
                   productCategoryList: response.data?.categories ?? [],
                   searchList: searchList,
                   isShimmering: false));
@@ -1195,7 +1195,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           final _checker = StoreVersionChecker();
           _checker.checkUpdate().then((value) {
             debugPrint('update available');
-            print(value.canUpdate); //return true if update is available
+            debugPrint(value.canUpdate.toString()); //return true if update is available
             debugPrint(value.currentVersion); //return current app version
             debugPrint(value.newVersion); //return the new app version
             debugPrint(value.appURL); //return the app url

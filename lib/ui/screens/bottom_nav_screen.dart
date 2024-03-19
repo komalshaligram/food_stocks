@@ -46,7 +46,6 @@ class BottomNavScreen extends StatelessWidget {
 
 class BottomNavScreenWidget extends StatelessWidget {
 
-
    BottomNavScreenWidget({super.key,});
 
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
@@ -135,12 +134,9 @@ class BottomNavScreenWidget extends StatelessWidget {
                       else{
                         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                       }
-
                     }else{
                       bloc.add(BottomNavEvent.changePage(index: index));
                     }
-
-
                   },
                   letIndexChange: (index) => true,
                 ),
@@ -167,7 +163,6 @@ class BottomNavScreenWidget extends StatelessWidget {
       ),
     );
   }
-
 
 
   Widget _pageContainers(

@@ -130,7 +130,8 @@ class MessageScreenWidget extends StatelessWidget {
                                             padding: const EdgeInsets.all(12),
                                             child: SvgPicture.asset(
                                               AppImagePath.delete,
-                                              color: AppColors.whiteColor,
+                                              colorFilter: ColorFilter.mode(
+                                                  AppColors.whiteColor, BlendMode.srcIn),
                                               height: 30,
                                               width: 30,
                                             ),

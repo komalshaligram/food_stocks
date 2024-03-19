@@ -1,19 +1,21 @@
-
-
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:food_stock/bloc/home/home_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -28,6 +30,7 @@ import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../utils/themes/app_urls.dart';
@@ -38,15 +41,12 @@ import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
 
-
-
 class HomeRoute {
   static Widget get route =>  HomeScreen();
 }
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -238,8 +238,6 @@ class HomeScreenWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                   gradient: AppColors
                                                       .appMainGradientColor,
-                                                  /*   color: AppColors
-                                                          .notificationColor,*/
                                                   border: Border.all(
                                                       color: AppColors
                                                           .whiteColor,
@@ -892,36 +890,30 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-/*  void handleMessageOnBackground(BuildContext context) {
+  void handleMessageOnBackground(BuildContext context) {
     PushNotificationService().firebaseMessaging.getInitialMessage().then(
-          (message) {
+          (message) async {
         if (message != null) {
           debugPrint("onMessageClosedApp: ${message.data}");
           if (message.data.isNotEmpty) {
             var data = json.decode(message.data['data'].toString());
             final RemoteNotification? notification = message.notification;
-            final String? messageId = message.messageId;
-            debugPrint('messageId______${messageId}');
             final AndroidNotification? android = message.notification?.android;
             debugPrint('data:${data.toString()}');
             if (data != null) {
-              String? title =
-              Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
-              String? body =
-              Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
-              String? _mainPage = data['message']['mainPage'] ?? '';
-              String? _subPage = data['message']['subPage'] ?? '';
-              String? _id = data['message']['id'] ?? '';
-
-//PushNotificationService().showNotification( notification.hashCode, title, body, channelId, channelName, channelDesc, androidIcon);
-              PushNotificationService().manageNavigation( true, _mainPage ?? '',_subPage ?? '' , _id ?? '' , );
+              PushNotificationService().showNotification(
+                  notification.hashCode,
+                  android?.smallIcon??'',
+                  data,
+                false
+              );
             }
           }
 
         }
       },
     );
-  }*/
+  }
 
   Widget titleRowWidget(
       {required BuildContext context,
