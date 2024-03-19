@@ -19,7 +19,7 @@ class BasketState with _$BasketState {
     required int supplierCount,
     required double bottleTax,
     required int? bottleQty,
-    required List<ProductStockModel> productStockList,
+    required List<List<ProductStockModel>> productStockList,
     required int productStockUpdateIndex,
     required bool isCartCountChange,
     required List<Product> productDetails,
@@ -29,6 +29,7 @@ class BasketState with _$BasketState {
     required bool isSelectSupplier,
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
+    required int productListIndex,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -48,7 +49,7 @@ class BasketState with _$BasketState {
      bottleQty: 0,
      bottleTax: 0,
      productStockUpdateIndex: 0,
-     productStockList: [],
+       productStockList: [[ProductStockModel(productId: '')],[]],
      isCartCountChange: false,
      productDetails: [],
      isProductLoading: false,
@@ -56,7 +57,8 @@ class BasketState with _$BasketState {
        isQtyUpdated: false,
      isSelectSupplier: false,
      relatedProductList: [],
-     isRelatedShimmering: false
+     isRelatedShimmering: false,
+     productListIndex: -1,
 );
 }
 

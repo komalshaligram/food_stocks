@@ -71,8 +71,11 @@ class HomeScreenWidget extends StatelessWidget {
     HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
-        BlocProvider.of<BottomNavBloc>(context)
-            .add(BottomNavEvent.updateCartCountEvent());
+        print('state.isCartCountChange___${state.isCartCountChange}');
+        if(state.isCartCountChange){
+          BlocProvider.of<BottomNavBloc>(context)
+              .add(BottomNavEvent.updateCartCountEvent());
+        }
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
@@ -485,6 +488,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                               .recommendedProductsList[
                                                           index]
                                                               .productStock.toString()),
+                                                          productListIndex: 1
                                                         );
 
                                                       }
@@ -804,6 +808,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 .searchList[index].searchId,
                                             isFromSearch: true,
                                             isBarcode:  true,
+                                            productListIndex: 0,
                                             productStock: (state.searchList[index].productStock.toString())
                                         );
                                       } else if (state
@@ -874,7 +879,9 @@ class HomeScreenWidget extends StatelessWidget {
                                   context: context,
                                   productId: scanResult,
                                   isBarcode: true,
-                                  productStock: '1'
+                                  productStock: '1',
+                                  productListIndex: 0
+
                                 );
                               }
                             },
@@ -1029,13 +1036,13 @@ class HomeScreenWidget extends StatelessWidget {
     bool isFromSearch = false,
     String productStock  = '0',
     bool isRelated = false,
-    int planoGramIndex = 0,
+    int productListIndex = 0,
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
       context: context,
       productId: productId,
       isBarcode: isBarcode,
-      planoGramIndex: planoGramIndex,
+      productListIndex:  productListIndex,
     ));
     showModalBottomSheet(
       context: context,
@@ -1087,7 +1094,6 @@ class HomeScreenWidget extends StatelessWidget {
                             )),
                       )
                           : SingleChildScrollView(
-                        //   controller: scrollController,
                           child: NotificationListener<ScrollNotification>(
                             onNotification: (notification) {
                 if(getScreenHeight(context)<700 ){
@@ -1198,11 +1204,11 @@ class HomeScreenWidget extends StatelessWidget {
                                   ?.text ??
                                   '',
                               productPrice: state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .totalPrice *
                                   state
-                                      .productStockList[
+                                      .productStockList[state.productListIndex][
                                   state.productStockUpdateIndex]
                                       .quantity *
                                   (state.productDetails.first
@@ -1215,7 +1221,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock:(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              productStock:(state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty
@@ -1223,7 +1229,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   : true,
                               scrollController: scrollController,
                               productQuantity:  state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .quantity,
                               onQuantityChanged: (quantity) {
@@ -1239,7 +1245,7 @@ class HomeScreenWidget extends StatelessWidget {
                               },
                               onQuantityDecreaseTap: () {
                                 if(state
-                                    .productStockList[
+                                    .productStockList[state.productListIndex][
                                 state.productStockUpdateIndex]
                                     .quantity > 1){
                                   context.read<HomeBloc>().add(
@@ -1266,60 +1272,57 @@ class HomeScreenWidget extends StatelessWidget {
   }
 
   Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context , ScrollController scrollController){
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      physics: ClampingScrollPhysics(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Align(
-            alignment:
-            context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
-              child: Text(
-                AppLocalizations.of(context)!.related_products,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.mediumFont,
-                    color: AppColors.blackColor),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Align(
+          alignment:
+          context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
+            child: Text(
+              AppLocalizations.of(context)!.related_products,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.mediumFont,
+                  color: AppColors.blackColor),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
           ),
-          Container(
-            height: AppConstants.relatedProductItemHeight,
-            padding: EdgeInsets.only(left: 10,right: 10),
-            child: ListView.builder(
-              controller: ScrollController(),
-              physics: ClampingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              itemBuilder: (context2,i){
-                return CommonProductItemWidget(
-                  lowStock: relatedProductList.elementAt(i).lowStock.toString(),
-                  productStock:relatedProductList.elementAt(i).productStock.toString(),
-                  width: AppConstants.relatedProductItemWidth,
-                  productImage:relatedProductList[i].mainImage,
-                  productName: relatedProductList.elementAt(i).productName,
-                  totalSaleCount: relatedProductList.elementAt(i).totalSale,
-                  price:relatedProductList.elementAt(i).productPrice,
-                  onButtonTap: (){
-                    Navigator.pop(prevContext);
-                    showProductDetails(
-                        context: context,
-                        productId: relatedProductList[i].id,
-                        isBarcode: false,
-                        productStock: (relatedProductList[i].productStock.toString())
-                    );
-                  },
-                );},itemCount: relatedProductList.length,),
-          )
-        ],
-      ),
+        ),
+        Container(
+          height: AppConstants.relatedProductItemHeight,
+          padding: EdgeInsets.only(left: 10,right: 10),
+          child: ListView.builder(
+            controller: ScrollController(),
+            physics: ClampingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemBuilder: (context2,i){
+              return CommonProductItemWidget(
+                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
+                productStock:relatedProductList.elementAt(i).productStock.toString(),
+                width: AppConstants.relatedProductItemWidth,
+                productImage:relatedProductList[i].mainImage,
+                productName: relatedProductList.elementAt(i).productName,
+                totalSaleCount: relatedProductList.elementAt(i).totalSale,
+                price:relatedProductList.elementAt(i).productPrice,
+                onButtonTap: (){
+                  Navigator.pop(prevContext);
+                  showProductDetails(
+                      context: context,
+                      productId: relatedProductList[i].id,
+                      isBarcode: false,
+                      productListIndex: 2,
+                      productStock: (relatedProductList[i].productStock.toString())
+                  );
+                },
+              );},itemCount: relatedProductList.length,),
+        )
+      ],
     );
   }
 

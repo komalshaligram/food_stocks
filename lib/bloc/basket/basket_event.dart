@@ -50,6 +50,7 @@ class BasketEvent with _$BasketEvent {
   const factory BasketEvent.getProductDetailsEvent(
       {required BuildContext context,
         required bool isBarcode,
+        required int productListIndex,
         required String productId}) = _GetProductDetailsEvent;
 
   const factory BasketEvent.addToCartProductEvent(

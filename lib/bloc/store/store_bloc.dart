@@ -820,6 +820,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
+              Navigator.pop(event.context);
               add(StoreEvent.setCartCountEvent());
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: true);
@@ -838,7 +839,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   productStockList: productStockList,
                   isCartCountChange: true));
               emit(state.copyWith(isCartCountChange: false));
-              Navigator.pop(event.context);
+
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   /* title: response.message ??

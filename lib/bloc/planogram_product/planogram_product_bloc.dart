@@ -53,7 +53,7 @@ class PlanogramProductBloc
         debugPrint('Planogram details = ${event.planogram.planogramproducts}');
 
        List <List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
-     List<ProductStockModel>stockList = state.productStockList[1].toList(growable: true);
+     List<ProductStockModel>stockList = [];
         stockList = event.planogram.planogramproducts
                 ?.map((product) => ProductStockModel(
                     productId: product.id ?? '',

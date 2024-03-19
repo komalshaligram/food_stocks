@@ -850,6 +850,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                       context: context,
                       productId: relatedProductList[i].id,
                       isBarcode: false,
+                      productListIndex: 2,
                       productStock: (relatedProductList[i].productStock.toString())
                   );
                 },
