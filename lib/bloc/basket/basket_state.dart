@@ -4,7 +4,6 @@ part of 'basket_bloc.dart';
 class BasketState with _$BasketState {
 
   const factory BasketState({
-    required bool isRefresh,
     required GetAllCartResModel CartItemList,
     required bool isShimmering,
     required double productWeight,
@@ -30,10 +29,10 @@ class BasketState with _$BasketState {
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
     required int productListIndex,
+    required bool isAnimation,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
-     isRefresh: false,
      CartItemList: GetAllCartResModel(),
      isShimmering: false,
      productWeight: 0,
@@ -59,6 +58,7 @@ class BasketState with _$BasketState {
      relatedProductList: [],
      isRelatedShimmering: false,
      productListIndex: -1,
+     isAnimation: false
 );
 }
 

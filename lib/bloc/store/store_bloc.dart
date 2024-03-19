@@ -102,9 +102,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 []);
             debugPrint('store search list = ${searchList.length}');
             bool productVisible = response.data?.categories?.any((element) => element.isHomePreference==true)??true;
-            emit(state.copyWith(isCatVisible: productVisible));
-            emit(state.copyWith(
 
+            emit(state.copyWith(
+                isCatVisible: productVisible,
                 productCategoryList: response.data?.categories ?? [],
                 searchList: searchList,
                 isShimmering: false));
@@ -141,8 +141,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           if (response.status == 200) {
             List<ProductSale> saleProductsList =
                 response.data?.toList(growable: true) ?? [];
-            // saleProductsList.removeWhere(
-            //     (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
             debugPrint('sale Products = ${saleProductsList.length}');
             debugPrint('sale Products = ${response.data?.length}');
             List<ProductStockModel> productStockList =
@@ -184,13 +182,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 AppUrls.getRecommendationProductsUrl,
                 data: RecommendationProductsReqModel(
                     pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
-                    .toJson(),
-                options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferencesHelper.getAuthToken()}',
-                  },
-                ));
+                    .toJson(),);
             RecommendationProductsResModel response =
             RecommendationProductsResModel.fromJson(res);
              debugPrint('storeresponse____${response}');
@@ -239,9 +231,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           debugPrint('suppliers = ${response.data}');
           if (response.status == 200) {
             bool productVisible = response.data?.any((element) => element.supplierDetail?.isHomePreference==true)??true;
-            emit(state.copyWith(isSupplierVisible: productVisible));
-//             debugPrint('supplier visible:$productVisible');
-            emit(state.copyWith(suppliersList: response, isShimmering: false));
+            emit(state.copyWith(suppliersList: response, isShimmering: false,isSupplierVisible: productVisible));
           } else {
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
@@ -523,32 +513,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     supplierSaleIndex: supplierSaleIndex));
               }
             }
-   /*         try {
-              SharedPreferencesHelper preferences = SharedPreferencesHelper(
-                  prefs: await SharedPreferences.getInstance());
-              final res = await DioClient(event.context).post(
-                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                        'Bearer ${preferences.getAuthToken()}'
-                  }));
-              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-              if (response.status == 200) {
-                debugPrint('cart before = ${response.data}');
-                response.data?.data?.forEach((cartProduct) {
-                  if (cartProduct.id ==
-                      state.productStockList[state.productStockUpdateIndex]
-                          .productId) {
-                    _isProductInCart = true;
-                    _cartProductId = cartProduct.cartProductId ?? '';
-                    _productQuantity = cartProduct.totalQuantity ?? 0;
-                    return;
-                  }
-                });
-                debugPrint(
-                    '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
-              }
-            } on ServerException {}*/
           } else {
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
@@ -736,9 +700,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   productStockList[state.productStockUpdateIndex].copyWith(
                 note: '',
                 isNoteOpen: false,
-                quantity: 0,
+                quantity: state.productStockList[state.productStockUpdateIndex]
+                    .quantity,
                 productSupplierIds: '',
-                totalPrice: 0.0,
+                totalPrice: state.productStockList[state.productStockUpdateIndex]
+                    .totalPrice,
                 productSaleId: '',
               );
               emit(state.copyWith(
@@ -812,12 +778,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             final res = await DioClient(event.context).post(
                 '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
-                options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                        'Bearer ${preferencesHelper.getAuthToken()}',
-                  },
-                ));
+            );
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
               Navigator.pop(event.context);
@@ -828,9 +789,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   productStockList[state.productStockUpdateIndex].copyWith(
                     note: '',
                 isNoteOpen: false,
-                quantity: 0,
+                quantity: state.productStockList[state.productStockUpdateIndex]
+                    .quantity ,
                 productSupplierIds: '',
-                totalPrice: 0.0,
+                totalPrice: state.productStockList[state.productStockUpdateIndex]
+                    .totalPrice ,
                 productSaleId: '',
               );
               Vibration.vibrate(amplitude: 128);
@@ -838,12 +801,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   isLoading: false,
                   productStockList: productStockList,
                   isCartCountChange: true));
+
               emit(state.copyWith(isCartCountChange: false));
 
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  /* title: response.message ??
-                    '${AppLocalizations.of(event.context)!.product_added_to_cart}',*/
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
                         response.message!,
@@ -889,6 +851,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
         await preferences.setIsAnimation(isAnimation: true);
         debugPrint('cart count store= ${preferences.getCartCount()}');
+
       }
       else if (event is _SupplierSelectionEvent) {
         debugPrint(

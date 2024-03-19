@@ -53,6 +53,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
           emit(state.copyWith(
               isShimmering: true,
+              isAnimation : false,
               language: preferencesHelper.getAppLanguage(),
               cartCount: preferencesHelper.getCartCount()));
           try {
@@ -67,6 +68,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               List<ProductDetailsModel> temp = [];
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
+              int cartCount  =  productStockList[0].length;
               productStockList[0].clear();
               List<ProductStockModel>stockList = [];
               stockList.addAll(response.data?.data?.map(
@@ -96,16 +98,18 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
                debugPrint('productStockList____${productStockList}');
 
-              await preferencesHelper.setCartCount(
-                  count: temp.isEmpty
-                      ? preferencesHelper.getCartCount()
-                      : temp.length);
+                 await preferencesHelper.setCartCount(
+                     count: temp.isEmpty
+                         ? preferencesHelper.getCartCount()
+                         : temp.length);
+              if(cartCount != temp.length){
+                emit(state.copyWith(isAnimation: true));
+              }
               emit(state.copyWith(
                 vatPercentage: response.data?.vatPercentage ?? 0,
                 bottleQty: response.data?.cart?.first.bottleQuantities,
                 bottleTax: response.data?.bottleTax ?? 0,
                 basketProductList: temp,
-                isRefresh: !state.isRefresh,
                 productStockList: productStockList,
                 totalPayment: response.data?.cart?.first.totalAmount ?? 0,
                 supplierCount: response.data?.cart?.first.suppliers ?? 1,
@@ -185,9 +189,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       event.context),
                   type: SnackBarType.FAILURE);
             }
-           /* if(event.isFromCart){
-              Navigator.pop(event.context);
-            }*/
           } on ServerException {
             emit(state.copyWith(isLoading: false));
           }
@@ -218,8 +219,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         : supplierList[event.supplierIndex]
                         .supplierSales[event.supplierSaleIndex]
                         .saleId);
-            /*debugPrint(
-              'selected stock supplier = ${productStockList[state.productStockUpdateIndex]}');*/
+
             supplierList = supplierList
                 .map((supplier) => supplier.copyWith(selectedIndex: -1))
                 .toList();
@@ -363,12 +363,12 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               );
               InsertCartResModel response = InsertCartResModel.fromJson(res);
               if (response.status == 201) {
+
                 add(BasketEvent.getAllCartEvent(context: event.context));
                 Vibration.vibrate();
                 Navigator.pop(event.context);
                 List<List<ProductStockModel>> productStockList =
                 state.productStockList.toList(growable: true);
-                debugPrint('quandjfd____${state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
                 productStockList[state.productListIndex][state.productStockUpdateIndex] =
                     productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                       note: '',
@@ -675,7 +675,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   context: event.context,
                   title:
                   "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
-                  // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                   type: SnackBarType.FAILURE);
             }
           }
@@ -766,7 +765,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               list.removeAt(event.listIndex);
               emit(state.copyWith(
                 basketProductList: list,
-                isRefresh: !state.isRefresh,
                 totalPayment: state.totalPayment - event.totalAmount,
                 isRemoveProcess: false,
               ));
@@ -796,7 +794,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               Navigator.pop(event.context);
               emit(state.copyWith(
                   basketProductList: list,
-                  isRefresh: !state.isRefresh,
                   isRemoveProcess: false));
             } else {
               Navigator.pop(event.context);
@@ -814,10 +811,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if (event is _updateImageIndexEvent) {
           emit(state.copyWith(productImageIndex: event.index));
         }
-        else if (event is _refreshListEvent) {
-          Navigator.pop(event.context);
-          emit(state.copyWith(CartItemList: state.CartItemList));
-        }
+
         else if (event is _orderSendEvent) {
           List<OrderSendModel.Product> ProductReqMap = [];
           emit(state.copyWith(isLoading: true));

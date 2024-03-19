@@ -18,6 +18,7 @@ import '../widget/circular_button_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
 import '../widget/custom_button_widget.dart';
+import '../widget/custom_dialog.dart';
 import '../widget/custom_form_field_widget.dart';
 import '../widget/product_details_screen-shimmer_widget.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -122,30 +123,44 @@ class _ProductDetailsScreenWidgetState
                               state.orderData.comaxInvoicePrice != 0.0 ?  '${formatNumber(value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}': '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
                             ),
                     ),
-                   /* CommonProductButtonWidget(
-                      title: AppLocalizations.of(context)!.duplicate_order,
-                      borderRadius: 1,
+                    Container(
                       height: 35,
-                      onPressed: (){
-                        showDialog(
+                      margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 5,vertical: 5),
+                      decoration: BoxDecoration(
+                         gradient: AppColors.appMainGradientColor,
+                          border: Border.all(color: AppColors.borderColor),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.radius_3))),
+                      child: GestureDetector(
+                        onTap: (){
+                          showDialog(
                             context: context,
                             builder: (context) {
-                              return CommonAlertDialog(
+                              return CustomDialog(
                                 title: AppLocalizations.of(context)!.you_want_to_duplicate_this_order,
                                 directionality: state.language,
-                                positiveTitle:AppLocalizations.of(context)!.yes ,
+                                positiveTitle:AppLocalizations.of(context)!.yes,
                                 negativeTitle: AppLocalizations.of(context)!.no,
                                 positiveOnTap: (){
-                                 // bloc.add(ProductDetailsEvent.orderSendEvent(context: context));
+                                  // bloc.add(ProductDetailsEvent.orderSendEvent(context: context));
                                 },
                                 negativeOnTap: (){
                                   Navigator.pop(context);
                                 },
                               );
                             },);
-                      },
-                    ),*/
-
+                        },
+                        child: Text(
+                          AppLocalizations.of(context)!.duplicate_order,
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
+                              color: AppColors.whiteColor,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    )
                   ],
                 ),
                 onTap: () {

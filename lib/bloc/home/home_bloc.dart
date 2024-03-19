@@ -577,10 +577,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                       note: '',
                       isNoteOpen: false,
-                      quantity: /*state.productStockList[state.productStockUpdateIndex]
-                    .quantity +*/ _productQuantity,
+                      quantity:  _productQuantity,
                       productSupplierIds: '',
-                      totalPrice: 0.0,
+                      totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                       productSaleId: '',
                     );
                 emit(state.copyWith(
@@ -665,7 +664,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       isNoteOpen: false,
                       quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                       productSupplierIds: '',
-                      totalPrice: 0.0,
+                      totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                       productSaleId: '',
                     );
 
@@ -1139,9 +1138,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               debugPrint('store search list = ${searchList.length}');
               bool productVisible = response.data?.categories?.any((
                   element) => element.isHomePreference == true) ?? true;
-              emit(state.copyWith(isCatVisible: productVisible));
-              emit(state.copyWith(
 
+              emit(state.copyWith(
+                  isCatVisible: productVisible,
                   productCategoryList: response.data?.categories ?? [],
                   searchList: searchList,
                   isShimmering: false));
