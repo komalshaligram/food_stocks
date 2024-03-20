@@ -900,6 +900,7 @@ class HomeScreenWidget extends StatelessWidget {
             final RemoteNotification? notification = message.notification;
             final AndroidNotification? android = message.notification?.android;
             debugPrint('data:${data.toString()}');
+
             if (data != null) {
               PushNotificationService().showNotification(
                   notification.hashCode,

@@ -28,6 +28,7 @@ class PushNotificationService {
   var fileName;
   Uint8List? imageByte;
   late AndroidNotificationChannel channel;
+  int notificationCount = 0;
 
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   Future<void> setupInteractedMessage() async {
@@ -45,6 +46,7 @@ class PushNotificationService {
 
     FirebaseMessaging.onMessageOpenedApp.listen(
           (RemoteMessage message) async {
+            FlutterAppBadger.removeBadge();
         var data = json.decode(message.data['data'].toString());
         final RemoteNotification? notification = message.notification;
         final String? messageId = message.messageId;
@@ -65,12 +67,16 @@ class PushNotificationService {
     FirebaseMessaging.instance.getInitialMessage().then((message) async {
       debugPrint('background calling...');
       if (message != null) {
+
         var data = json.decode(message.data['data'].toString());
         final RemoteNotification? notification = message.notification;
         final String? messageId = message.messageId;
         debugPrint('messageId___2___${messageId}');
         final AndroidNotification? android = message.notification?.android;
         debugPrint('data:${data.toString()}');
+        if(data['isRead']){
+          notificationCount = notificationCount+1;
+        }
         if (data != null) {
           showNotification(
               notification.hashCode,
@@ -78,8 +84,8 @@ class PushNotificationService {
               data,
             false
           );
+          FlutterAppBadger.updateBadgeCount(notificationCount);
         }
-
       }
     });
     if (Platform.isIOS) {
@@ -90,7 +96,7 @@ class PushNotificationService {
   }
 
   Future<void> registerNotificationListeners() async {
-channel = androidNotificationChannel();
+  channel = androidNotificationChannel();
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -119,10 +125,12 @@ channel = androidNotificationChannel();
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
         debugPrint("noti details:${details}");
+        FlutterAppBadger.removeBadge();
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
+      FlutterAppBadger.removeBadge();
       var data = json.decode(message!.data['data'].toString());
       final RemoteNotification? notification = message.notification;
       final String? messageId = message.messageId;
@@ -215,10 +223,6 @@ channel = androidNotificationChannel();
   }
 
   void manageNavigation(bool isAppOpen, String mainPage,String subPage,String id) {
-    debugPrint('main  1 = ${mainPage}');
-    debugPrint('subPage   1= ${subPage}');
-    debugPrint('id 1= ${id}');
-    debugPrint('isAppOpen = ${isAppOpen}');
 
     if (isAppOpen) {
       debugPrint('subPage  1 = ${subPage}');
@@ -292,7 +296,10 @@ channel = androidNotificationChannel();
     final AndroidNotification? android = message.notification?.android;
     debugPrint("Handling a background message: ${message.messageId}");
     debugPrint("Handling a background message: ${message.data.toString()}");
-
+    if(data['isRead']){
+      notificationCount = notificationCount+1;
+    }
+    FlutterAppBadger.updateBadgeCount(notificationCount);
    /* showNotification(
         notification.hashCode,
         android?.smallIcon??'',
