@@ -98,7 +98,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                       height: 26,
                       width: 26,
                       fit: BoxFit.cover,
-                      color: AppColors.whiteColor,
+                     colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),
                     ),),
                 ),
                 state.cartCount!=0?Positioned(

@@ -1,19 +1,22 @@
-
-
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:food_stock/bloc/home/home_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -28,6 +31,7 @@ import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../utils/themes/app_urls.dart';
@@ -38,15 +42,12 @@ import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
 
-
-
 class HomeRoute {
   static Widget get route =>  HomeScreen();
 }
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +72,11 @@ class HomeScreenWidget extends StatelessWidget {
     HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
-        BlocProvider.of<BottomNavBloc>(context)
-            .add(BottomNavEvent.updateCartCountEvent());
+        print('state.isCartCountChange___${state.isCartCountChange}');
+        if(state.isCartCountChange){
+          BlocProvider.of<BottomNavBloc>(context)
+              .add(BottomNavEvent.updateCartCountEvent());
+        }
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
@@ -81,7 +85,7 @@ class HomeScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-                //handleMessageOnBackground(context);
+                handleMessageOnBackground();
                 bloc.add(HomeEvent.getPreferencesDataEvent());
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(
                     context: context));
@@ -238,8 +242,6 @@ class HomeScreenWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                   gradient: AppColors
                                                       .appMainGradientColor,
-                                                  /*   color: AppColors
-                                                          .notificationColor,*/
                                                   border: Border.all(
                                                       color: AppColors
                                                           .whiteColor,
@@ -485,6 +487,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                               .recommendedProductsList[
                                                           index]
                                                               .productStock.toString()),
+                                                          productListIndex: 1
                                                         );
 
                                                       }
@@ -804,6 +807,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 .searchList[index].searchId,
                                             isFromSearch: true,
                                             isBarcode:  true,
+                                            productListIndex: 0,
                                             productStock: (state.searchList[index].productStock.toString())
                                         );
                                       } else if (state
@@ -874,7 +878,9 @@ class HomeScreenWidget extends StatelessWidget {
                                   context: context,
                                   productId: scanResult,
                                   isBarcode: true,
-                                  productStock: '1'
+                                  productStock: '1',
+                                  productListIndex: 0
+
                                 );
                               }
                             },
@@ -892,36 +898,33 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-/*  void handleMessageOnBackground(BuildContext context) {
+  void handleMessageOnBackground() {
     PushNotificationService().firebaseMessaging.getInitialMessage().then(
-          (message) {
+          (message) async {
         if (message != null) {
           debugPrint("onMessageClosedApp: ${message.data}");
           if (message.data.isNotEmpty) {
             var data = json.decode(message.data['data'].toString());
             final RemoteNotification? notification = message.notification;
-            final String? messageId = message.messageId;
-            debugPrint('messageId______${messageId}');
             final AndroidNotification? android = message.notification?.android;
-            debugPrint('data:${data.toString()}');
+            debugPrint('data home:${data.toString()}');
             if (data != null) {
-              String? title =
-              Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
-              String? body =
-              Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
-              String? _mainPage = data['message']['mainPage'] ?? '';
-              String? _subPage = data['message']['subPage'] ?? '';
-              String? _id = data['message']['id'] ?? '';
-
-//PushNotificationService().showNotification( notification.hashCode, title, body, channelId, channelName, channelDesc, androidIcon);
-              PushNotificationService().manageNavigation( true, _mainPage ?? '',_subPage ?? '' , _id ?? '' , );
+FlutterAppBadger.removeBadge();
+              PushNotificationService().showNotification(
+                 notiId:  notification.hashCode,
+                 androidIcon:  android?.smallIcon??'',
+                 data:  data,
+                isNavigate: true,
+                showNotification: false,
+                isAppOpen: true
+              );
             }
           }
 
         }
       },
     );
-  }*/
+  }
 
   Widget titleRowWidget(
       {required BuildContext context,
@@ -1029,13 +1032,13 @@ class HomeScreenWidget extends StatelessWidget {
     bool isFromSearch = false,
     String productStock  = '0',
     bool isRelated = false,
-    int planoGramIndex = 0,
+    int productListIndex = 0,
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
       context: context,
       productId: productId,
       isBarcode: isBarcode,
-      planoGramIndex: planoGramIndex,
+      productListIndex:  productListIndex,
     ));
     showModalBottomSheet(
       context: context,
@@ -1087,7 +1090,6 @@ class HomeScreenWidget extends StatelessWidget {
                             )),
                       )
                           : SingleChildScrollView(
-                        //   controller: scrollController,
                           child: NotificationListener<ScrollNotification>(
                             onNotification: (notification) {
                 if(getScreenHeight(context)<700 ){
@@ -1198,11 +1200,11 @@ class HomeScreenWidget extends StatelessWidget {
                                   ?.text ??
                                   '',
                               productPrice: state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .totalPrice *
                                   state
-                                      .productStockList[
+                                      .productStockList[state.productListIndex][
                                   state.productStockUpdateIndex]
                                       .quantity *
                                   (state.productDetails.first
@@ -1215,7 +1217,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock:(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              productStock:(state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty
@@ -1223,7 +1225,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   : true,
                               scrollController: scrollController,
                               productQuantity:  state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .quantity,
                               onQuantityChanged: (quantity) {
@@ -1239,7 +1241,7 @@ class HomeScreenWidget extends StatelessWidget {
                               },
                               onQuantityDecreaseTap: () {
                                 if(state
-                                    .productStockList[
+                                    .productStockList[state.productListIndex][
                                 state.productStockUpdateIndex]
                                     .quantity > 1){
                                   context.read<HomeBloc>().add(
@@ -1266,60 +1268,57 @@ class HomeScreenWidget extends StatelessWidget {
   }
 
   Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context , ScrollController scrollController){
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      physics: ClampingScrollPhysics(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Align(
-            alignment:
-            context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
-              child: Text(
-                AppLocalizations.of(context)!.related_products,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.mediumFont,
-                    color: AppColors.blackColor),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Align(
+          alignment:
+          context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
+            child: Text(
+              AppLocalizations.of(context)!.related_products,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.mediumFont,
+                  color: AppColors.blackColor),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
           ),
-          Container(
-            height: AppConstants.relatedProductItemHeight,
-            padding: EdgeInsets.only(left: 10,right: 10),
-            child: ListView.builder(
-              controller: ScrollController(),
-              physics: ClampingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              itemBuilder: (context2,i){
-                return CommonProductItemWidget(
-                  lowStock: relatedProductList.elementAt(i).lowStock.toString(),
-                  productStock:relatedProductList.elementAt(i).productStock.toString(),
-                  width: AppConstants.relatedProductItemWidth,
-                  productImage:relatedProductList[i].mainImage,
-                  productName: relatedProductList.elementAt(i).productName,
-                  totalSaleCount: relatedProductList.elementAt(i).totalSale,
-                  price:relatedProductList.elementAt(i).productPrice,
-                  onButtonTap: (){
-                    Navigator.pop(prevContext);
-                    showProductDetails(
-                        context: context,
-                        productId: relatedProductList[i].id,
-                        isBarcode: false,
-                        productStock: (relatedProductList[i].productStock.toString())
-                    );
-                  },
-                );},itemCount: relatedProductList.length,),
-          )
-        ],
-      ),
+        ),
+        Container(
+          height: AppConstants.relatedProductItemHeight,
+          padding: EdgeInsets.only(left: 10,right: 10),
+          child: ListView.builder(
+            controller: ScrollController(),
+            physics: ClampingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemBuilder: (context2,i){
+              return CommonProductItemWidget(
+                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
+                productStock:relatedProductList.elementAt(i).productStock.toString(),
+                width: AppConstants.relatedProductItemWidth,
+                productImage:relatedProductList[i].mainImage,
+                productName: relatedProductList.elementAt(i).productName,
+                totalSaleCount: relatedProductList.elementAt(i).totalSale,
+                price:relatedProductList.elementAt(i).productPrice,
+                onButtonTap: (){
+                  Navigator.pop(prevContext);
+                  showProductDetails(
+                      context: context,
+                      productId: relatedProductList[i].id,
+                      isBarcode: false,
+                      productListIndex: 2,
+                      productStock: (relatedProductList[i].productStock.toString())
+                  );
+                },
+              );},itemCount: relatedProductList.length,),
+        )
+      ],
     );
   }
 

@@ -81,7 +81,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                       height: 26,
                       width: 26,
                       fit: BoxFit.cover,
-                      color: AppColors.whiteColor,
+                      colorFilter: ColorFilter.mode(
+                        AppColors.whiteColor, BlendMode.srcIn),
                     ),
                   ),
                 ),
@@ -850,6 +851,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                       context: context,
                       productId: relatedProductList[i].id,
                       isBarcode: false,
+                      productListIndex: 2,
                       productStock: (relatedProductList[i].productStock.toString())
                   );
                 },

@@ -83,8 +83,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 .addAll(response.previousProductData ?? []);
             List<List<ProductStockModel>> productStockList =
                 state.productStockList.toList(growable: true);
-            List<ProductStockModel> stockList =
-            state.productStockList[1].toList(growable: true);
+            List<ProductStockModel> stockList = [];
             stockList.addAll(response.previousProductData?.map(
                     (recommendationProduct) => ProductStockModel(
                         productId: recommendationProduct.id ?? '',
@@ -941,9 +940,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             debugPrint('store search list = ${searchList.length}');
             bool productVisible = response.data?.categories?.any((
                 element) => element.isHomePreference == true) ?? true;
-            emit(state.copyWith(isCatVisible: productVisible));
-            emit(state.copyWith(
 
+            emit(state.copyWith(
+                isCatVisible: productVisible,
                 productCategoryList: response.data?.categories ?? [],
                 searchList: searchList,
                 isShimmering: false));

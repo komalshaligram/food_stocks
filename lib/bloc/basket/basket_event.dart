@@ -11,8 +11,6 @@ class BasketEvent with _$BasketEvent {
     required String cartProductId,
     required double totalPayment,
     required String saleId,
-     required bool isFromCart
-
   }) = _productUpdateEvent;
 
   const factory BasketEvent.removeCartProductEvent({
@@ -32,8 +30,6 @@ class BasketEvent with _$BasketEvent {
 
   const factory BasketEvent.setCartCountEvent({required bool isClearCart}) =_SetCartCountEvent;
   const factory BasketEvent.updateImageIndexEvent({required int index}) =_updateImageIndexEvent;
-  const factory BasketEvent.refreshListEvent({required BuildContext context}) =_refreshListEvent;
-
   const factory BasketEvent.orderSendEvent({
     required BuildContext context,
   }) = _orderSendEvent;
@@ -50,6 +46,7 @@ class BasketEvent with _$BasketEvent {
   const factory BasketEvent.getProductDetailsEvent(
       {required BuildContext context,
         required bool isBarcode,
+        required int productListIndex,
         required String productId}) = _GetProductDetailsEvent;
 
   const factory BasketEvent.addToCartProductEvent(

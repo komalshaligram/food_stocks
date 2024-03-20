@@ -57,7 +57,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
       required this.productWeight,
       required this.productUnitPrice,
       required this.productPerUnit,
-      required this.isRTL,
+       this.isRTL = false,
       required this.scrollController,
       required this.productQuantity,
       required this.onQuantityIncreaseTap,

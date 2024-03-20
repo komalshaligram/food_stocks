@@ -248,7 +248,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                 },
                                 child: SvgPicture.asset(
                                   AppImagePath.signature,
-                                  color: state.isSignaturePadActive && !state.isDelete ? AppColors.mainColor : AppColors.blackColor,
+                                  colorFilter: ColorFilter.mode(
+                                      state.isSignaturePadActive && !state.isDelete ? AppColors.mainColor : AppColors.blackColor, BlendMode.srcIn),
                                 ),
                               ),
                               GestureDetector(
@@ -259,7 +260,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                 },
                                 child: SvgPicture.asset(
                                   AppImagePath.delete,
-                                  color: Colors.red,
+                                  colorFilter: ColorFilter.mode( Colors.red, BlendMode.srcIn),
                                 ),
                               ),
                             ],

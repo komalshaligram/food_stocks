@@ -956,9 +956,9 @@ class CompanyProductsBloc
             debugPrint('store search list = ${searchList.length}');
             bool productVisible = response.data?.categories?.any((
                 element) => element.isHomePreference == true) ?? true;
-            emit(state.copyWith(isCatVisible: productVisible));
-            emit(state.copyWith(
 
+            emit(state.copyWith(
+                isCatVisible: productVisible,
                 productCategoryList: response.data?.categories ?? [],
                 searchList: searchList,
                 isShimmering: false));

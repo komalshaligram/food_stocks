@@ -12,7 +12,7 @@ class HomeState with _$HomeState {
     required bool isLoading,
     required bool isProductLoading,
     required List<Product> productDetails,
-    required List<ProductStockModel> productStockList,
+    required List<List<ProductStockModel>> productStockList,
     required int productStockUpdateIndex,
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
@@ -40,6 +40,8 @@ class HomeState with _$HomeState {
     required bool isIgnorePointer,
     required bool isRelatedShimmering,
     required List<RelatedProductDatum> relatedProductList,
+    required int productListIndex,
+
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -53,7 +55,7 @@ class HomeState with _$HomeState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [ProductStockModel(productId: '')],
+        productStockList: [[ProductStockModel(productId: '')],[],[]],
         isSelectSupplier: false,
         productSupplierList: [],
         isCartCountChange: false,
@@ -80,5 +82,7 @@ class HomeState with _$HomeState {
     isIgnorePointer: false,
       isRelatedShimmering:false,
       relatedProductList: [],
+    productListIndex: -1,
+
       );
 }
