@@ -123,7 +123,7 @@ class _ProductDetailsScreenWidgetState
                               state.orderData.comaxInvoicePrice != 0.0 ?  '${formatNumber(value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}': '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
                             ),
                     ),
-                    Container(
+                   /* Container(
                       height: 35,
                       margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                       padding: EdgeInsets.symmetric(
@@ -160,7 +160,7 @@ class _ProductDetailsScreenWidgetState
                               fontWeight: FontWeight.w600),
                         ),
                       ),
-                    )
+                    )*/
                   ],
                 ),
                 onTap: () {

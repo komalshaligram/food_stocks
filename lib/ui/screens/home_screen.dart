@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -84,7 +85,7 @@ class HomeScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-                //handleMessageOnBackground(context);
+                handleMessageOnBackground();
                 bloc.add(HomeEvent.getPreferencesDataEvent());
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(
                     context: context));
@@ -897,7 +898,7 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  void handleMessageOnBackground(BuildContext context) {
+  void handleMessageOnBackground() {
     PushNotificationService().firebaseMessaging.getInitialMessage().then(
           (message) async {
         if (message != null) {
@@ -906,13 +907,16 @@ class HomeScreenWidget extends StatelessWidget {
             var data = json.decode(message.data['data'].toString());
             final RemoteNotification? notification = message.notification;
             final AndroidNotification? android = message.notification?.android;
-            debugPrint('data:${data.toString()}');
+            debugPrint('data home:${data.toString()}');
             if (data != null) {
+FlutterAppBadger.removeBadge();
               PushNotificationService().showNotification(
-                  notification.hashCode,
-                  android?.smallIcon??'',
-                  data,
-                false
+                 notiId:  notification.hashCode,
+                 androidIcon:  android?.smallIcon??'',
+                 data:  data,
+                isNavigate: true,
+                showNotification: false,
+                isAppOpen: true
               );
             }
           }
