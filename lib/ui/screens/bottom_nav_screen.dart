@@ -175,7 +175,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       child: FadeIndexedStack(
         index:  state.index,
         children: [
-          HomeScreen() ,
+          HomeScreen(isSubCategory: 'false') ,
           StoreScreen(),
           BasketScreen(),
           WalletScreen(),
