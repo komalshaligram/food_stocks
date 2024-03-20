@@ -47,8 +47,8 @@ class HomeRoute {
 }
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
-
+  String isSubCategory;
+  HomeScreen({super.key, this.isSubCategory = ''});
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -59,13 +59,14 @@ class HomeScreen extends StatelessWidget {
         ..add(HomeEvent.getWalletRecordEvent(context: context))
         ..add(HomeEvent.getMessageListEvent(context: context))
         ..add(HomeEvent.getRecommendationProductsListEvent(context: context)),
-      child: HomeScreenWidget(),
+      child: HomeScreenWidget(isNavigation: isSubCategory),
     );
   }
 }
 
 class HomeScreenWidget extends StatelessWidget {
-  HomeScreenWidget({super.key});
+  String isNavigation = '';
+  HomeScreenWidget({super.key, this.isNavigation = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -899,31 +900,36 @@ class HomeScreenWidget extends StatelessWidget {
   }
 
   void handleMessageOnBackground() {
-    PushNotificationService().firebaseMessaging.getInitialMessage().then(
-          (message) async {
-        if (message != null) {
-          debugPrint("onMessageClosedApp: ${message.data}");
-          if (message.data.isNotEmpty) {
-            var data = json.decode(message.data['data'].toString());
-            final RemoteNotification? notification = message.notification;
-            final AndroidNotification? android = message.notification?.android;
-            debugPrint('data home:${data.toString()}');
-            if (data != null) {
-FlutterAppBadger.removeBadge();
-              PushNotificationService().showNotification(
-                 notiId:  notification.hashCode,
-                 androidIcon:  android?.smallIcon??'',
-                 data:  data,
-                isNavigate: true,
-                showNotification: false,
-                isAppOpen: true
-              );
+    print('isNavigation___${isNavigation}');
+    if(isNavigation.isNotEmpty){
+      PushNotificationService().firebaseMessaging.getInitialMessage().then(
+            (message) async {
+          if (message != null) {
+            debugPrint("onMessageClosedApp: ${message.data}");
+            if (message.data.isNotEmpty) {
+              var data = json.decode(message.data['data'].toString());
+              final RemoteNotification? notification = message.notification;
+              final AndroidNotification? android = message.notification
+                  ?.android;
+              debugPrint('data home:${data.toString()}');
+              if (data != null) {
+                FlutterAppBadger.removeBadge();
+                PushNotificationService().showNotification(
+                    notiId: notification.hashCode,
+                    androidIcon: android?.smallIcon ?? '',
+                    data: data,
+                    isNavigate: true,
+                    showNotification: false,
+                    isAppOpen: true
+                );
+              }
             }
           }
+        },
+      );
+      isNavigation = '';
+    }
 
-        }
-      },
-    );
   }
 
   Widget titleRowWidget(
