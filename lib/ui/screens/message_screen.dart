@@ -14,6 +14,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
+import '../widget/custom_dialog.dart';
 import '../widget/question_and_answer_screen_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 
@@ -148,76 +149,23 @@ class MessageScreenWidget extends StatelessWidget {
                                                     builder: (context, state) {
                                                       return AbsorbPointer(
                                                         absorbing: state.isRemoveProcess ? true : false,
-                                                        child: AlertDialog(
-                                                          backgroundColor: AppColors.pageColor,
-                                                          contentPadding: EdgeInsets.all(20.0),
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(20.0)),
-                                                          title: Text(
-                                                              '${AppLocalizations.of(context)!.are_you_sure}',
-                                                              style: AppStyles.rkRegularTextStyle(
-                                                                  size: AppConstants.mediumFont,
-                                                                  color: AppColors.blackColor,
-                                                                  fontWeight: FontWeight.w400)),
-                                                          actionsPadding: EdgeInsets.only(
-                                                              right: AppConstants.padding_20,
-                                                              bottom: AppConstants.padding_20,
-                                                              left: AppConstants.padding_20),
-                                                          actions: [
-                                                            InkWell(
-                                                              highlightColor: Colors.transparent,
-                                                              splashColor: Colors.transparent,
-                                                              onTap: () {
-                                                                bloc.add(MessageEvent.MessageDeleteEvent(
-                                                                    messageId: state.messageList[index].id.toString(),
-                                                                    context: context,
-                                                                    dialogContext: context1
-                                                                )
-                                                                );
-                                                              },
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    horizontal: 14.0, vertical: 10.0),
-                                                                alignment: Alignment.center,
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius: BorderRadius.circular(8.0)),
-                                                                width: 80,
-                                                                child: Text(
-                                                                  '${AppLocalizations.of(context)!.yes}',
-                                                                  style: AppStyles.rkRegularTextStyle(
-                                                                      color: AppColors.mainColor
-                                                                          .withOpacity(0.9),
-                                                                      size: AppConstants.smallFont),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            InkWell(
-                                                              highlightColor: Colors.transparent,
-                                                              splashColor: Colors.transparent,
-                                                              onTap: () {
-                                                                Navigator.pop(context1);
-                                                                /*bloc.add(MessageEvent.refreshListEvent(
-                                                                    context: context1));*/
-                                                              },
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    horizontal: 14.0, vertical: 10.0),
-                                                                alignment: Alignment.center,
-                                                                width: 80,
-                                                                decoration: BoxDecoration(
-                                                                    color:
-                                                                    AppColors.mainColor.withOpacity(0.9),
-                                                                    borderRadius: BorderRadius.circular(8.0)),
-                                                                child: Text(
-                                                                  '${AppLocalizations.of(context)!.no}',
-                                                                  style: AppStyles.rkRegularTextStyle(
-                                                                      color: AppColors.whiteColor,
-                                                                      size: AppConstants.smallFont),
-                                                                ),
-                                                              ),
+                                                        child: CustomDialog(
+                                                          title: '${AppLocalizations.of(context)!.are_you_sure}',
+                                                          directionality: state.language,
+                                                          positiveTitle:AppLocalizations.of(context)!.yes,
+                                                          negativeTitle: AppLocalizations.of(context)!.no,
+                                                          positiveOnTap: (){
+                                                            bloc.add(MessageEvent.MessageDeleteEvent(
+                                                                messageId: state.messageList[index].id.toString(),
+                                                                context: context,
+                                                                dialogContext: context1
                                                             )
-                                                          ],
-                                                        ),
+                                                            );
+                                                          },
+                                                          negativeOnTap: (){
+                                                            Navigator.pop(context1);
+                                                          },
+                                                        )
                                                       );
                                                     },
                                                   ),

@@ -28,10 +28,11 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
           emit(state.copyWith(isGuestUser:isGuestUser ,index: event.index));
         }
       } else if (event is _UpdateCartCountEvent) {
-     emit(state.copyWith(isAnimation: false));
+  //   emit(state.copyWith(isAnimation: false));
      if(state.cartCount < preferencesHelper.getCartCount()){
-       emit(state.copyWith(isAnimation: preferencesHelper.getIsAnimation()));
+       emit(state.copyWith(isAnimation: true));
      }
+     print('isAnimation____${state.isAnimation}');
      emit(state.copyWith(cartCount: preferencesHelper.getCartCount()));
         if(state.isAnimation){
           await Future.delayed(const Duration(milliseconds: 1000));

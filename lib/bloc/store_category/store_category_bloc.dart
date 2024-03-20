@@ -854,9 +854,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       .copyWith(
                     note: '',
                     isNoteOpen: false,
-                    quantity: 0,
+                    quantity: state
+                        .productStockList[state.planoGramUpdateIndex]
+                    [state.productStockUpdateIndex]
+                        .quantity,
                     productSupplierIds: '',
-                    totalPrice: 0.0,
+                    totalPrice: state
+                        .productStockList[state.planoGramUpdateIndex]
+                    [state.productStockUpdateIndex]
+                        .totalPrice,
                     productSaleId: '',
                   );
 
@@ -953,9 +959,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       .copyWith(
                     note: '',
                     isNoteOpen: false,
-                    quantity: 0,
+                    quantity: state
+                        .productStockList[state.planoGramUpdateIndex]
+                    [state.productStockUpdateIndex]
+                        .quantity,
                     productSupplierIds: '',
-                    totalPrice: 0.0,
+                    totalPrice: state
+                        .productStockList[state.planoGramUpdateIndex]
+                    [state.productStockUpdateIndex]
+                        .totalPrice,
                     productSaleId: '',
                   );
               add(StoreCategoryEvent.getCartCountEvent());
@@ -966,8 +978,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  /*  title: response.message ??
-                    '${AppLocalizations.of(event.context)!.product_added_to_cart}',*/
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
                           response.message!,
