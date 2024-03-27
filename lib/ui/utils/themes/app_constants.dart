@@ -5,7 +5,7 @@ class AppConstants{
   static const double containerHeight = 40;
   static const double appBarHeight = 56;
   static const double textFormFieldHeight = 40;
-  static const double relatedProductItemHeight = 190;
+  static const double relatedProductItemHeight = 215;
   static const double containerHeight_80 = 80;
   static const double containerHeight_60 = 60;
   static const double containerHeight_65 = 65;

@@ -52,6 +52,9 @@ class ProductSale with _$ProductSale {
     @JsonKey(name: "salesDescription") String? salesDescription,
     @JsonKey(name: "fromDate") String? fromDate,
     @JsonKey(name: "endDate") String? endDate,
+    @JsonKey(name: "isPesach") bool? isPesach,
+    @JsonKey(name: "nmMashlim") String? nmMashlim,
+
     double? discountedPrice,
   }) = _ProductSale;
 

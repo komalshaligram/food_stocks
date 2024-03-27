@@ -18,6 +18,7 @@ import 'package:food_stock/data/model/res_model/company_res_model/company_res_mo
 import 'package:food_stock/data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
+import 'package:food_stock/data/model/res_model/setting_res_model/setting_res_model.dart';
 import 'package:food_stock/data/model/search_model/search_model.dart';
 import 'package:food_stock/data/model/supplier_sale_model/supplier_sale_model.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
@@ -932,6 +933,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         searchId: category.id ?? '',
                         name: category.categoryName ?? '',
                         searchType: SearchTypes.category,
+                isPesach: category.isPesach??false,
                         image: category.categoryImage ?? ''))
                     .toList() ??
                 []);
@@ -944,7 +946,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         image: '',
                         categoryId: subCategory.parentCategoryId ?? '',
                         categoryName: subCategory.parentCategoryName ?? '',
-
+                isPesach: subCategory.isPesach??false
             ))
                     .toList() ??
                 []);
@@ -966,6 +968,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         name: supplier.supplierDetail?.companyName ?? '',
                         searchType: SearchTypes.supplier,
                         image: supplier.logo ?? '',
+                isPesach: supplier.isPesach??false
+
             ))
                     .toList() ??
                 []);
@@ -977,6 +981,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         searchType: SearchTypes.sale,
               numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                         image: sale.mainImage ?? '',
+                isPesach: sale.isPesach??false
 
             ))
                     .toList() ??
@@ -991,9 +996,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               productStock: supplier.productStock.toString(),
               numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
               priceOfBox: double.parse(supplier.productPrice.toString()) ,
-                lowStock: supplier.lowStock.toString()
-            ))
-                    .toList() ??
+                lowStock: supplier.lowStock.toString(),
+                isPesach: supplier.isPesach??false
+            )).toList() ??
                 []);
             debugPrint('store search list = ${searchList.length}');
             emit(state.copyWith(
@@ -1153,6 +1158,24 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       }
       else if(event is _RemoveRelatedProductEvent){
         emit(state.copyWith(relatedProductList: []));
+      }
+      else if(event is _GeneralSettings){
+        try {
+          emit(state.copyWith(isShimmering: true));
+          final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
+          SettingResModel response = SettingResModel.fromJson(res);
+
+          debugPrint('general settings = ${response.data.toString()}');
+          if (response.status == 200) {
+            emit(state.copyWith(isShimmering:false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner));
+          } else {
+            emit(state.copyWith(isShimmering: false));
+          }
+        } on ServerException {
+          emit(state.copyWith(isShimmering: false));
+        } catch (exc) {
+          emit(state.copyWith(isShimmering: false));
+        }
       }
 
     });

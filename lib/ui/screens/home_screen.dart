@@ -58,6 +58,7 @@ class HomeScreen extends StatelessWidget {
         ..add(HomeEvent.getOrderCountEvent(context: context))
         ..add(HomeEvent.getWalletRecordEvent(context: context))
         ..add(HomeEvent.getMessageListEvent(context: context))
+        ..add(HomeEvent.generalSettings(context: context))
         ..add(HomeEvent.getRecommendationProductsListEvent(context: context)),
       child: HomeScreenWidget(isNavigation: isSubCategory),
     );
@@ -95,6 +96,7 @@ class HomeScreenWidget extends StatelessWidget {
                 bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
                 bloc.add(HomeEvent.getCartCountEvent(context: context));
                 bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
+                bloc.add(HomeEvent.generalSettings(context: context));
               },
               child: SafeArea(
                 child: Column(
@@ -406,6 +408,15 @@ class HomeScreenWidget extends StatelessWidget {
                                   ),
                                 ),
                                 20.height,
+                                state.showPesachBanner?InkWell(
+                                  onTap: (){
+                                    Navigator.pushNamed(context, RouteDefine.pesachScreen.name);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left:8.0,right: 8),
+                                    child: Image.network(AppUrls.baseFileUrl+state.pesachBannerURL)
+                                  ),
+                                ):Container(),
                                 AnimatedCrossFade(
                                     firstChild: getScreenWidth(context).width,
                                     secondChild: Column(
@@ -430,7 +441,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             }),
                                         SizedBox(
                                           width: getScreenWidth(context),
-                                          height:  190,
+                                          height: AppConstants.relatedProductItemHeight,
                                           child: ListView.builder(
                                               itemCount: state
                                                   .recommendedProductsList.length,
@@ -441,6 +452,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                   AppConstants.padding_5),
                                               itemBuilder: (context, index) =>
                                                   CommonProductItemWidget(
+                                                    isPesach: state.recommendedProductsList[index].isPesach,
                                                     lowStock: state
                                                         .recommendedProductsList[
                                                     index]
@@ -675,7 +687,8 @@ class HomeScreenWidget extends StatelessWidget {
                               shrinkWrap: true,
                               itemBuilder: (listViewContext, index) {
                                 return _buildSearchItem(
-                                  lowStock: state.searchList[index].lowStock.toString(),
+                                    isPesach: state.searchList[index].isPesach,
+                                    lowStock: state.searchList[index].lowStock.toString(),
                                     numberOfUnits:state.searchList[index].numberOfUnits,
                                     priceOfBox: state.searchList[index].priceOfBox,
                                     productStock : state.searchList[index].productStock.toString(),
@@ -900,7 +913,7 @@ class HomeScreenWidget extends StatelessWidget {
   }
 
   void handleMessageOnBackground() {
-    print('isNavigation___${isNavigation}');
+    debugPrint('handleMessageOnBackground home${isNavigation}');
     if(isNavigation.isNotEmpty){
       PushNotificationService().firebaseMessaging.getInitialMessage().then(
             (message) async {
@@ -1116,6 +1129,8 @@ class HomeScreenWidget extends StatelessWidget {
                             child: Column(
                             children: [
                               CommonProductDetailsWidget(
+                                nmMashlim: state.productDetails.first.nmMashlim??'',
+                                isPesach: state.productDetails.first.isPesach??false,
                                 lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                                 qrCode:state.productDetails.first.qrcode ?? '' ,
                                 addToOrderTap: () {
@@ -1305,6 +1320,7 @@ class HomeScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,
@@ -1428,9 +1444,11 @@ class HomeScreenWidget extends StatelessWidget {
     bool? isLastItem, required String productStock,
     required int numberOfUnits,
     required double priceOfBox,
+    required bool isPesach
   }) {
+    debugPrint('isPesach:$isPesach');
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         isShowSearchLabel
@@ -1482,7 +1500,7 @@ class HomeScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != '0' || lowStock.isEmpty ? 80 : 90,
+            height: (productStock) != '0' || lowStock.isEmpty ? isPesach?110: 90 : isPesach?110: 90,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1603,6 +1621,15 @@ class HomeScreenWidget extends StatelessWidget {
 
                       ],
                     ),
+                    isPesach?
+                    Container(
+                        padding: EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                            color: AppColors.pesachBGColor,
+                            border: Border.all(color: AppColors.pesachBGColor),
+                            borderRadius: BorderRadius.all(Radius.circular(10))
+                        ),
+                        child: Text(AppLocalizations.of(context)!.pesach)):0.height
 
                   ],
                 ),

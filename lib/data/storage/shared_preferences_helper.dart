@@ -260,4 +260,5 @@ class SharedPreferencesHelper {
   bool getReorderProductGrid() {
     return prefs.getBool(reorderProductGrid) ?? true;
   }
+
 }

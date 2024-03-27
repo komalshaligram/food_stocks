@@ -296,6 +296,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              nmMashlim: state.productDetails.first.nmMashlim??'',
+                              isPesach: state.productDetails.first.isPesach??false,
                               lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:
                               state.productDetails.first.qrcode ?? '',
@@ -489,6 +491,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,

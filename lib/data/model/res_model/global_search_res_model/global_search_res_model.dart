@@ -54,6 +54,7 @@ class CategoryDatum with _$CategoryDatum {
     @JsonKey(name: "isHomePreference") bool? isHomePreference,
     // @JsonKey(name: "order") int? order,
     @JsonKey(name: "isDeleted") bool? isDeleted,
+    @JsonKey(name: "isPesach") bool? isPesach,
   }) = _CategoryDatum;
 
   factory CategoryDatum.fromJson(Map<String, dynamic> json) =>
@@ -72,6 +73,7 @@ class SubCategoryDatum with _$SubCategoryDatum {
     @JsonKey(name: "isDeleted") bool? isDeleted,
     @JsonKey(name: "subCategoryNumber") int? subCategoryNumber,
     @JsonKey(name: "parentCategoryName") String? parentCategoryName,
+    @JsonKey(name: "isPesach") bool? isPesach,
   }) = _SubCategoryDatum;
 
   factory SubCategoryDatum.fromJson(Map<String, dynamic> json) =>
@@ -85,6 +87,7 @@ class CompanyDatum with _$CompanyDatum {
     @JsonKey(name: "brandName") String? brandName,
     @JsonKey(name: "brandLogo") String? brandLogo,
     @JsonKey(name: "isHomePreference") bool? isHomePreference,
+
     // @JsonKey(name: "order") int? order,
     // @JsonKey(name: "createdAt") DateTime? createdAt,
     // @JsonKey(name: "updatedAt") DateTime? updatedAt,
@@ -119,6 +122,7 @@ class SaleDatum with _$SaleDatum {
     @JsonKey(name: "salesName") String? salesName,
     @JsonKey(name: "discountPercentage") String? discountPercentage,
     @JsonKey(name: "salesDescription") String? salesDescription,
+    @JsonKey(name: "isPesach") bool? isPesach,
     // @JsonKey(name: "fromDate") String? fromDate,
     // @JsonKey(name: "endDate") String? endDate,
   }) = _SaleDatum;
@@ -165,6 +169,7 @@ class SupplierDatum with _$SupplierDatum {
     // @JsonKey(name: "totalIncome") String? totalIncome,
     // @JsonKey(name: "incomeByThisMonth") String? incomeByThisMonth,
     @JsonKey(name: "_idSearch") String? idSearch,
+    @JsonKey(name: "isPesach") bool? isPesach,
   }) = _SupplierDatum;
 
   factory SupplierDatum.fromJson(Map<String, dynamic> json) =>
@@ -202,6 +207,7 @@ class SupplierDetail with _$SupplierDetail {
     // @JsonKey(name: "order") dynamic order,
     @JsonKey(name: "isHomePreference") bool? isHomePreference,
     @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "isPesach") bool? isPesach,
     // @JsonKey(name: "createdAt") DateTime? createdAt,
     // @JsonKey(name: "updatedAt") DateTime? updatedAt,
   }) = _SupplierDetail;
@@ -302,6 +308,8 @@ class SupplierProductDatum with _$SupplierProductDatum {
     @JsonKey(name: "supplierId") String? supplierId,
     @JsonKey(name: "productPrice") String? productPrice,
     @JsonKey(name: "productStock") String? productStock,
+    @JsonKey(name: "isPesach") bool? isPesach,
+    @JsonKey(name: "nmMashlim") String? nmMashlim,
     String? lowStock,
   }) = _SupplierProductDatum;
 
