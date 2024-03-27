@@ -109,7 +109,7 @@ class BasketScreenWidget extends StatelessWidget {
                                   children: [
                                     SvgPicture.asset(
                                       AppImagePath.delete,colorFilter:ColorFilter.mode(
-                                        AppColors.greyColor, BlendMode.srcIn),),
+                                        AppColors.redColor, BlendMode.srcIn),),
                                     5.width,
                                     Text(
                                       AppLocalizations.of(context)!.empty,
@@ -181,11 +181,11 @@ class BasketScreenWidget extends StatelessWidget {
                                     verticalOffset: 44.0,
                                     child: FadeInAnimation(
                                       child: basketListItem(
+                                        isPesach: state.basketProductList[index].isPesach??false,
                                         index: index,
                                         context: context,
                                         lowStock: state.basketProductList[index].lowStock.toString(),
                                         productStock: state.basketProductList[index].productStock ?? 0
-
                                       ),
                                     ),
                                   ),
@@ -244,12 +244,12 @@ class BasketScreenWidget extends StatelessWidget {
             Divider(),
             basketRow('${AppLocalizations.of(context)!.total}', '${(formatNumber(value: vatCalculation(price: state.totalPayment, vat:state.vatPercentage,qty: state.bottleQty?.toDouble() ?? 0, deposit: state.bottleTax).toStringAsFixed(2), local: AppStrings.hebrewLocal))}',isTitle: true),
             Divider(),
-          /*  Text('${AppLocalizations.of(context)!.note} : ${AppLocalizations.of(context)!.not_include_surfaces_price}',
+            Text('${AppLocalizations.of(context)!.note} : ${AppLocalizations.of(context)!.not_include_surfaces_price}',
               style: AppStyles.rkRegularTextStyle(
                   size: AppConstants.font_14,
                   color: AppColors
                       .redColor),
-            ),*/
+            ),
 
             5.height,
             CustomButtonWidget(
@@ -304,7 +304,7 @@ class BasketScreenWidget extends StatelessWidget {
   }
 
   Widget basketListItem({required int index, required BuildContext context,
-    required String lowStock, required double productStock}) {
+    required String lowStock, required double productStock,required bool isPesach}) {
     return BlocBuilder<BasketBloc, BasketState>(
       builder: (context, state) {
         BasketBloc bloc = context.read<BasketBloc>();
@@ -489,7 +489,16 @@ class BasketScreenWidget extends StatelessWidget {
                                       fontSize: AppConstants.smallFont,
                                       ),
                                 ) : 0.width,
-                                5.height,
+                                lowStock.isNotEmpty?5.height:0.height,
+                                isPesach?Container(
+                                    padding: EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                        color: AppColors.pesachBGColor,
+                                        border: Border.all(color: AppColors.pesachBGColor),
+                                        borderRadius: BorderRadius.all(Radius.circular(10))
+                                    ),
+                                    child: Text(AppLocalizations.of(context)!.pesach)):0.height,
+                                isPesach?5.height:0.height,
                                 Text(
                                   '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal)}',
                                   style: TextStyle(
@@ -821,6 +830,8 @@ class BasketScreenWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 CommonProductDetailsWidget(
+                                  nmMashlim: state.productDetails.first.nmMashlim??'',
+                                  isPesach: state.productDetails.first.isPesach??false,
                                   lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                                   qrCode:state.productDetails.first.qrcode ?? '' ,
                                   addToOrderTap: () {
@@ -1002,13 +1013,14 @@ class BasketScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.relatedProductItemHeight,
+          height: AppConstants. relatedProductItemHeight,
           padding: EdgeInsets.only(left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,

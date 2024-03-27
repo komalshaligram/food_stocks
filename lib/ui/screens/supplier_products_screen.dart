@@ -171,6 +171,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                             .productGridAspectRatio1),
                                                 itemBuilder: (context, index) {
                                                   return CommonProductItemWidget(
+                                                    isPesach: state.productList[index].isPesach,
                                                       lowStock: state
                                                           .productList[index]
                                                           .lowStock
@@ -243,6 +244,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         AppConstants.padding_5),
                                                 itemBuilder: (context, index) =>
                                                     CommonProductListWidget(
+                                                      isPesach: state.productList[index].isPesach,
                                                   lowStock: state
                                                       .productList[index]
                                                       .lowStock
@@ -780,6 +782,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       CommonProductDetailsWidget(
+                                        nmMashlim: state.productDetails.first.nmMashlim??'',
+                                        isPesach: state.productDetails.first.isPesach??false,
                                         lowStock: state.productDetails.first
                                                 .supplierSales?.first.lowStock
                                                 .toString() ??
@@ -1004,6 +1008,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2, i) {
               return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:
                     relatedProductList.elementAt(i).productStock.toString(),

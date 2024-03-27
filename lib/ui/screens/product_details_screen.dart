@@ -18,7 +18,6 @@ import '../widget/circular_button_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
 import '../widget/custom_button_widget.dart';
-import '../widget/custom_dialog.dart';
 import '../widget/custom_form_field_widget.dart';
 import '../widget/product_details_screen-shimmer_widget.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -110,7 +109,6 @@ class _ProductDetailsScreenWidgetState
                 iconData: Icons.arrow_back_ios_sharp,
                 trailingWidget: Row(
                   children: [
-
                     Padding(
                       padding: EdgeInsets.symmetric(
                         vertical: AppConstants.padding_10,
@@ -166,8 +164,6 @@ class _ProductDetailsScreenWidgetState
                 onTap: () {
                   Navigator.pop(context);
                 },
-
-
               ),
             ),
             body: state.isShimmering && state.isLoading || (state.orderBySupplierProduct.products?.length == 0)
@@ -583,12 +579,8 @@ class _ProductDetailsScreenWidgetState
                 state.orderBySupplierProduct.products?[index].mainImage != ''
                     ? Image.network(
                         '${AppUrls.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
-                        width: statusNumber == onTheWayStatus
-                            ? AppConstants.containerHeight_80
-                            : 80,
-                        height: statusNumber == onTheWayStatus
-                            ? AppConstants.containerHeight_80
-                            : 80,
+                        width:AppConstants.containerHeight_80,
+                        height:  AppConstants.containerHeight_80,
                         fit: BoxFit.contain,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {
@@ -596,12 +588,8 @@ class _ProductDetailsScreenWidgetState
                           } else {
                             return Center(
                               child: Container(
-                                width: statusNumber == onTheWayStatus
-                                    ? AppConstants.containerHeight_80
-                                    : 80,
-                                height: statusNumber == onTheWayStatus
-                                    ? AppConstants.containerHeight_80
-                                    : 80,
+                                width:  AppConstants.containerHeight_80,
+                                height:AppConstants.containerHeight_80,
                                 child: CupertinoActivityIndicator(
                                   color: AppColors.blackColor,
                                 ),
@@ -623,12 +611,8 @@ class _ProductDetailsScreenWidgetState
                     : Image.asset(
                         AppImagePath.imageNotAvailable5,
                         fit: BoxFit.cover,
-                        width: statusNumber == onTheWayStatus
-                            ? AppConstants.containerHeight_80
-                            : 80,
-                        height: statusNumber == onTheWayStatus
-                            ? AppConstants.containerHeight_80
-                            : 80,
+                        width: AppConstants.containerHeight_80,
+                        height:AppConstants.containerHeight_80,
                       ),
                 15.width,
                 Column(

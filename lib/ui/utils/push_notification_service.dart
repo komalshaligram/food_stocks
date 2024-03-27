@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:food_stock/main.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -33,7 +33,7 @@ class PushNotificationService {
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   Future<void> setupInteractedMessage() async {
-    await Firebase.initializeApp();
+
     NotificationSettings settings = await firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
@@ -47,6 +47,7 @@ class PushNotificationService {
 
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) async {
+        debugPrint('onMessageOpenedApp');
         var data = json.decode(message.data['data'].toString());
         final RemoteNotification? notification = message.notification;
         final String? messageId = message.messageId;
@@ -54,13 +55,13 @@ class PushNotificationService {
         final AndroidNotification? android = message.notification?.android;
         debugPrint('data:${data.toString()}');
         if (data != null) {
-          showNotification(
+    /*      showNotification(
               notiId: notification.hashCode,
               androidIcon: android?.smallIcon ?? '',
               data: data,
               isNavigate: true,
               showNotification: false,
-              isAppOpen: true);
+              isAppOpen: true);*/
         }
         FlutterAppBadger.removeBadge();
       },
@@ -79,21 +80,21 @@ class PushNotificationService {
           notificationCount = notificationCount + 1;
         }
         if (data != null) {
-          showNotification(
+    /*  showNotification(
               notiId: notification.hashCode,
               androidIcon: android?.smallIcon ?? '',
               data: data,
               isNavigate: true,
               showNotification: false,
-              isAppOpen: false);
+              isAppOpen: false);*/
         }
         FlutterAppBadger.updateBadgeCount(notificationCount);
       }
     });
-    if (Platform.isIOS) {
-      FirebaseMessaging.onBackgroundMessage(
-          _firebaseMessagingBackgroundHandler);
-    }
+
+/*      FirebaseMessaging.onBackgroundMessage(
+          _firebaseMessagingBackgroundHandler);*/
+
     enableIOSNotifications();
     await registerNotificationListeners();
   }
@@ -128,12 +129,13 @@ class PushNotificationService {
       onDidReceiveNotificationResponse: (NotificationResponse details) {
         debugPrint("details______:${details}");
         FlutterAppBadger.removeBadge();
-        manageNavigation(true, mainPage!, subPage!, id!);
+    //    manageNavigation(true, mainPage!, subPage!, id!);
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
     // app is open
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
+      debugPrint('onMessage');
       var data = json.decode(message!.data['data'].toString());
       final RemoteNotification? notification = message.notification;
       final String? messageId = message.messageId;
@@ -141,13 +143,13 @@ class PushNotificationService {
       final AndroidNotification? android = message.notification?.android;
       debugPrint('data:${data.toString()}');
       if (data != null) {
-        showNotification(
+      /*  showNotification(
             notiId: notification.hashCode,
             androidIcon: android?.smallIcon ?? '',
             data: data,
             isNavigate: false,
             showNotification: true,
-            isAppOpen: true);
+            isAppOpen: true);*/
       }
 
       FlutterAppBadger.removeBadge();
@@ -164,6 +166,7 @@ class PushNotificationService {
   }) async {
     debugPrint('noti data ${data.toString()}');
     channel = androidNotificationChannel();
+    debugPrint('msg data ${data['message'].toString()}');
     String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
     String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
     mainPage = data['message']['mainPage'] ?? '';
@@ -302,23 +305,27 @@ class PushNotificationService {
     }
   }
 
-  @pragma('vm:entry-point')
-  Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  /*@pragma('vm:entry-point')
+  Future firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    await Firebase.initializeApp();
+    debugPrint("Handling a background message:${message.messageId}");
+    debugPrint("Handling a background message:${message.data.toString()}");
     var data = json.decode(message.data['data'].toString());
-    final RemoteNotification? notification = message.notification;
-    final AndroidNotification? android = message.notification?.android;
-    debugPrint("Handling a background message: ${message.messageId}");
-    debugPrint("Handling a background message: ${message.data.toString()}");
-
-    showNotification(
-        notiId: notification.hashCode,
-        androidIcon: android?.smallIcon ?? '',
-        data: data,
-        isNavigate: true,
-        showNotification: false,
-        isAppOpen: true);
-  }
-
+    if (data['isRead']) {
+      notificationCount = notificationCount + 1;
+    }
+    FlutterAppBadger.updateBadgeCount(notificationCount);
+    if(data!=null){
+      PushNotificationService().showNotification(
+          notiId: message.notification.hashCode,
+          androidIcon:message.notification?.android?.smallIcon,
+          data: data,
+          isNavigate: true,
+          showNotification: true,
+          isAppOpen: false
+      );
+    }
+  }*/
   Future<void> enableIOSNotifications() async {
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(

@@ -7,6 +7,7 @@ import 'package:food_stock/data/model/req_model/update_cart/update_cart_req_mode
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import 'package:food_stock/data/model/res_model/setting_res_model/setting_res_model.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
@@ -57,12 +58,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   String _cartProductId = '';
   int _productQuantity = 0;
 
-
   HomeBloc() : super(HomeState.initial()) {
     on<HomeEvent>((event, emit) async {
       SharedPreferencesHelper preferences =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-
       if (preferences.getGuestUser()) {
 
       }
@@ -354,7 +353,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           // Navigator.pop(event.context);
         }*/
         }
-
         else if (event is _IncreaseQuantityOfProduct) {
           List<List<ProductStockModel>> productStockList =
           state.productStockList.toList(growable: false);
@@ -476,7 +474,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(productStockList: productStockList));
           }
         }
-        
         else if (event is _ChangeSupplierSelectionExpansionEvent) {
           emit(state.copyWith(
               isSelectSupplier:
@@ -772,7 +769,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } on ServerException {} catch (e) {}
         }
         else if (event is _GetMessageListEvent) {
-
           try {
             final res = await DioClient(event.context).post(
                 AppUrls.getNotificationMessageUrl,
@@ -874,9 +870,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       .isNoteOpen);
           emit(state.copyWith(productStockList: productStockList));
         }
-
         else if (event is _getProfileDetailsEvent) {
-
           try {
             debugPrint('req = ${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
@@ -915,7 +909,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } catch (e) {
           }
         }
-
         else if (event is _GetRecommendationProductsListEvent) {
           try {
             emit(state.copyWith(isShimmering: true));
@@ -963,7 +956,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(isShimmering: false));
           }
         }
-
         else if (event is _ChangeCategoryExpansion) {
           if (event.isOpened != null) {
             emit(state.copyWith(isCategoryExpand: event.isOpened ?? false));
@@ -1024,6 +1016,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     name: subCategory.subCategoryName ?? '',
                     searchType: SearchTypes.subCategory,
                     image: '',
+
                     categoryId: subCategory.parentCategoryId ?? '',
                     categoryName: subCategory.parentCategoryName ?? '',
 
@@ -1075,7 +1068,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       productStock: supplier.productStock.toString(),
                     numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                     priceOfBox: double.parse(supplier.productPrice.toString()),
-                    lowStock: supplier.lowStock.toString()
+                    lowStock: supplier.lowStock.toString(),
+                    isPesach: supplier.isPesach??false
 
                   ))
                   .toList() ??
@@ -1113,7 +1107,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               searchController: TextEditingController(text: event.search),
               searchList: event.searchList));
         }
-
         else if (event is _GetProductCategoriesListEvent) {
           try {
             emit(state.copyWith(isShimmering: true));
@@ -1162,7 +1155,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(isShimmering: false));
           }
         }
-
        else if (event is _checkVersionOfAppEvent) {
           final _checker = StoreVersionChecker();
           _checker.checkUpdate().then((value) {
@@ -1181,7 +1173,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
           });
         }
-
         else if(event is _RelatedProductsEvent){
           emit(state.copyWith(isRelatedShimmering:true));
           debugPrint('productId____${event.productId}');
@@ -1222,6 +1213,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
         else if(event is _RemoveRelatedProductEvent){
           emit(state.copyWith(relatedProductList: []));
+        }
+        else if(event is _GeneralSettings){
+          try {
+            emit(state.copyWith(isShimmering: true));
+            final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
+            SettingResModel response = SettingResModel.fromJson(res);
+
+            debugPrint('general settings = ${response.data.toString()}');
+            if (response.status == 200) {
+              emit(state.copyWith(isShimmering:false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner));
+            } else {
+              emit(state.copyWith(isShimmering: false));
+            }
+          } on ServerException {
+            emit(state.copyWith(isShimmering: false));
+          } catch (exc) {
+            emit(state.copyWith(isShimmering: false));
+          }
         }
       }
     });

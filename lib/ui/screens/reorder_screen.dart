@@ -228,6 +228,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                                       : AppConstants
                                                           .productGridAspectRatio1),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
+                                        isPesach: state.previousOrderProductsList[index].isPesach,
                                         lowStock: state
                                             .previousOrderProductsList[
                                         index]
@@ -284,6 +285,7 @@ class ReorderScreenWidget extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 horizontal: AppConstants.padding_5),
                             itemBuilder: (context, index) => CommonProductListWidget(
+                                isPesach:state.previousOrderProductsList[index].isPesach,
                              numberOfUnits: state.previousOrderProductsList[index].numberOfUnit.toString(),
                                 lowStock: state.previousOrderProductsList[index].lowStock.toString(),
                                 productStock: state.previousOrderProductsList[index].productStock.toString(),
@@ -784,6 +786,8 @@ class ReorderScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              nmMashlim: state.productDetails.first.nmMashlim??'',
+                              isPesach: state.productDetails.first.isPesach??false,
                               lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:state.productDetails.first.qrcode ?? '' ,
                               addToOrderTap: () {
@@ -969,6 +973,7 @@ class ReorderScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,

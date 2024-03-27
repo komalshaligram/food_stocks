@@ -17,6 +17,8 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;
 
+  const factory HomeEvent.generalSettings({required BuildContext context})=_GeneralSettings;
+
   const factory HomeEvent.decreaseQuantityOfProduct(
       {required BuildContext context}) = _DecreaseQuantityOfProduct;
 

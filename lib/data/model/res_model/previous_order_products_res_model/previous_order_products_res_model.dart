@@ -41,6 +41,8 @@ class PreviousOrderProductData with _$PreviousOrderProductData {
     String? productName,
     int? numberOfUnit,
     String? lowStock,
+    bool? isPesach,
+   String? nmMashlim,
   }) = _PreviousOrderProductData;
 
   factory PreviousOrderProductData.fromJson(Map<String, dynamic> json) =>

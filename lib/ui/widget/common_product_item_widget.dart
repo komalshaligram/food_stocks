@@ -23,6 +23,7 @@ class CommonProductItemWidget extends StatelessWidget {
   final double? imageHeight;
   final double? imageWidth;
   final String lowStock;
+  final bool? isPesach;
 
   const CommonProductItemWidget(
       {super.key,
@@ -35,8 +36,9 @@ class CommonProductItemWidget extends StatelessWidget {
       required this.onButtonTap,
      required this.productStock,
       this.isGuestUser = false,
-      this.imageHeight = 70,
-      this.imageWidth = 70,
+      this.imageHeight = 80,
+      this.imageWidth = 80,
+         this.isPesach = false,
         required   this.lowStock });
 
   @override
@@ -149,7 +151,17 @@ class CommonProductItemWidget extends StatelessWidget {
                         size: AppConstants.font_12,
                         color: AppColors.orangeColor,
                         fontWeight: FontWeight.w400)),
-            3.height,
+            2.height,
+            isPesach! ?
+                Container(
+                  padding: EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      color: AppColors.pesachBGColor,
+                      border: Border.all(color: AppColors.pesachBGColor),
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                    ),
+                    child: Text(AppLocalizations.of(context)!.pesach)):0.width,
+            isPesach! ? 3.height :0.height,
             !isGuestUser
                 ? Center(
                     child: CommonProductButtonWidget(
