@@ -73,10 +73,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
     CompanyProductsBloc bloc = context.read<CompanyProductsBloc>();
     return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
       builder: (context, state) {
-print('width___${getScreenWidth(context)}');
         return Scaffold(
-          floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
-          floatingActionButton:  !state.isGuestUser?FloatingActionButton(
+          floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
+          floatingActionButton:!state.isGuestUser?FloatingActionButton(
             elevation: 0,
             child:  Stack(
               children: [
@@ -217,7 +216,6 @@ print('width___${getScreenWidth(context)}');
                                 CompanyProductsEvent.getCompanyProductsListEvent(
                                     context: context));
                           },
-
                                   child: state.isCompanyProductGrid ? GridView.builder(
                                       itemCount: state.productList.length,
                                       shrinkWrap: true,
@@ -271,7 +269,6 @@ print('width___${getScreenWidth(context)}');
                                               else{
                                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                               }
-
                                                 }),
                                           )
 
@@ -1106,7 +1103,7 @@ print('width___${getScreenWidth(context)}');
          InkWell(
            onTap: onTap,
            child: Container(
-             height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
+             height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach ? 135: 120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
              decoration: BoxDecoration(
                  color: AppColors.whiteColor,
                  border: Border(
@@ -1117,12 +1114,9 @@ print('width___${getScreenWidth(context)}');
                          width: 1))),
              padding: EdgeInsets.only(
                  top: AppConstants.padding_5,
-                 left: AppConstants.padding_20,
-                 right: AppConstants.padding_20,
+                 left: AppConstants.padding_10,
+                 right: AppConstants.padding_10,
                  bottom: AppConstants.padding_5),
-             // padding: EdgeInsets.symmetric(
-             //     horizontal: AppConstants.padding_20,
-             //     vertical: AppConstants.padding_5),
              child: Row(
                crossAxisAlignment: CrossAxisAlignment.center,
                mainAxisAlignment: !isGuestUser ? searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? MainAxisAlignment.start: MainAxisAlignment.spaceBetween :MainAxisAlignment.start ,
