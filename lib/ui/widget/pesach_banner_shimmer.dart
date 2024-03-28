@@ -1,0 +1,23 @@
+import 'package:flutter/material.dart';
+
+import '../utils/app_utils.dart';
+import '../utils/themes/app_colors.dart';
+import '../utils/themes/app_constants.dart';
+import 'common_shimmer_widget.dart';
+
+class PesachBannerShimmerWidget extends StatelessWidget {
+  const PesachBannerShimmerWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return  CommonShimmerWidget(
+      child: Container(
+        padding: const EdgeInsets.only(left:8.0,right: 8),
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+        ),
+      ),
+    );
+
+  }
+}

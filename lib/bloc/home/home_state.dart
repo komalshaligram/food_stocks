@@ -43,6 +43,7 @@ class HomeState with _$HomeState {
     required int productListIndex,
     required bool showPesachBanner,
     required String pesachBannerURL,
+    required bool pesachBannerShimmering,
 
   }) = _HomeState;
 
@@ -86,7 +87,9 @@ class HomeState with _$HomeState {
       relatedProductList: [],
     productListIndex: -1,
     pesachBannerURL: '',
-    showPesachBanner: false
+    showPesachBanner: false,
+    pesachBannerShimmering: false
+
 
       );
 }

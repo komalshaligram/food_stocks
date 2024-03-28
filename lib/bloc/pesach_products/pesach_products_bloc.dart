@@ -82,6 +82,7 @@ class PesachProductsBloc
                   : false,
               search: state.search,
               isPesach : true,
+            onlyApproved: true
           );
 
           Map<String, dynamic> req = request.toJson();

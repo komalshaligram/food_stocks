@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/company_products/company_products_bloc.dart';
@@ -226,9 +227,13 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
-                                              childAspectRatio:  MediaQuery.of(context).size.width > 370 ?AppConstants
-                                                  .productGridAspectRatio: AppConstants
-                                                  .productGridAspectRatio1
+                                              childAspectRatio: MediaQuery
+                                                  .of(context)
+                                                  .size
+                                                  .height >
+                                                  750
+                                                  ? 9/13.h
+                                                  : 7/13.h
                                           ),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
 

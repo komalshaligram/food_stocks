@@ -1216,20 +1216,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
         else if(event is _GeneralSettings){
           try {
-            emit(state.copyWith(isShimmering: true));
+            emit(state.copyWith(pesachBannerShimmering: true));
             final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
 
             debugPrint('general settings = ${response.data.toString()}');
             if (response.status == 200) {
-              emit(state.copyWith(isShimmering:false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner));
+              emit(state.copyWith(pesachBannerShimmering:false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner));
             } else {
-              emit(state.copyWith(isShimmering: false));
+              emit(state.copyWith(pesachBannerShimmering: false));
             }
           } on ServerException {
-            emit(state.copyWith(isShimmering: false));
+            emit(state.copyWith(pesachBannerShimmering: false));
           } catch (exc) {
-            emit(state.copyWith(isShimmering: false));
+            emit(state.copyWith(pesachBannerShimmering: false));
           }
         }
       }
