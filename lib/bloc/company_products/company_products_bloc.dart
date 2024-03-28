@@ -74,7 +74,10 @@ class CompanyProductsBloc
           CompanyProductsReqModel request = CompanyProductsReqModel(
               brandId: state.companyId,
               pageLimit: AppConstants.supplierProductPageLimit,
-              pageNum: state.pageNum + 1);
+              pageNum: state.pageNum + 1,
+              sortField: AppStrings.sortFieldString,
+              sortOrder: AppStrings.sortOrderString
+          );
           debugPrint('supplier products req = ${request.toJson()}');
           final res = await DioClient(event.context)
               .post(AppUrls.getCompanyProductsUrl, data: request.toJson());
@@ -794,7 +797,10 @@ class CompanyProductsBloc
         debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
-          GlobalSearchReqModel(search: state.searchController.text);
+          GlobalSearchReqModel(search: state.searchController.text,
+              sortField: AppStrings.sortFieldString,
+              sortOrder: AppStrings.sortOrderString
+          );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
               AppUrls.getGlobalSearchResultUrl,

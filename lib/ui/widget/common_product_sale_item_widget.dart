@@ -25,6 +25,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final double? imageHeight;
   final double? imageWidth;
 
+
   const CommonProductSaleItemWidget(
       {super.key,
       this.height,
@@ -39,6 +40,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
         this.isGuestUser = false,
         this.imageHeight = 70,
         this.imageWidth = 70,
+
       });
 
   @override
@@ -85,15 +87,10 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                         borderRadius: BorderRadius.all(
                             Radius.circular(AppConstants.radius_10)),
                       ),
-                      // alignment: Alignment.center,
-                      // child: CupertinoActivityIndicator(
-                      //   color: AppColors.blackColor,
-                      // ),
                     ),
                   );
                 },
                 errorWidget: (context, error, stackTrace) {
-                  // debugPrint('sale list image error : $error');
                   return Container(
                     child: Image.asset(AppImagePath.imageNotAvailable5,
                         height: imageHeight, width: double.maxFinite, fit: BoxFit.cover),
@@ -138,8 +135,6 @@ class CommonProductSaleItemWidget extends StatelessWidget {
               ),
             ),
             5.height,
-
-
             !isGuestUser ?  Center(
               child: CommonProductButtonWidget(
                 title:
