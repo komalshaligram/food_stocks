@@ -1590,7 +1590,7 @@ class ReorderScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != '0' || lowStock.isEmpty ? 80 : 90,
+            height: lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? 80 :110,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1601,8 +1601,8 @@ class ReorderScreenWidget extends StatelessWidget {
                         width: 1))),
             padding: EdgeInsets.only(
                 top: AppConstants.padding_5,
-                left: AppConstants.padding_10,
-                right: AppConstants.padding_10,
+                left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
+                right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
                 bottom: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
