@@ -161,7 +161,13 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         AppConstants.padding_5),
                                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                                     crossAxisCount: 3,
-                                                    childAspectRatio: AppConstants.productGridAspectRatio),
+                                                    childAspectRatio: MediaQuery
+                                                        .of(context)
+                                                        .size
+                                                        .height >
+                                                        820
+                                                        ? AppConstants.productGridAspectRatio9
+                                                        : AppConstants.productGridAspectRatio75),
                                                 itemBuilder: (context, index) {
                                                   return CommonProductItemWidget(
                                                     isPesach: state.productList[index].isPesach,

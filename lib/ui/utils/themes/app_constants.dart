@@ -54,6 +54,7 @@ class AppConstants{
   static const double font_10 = 10;
   static const double font_12 = 12;
   static const double font_14 = 14;
+  static const double font_13 = 13;
   static const double font_30 = 30;
   static const double font_26 = 26;
   static const double font_22 = 22;
@@ -78,9 +79,10 @@ class AppConstants{
   static const int listAnimationItemDelay = 50;
 
   //product grid aspect ratio
-  static const double productGridAspectRatio = 9 / 13;
-  static const double productGridAspectRatio1 = 8 / 13;
-  static const double productGridAspectRatio2 = 7 / 13;
+  static const double productGridAspectRatio75 = 7.5 / 13;
+  static const double productGridAspectRatio9 = 9 / 13;
+  static const double productGridAspectRatio7 = 7 / 13;
+  static const double productGridAspectRatio8 = 8 / 13;
 
   //bottom nav space
   static const double bottomNavSpace = 30;
