@@ -408,5 +408,7 @@
   "my_invoices": "My invoices",
   "invoice_number" : "Invoice Number",
   "not_include_surfaces_price":"This price does not include surfaces price",
-   "open":"open"
+  "open":"open",
+  "pesach_products" : "Pesach Products",
+  "pesach": "כשר לפסח"
 }

@@ -83,6 +83,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               productStockList[0].addAll(stockList);
               response.data?.data?.forEach((element) {
                 temp.add(ProductDetailsModel(
+                  isPesach: element.isPesach,
                   totalQuantity: element.totalQuantity,
                   productName: element.productDetails?.productName ?? '',
                   mainImage: element.productDetails?.mainImage ?? '',

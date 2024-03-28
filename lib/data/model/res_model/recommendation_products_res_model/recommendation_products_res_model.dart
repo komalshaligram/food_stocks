@@ -39,6 +39,8 @@ class RecommendationData with _$RecommendationData {
     @JsonKey(name: "productPrice") double? productPrice,
     @JsonKey(name: "mainImage") String? mainImage,
     @JsonKey(name: "productName") String? productName,
+    @JsonKey(name: "isPesach") bool? isPesach,
+    @JsonKey(name: "nmMashlim") String? nmMashlim,
      int? numberOfUnit,
     String? lowStock,
   }) = _RecommendationData;

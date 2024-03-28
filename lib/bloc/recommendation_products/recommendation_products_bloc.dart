@@ -787,6 +787,7 @@ class RecommendationProductsBloc
                     searchId: category.id ?? '',
                     name: category.categoryName ?? '',
                     searchType: SearchTypes.category,
+                    isPesach: category.isPesach??false,
                     image: category.categoryImage ?? ''))
                 .toList() ??
                 []);
@@ -800,7 +801,7 @@ class RecommendationProductsBloc
                   image: '',
                   categoryId: subCategory.parentCategoryId ?? '',
                   categoryName: subCategory.parentCategoryName ?? '',
-
+                  isPesach: subCategory.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -824,6 +825,7 @@ class RecommendationProductsBloc
                   name: supplier.supplierDetail?.companyName ?? '',
                   searchType: SearchTypes.supplier,
                   image: supplier.logo ?? '',
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -836,7 +838,7 @@ class RecommendationProductsBloc
                   searchType: SearchTypes.sale,
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                   image: sale.mainImage ?? '',
-
+                  isPesach: sale.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -851,7 +853,8 @@ class RecommendationProductsBloc
                     productStock: supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()),
-                    lowStock: supplier.lowStock.toString()
+                    lowStock: supplier.lowStock.toString(),
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);

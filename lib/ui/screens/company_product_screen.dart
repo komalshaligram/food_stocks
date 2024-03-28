@@ -230,9 +230,11 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                   .productGridAspectRatio1
                                           ),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
+
+                                        isPesach:state.productList[index].isPesach,
                                         isGuestUser: state.isGuestUser,
                                           lowStock: state.productList[index].lowStock.toString(),
-                                      height:   160,
+                                      height: AppConstants.relatedProductItemHeight,
                                       width:  140,
                                         imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                         productStock: state.productList[index].productStock.toString(),
@@ -275,6 +277,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: AppConstants.padding_5),
                                       itemBuilder: (context, index) => CommonProductListWidget(
+                                        isPesach: state.productList[index].isPesach??false,
                                         isGuestUser: state.isGuestUser,
                                           lowStock: state.productList[index].lowStock.toString(),
                                         numberOfUnits: state.productList[index].numberOfUnit??'0',
@@ -808,6 +811,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                          child: Column(
                            children: [
                              CommonProductDetailsWidget(
+                               nmMashlim: state.productDetails.first.nmMashlim??'',
+                               isPesach: state.productDetails.first.isPesach??false,
                                lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                                qrCode:state.productDetails.first.qrcode ?? '' ,
                                addToOrderTap: () {
@@ -986,7 +991,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
              scrollDirection: Axis.horizontal,
              shrinkWrap: true,
              itemBuilder: (context2,i){
-               return CommonProductItemWidget(
+               return CommonProductItemWidget (
+                 height: AppConstants.relatedProductItemHeight,
+                 isPesach: relatedProductList.elementAt(i).isPesach,
                  lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                  productStock:relatedProductList.elementAt(i).productStock.toString(),
                  width: AppConstants.relatedProductItemWidth,

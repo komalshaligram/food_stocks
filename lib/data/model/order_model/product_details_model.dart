@@ -13,8 +13,7 @@ class ProductDetailsModel{
   bool? isProcess;
  String? lowStock;
  double? productStock;
-
-
+ bool? isPesach;
 
   ProductDetailsModel({
     this.isProductIssue = false,
@@ -28,8 +27,8 @@ class ProductDetailsModel{
     required this.weight,
      this.isProcess = false,
     this.lowStock = '',
-    this.productStock = 0
-
+    this.productStock = 0,
+required this.isPesach
    //required this.discountPercentage,
   });
 

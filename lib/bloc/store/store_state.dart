@@ -31,6 +31,8 @@ class StoreState with _$StoreState {
     required bool isGuestUser,
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
+    required bool showPesachBanner,
+    required String pesachBannerURL,
   }) = _StoreState;
 
   factory StoreState.initial() => StoreState(
@@ -61,6 +63,8 @@ class StoreState with _$StoreState {
         isSupplierVisible: true,
         isGuestUser: false,
     relatedProductList: [],
-    isRelatedShimmering: false
+    isRelatedShimmering: false,
+      pesachBannerURL: '',
+      showPesachBanner: false
       );
 }

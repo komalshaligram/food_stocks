@@ -71,4 +71,5 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
   const factory StoreEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
+  const factory StoreEvent.generalSettings({required BuildContext context})=_GeneralSettings;
 }

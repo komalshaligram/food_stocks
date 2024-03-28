@@ -47,12 +47,13 @@ class StoreScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         return StoreBloc()
-          ..add(StoreEvent.getProductCategoriesListEvent(context: context))..add(
-              StoreEvent.getCompaniesListEvent(context: context))..add(
-              StoreEvent.getSuppliersListEvent(context: context))..add(
-              StoreEvent.getProductSalesListEvent(context: context))..add(
-              StoreEvent.getRecommendationProductsListEvent(context: context))..add(
-              StoreEvent.getPreviousOrderProductsListEvent(context: context));
+          ..add(StoreEvent.getProductCategoriesListEvent(context: context))
+          ..add(StoreEvent.getCompaniesListEvent(context: context))
+          ..add(StoreEvent.getSuppliersListEvent(context: context))
+          ..add(StoreEvent.getProductSalesListEvent(context: context))
+          ..add(StoreEvent.getRecommendationProductsListEvent(context: context))
+          ..add(StoreEvent.generalSettings(context: context))
+          ..add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
       },
       child: StoreScreenWidget(),
     );
@@ -105,6 +106,7 @@ class StoreScreenWidget extends StatelessWidget {
                       builder: (context, mode) => StoreScreenShimmerWidget(),
                     ),
                     onRefresh: () {
+                      bloc.add(StoreEvent.generalSettings(context: context));
                       bloc.add(StoreEvent.getProductCategoriesListEvent(
                           context: context));
                       bloc.add(
@@ -186,7 +188,7 @@ class StoreScreenWidget extends StatelessWidget {
                                           }):Container(),
                                       SizedBox(
                                         width: getScreenWidth(context),
-                                        height: state.isCatVisible? 125:0,
+                                        height: state.isCatVisible? 135:0,
                                         child: ListView.builder(
                                           itemCount: state
                                               .productCategoryList
@@ -359,6 +361,15 @@ class StoreScreenWidget extends StatelessWidget {
                                       : CrossFadeState.showSecond,
                                   duration:
                                   Duration(milliseconds: 300)),
+                              state.showPesachBanner?InkWell(
+                                onTap: (){
+                                  Navigator.pushNamed(context, RouteDefine.pesachScreen.name);
+                                },
+                                child: Padding(
+                                    padding: const EdgeInsets.only(left:8.0,right: 8),
+                                    child: Image.network(AppUrls.baseFileUrl+state.pesachBannerURL)
+                                ),
+                              ):Container(),
                               AnimatedCrossFade(
                                   firstChild:
                                   getScreenWidth(context).width,
@@ -366,24 +377,10 @@ class StoreScreenWidget extends StatelessWidget {
                                     children: [
                                       state.isSupplierVisible ? buildListTitles(
                                           context: context,
-                                          title: AppLocalizations.of(
-                                              context)!
-                                              .suppliers,
-                                          subTitle: /*(state.suppliersList.data
-                                            ?.length ??
-                                            0) <
-                                            6
-                                            ? ''
-                                            : */
-                                          AppLocalizations.of(
-                                              context)!
-                                              .all_suppliers,
+                                          title: AppLocalizations.of(context)!.suppliers,
+                                          subTitle: AppLocalizations.of(context)!.all_suppliers,
                                           onTap: () {
-                                            Navigator.pushNamed(
-                                                context,
-                                                RouteDefine
-                                                    .supplierScreen
-                                                    .name);
+                                            Navigator.pushNamed(context, RouteDefine.supplierScreen.name);
                                           }):Container(),
                                       SizedBox(
                                         width: getScreenWidth(context),
@@ -470,7 +467,7 @@ class StoreScreenWidget extends StatelessWidget {
                                           }),
                                       SizedBox(
                                         width: getScreenWidth(context),
-                                        height: state.isGuestUser ? 180 :190 ,
+                                        height: state.isGuestUser ? 200 :AppConstants.relatedProductItemHeight ,
                                         child: ListView.builder(
                                           itemCount: state
                                               .productSalesList.length,
@@ -558,7 +555,7 @@ class StoreScreenWidget extends StatelessWidget {
                                           }),
                                       SizedBox(
                                         width: getScreenWidth(context),
-                                        height: 180,
+                                        height: AppConstants.relatedProductItemHeight,
                                         child: ListView.builder(
                                             itemCount: state
                                                 .recommendedProductsList
@@ -574,6 +571,7 @@ class StoreScreenWidget extends StatelessWidget {
                                             itemBuilder: (context,
                                                 index) =>
                                                 CommonProductItemWidget(
+                                                  isPesach: state.recommendedProductsList[index].isPesach,
                                                   lowStock: state
                                                       .recommendedProductsList[
                                                   index]
@@ -657,7 +655,7 @@ class StoreScreenWidget extends StatelessWidget {
                                           }),
                                       SizedBox(
                                         width: getScreenWidth(context),
-                                        height: 180,
+                                        height: AppConstants.relatedProductItemHeight,
                                         child: ListView.builder(
                                             itemCount: state
                                                 .previousOrderProductsList
@@ -673,6 +671,7 @@ class StoreScreenWidget extends StatelessWidget {
                                             itemBuilder: (context,
                                                 index) =>
                                                 CommonProductItemWidget(
+                                                  isPesach: state.previousOrderProductsList[index].isPesach,
                                                   lowStock: state
                                                       .previousOrderProductsList[
                                                   index]
@@ -804,6 +803,7 @@ class StoreScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
+                          isPesach: state.searchList[index].isPesach,
                             lowStock: state.searchList[index].lowStock.toString(),
                             numberOfUnits:state.searchList[index].numberOfUnits,
                             priceOfBox: state.searchList[index].priceOfBox,
@@ -1052,6 +1052,7 @@ class StoreScreenWidget extends StatelessWidget {
     bool isGuestUser = false,
     required int numberOfUnits,
     required double priceOfBox,
+    required bool isPesach
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1106,7 +1107,7 @@ class StoreScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? 120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
+            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1240,6 +1241,15 @@ class StoreScreenWidget extends StatelessWidget {
 
                       ],
                     ),
+                    isPesach?
+                    Container(
+                        padding: EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                            color: AppColors.pesachBGColor,
+                            border: Border.all(color: AppColors.pesachBGColor),
+                            borderRadius: BorderRadius.all(Radius.circular(10))
+                        ),
+                        child: Text(AppLocalizations.of(context)!.pesach)):0.height
                   ],
                 ),
 
@@ -1853,6 +1863,8 @@ class StoreScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              nmMashlim: state.productDetails.first.nmMashlim??'',
+                              isPesach: state.productDetails.first.isPesach??false,
                               lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:state.productDetails.first.qrcode ?? '' ,
                               addToOrderTap: () {
@@ -2039,6 +2051,7 @@ class StoreScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,

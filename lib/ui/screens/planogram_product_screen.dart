@@ -175,6 +175,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     .productGridAspectRatio1
                             ),
                             itemBuilder: (context, index) => buildPlanoGramProductItem(
+                              isPesach: state.planogramProductList[index].isPesach,
                               lowStock: state.planogramProductList[index].lowStock.toString(),
                               isGuestUser: state.isGuestUser,
                                 productImage: state.planogramProductList[index].mainImage ?? '',
@@ -207,6 +208,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 horizontal: AppConstants.padding_5),
                             itemBuilder: (context, index) => CommonProductListWidget(
+                                isPesach: state.planogramProductList[index].isPesach,
                               lowStock: state.planogramProductList[index].lowStock.toString(),
                               isGuestUser: state.isGuestUser,
                                 numberOfUnits: state.planogramProductList[index].numberOfUnit.toString(),
@@ -543,9 +545,11 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       required void Function() onPressed,
       required bool isRTL, required int productStock,
       required bool isGuestUser,
-        required String lowStock
+        required String lowStock,
+        required bool? isPesach
       }) {
     return CommonProductItemWidget(
+      isPesach: isPesach,
       lowStock: lowStock,
       isGuestUser: isGuestUser,
         imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
@@ -652,6 +656,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              nmMashlim: state.productDetails.first.nmMashlim??'',
+                              isPesach: state.productDetails.first.isPesach??false,
                               lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:state.productDetails.first.qrcode ?? '' ,
                               addToOrderTap: () {
@@ -838,6 +844,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,

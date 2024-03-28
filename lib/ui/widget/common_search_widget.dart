@@ -30,6 +30,7 @@ class CommonSearchWidget extends StatelessWidget {
   final TextEditingController controller;
   final bool isFilterTap;
 
+
   const CommonSearchWidget({super.key,
     required this.isCategoryExpand,
     required this.isSearching,

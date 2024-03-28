@@ -44,6 +44,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final bool isLoading;
   final String qrCode;
   final String lowStock;
+  final bool isPesach;
+  final String nmMashlim;
 
   const CommonProductDetailsWidget(
       {super.key,
@@ -59,6 +61,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
       required this.productPerUnit,
        this.isRTL = false,
       required this.scrollController,
+       this.isPesach = false,
       required this.productQuantity,
       required this.onQuantityIncreaseTap,
       required this.onQuantityDecreaseTap,
@@ -76,6 +79,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
       required this.addToOrderTap,
       required this.qrCode,
         required this.lowStock,
+      required this.nmMashlim
       });
 
   @override
@@ -151,6 +155,16 @@ class CommonProductDetailsWidget extends StatelessWidget {
             ),
           ),
           5.height,
+          nmMashlim.isNotEmpty?Container(
+            padding: EdgeInsets.all(3.0),
+            decoration: BoxDecoration(
+                color: AppColors.pesachBGColor,
+                border: Border.all(color: AppColors.pesachBGColor),
+                borderRadius: BorderRadius.all(Radius.circular(10))
+            ),
+            child:Text(nmMashlim),
+          ):0.height,
+          nmMashlim.isNotEmpty?5.height:0.height,
           Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,

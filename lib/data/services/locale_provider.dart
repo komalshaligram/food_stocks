@@ -19,29 +19,4 @@ class LocaleProvider extends ChangeNotifier {
     await preferencesHelper.setAppLanguage(languageCode: locale.languageCode);
     notifyListeners();
   }
-
-  // void changeLocaleSettings(Locale newLocale) async {
-  //   if(newLocale == Locale('en')) {
-  //     _locale = Locale('en');
-  //   } else if(newLocale==Locale('he')){
-  //     _locale = Locale('he');
-  //   }
-  //    SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-  //   preferencesHelper.setAppLanguage(language: language)
-  //   // SharedPreferences prefs = ;
-  //   // await prefs.setString("code", _locale?.countryCode??"en");
-  //   notifyListeners();
-  // }
-  //
-  // Future getLocaleFromSettings() async {
-  //   SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-  //   String code = preferencesHelper.getAppLanguage();
-  //   Locale newLocale = Locale(code);
-  //   if(newLocale == Locale('en')) {
-  //     _locale = Locale('en');
-  //   } else if(newLocale==Locale('he')){
-  //     _locale = Locale('he');
-  //   }
-  // }
-
 }

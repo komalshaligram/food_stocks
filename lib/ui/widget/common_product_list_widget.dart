@@ -22,7 +22,7 @@ class CommonProductListWidget extends StatelessWidget {
   final bool isGuestUser;
   final String numberOfUnits;
   final String lowStock;
-
+final bool? isPesach;
 
     CommonProductListWidget({super.key,
      this.height,
@@ -35,6 +35,7 @@ class CommonProductListWidget extends StatelessWidget {
      this.isGuestUser = false,
      this.numberOfUnits = '0',
       required this.lowStock,
+      required this.isPesach
    });
 
   @override
@@ -124,20 +125,32 @@ class CommonProductListWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
-                  double.parse(productStock) > 0 && lowStock.isEmpty || isGuestUser
-                      ? 0.width
-                      : double.parse(productStock) <=  0 && lowStock.isNotEmpty ?Text(
-                    AppLocalizations.of(context)!.out_of_stock1,
+                  (productStock) != '0' && lowStock.isEmpty ||   isGuestUser ? 0.width :
+                  (productStock) == '0' && lowStock.isNotEmpty ?Text(
+                    AppLocalizations.of(context)!
+                        .out_of_stock1,
                     style: AppStyles.rkBoldTextStyle(
-                        size: AppConstants.font_12,
+                        size: AppConstants.font_14,
                         color: AppColors.redColor,
                         fontWeight: FontWeight.w400),
-                  )
-                      : Text(lowStock,
-                      style: AppStyles.rkBoldTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.orangeColor,
-                          fontWeight: FontWeight.w400)),
+                  ) : Text(
+                   lowStock,
+                    style: AppStyles.rkBoldTextStyle(
+                        size: AppConstants.font_14,
+                        color: AppColors.orangeColor,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  isPesach! ? 3.height :0.height,
+                  isPesach! ?
+                  Container(
+                      padding: EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                          color: AppColors.pesachBGColor,
+                          border: Border.all(color: AppColors.pesachBGColor),
+                          borderRadius: BorderRadius.all(Radius.circular(10))
+                      ),
+                      child: Text(AppLocalizations.of(context)!.pesach)):0.width,
+                  isPesach! ? 3.height :0.height,
                  !isGuestUser ? numberOfUnits != '0' ? Text(
                     '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
                     style: AppStyles.rkBoldTextStyle(
