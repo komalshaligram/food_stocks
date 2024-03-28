@@ -82,6 +82,7 @@ class AppConstants{
   static const double productGridAspectRatio75 = 7.5 / 13;
   static const double productGridAspectRatio9 = 9 / 13;
   static const double productGridAspectRatio7 = 7 / 13;
+  static const double productGridAspectRatio8 = 8 / 13;
 
   //bottom nav space
   static const double bottomNavSpace = 30;

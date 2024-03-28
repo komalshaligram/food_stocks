@@ -1207,7 +1207,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
 
                       ],
                     ),
-                    isPesachLabelShow(isPesach,context)
+                    isPesachLabelShow(isPesach, context),
+                    isPesach ? 3.height :0.height,
                   ],
                 ),
 

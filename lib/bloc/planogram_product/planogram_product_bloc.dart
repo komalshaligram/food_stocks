@@ -752,6 +752,7 @@ class PlanogramProductBloc
                     searchId: category.id ?? '',
                     name: category.categoryName ?? '',
                     searchType: SearchTypes.category,
+                    isPesach: category.isPesach??false,
                     image: category.categoryImage ?? ''))
                 .toList() ??
                 []);
@@ -765,7 +766,7 @@ class PlanogramProductBloc
                   image: '',
                   categoryId: subCategory.parentCategoryId ?? '',
                   categoryName: subCategory.parentCategoryName ?? '',
-
+                  isPesach: subCategory.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -789,6 +790,7 @@ class PlanogramProductBloc
                   name: supplier.supplierDetail?.companyName ?? '',
                   searchType: SearchTypes.supplier,
                   image: supplier.logo ?? '',
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -801,7 +803,7 @@ class PlanogramProductBloc
                   searchType: SearchTypes.sale,
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                   image: sale.mainImage ?? '',
-
+                  isPesach: sale.isPesach??false,
                 ))
                 .toList() ??
                 []);

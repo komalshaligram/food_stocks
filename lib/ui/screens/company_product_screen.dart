@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -73,9 +75,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
     CompanyProductsBloc bloc = context.read<CompanyProductsBloc>();
     return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
       builder: (context, state) {
+print('width___${getScreenWidth(context)}');
         return Scaffold(
-          floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
-          floatingActionButton:!state.isGuestUser?FloatingActionButton(
+          floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
+          floatingActionButton:  !state.isGuestUser?FloatingActionButton(
             elevation: 0,
             child:  Stack(
               children: [
@@ -216,6 +219,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                 CompanyProductsEvent.getCompanyProductsListEvent(
                                     context: context));
                           },
+
                                   child: state.isCompanyProductGrid ? GridView.builder(
                                       itemCount: state.productList.length,
                                       shrinkWrap: true,
@@ -225,13 +229,11 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
-                                              childAspectRatio: MediaQuery
-                                                  .of(context)
-                                                  .size
-                                                  .height >
+                                              childAspectRatio: Platform.isAndroid?getScreenHeight(context) >
                                                   820
                                                   ? AppConstants.productGridAspectRatio9
-                                                  : AppConstants.productGridAspectRatio75
+                                                  : AppConstants.productGridAspectRatio75:getScreenHeight(context) >
+                                                  820?AppConstants.productGridAspectRatio8:7.5/13
                                           ),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
                                         isPesach:state.productList[index].isPesach,
@@ -269,6 +271,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                               else{
                                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                               }
+
                                                 }),
                                           )
 
