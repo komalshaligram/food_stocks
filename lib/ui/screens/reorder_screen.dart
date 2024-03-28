@@ -1,6 +1,4 @@
 
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -224,11 +222,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
                                               childAspectRatio:
-                                              Platform.isAndroid?getScreenHeight(context) >
-                                                  820
-                                                  ? AppConstants.productGridAspectRatio9
-                                                  : AppConstants.productGridAspectRatio75:getScreenHeight(context) >
-                                                  820?AppConstants.productGridAspectRatio8:AppConstants.productGridAspectRatio75),
+                                              getChildAspectRatio(context)),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
                                         isPesach: state.previousOrderProductsList[index].isPesach,
                                         lowStock: state
@@ -1596,7 +1590,7 @@ class ReorderScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != '0' || lowStock.isEmpty ? 80 : 90,
+            height: lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? 80 :110,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1607,8 +1601,8 @@ class ReorderScreenWidget extends StatelessWidget {
                         width: 1))),
             padding: EdgeInsets.only(
                 top: AppConstants.padding_5,
-                left: AppConstants.padding_10,
-                right: AppConstants.padding_10,
+                left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
+                right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
                 bottom: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

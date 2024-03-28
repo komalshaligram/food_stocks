@@ -229,11 +229,7 @@ print('width___${getScreenWidth(context)}');
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
-                                              childAspectRatio: Platform.isAndroid?getScreenHeight(context) >
-                                                  820
-                                                  ? AppConstants.productGridAspectRatio9
-                                                  : AppConstants.productGridAspectRatio75:getScreenHeight(context) >
-                                                  820?AppConstants.productGridAspectRatio8:AppConstants.productGridAspectRatio75
+                                              childAspectRatio: getChildAspectRatio(context)
                                           ),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
                                         isPesach:state.productList[index].isPesach,
@@ -1117,8 +1113,8 @@ print('width___${getScreenWidth(context)}');
                          width: 1))),
              padding: EdgeInsets.only(
                  top: AppConstants.padding_5,
-                 left: AppConstants.padding_10,
-                 right: AppConstants.padding_10,
+                 left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
+                 right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
                  bottom: AppConstants.padding_5),
              child: Row(
                crossAxisAlignment: CrossAxisAlignment.center,

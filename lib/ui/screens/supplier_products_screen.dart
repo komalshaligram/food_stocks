@@ -1,6 +1,4 @@
 
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -163,11 +161,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         AppConstants.padding_5),
                                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                                     crossAxisCount: 3,
-                                                    childAspectRatio: Platform.isAndroid?getScreenHeight(context) >
-                                                        820
-                                                        ? AppConstants.productGridAspectRatio9
-                                                        : AppConstants.productGridAspectRatio75:getScreenHeight(context) >
-                                                        820?AppConstants.productGridAspectRatio8:AppConstants.productGridAspectRatio75),
+                                                    childAspectRatio: getChildAspectRatio(context)),
                                                 itemBuilder: (context, index) {
                                                   return CommonProductItemWidget(
                                                     isPesach: state.productList[index].isPesach,
@@ -1129,8 +1123,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             width: 1))),
             padding: EdgeInsets.only(
                 top: AppConstants.padding_5,
-                left: AppConstants.padding_10,
-                right: AppConstants.padding_10,
+                left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
+                right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
                 bottom: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,

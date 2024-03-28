@@ -1,4 +1,5 @@
 
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,6 +39,13 @@ bool isTablet(BuildContext context) {
   }
   return isTablet;
 }
+ double getChildAspectRatio(BuildContext context){
+  return Platform.isAndroid? getScreenHeight(context) >
+       900
+       ? AppConstants.productGridAspectRatio9 :getScreenHeight(context) >  820 &&  getScreenHeight(context) <  900? AppConstants.productGridAspectRatio8
+       : AppConstants.productGridAspectRatio75: getScreenHeight(context) >
+       820?AppConstants.productGridAspectRatio8:AppConstants.productGridAspectRatio75;
+ }
 
 Widget isPesachLabelShow(bool isPesach,BuildContext context,){
  if(isPesach){

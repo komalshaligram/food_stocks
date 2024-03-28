@@ -490,14 +490,7 @@ class BasketScreenWidget extends StatelessWidget {
                                       ),
                                 ) : 0.width,
                                 lowStock.isNotEmpty?5.height:0.height,
-                                isPesach?Container(
-                                    padding: EdgeInsets.all(3),
-                                    decoration: BoxDecoration(
-                                        color: AppColors.pesachBGColor,
-                                        border: Border.all(color: AppColors.pesachBGColor),
-                                        borderRadius: BorderRadius.all(Radius.circular(10))
-                                    ),
-                                    child: Text(AppLocalizations.of(context)!.pesach)):0.height,
+                                isPesachLabelShow(isPesach, context),
                                 isPesach?5.height:0.height,
                                 Text(
                                   '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal)}',
