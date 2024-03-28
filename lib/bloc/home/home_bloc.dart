@@ -289,7 +289,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   productDetails: response.product ?? [],
                   productStockList: productStockList,
                   productStockUpdateIndex: productStockUpdateIndex,
-                  noteController: TextEditingController(text: note),
                   productSupplierList: supplierList,
                   productListIndex: productListIndex,
                   isProductLoading: false));
@@ -464,16 +463,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
           }
         }
-        else if (event is _ChangeNoteOfProduct) {
-          if (state.productStockUpdateIndex != -1) {
-            List<List<ProductStockModel> >productStockList =
-            state.productStockList.toList(growable: false);
-            productStockList[state.productListIndex][state.productStockUpdateIndex] =
-                productStockList[state.productListIndex][state.productStockUpdateIndex]
-                    .copyWith(note: /*event.newNote*/ state.noteController.text);
-            emit(state.copyWith(productStockList: productStockList));
-          }
-        }
+
         else if (event is _ChangeSupplierSelectionExpansionEvent) {
           emit(state.copyWith(
               isSelectSupplier:
@@ -861,15 +851,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(messageList: messageList));
           }
         }
-        else if (event is _ToggleNoteEvent) {
-          List <List<ProductStockModel>> productStockList =
-          state.productStockList.toList(growable: true);
-          productStockList[state.productListIndex][state.productStockUpdateIndex] =
-              productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
-                  isNoteOpen: !productStockList[state.productListIndex][state.productStockUpdateIndex]
-                      .isNoteOpen);
-          emit(state.copyWith(productStockList: productStockList));
-        }
+
         else if (event is _getProfileDetailsEvent) {
           try {
             debugPrint('req = ${preferences.getUserId()}');
