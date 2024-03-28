@@ -1036,7 +1036,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     searchId: category.id ?? '',
                     name: category.categoryName ?? '',
                     searchType: SearchTypes.category,
-                    image: category.categoryImage ?? '')));
+                    image: category.categoryImage ?? '',
+                )));
             emit(state.copyWith(searchList: searchList, isSearching: false));
             return;
           }
@@ -1048,6 +1049,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 searchId: category.id ?? '',
                 name: category.categoryName ?? '',
                 searchType: SearchTypes.category,
+                isPesach: category.isPesach??false,
                 image: category.categoryImage ?? ''))
                 .toList() ??
                 []);
@@ -1066,6 +1068,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 searchId: supplier.id ?? '',
                 name: supplier.supplierDetail?.companyName ?? '',
                 searchType: SearchTypes.supplier,
+                isPesach: supplier.isPesach??false,
                 image: supplier.logo ?? ''))
                 .toList() ??
                 []);
@@ -1075,6 +1078,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 searchId: sale.id ?? '',
                 name: sale.productName ?? '',
                 searchType: SearchTypes.sale,
+                isPesach: sale.isPesach??false,
                 numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                 image: sale.mainImage ?? ''))
                 .toList() ??
@@ -1083,6 +1087,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             searchList.addAll(response.data?.supplierProductData
                 ?.map((supplier) => SearchModel(
                 searchId: supplier.productId ?? '',
+                isPesach: supplier.isPesach??false,
                 name: supplier.productName ?? '',
                 searchType: SearchTypes.product,
                 productStock:  supplier.productStock.toString(),

@@ -830,6 +830,7 @@ class CompanyProductsBloc
                     searchId: category.id ?? '',
                     name: category.categoryName ?? '',
                     searchType: SearchTypes.category,
+                    isPesach: category.isPesach??false,
                     image: category.categoryImage ?? ''))
                 .toList() ??
                 []);
@@ -841,9 +842,9 @@ class CompanyProductsBloc
                   name: subCategory.subCategoryName ?? '',
                   searchType: SearchTypes.subCategory,
                   image: '',
+                  isPesach: subCategory.isPesach??false,
                   categoryId: subCategory.parentCategoryId ?? '',
                   categoryName: subCategory.parentCategoryName ?? '',
-
                 ))
                 .toList() ??
                 []);
@@ -855,7 +856,6 @@ class CompanyProductsBloc
                   name: company.brandName ?? '',
                   searchType: SearchTypes.company,
                   image: company.brandLogo ?? '',
-
                 ))
                 .toList() ??
                 []);
@@ -867,6 +867,7 @@ class CompanyProductsBloc
                   name: supplier.supplierDetail?.companyName ?? '',
                   searchType: SearchTypes.supplier,
                   image: supplier.logo ?? '',
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -879,7 +880,7 @@ class CompanyProductsBloc
                   searchType: SearchTypes.sale,
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                   image: sale.mainImage ?? '',
-
+                  isPesach: sale.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -895,6 +896,7 @@ class CompanyProductsBloc
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
                   lowStock: supplier.lowStock.toString(),
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);

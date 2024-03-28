@@ -1027,8 +1027,9 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
     required double priceOfBox,
     required bool isPesach
   }) {
+    debugPrint('isPesach:$isPesach');
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         isShowSearchLabel
@@ -1080,7 +1081,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != '0' || lowStock.isEmpty ? isPesach?110: 90 : isPesach?110: 90,
+            height: lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? 80 :110,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
