@@ -410,15 +410,24 @@ class HomeScreenWidget extends StatelessWidget {
                                   ),
                                 ),
                                 20.height,
-                                state.showPesachBanner? InkWell(
+                                 state.pesachBannerShimmering && state.pesachBannerURL.isEmpty  ? PesachBannerShimmerWidget():  state.showPesachBanner ?InkWell(
                                   onTap: (){
                                     Navigator.pushNamed(context, RouteDefine.pesachScreen.name);
                                   },
-                                  child: state.pesachBannerShimmering ? PesachBannerShimmerWidget(): Padding(
+                                  child: Padding(
                                     padding: const EdgeInsets.only(left:8.0,right: 8),
-                                    child: Image.network(AppUrls.baseFileUrl+state.pesachBannerURL)
-                                  ),
-                                ):Container(),
+                                    child: CachedNetworkImage(
+                                      placeholder: (context, url) => const PesachBannerShimmerWidget(),
+                                      imageUrl:
+                                      '${AppUrls.baseFileUrl}${state.pesachBannerURL}',
+                                      errorWidget: (context, url, error) {
+                                        debugPrint('home error : $error');
+                                        return Container(
+                                          color: AppColors.whiteColor,
+                                        );
+                                      },
+                                    ),
+                                )):Container(),
                                 AnimatedCrossFade(
                                     firstChild: getScreenWidth(context).width,
                                     secondChild: Column(
