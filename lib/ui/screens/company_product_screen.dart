@@ -75,7 +75,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
     CompanyProductsBloc bloc = context.read<CompanyProductsBloc>();
     return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
       builder: (context, state) {
-print('width___${getScreenWidth(context)}');
+print('height___${getScreenHeight(context)}');
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
           floatingActionButton:  !state.isGuestUser?FloatingActionButton(
@@ -229,11 +229,7 @@ print('width___${getScreenWidth(context)}');
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
-                                              childAspectRatio: Platform.isAndroid?getScreenHeight(context) >
-                                                  820
-                                                  ? AppConstants.productGridAspectRatio9
-                                                  : AppConstants.productGridAspectRatio75:getScreenHeight(context) >
-                                                  820?AppConstants.productGridAspectRatio8:7.5/13
+                                              childAspectRatio: getChildAspectRatio(context)
                                           ),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
                                         isPesach:state.productList[index].isPesach,
