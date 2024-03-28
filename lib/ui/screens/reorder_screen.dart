@@ -377,6 +377,7 @@ class ReorderScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
+                          isPesach: state.searchList[index].isPesach,
                             lowStock: state.searchList[index].lowStock.toString(),
                             numberOfUnits:state.searchList[index].numberOfUnits,
                             priceOfBox: state.searchList[index].priceOfBox,
@@ -1539,6 +1540,7 @@ class ReorderScreenWidget extends StatelessWidget {
     bool? isLastItem, required String productStock,
     required int numberOfUnits,
     required double priceOfBox,
+    required bool isPesach
 
   }) {
     return Column(
@@ -1605,8 +1607,8 @@ class ReorderScreenWidget extends StatelessWidget {
                         width: 1))),
             padding: EdgeInsets.only(
                 top: AppConstants.padding_5,
-                left: AppConstants.padding_20,
-                right: AppConstants.padding_20,
+                left: AppConstants.padding_10,
+                right: AppConstants.padding_10,
                 bottom: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1715,6 +1717,8 @@ class ReorderScreenWidget extends StatelessWidget {
 
                       ],
                     ),
+                    isPesachLabelShow(isPesach, context),
+                    isPesach?3.height:0.height
 
                   ],
                 ),

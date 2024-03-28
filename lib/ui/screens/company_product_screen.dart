@@ -75,7 +75,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
     CompanyProductsBloc bloc = context.read<CompanyProductsBloc>();
     return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
       builder: (context, state) {
-
+print('width___${getScreenWidth(context)}');
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
           floatingActionButton:  !state.isGuestUser?FloatingActionButton(
@@ -236,7 +236,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                   820?AppConstants.productGridAspectRatio8:7.5/13
                                           ),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
-
                                         isPesach:state.productList[index].isPesach,
                                         isGuestUser: state.isGuestUser,
                                           lowStock: state.productList[index].lowStock.toString(),
@@ -1107,7 +1106,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
          InkWell(
            onTap: onTap,
            child: Container(
-             height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
+             height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach ? 135: 120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
              decoration: BoxDecoration(
                  color: AppColors.whiteColor,
                  border: Border(
@@ -1118,12 +1117,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                          width: 1))),
              padding: EdgeInsets.only(
                  top: AppConstants.padding_5,
-                 left: AppConstants.padding_20,
-                 right: AppConstants.padding_20,
+                 left: AppConstants.padding_10,
+                 right: AppConstants.padding_10,
                  bottom: AppConstants.padding_5),
-             // padding: EdgeInsets.symmetric(
-             //     horizontal: AppConstants.padding_20,
-             //     vertical: AppConstants.padding_5),
              child: Row(
                crossAxisAlignment: CrossAxisAlignment.center,
                mainAxisAlignment: !isGuestUser ? searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? MainAxisAlignment.start: MainAxisAlignment.spaceBetween :MainAxisAlignment.start ,

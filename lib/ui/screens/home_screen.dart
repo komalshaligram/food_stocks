@@ -1492,8 +1492,8 @@ class HomeScreenWidget extends StatelessWidget {
                         width: 1))),
             padding: EdgeInsets.only(
                 top: AppConstants.padding_5,
-                left: AppConstants.padding_20,
-                right: AppConstants.padding_20,
+                left: AppConstants.padding_10,
+                right: AppConstants.padding_10,
                 bottom: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1599,15 +1599,10 @@ class HomeScreenWidget extends StatelessWidget {
                         ) : 0.width,
                       ],
                     ),
+                    3.height,
                     isPesach?
-                    Container(
-                        padding: EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                            color: AppColors.pesachBGColor,
-                            border: Border.all(color: AppColors.pesachBGColor),
-                            borderRadius: BorderRadius.all(Radius.circular(10))
-                        ),
-                        child: Text(AppLocalizations.of(context)!.pesach)):0.height
+                    isPesachLabelShow(isPesach,context)
+                        :0.height
                   ],
                 ),
               ],

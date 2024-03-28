@@ -67,7 +67,6 @@ class PesachProductsScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<PesachProductsBloc, PesachProductsState>(
         builder: (context, state) {
-          print('hejdjkd___${ MediaQuery.of(context).size.height}');
           return Scaffold(
             backgroundColor: AppColors.pageColor,
             appBar: PreferredSize(
@@ -1111,12 +1110,10 @@ class PesachProductsScreenWidget extends StatelessWidget {
                         width: 1))),
             padding: EdgeInsets.only(
                 top: AppConstants.padding_5,
-                left: AppConstants.padding_20,
-                right: AppConstants.padding_20,
+                left: AppConstants.padding_10,
+                right: AppConstants.padding_10,
                 bottom: AppConstants.padding_5),
-            // padding: EdgeInsets.symmetric(
-            //     horizontal: AppConstants.padding_20,
-            //     vertical: AppConstants.padding_5),
+
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: !isGuestUser
