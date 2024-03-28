@@ -75,7 +75,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
     CompanyProductsBloc bloc = context.read<CompanyProductsBloc>();
     return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
       builder: (context, state) {
-print('height___${getScreenHeight(context)}');
+print('width___${getScreenWidth(context)}');
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
           floatingActionButton:  !state.isGuestUser?FloatingActionButton(
@@ -1113,8 +1113,8 @@ print('height___${getScreenHeight(context)}');
                          width: 1))),
              padding: EdgeInsets.only(
                  top: AppConstants.padding_5,
-                 left: AppConstants.padding_10,
-                 right: AppConstants.padding_10,
+                 left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
+                 right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
                  bottom: AppConstants.padding_5),
              child: Row(
                crossAxisAlignment: CrossAxisAlignment.center,
