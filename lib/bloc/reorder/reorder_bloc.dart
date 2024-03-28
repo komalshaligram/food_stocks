@@ -812,6 +812,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 SearchModel(
                     searchId: category.id ?? '',
                     name: category.categoryName ?? '',
+                    isPesach: category.isPesach??false,
                     searchType: SearchTypes.category,
                     image: category.categoryImage ?? ''))
                 .toList() ??
@@ -826,7 +827,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   image: '',
                   categoryId: subCategory.parentCategoryId ?? '',
                   categoryName: subCategory.parentCategoryName ?? '',
-
+                  isPesach: subCategory.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -850,6 +851,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   name: supplier.supplierDetail?.companyName ?? '',
                   searchType: SearchTypes.supplier,
                   image: supplier.logo ?? '',
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -862,7 +864,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   searchType: SearchTypes.sale,
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                   image: sale.mainImage ?? '',
-
+                  isPesach: sale.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -878,7 +880,8 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                         supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
                   priceOfBox: double.parse(supplier.productPrice.toString()),
-                    lowStock: supplier.lowStock.toString()
+                    lowStock: supplier.lowStock.toString(),
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);

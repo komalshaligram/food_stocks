@@ -1207,15 +1207,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
 
                       ],
                     ),
-                    !isPesach ?
-                    Container(
-                        padding: EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                            color: AppColors.pesachBGColor,
-                            border: Border.all(color: AppColors.pesachBGColor),
-                            borderRadius: BorderRadius.all(Radius.circular(10))
-                        ),
-                        child: Text(AppLocalizations.of(context)!.pesach)):0.width,
+                    isPesachLabelShow(isPesach, context),
                     isPesach ? 3.height :0.height,
                   ],
                 ),
