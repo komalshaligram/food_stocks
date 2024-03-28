@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -141,15 +142,7 @@ final bool? isPesach;
                         fontWeight: FontWeight.w400),
                   ),
                   isPesach! ? 3.height :0.height,
-                  isPesach! ?
-                  Container(
-                      padding: EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                          color: AppColors.pesachBGColor,
-                          border: Border.all(color: AppColors.pesachBGColor),
-                          borderRadius: BorderRadius.all(Radius.circular(10))
-                      ),
-                      child: Text(AppLocalizations.of(context)!.pesach)):0.width,
+                 isPesachLabelShow(isPesach!, context),
                   isPesach! ? 3.height :0.height,
                  !isGuestUser ? numberOfUnits != '0' ? Text(
                     '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',

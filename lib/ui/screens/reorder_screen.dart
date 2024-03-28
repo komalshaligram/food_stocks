@@ -223,12 +223,12 @@ class ReorderScreenWidget extends StatelessWidget {
                                               crossAxisCount: 3,
                                               childAspectRatio:
                                               MediaQuery
-                                              .of(context)
-                                              .size
-                                              .height >
-                                              750
-                                              ? 9/13.h
-                                              : 7/13.h),
+                                                  .of(context)
+                                                  .size
+                                                  .height >
+                                                  820
+                                                  ? AppConstants.productGridAspectRatio9
+                                                  : AppConstants.productGridAspectRatio75),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
                                         isPesach: state.previousOrderProductsList[index].isPesach,
                                         lowStock: state

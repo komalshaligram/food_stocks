@@ -42,13 +42,17 @@ bool isTablet(BuildContext context) {
 Widget isPesachLabelShow(bool isPesach,BuildContext context){
  if(isPesach){
    return Container(
-       padding: EdgeInsets.all(3),
+       padding: EdgeInsets.only(left: 5,right: 5),
        decoration: BoxDecoration(
            color: AppColors.pesachBGColor,
            border: Border.all(color: AppColors.pesachBGColor),
            borderRadius: BorderRadius.all(Radius.circular(10))
        ),
-       child: Text(AppLocalizations.of(context)!.pesach));
+       child: Text(AppLocalizations.of(context)!.pesach,
+         style: AppStyles.rkRegularTextStyle(
+             size: AppConstants.font_13,
+             ),
+       ));
  }else{
    return 0.height;
  }
