@@ -233,7 +233,7 @@ print('width___${getScreenWidth(context)}');
                                                   820
                                                   ? AppConstants.productGridAspectRatio9
                                                   : AppConstants.productGridAspectRatio75:getScreenHeight(context) >
-                                                  820?AppConstants.productGridAspectRatio8:7.5/13
+                                                  820?AppConstants.productGridAspectRatio8:AppConstants.productGridAspectRatio75
                                           ),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
                                         isPesach:state.productList[index].isPesach,
