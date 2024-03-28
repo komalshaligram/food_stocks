@@ -1023,7 +1023,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         debugPrint('data1 = ${state.search}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
-          GlobalSearchReqModel(search: state.search);
+          GlobalSearchReqModel(search: state.search,
+              sortField: AppStrings.sortFieldString,
+              sortOrder: AppStrings.sortOrderString
+          );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
               AppUrls.getGlobalSearchResultUrl,

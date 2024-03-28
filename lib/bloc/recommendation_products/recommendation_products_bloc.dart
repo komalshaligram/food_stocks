@@ -66,7 +66,9 @@ class RecommendationProductsBloc
           RecommendationProductsReqModel request =
               RecommendationProductsReqModel(
                   pageLimit: AppConstants.recommendationProductPageLimit,
-                  pageNum: state.pageNum + 1);
+                  pageNum: state.pageNum + 1,
+
+              );
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
           debugPrint('recommendation products req = ${request.toJson()}');
@@ -777,7 +779,10 @@ class RecommendationProductsBloc
         debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
-          GlobalSearchReqModel(search: state.searchController.text);
+          GlobalSearchReqModel(search: state.searchController.text,
+              sortField: AppStrings.sortFieldString,
+              sortOrder: AppStrings.sortOrderString
+          );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
               AppUrls.getGlobalSearchResultUrl,

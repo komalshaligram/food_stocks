@@ -17,7 +17,6 @@ import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
-
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/req_model/global_search_req_model/global_search_req_model.dart';
@@ -82,7 +81,10 @@ class PesachProductsBloc
                   : false,
               search: state.search,
               isPesach : true,
-            onlyApproved: true
+            onlyApproved: true,
+            sortField: AppStrings.sortFieldString,
+            sortOrder: AppStrings.sortOrderString
+
           );
 
           Map<String, dynamic> req = request.toJson();
@@ -889,7 +891,10 @@ class PesachProductsBloc
         debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
-          GlobalSearchReqModel(search: state.searchController.text);
+          GlobalSearchReqModel(search: state.searchController.text,
+              sortField: AppStrings.sortFieldString,
+              sortOrder: AppStrings.sortOrderString
+          );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
               AppUrls.getGlobalSearchResultUrl,
