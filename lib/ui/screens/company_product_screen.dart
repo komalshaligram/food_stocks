@@ -73,7 +73,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
     CompanyProductsBloc bloc = context.read<CompanyProductsBloc>();
     return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
       builder: (context, state) {
-
+print('width___${getScreenWidth(context)}');
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
           floatingActionButton:  !state.isGuestUser?FloatingActionButton(
@@ -231,12 +231,11 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                   .of(context)
                                                   .size
                                                   .height >
-                                                  750
-                                                  ? 9/13.h
-                                                  : 7/13.h
+                                                  820
+                                                  ? AppConstants.productGridAspectRatio9
+                                                  : AppConstants.productGridAspectRatio75
                                           ),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
-
                                         isPesach:state.productList[index].isPesach,
                                         isGuestUser: state.isGuestUser,
                                           lowStock: state.productList[index].lowStock.toString(),

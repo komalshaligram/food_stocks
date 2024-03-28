@@ -164,9 +164,9 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                             .of(context)
                                             .size
                                             .height >
-                                            750
-                                            ? 9/13.h
-                                            : 7/13.h
+                                            820
+                                            ? AppConstants.productGridAspectRatio9
+                                            : AppConstants.productGridAspectRatio75
                                     ),
                                     itemBuilder: (context, index) {
                                       return CommonProductItemWidget(

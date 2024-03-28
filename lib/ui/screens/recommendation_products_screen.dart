@@ -227,13 +227,13 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 3,
-                                      childAspectRatio:  MediaQuery
-                                      .of(context)
-                                      .size
-                                      .height >
-                                      750
-                                      ? 9/13.h
-                                      : 7/13.h),
+                                      childAspectRatio: MediaQuery
+                                          .of(context)
+                                          .size
+                                          .height >
+                                          820
+                                          ? AppConstants.productGridAspectRatio9
+                                          : AppConstants.productGridAspectRatio75),
                                   itemBuilder: (context, index) {
                                     return CommonProductItemWidget(
                                       isPesach: state.recommendationProductsList[index].isPesach,

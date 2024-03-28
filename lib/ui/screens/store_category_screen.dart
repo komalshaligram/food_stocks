@@ -497,9 +497,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                   .of(context)
                                                   .size
                                                   .height >
-                                                  750
-                                                  ? 9/13.h
-                                                  : 7/13.h),
+                                                  820
+                                                  ? AppConstants.productGridAspectRatio9
+                                                  : AppConstants.productGridAspectRatio75),
                                               itemBuilder: (context, index) => CommonProductItemWidget(
                                                 isPesach: state.planogramProductList[index].product?.isPesach,
                                                 lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
