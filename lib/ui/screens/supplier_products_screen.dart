@@ -364,6 +364,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             shrinkWrap: true,
                             itemBuilder: (listViewContext, index) {
                               return _buildSearchItem(
+                                isPesach: state.searchList[index].isPesach,
                                   lowStock: state.searchList[index].lowStock
                                       .toString(),
                                   isGuestUser: state.isGuestUser,
@@ -1063,6 +1064,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
     bool isGuestUser = false,
     required int numberOfUnits,
     required double priceOfBox,
+    required bool isPesach
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1116,16 +1118,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: !isGuestUser
-                ? lowStock.isNotEmpty || (productStock) != '0'
-                    ? 120
-                    : searchType == SearchTypes.category ||
-                            searchType == SearchTypes.subCategory ||
-                            searchType == SearchTypes.company ||
-                            searchType == SearchTypes.supplier
-                        ? 80
-                        : 110
-                : 80,
+            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1136,12 +1129,9 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             width: 1))),
             padding: EdgeInsets.only(
                 top: AppConstants.padding_5,
-                left: AppConstants.padding_20,
-                right: AppConstants.padding_20,
+                left: AppConstants.padding_10,
+                right: AppConstants.padding_10,
                 bottom: AppConstants.padding_5),
-            // padding: EdgeInsets.symmetric(
-            //     horizontal: AppConstants.padding_20,
-            //     vertical: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: !isGuestUser
@@ -1295,6 +1285,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   : 0.width,
                             ],
                           ),
+                    isPesachLabelShow(isPesach,context),
                   ],
                 ),
               ],
