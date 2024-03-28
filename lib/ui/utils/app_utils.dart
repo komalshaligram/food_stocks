@@ -7,6 +7,7 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
+import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
@@ -38,6 +39,20 @@ bool isTablet(BuildContext context) {
   return isTablet;
 }
 
+Widget isPesachLabelShow(bool isPesach,BuildContext context){
+ if(isPesach){
+   return Container(
+       padding: EdgeInsets.all(3),
+       decoration: BoxDecoration(
+           color: AppColors.pesachBGColor,
+           border: Border.all(color: AppColors.pesachBGColor),
+           borderRadius: BorderRadius.all(Radius.circular(10))
+       ),
+       child: Text(AppLocalizations.of(context)!.pesach));
+ }else{
+   return 0.height;
+ }
+}
 
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
