@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
+import 'package:food_stock/ui/widget/pesach_banner_shimmer.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
 import '../utils/app_utils.dart';
@@ -21,12 +22,9 @@ class StoreScreenShimmerWidget extends StatelessWidget {
             buildListItems(context),
             buildListTitles(),
             buildListItems(context),
-            CommonShimmerWidget(
-              child: Container(
-                height: 100,
-                width: MediaQuery.of(context).size.width,
-              ),
-            ),
+            5.height,
+            PesachBannerShimmerWidget(),
+            5.height,
             // SizedBox(
             //   width: getScreenWidth(context),
             //   height: 110,

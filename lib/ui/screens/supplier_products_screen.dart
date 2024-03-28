@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/bloc/supplier_products/supplier_products_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
@@ -161,14 +162,12 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                                     crossAxisCount: 3,
                                                     childAspectRatio: MediaQuery
-                                                                    .of(context)
-                                                                .size
-                                                                .width >
-                                                            370
-                                                        ? AppConstants
-                                                            .productGridAspectRatio
-                                                        : AppConstants
-                                                            .productGridAspectRatio1),
+                                                        .of(context)
+                                                        .size
+                                                        .height >
+                                                        750
+                                                        ? 9/13.h
+                                                        : 7/13.h),
                                                 itemBuilder: (context, index) {
                                                   return CommonProductItemWidget(
                                                     isPesach: state.productList[index].isPesach,

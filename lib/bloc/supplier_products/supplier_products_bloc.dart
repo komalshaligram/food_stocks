@@ -79,10 +79,9 @@ class SupplierProductsBloc
                   ? true
                   : false,
               search: state.search,
-           // onlyApproved: true
+            onlyApproved: true,
+            isPesach: false
           );
-
-
 
           Map<String, dynamic> req = request.toJson();
           req.removeWhere((key, value) {

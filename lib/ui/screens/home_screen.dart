@@ -42,6 +42,8 @@ import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
 
+import '../widget/pesach_banner_shimmer.dart';
+
 class HomeRoute {
   static Widget get route =>  HomeScreen();
 }
@@ -408,15 +410,24 @@ class HomeScreenWidget extends StatelessWidget {
                                   ),
                                 ),
                                 20.height,
-                                state.showPesachBanner?InkWell(
+                                 state.pesachBannerShimmering && state.pesachBannerURL.isEmpty  ? PesachBannerShimmerWidget():  state.showPesachBanner ?InkWell(
                                   onTap: (){
                                     Navigator.pushNamed(context, RouteDefine.pesachScreen.name);
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.only(left:8.0,right: 8),
-                                    child: Image.network(AppUrls.baseFileUrl+state.pesachBannerURL)
-                                  ),
-                                ):Container(),
+                                    child: CachedNetworkImage(
+                                      placeholder: (context, url) => const PesachBannerShimmerWidget(),
+                                      imageUrl:
+                                      '${AppUrls.baseFileUrl}${state.pesachBannerURL}',
+                                      errorWidget: (context, url, error) {
+                                        debugPrint('home error : $error');
+                                        return Container(
+                                          color: AppColors.whiteColor,
+                                        );
+                                      },
+                                    ),
+                                )):Container(),
                                 AnimatedCrossFade(
                                     firstChild: getScreenWidth(context).width,
                                     secondChild: Column(
@@ -1508,7 +1519,6 @@ class HomeScreenWidget extends StatelessWidget {
                       }
                     },
                     errorBuilder: (context, error, stackTrace) {
-                       debugPrint('home error 1_____${error}');
                       return searchType == SearchTypes.subCategory
                           ? Image.asset(AppImagePath.imageNotAvailable5,
                           height: 60, width: 50, fit: BoxFit.cover)
