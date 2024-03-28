@@ -171,13 +171,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
-                                childAspectRatio:MediaQuery
-                                .of(context)
-                                .size
-                                .height >
-                                750
-                                ? 9/13.h
-                                : 7/13.h
+                                childAspectRatio: AppConstants.productGridAspectRatio
                             ),
                             itemBuilder: (context, index) => buildPlanoGramProductItem(
                               isPesach: state.planogramProductList[index].isPesach,

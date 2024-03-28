@@ -222,13 +222,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
                                               childAspectRatio:
-                                              MediaQuery
-                                              .of(context)
-                                              .size
-                                              .height >
-                                              750
-                                              ? 9/13.h
-                                              : 7/13.h),
+                                              AppConstants.productGridAspectRatio),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
                                         isPesach: state.previousOrderProductsList[index].isPesach,
                                         lowStock: state

@@ -227,16 +227,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
-                                              childAspectRatio: MediaQuery
-                                                  .of(context)
-                                                  .size
-                                                  .height >
-                                                  750
-                                                  ? 9/13.h
-                                                  : 7/13.h
+                                              childAspectRatio: 8.8/13
                                           ),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
-
                                         isPesach:state.productList[index].isPesach,
                                         isGuestUser: state.isGuestUser,
                                           lowStock: state.productList[index].lowStock.toString(),
