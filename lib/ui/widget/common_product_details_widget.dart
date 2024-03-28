@@ -328,7 +328,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   ),
                 ),
                 padding: EdgeInsets.fromLTRB(10, 10, 20, 0),
-                child: productStock == '0' || productStock == "-1"
+                child: double.parse(productStock) <= 0
                     ? Column(
                         children: [
                           5.height,

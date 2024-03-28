@@ -125,10 +125,10 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                       alignment: Alignment.center,
-                      width: 80,
+                      width: AppConstants.containerHeight_80,
                       decoration: BoxDecoration(
                           gradient: AppColors.appMainGradientColor,
-                          borderRadius: BorderRadius.circular(8.0)),
+                          borderRadius: BorderRadius.circular(AppConstants.radius_7)),
                       child: Text(
                         AppLocalizations.of(context)!.close,
                         style: AppStyles.rkRegularTextStyle(
@@ -325,10 +325,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                     AppLocalizations.of(context)!
                                         .monthly_expense_graph,
                                     style: AppStyles.rkRegularTextStyle(
-                                        size: /*  state.language == AppStrings.englishString
-                                          ? AppConstants.font_14
-                                          : */
-                                            AppConstants.smallFont,
+                                        size: AppConstants.smallFont,
                                         color: AppColors.blackColor),
                                   ),
                                   dropDownWidget(
@@ -364,7 +361,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                           return LineTooltipItem(
                                                               "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total}: ${AppLocalizations.of(context)!.currency}${e.y.toStringAsFixed(2)}",
                                                               TextStyle(
-                                                                  fontSize: 8));
+                                                                  fontSize: AppConstants.font_8));
                                                         }).toList();
                                                       },
                                                       tooltipBgColor:
@@ -866,13 +863,13 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
   }
 
   String? getType(String type) {
-    if (type == 'credit') {
+    if (type == AppStrings.creditString) {
       return AppLocalizations.of(context)!.monthly_credit;
-    } else if (type == 'debit') {
+    } else if (type == AppStrings.debitString) {
       return AppLocalizations.of(context)!.order;
-    }else if (type == 'refund') {
+    }else if (type == AppStrings.refundString) {
       return AppLocalizations.of(context)!.refund_for_order;
-    }else if (type == 'surfaceAmount') {
+    }else if (type == AppStrings.surfaceAmountString) {
       return AppLocalizations.of(context)!.surfaces_order;
     }
     else {
@@ -897,13 +894,13 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
         minDate: minDate,
         theme: CalendarTheme(
           selectedColor: AppColors.mainColor,
-          dayNameTextStyle: TextStyle(color: Colors.black45, fontSize: 10),
+          dayNameTextStyle: TextStyle(color: Colors.black45, fontSize: AppConstants.font_10),
           inRangeColor: AppColors.lightMainColor,
           inRangeTextStyle: TextStyle(color: Colors.black),
           selectedTextStyle: TextStyle(color: Colors.white),
           todayTextStyle: TextStyle(fontWeight: FontWeight.bold),
-          defaultTextStyle: TextStyle(color: Colors.black, fontSize: 12),
-          radius: 10,
+          defaultTextStyle: TextStyle(color: Colors.black, fontSize:  AppConstants.font_12),
+          radius: AppConstants.radius_10,
           tileSize: 40,
           selectedQuickDateRangeColor: AppColors.mainColor,
           disabledTextStyle: TextStyle(color: Colors.grey),

@@ -168,18 +168,17 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
              debugPrint('productStockList___${productStockList[1]}');
              debugPrint('productStockList___${productStockList[2].length}');
              debugPrint('productStockList___${productStockList[0]}');
-
              debugPrint('productListIndex___${event.productListIndex}');
             int productStockUpdateIndex = 0;
 
 
-            if(event.isBarcode ){
+            if(event.isBarcode){
               productStockUpdateIndex = 0;
-               debugPrint('responseproductid____${response.product?.first.id}');
+               debugPrint('response productid____${response.product?.first.id}');
               productStockList[0][0] =productStockList[0][0].copyWith(
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
+                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0"),
                   totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
               );
             }
@@ -226,14 +225,10 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
               );
-
               emit(state.copyWith(productStockList: productStockList));
-
             }
 
-
             List<ProductSupplierModel> supplierList = [];
-
             supplierList.addAll(response.product?.first.supplierSales
                 ?.map((supplier) => ProductSupplierModel(
               supplierId: supplier.supplierId ?? '',
@@ -311,7 +306,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 productDetails: response.product ?? [],
                 productStockList: productStockList,
                 productStockUpdateIndex: productStockUpdateIndex,
-                noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
                 productListIndex: productListIndex,
                 isProductLoading: false));
@@ -487,16 +481,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           }
         }
       }
-      else if (event is _ChangeNoteOfProduct) {
-        if (state.productStockUpdateIndex != -1) {
-          List<List<ProductStockModel> >productStockList =
-          state.productStockList.toList(growable: false);
-          productStockList[state.productListIndex][state.productStockUpdateIndex] =
-              productStockList[state.productListIndex][state.productStockUpdateIndex]
-                  .copyWith(note: /*event.newNote*/ state.noteController.text);
-          emit(state.copyWith(productStockList: productStockList));
-        }
-      }
+
 
       else if (event is _ChangeSupplierSelectionExpansionEvent) {
         emit(state.copyWith(
@@ -675,12 +660,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             final res = await DioClient(event.context).post(
                 '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
-                options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferencesHelper.getAuthToken()}',
-                  },
-                ));
+           );
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
               add(ReorderEvent.setCartCountEvent());
@@ -744,14 +724,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         debugPrint('cart count reorder = ${preferences.getCartCount()}');
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
-      }  else if (event is _ToggleNoteEvent) {
-        List <List<ProductStockModel>> productStockList =
-        state.productStockList.toList(growable: true);
-        productStockList[state.productListIndex][state.productStockUpdateIndex] =
-            productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
-                isNoteOpen: !productStockList[state.productListIndex][state.productStockUpdateIndex]
-                    .isNoteOpen);
-        emit(state.copyWith(productStockList: productStockList));
       }
       else if (event is _getCartCountEvent) {
         emit(

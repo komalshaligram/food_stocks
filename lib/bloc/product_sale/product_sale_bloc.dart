@@ -241,8 +241,6 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             emit(state.copyWith(
                 productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
-                noteController: TextEditingController(
-                    text: state.productStockList[productStockUpdateIndex].note),
                 productSupplierList: supplierList,
                 isProductLoading: false));
             if (supplierList.isNotEmpty) {
@@ -382,16 +380,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             emit(state.copyWith(productStockList: productStockList));
           }
         }
-      } else if (event is _ChangeNoteOfProduct) {
-        if (state.productStockUpdateIndex != -1) {
-          List<ProductStockModel> productStockList =
-              state.productStockList.toList(growable: false);
-          productStockList[state.productStockUpdateIndex] =
-              productStockList[state.productStockUpdateIndex]
-                  .copyWith(note: /*event.newNote*/ state.noteController.text);
-          emit(state.copyWith(productStockList: productStockList));
-        }
-      } else if (event is _ChangeSupplierSelectionExpansionEvent) {
+      }  else if (event is _ChangeSupplierSelectionExpansionEvent) {
         emit(state.copyWith(
             isSelectSupplier:
                 event.isSelectSupplier ?? !state.isSelectSupplier));
@@ -626,15 +615,6 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         emit(state.copyWith(imageIndex: event.index));
       } else if (event is _SetSearchEvent) {
         emit(state.copyWith(search: event.search));
-      }
-      else if (event is _ToggleNoteEvent) {
-        List<ProductStockModel> productStockList =
-            state.productStockList.toList(growable: true);
-        productStockList[state.productStockUpdateIndex] =
-            productStockList[state.productStockUpdateIndex].copyWith(
-                isNoteOpen: !productStockList[state.productStockUpdateIndex]
-                    .isNoteOpen);
-        emit(state.copyWith(productStockList: productStockList));
       }
       else if(event is _RelatedProductsEvent){
          debugPrint('productId____${event.productId}');

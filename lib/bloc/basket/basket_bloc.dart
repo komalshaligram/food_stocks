@@ -285,7 +285,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 state.productStockList.toList(growable: true);
                 productStockList[state.productListIndex][state.productStockUpdateIndex] =
                     productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
-                      note: '',
                       isNoteOpen: false,
                       quantity: _productQuantity,
                       productSupplierIds: '',
@@ -371,7 +370,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 state.productStockList.toList(growable: true);
                 productStockList[state.productListIndex][state.productStockUpdateIndex] =
                     productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
-                      note: '',
                       isNoteOpen: false,
                       quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                       productSupplierIds: '',

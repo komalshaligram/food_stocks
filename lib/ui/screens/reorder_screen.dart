@@ -721,11 +721,10 @@ class ReorderScreenWidget extends StatelessWidget {
           maxChildSize: 1 -
               (MediaQuery.of(context).viewPadding.top /
                   getScreenHeight(context)),
-
-          minChildSize:  productStock == '0' ? 0.8 :  1 -
+          minChildSize:  double.parse(productStock) <= 0 ? 0.8 :  1 -
               (MediaQuery.of(context).viewPadding.top /
                   getScreenHeight(context)),
-          initialChildSize:  productStock == '0' ? 0.8 :  1 -
+          initialChildSize:  double.parse(productStock) <= 0 ? 0.8 :  1 -
               (MediaQuery.of(context).viewPadding.top /
                   getScreenHeight(context)),
           builder:
@@ -1665,7 +1664,7 @@ class ReorderScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
+                              double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : double.parse(productStock) <= 0 && lowStock.isNotEmpty ? Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(

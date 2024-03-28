@@ -92,7 +92,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                 child: Text(
                   AppLocalizations.of(context)!.more_details,
                   style:
-                      AppStyles.rkRegularTextStyle(size: 16, color: Colors.black),
+                      AppStyles.rkRegularTextStyle(size:  AppConstants.smallFont, color: Colors.black),
                 ),
               ),
               backgroundColor: AppColors.whiteColor,
@@ -354,11 +354,6 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                       FilteringTextInputFormatter.digitsOnly,
                                       LengthLimitingTextInputFormatter(11)
                                     ],
-                                  /*  onChangeValue: (FAX) {
-                                      bloc.add(
-                                          MoreDetailsEvent.setFAXFormatEvent(
-                                              FAX: FAX));
-                                    },*/
                                     textDirection:
                                         context.rtl ? TextDirection.ltr : null,
                                     keyboardType: TextInputType.number,
@@ -378,10 +373,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     height: getScreenHeight(context) * 0.2,
                                     alignment: Alignment.center,
                                     child: DottedBorder(
-                                      color: /*state.companyLogo.isNotEmpty ?  state.image.path != ''
-                                    ? AppColors.whiteColor
-                                    : AppColors.whiteColor :*/
-                                          AppColors.borderColor,
+                                      color: AppColors.borderColor,
                                       radius: Radius.circular(
                                           AppConstants.radius_3),
                                       borderType: BorderType.RRect,
@@ -616,10 +608,6 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                               ? Expanded(
                                                                   child:
                                                                       SizedBox(
-                                                                    // height:
-                                                                    //     getScreenHeight(
-                                                                    //             context) *
-                                                                    //         0.18,
                                                                     width: getScreenWidth(
                                                                         context),
                                                                     child: Image

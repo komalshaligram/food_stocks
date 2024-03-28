@@ -25,8 +25,6 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
       {required BuildContext context,
       required String quantity}) = _UpdateQuantityOfProduct;
 
-  const factory CompanyProductsEvent.changeNoteOfProduct(
-      {required String newNote}) = _ChangeNoteOfProduct;
 
   const factory CompanyProductsEvent.changeSupplierSelectionExpansionEvent(
       {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
@@ -48,7 +46,6 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
     required int index,
   }) = _UpdateImageIndexEvent;
 
-  const factory CompanyProductsEvent.toggleNoteEvent() = _ToggleNoteEvent;
 
   const factory CompanyProductsEvent.refreshListEvent(
       {required BuildContext context}) = _RefreshListEvent;

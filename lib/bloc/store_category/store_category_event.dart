@@ -46,9 +46,6 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
       {required BuildContext context,
       required String quantity}) = _UpdateQuantityOfProduct;
 
-  const factory StoreCategoryEvent.changeNoteOfProduct(
-      {required String newNote}) = _ChangeNoteOfProduct;
-
   const factory StoreCategoryEvent.changeSupplierSelectionExpansionEvent(
       {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
 
@@ -75,9 +72,6 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
       {required String search,
       required BuildContext context,
       required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
-
-  const factory StoreCategoryEvent.toggleNoteEvent({required bool isBarcode}) =
-      _ToggleNoteEvent;
 
   const factory StoreCategoryEvent.subCategoryRefreshListEvent(
       {required BuildContext context}) = _SubCategoryRefreshListEvent;

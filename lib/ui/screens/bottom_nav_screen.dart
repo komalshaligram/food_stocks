@@ -263,7 +263,6 @@ class BottomNavScreenWidget extends StatelessWidget {
                         )
                       : SizedBox(),
           isCart ?  state.isAnimation  && state.index != 2 ? Positioned(
-         //   top: 5,
             right: isRTL ? null : 0,
             left: isRTL ? 0 : null,
             child: SizedBox(

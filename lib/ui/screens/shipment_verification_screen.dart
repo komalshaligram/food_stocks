@@ -50,6 +50,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
 
   final GlobalKey<SfSignaturePadState> signatureGlobalKey = GlobalKey();
   bool isSign = false;
+  int onTheWayStatus = 6;
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +72,6 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                 child: CircularButtonWidget(
                   buttonName: AppLocalizations.of(context)!.total,
                     buttonValue:
-                   // '${AppLocalizations.of(context)!.currency}${(args?[AppStrings.totalAmountString] ?? '0')}'
-
                     '${formatNumber(value: args?[AppStrings.totalAmountString] ?? '0', local: AppStrings.hebrewLocal)}',
                 ),
               ),
@@ -120,7 +119,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                             status?.toTitleCase() ?? '',
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont,
-                                color:  args?[AppStrings.orderStatusNo] == 6  ? AppColors.blueColor: AppColors.mainColor,
+                                color:  args?[AppStrings.orderStatusNo] == onTheWayStatus  ? AppColors.blueColor: AppColors.mainColor,
                                 fontWeight: FontWeight.w700),
                           )
                         ],
@@ -159,7 +158,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                             flexValue: 2,
                             title: AppLocalizations.of(context)!.total_order,
                             value:
-                                '${formatNumber(value: args?[AppStrings.totalOrderString] ?? '0', local: AppStrings.hebrewLocal)}',
+                            '${formatNumber(value: args?[AppStrings.totalOrderString] ?? '0', local: AppStrings.hebrewLocal)}',
                             titleColor: AppColors.mainColor,
                             valueColor: AppColors.blackColor,
                             valueTextWeight: FontWeight.w500,

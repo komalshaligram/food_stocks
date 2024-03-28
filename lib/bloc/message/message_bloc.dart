@@ -46,12 +46,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
                       pageNum: state.pageNum + 1,
                       pageLimit: AppConstants.messagePageLimit)
                   .toJson(),
-              options: Options(
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                      'Bearer ${preferences.getAuthToken()}',
-                },
-              ));
+           );
           GetMessagesResModel response = GetMessagesResModel.fromJson(res);
           debugPrint(
               'getMessage   url  = ${AppUrls.baseUrl}${AppUrls.getNotificationMessageUrl}');

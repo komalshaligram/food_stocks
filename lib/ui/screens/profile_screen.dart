@@ -425,9 +425,9 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                           AppImagePath
                                                                               .placeholderProfile,
                                                                           width:
-                                                                              80,
+                                                                          AppConstants.containerHeight_80,
                                                                           height:
-                                                                              80,
+                                                                          AppConstants.containerHeight_80,
                                                                           fit: BoxFit
                                                                               .scaleDown,
                                                                         ));
@@ -437,8 +437,8 @@ class ProfileScreenWidget extends StatelessWidget {
                                                         : SvgPicture.asset(
                                                             AppImagePath
                                                                 .placeholderProfile,
-                                                            width: 80,
-                                                            height: 80,
+                                                            width: AppConstants.containerHeight_80,
+                                                            height: AppConstants.containerHeight_80,
                                                             fit: BoxFit
                                                                 .scaleDown,
                                                           )
@@ -458,8 +458,8 @@ class ProfileScreenWidget extends StatelessWidget {
                                                         : SvgPicture.asset(
                                                             AppImagePath
                                                                 .placeholderProfile,
-                                                            width: 80,
-                                                            height: 80,
+                                                            width: AppConstants.containerHeight_80,
+                                                            height: AppConstants.containerHeight_80,
                                                             fit: BoxFit
                                                                 .scaleDown,
                                                             // colorFilter: ColorFilter.mode(
@@ -478,7 +478,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                     color: Colors.white,
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            20),
+                                                            AppConstants.radius_20),
                                                     border: Border.all(
                                                         color: AppColors
                                                             .borderColor)),

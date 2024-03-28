@@ -22,8 +22,6 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
       {required BuildContext context,
       required String quantity}) = _UpdateQuantityOfProduct;
 
-  const factory RecommendationProductsEvent.changeNoteOfProduct(
-      {required String newNote}) = _ChangeNoteOfProduct;
 
   const factory RecommendationProductsEvent.changeSupplierSelectionExpansionEvent(
       {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
@@ -44,9 +42,6 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
   const factory RecommendationProductsEvent.updateImageIndexEvent({
     required int index,
   }) = _UpdateImageIndexEvent;
-
-  const factory RecommendationProductsEvent.toggleNoteEvent() =
-      _ToggleNoteEvent;
 
   const factory RecommendationProductsEvent.refreshListEvent(
       {required BuildContext context}) = _RefreshListEvent;

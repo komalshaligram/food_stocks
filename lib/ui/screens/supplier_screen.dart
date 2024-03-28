@@ -62,8 +62,6 @@ class SupplierScreenWidget extends StatelessWidget {
           ),
           body: SafeArea(
             child:
-                //   NotificationListener<ScrollNotification>(
-                // child:
                 SmartRefresher(
               enablePullDown: true,
               controller: state.refreshController,

@@ -22,9 +22,6 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
       {required BuildContext context,
       required String quantity}) = _UpdateQuantityOfProduct;
 
-  const factory PlanogramProductEvent.changeNoteOfProduct(
-      {required String newNote}) = _ChangeNoteOfProduct;
-
   const factory PlanogramProductEvent.changeSupplierSelectionExpansionEvent(
       {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
 
@@ -44,7 +41,6 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
     required int index,
   }) = _UpdateImageIndexEvent;
 
-  const factory PlanogramProductEvent.toggleNoteEvent() = _ToggleNoteEvent;
 
   const factory PlanogramProductEvent.isCategoryEvent(
       {required bool isSubCategory}) = _isCategoryEvent;

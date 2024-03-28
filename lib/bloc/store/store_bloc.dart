@@ -175,8 +175,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       else if (event is _GetRecommendationProductsListEvent) {
         if(!preferencesHelper.getGuestUser()){
           try {
-            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-                prefs: await SharedPreferences.getInstance());
             emit(state.copyWith(isShimmering: true));
             final res = await DioClient(event.context).post(
                 AppUrls.getRecommendationProductsUrl,
@@ -185,7 +183,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     .toJson(),);
             RecommendationProductsResModel response =
             RecommendationProductsResModel.fromJson(res);
-             debugPrint('storeresponse____${response}');
+             debugPrint('store response____${response}');
             if (response.status == 200) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: true);
@@ -321,7 +319,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
               productSaleId: '',
               productSupplierIds: '',
-              note: '',
               isNoteOpen: false,
                 totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
             );
@@ -334,10 +331,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   prefs: await SharedPreferences.getInstance());
               final res = await DioClient(event.context).post(
                   '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferences.getAuthToken()}'
-                  }));
+               );
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
               if (response.status == 200) {
                 debugPrint('cart before = ${response.data}');
@@ -373,7 +367,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
                 productSaleId: '',
                 productSupplierIds: '',
-                note: '',
                 isNoteOpen: false,
 
               );
@@ -460,16 +453,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             debugPrint('supplier list = ${supplierList.length}');
             debugPrint(
                 'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
-            String note =
-                state.productStockList.indexOf(state.productStockList.last) ==
-                        productStockUpdateIndex
-                    ? ''
-                    : state.productStockList[productStockUpdateIndex].note;
             emit(state.copyWith(
               productStockList: state.productStockList,
                 productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
-                noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
                 isProductLoading: false));
             if (supplierList.isNotEmpty) {
@@ -546,7 +533,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
              double.parse( productStockList[state.productStockUpdateIndex].stock.toString())) {
-             debugPrint('productSupplierIds______${productStockList}');
+             debugPrint('product Supplier Ids______${productStockList}');
             if (productStockList[state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
@@ -572,7 +559,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 context: event.context,
                 title:
                     "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
-                // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 type: SnackBarType.FAILURE,
 
             );
@@ -633,17 +619,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           }
         }
       }
-      else if (event is _ChangeNoteOfProduct) {
-        if (state.productStockUpdateIndex != -1) {
-          debugPrint('note changed');
-          List<ProductStockModel> productStockList =
-              state.productStockList.toList(growable: false);
-          productStockList[state.productStockUpdateIndex] =
-              productStockList[state.productStockUpdateIndex]
-                  .copyWith(note: /*event.newNote*/ state.noteController.text);
-          emit(state.copyWith(productStockList: productStockList));
-        }
-      }
       else if (event is _AddToCartProductEvent) {
         if (state.productStockList[state.productStockUpdateIndex]
             .productSupplierIds.isEmpty) {
@@ -681,7 +656,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   : state.productStockList[state.productStockUpdateIndex]
                       .productSaleId,
               quantity: state.productStockList[state.productStockUpdateIndex]
-                      .quantity /*+ _productQuantity*/,
+                      .quantity,
               cartProductId: _cartProductId,
             );
             SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -698,7 +673,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   state.productStockList.toList(growable: true);
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex].copyWith(
-                note: '',
                 isNoteOpen: false,
                 quantity: state.productStockList[state.productStockUpdateIndex]
                     .quantity,
@@ -787,7 +761,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   state.productStockList.toList(growable: true);
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex].copyWith(
-                    note: '',
                 isNoteOpen: false,
                 quantity: state.productStockList[state.productStockUpdateIndex]
                     .quantity ,
@@ -1034,24 +1007,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             searchController: TextEditingController(text: event.search),
             searchList: event.searchList));
       }
-      else if (event is _ToggleNoteEvent) {
-        List<ProductStockModel> productStockList =
-            state.productStockList.toList(growable: true);
-        if (event.isBarcode) {
-          productStockList[productStockList.indexOf(productStockList.last)] =
-              productStockList[productStockList.indexOf(productStockList.last)]
-                  .copyWith(
-                      isNoteOpen: !productStockList[
-                              productStockList.indexOf(productStockList.last)]
-                          .isNoteOpen);
-        } else {
-          productStockList[state.productStockUpdateIndex] =
-              productStockList[state.productStockUpdateIndex].copyWith(
-                  isNoteOpen: !productStockList[state.productStockUpdateIndex]
-                      .isNoteOpen);
-        }
-        emit(state.copyWith(productStockList: productStockList));
-      }
+
       else if (event is _ResetGlobalSearchEvent) {
         List<SearchModel> searchList = [];
         searchList.addAll(state.productCategoryList.map((category) =>

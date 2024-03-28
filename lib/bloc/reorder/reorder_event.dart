@@ -22,9 +22,6 @@ class ReorderEvent with _$ReorderEvent {
       {required BuildContext context,
       required String quantity}) = _UpdateQuantityOfProduct;
 
-  const factory ReorderEvent.changeNoteOfProduct({required String newNote}) =
-      _ChangeNoteOfProduct;
-
   const factory ReorderEvent.changeSupplierSelectionExpansionEvent(
       {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
 
@@ -44,7 +41,6 @@ class ReorderEvent with _$ReorderEvent {
     required int index,
   }) = _UpdateImageIndexEvent;
 
-  const factory ReorderEvent.toggleNoteEvent() = _ToggleNoteEvent;
 
   const factory ReorderEvent.refreshListEvent({required BuildContext context}) =
       _RefreshListEvent;

@@ -70,8 +70,6 @@ class ProductSaleScreenWidget extends StatelessWidget {
             ),
             body: SafeArea(
               child:
-                  //   NotificationListener<ScrollNotification>(
-                  // child:
                   SmartRefresher(
                 enablePullDown: true,
                 controller: state.refreshController,
@@ -244,16 +242,12 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 maxChildSize: 1 -
                     (MediaQuery.of(context).viewPadding.top /
                         getScreenHeight(context)),
-                minChildSize: productStock == '0'
-                    ? 0.8
-                    : 1 -
-                        (MediaQuery.of(context).viewPadding.top /
-                            getScreenHeight(context)),
-                initialChildSize: productStock == '0'
-                    ? 0.8
-                    : 1 -
-                        (MediaQuery.of(context).viewPadding.top /
-                            getScreenHeight(context)),
+                minChildSize:  double.parse(productStock) <= 0 ? 0.8 :  1 -
+                    (MediaQuery.of(context).viewPadding.top /
+                        getScreenHeight(context)),
+                initialChildSize:  double.parse(productStock) <= 0 ? 0.8 :  1 -
+                    (MediaQuery.of(context).viewPadding.top /
+                        getScreenHeight(context)),
                 builder:
                     (BuildContext context1, ScrollController scrollController) {
                   return Container(
@@ -268,7 +262,6 @@ class ProductSaleScreenWidget extends StatelessWidget {
                     child: state.isProductLoading
                         ? ProductDetailsShimmerWidget()
                         : SingleChildScrollView(
-
                       child: NotificationListener<ScrollNotification>(
                       onNotification: (notification) {
                       if(getScreenHeight(context)<700 ){

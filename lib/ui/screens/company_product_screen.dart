@@ -51,21 +51,20 @@ class CompanyProductsScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
     companyName = args?[AppStrings.companyName];
-    companyLogo = args?[AppStrings.companyLogo];
     return BlocProvider(
       create: (context) => CompanyProductsBloc()
         ..add(CompanyProductsEvent.getCompanyProductsIdEvent(
             companyId: args?[AppStrings.companyIdString]))
         ..add(CompanyProductsEvent.getCompanyProductsListEvent(context: context)),
-      child: CompanyProductsScreenWidget(companyName:companyName,companyLogo:companyLogo),
+      child: CompanyProductsScreenWidget(companyName:companyName),
     );
   }
 }
 
 class CompanyProductsScreenWidget extends StatelessWidget {
-   const CompanyProductsScreenWidget({super.key,required this.companyName,required this.companyLogo});
+   const CompanyProductsScreenWidget({super.key,required this.companyName});
   final String? companyName;
-  final String? companyLogo;
+
 
   @override
   Widget build(BuildContext context) {
@@ -747,11 +746,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
            maxChildSize: 1 -
                (MediaQuery.of(context).viewPadding.top /
                    getScreenHeight(context)),
-
-           minChildSize:  productStock == '0' ? 0.8 :  1 -
+           minChildSize:  double.parse(productStock) <= 0 ? 0.8 :  1 -
                (MediaQuery.of(context).viewPadding.top /
                    getScreenHeight(context)),
-           initialChildSize:  productStock == '0' ? 0.8 :  1 -
+           initialChildSize:  double.parse(productStock) <= 0 ? 0.8 :  1 -
                (MediaQuery.of(context).viewPadding.top /
                    getScreenHeight(context)),
            builder:
@@ -1184,7 +1182,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                              mainAxisAlignment: MainAxisAlignment.start,
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
-                               double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
+                               double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : double.parse(productStock) <= 0 && lowStock.isNotEmpty ? Text(
                                  AppLocalizations.of(context)!
                                      .out_of_stock1,
                                  style: AppStyles.rkBoldTextStyle(

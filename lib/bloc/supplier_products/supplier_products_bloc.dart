@@ -279,7 +279,6 @@ class SupplierProductsBloc
                 stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0"),
                 productSaleId: '',
                 productSupplierIds: '',
-                note: '',
                 isNoteOpen: false,
                 totalPrice: double.parse(
                     response.product?.first.supplierSales?.first.productPrice
@@ -291,10 +290,7 @@ class SupplierProductsBloc
                   prefs: await SharedPreferences.getInstance());
               final res = await DioClient(event.context).post(
                   '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferences.getAuthToken()}'
-                  }));
+               );
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
               if (response.status == 200) {
                 debugPrint('cart before = ${response.data}');
@@ -337,7 +333,6 @@ class SupplierProductsBloc
                 stock:response.product?.first.supplierSales?.first.productStock.toString() ?? '0',
                 productSaleId: '',
                 productSupplierIds: '',
-                note: '',
                 isNoteOpen: false,
               );
 
@@ -430,16 +425,11 @@ class SupplierProductsBloc
             debugPrint(
                 'supplier select index = ${supplierList.map((e) =>
                 e.selectedIndex)}');
-            String note =
-            state.productStockList.indexOf(state.productStockList.last) ==
-                productStockUpdateIndex
-                ? ''
-                : state.productStockList[productStockUpdateIndex].note;
+
             emit(state.copyWith(
                 productStockList: state.productStockList,
                 productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
-                noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
                 isProductLoading: false));
             if (supplierList.isNotEmpty) {
@@ -611,15 +601,6 @@ class SupplierProductsBloc
             emit(state.copyWith(productStockList: productStockList));
           }
         }
-      } else if (event is _ChangeNoteOfProduct) {
-        if (state.productStockUpdateIndex != -1) {
-          List<ProductStockModel> productStockList =
-          state.productStockList.toList(growable: false);
-          productStockList[state.productStockUpdateIndex] =
-              productStockList[state.productStockUpdateIndex]
-                  .copyWith(note: /*event.newNote*/ state.noteController.text);
-          emit(state.copyWith(productStockList: productStockList));
-        }
       } else if (event is _ChangeSupplierSelectionExpansionEvent) {
         emit(state.copyWith(
             isSelectSupplier:
@@ -720,7 +701,6 @@ class SupplierProductsBloc
               state.productStockList.toList(growable: true);
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex].copyWith(
-                    note: '',
                     isNoteOpen: false,
                     quantity: 0,
                     productSupplierIds: '',
@@ -812,7 +792,6 @@ class SupplierProductsBloc
               state.productStockList.toList(growable: true);
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex].copyWith(
-                    note: '',
                     isNoteOpen: false,
                     quantity: 0,
                     productSupplierIds: '',
@@ -866,14 +845,6 @@ class SupplierProductsBloc
         debugPrint('cart count supplier= ${preferences.getCartCount()}');
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
-      } else if (event is _ToggleNoteEvent) {
-        List<ProductStockModel> productStockList =
-        state.productStockList.toList(growable: true);
-        productStockList[state.productStockUpdateIndex] =
-            productStockList[state.productStockUpdateIndex].copyWith(
-                isNoteOpen: !productStockList[state.productStockUpdateIndex]
-                    .isNoteOpen);
-        emit(state.copyWith(productStockList: productStockList));
       }
       else if (event is _getGridListView) {
         preferences.setSupplierProductGridListView(

@@ -377,7 +377,7 @@ class TimeContainer extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 var datetime = '';
-                final DateFormat formatter = DateFormat('HH:mm');
+                final DateFormat formatter = DateFormat(AppStrings.hhmmString);
                 datetime = formatter.format(
                   DateTime.now().add(
                     Duration(minutes: 30 - DateTime.now().minute % 30),
@@ -422,7 +422,7 @@ class TimeContainer extends StatelessWidget {
                                       onDateTimeChanged: (value) {
                                         final DateTime time = value;
                                         final DateFormat formatter =
-                                            DateFormat('HH:mm');
+                                            DateFormat(AppStrings.hhmmString);
                                         datetime = formatter.format(time);
                                       }),
                                 ),

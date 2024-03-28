@@ -124,21 +124,20 @@ class CommonProductListWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
-                  (productStock) != '0' && lowStock.isEmpty ||   isGuestUser ? 0.width :
-                  (productStock) == '0' && lowStock.isNotEmpty ?Text(
-                    AppLocalizations.of(context)!
-                        .out_of_stock1,
+                  double.parse(productStock) > 0 && lowStock.isEmpty || isGuestUser
+                      ? 0.width
+                      : double.parse(productStock) <=  0 && lowStock.isNotEmpty ?Text(
+                    AppLocalizations.of(context)!.out_of_stock1,
                     style: AppStyles.rkBoldTextStyle(
-                        size: AppConstants.font_14,
+                        size: AppConstants.font_12,
                         color: AppColors.redColor,
                         fontWeight: FontWeight.w400),
-                  ) : Text(
-                   lowStock,
-                    style: AppStyles.rkBoldTextStyle(
-                        size: AppConstants.font_14,
-                        color: AppColors.orangeColor,
-                        fontWeight: FontWeight.w400),
-                  ),
+                  )
+                      : Text(lowStock,
+                      style: AppStyles.rkBoldTextStyle(
+                          size: AppConstants.font_12,
+                          color: AppColors.orangeColor,
+                          fontWeight: FontWeight.w400)),
                  !isGuestUser ? numberOfUnits != '0' ? Text(
                     '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
                     style: AppStyles.rkBoldTextStyle(

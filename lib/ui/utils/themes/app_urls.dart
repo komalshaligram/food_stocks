@@ -28,10 +28,8 @@ class AppUrls {
       '/v1/store/getPalnogramProducts';
   static const String createOrderUrl = '/v1/orders/createOrder';
   static const String getAllOrderUrl = '/v1/orders/getAllOrders';
-  static const String verifyProductStockUrl = '/v1/store/verifyStock';
   static const String getAllCartUrl = '/v1/cart/listingCartProducts/';
   static const String getOrderById = '/v1/orders/getOrderById/';
-  static const String verifyStockUrl = '/v1/store/verifyStock';
   static const String updateCartProductUrl = '/v1/cart/updateCartProducts/';
   static const String listingCartProductsSupplierUrl =
       '/v1/cart/listingCartProductsSupplier/';

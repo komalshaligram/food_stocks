@@ -8,20 +8,19 @@ class AppStrings {
   static const iosString = 'IOS';
   static const timeString = '';
   static const hr24String = '24:00';
+  static const hhmmString = 'HH:mm';
   static const tempString = 'temp';
   static const cancelString = 'Cancel';
   static const doneString = 'Done';
   static const failedToLoadString = 'Failed to load';
-  static const outOfStockString = 'Out of Stock';
   static const clearString = 'Clear';
-  static const deleteString = 'Delete';
-  static const deliverString = 'deliver';
-  static const onTheWayString = 'onTheWay';
   static const statusString = 'status';
-  static const updateString = 'Updating';
   static const pendingString = 'pending';
-  static const navigateToStore = 'true';
   static const orderStatusNo = 'orderStatusNo';
+  static const creditString = 'credit';
+  static const debitString = 'debit';
+  static const refundString = 'refund';
+  static const surfaceAmountString = 'surfaceAmount';
 
   //language Strings
   static const englishString = 'en';
@@ -75,14 +74,13 @@ class AppStrings {
   static const addressValString = 'addressVal';
   static const emailValString = 'emailVal';
   static const faxValString = 'faxVal';
-  static const generalValString = 'generalVal';
   static const mobileValString = 'mobileVal';
   static const cityValString = 'cityVal';
 
   static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
 
   //page parameters strings
-  static const mobileParamString = 'mobileParam';
+
   static const profileParamString = 'profileParam';
   static const isUpdateParamString = 'isUpdateParam';
   static const planogramProductsParamString = 'planogramProductsParam';
@@ -96,9 +94,6 @@ class AppStrings {
   static const searchResultString = 'searchResultParam';
   static const fromStoreCategoryString = 'fromStoreCategoryParam';
   static const pushNavigationString = 'pushNavigationParam';
-  static const monthlyCreditString = 'Monthly Credits';
-  static const orderString = 'Order';
-  static const companiesString = 'companies';
   static const searchType = 'searchType';
 
   //hint strings
@@ -107,9 +102,7 @@ class AppStrings {
   //argument strings
   static const isRegisterString = 'isRegister';
   static const contactString = 'contact';
-  static const idString = 'id';
   static const orderIdString = 'orderId';
-  static const productDataString = 'productData';
   static const supplierNameString = 'supplierName';
   static const deliveryStatusString = 'deliveryStatus';
   static const totalOrderString = 'totalOrder';
@@ -117,9 +110,6 @@ class AppStrings {
   static const quantityString = 'quantity';
   static const supplierOrderNumberString = 'supplierOrderNumber';
   static const totalAmountString = 'totalAmount';
-  static const cartIdString = 'id';
-  static const driverNameString = 'driverName';
-  static const driverNumberString = 'driverNumber';
   static const messageIdString = 'messageId';
   static const messageIdListString = 'messageIdList';
   static const isReadMoreString = 'isReadMore';

@@ -24,9 +24,6 @@ class HomeEvent with _$HomeEvent {
       {required BuildContext context,
       required String quantity}) = _UpdateQuantityOfProduct;
 
-  const factory HomeEvent.changeNoteOfProduct({required String newNote}) =
-      _ChangeNoteOfProduct;
-
   const factory HomeEvent.changeSupplierSelectionExpansionEvent(
       {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
 
@@ -73,9 +70,6 @@ class HomeEvent with _$HomeEvent {
     required List<String> messageIdList,
   }) = _UpdateMessageListEvent;
 
-  const factory HomeEvent.toggleNoteEvent({
-    required bool isBarcode,
-}) = _ToggleNoteEvent;
 
   const factory HomeEvent.getProfileDetailsEvent({
     required BuildContext context,

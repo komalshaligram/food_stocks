@@ -137,7 +137,7 @@ class CommonProductItemWidget extends StatelessWidget {
             ),
             double.parse(productStock) > 0 && lowStock.isEmpty || isGuestUser
                     ? 0.width
-                    : (productStock) == '0' && lowStock.isNotEmpty ?Text(
+                    : double.parse(productStock) <=  0 && lowStock.isNotEmpty ?Text(
                         AppLocalizations.of(context)!.out_of_stock1,
                         style: AppStyles.rkBoldTextStyle(
                             size: AppConstants.font_12,

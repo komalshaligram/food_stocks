@@ -91,12 +91,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                               AppStrings.idParamString:
                                   preferencesHelper.getUserId(),
                             },
-                            options: Options(
-                              headers: {
-                                HttpHeaders.authorizationHeader:
-                                    'Bearer ${preferencesHelper.getAuthToken()}',
-                              },
-                            ));
+                           );
                     ProfileDetailsResModel response =
                         ProfileDetailsResModel.fromJson(res);
                     debugPrint('response = ${response}');
@@ -330,9 +325,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                    // contentType: MediaType(type,contentType!))
                     contentType: MediaType(type,contentType))
               });
-              //debugPrint('qqq${mimeManager.lookupMimeType(croppedImage!.path)}');
-            /*  debugPrint(
-                  'file upload = ${formData.files.first.key}/${formData.files.first.value.filename *//*.contentType?.parameters*//*}');*/
             }else{
 
               extension = croppedImage?.path!=null? croppedImage?.path.split(".")[1].toString():file?.path.split(".")[1].toString();
@@ -355,11 +347,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   filename:
                   "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}",
                     contentType: MediaType(type,contentType))
-            //    contentType: MediaType(mimeManager.lookupMimeType(croppedImage!.path.split('/')[0])!,'png'))
               });
-             // debugPrint('qqq${mimeManager.lookupMimeType(croppedImage!.path)}');
-            //  debugPrint("file name:${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}");
-
             }
 
             try {
@@ -444,19 +432,13 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             debugPrint('url = ${formAndFile.url}');
             if (formAndFile.url?.isNotEmpty ?? false) {
               if ((formAndFile.isForm ??
-                      false) /*&&
-                  (state.formsAndFilesList[i].url
-                          ?.contains(AppStrings.tempString) ??
-                      false)*/
+                      false)
                   ) {
                 formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
                     formAndFile.url ?? '';
                 formList[formAndFile.id ?? ''] =  formAndFile.url ?? '';
               } else if ((formAndFile.isForm ==
-                      false) /*&&
-                  (state.formsAndFilesList[i].url
-                      ?.contains(AppStrings.tempString) ??
-                      false)*/
+                      false)
                   ) {
                 formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] =
                     formAndFile.url ?? '';
@@ -570,18 +552,12 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             debugPrint('url = ${formAndFile.url}');
             if (formAndFile.url?.isNotEmpty ?? false) {
               if ((formAndFile.isForm ??
-                  false) /*&&
-                  (state.formsAndFilesList[i].url
-                          ?.contains(AppStrings.tempString) ??
-                      false)*/
+                  false)
               ) {
                 formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
                     formAndFile.url ?? '';
               } else if ((formAndFile.isForm ==
-                  false) /*&&
-                  (state.formsAndFilesList[i].url
-                      ?.contains(AppStrings.tempString) ??
-                      false)*/
+                  false)
               ) {
                 formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] =
                     formAndFile.url ?? '';
@@ -695,11 +671,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             Map<String, dynamic> newModel =
                 res['data']['clients'][0]['clientDetail'];
             debugPrint('data1 = ${newModel}');
-
-          /*  debugPrint(
-                'files = ${response.data?.clients?.first.clientDetail?.files?.toJson().keys}}');
-            debugPrint(
-                'forms = ${response.data?.clients?.first.clientDetail?.forms?.toJson().keys}}');*/
 
             if (response.status == 200) {
               List<FormAndFileModel> formsAndFilesList =

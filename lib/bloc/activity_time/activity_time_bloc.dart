@@ -252,7 +252,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             selectedTime = AppStrings.hr24String;
             emit(state.copyWith(time: selectedTime));
           }
-          var format = DateFormat("HH:mm");
+          var format = DateFormat(AppStrings.hhmmString);
           List<ActivityTimeModel> temp = [];
           temp.addAll(state.OperationTimeList);
 
@@ -295,7 +295,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               previousClosingTime =
                   shortVar[event.timeIndex - 1].until;
 
-              var format = DateFormat("HH:mm");
+              var format = DateFormat(AppStrings.hhmmString);
               var preEnd =
                   format.parse(previousClosingTime ?? AppStrings.timeString);
 
@@ -359,11 +359,9 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     selectTimeZone.isBefore(end)) {
                   shortVar.removeAt(event.timeIndex);
                   shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
-                 // shortVar.add(Day(from: selectedTime, until: closingTime));
                 } else if (closingTime == AppStrings.timeString) {
                   shortVar.removeAt(event.timeIndex);
                   shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
-                  //shortVar.add(Day(from: selectedTime, until: closingTime));
                 } else {
                   CustomSnackBar.showSnackBar(
                       context: event.context,
@@ -582,7 +580,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               try {
                 final response1 = await DioClient(event.context).post(
                     AppUrls.operationTimeUrl + '/' + preferences.getUserId(),
-                    //  AppUrls.operationTimeUrl + '/' + '651ff55af3c2b715fe5f1ba8',
                     data: reqMap);
                 res.ActivityTimeResModel operationTimeResModel =
                     res.ActivityTimeResModel.fromJson(response1);

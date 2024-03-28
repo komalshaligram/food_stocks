@@ -203,10 +203,7 @@ class CompanyProductsBloc
 
               final res = await DioClient(event.context).post(
                   '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferences.getAuthToken()}'
-                  }));
+                 );
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
               if (response.status == 200) {
                 debugPrint('cart before = ${response.data}');
@@ -321,7 +318,6 @@ class CompanyProductsBloc
                 productDetails: response.product ?? [],
                 productStockList: productStockList,
                 productStockUpdateIndex: productStockUpdateIndex,
-                noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
                 productListIndex: productListIndex,
                 isProductLoading: false));
@@ -498,16 +494,16 @@ class CompanyProductsBloc
         }
       }
 
-      else if (event is _ChangeNoteOfProduct) {
+    /*  else if (event is _ChangeNoteOfProduct) {
         if (state.productStockUpdateIndex != -1) {
           List<List<ProductStockModel> >productStockList =
               state.productStockList.toList(growable: false);
           productStockList[state.productListIndex][state.productStockUpdateIndex] =
               productStockList[state.productListIndex][state.productStockUpdateIndex]
-                  .copyWith(note: /*event.newNote*/ state.noteController.text);
+                  .copyWith(note: *//*event.newNote*//* state.noteController.text);
           emit(state.copyWith(productStockList: productStockList));
         }
-      }
+      }*/
 
       else if (event is _ChangeSupplierSelectionExpansionEvent) {
         emit(state.copyWith(
@@ -686,12 +682,7 @@ class CompanyProductsBloc
             final res = await DioClient(event.context).post(
                 '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
-                options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                        'Bearer ${preferencesHelper.getAuthToken()}',
-                  },
-                ));
+               );
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
               add(CompanyProductsEvent.setCartCountEvent());
@@ -702,7 +693,6 @@ class CompanyProductsBloc
                debugPrint('quandjfd____${state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
-                    note: '',
                 isNoteOpen: false,
                 quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                 productSupplierIds: '',
@@ -757,15 +747,6 @@ class CompanyProductsBloc
       }
       else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
-      }
-      else if (event is _ToggleNoteEvent) {
-       List <List<ProductStockModel>> productStockList =
-            state.productStockList.toList(growable: true);
-        productStockList[state.productListIndex][state.productStockUpdateIndex] =
-            productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
-                isNoteOpen: !productStockList[state.productListIndex][state.productStockUpdateIndex]
-                    .isNoteOpen);
-        emit(state.copyWith(productStockList: productStockList));
       }
 
       else if (event is _getCartCountEvent) {

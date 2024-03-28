@@ -227,17 +227,6 @@ class MessageScreenWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                // onNotification: (notification) {
-                //   if (notification.metrics.pixels ==
-                //       notification.metrics.maxScrollExtent) {
-                //     if (!state.isBottomOfMessage) {
-                //       context.read<MessageBloc>().add(
-                //           MessageEvent.getMessageListEvent(
-                //               context: context));
-                //     }
-                //   }
-                //   return true;
-                // }),
               ),
             ),
           );
