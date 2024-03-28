@@ -493,13 +493,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               shrinkWrap: true,
                                               physics: NeverScrollableScrollPhysics(),
                                               padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: MediaQuery
-                                                  .of(context)
-                                                  .size
-                                                  .height >
-                                                  820
-                                                  ? AppConstants.productGridAspectRatio9
-                                                  : AppConstants.productGridAspectRatio75),
+                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context)),
                                               itemBuilder: (context, index) => CommonProductItemWidget(
                                                 isPesach: state.planogramProductList[index].product?.isPesach,
                                                 lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
