@@ -630,6 +630,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
+                            isPesach: state.searchList[index].isPesach,
                             lowStock: state.searchList[index].lowStock.toString(),
                             numberOfUnits:state.searchList[index].numberOfUnits,
                             priceOfBox: state.searchList[index].priceOfBox,
@@ -845,6 +846,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     bool isGuestUser = false,
     required int numberOfUnits,
     required double priceOfBox,
+    required bool isPesach
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -899,7 +901,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? 120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
+            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1015,6 +1017,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     color: AppColors.blueColor,
                                     fontWeight: FontWeight.w400),
                               ) : 0.width :0.width,
+                              isPesach?3.height:0.height,
+                              isPesachLabelShow(isPesach,context)
                             ],
                           ),
                         ),

@@ -1121,9 +1121,6 @@ class StoreScreenWidget extends StatelessWidget {
                 left: AppConstants.padding_20,
                 right: AppConstants.padding_20,
                 bottom: AppConstants.padding_5),
-            // padding: EdgeInsets.symmetric(
-            //     horizontal: AppConstants.padding_20,
-            //     vertical: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: !isGuestUser ? searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? MainAxisAlignment.start: MainAxisAlignment.spaceBetween :MainAxisAlignment.start ,
@@ -1238,21 +1235,11 @@ class StoreScreenWidget extends StatelessWidget {
                                 fontWeight: FontWeight.w400),
                           ),
                         ) : 0.width:0.width,
-
                       ],
                     ),
-                    isPesach?
-                    Container(
-                        padding: EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                            color: AppColors.pesachBGColor,
-                            border: Border.all(color: AppColors.pesachBGColor),
-                            borderRadius: BorderRadius.all(Radius.circular(10))
-                        ),
-                        child: Text(AppLocalizations.of(context)!.pesach)):0.height
+                    isPesachLabelShow(isPesach,context)
                   ],
                 ),
-
               ],
             ),
           ),

@@ -21,6 +21,12 @@ class StoreScreenShimmerWidget extends StatelessWidget {
             buildListItems(context),
             buildListTitles(),
             buildListItems(context),
+            CommonShimmerWidget(
+              child: Container(
+                height: 100,
+                width: MediaQuery.of(context).size.width,
+              ),
+            ),
             // SizedBox(
             //   width: getScreenWidth(context),
             //   height: 110,

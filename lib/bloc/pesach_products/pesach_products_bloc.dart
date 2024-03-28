@@ -924,6 +924,7 @@ class PesachProductsBloc
                     searchId: category.id ?? '',
                     name: category.categoryName ?? '',
                     searchType: SearchTypes.category,
+                    isPesach: category.isPesach??false,
                     image: category.categoryImage ?? ''))
                 .toList() ??
                 []);
@@ -935,6 +936,7 @@ class PesachProductsBloc
                   name: subCategory.subCategoryName ?? '',
                   searchType: SearchTypes.subCategory,
                   image: '',
+                  isPesach: subCategory.isPesach??false,
                   categoryId: subCategory.parentCategoryId ?? '',
                   categoryName: subCategory.parentCategoryName ?? '',
 
@@ -961,6 +963,7 @@ class PesachProductsBloc
                   name: supplier.supplierDetail?.companyName ?? '',
                   searchType: SearchTypes.supplier,
                   image: supplier.logo ?? '',
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -973,7 +976,7 @@ class PesachProductsBloc
                   searchType: SearchTypes.sale,
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                   image: sale.mainImage ?? '',
-
+                  isPesach: sale.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -988,7 +991,8 @@ class PesachProductsBloc
                   productStock: supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
-                  lowStock: supplier.lowStock.toString()
+                  lowStock: supplier.lowStock.toString(),
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);

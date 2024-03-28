@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_colors.dart';
@@ -152,15 +153,7 @@ class CommonProductItemWidget extends StatelessWidget {
                         color: AppColors.orangeColor,
                         fontWeight: FontWeight.w400)),
             2.height,
-            isPesach! ?
-                Container(
-                  padding: EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      color: AppColors.pesachBGColor,
-                      border: Border.all(color: AppColors.pesachBGColor),
-                      borderRadius: BorderRadius.all(Radius.circular(10))
-                    ),
-                    child: Text(AppLocalizations.of(context)!.pesach)):0.width,
+            isPesachLabelShow(isPesach!, context),
             isPesach! ? 3.height :0.height,
             !isGuestUser
                 ? Center(

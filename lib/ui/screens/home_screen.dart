@@ -1013,36 +1013,6 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  CommonShimmerWidget buildListItems(BuildContext context, {double? height}) {
-    return CommonShimmerWidget(
-      child: Container(
-        width: getScreenWidth(context),
-        height: height ?? 110,
-        margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(AppConstants.radius_10),
-          ),
-          color: AppColors.whiteColor,
-        ),
-      ),
-    );
-  }
-
-  Widget buildTextFieldTitle() {
-    return CommonShimmerWidget(
-      child: Container(
-        height: AppConstants.shimmerTextHeight,
-        width: 100,
-        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius:
-          BorderRadius.all(Radius.circular(AppConstants.radius_3)),
-        ),
-      ),
-    );
-  }
 
   void showProductDetails({
     required BuildContext context,
@@ -1568,7 +1538,6 @@ class HomeScreenWidget extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-
                     Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -1618,7 +1587,6 @@ class HomeScreenWidget extends StatelessWidget {
                                 fontWeight: FontWeight.w400),
                           ),
                         ) : 0.width,
-
                       ],
                     ),
                     isPesach?
@@ -1630,10 +1598,8 @@ class HomeScreenWidget extends StatelessWidget {
                             borderRadius: BorderRadius.all(Radius.circular(10))
                         ),
                         child: Text(AppLocalizations.of(context)!.pesach)):0.height
-
                   ],
                 ),
-
               ],
             ),
           ),
