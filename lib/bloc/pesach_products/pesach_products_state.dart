@@ -10,7 +10,7 @@ class PesachProductsState with _$PesachProductsState {
     required bool isLoading,
     required bool isProductLoading,
     required List<Product> productDetails,
-    required List<ProductStockModel> productStockList,
+    required List<List<ProductStockModel>> productStockList,
     required int productStockUpdateIndex,
     required int pageNum,
     required bool isLoadMore,
@@ -31,6 +31,9 @@ class PesachProductsState with _$PesachProductsState {
     required bool isCatVisible,
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
+    required bool duringCelebration,
+    required int cartCount,
+    required int productListIndex,
   }) = _PesachProductsState;
 
   factory PesachProductsState.initial() => PesachProductsState(
@@ -42,7 +45,7 @@ class PesachProductsState with _$PesachProductsState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [ProductStockModel(productId: '')],
+      productStockList: [[ProductStockModel(productId: '')],[],[]],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,
@@ -62,6 +65,9 @@ class PesachProductsState with _$PesachProductsState {
     isCatVisible: false,
     relatedProductList: [],
     isRelatedShimmering: false,
+    duringCelebration: false,
+    cartCount: 0,
+    productListIndex: 0
 
       );
 }
