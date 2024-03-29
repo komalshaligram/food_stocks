@@ -696,11 +696,10 @@ class PesachProductsBloc
                     totalPrice: 0.0,
                     productSaleId: '',
                   );
-              //   add(PesachProductsEvent.getCartCountEvent());
-
-              emit(state.copyWith(isLoading: false, productStockList: productStockList));
+                 add(PesachProductsEvent.getCartCountEvent());
+              emit(state.copyWith(isLoading: false, productStockList: productStockList,duringCelebration: true));
               await Future.delayed(const Duration(milliseconds: 500));
-              // emit(state.copyWith(duringCelebration: false));
+              emit(state.copyWith(duringCelebration: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
