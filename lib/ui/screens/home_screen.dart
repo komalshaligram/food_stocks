@@ -927,18 +927,15 @@ class HomeScreenWidget extends StatelessWidget {
             debugPrint("onMessageClosedApp: ${message.data}");
             if (message.data.isNotEmpty) {
               var data = json.decode(message.data['data'].toString());
-              final RemoteNotification? notification = message.notification;
-              final AndroidNotification? android = message.notification
-                  ?.android;
               debugPrint('data home:${data.toString()}');
               if (data != null) {
                 FlutterAppBadger.removeBadge();
                 PushNotificationService().showNotification(
-                    notiId: notification.hashCode,
-                    androidIcon: android?.smallIcon ?? '',
+                    notiId: message.notification.hashCode,
+                    androidIcon:message.notification?.android?.smallIcon,
                     data: data,
                     isNavigate: true,
-                    showNotification: false,
+                    showNotification: true,
                     isAppOpen: true
                 );
               }

@@ -39,9 +39,7 @@ void main() async {
       });
     }
     runApp(MyApp());
-  },
-          (error, stack) =>
-          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
 
 @pragma('vm:entry-point')
@@ -55,7 +53,7 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     debugPrint("Handling a background message:${message.data.toString()}");
     var data = json.decode(message.data['data'].toString());
 
-    FlutterAppBadger.updateBadgeCount( PushNotificationService().notificationCount+1);
+    FlutterAppBadger.updateBadgeCount(PushNotificationService().notificationCount+1);
     if(data!=null){
       PushNotificationService().showNotification(
           notiId: message.notification.hashCode,

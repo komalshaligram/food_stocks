@@ -25,6 +25,7 @@ class AppColors {
   static Color shimmer2Color = const Color(0xffF5F5F5);
   static Color lightMainColor = const Color(0xffd2fcd2);
   static Color pesachBGColor = const Color(0xffF2C94C);
+  static Color barCodeLineColor = const Color(0xff20BF6B);
 
   static Gradient appMainGradientColor = const LinearGradient(
       begin: Alignment.centerLeft,

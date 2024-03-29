@@ -55,13 +55,13 @@ class PushNotificationService {
         final AndroidNotification? android = message.notification?.android;
         debugPrint('data:${data.toString()}');
         if (data != null) {
-    /*      showNotification(
+          showNotification(
               notiId: notification.hashCode,
               androidIcon: android?.smallIcon ?? '',
               data: data,
               isNavigate: true,
               showNotification: false,
-              isAppOpen: true);*/
+              isAppOpen: true);
         }
         FlutterAppBadger.removeBadge();
       },
@@ -80,13 +80,13 @@ class PushNotificationService {
           notificationCount = notificationCount + 1;
         }
         if (data != null) {
-    /*  showNotification(
+      showNotification(
               notiId: notification.hashCode,
               androidIcon: android?.smallIcon ?? '',
               data: data,
               isNavigate: true,
               showNotification: false,
-              isAppOpen: false);*/
+              isAppOpen: false);
         }
         FlutterAppBadger.updateBadgeCount(notificationCount);
       }
@@ -143,13 +143,13 @@ class PushNotificationService {
       final AndroidNotification? android = message.notification?.android;
       debugPrint('data:${data.toString()}');
       if (data != null) {
-      /*  showNotification(
+        showNotification(
             notiId: notification.hashCode,
             androidIcon: android?.smallIcon ?? '',
             data: data,
             isNavigate: false,
             showNotification: true,
-            isAppOpen: true);*/
+            isAppOpen: true);
       }
 
       FlutterAppBadger.removeBadge();
