@@ -12,7 +12,8 @@ class PesachProductsEvent with _$PesachProductsEvent {
   const factory PesachProductsEvent.getProductDetailsEvent(
       {required BuildContext context,
       required String productId,
-      required bool isBarcode
+      required bool isBarcode,
+        required int productListIndex
       }) = _GetProductDetailsEvent;
 
   const factory PesachProductsEvent.increaseQuantityOfProduct(
@@ -69,5 +70,9 @@ class PesachProductsEvent with _$PesachProductsEvent {
 
   const factory PesachProductsEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
   const factory PesachProductsEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
+  const factory PesachProductsEvent.getCartCountEvent(
+      ) = _getCartCountEvent;
+
+
 
 }
