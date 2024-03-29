@@ -24,7 +24,6 @@ class SupplierProductsReqModel with _$SupplierProductsReqModel {
     @JsonKey(name: "search") String? search,
     @JsonKey(name:"onlySearch") bool? onlySearch,
     @JsonKey(name:"onlyApproved") bool? onlyApproved,
-    @JsonKey(name:"isPesach") bool? isPesach,
     String? sortField,
     String? sortOrder,
 

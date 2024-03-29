@@ -542,8 +542,6 @@ class PlanogramProductBloc
                     totalPrice: 0.0,
                     productSaleId: '',
                   );
-              emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
 
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));

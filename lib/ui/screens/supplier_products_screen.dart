@@ -200,6 +200,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         if (!state
                                                             .isGuestUser) {
                                                           showProductDetails(
+                                                            productListIndex: 1,
                                                             context:
                                                                 context,
                                                             productId: state
@@ -267,6 +268,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   onButtonTap: () {
                                                     if (!state.isGuestUser) {
                                                       showProductDetails(
+                                                        productListIndex: 1,
                                                         context: context,
                                                         productId: state
                                                             .searchType ==
@@ -491,6 +493,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                        debugPrint("tap 4");
                                       if (!state.isGuestUser) {
                                         showProductDetails(
+                                          productListIndex: 0,
                                             context: context,
                                             productStock: state
                                                 .searchList[index].productStock
@@ -567,6 +570,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                          debugPrint("tap 5");
                         if (!state.isGuestUser) {
                           showProductDetails(
+                            productListIndex: 0,
                               context: context,
                               // productStock: '1',
                               productId: scanResult,
@@ -694,12 +698,14 @@ class SupplierProductsScreenWidget extends StatelessWidget {
   void showProductDetails(
       {required BuildContext context,
       required String productId,
+        required int productListIndex,
       bool? isBarcode,
       String productStock = '0'}) async {
     context.read<SupplierProductsBloc>().add(
         SupplierProductsEvent.getProductDetailsEvent(
             context: context,
             productId: productId,
+            productListIndex: productListIndex,
             isBarcode: isBarcode ?? false));
     showModalBottomSheet(
       context: context,
@@ -893,11 +899,11 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 ?.text ??
                                             '',
                                         productPrice: state
-                                                .productStockList[state
+                                                .productStockList[state.productListIndex][state
                                                     .productStockUpdateIndex]
                                                 .totalPrice *
                                             state
-                                                .productStockList[state
+                                                .productStockList[state.productListIndex][state
                                                     .productStockUpdateIndex]
                                                 .quantity *
                                             (state.productDetails.first
@@ -911,7 +917,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 ?.toDouble() ??
                                             0.0,
                                         productStock: (state
-                                            .productStockList[
+                                            .productStockList[state.productListIndex][
                                                 state.productStockUpdateIndex]
                                             .stock.toString()),
                                         isRTL: context.rtl,
@@ -921,7 +927,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 : true,
                                         scrollController: scrollController,
                                         productQuantity: state
-                                            .productStockList[
+                                            .productStockList[state.productListIndex][
                                                 state.productStockUpdateIndex]
                                             .quantity,
                                         onQuantityChanged: (quantity) {
@@ -941,7 +947,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                         },
                                         onQuantityDecreaseTap: () {
                                           if (state
-                                                  .productStockList[state
+                                                  .productStockList[state.productListIndex][state
                                                       .productStockUpdateIndex]
                                                   .quantity >
                                               1) {
@@ -1015,6 +1021,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                   Navigator.pop(prevContext);
                   showProductDetails(
                       context: context,
+                      productListIndex: 2,
                       productId: relatedProductList[i].id,
                       isBarcode: false,
                       productStock:
