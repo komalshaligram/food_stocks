@@ -25,7 +25,6 @@ import '../ui/screens/company_product_screen.dart';
 import '../ui/screens/company_screen.dart';
 import '../ui/screens/connect_screen.dart';
 import '../ui/screens/form_data_screen.dart';
-import '../ui/screens/menu_screen.dart';
 import '../ui/screens/file_upload_screen.dart';
 import '../ui/screens/order_details_screen.dart';
 import '../ui/screens/order_successful_screen.dart';
@@ -78,7 +77,7 @@ enum RouteDefine {
   companyProductsScreen,
   recommendationProductsScreen,
   reorderScreen,
-  pesachScreen
+  pesachScreen,
   formDataScreen,
   bankInfoScreen, privacyPolicyScreen
 
