@@ -34,7 +34,7 @@ class RecommendationProductsResModel with _$RecommendationProductsResModel {
 class RecommendationData with _$RecommendationData {
   const factory RecommendationData({
     @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "productStock") int? productStock,
+    @JsonKey(name: "productStock") double? productStock,
     @JsonKey(name: "totalSale") int? totalSale,
     @JsonKey(name: "productPrice") double? productPrice,
     @JsonKey(name: "mainImage") String? mainImage,

@@ -32,6 +32,8 @@ class SupplierProductsState with _$SupplierProductsState {
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
     required int productListIndex,
+    required String searchArg,
+
   }) = _SupplierProductsState;
 
   factory SupplierProductsState.initial() => SupplierProductsState(
@@ -63,7 +65,8 @@ class SupplierProductsState with _$SupplierProductsState {
     isCatVisible: false,
     relatedProductList: [],
     isRelatedShimmering: false,
-    productListIndex: 0
+    productListIndex: 0,
+    searchArg: ''
 
       );
 }

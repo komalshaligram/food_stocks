@@ -47,7 +47,7 @@ class PlanogramDatum with _$PlanogramDatum {
 class Planogramproduct with _$Planogramproduct {
   const factory Planogramproduct({
     @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "productStock") int? productStock,
+    @JsonKey(name: "productStock") double? productStock,
     @JsonKey(name: "totalSale") int? totalSale,
     @JsonKey(name: "productPrice") double? productPrice,
     @JsonKey(name: "mainImage") String? mainImage,
