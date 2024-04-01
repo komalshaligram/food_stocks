@@ -195,7 +195,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                 }
                                 },
-                                productStock :state.planogramProductList[index].productStock ?? 0,
+                                productStock :state.planogramProductList[index].productStock ?? 0.0,
                                 context: context,
                                 index: index,
                                 isRTL: context.rtl),
@@ -542,7 +542,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       required double productPrice,
       required int totalSale,
       required void Function() onPressed,
-      required bool isRTL, required int productStock,
+      required bool isRTL, required double productStock,
       required bool isGuestUser,
         required String lowStock,
         required bool? isPesach
