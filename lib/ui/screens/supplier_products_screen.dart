@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/bloc/supplier_products/supplier_products_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
@@ -14,7 +15,6 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_products_screen_shimmer_widget.dart';
 import 'package:html/parser.dart';
@@ -161,17 +161,10 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         AppConstants.padding_5),
                                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                                     crossAxisCount: 3,
-                                                    childAspectRatio: MediaQuery
-                                                                    .of(context)
-                                                                .size
-                                                                .width >
-                                                            370
-                                                        ? AppConstants
-                                                            .productGridAspectRatio
-                                                        : AppConstants
-                                                            .productGridAspectRatio1),
+                                                    childAspectRatio: getChildAspectRatio(context)),
                                                 itemBuilder: (context, index) {
                                                   return CommonProductItemWidget(
+                                                    isPesach: state.productList[index].isPesach,
                                                       lowStock: state
                                                           .productList[index]
                                                           .lowStock
@@ -207,6 +200,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         if (!state
                                                             .isGuestUser) {
                                                           showProductDetails(
+                                                            productListIndex: 1,
                                                             context:
                                                                 context,
                                                             productId: state
@@ -244,6 +238,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         AppConstants.padding_5),
                                                 itemBuilder: (context, index) =>
                                                     CommonProductListWidget(
+                                                      isPesach: state.productList[index].isPesach,
                                                   lowStock: state
                                                       .productList[index]
                                                       .lowStock
@@ -273,6 +268,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   onButtonTap: () {
                                                     if (!state.isGuestUser) {
                                                       showProductDetails(
+                                                        productListIndex: 1,
                                                         context: context,
                                                         productId: state
                                                             .searchType ==
@@ -364,6 +360,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             shrinkWrap: true,
                             itemBuilder: (listViewContext, index) {
                               return _buildSearchItem(
+                                isPesach: state.searchList[index].isPesach,
                                   lowStock: state.searchList[index].lowStock
                                       .toString(),
                                   isGuestUser: state.isGuestUser,
@@ -496,6 +493,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                        debugPrint("tap 4");
                                       if (!state.isGuestUser) {
                                         showProductDetails(
+                                          productListIndex: 0,
                                             context: context,
                                             productStock: state
                                                 .searchList[index].productStock
@@ -572,6 +570,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                          debugPrint("tap 5");
                         if (!state.isGuestUser) {
                           showProductDetails(
+                            productListIndex: 0,
                               context: context,
                               // productStock: '1',
                               productId: scanResult,
@@ -699,12 +698,14 @@ class SupplierProductsScreenWidget extends StatelessWidget {
   void showProductDetails(
       {required BuildContext context,
       required String productId,
+        required int productListIndex,
       bool? isBarcode,
       String productStock = '0'}) async {
     context.read<SupplierProductsBloc>().add(
         SupplierProductsEvent.getProductDetailsEvent(
             context: context,
             productId: productId,
+            productListIndex: productListIndex,
             isBarcode: isBarcode ?? false));
     showModalBottomSheet(
       context: context,
@@ -781,6 +782,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       CommonProductDetailsWidget(
+                                        nmMashlim: state.productDetails.first.nmMashlim??'',
+                                        isPesach: state.productDetails.first.isPesach??false,
                                         lowStock: state.productDetails.first
                                                 .supplierSales?.first.lowStock
                                                 .toString() ??
@@ -896,11 +899,11 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 ?.text ??
                                             '',
                                         productPrice: state
-                                                .productStockList[state
+                                                .productStockList[state.productListIndex][state
                                                     .productStockUpdateIndex]
                                                 .totalPrice *
                                             state
-                                                .productStockList[state
+                                                .productStockList[state.productListIndex][state
                                                     .productStockUpdateIndex]
                                                 .quantity *
                                             (state.productDetails.first
@@ -914,7 +917,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 ?.toDouble() ??
                                             0.0,
                                         productStock: (state
-                                            .productStockList[
+                                            .productStockList[state.productListIndex][
                                                 state.productStockUpdateIndex]
                                             .stock.toString()),
                                         isRTL: context.rtl,
@@ -924,7 +927,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 : true,
                                         scrollController: scrollController,
                                         productQuantity: state
-                                            .productStockList[
+                                            .productStockList[state.productListIndex][
                                                 state.productStockUpdateIndex]
                                             .quantity,
                                         onQuantityChanged: (quantity) {
@@ -944,7 +947,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                         },
                                         onQuantityDecreaseTap: () {
                                           if (state
-                                                  .productStockList[state
+                                                  .productStockList[state.productListIndex][state
                                                       .productStockUpdateIndex]
                                                   .quantity >
                                               1) {
@@ -1005,6 +1008,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2, i) {
               return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:
                     relatedProductList.elementAt(i).productStock.toString(),
@@ -1017,6 +1021,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                   Navigator.pop(prevContext);
                   showProductDetails(
                       context: context,
+                      productListIndex: 2,
                       productId: relatedProductList[i].id,
                       isBarcode: false,
                       productStock:
@@ -1060,6 +1065,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
     bool isGuestUser = false,
     required int numberOfUnits,
     required double priceOfBox,
+    required bool isPesach
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1113,16 +1119,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: !isGuestUser
-                ? lowStock.isNotEmpty || (productStock) != '0'
-                    ? 120
-                    : searchType == SearchTypes.category ||
-                            searchType == SearchTypes.subCategory ||
-                            searchType == SearchTypes.company ||
-                            searchType == SearchTypes.supplier
-                        ? 80
-                        : 110
-                : 80,
+            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1133,12 +1130,9 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             width: 1))),
             padding: EdgeInsets.only(
                 top: AppConstants.padding_5,
-                left: AppConstants.padding_20,
-                right: AppConstants.padding_20,
+                left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
+                right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
                 bottom: AppConstants.padding_5),
-            // padding: EdgeInsets.symmetric(
-            //     horizontal: AppConstants.padding_20,
-            //     vertical: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: !isGuestUser
@@ -1292,6 +1286,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   : 0.width,
                             ],
                           ),
+                    isPesachLabelShow(isPesach,context),
                   ],
                 ),
               ],

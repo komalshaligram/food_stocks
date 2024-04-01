@@ -7,6 +7,7 @@ import 'package:food_stock/ui/screens/message_content_screen.dart';
 import 'package:food_stock/ui/screens/message_screen.dart';
 import 'package:food_stock/ui/screens/activity_time_screen.dart';
 import 'package:food_stock/ui/screens/order_screen.dart';
+import 'package:food_stock/ui/screens/pesach_products_screen.dart';
 import 'package:food_stock/ui/screens/planogram_product_screen.dart';
 import 'package:food_stock/ui/screens/product_category_screen.dart';
 import 'package:food_stock/ui/screens/product_sale_screen.dart';
@@ -77,6 +78,7 @@ enum RouteDefine {
   companyProductsScreen,
   recommendationProductsScreen,
   reorderScreen,
+  pesachScreen
   formDataScreen,
   bankInfoScreen, privacyPolicyScreen
 
@@ -95,7 +97,6 @@ class AppRouting {
       RouteDefine.loginScreen.name: (_) => LogInRoute.route,
       RouteDefine.bottomNavScreen.name: (_) => BottomNavRoute.route,
       RouteDefine.homeScreen.name: (_) => HomeRoute.route,
-      RouteDefine.menuScreen.name: (_) => MenuRoute.route,
       RouteDefine.basketScreen.name: (_) => BasketRoute.route,
       RouteDefine.walletScreen.name: (_) => WalletRoute.route,
       RouteDefine.storeScreen.name: (_) => StoreRoute.route,
@@ -129,6 +130,7 @@ class AppRouting {
       RouteDefine.formDataScreen.name: (_) => FormDataRoute.route,
       RouteDefine.bankInfoScreen.name: (_) => BankInfoRoute.route,
       RouteDefine.privacyPolicyScreen.name: (_) => PrivacyPolicyRoute.route,
+      RouteDefine.pesachScreen.name: (_) => PesachProductsRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

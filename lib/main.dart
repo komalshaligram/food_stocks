@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:food_stock/ui/screens/my_app_screen.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
@@ -23,6 +25,7 @@ void main() async {
     await Firebase.initializeApp();
 
     await PushNotificationService().setupInteractedMessage();
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     //await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -43,7 +46,25 @@ void main() async {
 
 @pragma('vm:entry-point')
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint("Handling a background message:${message.messageId}");
-  debugPrint("Handling a background message:${message.data.toString()}");
-}
+  await Firebase.initializeApp();
+  bool isDisplay = false;
+  if(!isDisplay){
+    isDisplay = true;
+    debugPrint("Handling in main");
+    debugPrint("Handling a background message:${message.messageId}");
+    debugPrint("Handling a background message:${message.data.toString()}");
+    var data = json.decode(message.data['data'].toString());
 
+    FlutterAppBadger.updateBadgeCount( PushNotificationService().notificationCount+1);
+    if(data!=null){
+      PushNotificationService().showNotification(
+          notiId: message.notification.hashCode,
+          androidIcon:message.notification?.android?.smallIcon,
+          data: data,
+          isNavigate: true,
+          showNotification: true,
+          isAppOpen: true
+      );
+    }
+  }
+}

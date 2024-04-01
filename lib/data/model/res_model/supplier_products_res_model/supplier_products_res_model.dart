@@ -52,6 +52,8 @@ class SupplierProductsData with _$SupplierProductsData {
     @JsonKey(name: "supplierId") String? supplierId,
     @JsonKey(name: "productPrice") dynamic productPrice,
     @JsonKey(name: "productStock") dynamic productStock,
+    @JsonKey(name: "isPesach") bool? isPesach,
+    @JsonKey(name: "nmMashlim") String? nmMashlim,
     String? lowStock,
   }) = _SupplierProductsData;
 

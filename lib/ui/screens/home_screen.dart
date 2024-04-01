@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -7,6 +5,8 @@ import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,7 +23,6 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_product_details_widget.dart';
-import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -38,16 +37,15 @@ import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
 
-
+import '../widget/pesach_banner_shimmer.dart';
 
 class HomeRoute {
   static Widget get route =>  HomeScreen();
 }
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
-
-
+  String isSubCategory;
+  HomeScreen({super.key, this.isSubCategory = ''});
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -57,22 +55,27 @@ class HomeScreen extends StatelessWidget {
         ..add(HomeEvent.getOrderCountEvent(context: context))
         ..add(HomeEvent.getWalletRecordEvent(context: context))
         ..add(HomeEvent.getMessageListEvent(context: context))
+        ..add(HomeEvent.generalSettings(context: context))
         ..add(HomeEvent.getRecommendationProductsListEvent(context: context)),
-      child: HomeScreenWidget(),
+      child: HomeScreenWidget(isNavigation: isSubCategory),
     );
   }
 }
 
 class HomeScreenWidget extends StatelessWidget {
-  HomeScreenWidget({super.key});
+  String isNavigation = '';
+  HomeScreenWidget({super.key, this.isNavigation = ''});
 
   @override
   Widget build(BuildContext context) {
     HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
-        BlocProvider.of<BottomNavBloc>(context)
-            .add(BottomNavEvent.updateCartCountEvent());
+        print('state.isCartCountChange___${state.isCartCountChange}');
+        if(state.isCartCountChange){
+          BlocProvider.of<BottomNavBloc>(context)
+              .add(BottomNavEvent.updateCartCountEvent());
+        }
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
@@ -81,7 +84,7 @@ class HomeScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-                handleMessageOnBackground(context);
+                handleMessageOnBackground();
                 bloc.add(HomeEvent.getPreferencesDataEvent());
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(
                     context: context));
@@ -90,6 +93,7 @@ class HomeScreenWidget extends StatelessWidget {
                 bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
                 bloc.add(HomeEvent.getCartCountEvent(context: context));
                 bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
+                bloc.add(HomeEvent.generalSettings(context: context));
               },
               child: SafeArea(
                 child: Column(
@@ -238,8 +242,6 @@ class HomeScreenWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                   gradient: AppColors
                                                       .appMainGradientColor,
-                                                  /*   color: AppColors
-                                                          .notificationColor,*/
                                                   border: Border.all(
                                                       color: AppColors
                                                           .whiteColor,
@@ -403,6 +405,24 @@ class HomeScreenWidget extends StatelessWidget {
                                   ),
                                 ),
                                 20.height,
+                                 state.pesachBannerShimmering && state.pesachBannerURL.isEmpty  ? PesachBannerShimmerWidget():  state.showPesachBanner ?InkWell(
+                                  onTap: (){
+                                    Navigator.pushNamed(context, RouteDefine.pesachScreen.name);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left:8.0,right: 8),
+                                    child: CachedNetworkImage(
+                                      placeholder: (context, url) => const PesachBannerShimmerWidget(),
+                                      imageUrl:
+                                      '${AppUrls.baseFileUrl}${state.pesachBannerURL}',
+                                      errorWidget: (context, url, error) {
+                                        debugPrint('home error : $error');
+                                        return Container(
+                                          color: AppColors.whiteColor,
+                                        );
+                                      },
+                                    ),
+                                )):Container(),
                                 AnimatedCrossFade(
                                     firstChild: getScreenWidth(context).width,
                                     secondChild: Column(
@@ -427,7 +447,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             }),
                                         SizedBox(
                                           width: getScreenWidth(context),
-                                          height:  190,
+                                          height: AppConstants.relatedProductItemHeight,
                                           child: ListView.builder(
                                               itemCount: state
                                                   .recommendedProductsList.length,
@@ -438,6 +458,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                   AppConstants.padding_5),
                                               itemBuilder: (context, index) =>
                                                   CommonProductItemWidget(
+                                                    isPesach: state.recommendedProductsList[index].isPesach,
                                                     lowStock: state
                                                         .recommendedProductsList[
                                                     index]
@@ -485,6 +506,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                               .recommendedProductsList[
                                                           index]
                                                               .productStock.toString()),
+                                                          productListIndex: 1
                                                         );
 
                                                       }
@@ -671,7 +693,8 @@ class HomeScreenWidget extends StatelessWidget {
                               shrinkWrap: true,
                               itemBuilder: (listViewContext, index) {
                                 return _buildSearchItem(
-                                  lowStock: state.searchList[index].lowStock.toString(),
+                                    isPesach: state.searchList[index].isPesach,
+                                    lowStock: state.searchList[index].lowStock.toString(),
                                     numberOfUnits:state.searchList[index].numberOfUnits,
                                     priceOfBox: state.searchList[index].priceOfBox,
                                     productStock : state.searchList[index].productStock.toString(),
@@ -804,6 +827,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 .searchList[index].searchId,
                                             isFromSearch: true,
                                             isBarcode:  true,
+                                            productListIndex: 0,
                                             productStock: (state.searchList[index].productStock.toString())
                                         );
                                       } else if (state
@@ -874,7 +898,9 @@ class HomeScreenWidget extends StatelessWidget {
                                   context: context,
                                   productId: scanResult,
                                   isBarcode: true,
-                                  productStock: '1'
+                                  productStock: '1',
+                                  productListIndex: 0
+
                                 );
                               }
                             },
@@ -892,35 +918,37 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  void handleMessageOnBackground(BuildContext context) {
-    PushNotificationService().firebaseMessaging.getInitialMessage().then(
-          (message) {
-        if (message != null) {
-          debugPrint("onMessageClosedApp: ${message.data}");
-          if (message.data.isNotEmpty) {
-            var data = json.decode(message.data['data'].toString());
-            final RemoteNotification? notification = message.notification;
-            final String? messageId = message.messageId;
-            debugPrint('messageId______${messageId}');
-            final AndroidNotification? android = message.notification?.android;
-            debugPrint('data:${data.toString()}');
-            if (data != null) {
-              String? title =
-              Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
-              String? body =
-              Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
-              String? _mainPage = data['message']['mainPage'] ?? '';
-              String? _subPage = data['message']['subPage'] ?? '';
-              String? _id = data['message']['id'] ?? '';
-
-
-              PushNotificationService().manageNavigation( true, _mainPage ?? '',_subPage ?? '' , _id ?? '' , );
+  void handleMessageOnBackground() {
+    debugPrint('handleMessageOnBackground home${isNavigation}');
+    if(isNavigation.isNotEmpty){
+      PushNotificationService().firebaseMessaging.getInitialMessage().then(
+            (message) async {
+          if (message != null) {
+            debugPrint("onMessageClosedApp: ${message.data}");
+            if (message.data.isNotEmpty) {
+              var data = json.decode(message.data['data'].toString());
+              final RemoteNotification? notification = message.notification;
+              final AndroidNotification? android = message.notification
+                  ?.android;
+              debugPrint('data home:${data.toString()}');
+              if (data != null) {
+                FlutterAppBadger.removeBadge();
+                PushNotificationService().showNotification(
+                    notiId: notification.hashCode,
+                    androidIcon: android?.smallIcon ?? '',
+                    data: data,
+                    isNavigate: true,
+                    showNotification: false,
+                    isAppOpen: true
+                );
+              }
             }
           }
+        },
+      );
+      isNavigation = '';
+    }
 
-        }
-      },
-    );
   }
 
   Widget titleRowWidget(
@@ -991,36 +1019,6 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  CommonShimmerWidget buildListItems(BuildContext context, {double? height}) {
-    return CommonShimmerWidget(
-      child: Container(
-        width: getScreenWidth(context),
-        height: height ?? 110,
-        margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(AppConstants.radius_10),
-          ),
-          color: AppColors.whiteColor,
-        ),
-      ),
-    );
-  }
-
-  Widget buildTextFieldTitle() {
-    return CommonShimmerWidget(
-      child: Container(
-        height: AppConstants.shimmerTextHeight,
-        width: 100,
-        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius:
-          BorderRadius.all(Radius.circular(AppConstants.radius_3)),
-        ),
-      ),
-    );
-  }
 
   void showProductDetails({
     required BuildContext context,
@@ -1029,13 +1027,13 @@ class HomeScreenWidget extends StatelessWidget {
     bool isFromSearch = false,
     String productStock  = '0',
     bool isRelated = false,
-    int planoGramIndex = 0,
+    int productListIndex = 0,
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
       context: context,
       productId: productId,
       isBarcode: isBarcode,
-      planoGramIndex: planoGramIndex,
+      productListIndex:  productListIndex,
     ));
     showModalBottomSheet(
       context: context,
@@ -1087,7 +1085,6 @@ class HomeScreenWidget extends StatelessWidget {
                             )),
                       )
                           : SingleChildScrollView(
-                        //   controller: scrollController,
                           child: NotificationListener<ScrollNotification>(
                             onNotification: (notification) {
                 if(getScreenHeight(context)<700 ){
@@ -1108,6 +1105,8 @@ class HomeScreenWidget extends StatelessWidget {
                             child: Column(
                             children: [
                               CommonProductDetailsWidget(
+                                nmMashlim: state.productDetails.first.nmMashlim??'',
+                                isPesach: state.productDetails.first.isPesach??false,
                                 lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                                 qrCode:state.productDetails.first.qrcode ?? '' ,
                                 addToOrderTap: () {
@@ -1198,11 +1197,11 @@ class HomeScreenWidget extends StatelessWidget {
                                   ?.text ??
                                   '',
                               productPrice: state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .totalPrice *
                                   state
-                                      .productStockList[
+                                      .productStockList[state.productListIndex][
                                   state.productStockUpdateIndex]
                                       .quantity *
                                   (state.productDetails.first
@@ -1215,7 +1214,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   .productDetails.first.itemsWeight
                                   ?.toDouble() ??
                                   0.0,
-                              productStock:(state.productStockList[state.productStockUpdateIndex].stock.toString()),
+                              productStock:(state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
                               state.productSupplierList.isEmpty
@@ -1223,7 +1222,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   : true,
                               scrollController: scrollController,
                               productQuantity:  state
-                                  .productStockList[
+                                  .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .quantity,
                               onQuantityChanged: (quantity) {
@@ -1239,7 +1238,7 @@ class HomeScreenWidget extends StatelessWidget {
                               },
                               onQuantityDecreaseTap: () {
                                 if(state
-                                    .productStockList[
+                                    .productStockList[state.productListIndex][
                                 state.productStockUpdateIndex]
                                     .quantity > 1){
                                   context.read<HomeBloc>().add(
@@ -1266,60 +1265,58 @@ class HomeScreenWidget extends StatelessWidget {
   }
 
   Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context , ScrollController scrollController){
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      physics: ClampingScrollPhysics(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Align(
-            alignment:
-            context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
-              child: Text(
-                AppLocalizations.of(context)!.related_products,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.mediumFont,
-                    color: AppColors.blackColor),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Align(
+          alignment:
+          context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
+            child: Text(
+              AppLocalizations.of(context)!.related_products,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.mediumFont,
+                  color: AppColors.blackColor),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
           ),
-          Container(
-            height: AppConstants.relatedProductItemHeight,
-            padding: EdgeInsets.only(left: 10,right: 10),
-            child: ListView.builder(
-              controller: ScrollController(),
-              physics: ClampingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              itemBuilder: (context2,i){
-                return CommonProductItemWidget(
-                  lowStock: relatedProductList.elementAt(i).lowStock.toString(),
-                  productStock:relatedProductList.elementAt(i).productStock.toString(),
-                  width: AppConstants.relatedProductItemWidth,
-                  productImage:relatedProductList[i].mainImage,
-                  productName: relatedProductList.elementAt(i).productName,
-                  totalSaleCount: relatedProductList.elementAt(i).totalSale,
-                  price:relatedProductList.elementAt(i).productPrice,
-                  onButtonTap: (){
-                    Navigator.pop(prevContext);
-                    showProductDetails(
-                        context: context,
-                        productId: relatedProductList[i].id,
-                        isBarcode: false,
-                        productStock: (relatedProductList[i].productStock.toString())
-                    );
-                  },
-                );},itemCount: relatedProductList.length,),
-          )
-        ],
-      ),
+        ),
+        Container(
+          height: AppConstants.relatedProductItemHeight,
+          padding: EdgeInsets.only(left: 10,right: 10),
+          child: ListView.builder(
+            controller: ScrollController(),
+            physics: ClampingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemBuilder: (context2,i){
+              return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
+                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
+                productStock:relatedProductList.elementAt(i).productStock.toString(),
+                width: AppConstants.relatedProductItemWidth,
+                productImage:relatedProductList[i].mainImage,
+                productName: relatedProductList.elementAt(i).productName,
+                totalSaleCount: relatedProductList.elementAt(i).totalSale,
+                price:relatedProductList.elementAt(i).productPrice,
+                onButtonTap: (){
+                  Navigator.pop(prevContext);
+                  showProductDetails(
+                      context: context,
+                      productId: relatedProductList[i].id,
+                      isBarcode: false,
+                      productListIndex: 2,
+                      productStock: (relatedProductList[i].productStock.toString())
+                  );
+                },
+              );},itemCount: relatedProductList.length,),
+        )
+      ],
     );
   }
 
@@ -1423,9 +1420,11 @@ class HomeScreenWidget extends StatelessWidget {
     bool? isLastItem, required String productStock,
     required int numberOfUnits,
     required double priceOfBox,
+    required bool isPesach
   }) {
+    debugPrint('isPesach:$isPesach');
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         isShowSearchLabel
@@ -1477,7 +1476,7 @@ class HomeScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != '0' || lowStock.isEmpty ? 80 : 90,
+            height: (productStock) != '0' || lowStock.isEmpty ? isPesach?110: 90 : isPesach?110: 90,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1488,8 +1487,8 @@ class HomeScreenWidget extends StatelessWidget {
                         width: 1))),
             padding: EdgeInsets.only(
                 top: AppConstants.padding_5,
-                left: AppConstants.padding_20,
-                right: AppConstants.padding_20,
+                left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
+                right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
                 bottom: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1515,7 +1514,6 @@ class HomeScreenWidget extends StatelessWidget {
                       }
                     },
                     errorBuilder: (context, error, stackTrace) {
-                       debugPrint('home error 1_____${error}');
                       return searchType == SearchTypes.subCategory
                           ? Image.asset(AppImagePath.imageNotAvailable5,
                           height: 60, width: 50, fit: BoxFit.cover)
@@ -1545,7 +1543,6 @@ class HomeScreenWidget extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-
                     Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -1595,13 +1592,14 @@ class HomeScreenWidget extends StatelessWidget {
                                 fontWeight: FontWeight.w400),
                           ),
                         ) : 0.width,
-
                       ],
                     ),
-
+                    3.height,
+                    isPesach?
+                    isPesachLabelShow(isPesach,context)
+                        :0.height
                   ],
                 ),
-
               ],
             ),
           ),

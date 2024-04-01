@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AppStrings {
-  static const appName = 'Food Stock';
+  static const appName = 'Tavili';
   static const cropImageString = 'Crop Image';
   static const androidString = 'Android';
   static const iosString = 'IOS';
@@ -22,8 +22,6 @@ class AppStrings {
   static const pendingString = 'pending';
   static const navigateToStore = 'true';
   static const orderStatusNo = 'orderStatusNo';
-
-
 
   //language Strings
   static const englishString = 'en';
@@ -67,7 +65,8 @@ class AppStrings {
   static const isBasketScreenString = 'basketScreen';
   static const isCartCountString = 'true';
   static const homeScreenString = 'homeScreen';
-
+  static const sortFieldString = 'productStock';
+  static const sortOrderString = 'desc';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -107,7 +106,6 @@ class AppStrings {
   static const orderString = 'Order';
   static const companiesString = 'companies';
   static const searchType = 'searchType';
-//  static const companiesNotAvailableString = 'companiesNotAvailable';
 
   //hint strings
   static const hintNumberString = '1234567890';

@@ -44,6 +44,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final bool isLoading;
   final String qrCode;
   final String lowStock;
+  final bool isPesach;
+  final String nmMashlim;
 
   const CommonProductDetailsWidget(
       {super.key,
@@ -57,8 +59,9 @@ class CommonProductDetailsWidget extends StatelessWidget {
       required this.productWeight,
       required this.productUnitPrice,
       required this.productPerUnit,
-      required this.isRTL,
+       this.isRTL = false,
       required this.scrollController,
+       this.isPesach = false,
       required this.productQuantity,
       required this.onQuantityIncreaseTap,
       required this.onQuantityDecreaseTap,
@@ -76,6 +79,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
       required this.addToOrderTap,
       required this.qrCode,
         required this.lowStock,
+      required this.nmMashlim
       });
 
   @override
@@ -83,6 +87,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
     debugPrint('qrCode_____${qrCode}');
     debugPrint('stock_____${productStock}');
     debugPrint('lowStock${lowStock}');
+    debugPrint('nmMashlim$nmMashlim');
+    debugPrint('height:${getScreenHeight(context)}');
     return Container(
      // height: getScreenHeight(context) / 1.5,
       decoration: BoxDecoration(
@@ -151,6 +157,16 @@ class CommonProductDetailsWidget extends StatelessWidget {
             ),
           ),
           5.height,
+          isPesach?Container(
+            padding: EdgeInsets.only(left:3.0,right: 3.0),
+            decoration: BoxDecoration(
+                color: AppColors.pesachBGColor,
+                border: Border.all(color: AppColors.pesachBGColor),
+                borderRadius: BorderRadius.all(Radius.circular(10))
+            ),
+            child:nmMashlim.isNotEmpty?Text('${AppLocalizations.of(context)!.pesach}, ${nmMashlim}'):Text(AppLocalizations.of(context)!.pesach,style: TextStyle(fontSize: 12),)
+          ):0.height,
+          isPesach?5.height:0.height,
           Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,

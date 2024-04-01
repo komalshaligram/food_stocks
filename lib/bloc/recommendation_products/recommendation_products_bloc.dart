@@ -66,7 +66,9 @@ class RecommendationProductsBloc
           RecommendationProductsReqModel request =
               RecommendationProductsReqModel(
                   pageLimit: AppConstants.recommendationProductPageLimit,
-                  pageNum: state.pageNum + 1);
+                  pageNum: state.pageNum + 1,
+
+              );
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
           debugPrint('recommendation products req = ${request.toJson()}');
@@ -777,7 +779,10 @@ class RecommendationProductsBloc
         debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
-          GlobalSearchReqModel(search: state.searchController.text);
+          GlobalSearchReqModel(search: state.searchController.text,
+              sortField: AppStrings.sortFieldString,
+              sortOrder: AppStrings.sortOrderString
+          );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
               AppUrls.getGlobalSearchResultUrl,
@@ -813,6 +818,7 @@ class RecommendationProductsBloc
                     searchId: category.id ?? '',
                     name: category.categoryName ?? '',
                     searchType: SearchTypes.category,
+                    isPesach: category.isPesach??false,
                     image: category.categoryImage ?? ''))
                 .toList() ??
                 []);
@@ -826,7 +832,7 @@ class RecommendationProductsBloc
                   image: '',
                   categoryId: subCategory.parentCategoryId ?? '',
                   categoryName: subCategory.parentCategoryName ?? '',
-
+                  isPesach: subCategory.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -850,6 +856,7 @@ class RecommendationProductsBloc
                   name: supplier.supplierDetail?.companyName ?? '',
                   searchType: SearchTypes.supplier,
                   image: supplier.logo ?? '',
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -862,7 +869,7 @@ class RecommendationProductsBloc
                   searchType: SearchTypes.sale,
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                   image: sale.mainImage ?? '',
-
+                  isPesach: sale.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -877,7 +884,8 @@ class RecommendationProductsBloc
                     productStock: supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()),
-                    lowStock: supplier.lowStock.toString()
+                    lowStock: supplier.lowStock.toString(),
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -944,9 +952,9 @@ class RecommendationProductsBloc
             debugPrint('store search list = ${searchList.length}');
             bool productVisible = response.data?.categories?.any((
                 element) => element.isHomePreference == true) ?? true;
-            emit(state.copyWith(isCatVisible: productVisible));
-            emit(state.copyWith(
 
+            emit(state.copyWith(
+                isCatVisible: productVisible,
                 productCategoryList: response.data?.categories ?? [],
                 searchList: searchList,
                 isShimmering: false));

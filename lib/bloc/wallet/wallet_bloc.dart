@@ -122,7 +122,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               List<int> number = List<int>.generate(12, (i) => i);
               List<int> reverseList;
               List<String> reverseList1;
-              if (preferencesHelper.getAppLanguage() == 'he') {
+              if (preferencesHelper.getAppLanguage() == AppStrings.hebrewString) {
                 reverseList = number.reversed.toList();
               } else {
                 reverseList = number.toList();
@@ -139,7 +139,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                     element.totalExpenses?.toStringAsFixed(2) ?? '0'));
               });
 
-              if (preferencesHelper.getAppLanguage() == 'he') {
+              if (preferencesHelper.getAppLanguage() ==  AppStrings.hebrewString) {
                 reverseList1 = graphList.reversed.toList();
               } else {
                 reverseList1 = graphList.toList();

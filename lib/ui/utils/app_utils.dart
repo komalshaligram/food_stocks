@@ -1,4 +1,5 @@
 
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
+import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
@@ -37,7 +39,32 @@ bool isTablet(BuildContext context) {
   }
   return isTablet;
 }
+ double getChildAspectRatio(BuildContext context){
+  return Platform.isAndroid? getScreenHeight(context) >
+       900
+       ? AppConstants.productGridAspectRatio9 :getScreenHeight(context) >  820 &&  getScreenHeight(context) <  900? AppConstants.productGridAspectRatio8
+       : AppConstants.productGridAspectRatio75: getScreenHeight(context) >
+       820?AppConstants.productGridAspectRatio8:AppConstants.productGridAspectRatio75;
+ }
 
+Widget isPesachLabelShow(bool isPesach,BuildContext context,){
+ if(isPesach){
+   return Container(
+       padding: EdgeInsets.only(left: 5,right: 5),
+       decoration: BoxDecoration(
+           color: AppColors.pesachBGColor,
+           border: Border.all(color: AppColors.pesachBGColor),
+           borderRadius: BorderRadius.all(Radius.circular(10))
+       ),
+       child: Text(AppLocalizations.of(context)!.pesach,
+         style: AppStyles.rkRegularTextStyle(
+             size: AppConstants.font_13,
+             ),
+       ));
+ }else{
+   return 0.height;
+ }
+}
 
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
@@ -69,39 +96,40 @@ customShowUpdateDialog(
     barrierDismissible: false,
     context: context,
     builder: (context1) {
-      return AlertDialog(
-        title: Text(AppLocalizations.of(context)!.new_version_app_update,
-            style: AppStyles.rkRegularTextStyle(
-                color: AppColors.blackColor, size: AppConstants.mediumFont)),
-        actions: [
-          Align(
-            alignment: Alignment.center,
-            child: GestureDetector(
-              onTap: () {
-                debugPrint(storeUrl);
-                _launchUrl(storeUrl);
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                alignment: Alignment.center,
-                width: 80,
-                decoration: BoxDecoration(
-                    gradient: AppColors.appMainGradientColor,
-                    borderRadius: BorderRadius.circular(8.0)),
-                child: Text(
-                  AppLocalizations.of(context)!.update,
-                  style: AppStyles.rkRegularTextStyle(
-                      color: AppColors.whiteColor, size: AppConstants.font_14),
+      return PopScope(
+        canPop: false,
+        child: AlertDialog(
+          title: Text(AppLocalizations.of(context)!.new_version_app_update,
+              style: AppStyles.rkRegularTextStyle(
+                  color: AppColors.blackColor, size: AppConstants.mediumFont)),
+          actions: [
+            Align(
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: () {
+                  debugPrint(storeUrl);
+                  _launchUrl(storeUrl);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                  alignment: Alignment.center,
+                  width: AppConstants.containerHeight_80,
+                  decoration: BoxDecoration(
+                      gradient: AppColors.appMainGradientColor,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  child: Text(
+                    AppLocalizations.of(context)!.update,
+                    style: AppStyles.rkRegularTextStyle(
+                        color: AppColors.whiteColor, size: AppConstants.font_14),
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       );
     },
-  ).then((value) {
-
-  });
+  );
 }
 
 Future<void> _launchUrl(String storeUrl) async {
@@ -114,9 +142,6 @@ Future<void> _launchUrl(String storeUrl) async {
     } finally {
       launchUrl(_url);
     }
-    /*  if (!await launchUrl(_url)) {
-        throw Exception('Could not launch $_url');
-      }*/
 }
 
 Future<CroppedFile?> cropImage(
@@ -144,7 +169,6 @@ Future<CroppedFile?> cropImage(
       IOSUiSettings(
         title: AppStrings.cropImageString,
         aspectRatioLockEnabled: true,
-        // showCancelConfirmationDialog: true,
         hidesNavigationBar: true,
         resetButtonHidden: true,
         rotateButtonsHidden: true,
@@ -186,53 +210,12 @@ Future<String> scanBarcodeOrQRCode(
 bool isRTLContent({required BuildContext context}) {
   Locale locale = Localizations.localeOf(context);
   List<Locale> rtlLocales = [Locale('he')];
-  // debugPrint('rtl = ${rtlLocales.contains(locale) ? "true" : "false"}');
   return rtlLocales.contains(locale) ? true : false;
 }
 
 extension RTLExtension on BuildContext {
   bool get rtl =>
       [Locale('he')].contains(Localizations.localeOf(this)) ? true : false;
-}
-
-String formatter(String currentBalance) {
-  double value = double.parse(currentBalance);
-  if (value < 1000) {
-    return (splitNumber(value.toStringAsFixed(2)));
-  } else if (value < 10000 && value >= 1000) {
-    double result = (value / 1000);
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return ((result1.toString() + "K" + " "));
-  } else if (value < 100000 && value >= 10000) {
-    double result = value / 1000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return ((result1.toString() + "K" + " "));
-  } else if (value < 1000000 && value >= 100000) {
-    double result = value / 100000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "L" + "");
-  } else if (value < 10000000 && value >= 1000000) {
-    // less than 100 million
-    double result = value / 1000000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "M" + " ");
-  } else if (value < 100000000 && value >= 10000000) {
-    // less than 100 million
-    double result = value / 1000000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "M" + " ");
-  } else if (value < 1000000000 && value >= 100000000) {
-    // less than 100 million
-    double result = value / 1000000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "M" + " ");
-  } else if (value >= 1000000000) {
-    // less than 100 million
-    double result = value / 1000000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "M" + " ");
-  }
-  return '';
 }
 
 String splitNumber(String price) {
@@ -299,3 +282,5 @@ double saleCalculation({required double price, required double salePer}) {
   double result = price - (price * (salePer / 100));
   return result;
 }
+
+

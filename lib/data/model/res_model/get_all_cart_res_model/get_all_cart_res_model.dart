@@ -74,6 +74,7 @@ class Datum with _$Datum {
     @JsonKey(name: "note")
     String? note,
     String? lowStock,
+
   }) = _Datum;
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
@@ -96,6 +97,7 @@ class ProductDetails with _$ProductDetails {
     String? scales,
     @JsonKey(name: "numberOfUnit")
     int? numberOfUnit,
+    bool? isPesach
   }) = _ProductDetails;
 
   factory ProductDetails.fromJson(Map<String, dynamic> json) => _$ProductDetailsFromJson(json);

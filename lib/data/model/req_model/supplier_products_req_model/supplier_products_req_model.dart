@@ -24,6 +24,10 @@ class SupplierProductsReqModel with _$SupplierProductsReqModel {
     @JsonKey(name: "search") String? search,
     @JsonKey(name:"onlySearch") bool? onlySearch,
     @JsonKey(name:"onlyApproved") bool? onlyApproved,
+    String? sortField,
+    String? sortOrder,
+
+
   }) = _SupplierProductsReqModel;
 
   factory SupplierProductsReqModel.fromJson(Map<String, dynamic> json) =>

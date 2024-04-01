@@ -13,8 +13,6 @@ class AuthFormValidation {
       case AppStrings.emailValString:
         return formFieldValidation.emailField(value,context);
 
-      // case "phoneNum":
-      //   return formFieldValidation.phoneNumField(value);
       case AppStrings.mobileValString:
         return formFieldValidation.mobileField(value,context);
 

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/reorder/reorder_bloc.dart';
@@ -32,7 +33,6 @@ import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
-import '../widget/delayed_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
 import '../widget/supplier_products_screen_shimmer_widget.dart';
@@ -87,7 +87,8 @@ class ReorderScreenWidget extends StatelessWidget {
                       height: 26,
                       width: 26,
                       fit: BoxFit.cover,
-                      color: AppColors.whiteColor,
+                      colorFilter: ColorFilter.mode(
+                          AppColors.whiteColor, BlendMode.srcIn),
                     ),),
                 ),
                 state.cartCount!=0? Positioned(
@@ -221,13 +222,9 @@ class ReorderScreenWidget extends StatelessWidget {
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
                                               childAspectRatio:
-                                                  MediaQuery.of(context).size.width >
-                                                          370
-                                                      ? AppConstants
-                                                          .productGridAspectRatio
-                                                      : AppConstants
-                                                          .productGridAspectRatio1),
+                                              getChildAspectRatio(context)),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
+                                        isPesach: state.previousOrderProductsList[index].isPesach,
                                         lowStock: state
                                             .previousOrderProductsList[
                                         index]
@@ -284,6 +281,7 @@ class ReorderScreenWidget extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 horizontal: AppConstants.padding_5),
                             itemBuilder: (context, index) => CommonProductListWidget(
+                                isPesach:state.previousOrderProductsList[index].isPesach,
                              numberOfUnits: state.previousOrderProductsList[index].numberOfUnit.toString(),
                                 lowStock: state.previousOrderProductsList[index].lowStock.toString(),
                                 productStock: state.previousOrderProductsList[index].productStock.toString(),
@@ -373,6 +371,7 @@ class ReorderScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
+                          isPesach: state.searchList[index].isPesach,
                             lowStock: state.searchList[index].lowStock.toString(),
                             numberOfUnits:state.searchList[index].numberOfUnits,
                             priceOfBox: state.searchList[index].priceOfBox,
@@ -784,6 +783,8 @@ class ReorderScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              nmMashlim: state.productDetails.first.nmMashlim??'',
+                              isPesach: state.productDetails.first.isPesach??false,
                               lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:state.productDetails.first.qrcode ?? '' ,
                               addToOrderTap: () {
@@ -969,6 +970,7 @@ class ReorderScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,
@@ -1532,6 +1534,7 @@ class ReorderScreenWidget extends StatelessWidget {
     bool? isLastItem, required String productStock,
     required int numberOfUnits,
     required double priceOfBox,
+    required bool isPesach
 
   }) {
     return Column(
@@ -1587,7 +1590,7 @@ class ReorderScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != '0' || lowStock.isEmpty ? 80 : 90,
+            height: lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? 80 :110,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1598,8 +1601,8 @@ class ReorderScreenWidget extends StatelessWidget {
                         width: 1))),
             padding: EdgeInsets.only(
                 top: AppConstants.padding_5,
-                left: AppConstants.padding_20,
-                right: AppConstants.padding_20,
+                left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
+                right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
                 bottom: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1708,6 +1711,8 @@ class ReorderScreenWidget extends StatelessWidget {
 
                       ],
                     ),
+                    isPesachLabelShow(isPesach, context),
+                    isPesach?3.height:0.height
 
                   ],
                 ),

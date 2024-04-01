@@ -74,7 +74,10 @@ class CompanyProductsBloc
           CompanyProductsReqModel request = CompanyProductsReqModel(
               brandId: state.companyId,
               pageLimit: AppConstants.supplierProductPageLimit,
-              pageNum: state.pageNum + 1);
+              pageNum: state.pageNum + 1,
+              sortField: AppStrings.sortFieldString,
+              sortOrder: AppStrings.sortOrderString
+          );
           debugPrint('supplier products req = ${request.toJson()}');
           final res = await DioClient(event.context)
               .post(AppUrls.getCompanyProductsUrl, data: request.toJson());
@@ -794,7 +797,10 @@ class CompanyProductsBloc
         debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
-          GlobalSearchReqModel(search: state.searchController.text);
+          GlobalSearchReqModel(search: state.searchController.text,
+              sortField: AppStrings.sortFieldString,
+              sortOrder: AppStrings.sortOrderString
+          );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
               AppUrls.getGlobalSearchResultUrl,
@@ -830,6 +836,7 @@ class CompanyProductsBloc
                     searchId: category.id ?? '',
                     name: category.categoryName ?? '',
                     searchType: SearchTypes.category,
+                    isPesach: category.isPesach??false,
                     image: category.categoryImage ?? ''))
                 .toList() ??
                 []);
@@ -841,9 +848,9 @@ class CompanyProductsBloc
                   name: subCategory.subCategoryName ?? '',
                   searchType: SearchTypes.subCategory,
                   image: '',
+                  isPesach: subCategory.isPesach??false,
                   categoryId: subCategory.parentCategoryId ?? '',
                   categoryName: subCategory.parentCategoryName ?? '',
-
                 ))
                 .toList() ??
                 []);
@@ -855,7 +862,6 @@ class CompanyProductsBloc
                   name: company.brandName ?? '',
                   searchType: SearchTypes.company,
                   image: company.brandLogo ?? '',
-
                 ))
                 .toList() ??
                 []);
@@ -867,6 +873,7 @@ class CompanyProductsBloc
                   name: supplier.supplierDetail?.companyName ?? '',
                   searchType: SearchTypes.supplier,
                   image: supplier.logo ?? '',
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -879,7 +886,7 @@ class CompanyProductsBloc
                   searchType: SearchTypes.sale,
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                   image: sale.mainImage ?? '',
-
+                  isPesach: sale.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -895,6 +902,7 @@ class CompanyProductsBloc
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
                   lowStock: supplier.lowStock.toString(),
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -956,9 +964,9 @@ class CompanyProductsBloc
             debugPrint('store search list = ${searchList.length}');
             bool productVisible = response.data?.categories?.any((
                 element) => element.isHomePreference == true) ?? true;
-            emit(state.copyWith(isCatVisible: productVisible));
-            emit(state.copyWith(
 
+            emit(state.copyWith(
+                isCatVisible: productVisible,
                 productCategoryList: response.data?.categories ?? [],
                 searchList: searchList,
                 isShimmering: false));
@@ -1010,8 +1018,7 @@ class CompanyProductsBloc
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(
-                response.message.toLocalization() ??
-                    response.message,
+                response.message.toLocalization(),
                 event.context),
             type: SnackBarType.SUCCESS,
           );

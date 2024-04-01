@@ -19,6 +19,8 @@ String globalSearchReqModelToJson(GlobalSearchReqModel data) =>
 class GlobalSearchReqModel with _$GlobalSearchReqModel {
   const factory GlobalSearchReqModel({
     @JsonKey(name: "search") String? search,
+    String? sortField,
+    String? sortOrder,
   }) = _GlobalSearchReqModel;
 
   factory GlobalSearchReqModel.fromJson(Map<String, dynamic> json) =>

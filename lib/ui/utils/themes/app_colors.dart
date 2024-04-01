@@ -24,9 +24,16 @@ class AppColors {
   static Color shimmer1Color = const Color(0xCCE0E0E0);
   static Color shimmer2Color = const Color(0xffF5F5F5);
   static Color lightMainColor = const Color(0xffd2fcd2);
+  static Color pesachBGColor = const Color(0xffF2C94C);
 
   static Gradient appMainGradientColor = const LinearGradient(
       begin: Alignment.centerLeft,
       end: Alignment.centerRight,
       colors: [Color(0xff1D5499), Color(0xff8BC53F)]);
+
+  static Gradient connectGradientColor =  LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [AppColors.whiteColor,AppColors.whiteColor]);
+
 }

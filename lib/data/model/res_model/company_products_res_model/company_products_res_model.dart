@@ -62,6 +62,8 @@ class CompanyData with _$CompanyData {
     @JsonKey(name: "totalSale") int? totalSale,
     @JsonKey(name: "productStock") dynamic productStock,
     @JsonKey(name: "productPrice") double? productPrice,
+    @JsonKey(name: "isPesach") bool? isPesach,
+    @JsonKey(name: "nmMashlim") String? nmMashlim,
     String? lowStock,
   }) = _CompanyData;
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/bloc/store_category/store_category_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
@@ -115,7 +116,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         height: 26,
                         width: 26,
                         fit: BoxFit.cover,
-                        color: AppColors.whiteColor,
+                        colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),
                       ),
                     ),
                   ),
@@ -492,8 +493,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               shrinkWrap: true,
                                               physics: NeverScrollableScrollPhysics(),
                                               padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: MediaQuery.of(context).size.width > 370 ? AppConstants.productGridAspectRatio : AppConstants.productGridAspectRatio1),
+                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context)),
                                               itemBuilder: (context, index) => CommonProductItemWidget(
+                                                isPesach: state.planogramProductList[index].product?.isPesach,
                                                 lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
                                                   imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                                   isGuestUser: state.isGuestUser,
@@ -528,6 +530,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 (context,
                                                 index) {
                                               return CommonProductListWidget(
+                                                isPesach: state.planogramProductList[index].product?.isPesach??false,
                                                   lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
                                                   numberOfUnits:state.planogramProductList[index].product?.numberOfUnit ??
                                                       '0',
@@ -628,6 +631,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
+                            isPesach: state.searchList[index].isPesach,
                             lowStock: state.searchList[index].lowStock.toString(),
                             numberOfUnits:state.searchList[index].numberOfUnits,
                             priceOfBox: state.searchList[index].priceOfBox,
@@ -843,6 +847,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     bool isGuestUser = false,
     required int numberOfUnits,
     required double priceOfBox,
+    required bool isPesach
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -897,7 +902,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? 120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
+            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -908,8 +913,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         width: 1))),
             padding: EdgeInsets.only(
                 top: AppConstants.padding_5,
-                left: AppConstants.padding_20,
-                right: AppConstants.padding_20,
+                left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
+                right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
                 bottom: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1013,6 +1018,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     color: AppColors.blueColor,
                                     fontWeight: FontWeight.w400),
                               ) : 0.width :0.width,
+                              isPesach?3.height:0.height,
+                              isPesachLabelShow(isPesach,context)
                             ],
                           ),
                         ),
@@ -1087,6 +1094,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         required List<PlanogramDatum> list,
         required bool isGuestUser,
         required String lowStock,
+        required bool isPesach
 
       }) {
     return BlocProvider.value(
@@ -1094,7 +1102,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
         builder: (context1, state) {
           return Container(
-            height: 170,
+            height: AppConstants.relatedProductItemHeight,
             width: width,
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
@@ -1216,6 +1224,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     ),
                   ),
                   5.height,
+                    isPesach?
+                  Container(
+                      padding: EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                          color: AppColors.pesachBGColor,
+                          border: Border.all(color: AppColors.pesachBGColor),
+                          borderRadius: BorderRadius.all(Radius.circular(10))
+                      ),
+                      child: Text(AppLocalizations.of(context)!.pesach)):0.height,
+                  isPesach?5.height:0.height,
                   !isGuestUser
                       ? Center(
                     child: CommonProductButtonWidget(
@@ -1341,6 +1359,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+
+                              nmMashlim: state.productDetails.first.nmMashlim??'',
+                              isPesach: state.productDetails.first.isPesach??false,
                               lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:state.productDetails.first.qrcode ?? '' ,
                               isLoading: state.isLoading,
@@ -1539,6 +1560,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,
@@ -1706,7 +1728,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         : ''),
                 5.height,
                 SizedBox(
-                  height: 175,
+                  height: AppConstants.relatedProductItemHeight,
                   child: list.isEmpty
                       ? Center(
                     child: Text(
@@ -1727,6 +1749,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     shrinkWrap: true,
                     itemBuilder: (context, subIndex) {
                       return buildPlanoGramProductListItem(
+                        isPesach: list[index].planogramproducts?[subIndex].isPesach??false,
                           isGuestUser: isGuestUser,
                           planogramUpdateIndex: planogramUpdateIndex,
                           context: context,

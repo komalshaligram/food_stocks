@@ -41,9 +41,7 @@ class CustomButtonWidget extends StatelessWidget {
       width:width,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-          // border: Border.all(color: AppColors.mainColor),
-          //color: bGColor,
-          gradient: isFromConnectScreen ? LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]):AppColors.appMainGradientColor,
+          gradient: isFromConnectScreen ? AppColors.connectGradientColor:AppColors.appMainGradientColor,
           border: Border.all(color: borderColor),
           borderRadius: BorderRadius.all(
               Radius.circular(radius ?? AppConstants.radius_10))),

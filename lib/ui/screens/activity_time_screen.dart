@@ -67,7 +67,6 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                       size: AppConstants.smallFont,
                       color: AppColors.blackColor)),
             ),
-
             leading: GestureDetector(
                 onTap: () {
                   if (!state.isUpdate) {
@@ -133,7 +132,6 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                               ? ListView.builder(
                                   itemCount: state.OperationTimeList.length,
                                   shrinkWrap: true,
-                                  // scrollDirection: Axis.vertical,
                                   physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     return Padding(
@@ -222,7 +220,6 @@ class ActivityTimeRow extends StatelessWidget {
     return BlocBuilder<ActivityTimeBloc, ActivityTimeState>(
       builder: (context, state) {
         return Row(
-        //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             13.height,
             Expanded(

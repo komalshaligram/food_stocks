@@ -109,7 +109,6 @@ class _ProductDetailsScreenWidgetState
                 iconData: Icons.arrow_back_ios_sharp,
                 trailingWidget: Row(
                   children: [
-
                     Padding(
                       padding: EdgeInsets.symmetric(
                         vertical: AppConstants.padding_10,
@@ -122,37 +121,49 @@ class _ProductDetailsScreenWidgetState
                               state.orderData.comaxInvoicePrice != 0.0 ?  '${formatNumber(value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}': '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
                             ),
                     ),
-                   /* CommonProductButtonWidget(
-                      title: AppLocalizations.of(context)!.duplicate_order,
-                      borderRadius: 1,
+                   /* Container(
                       height: 35,
-                      onPressed: (){
-                        showDialog(
+                      margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 5,vertical: 5),
+                      decoration: BoxDecoration(
+                         gradient: AppColors.appMainGradientColor,
+                          border: Border.all(color: AppColors.borderColor),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.radius_3))),
+                      child: GestureDetector(
+                        onTap: (){
+                          showDialog(
                             context: context,
                             builder: (context) {
-                              return CommonAlertDialog(
+                              return CustomDialog(
                                 title: AppLocalizations.of(context)!.you_want_to_duplicate_this_order,
                                 directionality: state.language,
-                                positiveTitle:AppLocalizations.of(context)!.yes ,
+                                positiveTitle:AppLocalizations.of(context)!.yes,
                                 negativeTitle: AppLocalizations.of(context)!.no,
                                 positiveOnTap: (){
-                                 // bloc.add(ProductDetailsEvent.orderSendEvent(context: context));
+                                  // bloc.add(ProductDetailsEvent.orderSendEvent(context: context));
                                 },
                                 negativeOnTap: (){
                                   Navigator.pop(context);
                                 },
                               );
                             },);
-                      },
-                    ),*/
-
+                        },
+                        child: Text(
+                          AppLocalizations.of(context)!.duplicate_order,
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
+                              color: AppColors.whiteColor,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    )*/
                   ],
                 ),
                 onTap: () {
                   Navigator.pop(context);
                 },
-
-
               ),
             ),
             body: state.isShimmering && state.isLoading || (state.orderBySupplierProduct.products?.length == 0)
@@ -568,12 +579,8 @@ class _ProductDetailsScreenWidgetState
                 state.orderBySupplierProduct.products?[index].mainImage != ''
                     ? Image.network(
                         '${AppUrls.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
-                        width: statusNumber == onTheWayStatus
-                            ? AppConstants.containerHeight_80
-                            : 80,
-                        height: statusNumber == onTheWayStatus
-                            ? AppConstants.containerHeight_80
-                            : 80,
+                        width:AppConstants.containerHeight_80,
+                        height:  AppConstants.containerHeight_80,
                         fit: BoxFit.contain,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {
@@ -581,12 +588,8 @@ class _ProductDetailsScreenWidgetState
                           } else {
                             return Center(
                               child: Container(
-                                width: statusNumber == onTheWayStatus
-                                    ? AppConstants.containerHeight_80
-                                    : 80,
-                                height: statusNumber == onTheWayStatus
-                                    ? AppConstants.containerHeight_80
-                                    : 80,
+                                width:  AppConstants.containerHeight_80,
+                                height:AppConstants.containerHeight_80,
                                 child: CupertinoActivityIndicator(
                                   color: AppColors.blackColor,
                                 ),
@@ -608,12 +611,8 @@ class _ProductDetailsScreenWidgetState
                     : Image.asset(
                         AppImagePath.imageNotAvailable5,
                         fit: BoxFit.cover,
-                        width: statusNumber == onTheWayStatus
-                            ? AppConstants.containerHeight_80
-                            : 80,
-                        height: statusNumber == onTheWayStatus
-                            ? AppConstants.containerHeight_80
-                            : 80,
+                        width: AppConstants.containerHeight_80,
+                        height:AppConstants.containerHeight_80,
                       ),
                 15.width,
                 Column(

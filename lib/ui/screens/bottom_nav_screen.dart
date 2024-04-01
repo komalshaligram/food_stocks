@@ -46,10 +46,9 @@ class BottomNavScreen extends StatelessWidget {
 
 class BottomNavScreenWidget extends StatelessWidget {
 
+   BottomNavScreenWidget({super.key,});
 
-  BottomNavScreenWidget({super.key,});
-
-  GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -135,12 +134,9 @@ class BottomNavScreenWidget extends StatelessWidget {
                       else{
                         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                       }
-
                     }else{
                       bloc.add(BottomNavEvent.changePage(index: index));
                     }
-
-
                   },
                   letIndexChange: (index) => true,
                 ),
@@ -169,7 +165,6 @@ class BottomNavScreenWidget extends StatelessWidget {
   }
 
 
-
   Widget _pageContainers(
       {required double screenHeight,
       required double screenWidth,
@@ -180,7 +175,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       child: FadeIndexedStack(
         index:  state.index,
         children: [
-          HomeScreen() ,
+          HomeScreen(isSubCategory: 'false') ,
           StoreScreen(),
           BasketScreen(),
           WalletScreen(),

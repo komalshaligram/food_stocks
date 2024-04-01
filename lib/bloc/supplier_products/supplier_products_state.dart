@@ -10,7 +10,7 @@ class SupplierProductsState with _$SupplierProductsState {
     required bool isLoading,
     required bool isProductLoading,
     required List<Product> productDetails,
-    required List<ProductStockModel> productStockList,
+    required List<List<ProductStockModel>> productStockList,
     required int productStockUpdateIndex,
     required int pageNum,
     required bool isLoadMore,
@@ -31,6 +31,7 @@ class SupplierProductsState with _$SupplierProductsState {
     required bool isCatVisible,
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
+    required int productListIndex,
   }) = _SupplierProductsState;
 
   factory SupplierProductsState.initial() => SupplierProductsState(
@@ -42,7 +43,7 @@ class SupplierProductsState with _$SupplierProductsState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [ProductStockModel(productId: '')],
+    productStockList: [[ProductStockModel(productId: '')],[],[]],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,
@@ -62,6 +63,7 @@ class SupplierProductsState with _$SupplierProductsState {
     isCatVisible: false,
     relatedProductList: [],
     isRelatedShimmering: false,
+    productListIndex: 0
 
       );
 }

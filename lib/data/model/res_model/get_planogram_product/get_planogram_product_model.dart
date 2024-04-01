@@ -120,6 +120,8 @@ class PlanoProduct with _$PlanoProduct {
     @JsonKey(name: "totalSale")
     int? totalSale,
     String? lowStock,
+    @JsonKey(name: "isPesach") bool? isPesach,
+    @JsonKey(name: "nmMashlim") String? nmMashlim,
   }) = _PlanoProduct;
 
   factory PlanoProduct.fromJson(Map<String, dynamic> json) => _$PlanoProductFromJson(json);
