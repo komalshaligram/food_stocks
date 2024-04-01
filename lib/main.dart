@@ -19,6 +19,32 @@ GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
+@pragma('vm:entry-point')
+Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+
+  bool isDisplay = false;
+  if(!isDisplay){
+    isDisplay = true;
+    debugPrint("Handling in main${message.toString()}");
+    debugPrint("Handling a background message:${message.messageId}");
+    debugPrint("Handling a background message:${message.data.toString()}");
+    var data = json.decode(message.data['data'].toString());
+
+    FlutterAppBadger.updateBadgeCount(PushNotificationService().notificationCount+1);
+    if(data!=null){
+      PushNotificationService().showNotification(
+          notiId: message.notification.hashCode,
+          androidIcon:message.notification?.android?.smallIcon,
+          data: data,
+          isNavigate: true,
+          showNotification: false,
+          isAppOpen: true
+      );
+    }
+  }
+}
+
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -42,27 +68,3 @@ void main() async {
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
 
-@pragma('vm:entry-point')
-Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  bool isDisplay = false;
-  if(!isDisplay){
-    isDisplay = true;
-    debugPrint("Handling in main");
-    debugPrint("Handling a background message:${message.messageId}");
-    debugPrint("Handling a background message:${message.data.toString()}");
-    var data = json.decode(message.data['data'].toString());
-
-    FlutterAppBadger.updateBadgeCount(PushNotificationService().notificationCount+1);
-    if(data!=null){
-      PushNotificationService().showNotification(
-          notiId: message.notification.hashCode,
-          androidIcon:message.notification?.android?.smallIcon,
-          data: data,
-          isNavigate: true,
-          showNotification: true,
-          isAppOpen: true
-      );
-    }
-  }
-}
