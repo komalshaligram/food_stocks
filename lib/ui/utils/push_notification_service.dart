@@ -129,7 +129,7 @@ class PushNotificationService {
       onDidReceiveNotificationResponse: (NotificationResponse details) {
         debugPrint("details______:${details}");
         FlutterAppBadger.removeBadge();
-    //    manageNavigation(true, mainPage!, subPage!, id!);
+        manageNavigation(true, mainPage!, subPage!, id!);
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
@@ -143,13 +143,13 @@ class PushNotificationService {
       final AndroidNotification? android = message.notification?.android;
       debugPrint('data:${data.toString()}');
       if (data != null) {
-      /*  showNotification(
+        showNotification(
             notiId: notification.hashCode,
             androidIcon: android?.smallIcon ?? '',
             data: data,
             isNavigate: false,
             showNotification: true,
-            isAppOpen: true);*/
+            isAppOpen: true);
       }
 
       FlutterAppBadger.removeBadge();

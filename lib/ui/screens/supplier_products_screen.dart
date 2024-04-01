@@ -75,7 +75,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 bgColor: AppColors.pageColor,
-                title: state.search.isNotEmpty
+                title: state.searchArg.isNotEmpty
                     ? AppLocalizations.of(context)!.search_result
                     : AppLocalizations.of(context)!.products,
                 iconData: Icons.arrow_back_ios_sharp,
