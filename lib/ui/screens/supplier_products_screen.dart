@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/bloc/supplier_products/supplier_products_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
@@ -75,7 +74,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 bgColor: AppColors.pageColor,
-                title: state.search.isNotEmpty
+                title: state.searchArg.isNotEmpty
                     ? AppLocalizations.of(context)!.search_result
                     : AppLocalizations.of(context)!.products,
                 iconData: Icons.arrow_back_ios_sharp,

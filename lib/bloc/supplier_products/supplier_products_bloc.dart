@@ -55,7 +55,7 @@ class SupplierProductsBloc
           prefs: await SharedPreferences.getInstance());
       if (event is _GetSupplierProductsIdEvent) {
         emit(
-            state.copyWith(supplierId: event.supplierId, search: event.search));
+            state.copyWith(supplierId: event.supplierId, searchArg: event.search));
         debugPrint(
             'supplier id = ${state.supplierId}, search = ${state.search}');
       } else if (event is _GetSupplierProductsListEvent) {
@@ -76,8 +76,7 @@ class SupplierProductsBloc
               pageLimit: AppConstants.supplierProductPageLimit,
               pageNum: state.pageNum + 1,
               onlySearch: false,
-              search: state.search,
-            onlyApproved: true,
+              search: state.searchArg.isNotEmpty ? state.searchArg : '',
             sortOrder: AppStrings.sortOrderString,
             sortField: AppStrings.sortFieldString
           );
@@ -102,14 +101,16 @@ class SupplierProductsBloc
           } else {
             final res = await DioClient(event.context)
                 .post(AppUrls.getSupplierProductsUrl, data: req);
-            response =
-                SupplierProductsResModel.fromJson(res);
-            debugPrint('search url = ${AppUrls.baseUrl}${AppUrls.getSupplierProductsUrl}');
+            debugPrint('supplier product url = ${AppUrls.baseUrl}${AppUrls.getSupplierProductsUrl}');
+            debugPrint('supplier product res = $res');
+
+              response = SupplierProductsResModel.fromJson(res);
+
           }
           emit(state.copyWith(searchType: event.searchType.toString()));
-          debugPrint('supplier Products res = ${response.data}');
+       //   debugPrint('supplier Products res = ${response.data}');
 
-          if (response.status == 200) {
+          if (response.status == 200 && response.data != []) {
             List<SupplierProductsData> productList =
             state.productList.toList(growable: true);
             productList.addAll(response.data ?? []);

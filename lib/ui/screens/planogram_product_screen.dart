@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/planogram_product/planogram_product_bloc.dart';
@@ -188,7 +188,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   showProductDetails(
                                       context: context,
                                       productId: state.planogramProductList[index].id ?? '',
-                                      productStock: state.planogramProductList[index].productStock.toString() ?? '0',
+                                      productStock: state.planogramProductList[index].productStock.toString(),
                                     productListIndex: 1
                                   );
                                 }
@@ -196,7 +196,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                 }
                                 },
-                                productStock :state.planogramProductList[index].productStock ?? 0,
+                                productStock :state.planogramProductList[index].productStock ?? 0.0,
                                 context: context,
                                 index: index,
                                 isRTL: context.rtl),
@@ -543,7 +543,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       required double productPrice,
       required int totalSale,
       required void Function() onPressed,
-      required bool isRTL, required int productStock,
+      required bool isRTL, required double productStock,
       required bool isGuestUser,
         required String lowStock,
         required bool? isPesach
