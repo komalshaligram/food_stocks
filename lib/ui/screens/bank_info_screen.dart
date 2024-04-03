@@ -1,6 +1,9 @@
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/bank_info/bank_info_bloc.dart';
@@ -25,8 +28,12 @@ class BankInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+    ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => BankInfoBloc(),
+      create: (context) => BankInfoBloc()..add(BankInfoEvent.getBankNameEvent(context: context))
+      ..add(BankInfoEvent.getTermsConditionModelEvent(context: context,
+          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? TermsConditionReqModel())),
       child: BankInfoWidget(),
     );
   }
@@ -46,8 +53,9 @@ class BankInfoWidget extends StatelessWidget {
             surfaceTintColor: AppColors.whiteColor,
             leading: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(
-                      context, RouteDefine.activityTimeScreen.name);
+                  Navigator.pop(context);
+         /*         Navigator.pushNamed(
+                      context, RouteDefine.activityTimeScreen.name);*/
                 },
                 child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
             title: Align(
@@ -70,7 +78,10 @@ class BankInfoWidget extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: getScreenWidth(context) * 0.1),
-                child: Form(
+                child: state.isShimmering ? Container(
+                  height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
+                  child: Center(child: CupertinoActivityIndicator()),
+                ): Form(
                   key:_formKey,
                   child: Column(
                     children: [
@@ -78,15 +89,15 @@ class BankInfoWidget extends StatelessWidget {
                         name: AppLocalizations.of(context)!.name_of_bank,
                       ),
                       CommonDropDownButton(
-                        items: state.bankList.map((bankName) {
+                        items: state.bankList.map((element) {
                           return DropdownMenuItem<String>(
-                            value: bankName,
+                            value: element.bankName,
                             child: Text(
-                                bankName),
+                                element.bankName ?? ''),
                           );
                         }).toList(),
                         onChanged: (newBankName) {
-                          bloc.add(BankInfoEvent.selectBankEvent(agent: newBankName ?? ''));
+                          bloc.add(BankInfoEvent.selectBankEvent(bankName: newBankName ?? ''));
                         },
                         value: state.bankName,
                       ),
@@ -128,6 +139,7 @@ class BankInfoWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 30,horizontal: 30),
               child: CustomButtonWidget(
+                isLoading: state.isApiShimmering ? true: false,
                 buttonText: AppLocalizations.of(context)!
                     .next
                     .toUpperCase(),
@@ -136,7 +148,7 @@ class BankInfoWidget extends StatelessWidget {
                   if (_formKey.currentState
                       ?.validate() ??
                       false) {
-                    Navigator.pushNamed(context, RouteDefine.privacyPolicyScreen.name);
+                    bloc.add(BankInfoEvent.termsConditionApiEvent(context: context));
                   }
                 },
                 fontColors: AppColors.whiteColor,

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -25,7 +26,8 @@ class FormDataScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => FormDataBloc(),
+      create: (context) => FormDataBloc()..add(FormDataEvent.getAgentEvent(context: context)
+     )..add(FormDataEvent.getBusinessTypeEvent(context: context)),
       child: FormDataScreenWidget(),
     );
   }
@@ -65,12 +67,14 @@ class FormDataScreenWidget extends StatelessWidget {
             titleSpacing: 0,
             elevation: 0,
           ),
-          body: SafeArea(
+          body:  SafeArea(
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: getScreenWidth(context) * 0.1),
-                child: Form(
+                child: state.isShimmering || state.isAgentListShimmering ? Container(
+                  height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                    child: Center(child: CupertinoActivityIndicator())): Form(
                   key: _formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -87,9 +91,9 @@ class FormDataScreenWidget extends StatelessWidget {
                           },
                         items: state.agentList.map((agent) {
                           return DropdownMenuItem<String>(
-                            value: agent,
+                            value: agent.agentName,
                             child: Text(
-                                agent),
+                                agent.agentName ?? ''),
                           );
                         }).toList(),
                         value: state.agent,
@@ -101,46 +105,101 @@ class FormDataScreenWidget extends StatelessWidget {
                             .type_of_business,
                       ),
                       CommonDropDownButton(
-                        items: state.BusinessTypeList.map((business) {
+                        items: state.businessTypeList.map((business) {
                           return DropdownMenuItem<String>(
-                            value: business,
+                            value: business.businessTypeName,
                             child: Text(
-                                business),
+                                business.businessTypeName ?? ''),
                           );
                         }).toList(),
                         onChanged: (newBusiness) {
-                          bloc.add(FormDataEvent.selectBusinessTypeEvent(business: newBusiness ?? ''));
+                          bloc.add(FormDataEvent.selectBusinessTypeEvent(business: newBusiness ?? '',
+                            haveMultiple: true
+                          ));
                         },
                         value: state.business,
                       ),
                       7.height,
-                      int.parse(state.business) > 20 ? Column(
+                      CustomContainerWidget(
+                        name: AppLocalizations.of(context)!.owner1_full_name,
+                      ),
+                      CustomFormField(
+                        context: context,
+                        controller: state.owner1NameController,
+                        keyboardType: TextInputType.text,
+                        hint: "",
+                        fillColor: Colors.transparent,
+                        textInputAction: TextInputAction.next,
+                        validator: AppStrings.ownerNameValString,
+                      ),
+                      7.height,
+                      CustomContainerWidget(
+                        name: AppLocalizations.of(context)!.owner_1_israel_id,
+                      ),
+                      CustomFormField(
+                        context: context,
+                        controller: state.owner1israelIdController,
+                        keyboardType: TextInputType.number,
+                        hint: "",
+                        fillColor: Colors.transparent,
+                        textInputAction: TextInputAction.next,
+                        validator: AppStrings.idValString,
+                      ),
+                      7.height,
+                      CustomContainerWidget(
+                        name: AppLocalizations.of(context)!.guarantee_1_full_name,
+                      ),
+                      CustomFormField(
+                        context: context,
+                        controller: state.guarantee1NameController,
+                        keyboardType: TextInputType.text,
+                        hint: "",
+                        fillColor: Colors.transparent,
+                        textInputAction: TextInputAction.next,
+                        validator: AppStrings.guaranteeNameString,
+                      ),
+                      7.height,
+                      CustomContainerWidget(
+                        name: AppLocalizations.of(context)!.guarantee_1_israel_id,
+                      ),
+                      CustomFormField(
+                        context: context,
+                        controller: state.guarantee1idController,
+                        keyboardType: TextInputType.number,
+                        hint: "",
+                        fillColor: Colors.transparent,
+                        textInputAction: TextInputAction.next,
+                        validator: AppStrings.idValString,
+                      ),
+                      7.height,
+                      CustomContainerWidget(
+                        name: AppLocalizations.of(context)!.guarantee_1_address,
+                      ),
+                      CustomFormField(
+                        context: context,
+                        controller: state.guarantee1addressController,
+                        keyboardType: TextInputType.text,
+                        hint: "",
+                        fillColor: Colors.transparent,
+                        textInputAction: TextInputAction.next,
+                        validator: AppStrings.addressValString,
+                      ),
+                      7.height,
+                      CustomContainerWidget(
+                        name: AppLocalizations.of(context)!.guarantee_1_phone_number,
+                        star: '*',
+                      ),
+                      CustomFormField(
+                        context: context,
+                        controller: state.guarantee1PhoneController,
+                        keyboardType: TextInputType.number,
+                        hint: "",
+                        fillColor: Colors.transparent,
+                        textInputAction: TextInputAction.next,
+                        validator: AppStrings.mobileValString,
+                      ),
+                     state.haveMultiple ? Column(
                         children: [
-                          CustomContainerWidget(
-                            name: AppLocalizations.of(context)!.owner1_full_name,
-                          ),
-                          CustomFormField(
-                            context: context,
-                            controller: state.owner1NameController,
-                            keyboardType: TextInputType.text,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: AppStrings.ownerNameValString,
-                          ),
-                          7.height,
-                          CustomContainerWidget(
-                            name: AppLocalizations.of(context)!.owner_1_israel_id,
-                          ),
-                          CustomFormField(
-                            context: context,
-                            controller: state.owner1israelIdController,
-                            keyboardType: TextInputType.number,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: AppStrings.idValString,
-                          ),
                           7.height,
                           CustomContainerWidget(
                             name: AppLocalizations.of(context)!.owner2_full_name,
@@ -168,59 +227,6 @@ class FormDataScreenWidget extends StatelessWidget {
                             fillColor: Colors.transparent,
                             textInputAction: TextInputAction.next,
                             validator: '',
-                          ),
-                          7.height,
-                          CustomContainerWidget(
-                            name: AppLocalizations.of(context)!.guarantee_1_full_name,
-                          ),
-                          CustomFormField(
-                            context: context,
-                            controller: state.guarantee1NameController,
-                            keyboardType: TextInputType.text,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: AppStrings.guaranteeNameString,
-                          ),
-                          7.height,
-                          CustomContainerWidget(
-                            name: AppLocalizations.of(context)!.guarantee_1_israel_id,
-                          ),
-                          CustomFormField(
-                            context: context,
-                            controller: state.guarantee1idController,
-                            keyboardType: TextInputType.number,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: AppStrings.idValString,
-                          ),
-                          7.height,
-                          CustomContainerWidget(
-                            name: AppLocalizations.of(context)!.guarantee_1_address,
-                          ),
-                          CustomFormField(
-                            context: context,
-                            controller: state.guarantee1addressController,
-                            keyboardType: TextInputType.text,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: AppStrings.addressValString,
-                          ),
-                          7.height,
-                          CustomContainerWidget(
-                            name: AppLocalizations.of(context)!.guarantee_1_phone_number,
-                            star: '*',
-                          ),
-                          CustomFormField(
-                            context: context,
-                            controller: state.guarantee1PhoneController,
-                            keyboardType: TextInputType.number,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: AppStrings.mobileValString,
                           ),
                           7.height,
                           CustomContainerWidget(
@@ -292,7 +298,8 @@ class FormDataScreenWidget extends StatelessWidget {
                             if (_formKey.currentState
                                 ?.validate() ??
                                 false) {
-                              Navigator.pushNamed(context, RouteDefine.bankInfoScreen.name);
+                              bloc.add(FormDataEvent.navigateToNextScreenEvent(context: context));
+
                             }
                           }
                           else{

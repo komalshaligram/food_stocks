@@ -5,18 +5,22 @@ part of 'bank_info_bloc.dart';
 class BankInfoState with _$BankInfoState{
 
   const factory BankInfoState({
-    required List<String>bankList,
+    required List<BankDetail>bankList,
     required String bankName,
     required TextEditingController accountNumberController,
     required TextEditingController branchController,
+    required bool isShimmering,
+    required bool isApiShimmering,
 
   }) = _BankInfoState;
 
   factory BankInfoState.initial()=>  BankInfoState(
-    bankList: ['a1','b1','c1'],
-    bankName: 'a1',
+    bankList: [],
+    bankName: '',
     accountNumberController: TextEditingController(),
-    branchController: TextEditingController()
+    branchController: TextEditingController(),
+    isShimmering: false,
+    isApiShimmering: false
    
   );
 

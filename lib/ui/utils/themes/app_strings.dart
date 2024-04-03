@@ -106,6 +106,8 @@ class AppStrings {
   static const orderString = 'Order';
   static const companiesString = 'companies';
   static const searchType = 'searchType';
+  static const termsConditionParamString = 'termsConditionParam';
+  static const privacyPolicyPdfString = 'pdf';
 
   //hint strings
   static const hintNumberString = '1234567890';
@@ -129,6 +131,8 @@ class AppStrings {
   static const messageIdString = 'messageId';
   static const messageIdListString = 'messageIdList';
   static const isReadMoreString = 'isReadMore';
+
+
 
   static String getLocalizedStrings(String key,BuildContext context){
     switch(key){

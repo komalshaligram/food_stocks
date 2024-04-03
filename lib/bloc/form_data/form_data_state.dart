@@ -4,9 +4,9 @@ part of 'form_data_bloc.dart';
 class FormDataState with _$FormDataState{
 
   const factory FormDataState({
-  required List<String>agentList,
+  required List<Agent> agentList,
     required String agent,
-    required List<String> BusinessTypeList,
+    required List<BusinessType> businessTypeList,
     required String business,
     required bool isDisable,
     required TextEditingController owner1NameController,
@@ -21,13 +21,16 @@ class FormDataState with _$FormDataState{
     required TextEditingController guarantee2addressController,
     required TextEditingController guarantee1PhoneController,
     required TextEditingController guarantee2PhoneController,
+    required bool isShimmering,
+    required bool isAgentListShimmering,
+    required bool haveMultiple,
   }) = _FormDataState;
 
   factory FormDataState.initial()=>  FormDataState(
-    agentList: ['a1','b1','c1'],
-    agent: 'a1',
-    business: '15',
-    BusinessTypeList: ['15','17','21','30','40'],
+    agentList: [],
+    agent: '',
+    business: '',
+    businessTypeList: [],
     isDisable: true,
     guarantee1addressController: TextEditingController(),
     guarantee1idController: TextEditingController(),
@@ -40,7 +43,10 @@ class FormDataState with _$FormDataState{
     owner1israelIdController: TextEditingController(),
     owner1NameController: TextEditingController(),
     owner2israelIdController: TextEditingController(),
-    owner2NameController: TextEditingController()
+    owner2NameController: TextEditingController(),
+    isShimmering: false,
+    haveMultiple: false,
+    isAgentListShimmering: false
   );
 
 }

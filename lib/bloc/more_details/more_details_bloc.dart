@@ -55,7 +55,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               CityListResModel.fromJson(response);
           if (cityListResModel.status == 200) {
             List<String> temp = [];
-            cityListResModel.data!.cities!.forEach((element) {
+            cityListResModel.data?.cities?.forEach((element) {
               temp.add(element.cityName.toString());
             });
             emit(state.copyWith(
@@ -182,7 +182,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   logoUrl: response.data!.client!.logo.toString());
               emit(state.copyWith(isLoading: false,companyLogo: preferencesHelper.getUserCompanyLogoUrl()));
               preferencesHelper.setUserCompanyLogoUrl(
-                  logoUrl: response.data!.client!.logo.toString());
+                  logoUrl: response.data?.client?.logo.toString() ?? '');
               preferencesHelper.setEmailId(
                   userEmailId: response.data?.client?.email ?? '');
               preferencesHelper.setUserName(

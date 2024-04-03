@@ -9,4 +9,10 @@ class PrivacyPolicyEvent with _$PrivacyPolicyEvent {
 
   factory PrivacyPolicyEvent.navigationEvent({required BuildContext context}) =
   _navigationEvent;
+
+  factory PrivacyPolicyEvent.getPdfDataEvent({
+    required BuildContext context,
+    required String pdfData
+  }) =_getPdfDataEvent;
+
 }

@@ -8,6 +8,7 @@ import '../../bloc/privacy_policy/privacy_policy_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
+import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/custom_button_widget.dart';
 
@@ -22,8 +23,11 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+    ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => PrivacyPolicyBloc(),
+      create: (context) => PrivacyPolicyBloc()..add(PrivacyPolicyEvent.getPdfDataEvent(
+          context: context, pdfData: args?[AppStrings.privacyPolicyPdfString])),
       child: PrivacyPolicyWidget(),
     );
   }
@@ -44,12 +48,15 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
   List<PdfFormField>? _formFields;
 
   ui.Image? image;
+  bool isImage = false;
 
 
   @override
   Widget build(BuildContext context) {
     PrivacyPolicyBloc bloc= context.read<PrivacyPolicyBloc>();
+
     return BlocListener<PrivacyPolicyBloc, PrivacyPolicyState>(
+
       listener: (context, state) {
 
       },
@@ -61,8 +68,9 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
               surfaceTintColor: AppColors.whiteColor,
               leading: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(
-                        context, RouteDefine.activityTimeScreen.name);
+                    Navigator.pop(context);
+                   /* Navigator.pushNamed(
+                        context, RouteDefine.activityTimeScreen.name);*/
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Align(
@@ -83,17 +91,21 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  Container(
+                   Container(
                     color: AppColors.whiteColor,
                     height: getScreenHeight(context) - 170,
-                    child: SfPdfViewer.network(
-                      'https://5.imimg.com/data5/SELLER/Doc/2021/4/QI/LK/YD/7115850/pdf-conversion-services.pdf',
+                    child: /*state.documentBytes.length != 1 ?
+                    SfPdfViewer.memory(
+                      state.documentBytes,
+                    )
+                        :*/ state.pdfDataBytes != '' ? SfPdfViewer.memory(
+                     state.pdfDataBytes,
                       key: _pdfViewerKey,
                       controller: _pdfViewerController,
                       onFormFieldFocusChange: onFormFieldFocusChange,
                       onDocumentLoaded: onDocumentLoaded,
-                      canShowSignaturePadDialog: false,
-                    ),
+                      canShowSignaturePadDialog: true,
+                    ) : SizedBox(),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
@@ -103,7 +115,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                           .toUpperCase(),
                       bGColor: AppColors.whiteColor,
                       onPressed: () {
-                       bloc.add(PrivacyPolicyEvent.navigationEvent(context: context)) ;
+                      bloc.add(PrivacyPolicyEvent.navigationEvent(context: context));
                       },
                       fontColors: AppColors.whiteColor,
                     ),
