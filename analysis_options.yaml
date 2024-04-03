@@ -24,6 +24,9 @@ linter:
   rules:
      avoid_print: true
      avoid_empty_else:
+     unnecessary_new : error
+     file_names: error
+     sized_box_for_whitespace: error
     # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 

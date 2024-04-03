@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:food_stock/ui/screens/my_app_screen.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
@@ -21,11 +23,8 @@ final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
 @pragma('vm:entry-point')
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-
-  bool isDisplay = false;
-  if(!isDisplay){
-    isDisplay = true;
+  debugPrint("__________BackgroundHandler______");
+    await Firebase.initializeApp();
     debugPrint("Handling in main${message.toString()}");
     debugPrint("Handling a background message:${message.messageId}");
     debugPrint("Handling a background message:${message.data.toString()}");
@@ -38,10 +37,9 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           androidIcon:message.notification?.android?.smallIcon,
           data: data,
           isNavigate: true,
-          showNotification: false,
+          showNotification: true,
           isAppOpen: true
       );
-    }
   }
 }
 
@@ -51,7 +49,10 @@ void main() async {
     await Firebase.initializeApp();
 
     await PushNotificationService().setupInteractedMessage();
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    if(Platform.isAndroid){
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    }
+
     //await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -64,7 +65,7 @@ void main() async {
         }
       });
     }
+    await ScreenUtil.ensureScreenSize();
     runApp(MyApp());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
-

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -59,12 +60,14 @@ class CommonAlertDialog extends StatelessWidget {
                     alignment: Alignment.center,
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
-                    width: 80,
-                    child: Text(
+                    width:80,
+                    child: isLogOutProcess?CupertinoActivityIndicator(
+                      color: AppColors.mainColor,
+                    ):Text(
                       positiveTitle ?? '',
                       style: AppStyles.rkRegularTextStyle(
                           color: AppColors.mainColor.withOpacity(0.9),
-                          size: AppConstants.smallFont),
+                          size: AppConstants.smallFont,fontWeight: isLogOutProcess?FontWeight.bold:FontWeight.normal),
                     ),
                   ),
                 )
