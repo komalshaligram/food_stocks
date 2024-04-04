@@ -49,6 +49,9 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "deviceType") String? deviceType,
     Map<String, String>? forms,
      Map<String, String>? files,
+    String? streetName,
+    String? streetNumber,
+    String? zip,
   }) = _ClientDetail;
 
   factory ClientDetail.fromJson(Map<String, dynamic> json) => _$ClientDetailFromJson(json);

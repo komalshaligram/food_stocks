@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/custom_button_widget.dart';
+import 'dart:io';
 
 
 class PrivacyPolicyRoute {
@@ -25,9 +27,11 @@ class PrivacyPolicyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
     ModalRoute.of(context)?.settings.arguments as Map?;
+
+    //print('args____${args?[AppStrings.privacyPolicyPdfString]}');
     return BlocProvider(
       create: (context) => PrivacyPolicyBloc()..add(PrivacyPolicyEvent.getPdfDataEvent(
-          context: context, pdfData: args?[AppStrings.privacyPolicyPdfString])),
+          context: context, pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '')),
       child: PrivacyPolicyWidget(),
     );
   }
@@ -62,6 +66,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
       },
       child: BlocBuilder<PrivacyPolicyBloc, PrivacyPolicyState>(
         builder: (context, state) {
+          print('filepath______${state.filePath}');
           return Scaffold(
             backgroundColor: AppColors.whiteColor,
             appBar: AppBar(
@@ -94,12 +99,8 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                    Container(
                     color: AppColors.whiteColor,
                     height: getScreenHeight(context) - 170,
-                    child: /*state.documentBytes.length != 1 ?
-                    SfPdfViewer.memory(
-                      state.documentBytes,
-                    )
-                        :*/ state.pdfDataBytes != '' ? SfPdfViewer.memory(
-                     state.pdfDataBytes,
+                    child:  state.filePath != '' ? SfPdfViewer.file(
+                     File(state.filePath),
                       key: _pdfViewerKey,
                       controller: _pdfViewerController,
                       onFormFieldFocusChange: onFormFieldFocusChange,

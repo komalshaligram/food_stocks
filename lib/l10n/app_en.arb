@@ -433,5 +433,11 @@
   "please_enter_account_number":"Please enter account number",
   "privacy_policy":"Service Use Agreement - TAVILI",
   "pesach_products" : "Pesach Products",
-  "pesach": "כשר לפסח"
+  "pesach": "כשר לפסח",
+  "street_name" :"Street name",
+ "street_number" : "Street number",
+  "enter_street_name":"Please enter street name",
+   "enter_street_number":"Please enter street number",
+   "enter_zip":"Please enter zip code",
+    "zip": "Zip"
 }

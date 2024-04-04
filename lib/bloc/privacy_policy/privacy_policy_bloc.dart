@@ -6,8 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -34,6 +36,8 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     on<PrivacyPolicyEvent>((event, emit)   async {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+
+
       if(event is _onFormFieldFocusChangeEvent){
           final PdfFormField formField = event.details.formField;
           print('formField.name:${formField.name}');
@@ -41,7 +45,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
             final PdfSignatureFormField signatureFormField =
             event.details.formField as PdfSignatureFormField;
             emit(state.copyWith(SignaturePadDialog: true));
-            showCustomSignaturePadDialog(signatureFormField,event.context);
+          // showCustomSignaturePadDialog(signatureFormField,event.context);
 
             if (formField is PdfTextFormField && formField.name == 'Fordm Date') {
               final DateTime? selectedDate = await showDatePicker(
@@ -57,22 +61,82 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
               }
 
               FocusManager.instance.primaryFocus?.unfocus();
-            }else if(formField.name=='Signature'){
+            }else if(formField.name=='Sign'){
               print('signature');
-               showCustomSignaturePadDialog(signatureFormField ,event.context);
+           //  showCustomSignaturePadDialog(signatureFormField ,event.context);
             }
           }
 
       }
       else if(event is _navigationEvent){
+
+        image = await _signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
+        print('image___${image}');
         if (image != null) {
-          Navigator.pushNamed(
-              event.context, RouteDefine.fileUploadScreen.name);
+
+        //  Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
         }
       }
       else if(event is _getPdfDataEvent){
-        Uint8List pdf = base64.decode(event.pdfData);
-        emit(state.copyWith(pdfDataBytes: pdf));
+
+        var status = await Permission.storage.status;
+        if (!status.isGranted) {
+          await Permission.storage.request();
+        }
+
+        File file;
+        File file1;
+        Directory dir;
+        String filePath = '';
+        String filePath1 = '';
+        if (defaultTargetPlatform == TargetPlatform.android) {
+          dir = Directory('/storage/emulated/0/Documents');
+        } else {
+          dir = await getApplicationDocumentsDirectory();
+        }
+
+
+        filePath =
+        '${dir.path}/${preferencesHelper.getUserName()}${'.'}${(DateTime.now()).hour}${'.'}${(DateTime.now()).minute}${'.pdf'}';
+        file = File(filePath);
+
+        Uint8List documentBytes = base64.decode(event.pdfData);
+        PdfDocument document = PdfDocument(inputBytes: documentBytes);
+
+
+
+        PdfSignatureField _signatureField = PdfSignatureField(
+            document.pages[6],'sign',
+            tooltip: 'signature',
+            borderColor: PdfColor(255,0,0),
+            backColor: PdfColor(0,255,0),
+            bounds: Rect.fromLTWH(170, 290, 100, 50)
+        );
+
+
+        document.form.fields.add(PdfSignatureField(  document.pages[6],'sign',
+            tooltip: 'signature',
+            borderColor: PdfColor(255,0,0),
+            backColor: PdfColor(0,255,0),
+            bounds: Rect.fromLTWH(170, 290, 100, 50)));
+
+        document.form.fields.add(PdfSignatureField(document.pages[9], 'Sign1',
+            tooltip: 'signature1',
+            borderColor: PdfColor(255,0,0),
+            backColor: PdfColor(0,255,0),
+            bounds: Rect.fromLTWH(370, 365, 100, 40)));
+
+        PdfGraphics? graphics = _signatureField.appearance.normal.graphics;
+
+        //image = await _signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
+      //  print('image____${image}');
+
+       file.writeAsBytes(await document.save());
+
+        print('file____${file}');
+        emit(state.copyWith(filePath: filePath));
+
+
       }
     });
   }
@@ -144,8 +208,8 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     await image?.toByteData(format: ui.ImageByteFormat.png);
 
     final bytes = await image?.toByteData(format: ui.ImageByteFormat.png);
-    final ByteData docBytes = await rootBundle.load("assets/images/pdf-conversion-services.pdf");
-    final Uint8List documentBytes = docBytes.buffer.asUint8List();
+   // final ByteData docBytes = await rootBundle.load("assets/pdf/response.pdf");
+  //  final Uint8List documentBytes = docBytes.buffer.asUint8List();
 
     //ByteData certBytes = await rootBundle.load("assets/certificate.pfx");
    // final Uint8List certificateBytes = certBytes.buffer.asUint8List();
@@ -153,26 +217,9 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     if (imageBytes != null) {
       final Uint8List data = imageBytes.buffer.asUint8List();
       formField.signature = data;
-      PdfDocument document = PdfDocument(inputBytes: documentBytes);
-      PdfPage page = document.pages[0];
+     // PdfDocument document = PdfDocument(inputBytes: documentBytes);
+   //   PdfPage page = document.pages[8];
 
-      PdfSignatureField _signatureField = PdfSignatureField(page, 'signature',
-        borderColor:PdfColor(1,1,1,1),
-        signature: PdfSignature(
-
-        ),
-
-         );
-      PdfGraphics? graphics = _signatureField.appearance.normal.graphics;
-      graphics?.drawImage(PdfBitmap(bytes!.buffer.asUint8List()),
-          const Rect.fromLTWH(50, 200, 250, 200));
-
-      //Add a signature field to the form.
-       document.form.fields.add(_signatureField);
-    document.form.flattenAllFields();
-      _documentBytes = Uint8List.fromList(document.saveSync());
-      emit(state.copyWith(documentBytes: _documentBytes));
-      document.dispose();
 
     }
   }

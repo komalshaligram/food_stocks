@@ -47,6 +47,13 @@ class AuthFormValidation {
 
       case AppStrings.accountValString:
         return formFieldValidation.accountNumberField(value,context);
+      case AppStrings.accountValString:
+        return formFieldValidation.streetNameField(value,context);
+      case AppStrings.accountValString:
+        return formFieldValidation.streetNumberField(value,context);
+      case AppStrings.accountValString:
+        return formFieldValidation.zipField(value,context);
+
     }
     return null;
   }

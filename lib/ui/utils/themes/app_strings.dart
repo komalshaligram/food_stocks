@@ -75,6 +75,9 @@ class AppStrings {
   static const idValString = 'idVal';
   static const contactNameValString = 'contactNameVal';
   static const addressValString = 'addressVal';
+  static const zipValString = 'zipVal';
+  static const streetNameValString = 'streetNameVal';
+  static const streetNumberValString = 'streetNumberVal';
   static const emailValString = 'emailVal';
   static const faxValString = 'faxVal';
   static const generalValString = 'generalVal';

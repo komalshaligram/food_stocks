@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import'dart:io';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../../data/model/res_model/bank_detail_model/bank_detail_model.dart';
@@ -94,16 +94,20 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
 
 
           print('termCondition response ____${res}');
+
           TermsConditionResModel response =
           TermsConditionResModel.fromJson(res);
 
+
           if (response.status == 200) {
-            emit(state.copyWith(isApiShimmering: false,));
-             Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name,
-             arguments: {
-               AppStrings.privacyPolicyPdfString : response.data ?? ''
-             }
-             );
+            if(res != null){
+              emit(state.copyWith(isApiShimmering: false,));
+              Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name,
+                  arguments: {
+                    AppStrings.privacyPolicyPdfString : response.data ?? ''
+                  }
+              );
+            }
           } else {
             emit(state.copyWith(isApiShimmering: false));
             CustomSnackBar.showSnackBar(

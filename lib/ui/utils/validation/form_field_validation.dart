@@ -152,7 +152,26 @@ class FormFieldValidation {
     }
     return null;
   }
+  String? streetNameField(String value,BuildContext context) {
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.enter_street_name}';
+    }
+    return null;
+  }
 
-
+  String? streetNumberField(String value,BuildContext context) {
+    RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.enter_street_number}';
+    }
+    return null;
+  }
+  String? zipField(String value,BuildContext context) {
+    RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.enter_zip}';
+    }
+    return null;
+  }
 
 }

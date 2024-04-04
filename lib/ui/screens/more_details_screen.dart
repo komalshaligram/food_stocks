@@ -312,11 +312,11 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                   7.height,
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!
-                                        .full_address,
+                                        .street_name,
                                   ),
                                   CustomFormField(
                                     context: context,
-                                    controller: state.addressController,
+                                    controller: state.streetNameController,
                                     inputformet: [
                                       /*FilteringTextInputFormatter.deny(
                                   RegExp(r'\s')),*/
@@ -326,7 +326,26 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     hint: '',
                                     fillColor: AppColors.whiteColor,
                                     textInputAction: TextInputAction.next,
-                                    validator: AppStrings.addressValString,
+                                    validator: AppStrings.streetNameValString,
+                                  ),
+                                  7.height,
+                                  CustomContainerWidget(
+                                    name: AppLocalizations.of(context)!
+                                        .street_number,
+                                  ),
+                                  CustomFormField(
+                                    context: context,
+                                    controller: state.streetNumberController,
+                                    inputformet: [
+                                      /*FilteringTextInputFormatter.deny(
+                                  RegExp(r'\s')),*/
+                                      LengthLimitingTextInputFormatter(50)
+                                    ],
+                                    keyboardType: TextInputType.number,
+                                    hint: '',
+                                    fillColor: AppColors.whiteColor,
+                                    textInputAction: TextInputAction.next,
+                                    validator: AppStrings.streetNumberValString,
                                   ),
                                   7.height,
                                   CustomContainerWidget(
@@ -353,11 +372,6 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                       FilteringTextInputFormatter.digitsOnly,
                                       LengthLimitingTextInputFormatter(11)
                                     ],
-                                  /*  onChangeValue: (FAX) {
-                                      bloc.add(
-                                          MoreDetailsEvent.setFAXFormatEvent(
-                                              FAX: FAX));
-                                    },*/
                                     textDirection:
                                         context.rtl ? TextDirection.ltr : null,
                                     keyboardType: TextInputType.number,
@@ -365,6 +379,26 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     fillColor: AppColors.whiteColor,
                                     textInputAction: TextInputAction.done,
                                      validator: AppStrings.faxValString,
+
+                                  ),
+                                  7.height,
+                                  CustomContainerWidget(
+                                    name: AppLocalizations.of(context)!.zip,
+                                    star: '*',
+                                  ),
+                                  CustomFormField(
+                                    context: context,
+                                    controller: state.zipController,
+                                    inputformet: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
+                                    textDirection:
+                                    context.rtl ? TextDirection.ltr : null,
+                                    keyboardType: TextInputType.number,
+                                    hint: AppLocalizations.of(context)!.zip,
+                                    fillColor: AppColors.whiteColor,
+                                    textInputAction: TextInputAction.done,
+                                    validator: AppStrings.zipValString,
 
                                   ),
                                   7.height,
