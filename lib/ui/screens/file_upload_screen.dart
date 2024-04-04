@@ -101,177 +101,188 @@ class FileUploadScreenWidget extends StatelessWidget {
                       color: AppColors.blackColor,
                     )),
               ),
-              body: Stack(
-                children: [
-                  state.isShimmering
-                      ? FileUploadScreenShimmerWidget()
-                      : SafeArea(
-                          child: state.isLoading
-                              ? Container(
-                                  height: getScreenHeight(context),
-                                  child: Center(
-                                    child: CupertinoActivityIndicator(
-                                      color: AppColors.blackColor,
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    state.isShimmering
+                        ? FileUploadScreenShimmerWidget()
+                        : SafeArea(
+                            child: state.isLoading
+                                ? Container(
+                                    height: getScreenHeight(context),
+                                    child: Center(
+                                      child: CupertinoActivityIndicator(
+                                        color: AppColors.blackColor,
+                                      ),
                                     ),
-                                  ),
-                                )
-                              : SingleChildScrollView(
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: AppConstants.padding_20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        state.formsAndFilesList.isEmpty
-                                            ? Container(
-                                                height:
-                                                    getScreenHeight(context),
-                                                width: getScreenWidth(context),
-                                                child: Center(
-                                                  child: Text(
-                                                    '${AppLocalizations.of(context)!.forms_Files_not_available}',
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .normalFont,
-                                                            color: AppColors
-                                                                .textColor),
-                                                  ),
+                                  )
+                                : Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: AppConstants.padding_20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      state.formsAndFilesList.isEmpty
+                                          ? Container(
+                                              height:
+                                                  getScreenHeight(context),
+                                              width: getScreenWidth(context),
+                                              child: Center(
+                                                child: Text(
+                                                  '${AppLocalizations.of(context)!.forms_Files_not_available}',
+                                                  style: AppStyles
+                                                      .rkRegularTextStyle(
+                                                          size: AppConstants
+                                                              .normalFont,
+                                                          color: AppColors
+                                                              .textColor),
                                                 ),
-                                              )
-                                            : ListView.builder(
-                                                shrinkWrap: true,
-                                                itemCount: state
-                                                    .formsAndFilesList.length,
-                                                physics:
-                                                    const NeverScrollableScrollPhysics(),
-                                                itemBuilder: (context, index) {
-                                                  return buildFormsAndFilesUploadFields(
-                                                    updateState : state.isUpdate,
-                                                      directionality : state.language,
-                                                    fileIndex: index,
-                                                    context: context,
-                                                    fileName: state
-                                                            .formsAndFilesList[
-                                                                index]
-                                                            .name ??
-                                                        '',
-                                                    url: state
-                                                            .formsAndFilesList[
-                                                                index]
-                                                            .url ??
-                                                        '',
-                                                    localUrl: state
-                                                            .formsAndFilesList[
-                                                                index]
-                                                            .localUrl ??
-                                                        '',
-                                                    isUploading:
-                                                        state.isUploadLoading,
-                                                    uploadIndex:
-                                                        state.uploadIndex,
-                                                    isDownloadable: state
-                                                            .formsAndFilesList[
-                                                                index]
-                                                            .isForm ??
-                                                        false,
-                                                      isRemoveProcess : state.isRemoveProcess
-                                                  );
-                                                },
                                               ),
-                                        40.height,
-                                        CustomButtonWidget(
-                                          buttonText: state.isUpdate
-                                              ? AppLocalizations.of(context)!
+                                            )
+                                          : ListView.builder(
+                                              shrinkWrap: true,
+                                              itemCount: state
+                                                  .formsAndFilesList.length,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemBuilder: (context, index) {
+                                                return buildFormsAndFilesUploadFields(
+                                                  updateState : state.isUpdate,
+                                                    directionality : state.language,
+                                                  fileIndex: index,
+                                                  context: context,
+                                                  fileName: state
+                                                          .formsAndFilesList[
+                                                              index]
+                                                          .name ??
+                                                      '',
+                                                  url: state
+                                                          .formsAndFilesList[
+                                                              index]
+                                                          .url ??
+                                                      '',
+                                                  localUrl: state
+                                                          .formsAndFilesList[
+                                                              index]
+                                                          .localUrl ??
+                                                      '',
+                                                  isUploading:
+                                                      state.isUploadLoading,
+                                                  uploadIndex:
+                                                      state.uploadIndex,
+                                                  isDownloadable: state
+                                                          .formsAndFilesList[
+                                                              index]
+                                                          .isForm ??
+                                                      false,
+                                                    isRemoveProcess : state.isRemoveProcess
+                                                );
+                                              },
+                                            ),
+                                      SizedBox(
+                                      height: getScreenHeight(context) * 0.17,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          children: [
+                                            CustomButtonWidget(
+                                              buttonText: state.isUpdate
+                                                  ? AppLocalizations.of(context)!
                                                   .save
                                                   .toUpperCase()
-                                              : AppLocalizations.of(context)!
+                                                  : AppLocalizations.of(context)!
                                                   .next
                                                   .toUpperCase(),
-                                          fontColors: AppColors.whiteColor,
-                                          isLoading: state.isApiLoading,
-                                          onPressed: state.isApiLoading
-                                              ? null
-                                              : () {
-                                              bloc.add(FileUploadEvent
-                                                  .uploadApiEvent(
-                                                  context: context));
-                                                },
-                                          bGColor: AppColors.mainColor,
+                                              fontColors: AppColors.whiteColor,
+                                              isLoading: state.isApiLoading,
+                                              onPressed: state.isApiLoading
+                                                  ? null
+                                                  : () {
+                                                bloc.add(FileUploadEvent
+                                                    .uploadApiEvent(
+                                                    context: context));
+                                              },
+                                              bGColor: AppColors.mainColor,
+                                            ),
+                                            15.height,
+                                            state.isUpdate
+                                                ? 0.width
+                                                : CustomButtonWidget(
+                                              buttonText: AppLocalizations.of(
+                                                  context)!
+                                                  .skip,
+                                              isFromConnectScreen: true,
+                                              fontColors: AppColors.mainColor,
+                                              borderColor:
+                                              AppColors.mainColor,
+                                              onPressed: () async {
+                                                CustomSnackBar.showSnackBar(
+                                                    context: context,
+                                                    title:
+                                                    '${AppLocalizations.of(context)!.registered_successfully}',
+                                                    type:
+                                                    SnackBarType.SUCCESS);
+                                                Navigator.popUntil(
+                                                    context,
+                                                        (route) =>
+                                                    route.name ==
+                                                        RouteDefine
+                                                            .connectScreen
+                                                            .name);
+                                                Navigator.pushNamed(
+                                                    context,
+                                                    RouteDefine
+                                                        .loginScreen
+                                                        .name);
+                                              },
+                                              bGColor: AppColors.whiteColor,
+                                            ),
+                                            20.height,
+                                          ],
                                         ),
-                                        20.height,
-                                        state.isUpdate
-                                            ? 0.width
-                                            : CustomButtonWidget(
-                                                buttonText: AppLocalizations.of(
-                                                        context)!
-                                                    .skip,
-                                                fontColors: AppColors.mainColor,
-                                                borderColor:
-                                                    AppColors.mainColor,
-                                                onPressed: () async {
-                                                  CustomSnackBar.showSnackBar(
-                                                      context: context,
-                                                      title:
-                                                          '${AppLocalizations.of(context)!.registered_successfully}',
-                                                      type:
-                                                          SnackBarType.SUCCESS);
-                                                  Navigator.popUntil(
-                                                      context,
-                                                      (route) =>
-                                                          route.name ==
-                                                          RouteDefine
-                                                              .connectScreen
-                                                              .name);
-                                                  Navigator.pushNamed(
-                                                      context,
-                                                      RouteDefine
-                                                          .loginScreen
-                                                          .name);
-                                                },
-                                                bGColor: AppColors.whiteColor,
-                                              ),
-                                        20.height,
-                                      ],
-                                    ),
+                                      )
+
+                                    ],
                                   ),
                                 ),
-                        ),
-                  state.isDownloading
-                      ? Container(
-                    height: getScreenHeight(context),
-                          width: getScreenWidth(context),
-                          color: Color.fromARGB(20, 0, 0, 0),
-                          alignment: Alignment.center,
-                          child: Container(
-                            height: 80,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                color: AppColors.whiteColor,
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(AppConstants.radius_10))),
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CupertinoActivityIndicator(
-                                  color: AppColors.blackColor,
-                                  radius: AppConstants.radius_10,
-                                ),
-                                10.height,
-                                Text(
-                                  '${state.downloadProgress}%',
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.font_14,
-                                      color: AppColors.blackColor),
-                                )
-                              ],
-                            ),
                           ),
-                        )
-                      : 0.width,
-                ],
+                    state.isDownloading
+                        ? Container(
+                      height: getScreenHeight(context),
+                            width: getScreenWidth(context),
+                            color: Color.fromARGB(20, 0, 0, 0),
+                            alignment: Alignment.center,
+                            child: Container(
+                              height: 80,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                  color: AppColors.whiteColor,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(AppConstants.radius_10))),
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CupertinoActivityIndicator(
+                                    color: AppColors.blackColor,
+                                    radius: AppConstants.radius_10,
+                                  ),
+                                  10.height,
+                                  Text(
+                                    '${state.downloadProgress}%',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_14,
+                                        color: AppColors.blackColor),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        : 0.width,
+                  ],
+                ),
               ),
             ),
           );
@@ -617,38 +628,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                 );
                                 },
                               ),
-                             /* Image.network(
-                                          "${AppUrls.baseFileUrl}$url",
-                                          fit: BoxFit.cover,
-                                          width: double.maxFinite,
-                                          loadingBuilder: (context, child,
-                                              loadingProgress) {
-                                            if (loadingProgress == null) {
-                                              return child;
-                                            } else {
-                                              return Center(
-                                                child:
-                                                    CupertinoActivityIndicator(
-                                                  color: AppColors.blackColor,
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return Center(
-                                              child: Text(
-                                                AppStrings.failedToLoadString,
-                                                style: AppStyles
-                                                    .rkRegularTextStyle(
-                                                        size: AppConstants
-                                                            .smallFont,
-                                                        color: AppColors
-                                                            .textColor),
-                                              ),
-                                            );
-                                          },
-                                        ),*/
+
                             )
                           : Container(
                               height: 150,

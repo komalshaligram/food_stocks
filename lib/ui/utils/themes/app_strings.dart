@@ -75,11 +75,18 @@ class AppStrings {
   static const idValString = 'idVal';
   static const contactNameValString = 'contactNameVal';
   static const addressValString = 'addressVal';
+  static const zipValString = 'zipVal';
+  static const streetNameValString = 'streetNameVal';
+  static const streetNumberValString = 'streetNumberVal';
   static const emailValString = 'emailVal';
   static const faxValString = 'faxVal';
   static const generalValString = 'generalVal';
   static const mobileValString = 'mobileVal';
   static const cityValString = 'cityVal';
+  static const guaranteeNameString = 'guaranteeNameString';
+  static const branchValString = 'branchValString';
+  static const accountValString = 'accountValString';
+
 
   static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
 
@@ -102,6 +109,8 @@ class AppStrings {
   static const orderString = 'Order';
   static const companiesString = 'companies';
   static const searchType = 'searchType';
+  static const termsConditionParamString = 'termsConditionParam';
+  static const privacyPolicyPdfString = 'pdf';
 
   //hint strings
   static const hintNumberString = '1234567890';
@@ -125,6 +134,8 @@ class AppStrings {
   static const messageIdString = 'messageId';
   static const messageIdListString = 'messageIdList';
   static const isReadMoreString = 'isReadMore';
+
+
 
   static String getLocalizedStrings(String key,BuildContext context){
     switch(key){

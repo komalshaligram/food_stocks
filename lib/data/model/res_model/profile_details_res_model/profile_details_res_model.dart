@@ -97,6 +97,9 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "clientTypes") List<ClientType>? clientTypes,
     @JsonKey(name: "totalExpense") String? totalExpense,
     @JsonKey(name: "expenseByMonth") String? expenseByMonth,
+    String? streetName,
+    String? streetNumber,
+    String? zip,
   }) = _ClientDetail;
 
   factory ClientDetail.fromJson(Map<String, dynamic> json) =>

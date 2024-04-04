@@ -2,7 +2,6 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_stock/bloc/my_app/my_app_bloc.dart';
 import 'package:food_stock/data/services/my_behavior.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -60,9 +59,7 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
     return ChangeNotifierProvider(
       create: (context) => LocaleProvider()..setAppLocale(),
       builder: (context, child) {
-        return ScreenUtilInit(
-          designSize: const Size(360, 690),
-          child: MaterialApp(
+        return MaterialApp(
             key: scaffoldKey,
             navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
@@ -87,8 +84,8 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
             ),
             scrollBehavior: MyBehavior(),
             onGenerateRoute: AppRouting.generateRoute,
-          ),
-        );
+          );
+
       },
     );
   }

@@ -24,7 +24,7 @@ class ActivityTimeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+    ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint(
         "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}}");
     return BlocProvider(

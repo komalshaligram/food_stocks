@@ -25,6 +25,7 @@ class RelatedProductDatum with _$RelatedProductDatum {
     required String createdAt,
     required String updatedAt,
     required bool isBottle,
+
     @JsonKey(name:"_id")
     required String id,
     required String productName,

@@ -55,7 +55,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               CityListResModel.fromJson(response);
           if (cityListResModel.status == 200) {
             List<String> temp = [];
-            cityListResModel.data!.cities!.forEach((element) {
+            cityListResModel.data?.cities?.forEach((element) {
               temp.add(element.cityName.toString());
             });
             emit(state.copyWith(
@@ -144,9 +144,13 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             cityId: state.cityListResModel?.data?.cities
                 ?.firstWhere((city) => city.cityName == state.selectCity)
                 .id,
-            address: state.addressController.text.trim(),
             email: state.emailController.text,
-            clientDetail: ClientDetail(fax: state.faxController.text.isNotEmpty ? state.faxController.text : ''),
+            clientDetail: ClientDetail(
+                fax: state.faxController.text.isNotEmpty ? state.faxController.text : '',
+                zip: state.zipController.text.trim(),
+              streetNumber: state.streetNumberController.text.trim(),
+              streetName: state.streetNameController.text.trim()
+            ),
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail =
@@ -182,7 +186,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   logoUrl: response.data!.client!.logo.toString());
               emit(state.copyWith(isLoading: false,companyLogo: preferencesHelper.getUserCompanyLogoUrl()));
               preferencesHelper.setUserCompanyLogoUrl(
-                  logoUrl: response.data!.client!.logo.toString());
+                  logoUrl: response.data?.client?.logo.toString() ?? '');
               preferencesHelper.setEmailId(
                   userEmailId: response.data?.client?.email ?? '');
               preferencesHelper.setUserName(
@@ -227,7 +231,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   .id,
               statusId: AppStrings.pendingString,
               contactName: profileModel.contactName,
-              address: state.addressController.text.trim(),
+              address: state.streetNumberController.text.trim(),
               email: state.emailController.text,
               clientDetail: ClientDetail(
                 fax: state.faxController.text.trim(),
@@ -239,7 +243,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 israelId: profileModel.clientDetail?.israelId,
                 tokenId: preferencesHelper.getFCMToken(),
                 lastSeen: DateTime.now(),
-                applicationVersion: version
+                applicationVersion: version,
+                streetName: state.streetNameController.text.trim(),
+                streetNumber: state.streetNumberController.text.trim(),
+                zip:state.zipController.text.trim()
               ));
           debugPrint('token_____${preferencesHelper.getFCMToken()}');
           debugPrint('profile reqMap + $reqMap');
@@ -340,14 +347,18 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               emit(state.copyWith(
                 isUpdating: false,
                 selectCity: response.data?.clients?.first.city?.cityName ?? '',
-                addressController: TextEditingController(
-                    text: response.data?.clients?.first.address),
                 emailController: TextEditingController(
                     text: response.data?.clients?.first.email),
                 faxController: TextEditingController(
                     text: response.data?.clients?.first.clientDetail?.fax),
                 companyLogo: response.data?.clients?.first.logo ?? '',
-              ));
+                  streetNumberController: TextEditingController(
+                      text: response.data?.clients?.first.clientDetail?.streetNumber),
+                      streetNameController: TextEditingController(
+                          text: response.data?.clients?.first.clientDetail?.streetName),
+                      zipController:TextEditingController(
+                          text: response.data?.clients?.first.clientDetail?.zip)
+                  ));
             } else {
               emit(state.copyWith(isUpdating: false));
               CustomSnackBar.showSnackBar(

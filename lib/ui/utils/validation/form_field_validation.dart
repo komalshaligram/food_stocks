@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class FormFieldValidation {
-
   String? emailField(String value,BuildContext context) {
     RegExp regex = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
@@ -16,6 +15,14 @@ class FormFieldValidation {
     }
   }
 
+  // phoneNumField(String value) {
+  //   RegExp regex = RegExp(r'^(?:[+0]9)?[0-9]{10}$');
+  //   if (value.length < 10 || !regex.hasMatch(value)) {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
   String? mobileField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[a-zA-Z.!#$%&'*+-/=?^_`{|}~]).*$");
@@ -38,6 +45,7 @@ class FormFieldValidation {
       return null;
     }
   }
+
 
   String? businessNameField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*₹+-/=?^_`{|}~]).*$");
@@ -124,23 +132,46 @@ class FormFieldValidation {
     return null;
   }
 
-  String? driverNameField(String value,BuildContext context) {
-    RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
-    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
+
+  String? guaranteeNameField(String value,BuildContext context) {
     if (value.isEmpty) {
-      return 'Please enter driver name';
-    } else if (regex.hasMatch(value)) {
-      return '${AppLocalizations.of(context)!.please_enter_alphabets_only}';
-    } else if (!regex1.hasMatch(value)) {
-      return 'Please enter valid driver name';
+      return '${AppLocalizations.of(context)!.please_enter_guarantee1_name}';
     }
     return null;
   }
 
-  String? cityNameField(String value,BuildContext context) {
+  String? branchNumberField(String value,BuildContext context) {
     if (value.isEmpty) {
-      return '${AppLocalizations.of(context)!.please_enter_owner_name}';
+      return '${AppLocalizations.of(context)!.please_enter_branch_number}';
     }
     return null;
   }
+  String? accountNumberField(String value,BuildContext context) {
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.please_enter_account_number}';
+    }
+    return null;
+  }
+  String? streetNameField(String value,BuildContext context) {
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.enter_street_name}';
+    }
+    return null;
+  }
+
+  String? streetNumberField(String value,BuildContext context) {
+    RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.enter_street_number}';
+    }
+    return null;
+  }
+  String? zipField(String value,BuildContext context) {
+    RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.enter_zip}';
+    }
+    return null;
+  }
+
 }

@@ -76,8 +76,13 @@ class AppUrls {
   static const String otpVerifyUrl = '/v1/auth/otpVerification';
   static const String getPlanogramAllProductUrl = '/v1/store/getAllProducts';
   static const String removeIssueUrl = '/v1/orders/issues/removeIssue';
+  static const String getPlanogramAllProductForGuestUserUrl = '/v1/store/getAllProducts';
   static const String deleteAccountUrl = '/v1/clients/deleteAccount/';
   static const String relatedProductsUrl = '/v1/products/getRelatedProducts';
   static const String getSubCategoryProductsUrl = '/v1/store/getsubCategoryProducts';
   static const String generalSettingUrl = '/v1/settings/getSettings';
+  static const String getBusinessTypeUrl = '/v1/settings/BusinessType';
+  static const String getBankDetailUrl = '/v1/settings/BankDetail';
+  static const String getAgentUrl = '/v1/settings/Agent';
+  static const String termsConditionUrl = '/v1/clients/getTermsAndConditionForm';
 }
