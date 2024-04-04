@@ -58,8 +58,6 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A2CE5EBE2BABFBAA009E6166 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		A2CE5EC02BABFBAA009E6166 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB03D7A3CA4E349F4E4EEE65 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		C808A9B7572796F1277695FD /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		D74E225FBA756307C74A0257 /* Pods-Runner.profile-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-dev.xcconfig"; sourceTree = "<group>"; };
@@ -130,7 +128,6 @@
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				070916752B1F17C000B4E3AB /* Notification */,
-				A2CE5EBD2BABFBAA009E6166 /* ImageNotification */,
 				97C146EF1CF9000F007C117D /* Products */,
 				8A108772802EC7A6E3EBB5CC /* Pods */,
 				09BE974F2689637D0B59EFA2 /* Frameworks */,
@@ -160,15 +157,6 @@
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 			);
 			path = Runner;
-			sourceTree = "<group>";
-		};
-		A2CE5EBD2BABFBAA009E6166 /* ImageNotification */ = {
-			isa = PBXGroup;
-			children = (
-				A2CE5EBE2BABFBAA009E6166 /* NotificationService.swift */,
-				A2CE5EC02BABFBAA009E6166 /* Info.plist */,
-			);
-			path = ImageNotification;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -416,8 +404,8 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
+				CODE_SIGN_IDENTITY = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5R5A7UH9W6;
@@ -425,18 +413,18 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.18;
+				MARKETING_VERSION = 1.0.17;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -514,26 +502,26 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
+				CODE_SIGN_IDENTITY = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5R5A7UH9W6;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.18;
+				MARKETING_VERSION = 1.0.17;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -612,26 +600,26 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
+				CODE_SIGN_IDENTITY = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5R5A7UH9W6;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.18;
+				MARKETING_VERSION = 1.0.17;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -709,26 +697,26 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
+				CODE_SIGN_IDENTITY = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5R5A7UH9W6;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.18;
+				MARKETING_VERSION = 1.0.17;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -860,26 +848,26 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
+				CODE_SIGN_IDENTITY = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5R5A7UH9W6;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.18;
+				MARKETING_VERSION = 1.0.17;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -903,26 +891,26 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
+				CODE_SIGN_IDENTITY = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5R5A7UH9W6;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.18;
+				MARKETING_VERSION = 1.0.17;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -998,26 +986,26 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
+				CODE_SIGN_IDENTITY = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5R5A7UH9W6;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.18;
+				MARKETING_VERSION = 1.0.17;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -1093,26 +1081,26 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
+				CODE_SIGN_IDENTITY = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5R5A7UH9W6;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.18;
+				MARKETING_VERSION = 1.0.17;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -1188,26 +1176,26 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SHTIBEL COM LTD (5R5A7UH9W6)";
+				CODE_SIGN_IDENTITY = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Pradeep Dodiya (5WY8VQGU32)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5R5A7UH9W6;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.18;
+				MARKETING_VERSION = 1.0.17;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

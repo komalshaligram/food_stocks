@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
-import 'package:firebase_messaging/firebase_messaging.dart';
+//import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -927,15 +927,12 @@ class HomeScreenWidget extends StatelessWidget {
             debugPrint("onMessageClosedApp: ${message.data}");
             if (message.data.isNotEmpty) {
               var data = json.decode(message.data['data'].toString());
-              final RemoteNotification? notification = message.notification;
-              final AndroidNotification? android = message.notification
-                  ?.android;
               debugPrint('data home:${data.toString()}');
               if (data != null) {
                 FlutterAppBadger.removeBadge();
                 PushNotificationService().showNotification(
-                    notiId: notification.hashCode,
-                    androidIcon: android?.smallIcon ?? '',
+                    notiId: message.notification.hashCode,
+                    androidIcon:message.notification?.android?.smallIcon,
                     data: data,
                     isNavigate: true,
                     showNotification: false,

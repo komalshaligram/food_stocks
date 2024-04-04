@@ -8,6 +8,7 @@ import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
+
 import 'package:provider/provider.dart';
 import '../../app_config.dart';
 import '../../data/services/locale_provider.dart';

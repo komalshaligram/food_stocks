@@ -52,7 +52,6 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           if (response.status == 200) {
 
             await SmsAutoFill().listenForCode();
-             debugPrint('getAppSignature_______${SmsAutoFill().getAppSignature}');
             preferencesHelper.setUserId(id: response.user?.id ?? '');
             preferencesHelper.setIsGuestUser(isGuestUser: false);
             preferencesHelper.setPhoneNumber(
