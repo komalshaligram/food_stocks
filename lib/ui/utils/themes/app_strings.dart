@@ -67,6 +67,26 @@ class AppStrings {
   static const homeScreenString = 'homeScreen';
   static const sortFieldString = 'productStock';
   static const sortOrderString = 'desc';
+  static const userIdString = 'id';
+  static const agentIdString = 'agentId';
+  static const businessTypeIdString = 'businessTypeId';
+  static const bankIdString = 'bankId';
+  static const owner1FullNameString = 'owner1FullName';
+  static const owner1IsraelIdString = 'owner1IsraelId';
+  static const owner2FullNameString = 'owner2FullName';
+  static const owner2IsraelIdString = 'owner2IsraelId';
+  static const guarantee1FullNameString = 'guarantee1FullName';
+  static const guarantee1IsraelIdString = 'guarantee1IsraelId';
+  static const guarantee1AddressString = 'guarantee1Address';
+  static const guarantee1PhoneNumberString = 'guarantee1PhoneNumber';
+  static const guarantee2FullNameString = 'guarantee2FullName';
+  static const guarantee2IsraelIdString = 'guarantee2IsraelId';
+  static const guarantee2AddressString = 'guarantee2Address';
+  static const guarantee2PhoneNumberString = 'guarantee2PhoneNumber';
+  static const branchNumberString = 'branchNumber';
+  static const accountNumberString = 'accountNumber';
+
+
 
   //validation strings
   static const businessNameValString = 'businessNameVal';

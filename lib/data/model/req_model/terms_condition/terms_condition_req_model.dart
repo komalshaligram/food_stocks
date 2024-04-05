@@ -44,6 +44,7 @@ class TermsConditionReqModel with _$TermsConditionReqModel {
     String? branchNumber,
     @JsonKey(name: "accountNumber")
     String? accountNumber,
+    String? signature,
   }) = _TermsConditionReqModel;
 
   factory TermsConditionReqModel.fromJson(Map<String, dynamic> json) => _$TermsConditionReqModelFromJson(json);
