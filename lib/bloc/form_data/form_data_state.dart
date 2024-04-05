@@ -8,7 +8,6 @@ class FormDataState with _$FormDataState{
     required String agent,
     required List<BusinessType> businessTypeList,
     required String business,
-    required bool isDisable,
     required TextEditingController owner1NameController,
     required TextEditingController owner2NameController,
     required TextEditingController owner1israelIdController,
@@ -24,6 +23,7 @@ class FormDataState with _$FormDataState{
     required bool isShimmering,
     required bool isAgentListShimmering,
     required bool haveMultiple,
+    required bool isUpdate,
   }) = _FormDataState;
 
   factory FormDataState.initial()=>  FormDataState(
@@ -31,7 +31,6 @@ class FormDataState with _$FormDataState{
     agent: '',
     business: '',
     businessTypeList: [],
-    isDisable: true,
     guarantee1addressController: TextEditingController(),
     guarantee1idController: TextEditingController(),
     guarantee1NameController: TextEditingController(),
@@ -46,7 +45,8 @@ class FormDataState with _$FormDataState{
     owner2NameController: TextEditingController(),
     isShimmering: false,
     haveMultiple: false,
-    isAgentListShimmering: false
+    isAgentListShimmering: false,
+    isUpdate: false
   );
 
 }

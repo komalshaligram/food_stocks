@@ -1,11 +1,13 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../bloc/privacy_policy/privacy_policy_bloc.dart';
+import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -31,7 +33,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
     //print('args____${args?[AppStrings.privacyPolicyPdfString]}');
     return BlocProvider(
       create: (context) => PrivacyPolicyBloc()..add(PrivacyPolicyEvent.getPdfDataEvent(
-          context: context, pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '')),
+          context: context, pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '',
+          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? TermsConditionReqModel()
+      )),
       child: PrivacyPolicyWidget(),
     );
   }
@@ -66,7 +70,6 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
       },
       child: BlocBuilder<PrivacyPolicyBloc, PrivacyPolicyState>(
         builder: (context, state) {
-          print('filepath______${state.filePath}');
           return Scaffold(
             backgroundColor: AppColors.whiteColor,
             appBar: AppBar(
@@ -74,8 +77,6 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
               leading: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
-                   /* Navigator.pushNamed(
-                        context, RouteDefine.activityTimeScreen.name);*/
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Align(
@@ -106,7 +107,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                       onFormFieldFocusChange: onFormFieldFocusChange,
                       onDocumentLoaded: onDocumentLoaded,
                       canShowSignaturePadDialog: true,
-                    ) : SizedBox(),
+                    ) : CupertinoActivityIndicator(),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
@@ -115,6 +116,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                           .next
                           .toUpperCase(),
                       bGColor: AppColors.whiteColor,
+                      isLoading: state.isShimmering,
                       onPressed: () {
                       bloc.add(PrivacyPolicyEvent.navigationEvent(context: context));
                       },

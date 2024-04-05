@@ -169,12 +169,11 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     title: AppLocalizations.of(context)!
                                         .business_details,
                                     onTap: () {
-                                      Navigator.pushNamed(context, RouteDefine.formDataScreen.name);
-                                     /* Navigator.pushNamed(context,
+                                      Navigator.pushNamed(context,
                                           RouteDefine.profileScreen.name,
                                           arguments: {
                                             AppStrings.isUpdateParamString: true
-                                          });*/
+                                          });
                                     }),
                                 profileMenuTiles(
                                     title: AppLocalizations.of(context)!
@@ -182,6 +181,16 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     onTap: () {
                                       Navigator.pushNamed(context,
                                           RouteDefine.moreDetailsScreen.name,
+                                          arguments: {
+                                            AppStrings.isUpdateParamString: true
+                                          });
+                                    }),
+                                profileMenuTiles(
+                                    title: AppLocalizations.of(context)!
+                                        .data_for_form,
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          RouteDefine.formDataScreen.name,
                                           arguments: {
                                             AppStrings.isUpdateParamString: true
                                           });
@@ -198,7 +207,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     }),
                                 profileMenuTiles(
                                     title: AppLocalizations.of(context)!
-                                        .forms_files,
+                                        .files,
                                     onTap: () {
                                       Navigator.pushNamed(context,
                                           RouteDefine.fileUploadScreen.name,

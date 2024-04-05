@@ -125,7 +125,6 @@ flutter:
   assets:
     - assets/images/
     - assets/audio/
-    - assets/pdf/
     - shorebird.yaml
   #   - images/a_dot_ham.jpeg
 

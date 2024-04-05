@@ -12,7 +12,8 @@ class PrivacyPolicyEvent with _$PrivacyPolicyEvent {
 
   factory PrivacyPolicyEvent.getPdfDataEvent({
     required BuildContext context,
-    required String pdfData
+    required String pdfData,
+    required TermsConditionReqModel termsConditionReqModel
   }) =_getPdfDataEvent;
 
 }

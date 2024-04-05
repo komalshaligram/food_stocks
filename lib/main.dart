@@ -7,7 +7,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:food_stock/ui/screens/my_app_screen.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
@@ -65,7 +64,7 @@ void main() async {
         }
       });
     }
-    await ScreenUtil.ensureScreenSize();
+
     runApp(MyApp());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }

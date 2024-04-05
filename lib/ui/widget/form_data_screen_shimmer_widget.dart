@@ -6,9 +6,9 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
 
-class ProfileScreenShimmerWidget extends StatelessWidget {
+class FormDataScreenShimmerWidget extends StatelessWidget {
 
-  const ProfileScreenShimmerWidget({super.key});
+  const FormDataScreenShimmerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,37 +22,7 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              10.height,
-              Center(
-                child: Stack(
-                  children: [
-                    CommonShimmerWidget(
-                      child: Container(
-                        height: AppConstants.containerHeight_80,
-                        width: AppConstants.containerHeight_80,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          shape: BoxShape.circle,
-                        ),
-                        margin: EdgeInsets.only(
-                            bottom: AppConstants.padding_3,
-                            right: AppConstants.padding_3,
-                            left: AppConstants.padding_3),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               3.height,
-              Center(
-                child: CommonShimmerWidget(
-                  child: Container(
-                    width: 90,
-                    height: AppConstants.shimmerTextHeight,
-                    color: AppColors.whiteColor,
-                  ),
-                ),
-              ),
               buildTextFieldTitle(),
               buildTextField(),
               7.height,
@@ -70,9 +40,13 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
               7.height,
               buildTextFieldTitle(),
               buildTextField(),
-              40.height,
+              7.height,
+              buildTextFieldTitle(),
               buildTextField(),
-              20.height,
+              7.height,
+              buildTextFieldTitle(),
+              buildTextField(),
+              7.height,
             ],
           ),
         ),
@@ -88,7 +62,7 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
       ),
     );
@@ -103,7 +77,7 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+          BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );
