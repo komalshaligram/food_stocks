@@ -45,7 +45,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
             final PdfSignatureFormField signatureFormField =
             event.details.formField as PdfSignatureFormField;
             emit(state.copyWith(SignaturePadDialog: true));
-          // showCustomSignaturePadDialog(signatureFormField,event.context);
+           showCustomSignaturePadDialog(signatureFormField,event.context);
 
             if (formField is PdfTextFormField && formField.name == 'Fordm Date') {
               final DateTime? selectedDate = await showDatePicker(
@@ -61,7 +61,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
               }
 
               FocusManager.instance.primaryFocus?.unfocus();
-            }else if(formField.name=='Sign'){
+            }else if(formField.name=='Sign1'){
               print('signature');
            //  showCustomSignaturePadDialog(signatureFormField ,event.context);
             }
@@ -108,35 +108,35 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
         PdfSignatureField _signatureField = PdfSignatureField(
             document.pages[6],'sign',
             tooltip: 'signature',
+            signature: PdfSignature(),
             borderColor: PdfColor(255,0,0),
             backColor: PdfColor(0,255,0),
             bounds: Rect.fromLTWH(170, 290, 100, 50)
         );
 
-
-        document.form.fields.add(PdfSignatureField(  document.pages[6],'sign',
-            tooltip: 'signature',
-            borderColor: PdfColor(255,0,0),
-            backColor: PdfColor(0,255,0),
-            bounds: Rect.fromLTWH(170, 290, 100, 50)));
+        //_signatureField.signature();
+        document.form.fields.add(_signatureField);
 
         document.form.fields.add(PdfSignatureField(document.pages[9], 'Sign1',
             tooltip: 'signature1',
             borderColor: PdfColor(255,0,0),
             backColor: PdfColor(0,255,0),
             bounds: Rect.fromLTWH(370, 365, 100, 40)));
-
+/*
         PdfGraphics? graphics = _signatureField.appearance.normal.graphics;
+
+       // _signatureField.appearance.normal.graphics.
+
+
+        final ui.Image image =
+        await _signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
+        final ByteData? imageBytes =
+        await image.toByteData(format: ui.ImageByteFormat.png);*/
 
         //image = await _signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
       //  print('image____${image}');
-
-       file.writeAsBytes(await document.save());
-
-        print('file____${file}');
+        file.writeAsBytes(await document.save());
         emit(state.copyWith(filePath: filePath));
-
-
       }
     });
   }

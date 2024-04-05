@@ -94,6 +94,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
               elevation: 0,
             ),
             body: SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
               child: Column(
                 children: [
                    Container(
@@ -124,7 +125,6 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                 ],
               ),
             ),
-
           );
         },
       ),
@@ -135,13 +135,11 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
     _formFields = _pdfViewerController.getFormFields();
   }
 
+
   Future<void> onFormFieldFocusChange(
       PdfFormFieldFocusChangeDetails details) async {
     context.read<PrivacyPolicyBloc>().add(
         PrivacyPolicyEvent.onFormFieldFocusChangeEvent(
             context: context, details: details));
   }
-
-
 }
-
