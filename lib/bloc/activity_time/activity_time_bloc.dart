@@ -592,7 +592,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
 
                 if (response1['status'] == 200) {
                   Navigator.pushNamed(
-                      event.context, RouteDefine.fileUploadScreen.name);
+                      event.context, RouteDefine.formDataScreen.name);
                   emit(state.copyWith(isLoading: false));
                 } else {
                   CustomSnackBar.showSnackBar(

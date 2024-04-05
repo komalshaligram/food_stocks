@@ -191,7 +191,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                       ScaffoldMessenger.of(context)
                                           .hideCurrentSnackBar();
                                       Navigator.pushNamed(context,
-                                          RouteDefine.fileUploadScreen.name);
+                                          RouteDefine.formDataScreen.name);
                                     },
                                     bGColor: AppColors.whiteColor,
                                   ),
