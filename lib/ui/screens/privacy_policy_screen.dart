@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../bloc/privacy_policy/privacy_policy_bloc.dart';
-import '../../routes/app_routes.dart';
+import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
@@ -31,7 +31,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
     //print('args____${args?[AppStrings.privacyPolicyPdfString]}');
     return BlocProvider(
       create: (context) => PrivacyPolicyBloc()..add(PrivacyPolicyEvent.getPdfDataEvent(
-          context: context, pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '')),
+          context: context, pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '',
+          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? TermsConditionReqModel()
+      )),
       child: PrivacyPolicyWidget(),
     );
   }
