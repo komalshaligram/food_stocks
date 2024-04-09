@@ -38,7 +38,6 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           isNavigate: true,
           showNotification: true,
           isAppOpen: true
-
       );
   }
 }

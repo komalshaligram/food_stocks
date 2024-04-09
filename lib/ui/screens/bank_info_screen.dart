@@ -12,6 +12,7 @@ import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
+import '../widget/bank_info_shimmer_widget.dart';
 import '../widget/common_drop_down_button.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
@@ -75,13 +76,11 @@ class BankInfoWidget extends StatelessWidget {
           ),
           body: SafeArea(
             child: SingleChildScrollView(
-              child: Padding(
+              child: state.isShimmering ? BankInfoScreenShimmerWidget():
+              Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: getScreenWidth(context) * 0.1),
-                child: state.isShimmering ? Container(
-                  height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
-                  child: Center(child: CupertinoActivityIndicator()),
-                ): Form(
+                child: Form(
                   key:_formKey,
                   child: Column(
                     children: [
@@ -134,7 +133,7 @@ class BankInfoWidget extends StatelessWidget {
               ),
             ),
           ),
-          bottomSheet:   Container(
+          bottomSheet:  !state.isShimmering? Container(
             color: AppColors.whiteColor,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 30,horizontal: 30),
@@ -154,7 +153,7 @@ class BankInfoWidget extends StatelessWidget {
                 fontColors: AppColors.whiteColor,
               ),
             ),
-          ),
+          ):SizedBox(),
         );
       },
     );

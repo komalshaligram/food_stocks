@@ -9,6 +9,7 @@ import 'package:food_stock/ui/screens/activity_time_screen.dart';
 import 'package:food_stock/ui/screens/order_screen.dart';
 import 'package:food_stock/ui/screens/pesach_products_screen.dart';
 import 'package:food_stock/ui/screens/planogram_product_screen.dart';
+import 'package:food_stock/ui/screens/preview_screen.dart';
 import 'package:food_stock/ui/screens/product_category_screen.dart';
 import 'package:food_stock/ui/screens/product_sale_screen.dart';
 import 'package:food_stock/ui/screens/profile_menu_screen.dart';
@@ -79,7 +80,9 @@ enum RouteDefine {
   reorderScreen,
   pesachScreen,
   formDataScreen,
-  bankInfoScreen, privacyPolicyScreen
+  bankInfoScreen,
+  privacyPolicyScreen,
+  previewScreen
 
 }
 
@@ -129,6 +132,7 @@ class AppRouting {
       RouteDefine.bankInfoScreen.name: (_) => BankInfoRoute.route,
       RouteDefine.privacyPolicyScreen.name: (_) => PrivacyPolicyRoute.route,
       RouteDefine.pesachScreen.name: (_) => PesachProductsRoute.route,
+      RouteDefine.previewScreen.name: (_) => PreviewScreenRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

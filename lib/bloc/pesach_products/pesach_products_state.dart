@@ -34,11 +34,13 @@ class PesachProductsState with _$PesachProductsState {
     required bool duringCelebration,
     required int cartCount,
     required int productListIndex,
+    required double bottleDeposit,
   }) = _PesachProductsState;
 
   factory PesachProductsState.initial() => PesachProductsState(
     supplierId: '',
         search: '',
+      bottleDeposit:0.0,
         productList: [],
         isShimmering: false,
         isLoading: false,
@@ -67,7 +69,8 @@ class PesachProductsState with _$PesachProductsState {
     isRelatedShimmering: false,
     duringCelebration: false,
     cartCount: 0,
-    productListIndex: 0
+    productListIndex: 0,
+
 
       );
 }

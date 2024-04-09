@@ -70,8 +70,8 @@ class DioClient {
     debugPrint('URL = ${AppUrls.baseUrl}$path');
     debugPrint('token = ${preferencesHelper.getAuthToken()}');
     final connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi) {
+   /* if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {*/
       try {
         Options requestOptions = options ??
             Options(headers: {
@@ -96,7 +96,7 @@ class DioClient {
           throw _createErrorEntity(e, context: _context);
         }
       }
-    } else {
+   /* } else {
       debugPrint('no internet');
       showDialog(
         context: _context,
@@ -104,7 +104,7 @@ class DioClient {
           Navigator.pop(context);
         }),
       );
-    }
+    }*/
   }
 
   tokenExpirationWork(String path, Object? data,
@@ -191,8 +191,8 @@ class DioClient {
       debugPrint('URL = ${AppUrls.baseUrl}$path');
       final connectivityResult = await (Connectivity().checkConnectivity());
 
-      if (connectivityResult == ConnectivityResult.mobile ||
-          connectivityResult == ConnectivityResult.wifi) {
+     /* if (connectivityResult == ConnectivityResult.mobile ||
+          connectivityResult == ConnectivityResult.wifi) {*/
         try {
           final response = await _dio.get(path,
               queryParameters: query,
@@ -213,7 +213,7 @@ class DioClient {
             throw _createErrorEntity(e, context: _context);
           }
         }
-      } else {
+    /*  } else {
         debugPrint('error');
         showDialog(
           context: _context,
@@ -222,7 +222,7 @@ class DioClient {
           }),
         );
         throw Exception("Network Error");
-      }
+      }*/
     } on DioException catch (e) {
       throw _createErrorEntity(e);
     }
@@ -258,8 +258,8 @@ class DioClient {
       debugPrint('URL = ${AppUrls.baseUrl}$path');
       final connectivityResult = await (Connectivity().checkConnectivity());
 
-      if (connectivityResult == ConnectivityResult.mobile ||
-          connectivityResult == ConnectivityResult.wifi) {
+     /* if (connectivityResult == ConnectivityResult.mobile ||
+          connectivityResult == ConnectivityResult.wifi) {*/
         try {
           debugPrint('URL = ${AppUrls.baseUrl}$path');
           final response = await _dio.put(path,
@@ -283,7 +283,7 @@ class DioClient {
             throw _createErrorEntity(e, context: _context);
           }
         }
-      } else {
+      /*   } else {
         debugPrint('error');
         showDialog(
           context: _context,
@@ -292,7 +292,7 @@ class DioClient {
           }),
         );
         throw Exception("Network Error");
-      }
+      }*/
     } on DioException catch (e) {
       throw _createErrorEntity(e);
     }

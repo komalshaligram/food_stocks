@@ -823,6 +823,12 @@ class BasketScreenWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 CommonProductDetailsWidget(
+                                  totalBottleDeposit: (state.bottleTax* state.productDetails.first.numberOfUnit!.toDouble()* state
+                                      .productStockList[state.productListIndex][
+                                  state.productStockUpdateIndex]
+                                      .quantity),
+                                  bottleTax: state.bottleTax,
+                                  isBottle:state.productDetails.first.isBottle??false,
                                   nmMashlim: state.productDetails.first.nmMashlim??'',
                                   isPesach: state.productDetails.first.isPesach??false,
                                   lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',

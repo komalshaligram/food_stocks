@@ -14,6 +14,9 @@ import '../widget/common_drop_down_button.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
+import '../widget/form_data_screen_shimmer_widget.dart';
+import '../widget/more_details_screen_shimmer_widget.dart';
+import '../widget/profile_screen_shimmer_widget.dart';
 
 class FormDataRoute {
   static Widget get route => const FormDataScreen();
@@ -69,12 +72,11 @@ class FormDataScreenWidget extends StatelessWidget {
           ),
           body:  SafeArea(
             child: SingleChildScrollView(
-              child: Padding(
+              child: state.isShimmering || state.isAgentListShimmering ? FormDataScreenShimmerWidget():
+              Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: getScreenWidth(context) * 0.1),
-                child: state.isShimmering || state.isAgentListShimmering ? Container(
-                  height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
-                    child: Center(child: CupertinoActivityIndicator())): Form(
+                child: Form(
                   key: _formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,

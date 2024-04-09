@@ -108,7 +108,8 @@ class CompanyProductsBloc
                 pageNum: state.pageNum + 1,
                 isShimmering: false,
                 isLoadMore: false,
-                isRefreshingProduct: false
+                isRefreshingProduct: false,
+              bottleDeposit: preferences.getBottleTax(),
             ));
             emit(state.copyWith(
                 isBottomOfProducts: state.productList.length ==
@@ -154,7 +155,7 @@ class CompanyProductsBloc
         _cartProductId = '';
         _productQuantity = 0;
         try {
-          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
+          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false,));
 
           final res = await DioClient(event.context).post(
               AppUrls.getProductDetailsUrl,
@@ -793,7 +794,7 @@ class CompanyProductsBloc
         }
       }
       else if (event is _GlobalSearchEvent) {
-        emit(state.copyWith(search: state.searchController.text));
+        emit(state.copyWith(search: state.searchController.text,bottleDeposit: preferences.getBottleTax()));
         debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =

@@ -30,6 +30,7 @@ class PlanogramProductState with _$PlanogramProductState {
     required bool isRelatedShimmering,
     required bool isGuestUser,
     required int productListIndex,
+    required double bottleDeposit,
   }) = _PlanogramProductState;
 
   factory PlanogramProductState.initial() => PlanogramProductState(
@@ -59,6 +60,7 @@ class PlanogramProductState with _$PlanogramProductState {
     relatedProductList: [],
     isRelatedShimmering: false,
     isGuestUser: false,
-    productListIndex: -1
+    productListIndex: -1,
+    bottleDeposit: 0.0
       );
 }

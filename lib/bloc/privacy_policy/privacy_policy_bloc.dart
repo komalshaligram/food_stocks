@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/routes/app_routes.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -30,15 +32,19 @@ part 'privacy_policy_state.dart';
 part 'privacy_policy_event.dart';
 part 'privacy_policy_bloc.freezed.dart';
 
+
 class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
   final GlobalKey<SfSignaturePadState> _signaturePadKey = GlobalKey();
   ui.Image? image;
   File imagePath = File('');
-  Uint8List? documentBytes;
+  Uint8List? documentByte;
+   PdfFormField? formField;
+  File file = File('');
+  List<String>signPathList = [];
 
   TermsConditionReqModel termsConditionReqModel = TermsConditionReqModel();
   PrivacyPolicyBloc() : super(PrivacyPolicyState.initial()) {
-
+    Uint8List? documentBytes;
 
     on<PrivacyPolicyEvent>((event, emit)   async {
       SharedPreferencesHelper preferencesHelper =
@@ -47,17 +53,24 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
 
       if(event is _onFormFieldFocusChangeEvent){
 
-          final PdfFormField formField = event.details.formField;
-          print('formField.name:${formField.name}');
-        print('formfield____${formField}');
-          if (event.details.hasFocus) {
+           formField = event.details.formField;
+
+          print('formField.name:${formField?.name}');
+      /*    if(formField != null){
             final PdfSignatureFormField signatureFormField =
-            event.details.formField as PdfSignatureFormField;
-            showCustomSignaturePadDialog(signatureFormField ,event.context);
+            formField as PdfSignatureFormField;
+            final imageInUnit8List = (signatureFormField.signature);
+            final directory =
+                (await getApplicationDocumentsDirectory()).path;
+            var path = '$directory/${formField?.name}.png';
+            imagePath = await File(path).writeAsBytes(imageInUnit8List as List<int>);
+            signPathList.add(imagePath.path);
 
+          }*/
 
-           if(formField.name=='Sign'){
-             showCustomSignaturePadDialog(signatureFormField ,event.context);
+          if (event.details.hasFocus) {
+            if(formField?.name=='Sign'){
+         //    showCustomSignaturePadDialog(signatureFormField ,event.context);
 
             }
           }
@@ -71,40 +84,27 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
           await Permission.storage.request();
         }
 
-        File file;
-
         Directory dir;
         String filePath = '';
-
         if (defaultTargetPlatform == TargetPlatform.android) {
           dir = Directory('/storage/emulated/0/Documents');
         } else {
           dir = await getApplicationDocumentsDirectory();
         }
-
-
         filePath =
         '${dir.path}/${preferencesHelper.getUserName()}${'.'}${(DateTime.now()).hour}${'.'}${(DateTime.now()).minute}${'.pdf'}';
         file = File(filePath);
 
          documentBytes = base64.decode(event.pdfData);
         PdfDocument document = PdfDocument(inputBytes: documentBytes);
-     //   final data = await _signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
-        //final bytes = await data.toByteData(format: ui.ImageByteFormat.png);
 
-
-        document.form.fields.add(PdfSignatureField(  document.pages[6],'sign',
-            tooltip: 'signature',
-            borderColor: PdfColor(255,0,0),
-            backColor: PdfColor(0,255,0),
-            bounds: Rect.fromLTWH(170, 290, 100, 50)));
+        document.form.fields.add(PdfSignatureField(document.pages[6],'sign',
+            backColor: PdfColor(255,255,255),
+            bounds: Rect.fromLTWH(135, 310, 100, 50)));
 
         document.form.fields.add(PdfSignatureField(document.pages[9], 'Sign1',
-            tooltip: 'signature1',
-            borderColor: PdfColor(255,0,0),
-            backColor: PdfColor(0,255,0),
-            bounds: Rect.fromLTWH(370, 365, 100, 40)));
-
+            backColor: PdfColor(255,255,255),
+            bounds: Rect.fromLTWH(360, 390, 100, 40)));
 
        file.writeAsBytes(await document.save());
 
@@ -114,47 +114,77 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
 
       }
       else if(event is _navigationEvent){
-        String signUrl = '';
-        try {
-          final res =
-          await DioClient(event.context).uploadFileProgressWithFormData(
-            path: AppUrls.termsConditionUrl,
-            formData: FormData.fromMap(
-              {
-                AppStrings.userIdString : preferencesHelper.getUserId(),
-                AppStrings.agentIdString : termsConditionReqModel.agentId,
-                AppStrings.businessTypeIdString : termsConditionReqModel.businessTypeId,
-                AppStrings.owner1FullNameString : termsConditionReqModel.owner1FullName,
-                AppStrings.owner1IsraelIdString : termsConditionReqModel.owner1IsraelId,
-                AppStrings.owner2FullNameString : termsConditionReqModel.owner2FullName,
-                AppStrings.owner2IsraelIdString : termsConditionReqModel.owner2IsraelId,
-                AppStrings.guarantee1FullNameString : termsConditionReqModel.guarantee1FullName,
-                AppStrings.guarantee1IsraelIdString : termsConditionReqModel.guarantee1IsraelId,
-                AppStrings.guarantee1AddressString : termsConditionReqModel.guarantee1Address,
-                AppStrings.guarantee1PhoneNumberString : termsConditionReqModel.guarantee1PhoneNumber,
-                AppStrings.guarantee2FullNameString : termsConditionReqModel.guarantee2FullName,
-                AppStrings.guarantee2IsraelIdString : termsConditionReqModel.guarantee2IsraelId,
-                AppStrings.guarantee2AddressString : termsConditionReqModel.guarantee2Address,
-                AppStrings.guarantee2PhoneNumberString : termsConditionReqModel.guarantee2PhoneNumber,
-                AppStrings.bankIdString : termsConditionReqModel.bankId,
-                AppStrings.branchNumberString : termsConditionReqModel.branchNumber,
-                AppStrings.accountNumberString : termsConditionReqModel.accountNumber,
-                AppStrings.signatureString: await MultipartFile.fromFile(
-                    imagePath.path,
-                    contentType: MediaType('image', 'png')),
-              },
-            ),
-          );
-          debugPrint('fileUpload url = ${AppUrls.baseUrl}${AppUrls.termsConditionUrl}');
-          print('termCondition response ____${res}');
 
-          TermsConditionResModel response =
-          TermsConditionResModel.fromJson(res);
-          if(response.status == 200){
-            print('success');
-          }
+        if(formField != null){
+          final PdfSignatureFormField signatureFormField =
+          formField as PdfSignatureFormField;
+          final imageInUnit8List = (signatureFormField.signature);
+          final directory =
+              (await getApplicationDocumentsDirectory()).path;
+          var path = '$directory/${formField?.name}.png';
+          imagePath = await File(path).writeAsBytes(imageInUnit8List as List<int>);
+        //  signPathList.add(imagePath.path);
+        }
+        else{
+          CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppLocalizations.of(event.context)!.signature_missing,
+              type: SnackBarType.FAILURE);
+        }
 
-        } on ServerException {}
+        if(imagePath.path.isNotEmpty){
+          emit(state.copyWith(isShimmering: true));
+          try {
+            final res =
+            await DioClient(event.context).uploadFileProgressWithFormData(
+              path: AppUrls.termsConditionUrl,
+              formData: FormData.fromMap(
+                {
+                  AppStrings.userIdString : preferencesHelper.getUserId(),
+                  AppStrings.agentIdString : termsConditionReqModel.agentId,
+                  AppStrings.businessTypeIdString : termsConditionReqModel.businessTypeId,
+                  AppStrings.owner1FullNameString : termsConditionReqModel.owner1FullName,
+                  AppStrings.owner1IsraelIdString : termsConditionReqModel.owner1IsraelId,
+                  AppStrings.owner2FullNameString : termsConditionReqModel.owner2FullName,
+                  AppStrings.owner2IsraelIdString : termsConditionReqModel.owner2IsraelId,
+                  AppStrings.guarantee1FullNameString : termsConditionReqModel.guarantee1FullName,
+                  AppStrings.guarantee1IsraelIdString : termsConditionReqModel.guarantee1IsraelId,
+                  AppStrings.guarantee1AddressString : termsConditionReqModel.guarantee1Address,
+                  AppStrings.guarantee1PhoneNumberString : termsConditionReqModel.guarantee1PhoneNumber,
+                  AppStrings.guarantee2FullNameString : termsConditionReqModel.guarantee2FullName,
+                  AppStrings.guarantee2IsraelIdString : termsConditionReqModel.guarantee2IsraelId,
+                  AppStrings.guarantee2AddressString : termsConditionReqModel.guarantee2Address,
+                  AppStrings.guarantee2PhoneNumberString : termsConditionReqModel.guarantee2PhoneNumber,
+                  AppStrings.bankIdString : termsConditionReqModel.bankId,
+                  AppStrings.branchNumberString : termsConditionReqModel.branchNumber,
+                  AppStrings.accountNumberString : termsConditionReqModel.accountNumber,
+                  AppStrings.signatureString: await MultipartFile.fromFile(
+                      imagePath.path,
+                      contentType: MediaType('image', 'png')),
+                },
+              ),
+            );
+            debugPrint('fileUpload url = ${AppUrls.baseUrl}${AppUrls.termsConditionUrl}');
+            print('termCondition response ____${res}');
+
+            TermsConditionResModel response =
+            TermsConditionResModel.fromJson(res);
+            if(response.status == 200){
+              emit(state.copyWith(isShimmering: false));
+              Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
+              file.deleteSync(recursive: true);
+            }
+
+          } on ServerException {emit(state.copyWith(isShimmering: false));}
+        }
+        else{
+          CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppLocalizations.of(event.context)!.signature_missing,
+              type: SnackBarType.FAILURE);
+        }
+
+
     /*    if(signUrl.isNotEmpty){
           termsConditionReqModel = TermsConditionReqModel(
               id: preferencesHelper.getUserId(),
@@ -241,71 +271,13 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
   }
 
 
-
-  Future<void> showCustomSignaturePadDialog(PdfSignatureFormField formField,
-      BuildContext context) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            '${AppLocalizations.of(context)!.signature}',
-            textAlign: TextAlign.center,
-            style: AppStyles.rkRegularTextStyle(
-              size: AppConstants.smallFont,
-              color: Colors.black,
-            ),
-          ),
-          titlePadding: const EdgeInsets.all(8),
-          contentPadding: const EdgeInsets.all(12),
-          content: Container(
-            height: 200,
-            width: 300,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-            ),
-            child: SfSignaturePad(
-              key: _signaturePadKey,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Clears the strokes in the signature pad.
-                _signaturePadKey.currentState!.clear();
-              },
-              child: Text('${AppLocalizations.of(context)!.close}',
-                style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.smallFont,
-                  color: AppColors.redColor,
-                ),),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-                 _saveSignature(formField, context);
-              },
-              child: Text('${AppLocalizations.of(context)!.save}',
-                style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.smallFont,
-                  color: AppColors.mainColor,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-
   void _saveSignature(PdfSignatureFormField formField,
       BuildContext context) async {
 
     ui.Image tempImage =
     await _signaturePadKey.currentState!.toImage();
 
-    PdfDocument document = PdfDocument(inputBytes: documentBytes);
+    PdfDocument document = PdfDocument(inputBytes: documentByte);
 
     var data = await tempImage.toByteData(
         format: ui.ImageByteFormat.png);
@@ -317,14 +289,12 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     imagePath = await File(path).writeAsBytes(imageInUnit8List);
 
     print('imagepath____${imagePath}');
-    print('page___${document.pages.count}');
-    document.pages[6].graphics.drawImage(PdfBitmap(imageInUnit8List),
-    Rect.fromLTWH(370, 365, 100, 40));
-    document.form.fields.add(PdfSignatureField(document.pages[6], 'Sign1',
-        tooltip: 'signature1',
-        borderColor: PdfColor(255,0,0),
-        backColor: PdfColor(0,255,0),
-        bounds: Rect.fromLTWH(370, 365, 100, 40)));
-document.save();
+
+
+
   }
+
+
+
+
 }

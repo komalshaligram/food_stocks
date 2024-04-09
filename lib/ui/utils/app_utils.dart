@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
@@ -12,6 +13,7 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -38,6 +40,14 @@ bool isTablet(BuildContext context) {
     return true;
   }
   return isTablet;
+}
+
+Future<String> getBottleTax() async {
+  SharedPreferencesHelper preferencesHelper =
+  SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+  debugPrint('___bottleTax_____ :${preferencesHelper.getBottleTax().toString()}');
+  var value =  preferencesHelper.getBottleTax().toString();
+   return Future.value(value.toString());
 }
 
  double getChildAspectRatio(BuildContext context){
@@ -270,14 +280,24 @@ double totalVatAmountCalculation(
   return result;
 }
 
-double bottleDepositCalculation(
+/*double bottleDepositCalculation(
     {required double qty, required double deposit}) {
   double result = qty * deposit;
   debugPrint('qty$qty');
   debugPrint('bottle deposit$deposit');
   debugPrint('bottle tax$result');
   return result;
+}*/
+
+double bottleDepositCalculation(
+    { double units =1, required double deposit,required double qty}) {
+  double result = qty * deposit * units;
+  debugPrint('qty$qty');
+  debugPrint('bottle deposit$deposit');
+  debugPrint('bottle tax$result');
+  return result;
 }
+
 
 double saleCalculation({required double price, required double salePer}) {
   double result = price - (price * (salePer / 100));

@@ -1,12 +1,15 @@
-
+import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../bloc/privacy_policy/privacy_policy_bloc.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
+import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
@@ -60,15 +63,11 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
   @override
   Widget build(BuildContext context) {
     PrivacyPolicyBloc bloc= context.read<PrivacyPolicyBloc>();
-
     return BlocListener<PrivacyPolicyBloc, PrivacyPolicyState>(
-
       listener: (context, state) {
-
       },
       child: BlocBuilder<PrivacyPolicyBloc, PrivacyPolicyState>(
         builder: (context, state) {
-          print('filepath______${state.filePath}');
           return Scaffold(
             backgroundColor: AppColors.whiteColor,
             appBar: AppBar(
@@ -76,8 +75,6 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
               leading: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
-                   /* Navigator.pushNamed(
-                        context, RouteDefine.activityTimeScreen.name);*/
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Align(
@@ -99,25 +96,26 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
               physics: NeverScrollableScrollPhysics(),
               child: Column(
                 children: [
-                   Container(
+                  Container(
                     color: AppColors.whiteColor,
                     height: getScreenHeight(context) - 170,
                     child:  state.filePath != '' ? SfPdfViewer.file(
                      File(state.filePath),
                       key: _pdfViewerKey,
+                      canShowScrollStatus: false,
                       controller: _pdfViewerController,
                       onFormFieldFocusChange: onFormFieldFocusChange,
                       onDocumentLoaded: onDocumentLoaded,
                       canShowSignaturePadDialog: true,
-                    ) : SizedBox(),
+                    ) : CupertinoActivityIndicator(),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: CustomButtonWidget(
-                      buttonText: AppLocalizations.of(context)!
-                          .next
-                          .toUpperCase(),
+                      enable: state.nextEnable,
+                      buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
                       bGColor: AppColors.whiteColor,
+                      isLoading: state.isShimmering,
                       onPressed: () {
                       bloc.add(PrivacyPolicyEvent.navigationEvent(context: context));
                       },
@@ -136,7 +134,6 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
   void onDocumentLoaded(PdfDocumentLoadedDetails details) {
     _formFields = _pdfViewerController.getFormFields();
   }
-
 
   Future<void> onFormFieldFocusChange(
       PdfFormFieldFocusChangeDetails details) async {

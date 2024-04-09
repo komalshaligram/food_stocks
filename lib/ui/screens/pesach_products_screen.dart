@@ -781,17 +781,13 @@ class PesachProductsScreenWidget extends StatelessWidget {
           expand: true,
           maxChildSize: 1 -
               (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
-          minChildSize: productStock == '0'
-              ? 0.8
-              : 1 -
+                  getScreenHeight(context)*0.2),
+          minChildSize:  productStock == '0' ? 0.9 :  1 -
               (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
-          initialChildSize: productStock == '0'
-              ? 0.8
-              : 1 -
+                  getScreenHeight(context)*0.2),
+          initialChildSize:  productStock == '0' ? 0.9 :  1 -
               (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
+                  getScreenHeight(context)*0.2),
           builder: (BuildContext context1, ScrollController scrollController) {
             return BlocProvider.value(
               value: context.read<PesachProductsBloc>(),
@@ -842,6 +838,12 @@ class PesachProductsScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
+                                  .productStockList[state.productListIndex][
+                              state.productStockUpdateIndex]
+                                  .quantity),
+                              bottleTax: state.bottleDeposit,
+                              isBottle:state.productDetails.first.isBottle??false,
                               nmMashlim: state.productDetails.first.nmMashlim??'',
                               isPesach: state.productDetails.first.isPesach??false,
                               lowStock: state.productDetails.first
