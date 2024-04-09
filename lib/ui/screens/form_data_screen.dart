@@ -39,6 +39,8 @@ class FormDataScreen extends StatelessWidget {
 class FormDataScreenWidget extends StatelessWidget {
   FormDataScreenWidget({super.key});
   final _formKey = GlobalKey<FormState>();
+  String ownerName = '';
+
 
 
   @override
@@ -214,7 +216,11 @@ class FormDataScreenWidget extends StatelessWidget {
                               hint: "",
                               fillColor: Colors.transparent,
                               textInputAction: TextInputAction.next,
-                              validator: ''
+                              validator: '',
+                           onChangeValue: (t){
+                                print('t___${t}');
+                             ownerName = t;
+                           },
                           ),
                           7.height,
                           CustomContainerWidget(
@@ -228,7 +234,7 @@ class FormDataScreenWidget extends StatelessWidget {
                             hint: "",
                             fillColor: Colors.transparent,
                             textInputAction: TextInputAction.next,
-                            validator: '',
+                            validator: ownerName.isNotEmpty ? AppStrings.idValString: '',
                           ),
                           7.height,
                           CustomContainerWidget(
@@ -242,7 +248,7 @@ class FormDataScreenWidget extends StatelessWidget {
                             hint: "",
                             fillColor: Colors.transparent,
                             textInputAction: TextInputAction.next,
-                            validator: '',
+                            validator: ownerName.isNotEmpty ? AppStrings.guaranteeNameString: '',
                           ),
                           7.height,
                           CustomContainerWidget(
@@ -256,7 +262,7 @@ class FormDataScreenWidget extends StatelessWidget {
                             hint: "",
                             fillColor: Colors.transparent,
                             textInputAction: TextInputAction.next,
-                            validator: '',
+                            validator: ownerName.isNotEmpty ? AppStrings.idValString: '',
                           ),
                           7.height,
                           CustomContainerWidget(
@@ -270,7 +276,7 @@ class FormDataScreenWidget extends StatelessWidget {
                             hint: "",
                             fillColor: Colors.transparent,
                             textInputAction: TextInputAction.next,
-                            validator: '',
+                            validator: ownerName.isNotEmpty ? AppStrings.addressValString: '',
                           ),
                           7.height,
                           CustomContainerWidget(
@@ -284,10 +290,11 @@ class FormDataScreenWidget extends StatelessWidget {
                             hint: "",
                             fillColor: Colors.transparent,
                             textInputAction: TextInputAction.done,
-                            validator: '',
+                            validator: ownerName.isNotEmpty ? AppStrings.mobileValString: '',
                           ),
                         ],
                       ) : SizedBox(),
+
 
                       40.height,
                       CustomButtonWidget(
@@ -301,7 +308,6 @@ class FormDataScreenWidget extends StatelessWidget {
                                 ?.validate() ??
                                 false) {
                               bloc.add(FormDataEvent.navigateToNextScreenEvent(context: context));
-
                             }
                           }
                           else{

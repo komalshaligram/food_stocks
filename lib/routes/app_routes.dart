@@ -29,6 +29,7 @@ import '../ui/screens/file_upload_screen.dart';
 import '../ui/screens/order_details_screen.dart';
 import '../ui/screens/order_successful_screen.dart';
 import '../ui/screens/order_summary_screen.dart';
+import '../ui/screens/preview_screen.dart';
 import '../ui/screens/privacy_policy_screen.dart';
 import '../ui/screens/product_details_screen.dart';
 import '../ui/screens/profile_screen.dart';
@@ -79,7 +80,8 @@ enum RouteDefine {
   reorderScreen,
   pesachScreen,
   formDataScreen,
-  bankInfoScreen, privacyPolicyScreen
+  bankInfoScreen, privacyPolicyScreen,
+  previewScreen
 
 }
 
@@ -130,6 +132,7 @@ class AppRouting {
       RouteDefine.bankInfoScreen.name: (_) => BankInfoRoute.route,
       RouteDefine.privacyPolicyScreen.name: (_) => PrivacyPolicyRoute.route,
       RouteDefine.pesachScreen.name: (_) => PesachProductsRoute.route,
+      RouteDefine.previewScreen.name: (_) => PreviewScreenRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

@@ -85,6 +85,11 @@ class AppStrings {
   static const guarantee2PhoneNumberString = 'guarantee2PhoneNumber';
   static const branchNumberString = 'branchNumber';
   static const accountNumberString = 'accountNumber';
+  static const owner1SignatureString = 'owner1Signature';
+  static const owner2SignatureString = 'owner2Signature';
+  static const guarantee1SignatureString = 'guarantee1Signature';
+  static const guarantee2SignatureString = 'guarantee2Signature';
+  static const guaranteeNameString = 'guaranteeNameString';
 
 
 
@@ -103,9 +108,9 @@ class AppStrings {
   static const generalValString = 'generalVal';
   static const mobileValString = 'mobileVal';
   static const cityValString = 'cityVal';
-  static const guaranteeNameString = 'guaranteeNameString';
-  static const branchValString = 'branchValString';
-  static const accountValString = 'accountValString';
+  static const branchValString = 'branchVal';
+  static const accountValString = 'accountVal';
+
 
 
   static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
@@ -131,6 +136,7 @@ class AppStrings {
   static const searchType = 'searchType';
   static const termsConditionParamString = 'termsConditionParam';
   static const privacyPolicyPdfString = 'pdf';
+  static const clientFormString = 'clientForm';
 
   //hint strings
   static const hintNumberString = '1234567890';
@@ -148,7 +154,7 @@ class AppStrings {
   static const quantityString = 'quantity';
   static const supplierOrderNumberString = 'supplierOrderNumber';
   static const totalAmountString = 'totalAmount';
-  static const cartIdString = 'id';
+  static const cartIdString = 'cartId';
   static const driverNameString = 'driverName';
   static const driverNumberString = 'driverNumber';
   static const messageIdString = 'messageId';

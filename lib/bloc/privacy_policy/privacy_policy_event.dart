@@ -15,5 +15,10 @@ class PrivacyPolicyEvent with _$PrivacyPolicyEvent {
     required String pdfData,
     required TermsConditionReqModel termsConditionReqModel
   }) =_getPdfDataEvent;
+  factory PrivacyPolicyEvent.signatureEvent({required BuildContext context,
+    required String fieldName,
+    required String fieldNameForSign,
 
+  }) =
+  _signatureEvent;
 }

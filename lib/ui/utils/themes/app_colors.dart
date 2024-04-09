@@ -37,4 +37,9 @@ class AppColors {
       end: Alignment.centerRight,
       colors: [AppColors.whiteColor,AppColors.whiteColor]);
 
+  static Gradient disableGradientColor =  LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [AppColors.greyColor,AppColors.greyColor]);
+
 }

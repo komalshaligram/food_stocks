@@ -42,16 +42,20 @@ class AuthFormValidation {
 
       case AppStrings.guaranteeNameString:
         return formFieldValidation.guaranteeNameField(value,context);
+
       case AppStrings.branchValString:
         return formFieldValidation.branchNumberField(value,context);
 
       case AppStrings.accountValString:
         return formFieldValidation.accountNumberField(value,context);
-      case AppStrings.accountValString:
+
+      case AppStrings.streetNameValString:
         return formFieldValidation.streetNameField(value,context);
-      case AppStrings.accountValString:
+
+      case AppStrings.streetNumberValString:
         return formFieldValidation.streetNumberField(value,context);
-      case AppStrings.accountValString:
+
+      case AppStrings.zipValString:
         return formFieldValidation.zipField(value,context);
 
     }
