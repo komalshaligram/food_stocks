@@ -41,4 +41,9 @@ class FileUploadEvent with _$FileUploadEvent {
     required BuildContext context,
     required bool isUpdate
   }) = _formFileRegisterEvent;
+
+  factory FileUploadEvent.pdfPreviewEvent({
+    required BuildContext context,
+    required int fileIndex,
+  }) = _pdfPreviewEvent;
 }

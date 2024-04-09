@@ -185,7 +185,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                             AppStrings.isUpdateParamString: true
                                           });
                                     }),
-                                profileMenuTiles(
+                               profileMenuTiles(
                                     title: AppLocalizations.of(context)!
                                         .data_for_form,
                                     onTap: () {

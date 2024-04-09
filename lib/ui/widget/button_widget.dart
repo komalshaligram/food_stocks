@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 
@@ -11,6 +12,7 @@ class ButtonWidget extends StatelessWidget {
   final double fontSize;
   final double radius;
   final Color borderColor;
+
 
   ButtonWidget(
       {super.key,
@@ -40,7 +42,7 @@ class ButtonWidget extends StatelessWidget {
         elevation: 0,
         minWidth: width,
         onPressed: onPressed,
-        child: Text(
+        child:  Text(
           buttonText,
           style: AppStyles.rkRegularTextStyle(
             size: fontSize,

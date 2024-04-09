@@ -249,9 +249,6 @@ class PushNotificationService {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.companyScreen.name,
               arguments: {AppStrings.companyIdString: id});
-       /*   Navigator.pushNamed(OneContext().context!,
-              RouteDefine.companyScreen.name,
-              arguments: {AppStrings.companyIdString: id});*/
         }
         if (mainPage == 'saleScreen/') {
           Navigator.pushNamed(navigatorKey.currentState!.context,

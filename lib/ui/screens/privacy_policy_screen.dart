@@ -53,11 +53,9 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
 
   final PdfViewerController _pdfViewerController = PdfViewerController();
 
-  List<PdfFormField>? _formFields;
-
   ui.Image? image;
   bool isImage = false;
-
+  PdfFormFieldFocusChangeDetails? details;
 
   @override
   Widget build(BuildContext context) {
@@ -99,30 +97,121 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                 children: [
                    Container(
                     color: AppColors.whiteColor,
-                    height: getScreenHeight(context) - 170,
-                    child:  state.filePath != '' ? SfPdfViewer.file(
-                     File(state.filePath),
+                    height: getScreenHeight(context) - (state.isOwner2Available ?
+                    getScreenHeight(context) * 0.35 : getScreenHeight(context) * 0.28
+                    ),
+                    child: state.pdfPath != '' ? SfPdfViewer.memory(
+                     state.pdfPath,
                       key: _pdfViewerKey,
                       controller: _pdfViewerController,
-                      onFormFieldFocusChange: onFormFieldFocusChange,
-                      onDocumentLoaded: onDocumentLoaded,
+                 //     onFormFieldFocusChange: onFormFieldFocusChange,
+                   //   onDocumentLoaded: onDocumentLoaded,
                       canShowSignaturePadDialog: true,
                     ) : CupertinoActivityIndicator(),
                   ),
                   Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomButtonWidget(
+                          fontSize:AppConstants.font_13,
+                          buttonText: AppLocalizations.of(context)!
+                              .owner1_sign
+                              .toCapitalized(),
+                          height: 45,
+                          bGColor: AppColors.whiteColor,
+                          width: getScreenWidth(context)/2.2,
+                          onPressed: () {
+                            bloc.add(PrivacyPolicyEvent.signatureEvent(context: context,
+                                fieldName: AppStrings.owner1SignatureString,
+                                fieldNameForSign: AppLocalizations.of(context)!
+                                    .owner1_sign
+                            ));
+                          },
+                          fontColors: AppColors.whiteColor,
+                        ),
+                        CustomButtonWidget(
+                    fontSize:AppConstants.font_13,
+                          buttonText: AppLocalizations.of(context)!
+                              .guarantee1_sign
+                              .toCapitalized(),
+                          height: 45,
+                          bGColor: AppColors.whiteColor,
+                          width: getScreenWidth(context)/2.2,
+                          onPressed: () {
+                         bloc.add(PrivacyPolicyEvent.signatureEvent(context: context,
+                              fieldName: AppStrings.guarantee1SignatureString,
+                              fieldNameForSign: AppLocalizations.of(context)!.guarantee1_sign
+                            ));
+                          },
+                          fontColors: AppColors.whiteColor,
+                        ),
+
+                      ],
+                    ),
+                  ),
+                  state.isOwner2Available ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomButtonWidget(
+                          fontSize:AppConstants.font_13,
+                          buttonText: AppLocalizations.of(context)!
+                              .owner2_sign
+                              .toCapitalized(),
+                          height: 45,
+                          bGColor: AppColors.whiteColor,
+                          width: getScreenWidth(context)/2.2,
+                          onPressed: () {
+                            bloc.add(PrivacyPolicyEvent.signatureEvent(context: context,
+                                fieldName: AppStrings.owner2SignatureString,
+                                fieldNameForSign: AppLocalizations.of(context)!
+                                    .owner2_sign
+                            ));
+                          },
+                          fontColors: AppColors.whiteColor,
+                        ),
+                        CustomButtonWidget(
+                          fontSize:AppConstants.font_13,
+                          buttonText: AppLocalizations.of(context)!
+                              .guarantee2_sign
+                              .toCapitalized(),
+                          height: 45,
+                          bGColor: AppColors.whiteColor,
+                          width: getScreenWidth(context)/2.2,
+                          onPressed: () {
+                            bloc.add(PrivacyPolicyEvent.signatureEvent(context: context,
+                                fieldName: AppStrings.guarantee2SignatureString,
+                                fieldNameForSign: AppLocalizations.of(context)!
+                                    .guarantee2_sign
+                            ));
+                          },
+                          fontColors: AppColors.whiteColor,
+                        ),
+
+                      ],
+                    ),
+                  ) : SizedBox(),
+
+                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: CustomButtonWidget(
+                      height: 50,
                       buttonText: AppLocalizations.of(context)!
                           .next
                           .toUpperCase(),
                       bGColor: AppColors.whiteColor,
+                      enable: state.isNextEnable,
                       isLoading: state.isShimmering,
                       onPressed: () {
-                      bloc.add(PrivacyPolicyEvent.navigationEvent(context: context));
+                      bloc.add(PrivacyPolicyEvent.navigationEvent(context: context,
+                      ));
                       },
                       fontColors: AppColors.whiteColor,
                     ),
-                  ),
+                  ) ,
                 ],
               ),
             ),
@@ -133,16 +222,8 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
     );
   }
 
-  void onDocumentLoaded(PdfDocumentLoadedDetails details) {
-    _formFields = _pdfViewerController.getFormFields();
-  }
 
-  Future<void> onFormFieldFocusChange(
-      PdfFormFieldFocusChangeDetails details) async {
-    context.read<PrivacyPolicyBloc>().add(
-        PrivacyPolicyEvent.onFormFieldFocusChangeEvent(
-            context: context, details: details));
-  }
+
 
 
 }

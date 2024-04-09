@@ -439,5 +439,11 @@
   "enter_street_name":"Please enter street name",
    "enter_street_number":"Please enter street number",
    "enter_zip":"Please enter zip code",
-    "zip": "Zip"
+    "zip": "Zip",
+    "owner1_sign" :"Owner1 Signature",
+     "owner2_sign" :"Owner2 Signature",
+      "guarantee1_sign" :"Guarantee1 Signature",
+      "guarantee2_sign" :"Guarantee2 Signature",
+      "upload_document" :"Please upload document"
+
 }

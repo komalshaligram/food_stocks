@@ -377,7 +377,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     keyboardType: TextInputType.number,
                                     hint: AppLocalizations.of(context)!.fax,
                                     fillColor: AppColors.whiteColor,
-                                    textInputAction: TextInputAction.done,
+                                    textInputAction: TextInputAction.next,
                                      validator: AppStrings.faxValString,
 
                                   ),

@@ -15,6 +15,7 @@ class FileUploadState with _$FileUploadState {
     required bool isFileSizeExceeds,
     required bool isRemoveProcess,
     required String language,
+    required bool isPdfPreview,
   }) = _FileUploadState;
 
   factory FileUploadState.initial() => FileUploadState(
@@ -29,6 +30,7 @@ class FileUploadState with _$FileUploadState {
         isDownloading: false,
         downloadProgress: 0,
     isRemoveProcess: false,
-    language: 'he'
+    language: 'he',
+    isPdfPreview: false,
       );
 }

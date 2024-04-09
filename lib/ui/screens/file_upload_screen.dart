@@ -12,6 +12,7 @@ import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/file_upload_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../bloc/file_upload/file_upload_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
@@ -44,14 +45,13 @@ class FileUploadScreen extends StatelessWidget {
             isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
                 ? true
                 : false)),
-      child: const FileUploadScreenWidget(),
+      child:  FileUploadScreenWidget(),
     );
   }
 }
 
 class FileUploadScreenWidget extends StatelessWidget {
-  const FileUploadScreenWidget({super.key});
-
+   FileUploadScreenWidget({super.key});
   @override
   Widget build(BuildContext context) {
     FileUploadBloc bloc = context.read<FileUploadBloc>();
@@ -68,6 +68,7 @@ class FileUploadScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<FileUploadBloc, FileUploadState>(
         builder: (context, state) {
+          print('formsAndFilesList___${state.formsAndFilesList}');
           return WillPopScope(
             onWillPop: () {
               // if (state.isDownloading) {
@@ -140,7 +141,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 ),
                                               ),
                                             )
-                                          : ListView.builder(
+                                          :  ListView.builder(
                                               shrinkWrap: true,
                                               itemCount: state
                                                   .formsAndFilesList.length,
@@ -187,7 +188,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                         padding: const EdgeInsets.all(8.0),
                                         child: Column(
                                           children: [
-                                            CustomButtonWidget(
+                                         !state.isUpdate ? CustomButtonWidget(
                                               buttonText: state.isUpdate
                                                   ? AppLocalizations.of(context)!
                                                   .save
@@ -200,46 +201,25 @@ class FileUploadScreenWidget extends StatelessWidget {
                                               onPressed: state.isApiLoading
                                                   ? null
                                                   : () {
-                                                bloc.add(FileUploadEvent
-                                                    .uploadApiEvent(
-                                                    context: context));
+                                                 if(state.formsAndFilesList[0].url != null && state.formsAndFilesList[1].url != null
+                                                 && state.formsAndFilesList[2].url != null
+                                                 ){
+                                                    bloc.add(FileUploadEvent
+                                                        .uploadApiEvent(
+                                                        context: context));
+                                                  }
+                                                  else{
+                                                    CustomSnackBar.showSnackBar(
+                                                        context:context,
+                                                        title: AppLocalizations.of(context)!.upload_document,
+                                                        type: SnackBarType.FAILURE);
+                                                  }
                                               },
                                               bGColor: AppColors.mainColor,
-                                            ),
+                                            ) :SizedBox(),
+
+
                                             15.height,
-                                            state.isUpdate
-                                                ? 0.width
-                                                : CustomButtonWidget(
-                                              buttonText: AppLocalizations.of(
-                                                  context)!
-                                                  .skip,
-                                              isFromConnectScreen: true,
-                                              fontColors: AppColors.mainColor,
-                                              borderColor:
-                                              AppColors.mainColor,
-                                              onPressed: () async {
-                                                CustomSnackBar.showSnackBar(
-                                                    context: context,
-                                                    title:
-                                                    '${AppLocalizations.of(context)!.registered_successfully}',
-                                                    type:
-                                                    SnackBarType.SUCCESS);
-                                                Navigator.popUntil(
-                                                    context,
-                                                        (route) =>
-                                                    route.name ==
-                                                        RouteDefine
-                                                            .connectScreen
-                                                            .name);
-                                                Navigator.pushNamed(
-                                                    context,
-                                                    RouteDefine
-                                                        .loginScreen
-                                                        .name);
-                                              },
-                                              bGColor: AppColors.whiteColor,
-                                            ),
-                                            20.height,
                                           ],
                                         ),
                                       )
@@ -301,7 +281,6 @@ class FileUploadScreenWidget extends StatelessWidget {
     required int uploadIndex,
     required String localUrl,
     required bool isRemoveProcess, required String directionality, required bool updateState,
-
   }) {
     return Container(
       margin: EdgeInsets.only(top: AppConstants.padding_10),
@@ -382,176 +361,186 @@ class FileUploadScreenWidget extends StatelessWidget {
                           type: SnackBarType.FAILURE);
                       return;
                     }
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context1) => Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.whiteColor,
-                                borderRadius: BorderRadius.only(
-                                    topRight:
-                                        Radius.circular(AppConstants.radius_20),
-                                    topLeft: Radius.circular(
-                                        AppConstants.radius_20)),
-                              ),
-                              clipBehavior: Clip.hardEdge,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: AppConstants.padding_30,
-                                  vertical: AppConstants.padding_20),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!.upload_photo,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.normalFont,
-                                        color: AppColors.blackColor,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  30.height,
-                                  FileSelectionOptionWidget(
-                                      title:
-                                          AppLocalizations.of(context)!.camera,
-                                      icon: Icons.camera_alt_rounded,
-                                      onTap: () async {
-                                        Map<Permission, PermissionStatus>
-                                            statuses = await [
-                                          Permission.camera,
-                                        ].request();
-                                        if (Platform.isAndroid) {
-                                          if (!statuses[Permission.camera]!
+                    if(fileName == "Client form"){
+                      Navigator.pushNamed(context, RouteDefine.previewScreen.name,
+                      arguments: {
+                        AppStrings.privacyPolicyPdfString : url ,
+                        AppStrings.clientFormString : fileName ,
+                      }
+                      );
+                    }
+                    if(!updateState && fileName != "Client form"){
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context1) => Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.only(
+                                  topRight:
+                                  Radius.circular(AppConstants.radius_20),
+                                  topLeft: Radius.circular(
+                                      AppConstants.radius_20)),
+                            ),
+                            clipBehavior: Clip.hardEdge,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: AppConstants.padding_30,
+                                vertical: AppConstants.padding_20),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!.upload_photo,
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.normalFont,
+                                      color: AppColors.blackColor,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                30.height,
+                                FileSelectionOptionWidget(
+                                    title:
+                                    AppLocalizations.of(context)!.camera,
+                                    icon: Icons.camera_alt_rounded,
+                                    onTap: () async {
+                                      Map<Permission, PermissionStatus>
+                                      statuses = await [
+                                        Permission.camera,
+                                      ].request();
+                                      if (Platform.isAndroid) {
+                                        if (!statuses[Permission.camera]!
+                                            .isGranted) {
+                                          Navigator.pop(context);
+                                          CustomSnackBar.showSnackBar(
+                                              context: context,
+                                              title:
+                                              '${AppLocalizations.of(context)!.camera_permission}',
+                                              type: SnackBarType.FAILURE);
+                                          return;
+                                        }
+                                      } else if (Platform.isIOS) {
+                                        // Navigator.pop(context);
+                                      }
+                                      context.read<FileUploadBloc>().add(
+                                          FileUploadEvent.pickDocumentEvent(
+                                              context: context,
+                                              isFromCamera: true,
+                                              fileIndex: fileIndex,
+                                              isDocument: false));
+                                      Navigator.pop(context1);
+                                    }),
+                                FileSelectionOptionWidget(
+                                    title:
+                                    AppLocalizations.of(context)!.gallery,
+                                    icon: Icons.photo,
+                                    onTap: () async {
+                                      Map<Permission, PermissionStatus>
+                                      statuses = await [
+                                        Permission.storage,
+                                      ].request();
+                                      if (Platform.isAndroid) {
+                                        DeviceInfoPlugin deviceInfo =
+                                        DeviceInfoPlugin();
+                                        AndroidDeviceInfo androidInfo =
+                                        await deviceInfo.androidInfo;
+                                        if (androidInfo.version.sdkInt < 33) {
+                                          if (!statuses[Permission.storage]!
                                               .isGranted) {
                                             Navigator.pop(context);
                                             CustomSnackBar.showSnackBar(
                                                 context: context,
                                                 title:
-                                                    '${AppLocalizations.of(context)!.camera_permission}',
+                                                '${AppLocalizations.of(context)!.storage_permission}',
                                                 type: SnackBarType.FAILURE);
                                             return;
                                           }
-                                        } else if (Platform.isIOS) {
-                                          // Navigator.pop(context);
                                         }
-                                        context.read<FileUploadBloc>().add(
-                                            FileUploadEvent.pickDocumentEvent(
-                                                context: context,
-                                                isFromCamera: true,
-                                                fileIndex: fileIndex,
-                                                isDocument: false));
-                                        Navigator.pop(context1);
-                                      }),
-                                  FileSelectionOptionWidget(
-                                      title:
-                                          AppLocalizations.of(context)!.gallery,
-                                      icon: Icons.photo,
-                                      onTap: () async {
-                                        Map<Permission, PermissionStatus>
-                                            statuses = await [
-                                          Permission.storage,
-                                        ].request();
-                                        if (Platform.isAndroid) {
-                                          DeviceInfoPlugin deviceInfo =
-                                              DeviceInfoPlugin();
-                                          AndroidDeviceInfo androidInfo =
-                                              await deviceInfo.androidInfo;
-                                          if (androidInfo.version.sdkInt < 33) {
-                                            if (!statuses[Permission.storage]!
-                                                .isGranted) {
-                                              Navigator.pop(context);
-                                              CustomSnackBar.showSnackBar(
-                                                  context: context,
-                                                  title:
-                                                      '${AppLocalizations.of(context)!.storage_permission}',
-                                                  type: SnackBarType.FAILURE);
-                                              return;
-                                            }
-                                          }
-                                        } else if (Platform.isIOS) {
-                                          // Navigator.pop(context);
-                                        }
-                                        context.read<FileUploadBloc>().add(
-                                            FileUploadEvent.pickDocumentEvent(
-                                                context: context,
-                                                isFromCamera: false,
-                                                fileIndex: fileIndex,
-                                                isDocument: false));
-                                        Navigator.pop(context1);
-                                      }),
-                                  FileSelectionOptionWidget(
-                                      title: '${AppLocalizations.of(context)!.document}',
-                                      icon: Icons.file_open_rounded,
-                                      lastItem: url.isEmpty ? true : false,
-                                      onTap: () async {
-                                        Map<Permission, PermissionStatus>
-                                            statuses = await [
-                                          Permission.storage,
-                                        ].request();
-                                        if (Platform.isAndroid) {
-                                          DeviceInfoPlugin deviceInfo =
-                                              DeviceInfoPlugin();
-                                          AndroidDeviceInfo androidInfo =
-                                              await deviceInfo.androidInfo;
-                                          if (androidInfo.version.sdkInt < 33) {
-                                            if (!statuses[Permission.storage]!
-                                                .isGranted) {
-                                              Navigator.pop(context);
-                                              CustomSnackBar.showSnackBar(
-                                                  context: context,
-                                                  title:
-                                                      '${AppLocalizations.of(context)!.storage_permission}',
-                                                  type: SnackBarType.FAILURE);
-                                              return;
-                                            }
-                                          }
-                                        } else if (Platform.isIOS) {
-                                          // Navigator.pop(context);
-                                        }
-                                        context.read<FileUploadBloc>().add(
-                                            FileUploadEvent.pickDocumentEvent(
-                                                context: context,
-                                                isFromCamera: false,
-                                                fileIndex: fileIndex,
-                                                isDocument: true));
-                                        Navigator.pop(context);
-                                      }),
-                                  url.isEmpty
-                                      ? 0.width
-                                      : FileSelectionOptionWidget(
-                                          title: AppLocalizations.of(context)!
-                                              .remove,
-                                          icon: Icons.delete,
-                                          iconColor: AppColors.redColor,
-                                          lastItem: true,
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                            showDialog(
+                                      } else if (Platform.isIOS) {
+                                        // Navigator.pop(context);
+                                      }
+                                      context.read<FileUploadBloc>().add(
+                                          FileUploadEvent.pickDocumentEvent(
                                               context: context,
-                                              builder: (context2) =>
-                                                  CommonAlertDialog(
-                                                    directionality: directionality,
-                                                title: '${AppLocalizations.of(context)!.remove}',
-                                                subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
-                                                positiveTitle: '${AppLocalizations.of(context)!.yes}',
-                                                negativeTitle: '${AppLocalizations.of(context)!.no}',
-                                                negativeOnTap: () {
-                                                  Navigator.pop(context2);
-                                                },
-                                                positiveOnTap: () async {
-                                                  context
-                                                      .read<FileUploadBloc>()
-                                                      .add(FileUploadEvent
-                                                          .deleteFileEvent(
-                                                              context: context,
-                                                              index:
-                                                                  fileIndex));
-                                                  Navigator.pop(context2);
-                                                },
-                                              ),
-                                            );
-                                          }),
-                                ],
-                              ),
+                                              isFromCamera: false,
+                                              fileIndex: fileIndex,
+                                              isDocument: false));
+                                      Navigator.pop(context1);
+                                    }),
+                                FileSelectionOptionWidget(
+                                    title: '${AppLocalizations.of(context)!.document}',
+                                    icon: Icons.file_open_rounded,
+                                    lastItem: url.isEmpty ? true : false,
+                                    onTap: () async {
+                                      Map<Permission, PermissionStatus>
+                                      statuses = await [
+                                        Permission.storage,
+                                      ].request();
+                                      if (Platform.isAndroid) {
+                                        DeviceInfoPlugin deviceInfo =
+                                        DeviceInfoPlugin();
+                                        AndroidDeviceInfo androidInfo =
+                                        await deviceInfo.androidInfo;
+                                        if (androidInfo.version.sdkInt < 33) {
+                                          if (!statuses[Permission.storage]!
+                                              .isGranted) {
+                                            Navigator.pop(context);
+                                            CustomSnackBar.showSnackBar(
+                                                context: context,
+                                                title:
+                                                '${AppLocalizations.of(context)!.storage_permission}',
+                                                type: SnackBarType.FAILURE);
+                                            return;
+                                          }
+                                        }
+                                      } else if (Platform.isIOS) {
+                                        // Navigator.pop(context);
+                                      }
+                                      context.read<FileUploadBloc>().add(
+                                          FileUploadEvent.pickDocumentEvent(
+                                              context: context,
+                                              isFromCamera: false,
+                                              fileIndex: fileIndex,
+                                              isDocument: true));
+                                      Navigator.pop(context);
+                                    }),
+                                url.isEmpty
+                                    ? 0.width
+                                    : FileSelectionOptionWidget(
+                                    title: AppLocalizations.of(context)!
+                                        .remove,
+                                    icon: Icons.delete,
+                                    iconColor: AppColors.redColor,
+                                    lastItem: true,
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      showDialog(
+                                        context: context,
+                                        builder: (context2) =>
+                                            CommonAlertDialog(
+                                              directionality: directionality,
+                                              title: '${AppLocalizations.of(context)!.remove}',
+                                              subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
+                                              positiveTitle: '${AppLocalizations.of(context)!.yes}',
+                                              negativeTitle: '${AppLocalizations.of(context)!.no}',
+                                              negativeOnTap: () {
+                                                Navigator.pop(context2);
+                                              },
+                                              positiveOnTap: () async {
+                                                context
+                                                    .read<FileUploadBloc>()
+                                                    .add(FileUploadEvent
+                                                    .deleteFileEvent(
+                                                    context: context,
+                                                    index:
+                                                    fileIndex));
+                                                Navigator.pop(context2);
+                                              },
+                                            ),
+                                      );
+                                    }),
+                              ],
                             ),
-                        backgroundColor: Colors.transparent);
+                          ),
+                          backgroundColor: Colors.transparent);
+                    }
                   },
                   child: (isUploading && uploadIndex == fileIndex) || (isRemoveProcess && uploadIndex == fileIndex)
                       ? Container(
