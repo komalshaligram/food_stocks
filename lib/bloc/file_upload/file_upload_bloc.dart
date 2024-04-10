@@ -53,12 +53,14 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 state.formsAndFilesList.toList(growable: true);
             int len = response.data?.clientForms?.toList().length ?? 0;
             for (int i = 0; i < len; i++) {
-              formsList.add(FormAndFileModel(
-                  id: response.data?.clientForms?[i].id,
-                  isForm: true,
-                  sampleUrl: response.data?.clientForms?[i].sample,
-                  name: response.data?.clientForms?[i].formName));
-              debugPrint('formList[$i] = ${formsList[i].name}');
+              if(response.data?.clientForms?[i].isShownInMobile ?? false){
+                formsList.add(FormAndFileModel(
+                    id: response.data?.clientForms?[i].id,
+                    isForm: true,
+                    sampleUrl: response.data?.clientForms?[i].sample,
+                    name: response.data?.clientForms?[i].formName));
+                debugPrint('formList[$i] = ${formsList[i].name}');
+              }
             }
             if(state.isUpdate){
               emit(state.copyWith(formsAndFilesList: formsList));
