@@ -185,16 +185,6 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                             AppStrings.isUpdateParamString: true
                                           });
                                     }),
-                               profileMenuTiles(
-                                    title: AppLocalizations.of(context)!
-                                        .data_for_form,
-                                    onTap: () {
-                                      Navigator.pushNamed(context,
-                                          RouteDefine.formDataScreen.name,
-                                          arguments: {
-                                            AppStrings.isUpdateParamString: true
-                                          });
-                                    }),
                                 profileMenuTiles(
                                     title: AppLocalizations.of(context)!
                                         .activity_time,
