@@ -22,7 +22,8 @@ class ProductDetailsState with _$ProductDetailsState {
     required bool isRemoveProcess,
     required String language,
     required List<ProductStockModel> productStockList,
-   required int productStockUpdateIndex
+   required int productStockUpdateIndex,
+    required bool isDuplicateOrderProcess,
   }) = _ProductDetailsState;
 
   factory ProductDetailsState.initial()=>  ProductDetailsState(
@@ -45,7 +46,8 @@ class ProductDetailsState with _$ProductDetailsState {
     isRemoveProcess: false,
     language: 'en',
      productStockList: [],
-    productStockUpdateIndex: 0
+    productStockUpdateIndex: 0,
+    isDuplicateOrderProcess: false
 
   );
 }

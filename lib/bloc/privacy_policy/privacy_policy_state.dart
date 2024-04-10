@@ -4,19 +4,22 @@ part of 'privacy_policy_bloc.dart';
 class PrivacyPolicyState with _$PrivacyPolicyState{
 
   const factory PrivacyPolicyState({
-required bool nextEnable,
+
     required String filePath,
+    required Uint8List pdfPath,
     required bool isShimmering,
     required bool isUpdate,
-
-
+    required bool isOwner2Available,
+    required bool isNextEnable,
   }) = _PrivacyPolicyState;
 
   factory PrivacyPolicyState.initial()=>  PrivacyPolicyState(
     filePath: '',
     isShimmering: false,
-    isUpdate: false, nextEnable:false
-
+    isUpdate: false,
+    isOwner2Available: false,
+    isNextEnable: false,
+    pdfPath: Uint8List(1)
   );
 
 }

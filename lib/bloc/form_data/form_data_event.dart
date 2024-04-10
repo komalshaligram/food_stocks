@@ -12,4 +12,6 @@ class FormDataEvent with _$FormDataEvent {
   _getBusinessTypeEvent;
   factory FormDataEvent.navigateToNextScreenEvent({required BuildContext context}) =
   _navigateToNextScreenEvent;
+
+
 }

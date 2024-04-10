@@ -60,7 +60,10 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   name: response.data?.clientForms?[i].formName));
               debugPrint('formList[$i] = ${formsList[i].name}');
             }
-           // emit(state.copyWith(formsAndFilesList: formsList));
+            if(state.isUpdate){
+              emit(state.copyWith(formsAndFilesList: formsList));
+            }
+
             try {
               final res = await DioClient(event.context)
                   .get(path: AppUrls.filesListUrl);
@@ -93,12 +96,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                               AppStrings.idParamString:
                                   preferencesHelper.getUserId(),
                             },
-                            options: Options(
-                              headers: {
-                                HttpHeaders.authorizationHeader:
-                                    'Bearer ${preferencesHelper.getAuthToken()}',
-                              },
-                            ));
+                         );
                     ProfileDetailsResModel response =
                         ProfileDetailsResModel.fromJson(res);
                     debugPrint('response = ${response}');
@@ -131,8 +129,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                                     false)) {
                               formsAndFilesList[i] = formsAndFilesList[i]
                                   .copyWith(
-                                  url: newModel[AppStrings.formsString]
-                                  [formsAndFilesList[i].id]);
+                                  url: newModel[AppStrings.formsString][formsAndFilesList[i].id]);
                             }
                             debugPrint(
                                 'url(${formsAndFilesList[i].id}) = ${formsAndFilesList[i].url}');
@@ -740,6 +737,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 type: SnackBarType.FAILURE);
           }
         }
+      }
+
+      else if(event is _pdfPreviewEvent){
+
+        emit(state.copyWith(isPdfPreview: true));
       }
     });
   }

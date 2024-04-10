@@ -440,7 +440,14 @@
   "enter_street_name":"אנא הזן שם רחוב",
   "enter_street_number":"אנא הזן מספר בית",
   "enter_zip":"אנא הזן מיקוד",
-  "zip": "מיקוד"
+  "zip": "מיקוד",
+  "owner1_sign" :"חתימה בעלים 1",
+  "owner2_sign" :"חתימה בעלים 2",
+  "guarantee1_sign" :"חתימה ערב 1",
+  "guarantee2_sign" :"חתימה ערב 2",
+  "upload_document" :"Please upload document"
+
+
 
 
 }

@@ -18,6 +18,7 @@ import '../widget/circular_button_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
 import '../widget/custom_button_widget.dart';
+import '../widget/custom_dialog.dart';
 import '../widget/custom_form_field_widget.dart';
 import '../widget/product_details_screen-shimmer_widget.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -135,17 +136,21 @@ class _ProductDetailsScreenWidgetState
                         onTap: (){
                           showDialog(
                             context: context,
-                            builder: (context) {
+                            builder: (context1) {
                               return CustomDialog(
+                                isProcessing: state.isDuplicateOrderProcess,
                                 title: AppLocalizations.of(context)!.you_want_to_duplicate_this_order,
                                 directionality: state.language,
                                 positiveTitle:AppLocalizations.of(context)!.yes,
                                 negativeTitle: AppLocalizations.of(context)!.no,
                                 positiveOnTap: (){
-                                  // bloc.add(ProductDetailsEvent.orderSendEvent(context: context));
+                                   bloc.add(ProductDetailsEvent.duplicateOrderEvent(context: context,
+                                   orderId: widget.orderId,
+                                     dialogContext: context1
+                                   ));
                                 },
                                 negativeOnTap: (){
-                                  Navigator.pop(context);
+                                  Navigator.pop(context1);
                                 },
                               );
                             },);

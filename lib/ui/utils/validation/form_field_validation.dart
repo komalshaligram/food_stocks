@@ -144,12 +144,14 @@ class FormFieldValidation {
     if (value.isEmpty) {
       return '${AppLocalizations.of(context)!.please_enter_branch_number}';
     }
+
     return null;
   }
   String? accountNumberField(String value,BuildContext context) {
     if (value.isEmpty) {
       return '${AppLocalizations.of(context)!.please_enter_account_number}';
     }
+
     return null;
   }
   String? streetNameField(String value,BuildContext context) {

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -11,7 +12,7 @@ class CustomDialog extends StatelessWidget {
   final String? positiveTitle;
   final String? negativeTitle;
   final String directionality;
-  final bool isLogOutProcess;
+  final bool isProcessing;
 
   CustomDialog({
     super.key,
@@ -22,7 +23,7 @@ class CustomDialog extends StatelessWidget {
     this.positiveTitle,
     this.negativeTitle,
     required this.directionality,
-    this.isLogOutProcess = false,
+    this.isProcessing = false,
   });
 
   @override
@@ -55,7 +56,7 @@ class CustomDialog extends StatelessWidget {
               decoration:
               BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
               width: 80,
-              child: Text(
+              child: isProcessing ? CupertinoActivityIndicator() : Text(
                 positiveTitle ?? '',
                 style: AppStyles.rkRegularTextStyle(
                     color: AppColors.mainColor.withOpacity(0.9),
