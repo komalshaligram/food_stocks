@@ -562,24 +562,27 @@ class _ProductDetailsScreenWidgetState
                   : MainAxisAlignment.start,
               children: [
                 statusNumber == onTheWayStatus &&  sku != skuNumber  && (!isUpdated || (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity != 0 : false))
-                    ? Checkbox(
-                        value: ((isIssue ?? false) ||
-                                state.productListIndex.contains(index))
-                            ? true
-                            : false,
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(AppConstants.radius_3),
-                        ),
-                        side: MaterialStateBorderSide.resolveWith(
-                          (states) => BorderSide(
-                              width: 1.0, color: AppColors.greyColor),
-                        ),
-                        activeColor: AppColors.mainColor,
-                        onChanged: (value) {
-                          bloc.add(ProductDetailsEvent.productProblemEvent(
-                              isProductProblem: value!, index: index));
-                        })
+                    ? SizedBox(
+                  width: 30,
+                      child: Checkbox(
+                          value: ((isIssue ?? false) ||
+                                  state.productListIndex.contains(index))
+                              ? true
+                              : false,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(AppConstants.radius_3),
+                          ),
+                          side: MaterialStateBorderSide.resolveWith(
+                            (states) => BorderSide(
+                                width: 1.0, color: AppColors.greyColor),
+                          ),
+                          activeColor: AppColors.mainColor,
+                          onChanged: (value) {
+                            bloc.add(ProductDetailsEvent.productProblemEvent(
+                                isProductProblem: value!, index: index));
+                          }),
+                    )
                     : 30.width,
                 state.orderBySupplierProduct.products?[index].mainImage != ''
                     ? Image.network(
@@ -647,6 +650,8 @@ class _ProductDetailsScreenWidgetState
                         ) : sku == skuNumber ?
          Text(
         '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${AppLocalizations.of(context)!.units}',
+        maxLines: 2,
+           overflow: TextOverflow.fade,
         style: AppStyles.rkRegularTextStyle(
         color: AppColors.blackColor,
         size: AppConstants.font_12,
@@ -654,6 +659,8 @@ class _ProductDetailsScreenWidgetState
         )
                             : Text(
                           '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
+                          maxLines: 2,
+                          overflow: TextOverflow.fade,
                           style: AppStyles.rkRegularTextStyle(
                             color: AppColors.blackColor,
                             size: AppConstants.font_12,
@@ -664,6 +671,8 @@ class _ProductDetailsScreenWidgetState
 
                         statusNumber == onTheWayStatus  && isUpdated ?  Text(
                          '(${AppLocalizations.of(context)!.original_was}${' '}${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()})',
+                          maxLines: 2,
+                          overflow: TextOverflow.fade,
                           style: AppStyles.rkRegularTextStyle(
                             color: AppColors.redColor,
                             size: AppConstants.font_12,
@@ -674,6 +683,8 @@ class _ProductDetailsScreenWidgetState
                     Text(
                       '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0 ? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0,vat:state.orderData.vatPercentage ?? 0 ).toStringAsFixed(2))
                           : (vatCalculation(price: state.orderBySupplierProduct.products![index].totalPayment ?? 0 ,vat: state.orderData.vatPercentage ?? 0).toStringAsFixed(2)),local: AppStrings.hebrewLocal)}',
+                      maxLines: 2,
+                      overflow: TextOverflow.clip,
                       style: AppStyles.rkRegularTextStyle(
                           color: AppColors.blackColor,
                           size: AppConstants.font_14,

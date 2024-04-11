@@ -52,7 +52,7 @@ class RecommendationProductsBloc
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
       if (event is _GetRecommendationProductsEvent) {
-        emit(state.copyWith(cartCount: preferences.getCartCount(),isGridView: preferences.getRecommendationProductGrid()));
+        emit(state.copyWith(cartCount: preferences.getCartCount(),isGridView: preferences.getRecommendationProductGrid(),bottleDeposit: preferences.getBottleTax()));
         if (state.isLoadMore) {
           return;
         }
@@ -775,7 +775,7 @@ class RecommendationProductsBloc
         }
       }
       else if (event is _GlobalSearchEvent) {
-        emit(state.copyWith(search: state.searchController.text));
+        emit(state.copyWith(search: state.searchController.text,bottleDeposit: preferences.getBottleTax()));
         debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =

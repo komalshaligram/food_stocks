@@ -50,12 +50,12 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc()
-        ..add(HomeEvent.getCartCountEvent(context: context))
+        ..add(HomeEvent.generalSettings(context: context))
         ..add(HomeEvent.getPreferencesDataEvent())
+        ..add(HomeEvent.getCartCountEvent(context: context))
         ..add(HomeEvent.getOrderCountEvent(context: context))
         ..add(HomeEvent.getWalletRecordEvent(context: context))
         ..add(HomeEvent.getMessageListEvent(context: context))
-        ..add(HomeEvent.generalSettings(context: context))
         ..add(HomeEvent.getRecommendationProductsListEvent(context: context)),
       child: HomeScreenWidget(isNavigation: isSubCategory),
     );
@@ -496,6 +496,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                         index]
                                                             .id}');
                                                         showProductDetails(
+
                                                           context: context,
                                                           productId: state
                                                               .recommendedProductsList[
@@ -1024,6 +1025,7 @@ class HomeScreenWidget extends StatelessWidget {
     bool isFromSearch = false,
     String productStock  = '0',
     bool isRelated = false,
+    bool isBottle = false,
     int productListIndex = 0,
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
@@ -1046,13 +1048,13 @@ class HomeScreenWidget extends StatelessWidget {
           expand: true,
           maxChildSize: 1 -
               (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
-          minChildSize:  productStock == '0' ? 0.8 :  1 -
+                  getScreenHeight(context)*0.2),
+          minChildSize:  productStock == '0' ? 0.9 :  1 -
               (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
-          initialChildSize:  productStock == '0' ? 0.8 :  1 -
+                  getScreenHeight(context)*0.2),
+          initialChildSize:  productStock == '0' ? 0.9 :  1 -
               (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
+                  getScreenHeight(context)*0.2),
           builder:
               (BuildContext context1, ScrollController scrollController) {
             return BlocProvider.value(
@@ -1102,6 +1104,12 @@ class HomeScreenWidget extends StatelessWidget {
                             child: Column(
                             children: [
                               CommonProductDetailsWidget(
+                                totalBottleDeposit: (state.bottlePrice* state.productDetails.first.numberOfUnit!.toDouble()* state
+                                    .productStockList[state.productListIndex][
+                                state.productStockUpdateIndex]
+                                    .quantity),
+                                bottleTax: state.bottlePrice,
+                                isBottle:state.productDetails.first.isBottle??false,
                                 nmMashlim: state.productDetails.first.nmMashlim??'',
                                 isPesach: state.productDetails.first.isPesach??false,
                                 lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
@@ -1244,7 +1252,8 @@ class HomeScreenWidget extends StatelessWidget {
                                 }
                               },
                             ),
-                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context,scrollController),
+                            state.relatedProductList.isEmpty ? 0.height :
+                            relatedProductWidget(context1,state.relatedProductList,context,scrollController),
                           ],
                                                   ),
 
@@ -1285,7 +1294,7 @@ class HomeScreenWidget extends StatelessWidget {
         ),
         Container(
           height: AppConstants.relatedProductItemHeight,
-          padding: EdgeInsets.only(left: 10,right: 10),
+          padding: EdgeInsets.only(left: 10,right: 10,bottom: 5),
           child: ListView.builder(
             controller: ScrollController(),
             physics: ClampingScrollPhysics(),

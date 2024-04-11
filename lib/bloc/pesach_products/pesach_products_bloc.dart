@@ -53,6 +53,7 @@ class PesachProductsBloc
           prefs: await SharedPreferences.getInstance());
       if (event is _GetSupplierProductsListEvent) {
         emit(state.copyWith(isGuestUser: preferences.getGuestUser(),
+            bottleDeposit: preferences.getBottleTax(),
             isGridView: preferences.getSupplierProductGrid()));
         if (state.isLoadMore) {
           return;
@@ -761,7 +762,7 @@ class PesachProductsBloc
         }
       }
       else if (event is _GlobalSearchEvent) {
-        emit(state.copyWith(search: state.searchController.text));
+        emit(state.copyWith(search: state.searchController.text,bottleDeposit: state.bottleDeposit));
         debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =

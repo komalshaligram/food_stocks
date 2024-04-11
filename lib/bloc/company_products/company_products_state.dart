@@ -36,6 +36,7 @@ class CompanyProductsState with _$CompanyProductsState {
     required bool isRelatedShimmering,
     required bool isRefreshingProduct,
     required int productListIndex,
+    required double bottleDeposit,
 
   }) = _CompanyProductsState;
 
@@ -72,7 +73,8 @@ class CompanyProductsState with _$CompanyProductsState {
     relatedProductList: [],
     isRelatedShimmering: false,
     isRefreshingProduct: false,
-    productListIndex: -1
+    productListIndex: -1,
+    bottleDeposit: 0.0
 
       );
 }

@@ -60,7 +60,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       if (event is _isCategoryEvent) {
          debugPrint('isSubCategory_____${event.isSubCategory}');
         emit(state.copyWith(isSubCategory: event.isSubCategory ,isGridView: preferences.getIsGridView(),
-            isGuestUser: preferences.getGuestUser()
+            isGuestUser: preferences.getGuestUser(),bottleDeposit: preferences.getBottleTax()
         ));
       }
       if (event is _ChangeCategoryExpansionEvent) {
@@ -105,6 +105,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           //  subProductPageNum: 0,
             subCategoryPageNum: 0,
             planogramPageNum : 0,
+            bottleDeposit:preferences.getBottleTax(),
             subPlanogramPageNum: 0,
             isBottomOfSubCategory: false,
             isBottomOfPlanoGrams: false,
@@ -144,6 +145,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               [],
               [],
             ],
+              bottleDeposit:preferences.getBottleTax(),
             planogramProductList:[],
             subProductPageNum: 0,
             productStockUpdateIndex: -1,
@@ -187,6 +189,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               subCategoryPageNum: state.subCategoryPageNum + 1,
               isSubCategoryShimmering: false,
               isLoadMore: false,
+                bottleDeposit:preferences.getBottleTax(),
               categoryName: response.data?.subCategories?.length != 0 ? (response.data?.subCategories?[0].parentCategoryName ?? '' ) : state.categoryName,
             ) );
             emit(state.copyWith(
@@ -548,6 +551,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             emit(state.copyWith(productStockList: []));
 
             emit(state.copyWith(
+                bottleDeposit:preferences.getBottleTax(),
                 productDetails: response.product ?? [],
                 productStockList: productStockList,
                 productStockUpdateIndex: productStockUpdateIndex,
@@ -1019,7 +1023,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         debugPrint('cart count store cate= ${preferences.getCartCount()}');
       }
       else if (event is _GlobalSearchEvent) {
-        emit(state.copyWith(search: state.searchController.text));
+        emit(state.copyWith(search: state.searchController.text,bottleDeposit: preferences.getBottleTax()));
         debugPrint('data1 = ${state.search}');
         try {
           GlobalSearchReqModel globalSearchReqModel =

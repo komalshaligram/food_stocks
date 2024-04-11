@@ -22,6 +22,7 @@ class ProductSaleState with _$ProductSaleState {
     required bool isGuestUser,
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
+    required double bottleDeposit,
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => ProductSaleState(
@@ -43,6 +44,7 @@ class ProductSaleState with _$ProductSaleState {
         refreshController: RefreshController(),
       isGuestUser : false,
     relatedProductList: [],
-    isRelatedShimmering: false
+    isRelatedShimmering: false,
+      bottleDeposit:0
       );
 }

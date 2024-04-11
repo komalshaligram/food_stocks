@@ -60,7 +60,7 @@ class SupplierProductsBloc
             'supplier id = ${state.supplierId}, search = ${state.search}');
       } else if (event is _GetSupplierProductsListEvent) {
         emit(state.copyWith(isGuestUser: preferences.getGuestUser(),
-            isGridView: preferences.getSupplierProductGrid()));
+            isGridView: preferences.getSupplierProductGrid(),bottleDeposit:preferences.getBottleTax()));
         if (state.isLoadMore) {
           return;
         }
@@ -853,7 +853,7 @@ class SupplierProductsBloc
         }
       }
       else if (event is _GlobalSearchEvent) {
-        emit(state.copyWith(search: state.searchController.text));
+        emit(state.copyWith(search: state.searchController.text,bottleDeposit: preferences.getBottleTax()));
         debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
