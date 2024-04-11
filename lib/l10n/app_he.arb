@@ -445,9 +445,5 @@
   "owner2_sign" :"חתימה בעלים 2",
   "guarantee1_sign" :"חתימה ערב 1",
   "guarantee2_sign" :"חתימה ערב 2",
-  "upload_document" :"Please upload document"
-
-
-
-
+  "upload_document" :"אנא העלה את המסמך"
 }

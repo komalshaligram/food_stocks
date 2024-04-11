@@ -411,10 +411,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     height: getScreenHeight(context) * 0.2,
                                     alignment: Alignment.center,
                                     child: DottedBorder(
-                                      color: /*state.companyLogo.isNotEmpty ?  state.image.path != ''
-                                    ? AppColors.whiteColor
-                                    : AppColors.whiteColor :*/
-                                          AppColors.borderColor,
+                                      color: AppColors.borderColor,
                                       radius: Radius.circular(
                                           AppConstants.radius_3),
                                       borderType: BorderType.RRect,

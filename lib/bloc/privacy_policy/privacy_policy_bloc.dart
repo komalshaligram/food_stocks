@@ -26,7 +26,6 @@ import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_styles.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:http_parser/http_parser.dart';
 import '../../ui/utils/themes/app_urls.dart';
 part 'privacy_policy_state.dart';
@@ -48,13 +47,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
   TermsConditionReqModel termsConditionReqModel = TermsConditionReqModel();
   PrivacyPolicyBloc() : super(PrivacyPolicyState.initial()) {
 
-
-
     on<PrivacyPolicyEvent>((event, emit)   async {
-      SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-
-
        if(event is _getPdfDataEvent){
         termsConditionReqModel = event.termsConditionReqModel;
          emit(state.copyWith(isOwner2Available: (termsConditionReqModel.owner2FullName!.isNotEmpty) ? true : false));
@@ -66,9 +59,6 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
           print('ownerSignature___${owner2Signature}');
           print('guarantee1Signature___${guarantee1Signature}');
           print('guarantee2Signature___${guarantee2Signature}');
-          print('owner2FullName ____${termsConditionReqModel.owner2FullName}');
-          print('guarantee2FullNameString____${termsConditionReqModel.owner2FullName}');
-          print('getUserId()  ____${preferencesHelper.getUserId()}');
           print('id  ____${termsConditionReqModel.id}');
           try {
             emit(state.copyWith(isShimmering: true));
@@ -138,87 +128,6 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
                 type: SnackBarType.FAILURE);
           }
 
-
-
-
-    /*    if(signUrl.isNotEmpty){
-          termsConditionReqModel = TermsConditionReqModel(
-              id: preferencesHelper.getUserId(),
-              agentId: termsConditionReqModel.agentId,
-              businessTypeId: termsConditionReqModel.businessTypeId,
-              owner1FullName: termsConditionReqModel.owner1FullName,
-              owner1IsraelId: termsConditionReqModel.owner1IsraelId,
-              owner2FullName: termsConditionReqModel.owner2FullName,
-              owner2IsraelId: termsConditionReqModel.owner2IsraelId,
-              guarantee1FullName: termsConditionReqModel.guarantee1FullName,
-              guarantee1IsraelId: termsConditionReqModel.guarantee1IsraelId,
-              guarantee1Address: termsConditionReqModel.guarantee1Address,
-              guarantee1PhoneNumber: termsConditionReqModel.guarantee1PhoneNumber,
-              guarantee2FullName: termsConditionReqModel.guarantee2FullName,
-              guarantee2IsraelId: termsConditionReqModel.guarantee2IsraelId,
-              guarantee2Address: termsConditionReqModel.guarantee2Address,
-              guarantee2PhoneNumber: termsConditionReqModel.guarantee2PhoneNumber,
-              bankId: termsConditionReqModel.bankId,
-              accountNumber: termsConditionReqModel.accountNumber,
-              branchNumber: termsConditionReqModel.branchNumber,
-              signature: signUrl,
-          );
-          Map<String, dynamic> req = termsConditionReqModel.toJson();
-          req.removeWhere((key, value) {
-            if (value != null) {
-              debugPrint("[$key] = $value");
-            }
-            return value == null;
-          });
-          print('termsConditionReqModel____${req}');
-          try {
-            emit(state.copyWith(isShimmering: true));
-            final res = await DioClient(event.context).post(
-              AppUrls.termsConditionUrl,
-              data: req,
-            );
-
-
-            print('termCondition response ____${res}');
-
-            TermsConditionResModel response =
-            TermsConditionResModel.fromJson(res);
-
-
-            if (response.status == 200) {
-              if(res != null){
-                emit(state.copyWith(isShimmering: false,));
-                Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name,
-                    arguments: {
-                      AppStrings.privacyPolicyPdfString : response.data ?? '',
-                      AppStrings.termsConditionParamString :termsConditionReqModel
-                    }
-                );
-              }
-            } else {
-              emit(state.copyWith(isShimmering: false));
-              CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.FAILURE,
-              );
-            }
-          } on ServerException {
-            emit(state.copyWith(isShimmering: false));
-          }
-          catch (e) {
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: e.toString(),
-              type: SnackBarType.FAILURE,
-            );
-          }
-
-
-        }*/
 
       }
 
