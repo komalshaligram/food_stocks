@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/screens/app_content_screen.dart';
+
 import 'package:food_stock/ui/screens/bottom_nav_screen.dart';
 import 'package:food_stock/ui/screens/home_screen.dart';
 import 'package:food_stock/ui/screens/login_screen.dart';
@@ -104,7 +104,6 @@ class AppRouting {
       RouteDefine.orderScreen.name: (_) => OrderRoute.route,
       RouteDefine.questionAndAnswerScreen.name: (_) =>
           QuestionAndAnswerRoute.route,
-      RouteDefine.appContentScreen.name: (_) => AppContentRoute.route,
       RouteDefine.messageScreen.name: (_) => MessageRoute.route,
       RouteDefine.messageContentScreen.name: (_) => MessageContentRoute.route,
       RouteDefine.otpScreen.name: (_) => OTPRoute.route,

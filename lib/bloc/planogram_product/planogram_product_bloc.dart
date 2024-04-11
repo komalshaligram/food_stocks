@@ -63,6 +63,7 @@ class PlanogramProductBloc
         productStockList[1].addAll(stockList);
 
         emit(state.copyWith(
+          bottleDeposit: preferences.getBottleTax(),
             planogramName: event.planogram.planogramName ?? '',
             planogramProductList: event.planogram.planogramproducts ?? [],
             productStockList: productStockList,
@@ -710,7 +711,7 @@ class PlanogramProductBloc
         }
       }
       else if (event is _GlobalSearchEvent) {
-        emit(state.copyWith(search: state.searchController.text));
+        emit(state.copyWith(search: state.searchController.text,bottleDeposit: preferences.getBottleTax()));
         debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =

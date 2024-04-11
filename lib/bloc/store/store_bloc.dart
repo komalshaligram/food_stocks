@@ -65,7 +65,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       if (event is _ChangeCategoryExpansion) {
         if(event.isOpened == false ){
           state.searchController.clear();
-          emit(state.copyWith(searchController: state.searchController,search: ''));
+          emit(state.copyWith(searchController: state.searchController,search: '',));
         }
         if (event.isOpened != null) {
           emit(state.copyWith(isCategoryExpand: event.isOpened ?? false));
@@ -895,7 +895,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         }
       }
       else if (event is _GlobalSearchEvent) {
-        emit(state.copyWith(search: state.searchController.text));
+        emit(state.copyWith(search: state.searchController.text,bottlePrice: preferencesHelper.getBottleTax()));
         debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
@@ -1170,7 +1170,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
           debugPrint('general settings = ${response.data.toString()}');
           if (response.status == 200) {
-            emit(state.copyWith(isShimmering:false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner));
+            preferencesHelper.setBottleTax(bottleDeposit: response.data.bottlePrice);
+            emit(state.copyWith(isShimmering:false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner,bottlePrice: response.data.bottlePrice));
           } else {
             emit(state.copyWith(isShimmering: false));
           }

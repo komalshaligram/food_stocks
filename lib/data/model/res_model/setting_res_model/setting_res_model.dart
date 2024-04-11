@@ -21,6 +21,7 @@ class Data with _$Data {
   const factory Data({
     required String pesachBanner,
     required bool isShowPesachBanner,
+    required double bottlePrice,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

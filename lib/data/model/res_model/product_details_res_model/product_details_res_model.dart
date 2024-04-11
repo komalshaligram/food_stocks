@@ -62,6 +62,7 @@ class Product with _$Product {
     @JsonKey(name: "supplierSales") List<SupplierSale>? supplierSales,
     @JsonKey(name: "isPesach") bool? isPesach,
     @JsonKey(name: "nmMashlim") String? nmMashlim,
+    @JsonKey(name: "isBottle") bool? isBottle,
 
   }) = _Product;
 

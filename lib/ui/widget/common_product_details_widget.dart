@@ -11,6 +11,7 @@ import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
+import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
 
@@ -46,7 +47,9 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final String lowStock;
   final bool isPesach;
   final String nmMashlim;
-
+  final bool isBottle;
+  final double bottleTax;
+  final double totalBottleDeposit;
   const CommonProductDetailsWidget(
       {super.key,
       required this.context,
@@ -79,7 +82,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
       required this.addToOrderTap,
       required this.qrCode,
         required this.lowStock,
-      required this.nmMashlim
+      required this.nmMashlim,
+        required this.isBottle,
+        required this.bottleTax,
+        required this.totalBottleDeposit
       });
 
   @override
@@ -90,7 +96,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
     debugPrint('nmMashlim$nmMashlim');
     debugPrint('height:${getScreenHeight(context)}');
     return Container(
-     // height: getScreenHeight(context) / 1.5,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(AppConstants.radius_30),
@@ -148,11 +153,23 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont, color: AppColors.blackColor),
                 ),
-                Text(
-                  '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_14, color: AppColors.blackColor),
-                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_14, color: AppColors.blackColor),
+                    ),
+                    isBottle?Text(
+                      ',${AppLocalizations.of(context)?.bottle_deposit}:${AppLocalizations.of(context)?.currency}${bottleTax}',
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_14, color: AppColors.blackColor),
+                    ):0.width
+                  ],
+                )
+
               ],
             ),
           ),
@@ -332,7 +349,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     ),
                   ): 0.width,
                   10.height,*/
-              Container(
+              Container (
                 decoration: BoxDecoration(
                   border: Border(
                     top: BorderSide(
@@ -364,7 +381,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       )
                     : Column(
                         children: [
-                          5.height,
+                        3.height,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -383,10 +400,13 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           color: AppColors.blackColor,
                                           fontWeight: FontWeight.w700),
                                     ),
+                                    isBottle?Container(
+                                   padding: EdgeInsets.only(top:3),
+                                        child: Text('${AppLocalizations.of(context)?.bottle_deposit}:${AppLocalizations.of(context)!.currency}${totalBottleDeposit.toStringAsFixed(AppConstants.amountFrLength)}')):0.height,
                                     Text(
                                       "${parse(productSaleDescription).body?.text}",
                                       style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_14,
+                                          size: AppConstants.smallFont,
                                           color: AppColors.blackColor,
                                           fontWeight: FontWeight.w400),
                                       maxLines: 3,
@@ -552,7 +572,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                             lowStock,
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont, color: AppColors.orangeColor),
-                          ) : 0.width,
+                          ) : 0.height,
                           CommonProductDetailsButton(
                               isLoading: isLoading,
                               isSupplierAvailable: true,

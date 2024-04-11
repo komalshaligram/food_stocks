@@ -52,7 +52,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
       if (event is _GetPreviousOrderProductsEvent) {
-        emit(state.copyWith(cartCount: preferences.getCartCount(),isGridView: preferences.getReorderProductGrid()));
+        emit(state.copyWith(cartCount: preferences.getCartCount(),isGridView: preferences.getReorderProductGrid(),bottleDeposit: preferences.getBottleTax()));
         if (state.isLoadMore) {
           return;
         }
@@ -773,7 +773,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         }
       }
       else if (event is _GlobalSearchEvent) {
-        emit(state.copyWith(search: state.searchController.text));
+        emit(state.copyWith(search: state.searchController.text,bottleDeposit: preferences.getBottleTax()));
         debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =

@@ -44,6 +44,7 @@ class HomeState with _$HomeState {
     required bool showPesachBanner,
     required String pesachBannerURL,
     required bool pesachBannerShimmering,
+    required double bottlePrice,
 
   }) = _HomeState;
 
@@ -71,6 +72,7 @@ class HomeState with _$HomeState {
         messageList: [],
         isMessageShimmering: false,
         expensePercentage: 0,
+      bottlePrice:0.0,
         noteController: TextEditingController(),
         recommendedProductsList: [],
     isShimmering: false,

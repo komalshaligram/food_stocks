@@ -104,8 +104,6 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                      state.pdfPath,
                       key: _pdfViewerKey,
                       controller: _pdfViewerController,
-                 //     onFormFieldFocusChange: onFormFieldFocusChange,
-                   //   onDocumentLoaded: onDocumentLoaded,
                       canShowSignaturePadDialog: true,
                     ) : CupertinoActivityIndicator(),
                   ),
@@ -147,7 +145,6 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                           },
                           fontColors: AppColors.whiteColor,
                         ),
-
                       ],
                     ),
                   ),
@@ -194,7 +191,6 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                       ],
                     ),
                   ) : SizedBox(),
-
                    Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: CustomButtonWidget(
@@ -215,16 +211,9 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                 ],
               ),
             ),
-
           );
         },
       ),
     );
   }
-
-
-
-
-
 }
-

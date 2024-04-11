@@ -78,6 +78,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
             messageCount: preferences.getMessageCount(),
             cartCount: preferences.getCartCount(),
+            bottlePrice: preferences.getBottleTax()
           ));
         }
         else if (event is _GetCartCountEvent) {
@@ -972,7 +973,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 sortField: AppStrings.sortFieldString,
                 sortOrder: AppStrings.sortOrderString
             );
-            emit(state.copyWith(isSearching: true));
+            emit(state.copyWith(isSearching: true,bottlePrice: preferences.getBottleTax()));
             final res = await DioClient(event.context).post(
                 AppUrls.getGlobalSearchResultUrl,
                 data: globalSearchReqModel.toJson());
@@ -1225,7 +1226,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
             debugPrint('general settings = ${response.data.toString()}');
             if (response.status == 200) {
-              emit(state.copyWith(pesachBannerShimmering:false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner));
+              preferences.setBottleTax(bottleDeposit: response.data.bottlePrice);
+              emit(state.copyWith(pesachBannerShimmering:false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner,bottlePrice:response.data.bottlePrice));
             } else {
               emit(state.copyWith(pesachBannerShimmering: false));
             }

@@ -53,13 +53,13 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 state.formsAndFilesList.toList(growable: true);
             int len = response.data?.clientForms?.toList().length ?? 0;
             for (int i = 0; i < len; i++) {
-              if(response.data?.clientForms?[i].isShownInMobile ?? false){
+              if(response.data?.clientForms?[i].isShownInMobile??false){
                 formsList.add(FormAndFileModel(
                     id: response.data?.clientForms?[i].id,
                     isForm: true,
                     sampleUrl: response.data?.clientForms?[i].sample,
                     name: response.data?.clientForms?[i].formName));
-                debugPrint('formList[$i] = ${formsList[i].name}');
+                //debugPrint('formList[$i] = ${formsList[i].name}');
               }
             }
             if(state.isUpdate){
@@ -144,6 +144,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                         emit(state.copyWith(isShimmering: false));
                       }
                     } else {
+                      emit(state.copyWith(isShimmering: false));
                       CustomSnackBar.showSnackBar(
                           context: event.context,
                           title: AppStrings.getLocalizedStrings(
@@ -489,7 +490,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
-                  event.context, RouteDefine.loginScreen.name);
+                  event.context, RouteDefine.connectScreen.name);
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:

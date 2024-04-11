@@ -236,17 +236,13 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 expand: true,
                 maxChildSize: 1 -
                     (MediaQuery.of(context).viewPadding.top /
-                        getScreenHeight(context)),
-                minChildSize: productStock == '0'
-                    ? 0.8
-                    : 1 -
-                        (MediaQuery.of(context).viewPadding.top /
-                            getScreenHeight(context)),
-                initialChildSize: productStock == '0'
-                    ? 0.8
-                    : 1 -
-                        (MediaQuery.of(context).viewPadding.top /
-                            getScreenHeight(context)),
+                        getScreenHeight(context)*0.2),
+                minChildSize:  productStock == '0' ? 0.9 :  1 -
+                    (MediaQuery.of(context).viewPadding.top /
+                        getScreenHeight(context)*0.2),
+                initialChildSize:  productStock == '0' ? 0.9 :  1 -
+                    (MediaQuery.of(context).viewPadding.top /
+                        getScreenHeight(context)*0.2),
                 builder:
                     (BuildContext context1, ScrollController scrollController) {
                   return Container(
@@ -289,6 +285,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              bottleTax: state.bottleDeposit,
+                              totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
+                                  .productStockList[state.productStockUpdateIndex].quantity),
+                              isBottle:state.productDetails.first.isBottle??false,
                               nmMashlim: state.productDetails.first.nmMashlim??'',
                               isPesach: state.productDetails.first.isPesach??false,
                               lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
