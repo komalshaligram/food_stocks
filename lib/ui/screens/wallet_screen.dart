@@ -186,7 +186,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                   MediaQuery.of(context).size.height / 5,
                               child: FadeInAnimation(child: widget)),
                           children: [
-                            45.height,
+                            35.height,
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: AppConstants.padding_10),
@@ -313,7 +313,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                 ),
                               ),
                             ),
-                            30.height,
+                            25.height,
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: AppConstants.padding_15),
@@ -338,7 +338,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                 ],
                               ),
                             ),
-                            30.height,
+                            25.height,
                             state.isGraphProcess
                                 ? WalletScreenShimmerWidget()
                                 : Padding(
@@ -466,7 +466,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                       ),
                                     ),
                                   ),
-                            15.height,
+                            5.height,
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: AppConstants.padding_15),
@@ -540,7 +540,6 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                             horizontal: AppConstants.padding_3),
                                         decoration: BoxDecoration(
                                           gradient: AppColors.appMainGradientColor,
-                                         //   color: AppColors.mainColor,
                                             borderRadius: BorderRadius.circular(
                                                 AppConstants.radius_3)),
                                         child: state.isExportShimmering
@@ -692,7 +691,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                               height: getScreenHeight(
                                                           context) >=
                                                       725
-                                                  ? getScreenHeight(context) / 5
+                                                  ? getScreenHeight(context) / 9
                                                   : getScreenHeight(context) /
                                                       9,
                                               child: Center(

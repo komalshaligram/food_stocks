@@ -102,22 +102,22 @@ class FileUploadScreenWidget extends StatelessWidget {
                       color: AppColors.blackColor,
                     )),
               ),
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    state.isShimmering
-                        ? FileUploadScreenShimmerWidget()
-                        : SafeArea(
-                            child: state.isLoading
-                                ? Container(
-                                    height: getScreenHeight(context),
-                                    child: Center(
-                                      child: CupertinoActivityIndicator(
-                                        color: AppColors.blackColor,
-                                      ),
+              body: Stack(
+                children: [
+                  state.isShimmering
+                      ? FileUploadScreenShimmerWidget()
+                      : SafeArea(
+                          child: state.isLoading
+                              ? Container(
+                                  height: getScreenHeight(context),
+                                  child: Center(
+                                    child: CupertinoActivityIndicator(
+                                      color: AppColors.blackColor,
                                     ),
-                                  )
-                                : Padding(
+                                  ),
+                                )
+                              : SingleChildScrollView(
+                                child: Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: AppConstants.padding_20),
                                   child: Column(
@@ -227,42 +227,42 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                          ),
-                    state.isDownloading
-                        ? Container(
-                      height: getScreenHeight(context),
-                            width: getScreenWidth(context),
-                            color: Color.fromARGB(20, 0, 0, 0),
-                            alignment: Alignment.center,
-                            child: Container(
-                              height: 80,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                  color: AppColors.whiteColor,
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(AppConstants.radius_10))),
-                              alignment: Alignment.center,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  CupertinoActivityIndicator(
-                                    color: AppColors.blackColor,
-                                    radius: AppConstants.radius_10,
-                                  ),
-                                  10.height,
-                                  Text(
-                                    '${state.downloadProgress}%',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.font_14,
-                                        color: AppColors.blackColor),
-                                  )
-                                ],
                               ),
+                        ),
+                  state.isDownloading
+                      ? Container(
+                    height: getScreenHeight(context),
+                          width: getScreenWidth(context),
+                          color: Color.fromARGB(20, 0, 0, 0),
+                          alignment: Alignment.center,
+                          child: Container(
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(AppConstants.radius_10))),
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CupertinoActivityIndicator(
+                                  color: AppColors.blackColor,
+                                  radius: AppConstants.radius_10,
+                                ),
+                                10.height,
+                                Text(
+                                  '${state.downloadProgress}%',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.font_14,
+                                      color: AppColors.blackColor),
+                                )
+                              ],
                             ),
-                          )
-                        : 0.width,
-                  ],
-                ),
+                          ),
+                        )
+                      : 0.width,
+                ],
               ),
             ),
           );
