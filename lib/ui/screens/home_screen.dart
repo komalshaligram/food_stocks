@@ -50,12 +50,12 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc()
-        ..add(HomeEvent.getCartCountEvent(context: context))
+        ..add(HomeEvent.generalSettings(context: context))
         ..add(HomeEvent.getPreferencesDataEvent())
+        ..add(HomeEvent.getCartCountEvent(context: context))
         ..add(HomeEvent.getOrderCountEvent(context: context))
         ..add(HomeEvent.getWalletRecordEvent(context: context))
         ..add(HomeEvent.getMessageListEvent(context: context))
-        ..add(HomeEvent.generalSettings(context: context))
         ..add(HomeEvent.getRecommendationProductsListEvent(context: context)),
       child: HomeScreenWidget(isNavigation: isSubCategory),
     );
