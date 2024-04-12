@@ -219,7 +219,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               add(ReorderEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if ( (event.isBarcode )) {
-
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                   quantity: _productQuantity,

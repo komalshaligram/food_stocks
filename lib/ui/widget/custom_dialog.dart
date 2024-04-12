@@ -4,6 +4,8 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 
+import '../utils/themes/app_strings.dart';
+
 class CustomDialog extends StatelessWidget {
   final String title;
   final String subTitle;
@@ -29,7 +31,7 @@ class CustomDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: directionality == 'en' ? TextDirection.ltr : TextDirection.rtl,
+      textDirection: directionality == AppStrings.englishString ? TextDirection.ltr : TextDirection.rtl,
       child: AlertDialog(
         contentPadding: EdgeInsets.all(20.0),
         surfaceTintColor: AppColors.whiteColor,
@@ -56,7 +58,9 @@ class CustomDialog extends StatelessWidget {
               decoration:
               BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
               width: 80,
-              child: isProcessing ? CupertinoActivityIndicator() : Text(
+              child: isProcessing ? CupertinoActivityIndicator(
+                color: AppColors.mainColor,
+              ) : Text(
                 positiveTitle ?? '',
                 style: AppStyles.rkRegularTextStyle(
                     color: AppColors.mainColor.withOpacity(0.9),
