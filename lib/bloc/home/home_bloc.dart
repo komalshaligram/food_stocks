@@ -1160,7 +1160,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         }
        else if (event is _checkVersionOfAppEvent) {
-          final _checker = StoreVersionChecker();
+        /*  final _checker = StoreVersionChecker();
           _checker.checkUpdate().then((value) {
             debugPrint('update available');
             debugPrint(value.canUpdate.toString()); //return true if update is available
@@ -1175,7 +1175,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 customShowUpdateDialog(
                     event.context, preferences.getAppLanguage(),value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
               }
-          });
+          });*/
         }
         else if(event is _RelatedProductsEvent){
           emit(state.copyWith(isRelatedShimmering:true));
