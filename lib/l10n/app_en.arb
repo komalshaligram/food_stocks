@@ -372,7 +372,6 @@
   "per_unit": "per unit",
   "sub_categories": "Sub Categories",
   "delivery_date_value":"Delivery up to 3 business days",
-  "order":"Order",
   "monthly_credit":"Monthly Credits",
   "refund":"Refund",
   "sub_total": "Sub Total",
@@ -444,6 +443,6 @@
      "owner2_sign" :"Owner2 Signature",
       "guarantee1_sign" :"Guarantee1 Signature",
       "guarantee2_sign" :"Guarantee2 Signature",
-      "upload_document" :"Please upload document"
-
+      "upload_document" :"Please upload document",
+  "connection_error" :"Connection error"
 }
