@@ -200,7 +200,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                         .files,
                                     onTap: () {
                                       Navigator.pushNamed(context,
-                                          RouteDefine.formDataScreen.name,
+                                          RouteDefine.fileUploadScreen.name,
                                           arguments: {
                                             AppStrings.isUpdateParamString: true
                                           });
