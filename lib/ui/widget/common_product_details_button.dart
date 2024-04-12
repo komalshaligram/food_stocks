@@ -26,6 +26,7 @@ class CommonProductDetailsButton extends StatelessWidget {
         ? 0.height
         : Container(
             height: 70,
+            margin: EdgeInsets.zero,
             width: getScreenWidth(context),
             padding: EdgeInsets.symmetric(
                 horizontal: AppConstants.padding_20,

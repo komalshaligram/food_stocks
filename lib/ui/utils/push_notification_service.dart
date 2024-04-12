@@ -121,11 +121,11 @@ class PushNotificationService {
         InitializationSettings(android: androidSettings, iOS: iOSSettings);
     flutterLocalNotificationsPlugin.initialize(
       initSettings,
-     /* onDidReceiveNotificationResponse: (NotificationResponse details) {
+      onDidReceiveNotificationResponse: (NotificationResponse details) {
         debugPrint("__________details______:${details}");
         FlutterAppBadger.removeBadge();
-        //    manageNavigation(true, mainPage!, subPage!, id!);
-      },*/
+            manageNavigation(true, mainPage!, subPage!, id!);
+      },
     );
 // onMessage is called when the app is in foreground and a notification is received
     // app is open
@@ -148,7 +148,6 @@ class PushNotificationService {
               showNotification: true,
               isAppOpen: true);
         }
-
         FlutterAppBadger.removeBadge();
       }
     });

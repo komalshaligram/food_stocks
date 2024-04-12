@@ -12,6 +12,7 @@ import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/refresh_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/search_model/search_model.dart';
@@ -709,79 +710,57 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
         isBarcode: isBarcode ?? false,
       productListIndex: productListIndex
     ));
-    showModalBottomSheet(
+    showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      isScrollControlled: true,
+   //   isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      showDragHandle: true,
-      useSafeArea: true,
+   //   showDragHandle: true,
+     // useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        return DraggableScrollableSheet(
-          expand: true,
-          maxChildSize: 1 -
-              (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)*0.2),
-          minChildSize:  productStock == '0' ? 0.9 :  1 -
-              (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)*0.2),
-          initialChildSize:  productStock == '0' ? 0.9 :  1 -
-              (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)*0.2),
-          builder:
-              (BuildContext context1, ScrollController scrollController) {
-            return BlocProvider.value(
-              value: context.read<RecommendationProductsBloc>(),
-              child: BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
-                builder: (blocContext, state) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppConstants.radius_30),
-                        topRight: Radius.circular(AppConstants.radius_30),
+        return SafeArea(
+          child: DraggableScrollableSheet(
+            expand: true,
+            maxChildSize: 1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)*0.2),
+            minChildSize:  productStock == '0' ? 0.9 :  1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)*0.2),
+            initialChildSize:  productStock == '0' ? 0.9 :  1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)*0.2),
+            builder:
+                (BuildContext context1, ScrollController scrollController) {
+              return BlocProvider.value(
+                value: context.read<RecommendationProductsBloc>(),
+                child: BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
+                  builder: (blocContext, state) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(AppConstants.radius_30),
+                          topRight: Radius.circular(AppConstants.radius_30),
+                        ),
+                        color: AppColors.whiteColor,
                       ),
-                      color: AppColors.whiteColor,
-                    ),
-                    clipBehavior: Clip.hardEdge,
-                    child:state.isProductLoading
-                        ? ProductDetailsShimmerWidget()
-                        : state.productDetails.isEmpty
-                        ? Center(
-                      child: Text(
-                          AppLocalizations.of(context)!.no_product,
-                          style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.normalFont,
-                            color: AppColors.redColor,
-                            fontWeight: FontWeight.w500,
-                          )),
-                    )
-                        : SingleChildScrollView(
-                      child: NotificationListener<ScrollNotification>(
-                  onNotification: (notification) {
-                  if(getScreenHeight(context)<700 ){
-                  final metrices = notification.metrics;
-                  if (metrices.atEdge && metrices.pixels == 0) {
-                  Navigator.pop(context);
-
-                  }
-
-                  if (metrices.pixels == metrices.minScrollExtent) {
-
-                  }
-
-                  if (metrices.atEdge && metrices.pixels > 0) {
-
-                  }
-
-                  if (metrices.pixels >= metrices.maxScrollExtent) {
-
-                  }
-
-                  }
-                  return false;
-                  },
+                      clipBehavior: Clip.hardEdge,
+                      child:state.isProductLoading
+                          ? ProductDetailsShimmerWidget()
+                          : state.productDetails.isEmpty
+                          ? Center(
+                        child: Text(
+                            AppLocalizations.of(context)!.no_product,
+                            style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.normalFont,
+                              color: AppColors.redColor,
+                              fontWeight: FontWeight.w500,
+                            )),
+                      )
+                          : SingleChildScrollView(
+                        controller:  ModalScrollController.of(context),
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
@@ -937,13 +916,13 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            );
-          },
+                    );
+                  },
+                ),
+              );
+            },
 
+          ),
         );
       },
     );

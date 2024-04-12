@@ -177,7 +177,7 @@ class FormDataScreenWidget extends StatelessWidget {
                       ),
                       7.height,
                       CustomContainerWidget(
-                        name: AppLocalizations.of(context)!.guarantee_1_address,
+                        name: '${1}${AppLocalizations.of(context)!.guarantee_1_address}',
                       ),
                       CustomFormField(
                         context: context,
@@ -266,7 +266,7 @@ class FormDataScreenWidget extends StatelessWidget {
                           ),
                           7.height,
                           CustomContainerWidget(
-                            name: AppLocalizations.of(context)!.guarantee_2_address,
+                            name: '${2}${AppLocalizations.of(context)!.guarantee_2_address}',
                             star: '',
                           ),
                           CustomFormField(
