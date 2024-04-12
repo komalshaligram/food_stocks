@@ -359,6 +359,7 @@ class BasketScreenWidget extends StatelessWidget {
                         return AbsorbPointer(
                           absorbing: state.isRemoveProcess ? true : false,
                           child: CustomDialog(
+                            isProcessing: state.isRemoveProcess,
                             title: '${AppLocalizations.of(context)!.you_want_delete_product}',
                             directionality: state.language,
                             positiveTitle:AppLocalizations.of(context)!.yes,
@@ -722,6 +723,7 @@ class BasketScreenWidget extends StatelessWidget {
                           : '${AppLocalizations.of(context)!.you_want_delete_product}',
                       directionality: state.language,
                       positiveTitle:AppLocalizations.of(context)!.yes,
+                      isProcessing:  state.isRemoveProcess,
                       negativeTitle: AppLocalizations.of(context)!.no,
                       positiveOnTap: (){
                         updateClearString == AppStrings.clearString

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/bloc/basket/basket_bloc.dart';
 import 'package:food_stock/data/model/req_model/remove_issue/remove_issue_req_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -262,7 +263,6 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
 
       else if (event is _duplicateOrderEvent) {
         emit(state.copyWith(isDuplicateOrderProcess: true));
-
         try {
           final response = await DioClient(event.context).post(
             '${AppUrls.duplicateOrderUrl}',
@@ -276,12 +276,11 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               'duplicateOrder url  = ${AppUrls.baseUrl}${AppUrls.duplicateOrderUrl}');
           debugPrint('[order Id ] = ${event.orderId}');
           debugPrint('[cart Id ] = ${preferencesHelper.getCartId()}');
+          debugPrint('response = ${response}');
 
           if (response['status'] == 200) {
-
-            emit(state.copyWith(isDuplicateOrderProcess: false));
+            add(ProductDetailsEvent.getAllCartEvent(context: event.context));
            Navigator.pop(event.dialogContext);
-
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -310,13 +309,56 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               title:e.toString(),
               type: SnackBarType.SUCCESS);
         }
-
-
-
       }
 
-    //  else if(event is _)
+      else   if (event is _getAllCartEvent) {
+        debugPrint('cartId____${preferencesHelper.getCartId()}');
 
+        emit(state.copyWith(isDuplicateOrderProcess: true));
+        try {
+          final res = await DioClient(event.context).post(
+            '${AppUrls.getAllCartUrl}${preferencesHelper.getCartId()}',
+          );
+
+          GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+
+          if (response.status == 200) {
+            emit(state.copyWith(isDuplicateOrderProcess: false,));
+            List<ProductStockModel>stockList = [];
+            stockList.addAll(response.data?.data?.map(
+                    (product) =>
+                    ProductStockModel(
+                        quantity: product.totalQuantity?? 0,
+                        productId: product.id ?? '',
+                        stock: product.productStock.toString(),
+                        lowStock: product.lowStock.toString()
+                    )) ??
+                []);
+
+            await preferencesHelper.setCartCount(
+                count: stockList.length);
+            await preferencesHelper.setIsAnimation(
+                isAnimation: true);
+
+          } else {
+            emit(state.copyWith( isDuplicateOrderProcess: false));
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title:  AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
+                type: SnackBarType.SUCCESS);
+          }
+        } on ServerException { emit(state.copyWith( isDuplicateOrderProcess: false));}
+        catch(e){
+          emit(state.copyWith( isDuplicateOrderProcess: false));
+          CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: e.toString(),
+              type: SnackBarType.SUCCESS);
+        }
+      }
 
 
     });
