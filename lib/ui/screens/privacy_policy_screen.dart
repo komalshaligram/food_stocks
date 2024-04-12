@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,19 +7,16 @@ import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../bloc/privacy_policy/privacy_policy_bloc.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
-import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/custom_button_widget.dart';
-import 'dart:io';
 
 
 class PrivacyPolicyRoute {
   static Widget get route => PrivacyPolicyScreen();
 }
-
 
 class PrivacyPolicyScreen extends StatelessWidget {
   PrivacyPolicyScreen({super.key});
