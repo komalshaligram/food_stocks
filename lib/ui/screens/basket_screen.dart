@@ -24,6 +24,7 @@ import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 
 import '../widget/custom_dialog.dart';
@@ -753,73 +754,58 @@ class BasketScreenWidget extends StatelessWidget {
       productListIndex: productListIndex
 
     ));
-    showModalBottomSheet(
+    showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      isScrollControlled: true,
+   //   isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      showDragHandle: true,
-      useSafeArea: true,
+    //  showDragHandle: true,
+     // useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        return DraggableScrollableSheet(
-          expand: true,
-          maxChildSize: 1 -
-              (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
-          minChildSize:    1 -
-              (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
-          initialChildSize:   1 -
-              (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
-          builder:
-              (BuildContext context1, ScrollController scrollController) {
-            return BlocProvider.value(
-              value: context.read<BasketBloc>(),
-              child: BlocBuilder<BasketBloc, BasketState>(
-                builder: (blocContext, state) {
-                  return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(AppConstants.radius_30),
-                          topRight: Radius.circular(AppConstants.radius_30),
+        return SafeArea(
+          child: DraggableScrollableSheet(
+            expand: true,
+            maxChildSize: 1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)),
+            minChildSize:    1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)),
+            initialChildSize:   1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)),
+            builder:
+                (BuildContext context1, ScrollController scrollController) {
+              return BlocProvider.value(
+                value: context.read<BasketBloc>(),
+                child: BlocBuilder<BasketBloc, BasketState>(
+                  builder: (blocContext, state) {
+                    return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(AppConstants.radius_30),
+                            topRight: Radius.circular(AppConstants.radius_30),
+                          ),
+                          color: AppColors.whiteColor,
                         ),
-                        color: AppColors.whiteColor,
-                      ),
-                      clipBehavior: Clip.hardEdge,
+                        clipBehavior: Clip.hardEdge,
 
-                      child: state.isProductLoading
-                          ? ProductDetailsShimmerWidget()
-                          : state.productDetails.isEmpty
-                          ? Center(
-                        child: Text(
-                            AppLocalizations.of(context)!.no_product,
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.normalFont,
-                              color: AppColors.redColor,
-                              fontWeight: FontWeight.w500,
-                            )),
-                      )
-                          : SingleChildScrollView(
-                          child: NotificationListener<ScrollNotification>(
-                            onNotification: (notification) {
-                              if(getScreenHeight(context)<700 ){
-                                final metrices = notification.metrics;
-                                if (metrices.atEdge && metrices.pixels == 0) {
-                                  Navigator.pop(context);
-                                }
-                                if (metrices.pixels == metrices.minScrollExtent) {
-                                }
-                                if (metrices.atEdge && metrices.pixels > 0) {
-                                }
-                                if (metrices.pixels >= metrices.maxScrollExtent) {
-                                }
-
-                              }
-                              return false;
-                            },
+                        child: state.isProductLoading
+                            ? ProductDetailsShimmerWidget()
+                            : state.productDetails.isEmpty
+                            ? Center(
+                          child: Text(
+                              AppLocalizations.of(context)!.no_product,
+                              style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.normalFont,
+                                color: AppColors.redColor,
+                                fontWeight: FontWeight.w500,
+                              )),
+                        )
+                            : SingleChildScrollView(
+                            controller:  ModalScrollController.of(context),
                             child: Column(
                               children: [
                                 CommonProductDetailsWidget(
@@ -973,16 +959,15 @@ class BasketScreenWidget extends StatelessWidget {
                                 ),
                                 state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context),
                               ],
-                            ),
+                            ))
 
-                          ))
+                    );
+                  },
+                ),
+              );
+            },
 
-                  );
-                },
-              ),
-            );
-          },
-
+          ),
         );
       },
     );

@@ -315,6 +315,8 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
 
       }
 
+    //  else if(event is _)
+
 
 
     });
