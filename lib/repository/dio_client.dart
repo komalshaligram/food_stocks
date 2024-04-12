@@ -29,8 +29,8 @@ class DioClient {
       : _dio = Dio(
     BaseOptions(
         baseUrl: AppUrls.baseUrl,
-        connectTimeout: const Duration(milliseconds: 60000),
-        receiveTimeout: const Duration(milliseconds: 60000),
+        connectTimeout: const Duration(milliseconds: 80000),
+        receiveTimeout: const Duration(milliseconds: 80000),
         headers: {
           HttpHeaders.acceptHeader: Headers.jsonContentType,
           HttpHeaders.authorizationHeader: 'Bearer ',
@@ -44,12 +44,10 @@ class DioClient {
         },
         contentType: Headers.jsonContentType,
         responseType: ResponseType.json),
-  )..interceptors.add(InterceptorsWrapper(
-
-      onRequest: (options, handler) {
-        //  debugPrint("app request data ${options.data}");
-        return handler.next(options);
-      }, onResponse: (response, handler) async {
+  )..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+    //  debugPrint("app request data ${options.data}");
+    return handler.next(options);
+  }, onResponse: (response, handler) async {
     if (kDebugMode) {
       debugPrint("app response data ${response.data}");
     }
@@ -67,11 +65,8 @@ class DioClient {
         Options? options}) async {
     SharedPreferencesHelper preferencesHelper =
     SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-    debugPrint('URL = ${AppUrls.baseUrl}$path');
-    debugPrint('token = ${preferencesHelper.getAuthToken()}');
     final connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi) {
+    if (Platform.isAndroid) {
       try {
         Options requestOptions = options ??
             Options(headers: {
@@ -88,27 +83,61 @@ class DioClient {
         return response.data;
       } on DioException catch (e) {
         if (e.response?.statusCode == 401 && path != AppUrls.refreshTokenUrl) {
-          tokenExpirationWork(path, data, preferencesHelper,'POST',queryParameters??{});
+          tokenExpirationWork(
+              path, data, preferencesHelper, 'POST', queryParameters ?? {});
         } else if (path == AppUrls.refreshTokenUrl &&
             e.response?.statusCode == 401) {
-          manageRefreshTokenWork(preferencesHelper,queryParameters??{});
+          manageRefreshTokenWork(preferencesHelper, queryParameters ?? {});
         } else {
           throw _createErrorEntity(e, context: _context);
         }
       }
     } else {
-      debugPrint('no internet');
-      showDialog(
-        context: _context,
-        builder: (context) => NoInternetDialog(positiveOnTap: () {
-          Navigator.pop(context);
-        }),
-      );
+      if (connectivityResult == ConnectivityResult.mobile ||
+          connectivityResult == ConnectivityResult.wifi) {
+        try {
+          Options requestOptions = options ??
+              Options(headers: {
+                HttpHeaders.authorizationHeader:
+                'Bearer ${preferencesHelper.getAuthToken()}'
+              });
+          requestOptions.headers = requestOptions.headers ?? {};
+
+          var response = await _dio.post(path,
+              data: data,
+              queryParameters: queryParameters,
+              options: requestOptions);
+
+          return response.data;
+        } on DioException catch (e) {
+          if (e.response?.statusCode == 401 && path != AppUrls.refreshTokenUrl) {
+            tokenExpirationWork(
+                path, data, preferencesHelper, 'POST', queryParameters ?? {});
+          } else if (path == AppUrls.refreshTokenUrl &&
+              e.response?.statusCode == 401) {
+            manageRefreshTokenWork(preferencesHelper, queryParameters ?? {});
+          } else {
+            throw _createErrorEntity(e, context: _context);
+          }
+        }
+      } else {
+        debugPrint('no internet');
+        showDialog(
+          context: _context,
+          builder: (context) => NoInternetDialog(positiveOnTap: () {
+            Navigator.pop(context);
+          }),
+        );
+      }
     }
   }
 
-  tokenExpirationWork(String path, Object? data,
-      SharedPreferencesHelper preferencesHelper,String type,Map<String,dynamic> queryParams) async {
+  void tokenExpirationWork(
+      String path,
+      Object? data,
+      SharedPreferencesHelper preferencesHelper,
+      String type,
+      Map<String, dynamic> queryParams) async {
     ///save data of expire api
     preferencesHelper.setApiUrl(ApiUrl: path);
     preferencesHelper.setReqPram(ReqPram: jsonEncode(data));
@@ -120,16 +149,16 @@ class DioClient {
     debugPrint('[refreshToken token] ${res.data?.accessToken}');
 
     if (res.status == 200) {
-      manageAccessTokenWork(preferencesHelper, res, type,queryParams);
+      manageAccessTokenWork(preferencesHelper, res, type, queryParams);
     }
     if (res.status == 401) {
       //logout work
-      manageRefreshTokenWork(preferencesHelper,queryParams);
+      manageRefreshTokenWork(preferencesHelper, queryParams);
     }
   }
 
-  manageAccessTokenWork(SharedPreferencesHelper preferencesHelper, dynamic res,
-      String type,Map<String,dynamic> queryParams) async {
+  void  manageAccessTokenWork(SharedPreferencesHelper preferencesHelper, dynamic res,
+      String type, Map<String, dynamic> queryParams) async {
     preferencesHelper.setUserLoggedIn(isLoggedIn: true);
     preferencesHelper.setAuthToken(accToken: res.data?.accessToken ?? '');
     preferencesHelper.setRefreshToken(refToken: res.data?.refreshToken ?? '');
@@ -140,26 +169,34 @@ class DioClient {
     });
     requestOptions.headers = requestOptions.headers ?? {};
     var response;
-    switch(type){
+    switch (type) {
       case "GET":
         response = await _dio.get(preferencesHelper.getApiUrl(),
-            queryParameters: queryParams,
-            options: requestOptions);
+            queryParameters: queryParams, options: requestOptions);
         break;
       case "POST":
-        response = await _dio.post(preferencesHelper.getApiUrl(),
-          data: preferencesHelper.getRqPram(), options: requestOptions,queryParameters: queryParams,);
+        response = await _dio.post(
+          preferencesHelper.getApiUrl(),
+          data: preferencesHelper.getRqPram(),
+          options: requestOptions,
+          queryParameters: queryParams,
+        );
         break;
       case "PUT":
-        response = await _dio.put(preferencesHelper.getApiUrl(),
-          data: preferencesHelper.getRqPram(), options: requestOptions,queryParameters: queryParams,);
+        response = await _dio.put(
+          preferencesHelper.getApiUrl(),
+          data: preferencesHelper.getRqPram(),
+          options: requestOptions,
+          queryParameters: queryParams,
+        );
         break;
     }
     debugPrint('res_______________________$response');
     return response.data;
   }
 
-  manageRefreshTokenWork(SharedPreferencesHelper preferencesHelper,Map<String,dynamic> queryParams) async {
+  void manageRefreshTokenWork(SharedPreferencesHelper preferencesHelper,
+      Map<String, dynamic> queryParams) async {
     var response = await _dio.put(AppUrls.logOutUrl,
         data: {"userId": preferencesHelper.getUserId()});
 
@@ -180,6 +217,43 @@ class DioClient {
     }
   }
 
+
+  Future postWork(String path,
+      {Object? data,
+        Map<String, dynamic>? queryParameters,
+        Options? options}) async {
+    SharedPreferencesHelper preferencesHelper =
+    SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+
+    debugPrint('URL = ${AppUrls.baseUrl}$path');
+    debugPrint('token = ${preferencesHelper.getAuthToken()}');
+    try {
+      Options requestOptions = options ??
+          Options(headers: {
+            HttpHeaders.authorizationHeader:
+            'Bearer ${preferencesHelper.getAuthToken()}'
+          });
+      requestOptions.headers = requestOptions.headers ?? {};
+
+      var response = await _dio.post(path,
+          data: data,
+          queryParameters: queryParameters,
+          options: requestOptions);
+
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401 && path != AppUrls.refreshTokenUrl) {
+        tokenExpirationWork(
+            path, data, preferencesHelper, 'POST', queryParameters ?? {});
+      } else if (path == AppUrls.refreshTokenUrl &&
+          e.response?.statusCode == 401) {
+        manageRefreshTokenWork(preferencesHelper, queryParameters ?? {});
+      } else {
+        throw _createErrorEntity(e, context: _context);
+      }
+    }
+  }
+
   // GET
   Future get(
       {required String path,
@@ -188,11 +262,8 @@ class DioClient {
     try {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      debugPrint('URL = ${AppUrls.baseUrl}$path');
       final connectivityResult = await (Connectivity().checkConnectivity());
-
-      if (connectivityResult == ConnectivityResult.mobile ||
-          connectivityResult == ConnectivityResult.wifi) {
+      if (Platform.isAndroid) {
         try {
           final response = await _dio.get(path,
               queryParameters: query,
@@ -203,28 +274,86 @@ class DioClient {
                   }));
           debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
           return response.data as Map<String, dynamic>;
-        }  on DioException catch (e) {
-          if (e.response?.statusCode == 401 && path != AppUrls.refreshTokenUrl) {
-            tokenExpirationWork(path, null, preferencesHelper,'GET',query??{});
+        } on DioException catch (e) {
+          if (e.response?.statusCode == 401 &&
+              path != AppUrls.refreshTokenUrl) {
+            tokenExpirationWork(
+                path, null, preferencesHelper, 'GET', query ?? {});
           } else if (path == AppUrls.refreshTokenUrl &&
               e.response?.statusCode == 401) {
-            manageRefreshTokenWork(preferencesHelper,query??{});
+            manageRefreshTokenWork(preferencesHelper, query ?? {});
           } else {
             throw _createErrorEntity(e, context: _context);
           }
         }
-      } else {
-        debugPrint('error');
-        showDialog(
-          context: _context,
-          builder: (context) => NoInternetDialog(positiveOnTap: () {
-            Navigator.pop(context);
-          }),
-        );
-        throw Exception("Network Error");
+      }else {
+        if (connectivityResult == ConnectivityResult.mobile ||
+            connectivityResult == ConnectivityResult.wifi) {
+          try {
+            final response = await _dio.get(path,
+                queryParameters: query,
+                options: options ??
+                    Options(headers: {
+                      HttpHeaders.authorizationHeader:
+                      'Bearer ${preferencesHelper.getAuthToken()}'
+                    }));
+            debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
+            return response.data as Map<String, dynamic>;
+          } on DioException catch (e) {
+            if (e.response?.statusCode == 401 &&
+                path != AppUrls.refreshTokenUrl) {
+              tokenExpirationWork(
+                  path, null, preferencesHelper, 'GET', query ?? {});
+            } else if (path == AppUrls.refreshTokenUrl &&
+                e.response?.statusCode == 401) {
+              manageRefreshTokenWork(preferencesHelper, query ?? {});
+            } else {
+              throw _createErrorEntity(e, context: _context);
+            }
+          }
+        } else {
+          debugPrint('error');
+          showDialog(
+            context: _context,
+            builder: (context) => NoInternetDialog(positiveOnTap: () {
+              Navigator.pop(context);
+            }),
+          );
+          throw Exception("Network Error");
+        }
       }
     } on DioException catch (e) {
       throw _createErrorEntity(e);
+    }
+  }
+
+  Future getWork({required String path,
+    Map<String, dynamic>? query,
+    Options? options}) async {
+    SharedPreferencesHelper preferencesHelper =
+    SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    debugPrint('URL = ${AppUrls.baseUrl}$path');
+    try {
+      final response = await _dio.get(path,
+          queryParameters: query,
+          options: options ??
+              Options(headers: {
+                HttpHeaders.authorizationHeader:
+                'Bearer ${preferencesHelper.getAuthToken()}'
+              }));
+      debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
+      return response.data as Map<String, dynamic>;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401 &&
+          path != AppUrls.refreshTokenUrl) {
+        tokenExpirationWork(
+            path, null, preferencesHelper, 'GET', query ?? {});
+      } else if (path == AppUrls.refreshTokenUrl &&
+          e.response?.statusCode == 401) {
+        manageRefreshTokenWork(preferencesHelper, query ?? {});
+      } else {
+        throw _createErrorEntity(e, context: _context);
+      }
     }
   }
 
@@ -251,15 +380,12 @@ class DioClient {
         Map<String, dynamic>? data,
         Map<String, dynamic>? query,
         Options? options}) async {
-
     try {
-      SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      debugPrint('URL = ${AppUrls.baseUrl}$path');
-      final connectivityResult = await (Connectivity().checkConnectivity());
 
-      if (connectivityResult == ConnectivityResult.mobile ||
-          connectivityResult == ConnectivityResult.wifi) {
+      final connectivityResult = await (Connectivity().checkConnectivity());
+      if(Platform.isAndroid){
+        SharedPreferencesHelper preferencesHelper =
+        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         try {
           debugPrint('URL = ${AppUrls.baseUrl}$path');
           final response = await _dio.put(path,
@@ -273,29 +399,71 @@ class DioClient {
                     },
                   ));
           return response.data;
-        }  on DioException catch (e) {
-          if (e.response?.statusCode == 401 && path != AppUrls.refreshTokenUrl) {
-            tokenExpirationWork(path, data, preferencesHelper,'PUT',query??{});
+        } on DioException catch (e) {
+          if (e.response?.statusCode == 401 &&
+              path != AppUrls.refreshTokenUrl) {
+            tokenExpirationWork(
+                path, data, preferencesHelper, 'PUT', query ?? {});
           } else if (path == AppUrls.refreshTokenUrl &&
               e.response?.statusCode == 401) {
-            manageRefreshTokenWork(preferencesHelper,query??{});
+            manageRefreshTokenWork(preferencesHelper, query ?? {});
           } else {
             throw _createErrorEntity(e, context: _context);
           }
         }
-      } else {
-        debugPrint('error');
-        showDialog(
-          context: _context,
-          builder: (context) => NoInternetDialog(positiveOnTap: () {
-            Navigator.pop(context);
-          }),
-        );
-        throw Exception("Network Error");
+      }else{
+        if (connectivityResult == ConnectivityResult.mobile ||
+            connectivityResult == ConnectivityResult.wifi) {
+          SharedPreferencesHelper preferencesHelper =
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+          try {
+            debugPrint('URL = ${AppUrls.baseUrl}$path');
+            final response = await _dio.put(path,
+                data: data,
+                queryParameters: query,
+                options: options ??
+                    Options(
+                      headers: {
+                        HttpHeaders.authorizationHeader:
+                        'Bearer ${preferencesHelper.getAuthToken()}',
+                      },
+                    ));
+            return response.data;
+          } on DioException catch (e) {
+            if (e.response?.statusCode == 401 &&
+                path != AppUrls.refreshTokenUrl) {
+              tokenExpirationWork(
+                  path, data, preferencesHelper, 'PUT', query ?? {});
+            } else if (path == AppUrls.refreshTokenUrl &&
+                e.response?.statusCode == 401) {
+              manageRefreshTokenWork(preferencesHelper, query ?? {});
+            } else {
+              throw _createErrorEntity(e, context: _context);
+            }
+          }
+        } else {
+          debugPrint('error');
+          showDialog(
+            context: _context,
+            builder: (context) => NoInternetDialog(positiveOnTap: () {
+              Navigator.pop(context);
+            }),
+          );
+          throw Exception("Network Error");
+        }
       }
+
     } on DioException catch (e) {
       throw _createErrorEntity(e);
     }
+  }
+
+
+  Future<void> putWork({required String path,
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? query,
+    Options? options}) async {
+
   }
 }
 
@@ -401,9 +569,10 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
     case DioExceptionType.connectionError:
       CustomSnackBar.showSnackBar(
           context: context!,
-          title: 'Connection error',
+          title: AppLocalizations.of(context)!.connection_error,
           type: SnackBarType.FAILURE);
-      return ErrorEntity(code: -1, message: "Connection error");
+      return ErrorEntity(
+          code: -1, message: AppLocalizations.of(context)!.connection_error);
 
     case DioExceptionType.unknown:
       CustomSnackBar.showSnackBar(
