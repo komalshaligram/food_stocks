@@ -14,6 +14,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
 
+import 'package:eraser/eraser.dart';
+
 final shorebirdCodePush = ShorebirdCodePush();
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -27,9 +29,11 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     debugPrint("Handling in main${message.toString()}");
     debugPrint("Handling a background message:${message.messageId}");
     debugPrint("Handling a background message:${message.data.toString()}");
+    debugPrint("Handling a background message:${message.collapseKey}");
     var data = json.decode(message.data['data'].toString());
 
     FlutterAppBadger.updateBadgeCount(PushNotificationService().notificationCount+1);
+
     if(data!=null){
       PushNotificationService().showNotification(
           notiId: message.notification.hashCode,
@@ -39,6 +43,7 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           showNotification: true,
           isAppOpen: true
       );
+
   }
 }
 

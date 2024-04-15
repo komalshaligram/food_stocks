@@ -153,6 +153,9 @@ Future<void> _launchUrl(String storeUrl) async {
     } finally {
       launchUrl(_url);
     }
+    /*  if (!await launchUrl(_url)) {
+        throw Exception('Could not launch $_url');
+      }*/
 }
 
 Future<CroppedFile?> cropImage(
@@ -229,6 +232,46 @@ extension RTLExtension on BuildContext {
       [Locale('he')].contains(Localizations.localeOf(this)) ? true : false;
 }
 
+String formatter(String currentBalance) {
+  double value = double.parse(currentBalance);
+  if (value < 1000) {
+    return (splitNumber(value.toStringAsFixed(2)));
+  } else if (value < 10000 && value >= 1000) {
+    double result = (value / 1000);
+    String result1 = splitNumber(result.toStringAsFixed(2));
+    return ((result1.toString() + "K" + " "));
+  } else if (value < 100000 && value >= 10000) {
+    double result = value / 1000;
+    String result1 = splitNumber(result.toStringAsFixed(2));
+    return ((result1.toString() + "K" + " "));
+  } else if (value < 1000000 && value >= 100000) {
+    double result = value / 100000;
+    String result1 = splitNumber(result.toStringAsFixed(2));
+    return (result1.toString() + "L" + "");
+  } else if (value < 10000000 && value >= 1000000) {
+    // less than 100 million
+    double result = value / 1000000;
+    String result1 = splitNumber(result.toStringAsFixed(2));
+    return (result1.toString() + "M" + " ");
+  } else if (value < 100000000 && value >= 10000000) {
+    // less than 100 million
+    double result = value / 1000000;
+    String result1 = splitNumber(result.toStringAsFixed(2));
+    return (result1.toString() + "M" + " ");
+  } else if (value < 1000000000 && value >= 100000000) {
+    // less than 100 million
+    double result = value / 1000000;
+    String result1 = splitNumber(result.toStringAsFixed(2));
+    return (result1.toString() + "M" + " ");
+  } else if (value >= 1000000000) {
+    // less than 100 million
+    double result = value / 1000000;
+    String result1 = splitNumber(result.toStringAsFixed(2));
+    return (result1.toString() + "M" + " ");
+  }
+  return '';
+}
+
 String splitNumber(String price) {
   var splitPrice = price.split(".");
   if (splitPrice[1] == "00") {
@@ -298,10 +341,7 @@ double bottleDepositCalculation(
   return result;
 }
 
-
 double saleCalculation({required double price, required double salePer}) {
   double result = price - (price * (salePer / 100));
   return result;
 }
-
-

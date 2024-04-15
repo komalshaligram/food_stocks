@@ -306,7 +306,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 type: SnackBarType.SUCCESS,
               );*/
               });
-              print('file____${file}');
+              debugPrint('file____${file}');
 
             }
             else {

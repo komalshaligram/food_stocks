@@ -24,6 +24,7 @@ class FormDataState with _$FormDataState{
     required bool isAgentListShimmering,
     required bool haveMultiple,
     required bool isUpdate,
+    required String language,
   }) = _FormDataState;
 
   factory FormDataState.initial()=>  FormDataState(
@@ -46,7 +47,8 @@ class FormDataState with _$FormDataState{
     isShimmering: false,
     haveMultiple: false,
     isAgentListShimmering: false,
-    isUpdate: false
+    isUpdate: false,
+    language: AppStrings.hebrewString
   );
 
 }

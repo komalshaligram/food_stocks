@@ -71,8 +71,6 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                 child: CircularButtonWidget(
                   buttonName: AppLocalizations.of(context)!.total,
                     buttonValue:
-                   // '${AppLocalizations.of(context)!.currency}${(args?[AppStrings.totalAmountString] ?? '0')}'
-
                     '${formatNumber(value: args?[AppStrings.totalAmountString] ?? '0', local: AppStrings.hebrewLocal)}',
                 ),
               ),

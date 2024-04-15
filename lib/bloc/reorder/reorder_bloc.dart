@@ -219,7 +219,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               add(ReorderEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if ( (event.isBarcode )) {
-
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                   quantity: _productQuantity,
@@ -740,7 +739,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
       else if (event is _SetCartCountEvent) {
 
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
-        await preferences.setIsAnimation(isAnimation: true);
+        
         debugPrint('cart count reorder = ${preferences.getCartCount()}');
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));

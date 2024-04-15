@@ -74,6 +74,7 @@ class DioClient {
               'Bearer ${preferencesHelper.getAuthToken()}'
             });
         requestOptions.headers = requestOptions.headers ?? {};
+        debugPrint('getAuthToken____${preferencesHelper.getAuthToken()}');
 
         var response = await _dio.post(path,
             data: data,

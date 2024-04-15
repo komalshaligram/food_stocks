@@ -43,7 +43,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       if (event is _getFormsListEvent) {
         emit(state.copyWith(
             isLoading: true, isShimmering: true, isUpdate: event.isUpdate , language: preferencesHelper.getAppLanguage()));
-        print('update___${state.isUpdate}');
+        debugPrint('update___${state.isUpdate}');
         try {
           final res =
               await DioClient(event.context).get(path: AppUrls.formsListUrl);
@@ -53,13 +53,12 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 state.formsAndFilesList.toList(growable: true);
             int len = response.data?.clientForms?.toList().length ?? 0;
             for (int i = 0; i < len; i++) {
-              if(response.data?.clientForms?[i].isShownInMobile??false){
+              if(response.data?.clientForms?[i].isShownInMobile ?? false){
                 formsList.add(FormAndFileModel(
                     id: response.data?.clientForms?[i].id,
                     isForm: true,
                     sampleUrl: response.data?.clientForms?[i].sample,
                     name: response.data?.clientForms?[i].formName));
-                //debugPrint('formList[$i] = ${formsList[i].name}');
               }
             }
             if(state.isUpdate){
@@ -609,14 +608,14 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             dir = await getApplicationDocumentsDirectory();
           }
           debugPrint(
-              'download url = ${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}');
+              'download url = ${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].url}');
 
           String filePath =
-              '${dir.path}/${state.formsAndFilesList[event.fileIndex].sampleUrl?.split('/').last.split('.').first}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(state.formsAndFilesList[event.fileIndex].sampleUrl?.split('/').last ?? '')}';
+              '${dir.path}/${state.formsAndFilesList[event.fileIndex].url?.split('/').last.split('.').first}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(state.formsAndFilesList[event.fileIndex].url?.split('/').last ?? '')}';
           debugPrint( " download    ${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}");
           debugPrint( " download  111  ${state.formsAndFilesList}");
           await Dio().download(
-              "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}",
+              "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].url}",
               filePath, onReceiveProgress: (received, total) {
             debugPrint('rec:${received},total:$total');
             int progress = (received * 100) ~/ total;
