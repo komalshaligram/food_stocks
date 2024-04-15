@@ -276,7 +276,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               'duplicateOrder url  = ${AppUrls.baseUrl}${AppUrls.duplicateOrderUrl}');
           debugPrint('[order Id ] = ${event.orderId}');
           debugPrint('[cart Id ] = ${preferencesHelper.getCartId()}');
-          debugPrint('response = ${response}');
+          debugPrint('duplicateOrder response = ${response}');
 
           if (response['status'] == 200) {
             add(ProductDetailsEvent.getAllCartEvent(context: event.context));
@@ -320,6 +320,11 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             '${AppUrls.getAllCartUrl}${preferencesHelper.getCartId()}',
           );
 
+          debugPrint(
+              'duplicateOrder url  = ${AppUrls.baseUrl}${AppUrls.getAllCartUrl}');
+
+          debugPrint('GetAllCart response = ${res}');
+
           GetAllCartResModel response = GetAllCartResModel.fromJson(res);
 
           if (response.status == 200) {
@@ -337,8 +342,6 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
 
             await preferencesHelper.setCartCount(
                 count: stockList.length);
-            await preferencesHelper.setIsAnimation(
-                isAnimation: true);
 
           } else {
             emit(state.copyWith( isDuplicateOrderProcess: false));

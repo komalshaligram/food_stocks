@@ -69,9 +69,4 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
   const factory ProductDetailsEvent.getAllCartEvent({required BuildContext context}) =
   _getAllCartEvent;
 
-  const factory ProductDetailsEvent.setCartCountEvent() =_SetCartCountEvent;
-
-
-
-
 }

@@ -55,11 +55,11 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
 
       }
       else if(event is _navigationEvent){
-          print('owner1Signature___${owner1Signature}');
-          print('ownerSignature___${owner2Signature}');
-          print('guarantee1Signature___${guarantee1Signature}');
-          print('guarantee2Signature___${guarantee2Signature}');
-          print('id  ____${termsConditionReqModel.id}');
+          debugPrint('owner1Signature___${owner1Signature}');
+          debugPrint('ownerSignature___${owner2Signature}');
+          debugPrint('guarantee1Signature___${guarantee1Signature}');
+          debugPrint('guarantee2Signature___${guarantee2Signature}');
+          debugPrint('id  ____${termsConditionReqModel.id}');
           try {
             emit(state.copyWith(isShimmering: true));
             final res =
@@ -101,7 +101,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
               ),
             );
             debugPrint('fileUpload url = ${AppUrls.baseUrl}${AppUrls.termsConditionUrl}');
-            print('termCondition response ____${res}');
+            debugPrint('termCondition response ____${res}');
 
             TermsConditionResModel response =
             TermsConditionResModel.fromJson(res);
@@ -219,10 +219,10 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
       guarantee2Signature = imagePath.path;
     }
 
-    print('owner1Signature___${owner1Signature}');
-    print('guarantee1Signature___${guarantee1Signature}');
-    print('guarantee2Signature___${guarantee2Signature}');
-    print('owner2Signature ____${owner2Signature}');
+    debugPrint('owner1Signature___${owner1Signature}');
+    debugPrint('guarantee1Signature___${guarantee1Signature}');
+    debugPrint('guarantee2Signature___${guarantee2Signature}');
+    debugPrint('owner2Signature ____${owner2Signature}');
 
     if(state.isOwner2Available ){
       if(owner1Signature != '' &&  owner2Signature != ''

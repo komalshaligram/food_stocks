@@ -68,7 +68,7 @@ class FileUploadScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<FileUploadBloc, FileUploadState>(
         builder: (context, state) {
-          print('formsAndFilesList___${state.formsAndFilesList}');
+          debugPrint('formsAndFilesList___${state.formsAndFilesList}');
           return WillPopScope(
             onWillPop: () {
               // if (state.isDownloading) {

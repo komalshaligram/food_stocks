@@ -219,7 +219,6 @@ class FormDataScreenWidget extends StatelessWidget {
                               textInputAction: TextInputAction.next,
                               validator: '',
                            onChangeValue: (t){
-                                print('t___${t}');
                              ownerName = t;
                            },
                           ),

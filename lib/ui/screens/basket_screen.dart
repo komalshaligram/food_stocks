@@ -48,7 +48,6 @@ class BasketScreen extends StatelessWidget {
 
 class BasketScreenWidget extends StatelessWidget {
   BasketScreenWidget({Key? key}) : super(key: key);
-  bool isRemoveProcess = false;
 
   @override
   Widget build(BuildContext context) {
@@ -328,7 +327,6 @@ class BasketScreenWidget extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: GestureDetector(
                 onTap: () {
-                  isRemoveProcess = true;
                   deleteDialog(
                     context: context,
                     cartProductId: state.basketProductList[index].cartProductId,

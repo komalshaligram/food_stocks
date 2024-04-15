@@ -168,6 +168,7 @@ class PushNotificationService {
     mainPage = data['message']['mainPage'] ?? '';
     subPage = data['message']['subPage'] ?? '';
     id = data['message']['id'] ?? '';
+
     String imageUrl = data['message']['imageUrl'] ?? '';
     Uint8List? imageByte;
     if (imageUrl.isNotEmpty) {
@@ -229,7 +230,7 @@ class PushNotificationService {
       );
     }
     if (isNavigate) {
-      print('___________navigation');
+      debugPrint('___________navigation');
       manageNavigation(isAppOpen, mainPage!, subPage!, id!);
     }
   }
