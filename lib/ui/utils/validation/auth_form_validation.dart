@@ -13,8 +13,6 @@ class AuthFormValidation {
       case AppStrings.emailValString:
         return formFieldValidation.emailField(value,context);
 
-      // case "phoneNum":
-      //   return formFieldValidation.phoneNumField(value);
       case AppStrings.mobileValString:
         return formFieldValidation.mobileField(value,context);
 
@@ -42,8 +40,24 @@ class AuthFormValidation {
       case AppStrings.faxValString:
         return formFieldValidation.faxField(value,context);
 
-      case AppStrings.cityValString:
-        return formFieldValidation.cityNameField(value,context);
+      case AppStrings.guaranteeNameString:
+        return formFieldValidation.guaranteeNameField(value,context);
+
+      case AppStrings.branchValString:
+        return formFieldValidation.branchNumberField(value,context);
+
+      case AppStrings.accountValString:
+        return formFieldValidation.accountNumberField(value,context);
+
+      case AppStrings.streetNameValString:
+        return formFieldValidation.streetNameField(value,context);
+
+      case AppStrings.streetNumberValString:
+        return formFieldValidation.streetNumberField(value,context);
+
+      case AppStrings.zipValString:
+        return formFieldValidation.zipField(value,context);
+
     }
     return null;
   }

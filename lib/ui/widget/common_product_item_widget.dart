@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_colors.dart';
@@ -23,6 +24,7 @@ class CommonProductItemWidget extends StatelessWidget {
   final double? imageHeight;
   final double? imageWidth;
   final String lowStock;
+  final bool? isPesach;
 
   const CommonProductItemWidget(
       {super.key,
@@ -33,14 +35,16 @@ class CommonProductItemWidget extends StatelessWidget {
       required this.totalSaleCount,
       required this.price,
       required this.onButtonTap,
-      this.productStock = '0',
+     required this.productStock,
       this.isGuestUser = false,
-      this.imageHeight = 70,
-      this.imageWidth = 70,
+      this.imageHeight = 80,
+      this.imageWidth = 80,
+         this.isPesach = false,
         required   this.lowStock });
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       height: height,
       width: width,
@@ -135,21 +139,22 @@ class CommonProductItemWidget extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
             ),
-            (productStock) != '0' && lowStock.isEmpty || isGuestUser
-                    ? 0.width
-                    : (productStock) == '0' && lowStock.isNotEmpty ?Text(
+        isGuestUser ? 0.height
+                    : (productStock) == '0' || productStock =='0.0'?Text(
                         AppLocalizations.of(context)!.out_of_stock1,
                         style: AppStyles.rkBoldTextStyle(
                             size: AppConstants.font_12,
                             color: AppColors.redColor,
                             fontWeight: FontWeight.w400),
                       )
-                : Text(lowStock,
+                : lowStock.isNotEmpty?Text(lowStock,
                     style: AppStyles.rkBoldTextStyle(
                         size: AppConstants.font_12,
                         color: AppColors.orangeColor,
-                        fontWeight: FontWeight.w400)),
-            3.height,
+                        fontWeight: FontWeight.w400)):0.height,
+            2.height,
+            isPesachLabelShow(isPesach!, context),
+            isPesach! ? 3.height :0.height,
             !isGuestUser
                 ? Center(
                     child: CommonProductButtonWidget(

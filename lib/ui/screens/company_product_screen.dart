@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -9,12 +11,13 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/company_products/company_products_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
-import 'package:food_stock/ui/widget/delayed_widget.dart';
+
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../../data/model/product_supplier_model/product_supplier_model.dart';
+
 import '../../data/model/search_model/search_model.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
@@ -72,7 +75,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
     CompanyProductsBloc bloc = context.read<CompanyProductsBloc>();
     return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
       builder: (context, state) {
-
+print('width___${getScreenWidth(context)}');
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
           floatingActionButton:  !state.isGuestUser?FloatingActionButton(
@@ -98,7 +101,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                       height: 26,
                       width: 26,
                       fit: BoxFit.cover,
-                      color: AppColors.whiteColor,
+                     colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),
                     ),),
                 ),
                 state.cartCount!=0?Positioned(
@@ -113,7 +116,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: AppColors.mainColor,
-                          //gradient:AppColors.appMainGradientColor,
                           borderRadius: const BorderRadius.all(
                               Radius.circular(AppConstants.radius_100)),
                           border: Border.all(
@@ -227,14 +229,13 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
-                                              childAspectRatio:  MediaQuery.of(context).size.width > 370 ?AppConstants
-                                                  .productGridAspectRatio: AppConstants
-                                                  .productGridAspectRatio1
+                                              childAspectRatio: getChildAspectRatio(context)
                                           ),
                                       itemBuilder: (context, index) => CommonProductItemWidget(
+                                        isPesach:state.productList[index].isPesach,
                                         isGuestUser: state.isGuestUser,
                                           lowStock: state.productList[index].lowStock.toString(),
-                                      height:   160,
+                                      height: AppConstants.relatedProductItemHeight,
                                       width:  140,
                                         imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                         productStock: state.productList[index].productStock.toString(),
@@ -277,10 +278,11 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: AppConstants.padding_5),
                                       itemBuilder: (context, index) => CommonProductListWidget(
+                                        isPesach: state.productList[index].isPesach??false,
                                         isGuestUser: state.isGuestUser,
                                           lowStock: state.productList[index].lowStock.toString(),
                                         numberOfUnits: state.productList[index].numberOfUnit??'0',
-                                          productStock: state.productList[index].productStock.toString() ?? '0',
+                                          productStock: state.productList[index].productStock.toString(),
                                           productImage: state.productList[index]
                                               .mainImage ??
                                               '',
@@ -303,7 +305,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                     .productList[index]
                                                     .id ??
                                                     '',
-                                                productStock: state.productList[index].productStock.toString() ?? '0',
+                                                productStock: state.productList[index].productStock.toString(),
                                                   productListIndex: 1
 
                                                 );
@@ -378,6 +380,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                           shrinkWrap: true,
                           itemBuilder: (listViewContext, index) {
                             return _buildSearchItem(
+                              isPesach: state.searchList[index].isPesach,
                                 lowStock: state.searchList[index].lowStock.toString(),
                               isGuestUser: state.isGuestUser,
                                 numberOfUnits:state.searchList[index].numberOfUnits,
@@ -732,85 +735,69 @@ class CompanyProductsScreenWidget extends StatelessWidget {
          productListIndex: productListIndex
          //planoGramIndex: planoGramIndex
      ));
-     showModalBottomSheet(
+     showMaterialModalBottomSheet(
        context: context,
        backgroundColor: Colors.transparent,
-       isScrollControlled: true,
+     //  isScrollControlled: true,
        isDismissible: true,
        clipBehavior: Clip.hardEdge,
-       showDragHandle: true,
-       useSafeArea: true,
+      // showDragHandle: true,
+     //  useSafeArea: true,
        enableDrag: true,
        builder: (context1) {
 
-         return DraggableScrollableSheet(
-           expand: true,
-           maxChildSize: 1 -
-               (MediaQuery.of(context).viewPadding.top /
-                   getScreenHeight(context)),
-
-           minChildSize:  productStock == '0' ? 0.8 :  1 -
-               (MediaQuery.of(context).viewPadding.top /
-                   getScreenHeight(context)),
-           initialChildSize:  productStock == '0' ? 0.8 :  1 -
-               (MediaQuery.of(context).viewPadding.top /
-                   getScreenHeight(context)),
-           builder:
-               (BuildContext context1, ScrollController scrollController) {
-             return BlocProvider.value(
-               value: context.read<CompanyProductsBloc>(),
-               child: BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
-                 builder: (blocContext, state) {
-                   return Container(
-                     decoration: BoxDecoration(
-                       borderRadius: BorderRadius.only(
-                         topLeft: Radius.circular(AppConstants.radius_30),
-                         topRight: Radius.circular(AppConstants.radius_30),
+         return SafeArea(
+           child: DraggableScrollableSheet(
+             expand: true,
+             maxChildSize: 1 -
+                 (MediaQuery.of(context).viewPadding.top /
+                     getScreenHeight(context)*0.2),
+             minChildSize:  productStock == '0' ? 0.9 :  1 -
+                 (MediaQuery.of(context).viewPadding.top /
+                     getScreenHeight(context)*0.2),
+             initialChildSize:  productStock == '0' ? 0.9 :  1 -
+                 (MediaQuery.of(context).viewPadding.top /
+                     getScreenHeight(context)*0.2),
+             builder:
+                 (BuildContext context1, ScrollController scrollController) {
+               return BlocProvider.value(
+                 value: context.read<CompanyProductsBloc>(),
+                 child: BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
+                   builder: (blocContext, state) {
+                     return Container(
+                       decoration: BoxDecoration(
+                         borderRadius: BorderRadius.only(
+                           topLeft: Radius.circular(AppConstants.radius_30),
+                           topRight: Radius.circular(AppConstants.radius_30),
+                         ),
+                         color: AppColors.whiteColor,
                        ),
-                       color: AppColors.whiteColor,
-                     ),
-                     clipBehavior: Clip.hardEdge,
-                     child: state.isProductLoading
-                         ? ProductDetailsShimmerWidget()
-                         : state.productDetails.isEmpty
-                         ? Center(
-                       child: Text(
-                           AppLocalizations.of(context)!.no_product,
-                           style: AppStyles.rkRegularTextStyle(
-                             size: AppConstants.normalFont,
-                             color: AppColors.redColor,
-                             fontWeight: FontWeight.w500,
-                           )),
-                     )
-                         : SingleChildScrollView(
-
-                       child: NotificationListener<ScrollNotification>(
-                   onNotification: (notification) {
-                   if(getScreenHeight(context)<700 ){
-                   final metrices = notification.metrics;
-                   if (metrices.atEdge && metrices.pixels == 0) {
-                   Navigator.pop(context);
-
-                   }
-
-                   if (metrices.pixels == metrices.minScrollExtent) {
-
-                   }
-
-                   if (metrices.atEdge && metrices.pixels > 0) {
-
-                   }
-
-                   if (metrices.pixels >= metrices.maxScrollExtent) {
-
-                   }
-
-                   }
-                   return false;
-                   },
+                       clipBehavior: Clip.hardEdge,
+                       child: state.isProductLoading
+                           ? ProductDetailsShimmerWidget()
+                           : state.productDetails.isEmpty
+                           ? Center(
+                         child: Text(
+                             AppLocalizations.of(context)!.no_product,
+                             style: AppStyles.rkRegularTextStyle(
+                               size: AppConstants.normalFont,
+                               color: AppColors.redColor,
+                               fontWeight: FontWeight.w500,
+                             )),
+                       )
+                           : SingleChildScrollView(
+                         controller:  ModalScrollController.of(context),
                          child: Column(
                            children: [
                              CommonProductDetailsWidget(
+                               totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
+                                   .productStockList[state.productListIndex][
+                               state.productStockUpdateIndex]
+                                   .quantity),
+                               bottleTax: state.bottleDeposit,
+                               isBottle:state.productDetails.first.isBottle??false,
+                               nmMashlim: state.productDetails.first.nmMashlim??'',
+                               isPesach: state.productDetails.first.isPesach??false,
                                lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                                qrCode:state.productDetails.first.qrcode ?? '' ,
                                addToOrderTap: () {
@@ -949,13 +936,13 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                            ],
                          ),
                        ),
-                     ),
-                   );
-                 },
-               ),
-             );
-           },
+                     );
+                   },
+                 ),
+               );
+             },
 
+           ),
          );
        },
      );
@@ -989,7 +976,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
              scrollDirection: Axis.horizontal,
              shrinkWrap: true,
              itemBuilder: (context2,i){
-               return CommonProductItemWidget(
+               return CommonProductItemWidget (
+                 height: AppConstants.relatedProductItemHeight,
+                 isPesach: relatedProductList.elementAt(i).isPesach,
                  lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                  productStock:relatedProductList.elementAt(i).productStock.toString(),
                  width: AppConstants.relatedProductItemWidth,
@@ -1040,6 +1029,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
      bool isGuestUser = false,
      required int numberOfUnits,
      required double priceOfBox,
+     required bool isPesach
    }) {
      return Column(
        mainAxisSize: MainAxisSize.min,
@@ -1094,7 +1084,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
          InkWell(
            onTap: onTap,
            child: Container(
-             height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? 120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
+             height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach ? 135: 120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
              decoration: BoxDecoration(
                  color: AppColors.whiteColor,
                  border: Border(
@@ -1105,12 +1095,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                          width: 1))),
              padding: EdgeInsets.only(
                  top: AppConstants.padding_5,
-                 left: AppConstants.padding_20,
-                 right: AppConstants.padding_20,
+                 left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
+                 right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
                  bottom: AppConstants.padding_5),
-             // padding: EdgeInsets.symmetric(
-             //     horizontal: AppConstants.padding_20,
-             //     vertical: AppConstants.padding_5),
              child: Row(
                crossAxisAlignment: CrossAxisAlignment.center,
                mainAxisAlignment: !isGuestUser ? searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? MainAxisAlignment.start: MainAxisAlignment.spaceBetween :MainAxisAlignment.start ,
@@ -1185,7 +1172,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                              mainAxisAlignment: MainAxisAlignment.start,
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
-                               (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
+                               double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                  AppLocalizations.of(context)!
                                      .out_of_stock1,
                                  style: AppStyles.rkBoldTextStyle(
@@ -1228,6 +1215,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
 
                        ],
                      ),
+                     isPesach ? 3.height : 0.height,
+                     isPesachLabelShow(isPesach, context)
                    ],
                  ),
 

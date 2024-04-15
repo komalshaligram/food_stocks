@@ -52,7 +52,6 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           if (response.status == 200) {
 
             await SmsAutoFill().listenForCode();
-             debugPrint('getAppSignature_______${SmsAutoFill().getAppSignature}');
             preferencesHelper.setUserId(id: response.user?.id ?? '');
             preferencesHelper.setIsGuestUser(isGuestUser: false);
             preferencesHelper.setPhoneNumber(
@@ -61,7 +60,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
               AppStrings.contactString: event.contactNumber,
               AppStrings.isRegisterString: state.isRegister
             });
-            emit(state.copyWith(isLoginSuccess: true, isLoading: false));
+            emit(state.copyWith( isLoading: false));
           } else if(response.status == 403){
              debugPrint('here');
             CustomSnackBar.showSnackBar(

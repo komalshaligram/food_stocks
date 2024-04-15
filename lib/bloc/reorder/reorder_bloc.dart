@@ -52,7 +52,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
       if (event is _GetPreviousOrderProductsEvent) {
-        emit(state.copyWith(cartCount: preferences.getCartCount(),isGridView: preferences.getReorderProductGrid()));
+        emit(state.copyWith(cartCount: preferences.getCartCount(),isGridView: preferences.getReorderProductGrid(),bottleDeposit: preferences.getBottleTax()));
         if (state.isLoadMore) {
           return;
         }
@@ -83,8 +83,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 .addAll(response.previousProductData ?? []);
             List<List<ProductStockModel>> productStockList =
                 state.productStockList.toList(growable: true);
-            List<ProductStockModel> stockList =
-            state.productStockList[1].toList(growable: true);
+            List<ProductStockModel> stockList = [];
             stockList.addAll(response.previousProductData?.map(
                     (recommendationProduct) => ProductStockModel(
                         productId: recommendationProduct.id ?? '',
@@ -774,11 +773,14 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         }
       }
       else if (event is _GlobalSearchEvent) {
-        emit(state.copyWith(search: state.searchController.text));
+        emit(state.copyWith(search: state.searchController.text,bottleDeposit: preferences.getBottleTax()));
         debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
-          GlobalSearchReqModel(search: state.searchController.text);
+          GlobalSearchReqModel(search: state.searchController.text,
+              sortField: AppStrings.sortFieldString,
+              sortOrder: AppStrings.sortOrderString
+          );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
               AppUrls.getGlobalSearchResultUrl,
@@ -813,6 +815,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 SearchModel(
                     searchId: category.id ?? '',
                     name: category.categoryName ?? '',
+                    isPesach: category.isPesach??false,
                     searchType: SearchTypes.category,
                     image: category.categoryImage ?? ''))
                 .toList() ??
@@ -827,7 +830,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   image: '',
                   categoryId: subCategory.parentCategoryId ?? '',
                   categoryName: subCategory.parentCategoryName ?? '',
-
+                  isPesach: subCategory.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -851,6 +854,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   name: supplier.supplierDetail?.companyName ?? '',
                   searchType: SearchTypes.supplier,
                   image: supplier.logo ?? '',
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -863,7 +867,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   searchType: SearchTypes.sale,
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                   image: sale.mainImage ?? '',
-
+                  isPesach: sale.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -879,7 +883,8 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                         supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
                   priceOfBox: double.parse(supplier.productPrice.toString()),
-                    lowStock: supplier.lowStock.toString()
+                    lowStock: supplier.lowStock.toString(),
+                  isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??
                 []);
@@ -941,9 +946,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             debugPrint('store search list = ${searchList.length}');
             bool productVisible = response.data?.categories?.any((
                 element) => element.isHomePreference == true) ?? true;
-            emit(state.copyWith(isCatVisible: productVisible));
-            emit(state.copyWith(
 
+            emit(state.copyWith(
+                isCatVisible: productVisible,
                 productCategoryList: response.data?.categories ?? [],
                 searchList: searchList,
                 isShimmering: false));

@@ -1,15 +1,19 @@
 
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
+import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -38,6 +42,40 @@ bool isTablet(BuildContext context) {
   return isTablet;
 }
 
+Future<String> getBottleTax() async {
+  SharedPreferencesHelper preferencesHelper =
+  SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+  debugPrint('___bottleTax_____ :${preferencesHelper.getBottleTax().toString()}');
+  var value =  preferencesHelper.getBottleTax().toString();
+   return Future.value(value.toString());
+}
+
+ double getChildAspectRatio(BuildContext context){
+  return Platform.isAndroid? getScreenHeight(context) > 900
+       ? AppConstants.productGridAspectRatio9 :getScreenHeight(context) >  820
+      && getScreenHeight(context) <  900? AppConstants.productGridAspectRatio8
+       : AppConstants.productGridAspectRatio75: getScreenHeight(context) > 820
+       ? AppConstants.productGridAspectRatio8:AppConstants.productGridAspectRatio75;
+ }
+
+Widget isPesachLabelShow(bool isPesach,BuildContext context,){
+ if(isPesach){
+   return Container(
+       padding: EdgeInsets.only(left: 5,right: 5),
+       decoration: BoxDecoration(
+           color: AppColors.pesachBGColor,
+           border: Border.all(color: AppColors.pesachBGColor),
+           borderRadius: BorderRadius.all(Radius.circular(10))
+       ),
+       child: Text(AppLocalizations.of(context)!.pesach,
+         style: AppStyles.rkRegularTextStyle(
+             size: AppConstants.font_13,
+             ),
+       ));
+ }else{
+   return 0.height;
+ }
+}
 
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
@@ -86,7 +124,7 @@ customShowUpdateDialog(
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                   alignment: Alignment.center,
-                  width: 80,
+                  width: AppConstants.containerHeight_80,
                   decoration: BoxDecoration(
                       gradient: AppColors.appMainGradientColor,
                       borderRadius: BorderRadius.circular(8.0)),
@@ -145,7 +183,6 @@ Future<CroppedFile?> cropImage(
       IOSUiSettings(
         title: AppStrings.cropImageString,
         aspectRatioLockEnabled: true,
-        // showCancelConfirmationDialog: true,
         hidesNavigationBar: true,
         resetButtonHidden: true,
         rotateButtonsHidden: true,
@@ -187,7 +224,6 @@ Future<String> scanBarcodeOrQRCode(
 bool isRTLContent({required BuildContext context}) {
   Locale locale = Localizations.localeOf(context);
   List<Locale> rtlLocales = [Locale('he')];
-  // debugPrint('rtl = ${rtlLocales.contains(locale) ? "true" : "false"}');
   return rtlLocales.contains(locale) ? true : false;
 }
 
@@ -287,9 +323,18 @@ double totalVatAmountCalculation(
   return result;
 }
 
-double bottleDepositCalculation(
+/*double bottleDepositCalculation(
     {required double qty, required double deposit}) {
   double result = qty * deposit;
+  debugPrint('qty$qty');
+  debugPrint('bottle deposit$deposit');
+  debugPrint('bottle tax$result');
+  return result;
+}*/
+
+double bottleDepositCalculation(
+    { double units =1, required double deposit,required double qty}) {
+  double result = qty * deposit * units;
   debugPrint('qty$qty');
   debugPrint('bottle deposit$deposit');
   debugPrint('bottle tax$result');

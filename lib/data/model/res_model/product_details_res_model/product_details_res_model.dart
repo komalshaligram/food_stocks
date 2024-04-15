@@ -60,6 +60,10 @@ class Product with _$Product {
     @JsonKey(name: "scaleId") String? scaleId,
     @JsonKey(name: "scales") Scales? scales,
     @JsonKey(name: "supplierSales") List<SupplierSale>? supplierSales,
+    @JsonKey(name: "isPesach") bool? isPesach,
+    @JsonKey(name: "nmMashlim") String? nmMashlim,
+    @JsonKey(name: "isBottle") bool? isBottle,
+
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) =>

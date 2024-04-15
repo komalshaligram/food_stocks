@@ -21,6 +21,7 @@ class SharedPreferencesHelper {
   static const String isCelebrationAnimation = 'isCelebrationAnimation';
   static const String orderId = 'orderId';
   static const String gridView = 'gridView';
+  static const String bottleTax = 'bottleTax';
   static const String emailId = 'userEmailId';
   static const String guestUser = 'guestUser';
   static const String companyProductGrid = 'isCompanyProductGrid';
@@ -141,6 +142,9 @@ class SharedPreferencesHelper {
   Future<void> setIsGridView({required bool isGridView}) async {
     await prefs.setBool(gridView, isGridView);
   }
+  Future<void> setBottleTax({required double bottleDeposit}) async {
+    await prefs.setDouble(bottleTax, bottleDeposit);
+  }
   Future<void> setIsGuestUser({bool isGuestUser = false}) async {
     await prefs.setBool(guestUser, isGuestUser);
   }
@@ -220,6 +224,9 @@ class SharedPreferencesHelper {
     return prefs.getString(phoneNumber) ?? '';
   }
 
+  double getBottleTax() {
+    return prefs.getDouble(bottleTax) ?? 0.0;
+  }
   String getWalletId() {
     return prefs.getString(walletId) ?? '';
   }
@@ -260,4 +267,5 @@ class SharedPreferencesHelper {
   bool getReorderProductGrid() {
     return prefs.getBool(reorderProductGrid) ?? true;
   }
+
 }

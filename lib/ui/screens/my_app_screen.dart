@@ -8,6 +8,7 @@ import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
+
 import 'package:provider/provider.dart';
 import '../../app_config.dart';
 import '../../data/services/locale_provider.dart';
@@ -59,31 +60,32 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
       create: (context) => LocaleProvider()..setAppLocale(),
       builder: (context, child) {
         return MaterialApp(
-          key: scaffoldKey,
-          navigatorKey: navigatorKey,
-          debugShowCheckedModeBanner: false,
-          locale: Provider.of<LocaleProvider>(context).locale,
-          title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
-          initialRoute: RouteDefine.splashScreen.name,
-          supportedLocales: AppLocalizations.supportedLocales,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          theme: ThemeData(
-            textSelectionTheme: TextSelectionThemeData(
-              cursorColor: AppColors.mainColor,
-              selectionColor: AppColors.mainColor,
-              selectionHandleColor: Colors.transparent,
+            key: scaffoldKey,
+            navigatorKey: navigatorKey,
+            debugShowCheckedModeBanner: false,
+            locale: Provider.of<LocaleProvider>(context).locale,
+            title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
+            initialRoute: RouteDefine.splashScreen.name,
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            theme: ThemeData(
+              textSelectionTheme: TextSelectionThemeData(
+                cursorColor: AppColors.mainColor,
+                selectionColor: AppColors.mainColor,
+                selectionHandleColor: Colors.transparent,
+              ),
+              primarySwatch: Colors.green,
+              canvasColor: Colors.white,
+              cardColor: AppColors.whiteColor,
+              snackBarTheme: SnackBarThemeData(
+                backgroundColor: AppColors.mainColor,
+                actionTextColor: AppColors.textColor,
+              ),
             ),
-            primarySwatch: Colors.green,
-            canvasColor: Colors.white,
-            cardColor: AppColors.whiteColor,
-            snackBarTheme: SnackBarThemeData(
-              backgroundColor: AppColors.mainColor,
-              actionTextColor: AppColors.textColor,
-            ),
-          ),
-          scrollBehavior: MyBehavior(),
-          onGenerateRoute: AppRouting.generateRoute,
-        );
+            scrollBehavior: MyBehavior(),
+            onGenerateRoute: AppRouting.generateRoute,
+          );
+
       },
     );
   }

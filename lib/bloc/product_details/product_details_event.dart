@@ -60,19 +60,13 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
         required BuildContext BottomSheetContext,
       }) = _removeIssueEvent;
 
-  const factory ProductDetailsEvent.duplicateButtonEvent({
+  const factory ProductDetailsEvent.duplicateOrderEvent({
     required BuildContext context,
-  }) = _duplicateButtonEvent;
+    required String orderId,
+    required BuildContext dialogContext
+  }) = _duplicateOrderEvent;
 
-  const factory ProductDetailsEvent.getAllCartEvent({required BuildContext context}) =
-  _getAllCartEvent;
+  const factory ProductDetailsEvent.apiProcessingEvent() = _apiProcessingEvent;
 
-  const factory ProductDetailsEvent.addToCartProductEvent(
-      {required BuildContext context,
-        required String productId
-      }) = _AddToCartProductEvent;
-
-  const factory ProductDetailsEvent.updateQuantityOfProduct(
-      {required BuildContext context}) = _UpdateQuantityOfProduct;
 
 }

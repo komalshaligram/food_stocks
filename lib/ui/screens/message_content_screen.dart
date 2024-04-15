@@ -174,11 +174,11 @@ class MessageContentScreenWidget extends StatelessWidget {
                         ],
                       ),
                     )
-                  : SafeArea(
-                      child: Column(
-                          children: [
-                          SingleChildScrollView(
-                            child: Container(
+                  : SingleChildScrollView(
+                    child: SafeArea(
+                        child: Column(
+                            children: [
+                            Container(
                               width: double.maxFinite,
                               margin: EdgeInsets.only(
                                   left: AppConstants.padding_10,
@@ -285,24 +285,24 @@ class MessageContentScreenWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          ),
-                            40.height,
-                            (state.message.message?.mainPage?.isNotEmpty ?? false) ?  CustomButtonWidget(
-                              buttonText:  AppLocalizations.of(context)!
-                                  .open
-                                  .toUpperCase(),
-                              bGColor: AppColors.mainColor,
-                              width: getScreenWidth(context) - 100,
-                              onPressed: (){
-                                navigationToScreen(id: state.message.message?.navigationId.toString() ?? '',
-                                    mainPage: state.message.message?.mainPage.toString() ?? '',
-                                    subPage: state.message.message?.subPage.toString() ?? '');
-                              },
-                              fontColors: AppColors.whiteColor,
-                            ) : SizedBox(),
-                        ],
+                              40.height,
+                              (state.message.message?.mainPage?.isNotEmpty ?? false) ?  CustomButtonWidget(
+                                buttonText:  AppLocalizations.of(context)!
+                                    .open
+                                    .toUpperCase(),
+                                bGColor: AppColors.mainColor,
+                                width: getScreenWidth(context) - 100,
+                                onPressed: (){
+                                  navigationToScreen(id: state.message.message?.navigationId.toString() ?? '',
+                                      mainPage: state.message.message?.mainPage.toString() ?? '',
+                                      subPage: state.message.message?.subPage.toString() ?? '');
+                                },
+                                fontColors: AppColors.whiteColor,
+                              ) : SizedBox(),
+                          ],
+                        ),
                       ),
-                    ),
+                  ),
             ),
           );
         },

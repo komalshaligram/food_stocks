@@ -40,20 +40,6 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
                             left: AppConstants.padding_3),
                       ),
                     ),
-                    // Positioned(
-                    //   right: 1,
-                    //   bottom: 1,
-                    //   child: CommonShimmerWidget(
-                    //     child: Container(
-                    //       height: 29,
-                    //       width: 29,
-                    //       decoration: BoxDecoration(
-                    //         color: AppColors.whiteColor,
-                    //         shape: BoxShape.circle,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

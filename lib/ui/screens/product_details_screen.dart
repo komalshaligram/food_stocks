@@ -18,6 +18,7 @@ import '../widget/circular_button_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
 import '../widget/custom_button_widget.dart';
+import '../widget/custom_dialog.dart';
 import '../widget/custom_form_field_widget.dart';
 import '../widget/product_details_screen-shimmer_widget.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -109,7 +110,6 @@ class _ProductDetailsScreenWidgetState
                 iconData: Icons.arrow_back_ios_sharp,
                 trailingWidget: Row(
                   children: [
-
                     Padding(
                       padding: EdgeInsets.symmetric(
                         vertical: AppConstants.padding_10,
@@ -119,40 +119,56 @@ class _ProductDetailsScreenWidgetState
                           : CircularButtonWidget(
                               buttonName: AppLocalizations.of(context)!.total,
                               buttonValue:
-                              state.orderData.comaxInvoicePrice != 0.0 ?  '${formatNumber(value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}': '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
+                              state.orderData.comaxInvoicePrice != 0.0 ? '${formatNumber(value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}': '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
                             ),
                     ),
-                   /* CommonProductButtonWidget(
-                      title: AppLocalizations.of(context)!.duplicate_order,
-                      borderRadius: 1,
+                  /*  Container(
                       height: 35,
-                      onPressed: (){
-                        showDialog(
+                      margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 5,vertical: 5),
+                      decoration: BoxDecoration(
+                         gradient: AppColors.appMainGradientColor,
+                          border: Border.all(color: AppColors.borderColor),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.radius_3))),
+                      child: GestureDetector(
+                        onTap: (){
+                          showDialog(
                             context: context,
-                            builder: (context) {
-                              return CommonAlertDialog(
+                            builder: (context1) {
+                              return CustomDialog(
+                                isProcessing: state.isDuplicateOrderProcess,
                                 title: AppLocalizations.of(context)!.you_want_to_duplicate_this_order,
                                 directionality: state.language,
-                                positiveTitle:AppLocalizations.of(context)!.yes ,
+                                positiveTitle:AppLocalizations.of(context)!.yes,
                                 negativeTitle: AppLocalizations.of(context)!.no,
                                 positiveOnTap: (){
-                                 // bloc.add(ProductDetailsEvent.orderSendEvent(context: context));
+                                   bloc.add(ProductDetailsEvent.duplicateOrderEvent(context: context,
+                                   orderId: widget.orderId,
+                                     dialogContext: context1
+                                   ));
                                 },
                                 negativeOnTap: (){
-                                  Navigator.pop(context);
+                                  Navigator.pop(context1);
                                 },
                               );
                             },);
-                      },
-                    ),*/
-
+                        },
+                        child: Text(
+                          AppLocalizations.of(context)!.duplicate_order,
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
+                              color: AppColors.whiteColor,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    )*/
                   ],
                 ),
                 onTap: () {
                   Navigator.pop(context);
                 },
-
-
               ),
             ),
             body: state.isShimmering && state.isLoading || (state.orderBySupplierProduct.products?.length == 0)
@@ -546,34 +562,33 @@ class _ProductDetailsScreenWidgetState
                   : MainAxisAlignment.start,
               children: [
                 statusNumber == onTheWayStatus &&  sku != skuNumber  && (!isUpdated || (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity != 0 : false))
-                    ? Checkbox(
-                        value: ((isIssue ?? false) ||
-                                state.productListIndex.contains(index))
-                            ? true
-                            : false,
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(AppConstants.radius_3),
-                        ),
-                        side: MaterialStateBorderSide.resolveWith(
-                          (states) => BorderSide(
-                              width: 1.0, color: AppColors.greyColor),
-                        ),
-                        activeColor: AppColors.mainColor,
-                        onChanged: (value) {
-                          bloc.add(ProductDetailsEvent.productProblemEvent(
-                              isProductProblem: value!, index: index));
-                        })
+                    ? SizedBox(
+                  width: 30,
+                      child: Checkbox(
+                          value: ((isIssue ?? false) ||
+                                  state.productListIndex.contains(index))
+                              ? true
+                              : false,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(AppConstants.radius_3),
+                          ),
+                          side: MaterialStateBorderSide.resolveWith(
+                            (states) => BorderSide(
+                                width: 1.0, color: AppColors.greyColor),
+                          ),
+                          activeColor: AppColors.mainColor,
+                          onChanged: (value) {
+                            bloc.add(ProductDetailsEvent.productProblemEvent(
+                                isProductProblem: value!, index: index));
+                          }),
+                    )
                     : 30.width,
                 state.orderBySupplierProduct.products?[index].mainImage != ''
                     ? Image.network(
                         '${AppUrls.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
-                        width: statusNumber == onTheWayStatus
-                            ? AppConstants.containerHeight_80
-                            : 80,
-                        height: statusNumber == onTheWayStatus
-                            ? AppConstants.containerHeight_80
-                            : 80,
+                        width:AppConstants.containerHeight_80,
+                        height:  AppConstants.containerHeight_80,
                         fit: BoxFit.contain,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {
@@ -581,12 +596,8 @@ class _ProductDetailsScreenWidgetState
                           } else {
                             return Center(
                               child: Container(
-                                width: statusNumber == onTheWayStatus
-                                    ? AppConstants.containerHeight_80
-                                    : 80,
-                                height: statusNumber == onTheWayStatus
-                                    ? AppConstants.containerHeight_80
-                                    : 80,
+                                width:  AppConstants.containerHeight_80,
+                                height:AppConstants.containerHeight_80,
                                 child: CupertinoActivityIndicator(
                                   color: AppColors.blackColor,
                                 ),
@@ -608,12 +619,8 @@ class _ProductDetailsScreenWidgetState
                     : Image.asset(
                         AppImagePath.imageNotAvailable5,
                         fit: BoxFit.cover,
-                        width: statusNumber == onTheWayStatus
-                            ? AppConstants.containerHeight_80
-                            : 80,
-                        height: statusNumber == onTheWayStatus
-                            ? AppConstants.containerHeight_80
-                            : 80,
+                        width: AppConstants.containerHeight_80,
+                        height:AppConstants.containerHeight_80,
                       ),
                 15.width,
                 Column(
@@ -643,6 +650,8 @@ class _ProductDetailsScreenWidgetState
                         ) : sku == skuNumber ?
          Text(
         '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${AppLocalizations.of(context)!.units}',
+        maxLines: 2,
+           overflow: TextOverflow.fade,
         style: AppStyles.rkRegularTextStyle(
         color: AppColors.blackColor,
         size: AppConstants.font_12,
@@ -650,6 +659,8 @@ class _ProductDetailsScreenWidgetState
         )
                             : Text(
                           '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
+                          maxLines: 2,
+                          overflow: TextOverflow.fade,
                           style: AppStyles.rkRegularTextStyle(
                             color: AppColors.blackColor,
                             size: AppConstants.font_12,
@@ -660,6 +671,8 @@ class _ProductDetailsScreenWidgetState
 
                         statusNumber == onTheWayStatus  && isUpdated ?  Text(
                          '(${AppLocalizations.of(context)!.original_was}${' '}${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()})',
+                          maxLines: 2,
+                          overflow: TextOverflow.fade,
                           style: AppStyles.rkRegularTextStyle(
                             color: AppColors.redColor,
                             size: AppConstants.font_12,
@@ -670,6 +683,8 @@ class _ProductDetailsScreenWidgetState
                     Text(
                       '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0 ? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0,vat:state.orderData.vatPercentage ?? 0 ).toStringAsFixed(2))
                           : (vatCalculation(price: state.orderBySupplierProduct.products![index].totalPayment ?? 0 ,vat: state.orderData.vatPercentage ?? 0).toStringAsFixed(2)),local: AppStrings.hebrewLocal)}',
+                      maxLines: 2,
+                      overflow: TextOverflow.clip,
                       style: AppStyles.rkRegularTextStyle(
                           color: AppColors.blackColor,
                           size: AppConstants.font_14,

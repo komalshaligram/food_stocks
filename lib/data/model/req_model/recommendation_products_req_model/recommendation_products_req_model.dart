@@ -22,6 +22,7 @@ class RecommendationProductsReqModel with _$RecommendationProductsReqModel {
   const factory RecommendationProductsReqModel({
     @JsonKey(name: "pageNum") int? pageNum,
     @JsonKey(name: "pageLimit") int? pageLimit,
+
   }) = _RecommendationProductsReqModel;
 
   factory RecommendationProductsReqModel.fromJson(Map<String, dynamic> json) =>

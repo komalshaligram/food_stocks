@@ -39,9 +39,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
     on<FileUploadEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
+
       if (event is _getFormsListEvent) {
         emit(state.copyWith(
             isLoading: true, isShimmering: true, isUpdate: event.isUpdate , language: preferencesHelper.getAppLanguage()));
+        print('update___${state.isUpdate}');
         try {
           final res =
               await DioClient(event.context).get(path: AppUrls.formsListUrl);
@@ -51,14 +53,19 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 state.formsAndFilesList.toList(growable: true);
             int len = response.data?.clientForms?.toList().length ?? 0;
             for (int i = 0; i < len; i++) {
-              formsList.add(FormAndFileModel(
-                  id: response.data?.clientForms?[i].id,
-                  isForm: true,
-                  sampleUrl: response.data?.clientForms?[i].sample,
-                  name: response.data?.clientForms?[i].formName));
-              debugPrint('formList[$i] = ${formsList[i].name}');
+              if(response.data?.clientForms?[i].isShownInMobile??false){
+                formsList.add(FormAndFileModel(
+                    id: response.data?.clientForms?[i].id,
+                    isForm: true,
+                    sampleUrl: response.data?.clientForms?[i].sample,
+                    name: response.data?.clientForms?[i].formName));
+                //debugPrint('formList[$i] = ${formsList[i].name}');
+              }
             }
-            emit(state.copyWith(formsAndFilesList: formsList));
+            if(state.isUpdate){
+              emit(state.copyWith(formsAndFilesList: formsList));
+            }
+
             try {
               final res = await DioClient(event.context)
                   .get(path: AppUrls.filesListUrl);
@@ -91,12 +98,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                               AppStrings.idParamString:
                                   preferencesHelper.getUserId(),
                             },
-                            options: Options(
-                              headers: {
-                                HttpHeaders.authorizationHeader:
-                                    'Bearer ${preferencesHelper.getAuthToken()}',
-                              },
-                            ));
+                         );
                     ProfileDetailsResModel response =
                         ProfileDetailsResModel.fromJson(res);
                     debugPrint('response = ${response}');
@@ -129,8 +131,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                                     false)) {
                               formsAndFilesList[i] = formsAndFilesList[i]
                                   .copyWith(
-                                  url: newModel[AppStrings.formsString]
-                                  [formsAndFilesList[i].id]);
+                                  url: newModel[AppStrings.formsString][formsAndFilesList[i].id]);
                             }
                             debugPrint(
                                 'url(${formsAndFilesList[i].id}) = ${formsAndFilesList[i].url}');
@@ -143,6 +144,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                         emit(state.copyWith(isShimmering: false));
                       }
                     } else {
+                      emit(state.copyWith(isShimmering: false));
                       CustomSnackBar.showSnackBar(
                           context: event.context,
                           title: AppStrings.getLocalizedStrings(
@@ -298,7 +300,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   AppConstants.fileSizeCap &&
               fileSize.split(' ').last == 'KB') {
 
-            //debugPrint('file = ${croppedImage?.path!=null?croppedImage!.path:pickedFile!.path}');
+
             List<FormAndFileModel> formAndFileList =
                 state.formsAndFilesList.toList(growable: true);
             FormData formData;
@@ -327,14 +329,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   croppedImage?.path ?? pickedFile.path,
                   filename:
                   "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? pickedFile.path : pickedFile.path)}",
-                   // contentType: MediaType(type,contentType!))
                     contentType: MediaType(type,contentType))
               });
-              //debugPrint('qqq${mimeManager.lookupMimeType(croppedImage!.path)}');
-            /*  debugPrint(
-                  'file upload = ${formData.files.first.key}/${formData.files.first.value.filename *//*.contentType?.parameters*//*}');*/
             }else{
-
               extension = croppedImage?.path!=null? croppedImage?.path.split(".")[1].toString():file?.path.split(".")[1].toString();
               if(extension =='pdf'){
                 contentType = 'pdf';
@@ -355,10 +352,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   filename:
                   "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}",
                     contentType: MediaType(type,contentType))
-            //    contentType: MediaType(mimeManager.lookupMimeType(croppedImage!.path.split('/')[0])!,'png'))
+
               });
-             // debugPrint('qqq${mimeManager.lookupMimeType(croppedImage!.path)}');
-            //  debugPrint("file name:${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}");
+
 
             }
 
@@ -411,30 +407,17 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             emit(state.copyWith(
                 isUploadLoading: false, isFileSizeExceeds: true));
             emit(state.copyWith(isFileSizeExceeds: false));
-            // CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
-            //     context: event.context,
-            //     title: AppStrings.fileSizeLimitString,
-            //     type: SnackBarType.FAILURE);
+
           }
         }
       }
-
-
-
-
-
-
 
       else if (event is _uploadApiEvent) {
 
         try {
           emit(state.copyWith(isApiLoading: true));
           Map<String, Map<String, dynamic>> formsAndFiles = {
-            AppStrings.formsString: {},
             AppStrings.filesString: {}
-          };
-          Map<String, String> formList = {
-
           };
           Map<String, String> fileList = {
 
@@ -444,19 +427,10 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             debugPrint('url = ${formAndFile.url}');
             if (formAndFile.url?.isNotEmpty ?? false) {
               if ((formAndFile.isForm ??
-                      false) /*&&
-                  (state.formsAndFilesList[i].url
-                          ?.contains(AppStrings.tempString) ??
-                      false)*/
+                      false)
                   ) {
-                formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
-                    formAndFile.url ?? '';
-                formList[formAndFile.id ?? ''] =  formAndFile.url ?? '';
               } else if ((formAndFile.isForm ==
-                      false) /*&&
-                  (state.formsAndFilesList[i].url
-                      ?.contains(AppStrings.tempString) ??
-                      false)*/
+                      false)
                   ) {
                 formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] =
                     formAndFile.url ?? '';
@@ -466,10 +440,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           });
           debugPrint('update urls list = ${formsAndFiles}');
           debugPrint('update urls list 1 = ${fileList}');
-          debugPrint('update urls list 2= ${formList}');
           if (!state.isUpdate) {
-            if ((formsAndFiles[AppStrings.formsString]?.isEmpty ?? true) &&
-                (formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
+            if ((formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
               emit(state.copyWith(isApiLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -518,7 +490,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
-                  event.context, RouteDefine.loginScreen.name);
+                  event.context, RouteDefine.connectScreen.name);
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
@@ -570,18 +542,12 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             debugPrint('url = ${formAndFile.url}');
             if (formAndFile.url?.isNotEmpty ?? false) {
               if ((formAndFile.isForm ??
-                  false) /*&&
-                  (state.formsAndFilesList[i].url
-                          ?.contains(AppStrings.tempString) ??
-                      false)*/
+                  false)
               ) {
                 formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
                     formAndFile.url ?? '';
               } else if ((formAndFile.isForm ==
-                  false) /*&&
-                  (state.formsAndFilesList[i].url
-                      ?.contains(AppStrings.tempString) ??
-                      false)*/
+                  false)
               ) {
                 formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] =
                     formAndFile.url ?? '';
@@ -610,8 +576,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             //     context: event.context,
             //     title: response.message ?? AppStrings.removeSuccessString,
             //     type: SnackBarType.SUCCESS);
-         /*   add(FileUploadEvent.uploadApiEvent(
-                context: event.context, isFromDelete: true));*/
           } else {
             emit(state.copyWith(isRemoveProcess: false));
             CustomSnackBar.showSnackBar(
@@ -634,15 +598,10 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       else if (event is _downloadFileEvent) {
         try {
           emit(state.copyWith(isDownloading: true));
-          // PackageInfo packageInfo = await PackageInfo.fromPlatform();
-          //
-          // String buildNumber = packageInfo.buildNumber;
-          // debugPrint('build number $buildNumber');
-          // if(statuses[Permission.storage]!.isGranted) {
-          // File file;
+
           Directory? dir;
           if (defaultTargetPlatform == TargetPlatform.android) {
-            // dir = await getApplicationDocumentsDirectory();
+
             dir = Directory('/storage/emulated/0/Documents');
             debugPrint('dir = ${await dir.stat()}');
             // return;
@@ -651,7 +610,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           }
           debugPrint(
               'download url = ${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}');
-          //'https://filesamples.com/samples/document/pdf/sample3.pdf'
+
           String filePath =
               '${dir.path}/${state.formsAndFilesList[event.fileIndex].sampleUrl?.split('/').last.split('.').first}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(state.formsAndFilesList[event.fileIndex].sampleUrl?.split('/').last ?? '')}';
           debugPrint( " download    ${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}");
@@ -696,11 +655,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 res['data']['clients'][0]['clientDetail'];
             debugPrint('data1 = ${newModel}');
 
-          /*  debugPrint(
-                'files = ${response.data?.clients?.first.clientDetail?.files?.toJson().keys}}');
-            debugPrint(
-                'forms = ${response.data?.clients?.first.clientDetail?.forms?.toJson().keys}}');*/
-
             if (response.status == 200) {
               List<FormAndFileModel> formsAndFilesList =
                   state.formsAndFilesList.toList(growable: true);
@@ -738,6 +692,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 type: SnackBarType.FAILURE);
           }
         }
+      }
+
+      else if(event is _pdfPreviewEvent){
+
+        emit(state.copyWith(isPdfPreview: true));
       }
     });
   }

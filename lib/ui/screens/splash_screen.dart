@@ -98,9 +98,11 @@ void appFlyerSetup() {
                 context, RouteDefine.bottomNavScreen.name, arguments: {
               AppStrings.pushNavigationString: state.pushNavigation
             });
+
           } else {
             Navigator.pushReplacementNamed(
                 context, RouteDefine.connectScreen.name);
+
           }
         }
       },

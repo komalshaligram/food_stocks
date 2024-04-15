@@ -21,6 +21,8 @@ class CompanyProductsReqModel with _$CompanyProductsReqModel {
  String? brandId,
    int? pageNum,
     int? pageLimit,
+    String? sortField,
+    String? sortOrder,
   }) = _CompanyProductsReqModel;
 
   factory CompanyProductsReqModel.fromJson(Map<String, dynamic> json) =>

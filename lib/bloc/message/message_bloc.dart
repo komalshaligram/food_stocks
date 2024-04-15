@@ -25,8 +25,6 @@ part 'message_bloc.freezed.dart';
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
   MessageBloc() : super(MessageState.initial()) {
     on<MessageEvent>((event, emit) async {
-      SharedPreferencesHelper preferences = SharedPreferencesHelper(
-        prefs: await SharedPreferences.getInstance());
       if (event is _GetMessageListEvent) {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());

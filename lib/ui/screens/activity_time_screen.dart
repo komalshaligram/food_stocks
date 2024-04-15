@@ -24,7 +24,7 @@ class ActivityTimeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+    ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint(
         "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}}");
     return BlocProvider(
@@ -132,7 +132,6 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                               ? ListView.builder(
                                   itemCount: state.OperationTimeList.length,
                                   shrinkWrap: true,
-                                  // scrollDirection: Axis.vertical,
                                   physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     return Padding(
@@ -192,7 +191,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                       ScaffoldMessenger.of(context)
                                           .hideCurrentSnackBar();
                                       Navigator.pushNamed(context,
-                                          RouteDefine.fileUploadScreen.name);
+                                          RouteDefine.formDataScreen.name);
                                     },
                                     bGColor: AppColors.whiteColor,
                                   ),
@@ -221,7 +220,6 @@ class ActivityTimeRow extends StatelessWidget {
     return BlocBuilder<ActivityTimeBloc, ActivityTimeState>(
       builder: (context, state) {
         return Row(
-        //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             13.height,
             Expanded(

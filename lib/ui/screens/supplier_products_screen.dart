@@ -14,10 +14,10 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_products_screen_shimmer_widget.dart';
 import 'package:html/parser.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -75,7 +75,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 bgColor: AppColors.pageColor,
-                title: state.search.isNotEmpty
+                title: state.searchArg.isNotEmpty
                     ? AppLocalizations.of(context)!.search_result
                     : AppLocalizations.of(context)!.products,
                 iconData: Icons.arrow_back_ios_sharp,
@@ -161,17 +161,10 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         AppConstants.padding_5),
                                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                                     crossAxisCount: 3,
-                                                    childAspectRatio: MediaQuery
-                                                                    .of(context)
-                                                                .size
-                                                                .width >
-                                                            370
-                                                        ? AppConstants
-                                                            .productGridAspectRatio
-                                                        : AppConstants
-                                                            .productGridAspectRatio1),
+                                                    childAspectRatio: getChildAspectRatio(context)),
                                                 itemBuilder: (context, index) {
                                                   return CommonProductItemWidget(
+                                                    isPesach: state.productList[index].isPesach,
                                                       lowStock: state
                                                           .productList[index]
                                                           .lowStock
@@ -207,6 +200,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         if (!state
                                                             .isGuestUser) {
                                                           showProductDetails(
+                                                            productListIndex: 1,
                                                             context:
                                                                 context,
                                                             productId: state
@@ -244,6 +238,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         AppConstants.padding_5),
                                                 itemBuilder: (context, index) =>
                                                     CommonProductListWidget(
+                                                      isPesach: state.productList[index].isPesach,
                                                   lowStock: state
                                                       .productList[index]
                                                       .lowStock
@@ -273,6 +268,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   onButtonTap: () {
                                                     if (!state.isGuestUser) {
                                                       showProductDetails(
+                                                        productListIndex: 1,
                                                         context: context,
                                                         productId: state
                                                             .searchType ==
@@ -364,6 +360,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             shrinkWrap: true,
                             itemBuilder: (listViewContext, index) {
                               return _buildSearchItem(
+                                isPesach: state.searchList[index].isPesach,
                                   lowStock: state.searchList[index].lowStock
                                       .toString(),
                                   isGuestUser: state.isGuestUser,
@@ -496,6 +493,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                        debugPrint("tap 4");
                                       if (!state.isGuestUser) {
                                         showProductDetails(
+                                          productListIndex: 0,
                                             context: context,
                                             productStock: state
                                                 .searchList[index].productStock
@@ -572,6 +570,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                          debugPrint("tap 5");
                         if (!state.isGuestUser) {
                           showProductDetails(
+                            productListIndex: 0,
                               context: context,
                               // productStock: '1',
                               productId: scanResult,
@@ -699,88 +698,76 @@ class SupplierProductsScreenWidget extends StatelessWidget {
   void showProductDetails(
       {required BuildContext context,
       required String productId,
+        required int productListIndex,
       bool? isBarcode,
       String productStock = '0'}) async {
     context.read<SupplierProductsBloc>().add(
         SupplierProductsEvent.getProductDetailsEvent(
             context: context,
             productId: productId,
+            productListIndex: productListIndex,
             isBarcode: isBarcode ?? false));
-    showModalBottomSheet(
+    showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      isScrollControlled: true,
+    //  isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      showDragHandle: true,
-      useSafeArea: true,
+     // showDragHandle: true,
+     // useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        return DraggableScrollableSheet(
-          expand: true,
-          maxChildSize: 1 -
-              (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
-          minChildSize: productStock == '0'
-              ? 0.8
-              : 1 -
-                  (MediaQuery.of(context).viewPadding.top /
-                      getScreenHeight(context)),
-          initialChildSize: productStock == '0'
-              ? 0.8
-              : 1 -
-                  (MediaQuery.of(context).viewPadding.top /
-                      getScreenHeight(context)),
-          builder: (BuildContext context1, ScrollController scrollController) {
-            return BlocProvider.value(
-              value: context.read<SupplierProductsBloc>(),
-              child: BlocBuilder<SupplierProductsBloc, SupplierProductsState>(
-                builder: (blocContext, state) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppConstants.radius_30),
-                        topRight: Radius.circular(AppConstants.radius_30),
+        return SafeArea(
+          child: DraggableScrollableSheet(
+            expand: true,
+            maxChildSize: 1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)*0.2),
+            minChildSize:  productStock == '0' ? 0.9 :  1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)*0.2),
+            initialChildSize:  productStock == '0' ? 0.9 :  1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)*0.2),
+            builder: (BuildContext context1, ScrollController scrollController) {
+              return BlocProvider.value(
+                value: context.read<SupplierProductsBloc>(),
+                child: BlocBuilder<SupplierProductsBloc, SupplierProductsState>(
+                  builder: (blocContext, state) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(AppConstants.radius_30),
+                          topRight: Radius.circular(AppConstants.radius_30),
+                        ),
+                        color: AppColors.whiteColor,
                       ),
-                      color: AppColors.whiteColor,
-                    ),
-                    clipBehavior: Clip.hardEdge,
-                    child: state.isProductLoading
-                        ? ProductDetailsShimmerWidget()
-                        : state.productDetails.isEmpty
-                            ? Center(
-                                child: Text(
-                                    AppLocalizations.of(context)!.no_product,
-                                    style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.normalFont,
-                                      color: AppColors.redColor,
-                                      fontWeight: FontWeight.w500,
-                                    )),
-                              )
-                            : SingleChildScrollView(
-                                child: NotificationListener<ScrollNotification>(
-                                  onNotification: (notification) {
-                                    if (getScreenHeight(context) < 700) {
-                                      final metrices = notification.metrics;
-                                      if (metrices.atEdge &&
-                                          metrices.pixels == 0) {
-                                        Navigator.pop(context);
-                                      }
-
-                                      if (metrices.pixels ==
-                                          metrices.minScrollExtent) {}
-
-                                      if (metrices.atEdge &&
-                                          metrices.pixels > 0) {}
-
-                                      if (metrices.pixels >=
-                                          metrices.maxScrollExtent) {}
-                                    }
-                                    return false;
-                                  },
+                      clipBehavior: Clip.hardEdge,
+                      child: state.isProductLoading
+                          ? ProductDetailsShimmerWidget()
+                          : state.productDetails.isEmpty
+                              ? Center(
+                                  child: Text(
+                                      AppLocalizations.of(context)!.no_product,
+                                      style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.normalFont,
+                                        color: AppColors.redColor,
+                                        fontWeight: FontWeight.w500,
+                                      )),
+                                )
+                              : SingleChildScrollView(
+                        controller:  ModalScrollController.of(context),
                                   child: Column(
                                     children: [
                                       CommonProductDetailsWidget(
+                                        bottleTax: state.bottleDeposit,
+                                        totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
+                                            .productStockList[state.productListIndex][
+                                        state.productStockUpdateIndex]
+                                            .quantity),
+                                        isBottle:state.productDetails.first.isBottle??false,
+                                        nmMashlim: state.productDetails.first.nmMashlim??'',
+                                        isPesach: state.productDetails.first.isPesach??false,
                                         lowStock: state.productDetails.first
                                                 .supplierSales?.first.lowStock
                                                 .toString() ??
@@ -896,11 +883,11 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 ?.text ??
                                             '',
                                         productPrice: state
-                                                .productStockList[state
+                                                .productStockList[state.productListIndex][state
                                                     .productStockUpdateIndex]
                                                 .totalPrice *
                                             state
-                                                .productStockList[state
+                                                .productStockList[state.productListIndex][state
                                                     .productStockUpdateIndex]
                                                 .quantity *
                                             (state.productDetails.first
@@ -914,7 +901,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 ?.toDouble() ??
                                             0.0,
                                         productStock: (state
-                                            .productStockList[
+                                            .productStockList[state.productListIndex][
                                                 state.productStockUpdateIndex]
                                             .stock.toString()),
                                         isRTL: context.rtl,
@@ -924,7 +911,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 : true,
                                         scrollController: scrollController,
                                         productQuantity: state
-                                            .productStockList[
+                                            .productStockList[state.productListIndex][
                                                 state.productStockUpdateIndex]
                                             .quantity,
                                         onQuantityChanged: (quantity) {
@@ -944,7 +931,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                         },
                                         onQuantityDecreaseTap: () {
                                           if (state
-                                                  .productStockList[state
+                                                  .productStockList[state.productListIndex][state
                                                       .productStockUpdateIndex]
                                                   .quantity >
                                               1) {
@@ -966,12 +953,12 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                              ),
-                  );
-                },
-              ),
-            );
-          },
+                    );
+                  },
+                ),
+              );
+            },
+          ),
         );
       },
     );
@@ -1005,6 +992,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2, i) {
               return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:
                     relatedProductList.elementAt(i).productStock.toString(),
@@ -1017,6 +1005,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                   Navigator.pop(prevContext);
                   showProductDetails(
                       context: context,
+                      productListIndex: 2,
                       productId: relatedProductList[i].id,
                       isBarcode: false,
                       productStock:
@@ -1060,6 +1049,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
     bool isGuestUser = false,
     required int numberOfUnits,
     required double priceOfBox,
+    required bool isPesach
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1113,16 +1103,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: !isGuestUser
-                ? lowStock.isNotEmpty || (productStock) != '0'
-                    ? 120
-                    : searchType == SearchTypes.category ||
-                            searchType == SearchTypes.subCategory ||
-                            searchType == SearchTypes.company ||
-                            searchType == SearchTypes.supplier
-                        ? 80
-                        : 110
-                : 80,
+            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1133,12 +1114,9 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             width: 1))),
             padding: EdgeInsets.only(
                 top: AppConstants.padding_5,
-                left: AppConstants.padding_20,
-                right: AppConstants.padding_20,
+                left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
+                right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
                 bottom: AppConstants.padding_5),
-            // padding: EdgeInsets.symmetric(
-            //     horizontal: AppConstants.padding_20,
-            //     vertical: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: !isGuestUser
@@ -1229,7 +1207,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
+                                    double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                       AppLocalizations.of(context)!
                                           .out_of_stock1,
                                       style: AppStyles.rkBoldTextStyle(
@@ -1292,6 +1270,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   : 0.width,
                             ],
                           ),
+                    isPesachLabelShow(isPesach,context),
                   ],
                 ),
               ],

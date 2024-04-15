@@ -30,7 +30,8 @@ class ReorderState with _$ReorderState {
     required bool isGridView,
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
-    required int productListIndex
+    required int productListIndex,
+    required double bottleDeposit,
   }) = _ReorderState;
 
   factory ReorderState.initial() => ReorderState(
@@ -40,7 +41,7 @@ class ReorderState with _$ReorderState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-      productStockList: [[ProductStockModel(productId: '')],[],[]],
+        productStockList: [[ProductStockModel(productId: '')],[],[]],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,
@@ -49,19 +50,20 @@ class ReorderState with _$ReorderState {
         imageIndex: 0,
         refreshController: RefreshController(),
         noteController: TextEditingController(),
-    duringCelebration: false,
-    cartCount: 0,
-    isCategoryExpand: false,
-    isSearching: false,
-    searchController: TextEditingController(),
-    searchList: [],
-    search: '',
-    productCategoryList: [],
-    isCatVisible: false,
-    isGridView: true,
-    relatedProductList: [],
-    isRelatedShimmering: false,
-    productListIndex: -1
+        duringCelebration: false,
+        cartCount: 0,
+        isCategoryExpand: false,
+        isSearching: false,
+        searchController: TextEditingController(),
+        searchList: [],
+        search: '',
+        productCategoryList: [],
+        isCatVisible: false,
+        isGridView: true,
+        relatedProductList: [],
+        isRelatedShimmering: false,
+        productListIndex: -1,
+        bottleDeposit: 0
 
       );
 }

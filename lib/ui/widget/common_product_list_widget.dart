@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -22,7 +23,7 @@ class CommonProductListWidget extends StatelessWidget {
   final bool isGuestUser;
   final String numberOfUnits;
   final String lowStock;
-
+final bool? isPesach;
 
     CommonProductListWidget({super.key,
      this.height,
@@ -35,6 +36,7 @@ class CommonProductListWidget extends StatelessWidget {
      this.isGuestUser = false,
      this.numberOfUnits = '0',
       required this.lowStock,
+      required this.isPesach
    });
 
   @override
@@ -139,6 +141,9 @@ class CommonProductListWidget extends StatelessWidget {
                         color: AppColors.orangeColor,
                         fontWeight: FontWeight.w400),
                   ),
+                  isPesach! ? 3.height :0.height,
+                 isPesachLabelShow(isPesach!, context),
+                  isPesach! ? 3.height :0.height,
                  !isGuestUser ? numberOfUnits != '0' ? Text(
                     '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
                     style: AppStyles.rkBoldTextStyle(

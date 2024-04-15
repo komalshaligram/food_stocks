@@ -8,10 +8,10 @@ import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
 import 'package:food_stock/ui/widget/common_sale_description_dialog.dart';
-import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/product_sale_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../utils/app_utils.dart';
@@ -118,14 +118,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 3,
                                           childAspectRatio:
-                                              MediaQuery.of(context)
-                                                          .size
-                                                          .width >
-                                                      370
-                                                  ? AppConstants
-                                                      .productGridAspectRatio1
-                                                  : AppConstants
-                                                      .productGridAspectRatio2),
+                                          getChildAspectRatio(context)),
                                   itemBuilder: (context, index) {
                                     return buildProductSaleListItem(
                                       isGuestUser: state.isGuestUser,
@@ -226,77 +219,56 @@ class ProductSaleScreenWidget extends StatelessWidget {
   }) async {
     context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductDetailsEvent(
         context: context, productId: productId));
-    showModalBottomSheet(
+    showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      isScrollControlled: true,
+     // isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      showDragHandle: true,
-      useSafeArea: true,
+    //  showDragHandle: true,
+    //  useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
         return BlocProvider.value(
           value: context.read<ProductSaleBloc>(),
           child: BlocBuilder<ProductSaleBloc, ProductSaleState>(
             builder: (blocContext, state) {
-              return DraggableScrollableSheet(
-                expand: true,
-                maxChildSize: 1 -
-                    (MediaQuery.of(context).viewPadding.top /
-                        getScreenHeight(context)),
-                minChildSize: productStock == '0'
-                    ? 0.8
-                    : 1 -
-                        (MediaQuery.of(context).viewPadding.top /
-                            getScreenHeight(context)),
-                initialChildSize: productStock == '0'
-                    ? 0.8
-                    : 1 -
-                        (MediaQuery.of(context).viewPadding.top /
-                            getScreenHeight(context)),
-                builder:
-                    (BuildContext context1, ScrollController scrollController) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppConstants.radius_30),
-                        topRight: Radius.circular(AppConstants.radius_30),
+              return SafeArea(
+                child: DraggableScrollableSheet(
+                  expand: true,
+                  maxChildSize: 1 -
+                      (MediaQuery.of(context).viewPadding.top /
+                          getScreenHeight(context)*0.2),
+                  minChildSize:  productStock == '0' ? 0.9 :  1 -
+                      (MediaQuery.of(context).viewPadding.top /
+                          getScreenHeight(context)*0.2),
+                  initialChildSize:  productStock == '0' ? 0.9 :  1 -
+                      (MediaQuery.of(context).viewPadding.top /
+                          getScreenHeight(context)*0.2),
+                  builder:
+                      (BuildContext context1, ScrollController scrollController) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(AppConstants.radius_30),
+                          topRight: Radius.circular(AppConstants.radius_30),
+                        ),
+                        color: AppColors.whiteColor,
                       ),
-                      color: AppColors.whiteColor,
-                    ),
-                    clipBehavior: Clip.hardEdge,
-                    child: state.isProductLoading
-                        ? ProductDetailsShimmerWidget()
-                        : SingleChildScrollView(
-
-                      child: NotificationListener<ScrollNotification>(
-                      onNotification: (notification) {
-                      if(getScreenHeight(context)<700 ){
-                      final metrices = notification.metrics;
-                      if (metrices.atEdge && metrices.pixels == 0) {
-                      Navigator.pop(context);
-
-                      }
-
-                      if (metrices.pixels == metrices.minScrollExtent) {
-
-                      }
-
-                      if (metrices.atEdge && metrices.pixels > 0) {
-
-                      }
-
-                      if (metrices.pixels >= metrices.maxScrollExtent) {
-
-                      }
-
-                      }
-                      return false;
-                      },
+                      clipBehavior: Clip.hardEdge,
+                      child: state.isProductLoading
+                          ? ProductDetailsShimmerWidget()
+                          : SingleChildScrollView(
+                        controller:  ModalScrollController.of(context),
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              bottleTax: state.bottleDeposit,
+                              totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
+                                  .productStockList[state.productStockUpdateIndex].quantity),
+                              isBottle:state.productDetails.first.isBottle??false,
+                              nmMashlim: state.productDetails.first.nmMashlim??'',
+                              isPesach: state.productDetails.first.isPesach??false,
                               lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:
                               state.productDetails.first.qrcode ?? '',
@@ -450,9 +422,9 @@ class ProductSaleScreenWidget extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               );
             },
           ),
@@ -490,6 +462,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,

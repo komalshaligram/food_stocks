@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AppStrings {
-  static const appName = 'Food Stock';
+  static const appName = 'Tavili';
   static const cropImageString = 'Crop Image';
   static const androidString = 'Android';
   static const iosString = 'IOS';
@@ -22,8 +22,6 @@ class AppStrings {
   static const pendingString = 'pending';
   static const navigateToStore = 'true';
   static const orderStatusNo = 'orderStatusNo';
-
-
 
   //language Strings
   static const englishString = 'en';
@@ -67,6 +65,32 @@ class AppStrings {
   static const isBasketScreenString = 'basketScreen';
   static const isCartCountString = 'true';
   static const homeScreenString = 'homeScreen';
+  static const sortFieldString = 'productStock';
+  static const sortOrderString = 'desc';
+  static const userIdString = 'id';
+  static const agentIdString = 'agentId';
+  static const businessTypeIdString = 'businessTypeId';
+  static const bankIdString = 'bankId';
+  static const owner1FullNameString = 'owner1FullName';
+  static const owner1IsraelIdString = 'owner1IsraelId';
+  static const owner2FullNameString = 'owner2FullName';
+  static const owner2IsraelIdString = 'owner2IsraelId';
+  static const guarantee1FullNameString = 'guarantee1FullName';
+  static const guarantee1IsraelIdString = 'guarantee1IsraelId';
+  static const guarantee1AddressString = 'guarantee1Address';
+  static const guarantee1PhoneNumberString = 'guarantee1PhoneNumber';
+  static const guarantee2FullNameString = 'guarantee2FullName';
+  static const guarantee2IsraelIdString = 'guarantee2IsraelId';
+  static const guarantee2AddressString = 'guarantee2Address';
+  static const guarantee2PhoneNumberString = 'guarantee2PhoneNumber';
+  static const branchNumberString = 'branchNumber';
+  static const accountNumberString = 'accountNumber';
+  static const owner1SignatureString = 'owner1Signature';
+  static const owner2SignatureString = 'owner2Signature';
+  static const guarantee1SignatureString = 'guarantee1Signature';
+  static const guarantee2SignatureString = 'guarantee2Signature';
+  static const guaranteeNameString = 'guaranteeNameString';
+
 
 
   //validation strings
@@ -76,11 +100,18 @@ class AppStrings {
   static const idValString = 'idVal';
   static const contactNameValString = 'contactNameVal';
   static const addressValString = 'addressVal';
+  static const zipValString = 'zipVal';
+  static const streetNameValString = 'streetNameVal';
+  static const streetNumberValString = 'streetNumberVal';
   static const emailValString = 'emailVal';
   static const faxValString = 'faxVal';
   static const generalValString = 'generalVal';
   static const mobileValString = 'mobileVal';
   static const cityValString = 'cityVal';
+  static const branchValString = 'branchVal';
+  static const accountValString = 'accountVal';
+
+
 
   static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
 
@@ -103,7 +134,9 @@ class AppStrings {
   static const orderString = 'Order';
   static const companiesString = 'companies';
   static const searchType = 'searchType';
-//  static const companiesNotAvailableString = 'companiesNotAvailable';
+  static const termsConditionParamString = 'termsConditionParam';
+  static const privacyPolicyPdfString = 'pdf';
+  static const clientFormString = 'clientForm';
 
   //hint strings
   static const hintNumberString = '1234567890';
@@ -121,13 +154,15 @@ class AppStrings {
   static const quantityString = 'quantity';
   static const supplierOrderNumberString = 'supplierOrderNumber';
   static const totalAmountString = 'totalAmount';
-  static const cartIdString = 'id';
+  static const cartIdString = 'cartId';
   static const driverNameString = 'driverName';
   static const driverNumberString = 'driverNumber';
   static const messageIdString = 'messageId';
   static const messageIdListString = 'messageIdList';
   static const isReadMoreString = 'isReadMore';
   static const invoiceListString = 'invoiceListString';
+
+
 
   static String getLocalizedStrings(String key,BuildContext context){
     switch(key){

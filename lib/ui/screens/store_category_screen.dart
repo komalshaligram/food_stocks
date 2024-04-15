@@ -18,6 +18,7 @@ import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_search_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart';
@@ -115,7 +116,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         height: 26,
                         width: 26,
                         fit: BoxFit.cover,
-                        color: AppColors.whiteColor,
+                        colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),
                       ),
                     ),
                   ),
@@ -492,8 +493,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               shrinkWrap: true,
                                               physics: NeverScrollableScrollPhysics(),
                                               padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: MediaQuery.of(context).size.width > 370 ? AppConstants.productGridAspectRatio : AppConstants.productGridAspectRatio1),
+                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context)),
                                               itemBuilder: (context, index) => CommonProductItemWidget(
+                                                isPesach: state.planogramProductList[index].product?.isPesach,
                                                 lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
                                                   imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                                   isGuestUser: state.isGuestUser,
@@ -528,6 +530,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 (context,
                                                 index) {
                                               return CommonProductListWidget(
+                                                isPesach: state.planogramProductList[index].product?.isPesach??false,
                                                   lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
                                                   numberOfUnits:state.planogramProductList[index].product?.numberOfUnit ??
                                                       '0',
@@ -628,6 +631,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
+                            isPesach: state.searchList[index].isPesach,
                             lowStock: state.searchList[index].lowStock.toString(),
                             numberOfUnits:state.searchList[index].numberOfUnits,
                             priceOfBox: state.searchList[index].priceOfBox,
@@ -843,6 +847,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     bool isGuestUser = false,
     required int numberOfUnits,
     required double priceOfBox,
+    required bool isPesach
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -897,7 +902,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? 120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
+            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -908,8 +913,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         width: 1))),
             padding: EdgeInsets.only(
                 top: AppConstants.padding_5,
-                left: AppConstants.padding_20,
-                right: AppConstants.padding_20,
+                left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
+                right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
                 bottom: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -986,7 +991,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              (productStock) != '0'  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
+                              double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
                                 AppLocalizations.of(context)!
                                     .out_of_stock1,
                                 style: AppStyles.rkBoldTextStyle(
@@ -1013,6 +1018,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     color: AppColors.blueColor,
                                     fontWeight: FontWeight.w400),
                               ) : 0.width :0.width,
+                              isPesach?3.height:0.height,
+                              isPesachLabelShow(isPesach,context)
                             ],
                           ),
                         ),
@@ -1087,6 +1094,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         required List<PlanogramDatum> list,
         required bool isGuestUser,
         required String lowStock,
+        required bool isPesach
 
       }) {
     return BlocProvider.value(
@@ -1094,7 +1102,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
         builder: (context1, state) {
           return Container(
-            height: 170,
+            height: AppConstants.relatedProductItemHeight,
             width: width,
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
@@ -1216,6 +1224,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     ),
                   ),
                   5.height,
+                    isPesach?
+                  Container(
+                      padding: EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                          color: AppColors.pesachBGColor,
+                          border: Border.all(color: AppColors.pesachBGColor),
+                          borderRadius: BorderRadius.all(Radius.circular(10))
+                      ),
+                      child: Text(AppLocalizations.of(context)!.pesach)):0.height,
+                  isPesach?5.height:0.height,
                   !isGuestUser
                       ? Center(
                     child: CommonProductButtonWidget(
@@ -1262,85 +1280,69 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             productId: productId,
             planoGramIndex: planoGramIndex,
             isBarcode: isBarcode));
-    showModalBottomSheet(
+    showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      isScrollControlled: true,
+    //  isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      showDragHandle: true,
-      useSafeArea: true,
+     // showDragHandle: true,
+    //  useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        return DraggableScrollableSheet(
-          expand: true,
-          maxChildSize: 1 -
-              (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
-
-          minChildSize:  productStock == '0' ? 0.8 :  1 -
-              (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
-          initialChildSize:  productStock == '0' ? 0.8 :  1 -
-              (MediaQuery.of(context).viewPadding.top /
-                  getScreenHeight(context)),
-          builder:
-              (BuildContext context1, ScrollController scrollController) {
-            return BlocProvider.value(
-              value: context.read<StoreCategoryBloc>(),
-              child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
-                builder: (blocContext, state) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppConstants.radius_30),
-                        topRight: Radius.circular(AppConstants.radius_30),
+        return SafeArea(
+          child: DraggableScrollableSheet(
+            expand: true,
+            maxChildSize: 1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)*0.2),
+            minChildSize:  productStock == '0' ? 0.9 :  1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)*0.2),
+            initialChildSize:  productStock == '0' ? 0.9 :  1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)*0.2),
+            builder:
+                (BuildContext context1, ScrollController scrollController) {
+              return BlocProvider.value(
+                value: context.read<StoreCategoryBloc>(),
+                child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
+                  builder: (blocContext, state) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(AppConstants.radius_30),
+                          topRight: Radius.circular(AppConstants.radius_30),
+                        ),
+                        color: AppColors.whiteColor,
                       ),
-                      color: AppColors.whiteColor,
-                    ),
-                    clipBehavior: Clip.hardEdge,
-                    child: state.isProductLoading
-                        ? ProductDetailsShimmerWidget()
-                        : state.productDetails.isEmpty
-                        ? Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                          AppLocalizations.of(context)!.no_product,
-                          style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.normalFont,
-                            color: AppColors.redColor,
-                            fontWeight: FontWeight.w500,
-                          )),
-                    )
-                        : SingleChildScrollView(
-
-                      child: NotificationListener<ScrollNotification>(
-                  onNotification: (notification) {
-                  if(getScreenHeight(context)<700 ){
-                  final metrices = notification.metrics;
-                  if (metrices.atEdge && metrices.pixels == 0) {
-                  Navigator.pop(context);
-
-                  }
-
-                  if (metrices.pixels == metrices.minScrollExtent) {
-
-                  }
-
-                  if (metrices.atEdge && metrices.pixels > 0) {
-
-                  }
-
-                  if (metrices.pixels >= metrices.maxScrollExtent) {
-
-                  }
-
-                  }
-                  return false;
-                  },
+                      clipBehavior: Clip.hardEdge,
+                      child: state.isProductLoading
+                          ? ProductDetailsShimmerWidget()
+                          : state.productDetails.isEmpty
+                          ? Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                            AppLocalizations.of(context)!.no_product,
+                            style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.normalFont,
+                              color: AppColors.redColor,
+                              fontWeight: FontWeight.w500,
+                            )),
+                      )
+                          : SingleChildScrollView(
+                        controller:  ModalScrollController.of(context),
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
+                                  .productStockList[state.planoGramUpdateIndex]
+                              [state.productStockUpdateIndex]
+                                  .quantity),
+                              bottleTax: state.bottleDeposit,
+                              isBottle:state.productDetails.first.isBottle??false,
+                              nmMashlim: state.productDetails.first.nmMashlim??'',
+                              isPesach: state.productDetails.first.isPesach??false,
                               lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
                               qrCode:state.productDetails.first.qrcode ?? '' ,
                               isLoading: state.isLoading,
@@ -1498,13 +1500,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            );
-          },
+                    );
+                  },
+                ),
+              );
+            },
 
+          ),
         );
       },
     );
@@ -1539,6 +1541,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
                 productStock:relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,
@@ -1706,7 +1709,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         : ''),
                 5.height,
                 SizedBox(
-                  height: 175,
+                  height: AppConstants.relatedProductItemHeight,
                   child: list.isEmpty
                       ? Center(
                     child: Text(
@@ -1727,6 +1730,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     shrinkWrap: true,
                     itemBuilder: (context, subIndex) {
                       return buildPlanoGramProductListItem(
+                        isPesach: list[index].planogramproducts?[subIndex].isPesach??false,
                           isGuestUser: isGuestUser,
                           planogramUpdateIndex: planogramUpdateIndex,
                           context: context,

@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:food_stock/main.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:http/http.dart' as http;
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -13,106 +15,87 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as flutter_local_notifications;
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:intl/intl.dart';
+
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class PushNotificationService {
-
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   var fileName;
-  String _subPage = '';
-  String _mainPage = '';
-  String _id = '';
 
-   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  late AndroidNotificationChannel channel;
+  String? mainPage;
+  String? subPage;
+  String? id;
+  int notificationCount = 0;
+
+  FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
+  _handleMessage(RemoteMessage message) {
+    var data = json.decode(message.data['data'].toString());
+    final RemoteNotification? notification = message.notification;
+    final String? messageId = message.messageId;
+    debugPrint('messageId___2___${messageId}');
+    final AndroidNotification? android = message.notification?.android;
+    debugPrint('data:${data.toString()}');
+    if (data['isRead']) {
+      notificationCount = notificationCount + 1;
+    }
+    if (data != null) {
+      showNotification(
+          notiId: notification.hashCode,
+          androidIcon: android?.smallIcon ?? '',
+          data: data,
+          isNavigate: true,
+          showNotification: false,
+          isAppOpen: false);
+    }
+    FlutterAppBadger.updateBadgeCount(notificationCount);
+  }
+
   Future<void> setupInteractedMessage() async {
-    await Firebase.initializeApp();
-    NotificationSettings settings = await firebaseMessaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-     debugPrint('User granted permission: ${settings.authorizationStatus}');
+    if (Platform.isAndroid) {
+      NotificationSettings settings = await firebaseMessaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      debugPrint('User granted permission: ${settings.authorizationStatus}');
+    } else {
+      PermissionStatus status = await Permission.notification.request();
+      if (status.isGranted) {
+        debugPrint('Granted!!!');
+        // notification permission is granted
+      } else {
+        // Open settings to enable notification permission
+      }
+    }
+
 
     FirebaseMessaging.onMessageOpenedApp.listen(
-      (RemoteMessage message) {
-        debugPrint("onMessageOpenedApp: ${message.data}");
-        _mainPage = message.data['data']['message']['mainPage'];
-        _subPage = message.data['data']['message']['subPage'];
-        _id = message.data['data']['message']['id'];
-        manageNavigation( true, _mainPage, _subPage , _id ,);
+      (RemoteMessage message) async {
+        if (message != null) {
+          _handleMessage(message);
+        }
       },
     );
-    FirebaseMessaging.instance.getInitialMessage().then((message) async {
-      final AndroidNotificationChannel channel = androidNotificationChannel();
-      if (message != null) {
-        var data = json.decode(message.data['data'].toString());
-        final RemoteNotification? notification = message.notification;
-        final String? messageId = message.messageId;
-        debugPrint('messageId______${messageId}');
-        final AndroidNotification? android = message.notification?.android;
-        debugPrint('data:${data.toString()}');
-        if (data != null) {
-          String? title =
-          Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
-          String? body =
-          Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
-          String? mainPage = data['message']['mainPage'] ?? '';
-          String? subPage = data['message']['subPage'] ?? '';
-          String? id = data['message']['id'] ?? '';
-          String imageUrl = data['message']['imageUrl'] ?? '';
-          _subPage = subPage ?? '';
-          _mainPage = mainPage ?? '';
-          _id = id ?? '';
-           debugPrint('subPage___${_subPage}');
-           debugPrint('mainPage___${_mainPage}');
-           debugPrint('ide___${_id }');
-          manageNavigation(false, _mainPage, _subPage , _id);
-          if (imageUrl.isNotEmpty) {
-            final http.Response response;
-            response = await http
-                .get(Uri.parse(AppUrls.baseFileUrl + imageUrl.toString()));
-            Directory dir;
-            if (Platform.isAndroid) {
-              dir = await getTemporaryDirectory();
-            } else {
-              dir = await getApplicationDocumentsDirectory();
-            }
-            // Create an image name
-            fileName = '${dir.path}/image.png';
-            // Save to filesystem
-            final file = File(fileName);
-            await file.writeAsBytes(response.bodyBytes);
-          }
-          showNotification(
-            notification.hashCode,
-            title,
-            body,
-            channel.id,
-            channel.name,
-            channel.description ?? '',
-            android?.smallIcon??'',
-          );
-        }
 
+    FirebaseMessaging.instance.getInitialMessage().then((message) async {
+      debugPrint('_______background calling...');
+      if (message != null) {
+        _handleMessage(message);
       }
     });
-    if (Platform.isIOS) {
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    }
     enableIOSNotifications();
     await registerNotificationListeners();
+
   }
 
   Future<void> registerNotificationListeners() async {
-    final AndroidNotificationChannel channel = androidNotificationChannel();
+    channel = androidNotificationChannel();
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -121,226 +104,201 @@ class PushNotificationService {
 
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@drawable/ic_launcher1');
-   /* if (Platform.isIOS) {
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
-    }*/
     const DarwinInitializationSettings iOSSettings =
         DarwinInitializationSettings(
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,
-
     );
     String? fcmToken = '';
 
-    fcmToken = await FirebaseMessaging.instance.getToken();
-     debugPrint("FCM Token: ${fcmToken}");
+    fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getAPNSToken();
+    debugPrint("FCM Token: ${fcmToken}");
     SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-    preferences.setFCMToken(fcmTokenId: fcmToken!);
+    preferences.setFCMToken(fcmTokenId: fcmToken??'');
     const InitializationSettings initSettings =
         InitializationSettings(android: androidSettings, iOS: iOSSettings);
     flutterLocalNotificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
-         debugPrint("details:${details}");
-        manageNavigation(true, _mainPage, _subPage , _id);
+        debugPrint("__________details______:${details}");
+        FlutterAppBadger.removeBadge();
+            manageNavigation(true, mainPage!, subPage!, id!);
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
+    // app is open
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
-
+      debugPrint('_____onMessage_______');
       var data = json.decode(message!.data['data'].toString());
+
       final RemoteNotification? notification = message.notification;
-      final String? messageId = message.messageId;
-      debugPrint('messageId______${messageId}');
-      final AndroidNotification? android = message.notification?.android;
-      debugPrint('data:${data.toString()}');
-      if (data != null) {
-        String? title =
-            Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
-        String? body =
-            Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
-        String mainPage = data['message']['mainPage'] ?? '';
-        String subPage = data['message']['subPage'] ?? '';
-        String id = data['message']['id'] ?? '';
-        _subPage = subPage;
-        _mainPage = mainPage;
-        _id = id;
-        String imageUrl = data['message']['imageUrl'] ?? '';
-
-
-      /*  if (imageUrl.isNotEmpty) {
-          final http.Response response;
-          response = await http
-              .get(Uri.parse(AppUrls.baseFileUrl + imageUrl.toString()));
-          Directory dir;
-          if (Platform.isAndroid) {
-            dir = await getTemporaryDirectory();
-          } else {
-            dir = await getApplicationDocumentsDirectory();
-          }
-          // Create an image name
-          fileName = '${dir.path}/image.png';
-          // Save to filesystem
-          final file = File(fileName);
-          await file.writeAsBytes(response.bodyBytes);
+      if (notification != null) {
+        final String? messageId = message.messageId;
+        debugPrint('messageId___3___${messageId}');
+        final AndroidNotification? android = message.notification?.android;
+        debugPrint('data:${data.toString()}');
+        if (data != null) {
+          showNotification(
+              notiId: notification.hashCode,
+              androidIcon: android?.smallIcon ?? '',
+              data: data,
+              isNavigate: false,
+              showNotification: true,
+              isAppOpen: true);
         }
-
-        showNotification(
-          notification.hashCode,
-          title,
-          body,
-          channel.id,
-          channel.name,
-          channel.description ?? '',
-          android?.smallIcon??'',
-        );*/
+        FlutterAppBadger.removeBadge();
       }
     });
   }
 
-  showNotification(int id, String title, String body, String channelId,
-      String channelName, String channelDesc, String? androidIcon) {
-    flutterLocalNotificationsPlugin.show(
-      id,
-      title,
-      body,
-    Platform.isAndroid ?  flutter_local_notifications.NotificationDetails(
-        android: fileName != null
-            ? AndroidNotificationDetails(
-                channelId,
-                channelName,
-                channelDescription: channelDesc,
-                icon: androidIcon ??'',
-                channelShowBadge: true,
-               largeIcon: ByteArrayAndroidBitmap(fileName)
+  showNotification({
+    required int notiId,
+    String? androidIcon,
+    var data,
+    required bool isNavigate,
+    required bool showNotification,
+    required bool isAppOpen,
+  }) async {
+    debugPrint('____notification_____');
+    channel = androidNotificationChannel();
+    String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
+    String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
+    mainPage = data['message']['mainPage'] ?? '';
+    subPage = data['message']['subPage'] ?? '';
+    id = data['message']['id'] ?? '';
+    String imageUrl = data['message']['imageUrl'] ?? '';
+    Uint8List? imageByte;
+    if (imageUrl.isNotEmpty) {
+      Directory dir;
+      if (Platform.isAndroid) {
+        dir = await getTemporaryDirectory();
+      } else {
+        dir = await getApplicationDocumentsDirectory();
+      }
+      // Create an image name
+      fileName = '${dir.path}/image.png';
+      // Save to filesystem
+      final file = File(fileName);
+
+      imageByte =
+          (await NetworkAssetBundle(Uri.parse(AppUrls.baseFileUrl + imageUrl))
+                  .load(AppUrls.baseFileUrl + imageUrl))
+              .buffer
+              .asUint8List();
+      await file.writeAsBytes(imageByte.toList());
+
+      debugPrint('imageBytes:$imageByte');
+    }
+    debugPrint('subPage___${subPage}');
+    debugPrint('mainPage___${mainPage}');
+    debugPrint('ide___${id}');
+    debugPrint('isNavigate___${isNavigate}');
+    debugPrint('showNotification___${showNotification}');
+
+    if (showNotification) {
+      debugPrint('fileName_____${fileName}');
+      flutterLocalNotificationsPlugin.show(
+        notiId,
+        title,
+        body,
+        Platform.isAndroid
+            ? flutter_local_notifications.NotificationDetails(
+                android: imageByte != null
+                    ? AndroidNotificationDetails(
+                        channel.id,
+                        channel.name,
+                        channelDescription: channel.description,
+                        icon: androidIcon ?? '',
+                        channelShowBadge: true,
+                        largeIcon: ByteArrayAndroidBitmap(imageByte),
+                      )
+                    : AndroidNotificationDetails(channel.id, channel.name,
+                        channelDescription: channel.description,
+                        icon: androidIcon ?? '',
+                        channelShowBadge: true),
               )
-            : AndroidNotificationDetails(
-                channelId,
-                channelName,
-                channelDescription: channelDesc,
-                icon: androidIcon??'',
-               channelShowBadge: true
+            : flutter_local_notifications.NotificationDetails(
+                iOS: fileName != null
+                    ? DarwinNotificationDetails(
+                        attachments: [DarwinNotificationAttachment(fileName)])
+                    : DarwinNotificationDetails(),
               ),
-      ):flutter_local_notifications.NotificationDetails(
-      iOS: fileName != null
-          ? DarwinNotificationDetails(
-          attachments: [DarwinNotificationAttachment(fileName)])
-          : DarwinNotificationDetails(),
-    ),
-      // payload: message.data.toString(),
-    );
-     debugPrint('fileName_____${fileName}');
-    if(fileName != null){
-      showImage(fileName);
+        // payload: message.data.toString(),
+      );
+    }
+    if (isNavigate) {
+      print('___________navigation');
+      manageNavigation(isAppOpen, mainPage!, subPage!, id!);
     }
   }
 
-  showImage(String imageUrl) async {
-    final http.Response response;
-    var fName;
-    response =
-        await http.get(Uri.parse(AppUrls.baseFileUrl + imageUrl.toString()));
-    Directory dir;
-    if (Platform.isAndroid) {
-      dir = await getTemporaryDirectory();
-    } else {
-      dir = await getApplicationDocumentsDirectory();
-    }
-    // Create an image name
-    fName = '${dir.path}/image.png';
-    // Save to filesystem
-    final file = File(fName);
-    await file.writeAsBytes(response.bodyBytes);
-    return fName;
-  }
-
-  void manageNavigation(bool isAppOpen, String mainPage, String subPage , String id ) {
+  void manageNavigation(
+      bool isAppOpen, String mainPage, String subPage, String id) {
     debugPrint('main  1 = ${mainPage}');
     debugPrint('subPage   1= ${subPage}');
     debugPrint('id 1= ${id}');
     debugPrint('isAppOpen = ${isAppOpen}');
+
     if (isAppOpen) {
       debugPrint('subPage  1 = ${subPage}');
-      if(subPage == ''){
-        if (mainPage == 'companyScreen') {
-           Navigator.pushNamed(navigatorKey.currentState!.context,
+      if (subPage == '') {
+        if (mainPage == 'companyScreen/') {
+          Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.companyScreen.name,
-               arguments: {AppStrings.companyIdString: id});
+              arguments: {AppStrings.companyIdString: id});
         }
-        if (mainPage == 'saleScreen') {
+        if (mainPage == 'saleScreen/') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.productSaleScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-        if (mainPage == 'supplierScreen') {
-          Navigator.pushNamed(
-              navigatorKey.currentState!.context, RouteDefine.supplierScreen.name,
+        if (mainPage == 'supplierScreen/') {
+          Navigator.pushNamed(navigatorKey.currentState!.context,
+              RouteDefine.supplierScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-        if (mainPage == 'storeScreen') {
-          Navigator.pushNamed(
-              navigatorKey.currentState!.context, RouteDefine.bottomNavScreen.name,
-              arguments: {
-                AppStrings.companyIdString: id,
-                AppStrings.pushNavigationString : 'storeScreen'
-              });
+        if (mainPage == 'storeScreen/') {
+          Navigator.pushNamed(navigatorKey.currentState!.context,
+              RouteDefine.bottomNavScreen.name, arguments: {
+            AppStrings.companyIdString: id,
+            AppStrings.pushNavigationString: 'storeScreen'
+          });
         }
-      }
-      else{
+      } else {
         if (subPage == 'companyProductsScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.companyProductsScreen.name,
               arguments: {AppStrings.companyIdString: id});
-        }
-        else if (subPage == 'supplierProductsScreen') {
+        } else if (subPage == 'supplierProductsScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.supplierProductsScreen.name,
               arguments: {AppStrings.supplierIdString: id});
-        }
-      else if (subPage == 'catagoryScreen' || subPage == 'storeCategoryScreen') {
-           Navigator.pushNamed(navigatorKey.currentState!.context,
+        } else if (subPage == 'catagoryScreen' ||
+            subPage == 'storeCategoryScreen') {
+          Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.storeCategoryScreen.name,
               arguments: {AppStrings.companyIdString: id});
-        }
-      else if (subPage == 'planogramScreen' || subPage ==  'planogramProductScreen') {
+        } else if (subPage == 'planogramScreen' ||
+            subPage == 'planogramProductScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.storeCategoryScreen.name,
               arguments: {
                 AppStrings.companyIdString: id,
-                AppStrings.isSubCategory : 'false',
+                AppStrings.isSubCategory: 'false',
               });
-        }
-      else{
+        } else {
           AppRouting.generateRoute(RouteSettings(
             name: RouteDefine.splashScreen.name,
           ));
         }
       }
-   } else {
+    } else {
       AppRouting.generateRoute(RouteSettings(
-          name: RouteDefine.splashScreen.name,
-         ));
+        name: RouteDefine.splashScreen.name,
+      ));
     }
-  }
-
-
-  @pragma('vm:entry-point')
-  Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    debugPrint("Handling a background message: ${message.messageId}");
-    debugPrint("Handling a background message: ${message.data.toString()}");
-    _mainPage = message.data['data']['message']['mainPage'];
-    _subPage = message.data['data']['message']['subPage'];
-    _id = message.data['data']['message']['id'];
-    manageNavigation( true, _mainPage, _subPage , _id);
   }
 
   Future<void> enableIOSNotifications() async {
@@ -359,6 +317,6 @@ class PushNotificationService {
         description:
             'This channel is used for important notifications.', // description
         importance: Importance.max,
-        showBadge: true,
+        showBadge: false,
       );
 }

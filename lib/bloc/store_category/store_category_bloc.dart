@@ -60,7 +60,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       if (event is _isCategoryEvent) {
          debugPrint('isSubCategory_____${event.isSubCategory}');
         emit(state.copyWith(isSubCategory: event.isSubCategory ,isGridView: preferences.getIsGridView(),
-            isGuestUser: preferences.getGuestUser()
+            isGuestUser: preferences.getGuestUser(),bottleDeposit: preferences.getBottleTax()
         ));
       }
       if (event is _ChangeCategoryExpansionEvent) {
@@ -105,6 +105,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           //  subProductPageNum: 0,
             subCategoryPageNum: 0,
             planogramPageNum : 0,
+            bottleDeposit:preferences.getBottleTax(),
             subPlanogramPageNum: 0,
             isBottomOfSubCategory: false,
             isBottomOfPlanoGrams: false,
@@ -144,6 +145,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               [],
               [],
             ],
+              bottleDeposit:preferences.getBottleTax(),
             planogramProductList:[],
             subProductPageNum: 0,
             productStockUpdateIndex: -1,
@@ -187,6 +189,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               subCategoryPageNum: state.subCategoryPageNum + 1,
               isSubCategoryShimmering: false,
               isLoadMore: false,
+                bottleDeposit:preferences.getBottleTax(),
               categoryName: response.data?.subCategories?.length != 0 ? (response.data?.subCategories?[0].parentCategoryName ?? '' ) : state.categoryName,
             ) );
             emit(state.copyWith(
@@ -301,8 +304,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
-            // List<ProductStockModel> barcodeStock =
-            // productStockList.removeLast();
+
             List<ProductStockModel> stockList = [];
             for (int i = 0; i < (response.data?.length ?? 0); i++) {
               stockList.addAll(response.data![i].planogramproducts?.map(
@@ -310,7 +312,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       productId: product.id ?? '',
                       stock: product.productStock.toString())) ??
                   []);
-              // debugPrint('stockList[$i] = $stockList');
+
             }
             if(isSubCategoryString == '' && !state.isSubCategory ){
               productStockList[2] = stockList;
@@ -319,8 +321,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               productStockList[2] = stockList;
             }
             else{
-              // first planogram
-
               productStockList[1] = stockList;
             }
 
@@ -338,13 +338,17 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               planogramPageNum: state.planogramPageNum + 1,
               isPlanogramShimmering: false,
               isLoadMore: false,
+                isBottomOfPlanoGrams: planoGramsList.length ==
+                    (response.metaData?.totalFilteredCount ?? 0)
+                    ? true
+                    : false
             ));
 
-              emit(state.copyWith(
+         /*     emit(state.copyWith(
                   isBottomOfPlanoGrams: planoGramsList.length ==
                       (response.metaData?.totalFilteredCount ?? 0)
                       ? true
-                      : false));
+                      : false));*/
 
 
           } else {
@@ -393,15 +397,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
            debugPrint('GetProductDetails_____${response}');
           if (response.status == 200) {
-            // 0 planogram
-            //1 product
-            //2 barcode
+            /// 0 planogram
+            ///1 product
+            ///2 barcode
 
-            //new chanegs
-            //0 for barcode and search
-            //1 for planogram above sub cat.
-            //2 for planogram above grid/list products.
-            //3 for grid/list products.
+            ///new chanegs
+            ///0 for barcode and search
+            ///1 for planogram above sub cat.
+            ///2 for planogram above grid/list products.
+            ///3 for grid/list products.
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             int planoGramIndex  = event.planoGramIndex;
@@ -411,14 +415,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
              debugPrint('productStockList___${productStockList[3]}');
              debugPrint('planoGramIndex___${event.planoGramIndex}');
             int productStockUpdateIndex = 0;
-            /*   if(planoGramIndex == 1){
-              productStockUpdateIndex = state.productStockList[planoGramIndex]
-                  .indexWhere((productStock) =>
-              productStock.productId == event.productId);
-            }
-            else{
-              productStockUpdateIndex = planoGramIndex;
-            }*/
 
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
@@ -470,8 +466,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               add(StoreCategoryEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if ( (event.isBarcode )) {
-              // List<List<ProductStockModel>> productStockList =
-              // state.productStockList.toList(growable: false);
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                   quantity: _productQuantity,
@@ -484,8 +478,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             }
 
             List<ProductSupplierModel> supplierList = [];
-            // debugPrint(
-            //     'supplier id = ${state.productStockList[planoGramIndex][productStockUpdateIndex].productSupplierIds}');
             supplierList.addAll(response.product?.first.supplierSales
                 ?.map((supplier) => ProductSupplierModel(
               supplierId: supplier.supplierId ?? '',
@@ -549,8 +541,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             debugPrint(
                 'response list = ${response.product?.first.supplierSales?.length}');
             debugPrint('supplier list = ${supplierList}');
-            // debugPrint(
-            //     'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
+
             String note = productStockList.isEmpty
                 ? ''
                 : productStockList.indexOf(state.productStockList.last) ==
@@ -560,6 +551,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             emit(state.copyWith(productStockList: []));
 
             emit(state.copyWith(
+                bottleDeposit:preferences.getBottleTax(),
                 productDetails: response.product ?? [],
                 productStockList: productStockList,
                 productStockUpdateIndex: productStockUpdateIndex,
@@ -621,11 +613,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           }
         } on ServerException {
           Navigator.pop(event.context);
-          // emit(state.copyWith(isProductLoading: false));
-        } /*catch (e) {
-          debugPrint('bs error = $e');
-          // Navigator.pop(event.context);
-        }*/
+        }
       }
       else if (event is _IncreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
@@ -665,7 +653,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 context: event.context,
                 title:
                 "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
-                // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 type: SnackBarType.FAILURE);
           }
         }
@@ -871,9 +858,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       .copyWith(
                     note: '',
                     isNoteOpen: false,
-                    quantity: 0,
+                    quantity: state
+                        .productStockList[state.planoGramUpdateIndex]
+                    [state.productStockUpdateIndex]
+                        .quantity,
                     productSupplierIds: '',
-                    totalPrice: 0.0,
+                    totalPrice: state
+                        .productStockList[state.planoGramUpdateIndex]
+                    [state.productStockUpdateIndex]
+                        .totalPrice,
                     productSaleId: '',
                   );
 
@@ -970,9 +963,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       .copyWith(
                     note: '',
                     isNoteOpen: false,
-                    quantity: 0,
+                    quantity: state
+                        .productStockList[state.planoGramUpdateIndex]
+                    [state.productStockUpdateIndex]
+                        .quantity,
                     productSupplierIds: '',
-                    totalPrice: 0.0,
+                    totalPrice: state
+                        .productStockList[state.planoGramUpdateIndex]
+                    [state.productStockUpdateIndex]
+                        .totalPrice,
                     productSaleId: '',
                   );
               add(StoreCategoryEvent.getCartCountEvent());
@@ -983,8 +982,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  /*  title: response.message ??
-                    '${AppLocalizations.of(event.context)!.product_added_to_cart}',*/
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
                           response.message!,
@@ -1026,11 +1023,14 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         debugPrint('cart count store cate= ${preferences.getCartCount()}');
       }
       else if (event is _GlobalSearchEvent) {
-        emit(state.copyWith(search: state.searchController.text));
+        emit(state.copyWith(search: state.searchController.text,bottleDeposit: preferences.getBottleTax()));
         debugPrint('data1 = ${state.search}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
-          GlobalSearchReqModel(search: state.search);
+          GlobalSearchReqModel(search: state.search,
+              sortField: AppStrings.sortFieldString,
+              sortOrder: AppStrings.sortOrderString
+          );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
               AppUrls.getGlobalSearchResultUrl,
@@ -1043,7 +1043,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     searchId: category.id ?? '',
                     name: category.categoryName ?? '',
                     searchType: SearchTypes.category,
-                    image: category.categoryImage ?? '')));
+                    image: category.categoryImage ?? '',
+                )));
             emit(state.copyWith(searchList: searchList, isSearching: false));
             return;
           }
@@ -1055,6 +1056,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 searchId: category.id ?? '',
                 name: category.categoryName ?? '',
                 searchType: SearchTypes.category,
+                isPesach: category.isPesach??false,
                 image: category.categoryImage ?? ''))
                 .toList() ??
                 []);
@@ -1073,6 +1075,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 searchId: supplier.id ?? '',
                 name: supplier.supplierDetail?.companyName ?? '',
                 searchType: SearchTypes.supplier,
+                isPesach: supplier.isPesach??false,
                 image: supplier.logo ?? ''))
                 .toList() ??
                 []);
@@ -1082,6 +1085,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 searchId: sale.id ?? '',
                 name: sale.productName ?? '',
                 searchType: SearchTypes.sale,
+                isPesach: sale.isPesach??false,
                 numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                 image: sale.mainImage ?? ''))
                 .toList() ??
@@ -1090,6 +1094,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             searchList.addAll(response.data?.supplierProductData
                 ?.map((supplier) => SearchModel(
                 searchId: supplier.productId ?? '',
+                isPesach: supplier.isPesach??false,
                 name: supplier.productName ?? '',
                 searchType: SearchTypes.product,
                 productStock:  supplier.productStock.toString(),
@@ -1206,10 +1211,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               pageNum: state.subProductPageNum + 1,
               pageLimit: AppConstants.orderPageLimit,
             );
-          debugPrint('getSubCategoriesProduct_____${AppUrls.baseUrl}${AppUrls.getsubCategoryProductsUrl}');
+          debugPrint('getSubCategoriesProduct_____${AppUrls.baseUrl}${AppUrls.getSubCategoryProductsUrl}');
           debugPrint('getSubCategoriesProduct req_____${getSubCategoriesProductReqModel}');
           final  res = await DioClient(event.context)
-                .post('${AppUrls.getsubCategoryProductsUrl}',
+                .post('${AppUrls.getSubCategoryProductsUrl}',
                 data: getSubCategoriesProductReqModel
             );
 
@@ -1240,7 +1245,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             debugPrint('page = ${stockList.length}');
             debugPrint('page = ${productStockList[3].length}');
             debugPrint('page = ${productStockList[2].length}');
-            // productStockList.add(barcodeStock);
             planogramProductList.addAll(response.data ?? []);
 
              debugPrint('planogramProductList.length_____${ planogramProductList.length}');
@@ -1293,8 +1297,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if (response.status == 200) {
           List<List<ProductStockModel>> productStockList =
           state.productStockList.toList(growable: true);
-          // List<ProductStockModel> barcodeStock =
-          // productStockList.removeLast();
           List<ProductStockModel> stockList = [];
           debugPrint('RelatedProducts response_____${response.data.length}');
           stockList.addAll(response.data.map(

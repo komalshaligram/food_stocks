@@ -58,6 +58,8 @@ class PlanogramProduct with _$PlanogramProduct {
     String? productId,
     String? image,
     String? productName,
+    bool? isPesach,
+    String? nmMashlim,
   }) = _PlanogramProduct;
 
   factory PlanogramProduct.fromJson(Map<String, dynamic> json) => _$PlanogramProductFromJson(json);

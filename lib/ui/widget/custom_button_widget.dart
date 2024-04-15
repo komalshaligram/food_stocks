@@ -17,6 +17,7 @@ class CustomButtonWidget extends StatelessWidget {
   final Color borderColor;
   final bool isFromConnectScreen;
   final double width;
+  final double fontSize;
 
   CustomButtonWidget(
       {super.key,
@@ -32,6 +33,7 @@ class CustomButtonWidget extends StatelessWidget {
       this.borderColor = Colors.white,
       this.loadingColor = Colors.white,
         this.width = double.maxFinite,
+        this.fontSize = 18,
       });
 
   @override
@@ -41,9 +43,7 @@ class CustomButtonWidget extends StatelessWidget {
       width:width,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-          // border: Border.all(color: AppColors.mainColor),
-          //color: bGColor,
-          gradient: isFromConnectScreen ? LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]):AppColors.appMainGradientColor,
+          gradient: isFromConnectScreen ? AppColors.connectGradientColor: !enable ? AppColors.disableGradientColor: AppColors.appMainGradientColor,
           border: Border.all(color: borderColor),
           borderRadius: BorderRadius.all(
               Radius.circular(radius ?? AppConstants.radius_10))),
@@ -56,7 +56,7 @@ class CustomButtonWidget extends StatelessWidget {
             : Text(
                 buttonText.toUpperCase(),
                 style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.mediumFont, color: fontColors),
+                    size: fontSize, color: fontColors),
               ),
       ),
     );

@@ -5,7 +5,7 @@ import '../utils/themes/app_constants.dart';
 import 'common_shimmer_widget.dart';
 
 class OrderSummaryScreenShimmerWidget extends StatelessWidget {
-  int itemCount;
+  final int itemCount;
    OrderSummaryScreenShimmerWidget({super.key , this.itemCount = 5});
 
   @override
