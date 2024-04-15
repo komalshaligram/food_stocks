@@ -452,7 +452,6 @@
     "refund_invoice" : "Refund invoice",
     "payed" :"Payed",
     "pending" :"Pending",
-    "my_invoices" :"My invoices",
     "invoice_date" : "Invoice date",
     "invoice_type" : "Invoice type",
     "invoice_statue" : "Invoice statue",

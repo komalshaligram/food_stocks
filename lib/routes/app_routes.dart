@@ -27,7 +27,6 @@ import '../ui/screens/connect_screen.dart';
 import '../ui/screens/form_data_screen.dart';
 import '../ui/screens/invoice_pdf_screen.dart';
 import '../ui/screens/invoice_screen.dart';
-import '../ui/screens/menu_screen.dart';
 import '../ui/screens/file_upload_screen.dart';
 import '../ui/screens/order_details_screen.dart';
 import '../ui/screens/order_successful_screen.dart';
@@ -84,7 +83,7 @@ enum RouteDefine {
   pesachScreen,
   formDataScreen,
   bankInfoScreen, privacyPolicyScreen,
-  previewScreen
+  previewScreen,
   invoiceScreen, invoicePdfScreen,
 
 }
@@ -102,14 +101,14 @@ class AppRouting {
       RouteDefine.loginScreen.name: (_) => LogInRoute.route,
       RouteDefine.bottomNavScreen.name: (_) => BottomNavRoute.route,
       RouteDefine.homeScreen.name: (_) => HomeRoute.route,
-      RouteDefine.menuScreen.name: (_) => MenuRoute.route,
+    //  RouteDefine.menuScreen.name: (_) => MenuRoute.route,
       RouteDefine.basketScreen.name: (_) => BasketRoute.route,
       RouteDefine.walletScreen.name: (_) => WalletRoute.route,
       RouteDefine.storeScreen.name: (_) => StoreRoute.route,
       RouteDefine.orderScreen.name: (_) => OrderRoute.route,
       RouteDefine.questionAndAnswerScreen.name: (_) =>
           QuestionAndAnswerRoute.route,
-      RouteDefine.appContentScreen.name: (_) => AppContentRoute.route,
+    //  RouteDefine.appContentScreen.name: (_) => AppContentRoute.route,
       RouteDefine.messageScreen.name: (_) => MessageRoute.route,
       RouteDefine.messageContentScreen.name: (_) => MessageContentRoute.route,
       RouteDefine.otpScreen.name: (_) => OTPRoute.route,
