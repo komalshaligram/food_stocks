@@ -933,6 +933,7 @@ class HomeScreenWidget extends StatelessWidget {
               var data = json.decode(message.data['data'].toString());
               debugPrint('data home:${data.toString()}');
               if (data != null) {
+                debugPrint('noti from  home');
                 FlutterAppBadger.removeBadge();
                 PushNotificationService().showNotification(
                     notiId: message.notification.hashCode,

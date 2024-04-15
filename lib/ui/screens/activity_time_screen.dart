@@ -202,7 +202,6 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-
         );
       },
     );

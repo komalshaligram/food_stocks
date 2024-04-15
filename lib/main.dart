@@ -28,17 +28,19 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     debugPrint("Handling a background message:${message.messageId}");
     debugPrint("Handling a background message:${message.data.toString()}");
     var data = json.decode(message.data['data'].toString());
-
+    bool isAlreadyShow =  false;
     FlutterAppBadger.updateBadgeCount(PushNotificationService().notificationCount+1);
     if(data!=null){
+      debugPrint('noti from  main');
       PushNotificationService().showNotification(
           notiId: message.notification.hashCode,
           androidIcon:message.notification?.android?.smallIcon,
           data: data,
           isNavigate: true,
-          showNotification: true,
+          showNotification: false,
           isAppOpen: true
       );
+      isAlreadyShow = true;
   }
 }
 
@@ -48,9 +50,9 @@ void main() async {
     await Firebase.initializeApp();
 
     await PushNotificationService().setupInteractedMessage();
-    if(Platform.isAndroid){
+  //  if(Platform.isAndroid){
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    }
+ //   }
 
     //await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(

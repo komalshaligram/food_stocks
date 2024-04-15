@@ -279,7 +279,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           debugPrint('response = ${response}');
 
           if (response['status'] == 200) {
-            add(ProductDetailsEvent.getAllCartEvent(context: event.context));
+          //  add(ProductDetailsEvent.getAllCartEvent(context: event.context));
            Navigator.pop(event.dialogContext);
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -311,7 +311,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
         }
       }
 
-      else   if (event is _getAllCartEvent) {
+   /*   else   if (event is _getAllCartEvent) {
         debugPrint('cartId____${preferencesHelper.getCartId()}');
 
         emit(state.copyWith(isDuplicateOrderProcess: true));
@@ -358,7 +358,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               title: e.toString(),
               type: SnackBarType.SUCCESS);
         }
-      }
+      }*/
 
 
     });
