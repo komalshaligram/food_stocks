@@ -365,22 +365,19 @@ class ProfileMenuScreenWidget extends StatelessWidget {
         child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(
           builder: (context, state) {
             ProfileMenuBloc bloc = context.read<ProfileMenuBloc>();
-            return AbsorbPointer(
-              absorbing: state.isLogOutProcess ? true : false,
-              child: CommonAlertDialog(
-                isLogOutProcess: state.isLogOutProcess,
-                directionality: directionality,
-                title: '${AppLocalizations.of(context)!.log_out}',
-                subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
-                positiveTitle: '${AppLocalizations.of(context)!.yes}',
-                negativeTitle: '${AppLocalizations.of(context)!.no}',
-                negativeOnTap: () {
-                  Navigator.pop(context);
-                },
-                positiveOnTap: () async {
-                  bloc.add(ProfileMenuEvent.logOutEvent(context: context));
-                },
-              ),
+            return CommonAlertDialog(
+              isLogOutProcess: state.isLogOutProcess,
+              directionality: directionality,
+              title: '${AppLocalizations.of(context)!.log_out}',
+              subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
+              positiveTitle: '${AppLocalizations.of(context)!.yes}',
+              negativeTitle: '${AppLocalizations.of(context)!.no}',
+              negativeOnTap: () {
+                Navigator.pop(context);
+              },
+              positiveOnTap: () async {
+                bloc.add(ProfileMenuEvent.logOutEvent(context: context));
+              },
             );
           },
         ),

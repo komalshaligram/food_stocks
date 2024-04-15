@@ -66,7 +66,7 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
     required BuildContext dialogContext
   }) = _duplicateOrderEvent;
 
-  const factory ProductDetailsEvent.apiProcessingEvent() = _apiProcessingEvent;
-
+  const factory ProductDetailsEvent.getAllCartEvent({required BuildContext context}) =
+  _getAllCartEvent;
 
 }

@@ -508,7 +508,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         if (scanResult != '-1') {
                           // -1 result for cancel scanning
                           debugPrint('result = $scanResult');
-                          print("tap 5");
+                          debugPrint("tap 5");
                           if(!state.isGuestUser){
                             showProductDetails(
                                 context: context,

@@ -170,7 +170,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               double totalAmount = 0;
               if ((list[event.listIndex].totalPayment ?? 0) > payment) {
                 totalAmount = event.totalPayment + newAmount;
-                await preferencesHelper.setIsAnimation(isAnimation: true);
+
               } else {
                 totalAmount = event.totalPayment - newAmount;
               }
@@ -895,8 +895,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       stock: (Product.productStock.toString()),
                     )));
             productStockList[1].addAll(stockList);
-            print('productStockList[0] length____${productStockList[0].length}');
-            print('productStockList[1] length____${productStockList[1].length}');
+
             emit(state.copyWith(
                 relatedProductList:response.data,
                 isRelatedShimmering: false,productStockList: productStockList));

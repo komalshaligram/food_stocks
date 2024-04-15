@@ -43,7 +43,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       if (event is _getFormsListEvent) {
         emit(state.copyWith(
             isLoading: true, isShimmering: true, isUpdate: event.isUpdate , language: preferencesHelper.getAppLanguage()));
-        print('update___${state.isUpdate}');
+        debugPrint('update___${state.isUpdate}');
         try {
           final res =
               await DioClient(event.context).get(path: AppUrls.formsListUrl);

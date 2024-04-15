@@ -133,9 +133,7 @@ class SharedPreferencesHelper {
     await prefs.setString(apiPram, ReqPram);
   }
 
-  Future<void> setIsAnimation({required bool isAnimation}) async {
-    await prefs.setBool(isCelebrationAnimation, isAnimation);
-  }
+
   Future<void> setOrderId({required String productOrderId}) async {
     await prefs.setString(orderId, productOrderId);
   }
@@ -235,9 +233,6 @@ class SharedPreferencesHelper {
   }
   String getRqPram() {
     return prefs.getString(apiPram) ?? '';
-  }
-  bool getIsAnimation() {
-    return prefs.getBool(isCelebrationAnimation) ?? false;
   }
 
   String getOrderId() {

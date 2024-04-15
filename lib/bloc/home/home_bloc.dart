@@ -702,7 +702,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         }
         else if (event is _SetCartCountEvent) {
-          await preferences.setIsAnimation(isAnimation: true);
+          
           await preferences.setCartCount(count: preferences.getCartCount() + 1);
           emit(state.copyWith(cartCount: preferences.getCartCount(),isCartCountChange: true));
           debugPrint('cart count home = ${state.cartCount}');
@@ -1198,9 +1198,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       stock: (Product.productStock.toString()),
                     )));
             productStockList[2].addAll(stockList);
-            print('productStockList[2] length____${productStockList[2].length}');
-            print('productStockList[0] length____${productStockList[0].length}');
-            print('productStockList[1] length____${productStockList[1].length}');
+
             emit(state.copyWith(
                 relatedProductList:response.data,
                 isRelatedShimmering: false,productStockList: productStockList));

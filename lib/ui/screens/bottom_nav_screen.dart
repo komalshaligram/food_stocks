@@ -58,6 +58,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       listener: (context, state) {
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
+
         builder: (context, state) {
           return WillPopScope(
             onWillPop: () {
