@@ -182,18 +182,14 @@ class FileUploadScreenWidget extends StatelessWidget {
                                               },
                                             ),
                                       SizedBox(
-                                      height: getScreenHeight(context) * 0.17,
+                                      height: getScreenHeight(context) * 0.05,
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Column(
                                           children: [
                                          !state.isUpdate ? CustomButtonWidget(
-                                              buttonText: state.isUpdate
-                                                  ? AppLocalizations.of(context)!
-                                                  .save
-                                                  .toUpperCase()
-                                                  : AppLocalizations.of(context)!
+                                              buttonText: AppLocalizations.of(context)!
                                                   .next
                                                   .toUpperCase(),
                                               fontColors: AppColors.whiteColor,
