@@ -6,7 +6,8 @@ import 'common_shimmer_widget.dart';
 
 class OrderSummaryScreenShimmerWidget extends StatelessWidget {
   final int itemCount;
-   OrderSummaryScreenShimmerWidget({super.key , this.itemCount = 5});
+  final double containerHeight;
+   OrderSummaryScreenShimmerWidget({super.key , this.itemCount = 5 , this.containerHeight  = 55});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class OrderSummaryScreenShimmerWidget extends StatelessWidget {
 
             ),
             child: Container(
-              height: 55,
+              height: containerHeight,
             ),
           ),
         );

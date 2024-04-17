@@ -409,7 +409,7 @@
   "my_invoices": "החשבוניות שלי",
   "invoice_number" : "מס' חשבונית",
   "not_include_surfaces_price":"הסכום אינו כולל עלות משטחים",
-  "open":"open",
+  "open":"פתח",
   "data_for_form":"נתונים עבור טפסים",
   "select_agent" :"הסוכן שלי",
   "owner1_full_name": "שם בעלים 1",
@@ -453,10 +453,10 @@
   "refund_invoice" : "חשבונית זיכוי",
   "payed" : "שולם",
   "pending" :"ממתין",
-  "invoice_date" : "Invoice date",
-   "invoice_type" : "Invoice type",
-   "invoice_statue" : "Invoice statue",
-   "invoice_amount" : "Invoice amount"
+  "invoice_date" : "תאריך חשבונית",
+   "invoice_type" : "סוג חשבונית",
+   "invoice_status" : "סטטוס חשבונית",
+   "invoice_amount" : "סכום חשבונית"
 
 
 

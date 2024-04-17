@@ -58,7 +58,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     id: response.data?.clientForms?[i].id,
                     isForm: true,
                     sampleUrl: response.data?.clientForms?[i].sample,
-                    name: response.data?.clientForms?[i].formName));
+                    name: response.data?.clientForms?[i].formName,
+                ));
               }
             }
             if(state.isUpdate){
@@ -295,11 +296,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           if (int.parse(fileSize!.split(' ').first) == 0) {
             return;
           }
-          if (int.parse(fileSize.split(' ').first) <=
-                  AppConstants.fileSizeCap &&
-              fileSize.split(' ').last == 'KB') {
-
-
+     //     else {
             List<FormAndFileModel> formAndFileList =
                 state.formsAndFilesList.toList(growable: true);
             FormData formData;
@@ -402,12 +399,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               //     title: AppStrings.somethingWrongString,
               //     type: SnackBarType.FAILURE);
             }
-          } else {
-            emit(state.copyWith(
-                isUploadLoading: false, isFileSizeExceeds: true));
-            emit(state.copyWith(isFileSizeExceeds: false));
-
-          }
+        //  }
         }
       }
 
