@@ -96,9 +96,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
           }
-          if (int.parse(imageSize.split(' ').first) <=
-                  AppConstants.fileSizeCap &&
-              imageSize.split(' ').last == 'KB') {
+      //    else {
             try {
            emit(state.copyWith(isUploadProcess: true));
 
@@ -132,11 +130,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             catch(e){
               emit(state.copyWith(isUploadProcess: false));
             }
-          } else {
-            emit(state.copyWith(isFileSizeExceeds: true));
           }
         }
-      }
+    //  }
       else if (event is _registrationApiEvent) {
         if (state.isUpdate) {
           ProfileModel updatedProfileModel = ProfileModel(

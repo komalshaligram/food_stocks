@@ -12,9 +12,6 @@ import 'package:food_stock/ui/screens/my_app_screen.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shorebird_code_push/shorebird_code_push.dart';
-
-final shorebirdCodePush = ShorebirdCodePush();
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 

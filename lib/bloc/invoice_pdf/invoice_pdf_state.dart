@@ -4,14 +4,14 @@ part of 'invoice_pdf_bloc.dart';
 class InvoicePdfState with _$InvoicePdfState{
 
   const factory InvoicePdfState({
-    required InvoiceModel invoiceDetailsList,
+    required Invoice invoiceDetailsList,
     required bool isDownloading,
     required int downloadProgress,
 
   }) = _InvoicePdfState;
 
   factory InvoicePdfState.initial()=>  InvoicePdfState(
- invoiceDetailsList: InvoiceModel(),
+ invoiceDetailsList: Invoice(),
     downloadProgress: 0,
     isDownloading: false
 

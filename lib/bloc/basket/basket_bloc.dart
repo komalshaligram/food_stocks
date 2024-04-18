@@ -482,18 +482,14 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 add(BasketEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
               if ( (event.isBarcode )) {
-
                 productStockList[0][0] =  productStockList[0][0]
                     .copyWith(
                     quantity: _productQuantity,
                     productId: response.product?.first.id ?? '' ,
                     stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
                 );
-
                 emit(state.copyWith(productStockList: productStockList));
-
               }
-
 
               List<ProductSupplierModel> supplierList = [];
 

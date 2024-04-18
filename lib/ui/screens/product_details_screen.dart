@@ -125,7 +125,7 @@ class _ProductDetailsScreenWidgetState
                                 : '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
                           ),
                   ),
-          /*       GestureDetector(
+                 GestureDetector(
                     onTap: () {
                       duplicateOrderDialog(
                           context: context, directionality: state.language);
@@ -148,7 +148,7 @@ class _ProductDetailsScreenWidgetState
                             fontWeight: FontWeight.w600),
                       ),
                     ),
-                  )*/
+                  )
                 ],
               ),
               onTap: () {

@@ -94,7 +94,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
     debugPrint('stock_____${productStock}');
     debugPrint('lowStock${lowStock}');
     debugPrint('nmMashlim$nmMashlim');
-    debugPrint('height:${getScreenHeight(context)}');
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(

@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../data/model/invoice_model/invoice_model.dart';
+import '../../data/model/res_model/invoices_res/invoices_res_model.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
@@ -35,15 +35,14 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
            } else {
              dir = await getApplicationDocumentsDirectory();
            }
-           debugPrint(
-               'download url = ${AppUrls.baseFileUrl}${''}');
+           print('path______${state.invoiceDetailsList.link?.split('/').last.split('.').first}');
 
            String filePath =
-               '${dir.path}/${''}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second})}';
-           debugPrint( " download    ${AppUrls.baseFileUrl}${'sample/660fb530182352848801307d/סטוק_טק_(TAVILI)__-_הסכם_שימוש_בשירות_-_.pdf'}");
+               '${dir.path}/${state.invoiceDetailsList.link?.split('/').last.split('.').first}_${DateTime.now().day}_${DateTime.now().month}_${DateTime.now().hour}_${DateTime.now().minute}${'.pdf'}';
+           debugPrint( " download    ${AppUrls.baseFileUrl}${state.invoiceDetailsList.link}");
 
            await Dio().download(
-               "${AppUrls.baseFileUrl}${'sample/660fb530182352848801307d/סטוק_טק_(TAVILI)__-_הסכם_שימוש_בשירות_-_.pdf'}",
+               "${AppUrls.baseFileUrl}${state.invoiceDetailsList.link}",
                filePath, onReceiveProgress: (received, total) {
              debugPrint('rec:${received},total:$total');
              int progress = (received * 100) ~/ total;

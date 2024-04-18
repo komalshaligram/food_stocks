@@ -81,7 +81,6 @@ dependencies:
   liquid_pull_to_refresh: ^3.0.1
   flutter_staggered_animations: ^1.1.1
   getwidget: ^4.0.0
-  shorebird_code_push: ^1.1.3
   sms_autofill: ^2.3.0
   version_check: ^0.7.1
   url_launcher: ^6.2.4
@@ -126,7 +125,7 @@ flutter:
   assets:
     - assets/images/
     - assets/audio/
-    - shorebird.yaml
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

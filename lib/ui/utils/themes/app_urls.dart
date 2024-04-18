@@ -86,4 +86,5 @@ class AppUrls {
   static const String getAgentUrl = '/v1/settings/Agent';
   static const String termsConditionUrl = '/v1/clients/getTermsAndConditionForm';
   static const String duplicateOrderUrl = '/v1/cart/duplicateOrder';
+  static const String clientInvoicesUrl = '/v1/clients/clientInvoices';
 }
