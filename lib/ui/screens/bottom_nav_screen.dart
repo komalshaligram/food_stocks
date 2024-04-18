@@ -125,7 +125,6 @@ class BottomNavScreenWidget extends StatelessWidget {
                   animationCurve: Curves.decelerate,
                   animationDuration: Duration(milliseconds: 600),
                   onTap: (index) async {
-
                     SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                         prefs: await SharedPreferences.getInstance());
                     if(preferencesHelper.getGuestUser()){

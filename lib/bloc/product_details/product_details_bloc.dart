@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/bloc/basket/basket_bloc.dart';
 import 'package:food_stock/data/model/req_model/remove_issue/remove_issue_req_model.dart';
+import 'package:food_stock/routes/app_routes.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
@@ -279,8 +280,11 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           debugPrint('duplicateOrder response = ${response}');
 
           if (response['status'] == 200) {
-          //  add(ProductDetailsEvent.getAllCartEvent(context: event.context));
-           Navigator.pop(event.dialogContext);
+            Navigator.pop(event.dialogContext);
+           // add(ProductDetailsEvent.getAllCartEvent(context: event.context));
+            Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name,
+                arguments: {AppStrings.isBasketScreenString: 'true'});
+
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -289,6 +293,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
                         .toLocalization(),
                     event.context),
                 type: SnackBarType.SUCCESS);
+            emit(state.copyWith(isCartCount: false));
           } else {
             emit(state.copyWith(isDuplicateOrderProcess: false));
             CustomSnackBar.showSnackBar(
@@ -342,7 +347,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
 
             await preferencesHelper.setCartCount(
                 count: stockList.length);
-
+            emit(state.copyWith(isCartCount: true));
           } else {
             emit(state.copyWith( isDuplicateOrderProcess: false));
             CustomSnackBar.showSnackBar(
