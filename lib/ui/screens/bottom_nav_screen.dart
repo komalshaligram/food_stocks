@@ -58,7 +58,6 @@ class BottomNavScreenWidget extends StatelessWidget {
       listener: (context, state) {
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
-
         builder: (context, state) {
           return WillPopScope(
             onWillPop: () {
@@ -125,7 +124,6 @@ class BottomNavScreenWidget extends StatelessWidget {
                   animationCurve: Curves.decelerate,
                   animationDuration: Duration(milliseconds: 600),
                   onTap: (index) async {
-
                     SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                         prefs: await SharedPreferences.getInstance());
                     if(preferencesHelper.getGuestUser()){

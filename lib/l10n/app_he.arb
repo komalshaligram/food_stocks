@@ -396,7 +396,7 @@
   "application_version":"גרסת אפליקציה",
   "no_product" : "המוצר לא נמצא",
   "duplicate_order" : "שכפל הזמנה",
- "you_want_to_duplicate_this_order" : "האם אתה בטוח שברצונך לשכפל את ההזמנה?",
+ "you_want_to_duplicate_this_order" : "שים לב, מוצרים שלא קיימים יותר או שחסרים במלאי לא יוספו להזמנה החדשה. האם אתה בטוח שברצונך לשכפל את ההזמנה ?",
  "wallet_refund" : "זיכוי ארנק",
  "original_was" : "במקור היה",
  "was_not_in_stock" : "לא היה במלאי",
@@ -451,12 +451,14 @@
   "rivchit_invoice_number" : "מס' חשבונית",
   "payment_invoice" : "חשבונית תשלום",
   "refund_invoice" : "חשבונית זיכוי",
+  "refund_invoice" : "חשבונית זיכוי",
   "payed" : "שולם",
   "pending" :"ממתין",
   "invoice_date" : "תאריך חשבונית",
    "invoice_type" : "סוג חשבונית",
    "invoice_status" : "סטטוס חשבונית",
-   "invoice_amount" : "סכום חשבונית"
+   "invoice_amount" : "סכום חשבונית",
+   "needtoapprovepreviousorder" : "need to approve previous order"
 
 
 
