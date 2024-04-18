@@ -24,7 +24,6 @@ class ProductDetailsState with _$ProductDetailsState {
     required List<ProductStockModel> productStockList,
    required int productStockUpdateIndex,
     required bool isDuplicateOrderProcess,
-    required bool isAnimation,
   }) = _ProductDetailsState;
 
   factory ProductDetailsState.initial()=>  ProductDetailsState(
@@ -49,7 +48,5 @@ class ProductDetailsState with _$ProductDetailsState {
      productStockList: [],
     productStockUpdateIndex: 0,
     isDuplicateOrderProcess: false,
-    isAnimation: false
-
   );
 }

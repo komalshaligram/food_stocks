@@ -48,7 +48,6 @@ class BasketScreen extends StatelessWidget {
 
 class BasketScreenWidget extends StatelessWidget {
   BasketScreenWidget({Key? key}) : super(key: key);
-  bool isRemoveProcess = false;
 
   @override
   Widget build(BuildContext context) {
@@ -328,7 +327,6 @@ class BasketScreenWidget extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: GestureDetector(
                 onTap: () {
-                  isRemoveProcess = true;
                   deleteDialog(
                     context: context,
                     cartProductId: state.basketProductList[index].cartProductId,
@@ -767,6 +765,7 @@ class BasketScreenWidget extends StatelessWidget {
       enableDrag: true,
       builder: (context1) {
         return SafeArea(
+          bottom: false,
           child: DraggableScrollableSheet(
             expand: true,
             maxChildSize: 1 -
@@ -833,38 +832,44 @@ class BasketScreenWidget extends StatelessWidget {
                                     showDialog(
                                       context: context,
                                       builder: (dialogContext) {
-                                        return Stack(
-                                          children: [
-                                            Container(
-                                              height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
-                                              width: getScreenWidth(context),
-                                              child: GestureDetector(
-                                                onVerticalDragStart: (dragDetails) {
-                                                  debugPrint('onVerticalDragStart');
-                                                },
-                                                onVerticalDragUpdate: (dragDetails) {
-                                                  debugPrint('onVerticalDragUpdate');
-                                                },
-                                                onVerticalDragEnd: (endDetails) {
-                                                  debugPrint('onVerticalDragEnd');
-                                                  Navigator.pop(dialogContext);
-                                                },
-                                                child: PhotoView(
-                                                  imageProvider: NetworkImage(
-                                                    '${AppUrls.baseFileUrl}${state.productDetails[state.productImageIndex].mainImage}',
+                                        return SafeArea(
+                                          bottom: false,
+                                          child: Stack(
+                                            children: [
+                                              Container(
+                                                height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                                width: getScreenWidth(context),
+                                                child: GestureDetector(
+                                                  onVerticalDragStart: (dragDetails) {
+                                                    debugPrint('onVerticalDragStart');
+                                                  },
+                                                  onVerticalDragUpdate: (dragDetails) {
+                                                    debugPrint('onVerticalDragUpdate');
+                                                  },
+                                                  onVerticalDragEnd: (endDetails) {
+                                                    debugPrint('onVerticalDragEnd');
+                                                    Navigator.pop(dialogContext);
+                                                  },
+                                                  child: PhotoView(
+                                                    imageProvider: NetworkImage(
+                                                      '${AppUrls.baseFileUrl}${state.productDetails[state.productImageIndex].mainImage}',
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
 
-                                            GestureDetector(
-                                                onTap: (){
-                                                  Navigator.pop(dialogContext);
-                                                },
-                                                child: Icon(Icons.close,
-                                                  color: Colors.white,
-                                                )),
-                                          ],
+                                              GestureDetector(
+                                                  onTap: (){
+                                                    Navigator.pop(dialogContext);
+                                                  },
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(top:10.0),
+                                                    child: Icon(Icons.close,
+                                                      color: Colors.white,
+                                                    ),
+                                                  )),
+                                            ],
+                                          ),
                                         );
                                       },);
                                   },

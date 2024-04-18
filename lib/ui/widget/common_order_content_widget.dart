@@ -16,6 +16,7 @@ class CommonOrderContentWidget extends StatelessWidget {
   final Color borderCoder;
   final Color backGroundColor;
   final int maxLine;
+  final int titleMaxLine;
 
 
   const CommonOrderContentWidget(
@@ -31,6 +32,7 @@ class CommonOrderContentWidget extends StatelessWidget {
       required  this.backGroundColor,
       required  this.borderCoder,
          this.maxLine = 1,
+        this.titleMaxLine = 1
       });
 
   @override
@@ -58,7 +60,7 @@ class CommonOrderContentWidget extends StatelessWidget {
                     size: AppConstants.font_10,
                     color: titleColor,
                     fontWeight: FontWeight.normal),
-                maxLines: 1,
+                maxLines: titleMaxLine,
                 overflow: TextOverflow.ellipsis,
               ),
               5.height,

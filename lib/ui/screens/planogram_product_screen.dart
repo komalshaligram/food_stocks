@@ -508,7 +508,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         if (scanResult != '-1') {
                           // -1 result for cancel scanning
                           debugPrint('result = $scanResult');
-                          print("tap 5");
+                          debugPrint("tap 5");
                           if(!state.isGuestUser){
                             showProductDetails(
                                 context: context,
@@ -590,6 +590,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       enableDrag: true,
       builder: (context1) {
         return SafeArea(
+          bottom: false,
           child: DraggableScrollableSheet(
             expand: true,
             maxChildSize: 1 -
@@ -655,38 +656,44 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                 showDialog(
                                   context: context,
                                   builder: (dialogContext) {
-                                    return Stack(
-                                      children: [
-                                        Container(
-                                          height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
-                                          width: getScreenWidth(context),
-                                          child: GestureDetector(
-                                            onVerticalDragStart: (dragDetails) {
-                                                debugPrint('onVerticalDragStart');
-                                            },
-                                            onVerticalDragUpdate: (dragDetails) {
-                                                debugPrint('onVerticalDragUpdate');
-                                            },
-                                            onVerticalDragEnd: (endDetails) {
-                                               debugPrint('onVerticalDragEnd');
-                                              Navigator.pop(dialogContext);
-                                            },
-                                            child: PhotoView(
-                                              imageProvider: NetworkImage(
-                                                '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                    return SafeArea(
+                                      bottom: false,
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                            width: getScreenWidth(context),
+                                            child: GestureDetector(
+                                              onVerticalDragStart: (dragDetails) {
+                                                  debugPrint('onVerticalDragStart');
+                                              },
+                                              onVerticalDragUpdate: (dragDetails) {
+                                                  debugPrint('onVerticalDragUpdate');
+                                              },
+                                              onVerticalDragEnd: (endDetails) {
+                                                 debugPrint('onVerticalDragEnd');
+                                                Navigator.pop(dialogContext);
+                                              },
+                                              child: PhotoView(
+                                                imageProvider: NetworkImage(
+                                                  '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
 
-                                        GestureDetector(
-                                            onTap: (){
-                                              Navigator.pop(dialogContext);
-                                            },
-                                            child: Icon(Icons.close,
-                                              color: Colors.white,
-                                            )),
-                                      ],
+                                          GestureDetector(
+                                              onTap: (){
+                                                Navigator.pop(dialogContext);
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top:10.0),
+                                                child: Icon(Icons.close,
+                                                  color: Colors.white,
+                                                ),
+                                              )),
+                                        ],
+                                      ),
                                     );
                                   },);
                               },

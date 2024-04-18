@@ -146,6 +146,7 @@
 "february": "פברואר",
 "march": "מרץ",
 "april": "אַפּרִיל",
+"may": "מאי",
 "june": "יוני",
 "july": "יולי",
 "august": "אוגוסט",
@@ -372,6 +373,7 @@
   "sub_categories": "תתי קטגויות",
   "per_unit": "ליחידה",
   "delivery_date_value":"משלוח עד 3 ימי עסקים",
+  "order":"הזמנה",
   "monthly_credit":"זיכוי חודשי",
    "refund":"החזר תשלום",
    "sub_total": "מחיר לפני מע\"מ",
@@ -444,5 +446,20 @@
   "guarantee1_sign" :"חתימה ערב 1",
   "guarantee2_sign" :"חתימה ערב 2",
   "upload_document" :"אנא העלה את המסמך",
-  "connection_error" :"בעיית התחברות"
+  "connection_error" :"בעיית התחברות",
+  "my_invoices" : "החשבוניות שלי",
+  "rivchit_invoice_number" : "מס' חשבונית",
+  "payment_invoice" : "חשבונית תשלום",
+  "refund_invoice" : "חשבונית זיכוי",
+  "payed" : "שולם",
+  "pending" :"ממתין",
+  "invoice_date" : "Invoice date",
+   "invoice_type" : "Invoice type",
+   "invoice_statue" : "Invoice statue",
+   "invoice_amount" : "Invoice amount"
+
+
+
+
+
 }

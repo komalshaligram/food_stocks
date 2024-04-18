@@ -114,12 +114,12 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
             ),
           );
           debugPrint('fileUpload url = ${AppUrls.baseUrl}${AppUrls.termsConditionUrl}');
-          print('termCondition response ____${res}');
+          debugPrint('termCondition response ____${res}');
 
           TermsConditionResModel response =
           TermsConditionResModel.fromJson(res);
           if(response.status == 200){
-            print('success');
+
             emit(state.copyWith(isApiShimmering: false,));
             Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name,
                 arguments: {

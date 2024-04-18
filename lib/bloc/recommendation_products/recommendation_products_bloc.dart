@@ -742,7 +742,7 @@ class RecommendationProductsBloc
       else if (event is _SetCartCountEvent) {
 
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
-        await preferences.setIsAnimation(isAnimation: true);
+        
         debugPrint('cart count reccom= ${preferences.getCartCount()}');
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));

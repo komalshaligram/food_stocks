@@ -112,7 +112,7 @@ class PushNotificationService {
     );
     String? fcmToken = '';
 
-    fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getAPNSToken();
+    fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getToken();
     debugPrint("FCM Token: ${fcmToken}");
     SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -145,7 +145,7 @@ class PushNotificationService {
               androidIcon: android?.smallIcon ?? '',
               data: data,
               isNavigate: false,
-              showNotification: true,
+              showNotification: false,
               isAppOpen: true);
         }
 
@@ -191,6 +191,8 @@ class PushNotificationService {
       await file.writeAsBytes(imageByte.toList());
 
       debugPrint('imageBytes:$imageByte');
+    }else{
+      fileName = null;
     }
     debugPrint('subPage___${subPage}');
     debugPrint('mainPage___${mainPage}');
@@ -200,7 +202,7 @@ class PushNotificationService {
 
     if (showNotification) {
       debugPrint('fileName_____${fileName}');
-      flutterLocalNotificationsPlugin.show(
+     await flutterLocalNotificationsPlugin.show(
         notiId,
         title,
         body,

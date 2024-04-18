@@ -70,6 +70,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
             final res = await DioClient(event.context)
                 .post(AppUrls.loginOTPUrl, data: reqMap);
             debugPrint('otp res = $res');
+
             LoginOtpResModel response = LoginOtpResModel.fromJson(res);
             if (response.status == 200) {
               _periodicOtpTimerSubscription.cancel();

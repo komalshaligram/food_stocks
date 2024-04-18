@@ -424,9 +424,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                       AppStrings
                                           .searchResultString]));
                                 }
-                              } else if (state
-                                  .searchList[index].searchType ==
-                                  SearchTypes.subCategory) {
+                              } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
                                 dynamic searchResult =
                                 await Navigator.pushNamed(
                                     context,
@@ -444,8 +442,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                       state.searchList
                                     });
                                 if (searchResult != null) {
-                                  bloc.add(ReorderEvent
-                                      .updateGlobalSearchEvent(
+                                  bloc.add(ReorderEvent.updateGlobalSearchEvent(
                                       search: searchResult[
                                       AppStrings.searchString],
                                       searchList: searchResult[
@@ -716,6 +713,7 @@ class ReorderScreenWidget extends StatelessWidget {
       enableDrag: true,
       builder: (context1) {
         return SafeArea(
+          bottom: false,
           child: DraggableScrollableSheet(
             expand: true,
             maxChildSize: 1 -
@@ -788,13 +786,13 @@ class ReorderScreenWidget extends StatelessWidget {
                                           width: getScreenWidth(context),
                                           child: GestureDetector(
                                             onVerticalDragStart: (dragDetails) {
-                                              print('onVerticalDragStart');
+                                              debugPrint('onVerticalDragStart');
                                             },
                                             onVerticalDragUpdate: (dragDetails) {
-                                              print('onVerticalDragUpdate');
+                                              debugPrint('onVerticalDragUpdate');
                                             },
                                             onVerticalDragEnd: (endDetails) {
-                                              print('onVerticalDragEnd');
+                                              debugPrint('onVerticalDragEnd');
                                               Navigator.pop(dialogContext);
                                             },
                                             child: PhotoView(
@@ -809,8 +807,11 @@ class ReorderScreenWidget extends StatelessWidget {
                                             onTap: (){
                                               Navigator.pop(dialogContext);
                                             },
-                                            child: Icon(Icons.close,
-                                              color: Colors.white,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top:10.0),
+                                              child: Icon(Icons.close,
+                                                color: Colors.white,
+                                              ),
                                             )),
                                       ],
                                     );
@@ -857,8 +858,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                   ?.text ??
                                   '',
                               productPrice: state
-                                  .productStockList[state.productListIndex][
-                              state.productStockUpdateIndex]
+                                  .productStockList[state.productListIndex][state.productStockUpdateIndex]
                                   .totalPrice *
                                   state
                                       .productStockList[state.productListIndex][
@@ -916,7 +916,6 @@ class ReorderScreenWidget extends StatelessWidget {
                 ),
               );
             },
-
           ),
         );
       },

@@ -65,9 +65,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
           }
-          if (int.parse(imageSize.split(' ').first) <=
-                  AppConstants.fileSizeCap &&
-              imageSize.split(' ').last == 'KB') {
             try {
               emit(state.copyWith(isFileUploading: true,isUploadingProcess: true));
               debugPrint("image1 = ${croppedImage?.path ?? pickedFile.path}");
@@ -107,11 +104,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             } catch (e) {
               emit(state.copyWith(isFileUploading: false,isUploadingProcess: false));
             }
-          } else {
-            emit(state.copyWith(
-                isFileSizeExceeds: true, isFileUploading: false,isUploadingProcess: false));
-            emit(state.copyWith(isFileSizeExceeds: false));
-          }
         }
       }   else if (event is _DeleteAccountEvent) {
         try {

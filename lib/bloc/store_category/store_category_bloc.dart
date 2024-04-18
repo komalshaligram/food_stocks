@@ -1019,7 +1019,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
-        await preferences.setIsAnimation(isAnimation: true);
+        
         debugPrint('cart count store cate= ${preferences.getCartCount()}');
       }
       else if (event is _GlobalSearchEvent) {
@@ -1219,7 +1219,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             );
 
 
-          print('getAllProduct_____$res');
+          debugPrint('getAllProduct_____$res');
           GetPlanogramProductModel response = GetPlanogramProductModel.fromJson(res);
           debugPrint('getSubCategoriesProduct response_____${response}');
           debugPrint('getSubCategoriesProduct response count_____${response.metaData?.totalFilteredCount}');

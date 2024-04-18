@@ -28,7 +28,7 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     debugPrint("Handling a background message:${message.messageId}");
     debugPrint("Handling a background message:${message.data.toString()}");
     var data = json.decode(message.data['data'].toString());
-    bool isAlreadyShow =  false;
+
     FlutterAppBadger.updateBadgeCount(PushNotificationService().notificationCount+1);
     if(data!=null){
       debugPrint('noti from  main');
@@ -37,10 +37,9 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           androidIcon:message.notification?.android?.smallIcon,
           data: data,
           isNavigate: true,
-          showNotification: false,
+          showNotification: true,
           isAppOpen: true
       );
-      isAlreadyShow = true;
   }
 }
 
@@ -48,12 +47,10 @@ void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-
     await PushNotificationService().setupInteractedMessage();
-  //  if(Platform.isAndroid){
+    if(Platform.isAndroid){
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
- //   }
-
+    }
     //await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -66,7 +63,6 @@ void main() async {
         }
       });
     }
-
     runApp(MyApp());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }

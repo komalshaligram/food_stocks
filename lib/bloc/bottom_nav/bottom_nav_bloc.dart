@@ -32,7 +32,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
      if(state.cartCount < preferencesHelper.getCartCount()){
        emit(state.copyWith(isAnimation: true));
      }
-     print('isAnimation____${state.isAnimation}');
+     debugPrint('isAnimation____${state.isAnimation}');
      emit(state.copyWith(cartCount: preferencesHelper.getCartCount()));
         if(state.isAnimation){
           await Future.delayed(const Duration(milliseconds: 1000));
