@@ -454,6 +454,6 @@
     "pending" :"Pending",
     "invoice_date" : "Invoice date",
     "invoice_type" : "Invoice type",
-    "invoice_statue" : "Invoice statue",
+    "invoice_status" : "Invoice status",
     "invoice_amount" : "Invoice amount"
 }

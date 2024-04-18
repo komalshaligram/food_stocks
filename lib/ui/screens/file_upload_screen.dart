@@ -57,14 +57,7 @@ class FileUploadScreenWidget extends StatelessWidget {
     FileUploadBloc bloc = context.read<FileUploadBloc>();
     return BlocListener<FileUploadBloc, FileUploadState>(
       listener: (context, state) {
-        if (state.isFileSizeExceeds) {
-          CustomSnackBar.showSnackBar(
-              context: context,
-              title:
-                  '${AppLocalizations.of(context)!.file_size_must_be_less_then}',
-              type: SnackBarType.FAILURE);
-        }
-        ;
+
       },
       child: BlocBuilder<FileUploadBloc, FileUploadState>(
         builder: (context, state) {
@@ -149,10 +142,15 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                   const NeverScrollableScrollPhysics(),
                                               itemBuilder: (context, index) {
                                                 return buildFormsAndFilesUploadFields(
+                                                  isForm: state
+                                                      .formsAndFilesList[
+                                                  index]
+                                                      .isForm ?? false,
                                                   updateState : state.isUpdate,
                                                     directionality : state.language,
                                                   fileIndex: index,
                                                   context: context,
+
                                                   fileName: state
                                                           .formsAndFilesList[
                                                               index]
@@ -277,6 +275,7 @@ class FileUploadScreenWidget extends StatelessWidget {
     required int uploadIndex,
     required String localUrl,
     required bool isRemoveProcess, required String directionality, required bool updateState,
+    required bool isForm,
   }) {
     return Container(
       margin: EdgeInsets.only(top: AppConstants.padding_10),
@@ -357,15 +356,18 @@ class FileUploadScreenWidget extends StatelessWidget {
                           type: SnackBarType.FAILURE);
                       return;
                     }
-                    if(fileName == "Client form"){
-                      Navigator.pushNamed(context, RouteDefine.previewScreen.name,
-                      arguments: {
-                        AppStrings.privacyPolicyPdfString : url ,
-                        AppStrings.clientFormString : fileName ,
+                    if(isForm){
+                      if(url.isNotEmpty){
+                        Navigator.pushNamed(context, RouteDefine.previewScreen.name,
+                            arguments: {
+                              AppStrings.privacyPolicyPdfString : url,
+                              AppStrings.clientFormString : fileName,
+                            }
+                        );
                       }
-                      );
+
                     }
-                    if(!updateState && fileName != "Client form"){
+                    if(!updateState){
                       showModalBottomSheet(
                           context: context,
                           builder: (context1) => Container(

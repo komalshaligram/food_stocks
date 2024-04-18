@@ -11,6 +11,7 @@ class CommonOrderContentWidget extends StatelessWidget {
   final Color valueColor;
   final int? flexValue;
   final double valueTextSize;
+  final double titleTextSize;
   final FontWeight valueTextWeight;
   final double columnPadding;
   final Color borderCoder;
@@ -32,7 +33,8 @@ class CommonOrderContentWidget extends StatelessWidget {
       required  this.backGroundColor,
       required  this.borderCoder,
          this.maxLine = 1,
-        this.titleMaxLine = 1
+        this.titleMaxLine = 1,
+        this.titleTextSize = 10
       });
 
   @override
@@ -57,7 +59,7 @@ class CommonOrderContentWidget extends StatelessWidget {
               Text(
                 title,
                 style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_10,
+                    size: titleTextSize,
                     color: titleColor,
                     fontWeight: FontWeight.normal),
                 maxLines: titleMaxLine,

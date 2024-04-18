@@ -128,7 +128,9 @@ class RecommendationProductsBloc
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
-      } else if (event is _RefreshListEvent) {
+      }
+
+      else if (event is _RefreshListEvent) {
         emit(state.copyWith(
             pageNum: 0,
             recommendationProductsList: [],
