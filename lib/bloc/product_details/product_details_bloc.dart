@@ -289,6 +289,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
                         .toLocalization(),
                     event.context),
                 type: SnackBarType.SUCCESS);
+            emit(state.copyWith(isCartCount: false));
           } else {
             emit(state.copyWith(isDuplicateOrderProcess: false));
             CustomSnackBar.showSnackBar(
@@ -342,7 +343,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
 
             await preferencesHelper.setCartCount(
                 count: stockList.length);
-
+            emit(state.copyWith(isCartCount: true));
           } else {
             emit(state.copyWith( isDuplicateOrderProcess: false));
             CustomSnackBar.showSnackBar(
