@@ -12,11 +12,6 @@ import 'package:food_stock/ui/screens/my_app_screen.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shorebird_code_push/shorebird_code_push.dart';
-
-import 'package:eraser/eraser.dart';
-
-final shorebirdCodePush = ShorebirdCodePush();
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -29,12 +24,11 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     debugPrint("Handling in main${message.toString()}");
     debugPrint("Handling a background message:${message.messageId}");
     debugPrint("Handling a background message:${message.data.toString()}");
-    debugPrint("Handling a background message:${message.collapseKey}");
     var data = json.decode(message.data['data'].toString());
 
     FlutterAppBadger.updateBadgeCount(PushNotificationService().notificationCount+1);
-
     if(data!=null){
+      debugPrint('noti from  main');
       PushNotificationService().showNotification(
           notiId: message.notification.hashCode,
           androidIcon:message.notification?.android?.smallIcon,
@@ -43,7 +37,6 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           showNotification: true,
           isAppOpen: true
       );
-
   }
 }
 
@@ -51,12 +44,10 @@ void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-
     await PushNotificationService().setupInteractedMessage();
     if(Platform.isAndroid){
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     }
-
     //await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -69,7 +60,6 @@ void main() async {
         }
       });
     }
-
     runApp(MyApp());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }

@@ -127,9 +127,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
                   AppStrings.termsConditionParamString :termsConditionReqModel
                 }
             );
-
           }
-
         } on ServerException {}
   /*      termsConditionReqModel = TermsConditionReqModel(
             id: preferencesHelper.getUserId(),
