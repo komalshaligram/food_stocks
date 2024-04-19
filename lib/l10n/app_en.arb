@@ -395,7 +395,7 @@
   "application_version":"Application version",
   "no_product" : "המוצר לא קיים",
   "duplicate_order" : "Duplicate Order",
- "you_want_to_duplicate_this_order" : "האם אתה בטוח שברצונך לשכפל את ההזמנה?",
+ "you_want_to_duplicate_this_order" : "Please note, products that no longer exist or are out of stock will not be added to the new order. Are you sure you want to duplicate the order?",
   "wallet_refund" : "Wallet refund",
   "original_was" : "Original was",
   "was_not_in_stock" : "Was not in stock",
@@ -455,5 +455,6 @@
     "invoice_date" : "Invoice date",
     "invoice_type" : "Invoice type",
     "invoice_status" : "Invoice status",
-    "invoice_amount" : "Invoice amount"
+    "invoice_amount" : "Invoice amount",
+    "needtoapprovepreviousorder" : "need to approve previous order"
 }

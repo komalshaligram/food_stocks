@@ -1,15 +1,12 @@
 import 'package:bloc/bloc.dart';
-
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import '../../ui/utils/themes/app_strings.dart';
 
 part 'bottom_nav_event.dart';
-
 part 'bottom_nav_state.dart';
-
 part 'bottom_nav_bloc.freezed.dart';
 
 class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
@@ -17,17 +14,26 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
     on<BottomNavEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
+
       if (event is _ChangePageEvent) {
         bool isGuestUser = preferencesHelper.getGuestUser();
         debugPrint("isGuestUser:$isGuestUser");
 
         if(!isGuestUser){
-          emit(state.copyWith(index: event.index));
+          if(state.arg != '' && preferencesHelper.getAppLanguage() == AppStrings.hebrewString){
+            emit(state.copyWith(index: state.index));
+          }
+          else{
+            emit(state.copyWith(index: event.index));
+          }
         }
         else{
           emit(state.copyWith(isGuestUser:isGuestUser ,index: event.index));
         }
-      } else if (event is _UpdateCartCountEvent) {
+        emit(state.copyWith(arg: ''));
+
+      }
+      else if (event is _UpdateCartCountEvent) {
   //   emit(state.copyWith(isAnimation: false));
      if(state.cartCount < preferencesHelper.getCartCount()){
        emit(state.copyWith(isAnimation: true));
@@ -44,11 +50,12 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       }
 
       else if(event is _NavigateToStoreScreenEvent){
-        if(event.basketScreen != ''){
-          emit(state.copyWith(index: 2));
+
+        if(event.basketScreen == 'true'){
+          emit(state.copyWith(index: 2 , arg : event.basketScreen));
         }
         else if(event.storeScreen != ''){
-          emit(state.copyWith(index: 1));
+          emit(state.copyWith(index: 1,  arg : event.storeScreen));
         }
       }
     });

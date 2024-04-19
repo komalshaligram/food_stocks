@@ -10,6 +10,7 @@ class BottomNavState with _$BottomNavState {
     required bool duringCelebration,
     required String isStoreScreen,
     required bool isGuestUser,
+    required String arg,
   }) = _BottomNavState;
 
   factory BottomNavState.initial() =>  BottomNavState(
@@ -19,7 +20,8 @@ class BottomNavState with _$BottomNavState {
         pushNotificationPath: '',
         duringCelebration: false,
     isStoreScreen: '',
-    isGuestUser: false
+    isGuestUser: false,
+    arg: ''
 
       );
 }
