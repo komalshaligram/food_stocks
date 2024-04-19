@@ -27,6 +27,7 @@ import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 
+import '../widget/common_dialog_with_one_button.dart';
 import '../widget/custom_dialog.dart';
 
 
@@ -57,6 +58,24 @@ class BasketScreenWidget extends StatelessWidget {
         if(state.isAnimation){
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.updateCartCountEvent());
+        }
+        if(state.isOrderPending){
+          showDialog(
+            context:context,
+            builder: (context1) {
+              return CustomOneButtonDialog(
+                title: AppLocalizations.of(context)!.order_sign_dialog,
+                  directionality: state.language,
+                positiveOnTap: () {
+                  Navigator.pop(context1);
+                  Navigator.pushNamed(context, RouteDefine.orderScreen.name);
+                },
+                positiveTitle: AppLocalizations.of(context)!.show_order,
+                width: 120,
+              );
+            },).then((value) {
+            context.read<BasketBloc>().add(BasketEvent.refreshEvent());
+          });
         }
       },
       child: BlocBuilder<BasketBloc, BasketState>(

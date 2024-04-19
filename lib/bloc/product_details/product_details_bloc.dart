@@ -280,7 +280,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           debugPrint('duplicateOrder response = ${response}');
 
           if (response['status'] == 200) {
-            add(ProductDetailsEvent.getAllCartEvent(context: event.context));
+        //    add(ProductDetailsEvent.getAllCartEvent(context: event.context));
            Navigator.pop(event.dialogContext);
            /* CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -290,11 +290,11 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
                         .toLocalization(),
                     event.context),
                 type: SnackBarType.SUCCESS);*/
-            emit(state.copyWith(isCartCount: false));
+          //  emit(state.copyWith(isCartCount: false));
             Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name,
                 arguments: {AppStrings.isBasketScreenString: 'true'}
             );
-
+           emit(state.copyWith(isDuplicateOrderProcess: false));
           } else {
             emit(state.copyWith(isDuplicateOrderProcess: false));
             CustomSnackBar.showSnackBar(
