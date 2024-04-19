@@ -7,12 +7,14 @@ class ShipmentVerificationState with _$ShipmentVerificationState{
     required bool isSignaturePadActive,
      required bool isLoading,
      required bool isDelete,
+     required TextEditingController surfacesController,
 }) = _ShipmentVerificationState;
 
   factory ShipmentVerificationState.initial()=>  ShipmentVerificationState(
  isSignaturePadActive: true,
     isLoading: false,
-    isDelete: false
+    isDelete: false,
+    surfacesController: TextEditingController()
 
   );
 

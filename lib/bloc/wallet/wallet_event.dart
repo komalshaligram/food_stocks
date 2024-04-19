@@ -42,4 +42,6 @@ class WalletEvent with _$WalletEvent {
     required BuildContext context,
   }) = _getOrderCountEvent;
 
+
+
 }

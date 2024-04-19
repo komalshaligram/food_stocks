@@ -20,6 +20,7 @@ import '../utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widget/balance_indicator.dart';
 import '../widget/circular_button_widget.dart';
+import '../widget/common_dialog_with_one_button.dart';
 import '../widget/dashboard_stats_widget.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
 
@@ -97,53 +98,16 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
           showDialog(
             context:context,
             builder: (context1) {
-              return AlertDialog(
-                title:  RichText(
-                  text: TextSpan(
-                    text: '${AppLocalizations.of(context)!.wallet_information_sent_to_your_email}' ':',
-                    style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_14,
-                      color: AppColors.blackColor,),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text:
-                          '${state.userEmail}',
-                        style: AppStyles.rkRegularTextStyle(
-                            color: AppColors.blackColor, size: AppConstants.smallFont,
-                            fontWeight: FontWeight.w600
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                actions: [
-                Align(
-                  alignment: Alignment.center,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context1),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                      alignment: Alignment.center,
-                      width: 80,
-                      decoration: BoxDecoration(
-                          gradient: AppColors.appMainGradientColor,
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: Text(
-                        AppLocalizations.of(context)!.close,
-                        style: AppStyles.rkRegularTextStyle(
-                            color: AppColors.whiteColor,
-                            size: AppConstants.font_14),
-                      ),
-                    ),
-                  ),
-                )
-                ],
+              return CustomOneButtonDialog(
+                title: state.userEmail,
+                directionality: state.language,
+                width: 80,
+                positiveTitle: AppLocalizations.of(context)!.close,
+                positiveOnTap:()=>Navigator.pop(context1) ,
+                Subtitle:AppLocalizations.of(context)!.wallet_information_sent_to_your_email ,
               );
             },).then((value) {
-
             context.read<WalletBloc>().add(WalletEvent.checkLanguage());
-
           });
         }
 
@@ -166,6 +130,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                 bloc.add(WalletEvent.getTotalExpenseEvent(
                     year: state.year, context: context));
                 bloc.add(WalletEvent.getDropDownElementEvent(year: state.year));
+                bloc.add(WalletEvent.checkLanguage());
                 minDate = DateTime(state.yearList.last, 1, 1);
               },
               child: AnimationLimiter(

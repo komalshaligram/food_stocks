@@ -458,7 +458,13 @@
    "invoice_type" : "סוג חשבונית",
    "invoice_status" : "סטטוס חשבונית",
    "invoice_amount" : "סכום חשבונית",
-   "needtoapprovepreviousorder" : "need to approve previous order"
+   "needtoapprovepreviousorder" : "need to approve previous order",
+   "order_sign_dialog": "קיימות הזמנות שלא חתמת עליהם, אנא עבור על רשימת ההזמנות ואשר שקיבלת אותם.",
+   "show_order":"הצג הזמנות",
+   "please_enter_surfaces":"אנא הזן כמה משטחים אתה מחזיר",
+   "pallets_return":"כמה משטחים אתה מחזיר ?"
+
+
 
 
 

@@ -110,6 +110,7 @@ class AppStrings {
   static const cityValString = 'cityVal';
   static const branchValString = 'branchVal';
   static const accountValString = 'accountVal';
+  static const surfaceValString = 'surfacesVal';
 
 
 
