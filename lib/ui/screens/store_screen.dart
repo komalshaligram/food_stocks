@@ -1785,6 +1785,7 @@ class StoreScreenWidget extends StatelessWidget {
       enableDrag: true,
       builder: (context1) {
         return SafeArea(
+          bottom: false,
           child: DraggableScrollableSheet(
             expand: true,
             maxChildSize: 1 -
@@ -1878,8 +1879,11 @@ class StoreScreenWidget extends StatelessWidget {
                                             onTap: (){
                                               Navigator.pop(dialogContext);
                                             },
-                                            child: Icon(Icons.close,
-                                              color: Colors.white,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top:10.0),
+                                              child: Icon(Icons.close,
+                                                color: Colors.white,
+                                              ),
                                             )),
                                       ],
                                     );

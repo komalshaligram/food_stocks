@@ -112,7 +112,7 @@ class PushNotificationService {
     );
     String? fcmToken = '';
 
-    fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getAPNSToken();
+    fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getToken();
     debugPrint("FCM Token: ${fcmToken}");
     SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -124,7 +124,7 @@ class PushNotificationService {
       onDidReceiveNotificationResponse: (NotificationResponse details) {
         debugPrint("__________details______:${details}");
         FlutterAppBadger.removeBadge();
-            manageNavigation(true, mainPage!, subPage!, id!);
+        //    manageNavigation(true, mainPage!, subPage!, id!);
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
@@ -145,9 +145,10 @@ class PushNotificationService {
               androidIcon: android?.smallIcon ?? '',
               data: data,
               isNavigate: false,
-              showNotification: true,
+              showNotification: false,
               isAppOpen: true);
         }
+
         FlutterAppBadger.removeBadge();
       }
     });
@@ -168,7 +169,6 @@ class PushNotificationService {
     mainPage = data['message']['mainPage'] ?? '';
     subPage = data['message']['subPage'] ?? '';
     id = data['message']['id'] ?? '';
-
     String imageUrl = data['message']['imageUrl'] ?? '';
     Uint8List? imageByte;
     if (imageUrl.isNotEmpty) {
@@ -191,6 +191,8 @@ class PushNotificationService {
       await file.writeAsBytes(imageByte.toList());
 
       debugPrint('imageBytes:$imageByte');
+    }else{
+      fileName = null;
     }
     debugPrint('subPage___${subPage}');
     debugPrint('mainPage___${mainPage}');
@@ -200,7 +202,7 @@ class PushNotificationService {
 
     if (showNotification) {
       debugPrint('fileName_____${fileName}');
-      flutterLocalNotificationsPlugin.show(
+     await flutterLocalNotificationsPlugin.show(
         notiId,
         title,
         body,
@@ -229,8 +231,8 @@ class PushNotificationService {
         // payload: message.data.toString(),
       );
     }
-    if (isNavigate) {
-      debugPrint('___________navigation');
+    if (isNavigate && showNotification) {
+      print('___________navigation');
       manageNavigation(isAppOpen, mainPage!, subPage!, id!);
     }
   }

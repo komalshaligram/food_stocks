@@ -1,19 +1,12 @@
-
-
 import 'package:bloc/bloc.dart';
-
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../ui/utils/themes/app_strings.dart';
 
-
 part 'bottom_nav_event.dart';
-
 part 'bottom_nav_state.dart';
-
 part 'bottom_nav_bloc.freezed.dart';
 
 class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
@@ -26,7 +19,6 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         bool isGuestUser = preferencesHelper.getGuestUser();
         debugPrint("isGuestUser:$isGuestUser");
 
-
         if(!isGuestUser){
           if(state.arg != '' && preferencesHelper.getAppLanguage() == AppStrings.hebrewString){
             emit(state.copyWith(index: state.index));
@@ -34,13 +26,11 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
           else{
             emit(state.copyWith(index: event.index));
           }
-
         }
         else{
           emit(state.copyWith(isGuestUser:isGuestUser ,index: event.index));
         }
         emit(state.copyWith(arg: ''));
-
 
       }
       else if (event is _UpdateCartCountEvent) {
@@ -67,8 +57,6 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         else if(event.storeScreen != ''){
           emit(state.copyWith(index: 1,  arg : event.storeScreen));
         }
-
-
       }
     });
   }

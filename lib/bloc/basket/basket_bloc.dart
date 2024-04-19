@@ -102,14 +102,15 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                      count: temp.isEmpty
                          ? preferencesHelper.getCartCount()
                          : temp.length);
-              if(cartCount != temp.length){
+            //  if(cartCount != temp.length){
                 emit(state.copyWith(isAnimation: true));
-              }
+             // }
               emit(state.copyWith(
                 vatPercentage: response.data?.vatPercentage ?? 0,
                 bottleQty: response.data?.cart?.first.bottleQuantities,
                 bottleTax: response.data?.bottleTax ?? 0,
                 basketProductList: temp,
+                isAnimation:false,
                 productStockList: productStockList,
                 totalPayment: response.data?.cart?.first.totalAmount ?? 0,
                 supplierCount: response.data?.cart?.first.suppliers ?? 1,
@@ -482,18 +483,14 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 add(BasketEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
               if ( (event.isBarcode )) {
-
                 productStockList[0][0] =  productStockList[0][0]
                     .copyWith(
                     quantity: _productQuantity,
                     productId: response.product?.first.id ?? '' ,
                     stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
                 );
-
                 emit(state.copyWith(productStockList: productStockList));
-
               }
-
 
               List<ProductSupplierModel> supplierList = [];
 
@@ -767,6 +764,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 basketProductList: list,
                 totalPayment: state.totalPayment - event.totalAmount,
                 isRemoveProcess: false,
+                isAnimation: false
               ));
             } else {
               Navigator.pop(event.dialogContext);
@@ -794,7 +792,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               Navigator.pop(event.context);
               emit(state.copyWith(
                   basketProductList: list,
-                  isRemoveProcess: false));
+                  isRemoveProcess: false,
+                isAnimation: false
+
+              ));
             } else {
               Navigator.pop(event.context);
               emit(state.copyWith(isRemoveProcess: false));
@@ -807,6 +808,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if (event is _SetCartCountEvent) {
           await preferencesHelper.setCartCount(
               count: event.isClearCart ? 0 : preferencesHelper.getCartCount() - 1);
+          emit(state.copyWith(isAnimation: true));
         }
         else if (event is _updateImageIndexEvent) {
           emit(state.copyWith(productImageIndex: event.index));

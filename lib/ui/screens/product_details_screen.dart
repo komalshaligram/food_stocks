@@ -100,10 +100,10 @@ class _ProductDetailsScreenWidgetState
         builder: (context, state) {
           return FocusDetector(
             onFocusGained: () {
-              if(state.isCartCount){
+       /*       if(state.isCartCount){
             BlocProvider.of<BottomNavBloc>(context)
                 .add(BottomNavEvent.updateCartCountEvent());
-          }
+          }*/
             },
             child: Scaffold(
               backgroundColor: AppColors.pageColor,

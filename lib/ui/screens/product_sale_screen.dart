@@ -234,6 +234,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
           child: BlocBuilder<ProductSaleBloc, ProductSaleState>(
             builder: (blocContext, state) {
               return SafeArea(
+                bottom: false,
                 child: DraggableScrollableSheet(
                   expand: true,
                   maxChildSize: 1 -
@@ -282,45 +283,51 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return Stack(
-                                      children: [
-                                        Container(
-                                          height: getScreenHeight(context) -
-                                              MediaQuery.of(context)
-                                                  .padding
-                                                  .top,
-                                          width: getScreenWidth(context),
-                                          child: GestureDetector(
-                                            onVerticalDragStart:
-                                                (dragDetails) {
-                                                debugPrint('onVerticalDragStart');
-                                            },
-                                            onVerticalDragUpdate:
-                                                (dragDetails) {
-                                                debugPrint('onVerticalDragUpdate');
-                                            },
-                                            onVerticalDragEnd:
-                                                (endDetails) {
-                                               debugPrint('onVerticalDragEnd');
-                                              Navigator.pop(context);
-                                            },
-                                            child: PhotoView(
-                                              imageProvider:
-                                              NetworkImage(
-                                                '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                    return SafeArea(
+                                      bottom: false,
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            height: getScreenHeight(context) -
+                                                MediaQuery.of(context)
+                                                    .padding
+                                                    .top,
+                                            width: getScreenWidth(context),
+                                            child: GestureDetector(
+                                              onVerticalDragStart:
+                                                  (dragDetails) {
+                                                  debugPrint('onVerticalDragStart');
+                                              },
+                                              onVerticalDragUpdate:
+                                                  (dragDetails) {
+                                                  debugPrint('onVerticalDragUpdate');
+                                              },
+                                              onVerticalDragEnd:
+                                                  (endDetails) {
+                                                 debugPrint('onVerticalDragEnd');
+                                                Navigator.pop(context);
+                                              },
+                                              child: PhotoView(
+                                                imageProvider:
+                                                NetworkImage(
+                                                  '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Icon(
-                                              Icons.close,
-                                              color: Colors.white,
-                                            )),
-                                      ],
+                                          GestureDetector(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top:10.0),
+                                                child: Icon(
+                                                  Icons.close,
+                                                  color: Colors.white,
+                                                ),
+                                              )),
+                                        ],
+                                      ),
                                     );
                                   },
                                 );
