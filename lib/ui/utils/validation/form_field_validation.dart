@@ -177,9 +177,14 @@ class FormFieldValidation {
   }
 
   String? surfaceField(String value,BuildContext context) {
+    RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
     if (value.isEmpty) {
       return '${AppLocalizations.of(context)!.please_enter_surfaces}';
     }
+    else if (!regex.hasMatch(value)) {
+      return '${AppLocalizations.of(context)!.please_enter_surfaces}';
+    }
+
     return null;
   }
 

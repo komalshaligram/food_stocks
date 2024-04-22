@@ -200,7 +200,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                       ),
                     ),
                     5.height,
-                /*    CustomContainerWidget(
+                    CustomContainerWidget(
                       name: AppLocalizations.of(context)!
                           .pallets_return,
                       star: '*',
@@ -214,7 +214,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                       textInputAction: TextInputAction.done,
                       validator: AppStrings.surfaceValString,
                     ),
-                    10.height,*/
+                    10.height,
                     Padding(
                       padding: EdgeInsets.symmetric(
                           vertical: AppConstants.padding_5,
@@ -296,7 +296,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () async {
-                     //   if(_formKey.currentState!.validate()){
+                        if(_formKey.currentState!.validate()){
                          if (state.isSignaturePadActive &&
                               !state.isDelete &&
                               isSign) {
@@ -326,7 +326,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                 '${AppLocalizations.of(context)!.signature_missing}',
                                 type: SnackBarType.FAILURE);
                           }
-                      //  }
+                        }
 
                       },
                       child: Container(

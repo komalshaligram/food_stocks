@@ -40,6 +40,7 @@ class ShipmentVerificationBloc
 
     else  if (event is _deliveryConfirmEvent) {
         String signUrl = '';
+        print('surfaces____${state.surfacesController.text}');
         emit(state.copyWith(isLoading: true));
         if (event.signPath.isNotEmpty) {
           try {
@@ -69,21 +70,18 @@ class ShipmentVerificationBloc
               DeliveryConfirmReqModel reqMap = DeliveryConfirmReqModel(
                 supplierId: event.supplierId,
                 signature: signUrl,
+                returningSurface: int.parse(state.surfacesController.text)
               );
               debugPrint('delivery Confirm ReqModel = $reqMap}');
              final response = await DioClient(event.context).post(
                   '${AppUrls.deliveryConfirmUrl}${event.orderId}',
                   data: reqMap,
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader: 'Bearer ${preferencesHelper.getAuthToken()}'
-                  }));
+                );
 
               debugPrint('delivery Confirm url  = ${AppUrls.baseUrl}${AppUrls.deliveryConfirmUrl}${event.orderId}');
-             debugPrint('delivery Confirm response model  = $response');
+             debugPrint('delivery Confirm model  = $response');
 
-             if (response['status'] == 200) {
-             /*   Navigator.pushNamed(
-                    event.context, RouteDefine.bottomNavScreen.name);*/
+             if (response[AppStrings.statusString] == 200) {
                emit(state.copyWith(isLoading: true));
                 Navigator.pushNamedAndRemoveUntil(
                     event.context,
@@ -100,7 +98,7 @@ class ShipmentVerificationBloc
                         event.context),
                     type: SnackBarType.SUCCESS);
               } else {
-               emit(state.copyWith(isLoading: true));
+               emit(state.copyWith(isLoading: false));
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
@@ -108,11 +106,11 @@ class ShipmentVerificationBloc
                             .toString()
                             .toLocalization(),
                         event.context),
-                    type: SnackBarType.SUCCESS);
+                    type: SnackBarType.FAILURE);
               }
-            } on ServerException { emit(state.copyWith(isLoading: true));}
+            } on ServerException { emit(state.copyWith(isLoading: false));}
           } else {
-           emit(state.copyWith(isLoading: true));
+           emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
@@ -121,10 +119,6 @@ class ShipmentVerificationBloc
           }
         }
       }
-
-
-
-
     });
   }
 }

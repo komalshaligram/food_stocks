@@ -24,7 +24,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
       debugPrint('[token]   ${preferencesHelper.getAuthToken()}');
-      //  emit(state.copyWith(isShimmering: true));
       if(event is _getAllOrderEvent){
         if (state.isLoadMore) {
           return;
