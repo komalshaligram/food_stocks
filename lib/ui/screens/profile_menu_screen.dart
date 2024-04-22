@@ -214,6 +214,16 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                             AppStrings.isUpdateParamString: true
                                           });
                                     }),
+                         /*       profileMenuTiles(
+                                    title:
+                                    AppLocalizations.of(context)!.log_out,
+                                    onTap: () {
+                                      !state.isLogOutProcess
+                                          ? logOutDialog(
+                                          context: context,
+                                          directionality: state.language)
+                                          : CupertinoActivityIndicator();
+                                    }),*/
                                 profileMenuTiles(
                                     title:
                                         AppLocalizations.of(context)!.log_out,
