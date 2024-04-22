@@ -458,8 +458,10 @@
     "invoice_amount" : "Invoice amount",
     "needtoapprovepreviousorder" : "need to approve previous order",
     "order_sign_dialog": "There are orders that you have not signed, please go through the list of orders and confirm that you have received them.",
-       "show_order":"Show order",
-       "please_enter_surfaces":"Please enter the number of Returning surfaces",
-       "pallets_return":"How many pallets do you return?"
+      "show_order":"Show order",
+     "please_enter_surfaces":"Please enter the number of Returning surfaces",
+     "pallets_return":"How many pallets do you return?",
+   "sub_user": "Sub Users"
+
 
 }
