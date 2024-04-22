@@ -61,4 +61,5 @@ class BasketEvent with _$BasketEvent {
 
   const factory BasketEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
   const factory BasketEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
+  const factory BasketEvent.refreshEvent() = _refreshEvent;
 }

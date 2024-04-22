@@ -30,6 +30,7 @@ class BasketState with _$BasketState {
     required bool isRelatedShimmering,
     required int productListIndex,
     required bool isAnimation,
+    required bool isOrderPending,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -58,7 +59,9 @@ class BasketState with _$BasketState {
      relatedProductList: [],
      isRelatedShimmering: false,
      productListIndex: -1,
-     isAnimation: false
+     isAnimation: false,
+     isOrderPending: false,
+
 );
 }
 

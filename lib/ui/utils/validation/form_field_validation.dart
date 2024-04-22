@@ -176,4 +176,11 @@ class FormFieldValidation {
     return null;
   }
 
+  String? surfaceField(String value,BuildContext context) {
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.please_enter_surfaces}';
+    }
+    return null;
+  }
+
 }

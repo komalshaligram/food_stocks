@@ -58,6 +58,9 @@ class AuthFormValidation {
       case AppStrings.zipValString:
         return formFieldValidation.zipField(value,context);
 
+      case AppStrings.surfaceValString:
+        return formFieldValidation.surfaceField(value,context);
+
     }
     return null;
   }

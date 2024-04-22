@@ -9,9 +9,6 @@ class ShipmentVerificationEvent with _$ShipmentVerificationEvent {
     required String supplierId,
     required String signPath,
     required String orderId,
-    /*required String driverName,
-    required String driverNumber,*/
-
 }) = _deliveryConfirmEvent;
   factory ShipmentVerificationEvent.signDeleteEvent(
       ) = _signDeleteEvent;
