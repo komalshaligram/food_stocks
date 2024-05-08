@@ -23,6 +23,7 @@ mixin _$BottomNavEvent {
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
         NavigateToStoreScreenEvent,
+    required TResult Function() seeWalletPermissionUpdateEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -32,6 +33,7 @@ mixin _$BottomNavEvent {
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
+    TResult? Function()? seeWalletPermissionUpdateEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -41,6 +43,7 @@ mixin _$BottomNavEvent {
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
+    TResult Function()? seeWalletPermissionUpdateEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -50,6 +53,8 @@ mixin _$BottomNavEvent {
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_NavigateToStoreScreenEvent value)
         NavigateToStoreScreenEvent,
+    required TResult Function(_seeWalletPermissionUpdateEvent value)
+        seeWalletPermissionUpdateEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -58,6 +63,8 @@ mixin _$BottomNavEvent {
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_NavigateToStoreScreenEvent value)?
         NavigateToStoreScreenEvent,
+    TResult? Function(_seeWalletPermissionUpdateEvent value)?
+        seeWalletPermissionUpdateEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -66,6 +73,8 @@ mixin _$BottomNavEvent {
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_NavigateToStoreScreenEvent value)?
         NavigateToStoreScreenEvent,
+    TResult Function(_seeWalletPermissionUpdateEvent value)?
+        seeWalletPermissionUpdateEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -159,6 +168,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
         NavigateToStoreScreenEvent,
+    required TResult Function() seeWalletPermissionUpdateEvent,
   }) {
     return changePage(index);
   }
@@ -171,6 +181,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
+    TResult? Function()? seeWalletPermissionUpdateEvent,
   }) {
     return changePage?.call(index);
   }
@@ -183,6 +194,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
+    TResult Function()? seeWalletPermissionUpdateEvent,
     required TResult orElse(),
   }) {
     if (changePage != null) {
@@ -198,6 +210,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_NavigateToStoreScreenEvent value)
         NavigateToStoreScreenEvent,
+    required TResult Function(_seeWalletPermissionUpdateEvent value)
+        seeWalletPermissionUpdateEvent,
   }) {
     return changePage(this);
   }
@@ -209,6 +223,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_NavigateToStoreScreenEvent value)?
         NavigateToStoreScreenEvent,
+    TResult? Function(_seeWalletPermissionUpdateEvent value)?
+        seeWalletPermissionUpdateEvent,
   }) {
     return changePage?.call(this);
   }
@@ -220,6 +236,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_NavigateToStoreScreenEvent value)?
         NavigateToStoreScreenEvent,
+    TResult Function(_seeWalletPermissionUpdateEvent value)?
+        seeWalletPermissionUpdateEvent,
     required TResult orElse(),
   }) {
     if (changePage != null) {
@@ -282,6 +300,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
         NavigateToStoreScreenEvent,
+    required TResult Function() seeWalletPermissionUpdateEvent,
   }) {
     return updateCartCountEvent();
   }
@@ -294,6 +313,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
+    TResult? Function()? seeWalletPermissionUpdateEvent,
   }) {
     return updateCartCountEvent?.call();
   }
@@ -306,6 +326,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
+    TResult Function()? seeWalletPermissionUpdateEvent,
     required TResult orElse(),
   }) {
     if (updateCartCountEvent != null) {
@@ -321,6 +342,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_NavigateToStoreScreenEvent value)
         NavigateToStoreScreenEvent,
+    required TResult Function(_seeWalletPermissionUpdateEvent value)
+        seeWalletPermissionUpdateEvent,
   }) {
     return updateCartCountEvent(this);
   }
@@ -332,6 +355,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_NavigateToStoreScreenEvent value)?
         NavigateToStoreScreenEvent,
+    TResult? Function(_seeWalletPermissionUpdateEvent value)?
+        seeWalletPermissionUpdateEvent,
   }) {
     return updateCartCountEvent?.call(this);
   }
@@ -343,6 +368,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_NavigateToStoreScreenEvent value)?
         NavigateToStoreScreenEvent,
+    TResult Function(_seeWalletPermissionUpdateEvent value)?
+        seeWalletPermissionUpdateEvent,
     required TResult orElse(),
   }) {
     if (updateCartCountEvent != null) {
@@ -450,6 +477,7 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
         NavigateToStoreScreenEvent,
+    required TResult Function() seeWalletPermissionUpdateEvent,
   }) {
     return NavigateToStoreScreenEvent(context, storeScreen, basketScreen);
   }
@@ -462,6 +490,7 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
+    TResult? Function()? seeWalletPermissionUpdateEvent,
   }) {
     return NavigateToStoreScreenEvent?.call(context, storeScreen, basketScreen);
   }
@@ -474,6 +503,7 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
+    TResult Function()? seeWalletPermissionUpdateEvent,
     required TResult orElse(),
   }) {
     if (NavigateToStoreScreenEvent != null) {
@@ -489,6 +519,8 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_NavigateToStoreScreenEvent value)
         NavigateToStoreScreenEvent,
+    required TResult Function(_seeWalletPermissionUpdateEvent value)
+        seeWalletPermissionUpdateEvent,
   }) {
     return NavigateToStoreScreenEvent(this);
   }
@@ -500,6 +532,8 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_NavigateToStoreScreenEvent value)?
         NavigateToStoreScreenEvent,
+    TResult? Function(_seeWalletPermissionUpdateEvent value)?
+        seeWalletPermissionUpdateEvent,
   }) {
     return NavigateToStoreScreenEvent?.call(this);
   }
@@ -511,6 +545,8 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_NavigateToStoreScreenEvent value)?
         NavigateToStoreScreenEvent,
+    TResult Function(_seeWalletPermissionUpdateEvent value)?
+        seeWalletPermissionUpdateEvent,
     required TResult orElse(),
   }) {
     if (NavigateToStoreScreenEvent != null) {
@@ -532,6 +568,138 @@ abstract class _NavigateToStoreScreenEvent implements BottomNavEvent {
   @JsonKey(ignore: true)
   _$$NavigateToStoreScreenEventImplCopyWith<_$NavigateToStoreScreenEventImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$seeWalletPermissionUpdateEventImplCopyWith<$Res> {
+  factory _$$seeWalletPermissionUpdateEventImplCopyWith(
+          _$seeWalletPermissionUpdateEventImpl value,
+          $Res Function(_$seeWalletPermissionUpdateEventImpl) then) =
+      __$$seeWalletPermissionUpdateEventImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$seeWalletPermissionUpdateEventImplCopyWithImpl<$Res>
+    extends _$BottomNavEventCopyWithImpl<$Res,
+        _$seeWalletPermissionUpdateEventImpl>
+    implements _$$seeWalletPermissionUpdateEventImplCopyWith<$Res> {
+  __$$seeWalletPermissionUpdateEventImplCopyWithImpl(
+      _$seeWalletPermissionUpdateEventImpl _value,
+      $Res Function(_$seeWalletPermissionUpdateEventImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$seeWalletPermissionUpdateEventImpl
+    implements _seeWalletPermissionUpdateEvent {
+  const _$seeWalletPermissionUpdateEventImpl();
+
+  @override
+  String toString() {
+    return 'BottomNavEvent.seeWalletPermissionUpdateEvent()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$seeWalletPermissionUpdateEventImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int index) changePage,
+    required TResult Function() updateCartCountEvent,
+    required TResult Function(
+            BuildContext context, String storeScreen, String basketScreen)
+        NavigateToStoreScreenEvent,
+    required TResult Function() seeWalletPermissionUpdateEvent,
+  }) {
+    return seeWalletPermissionUpdateEvent();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int index)? changePage,
+    TResult? Function()? updateCartCountEvent,
+    TResult? Function(
+            BuildContext context, String storeScreen, String basketScreen)?
+        NavigateToStoreScreenEvent,
+    TResult? Function()? seeWalletPermissionUpdateEvent,
+  }) {
+    return seeWalletPermissionUpdateEvent?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int index)? changePage,
+    TResult Function()? updateCartCountEvent,
+    TResult Function(
+            BuildContext context, String storeScreen, String basketScreen)?
+        NavigateToStoreScreenEvent,
+    TResult Function()? seeWalletPermissionUpdateEvent,
+    required TResult orElse(),
+  }) {
+    if (seeWalletPermissionUpdateEvent != null) {
+      return seeWalletPermissionUpdateEvent();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ChangePageEvent value) changePage,
+    required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
+    required TResult Function(_NavigateToStoreScreenEvent value)
+        NavigateToStoreScreenEvent,
+    required TResult Function(_seeWalletPermissionUpdateEvent value)
+        seeWalletPermissionUpdateEvent,
+  }) {
+    return seeWalletPermissionUpdateEvent(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ChangePageEvent value)? changePage,
+    TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
+    TResult? Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
+    TResult? Function(_seeWalletPermissionUpdateEvent value)?
+        seeWalletPermissionUpdateEvent,
+  }) {
+    return seeWalletPermissionUpdateEvent?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ChangePageEvent value)? changePage,
+    TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
+    TResult Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
+    TResult Function(_seeWalletPermissionUpdateEvent value)?
+        seeWalletPermissionUpdateEvent,
+    required TResult orElse(),
+  }) {
+    if (seeWalletPermissionUpdateEvent != null) {
+      return seeWalletPermissionUpdateEvent(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _seeWalletPermissionUpdateEvent implements BottomNavEvent {
+  const factory _seeWalletPermissionUpdateEvent() =
+      _$seeWalletPermissionUpdateEventImpl;
 }
 
 /// @nodoc

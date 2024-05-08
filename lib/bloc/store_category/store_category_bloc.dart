@@ -627,11 +627,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             [state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title:
-                  '${AppLocalizations.of(event.context)!.please_select_supplier}',
-                  type: SnackBarType.FAILURE);
+
               return;
             }
             productStockList[state.planoGramUpdateIndex]
@@ -793,11 +789,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         [state.productStockUpdateIndex]
             .productSupplierIds
             .isEmpty) {
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title:
-              '${AppLocalizations.of(event.context)!.please_select_supplier}',
-              type: SnackBarType.FAILURE);
+
           return;
         }
         if (state

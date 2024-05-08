@@ -156,7 +156,7 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
           emit(state.copyWith(isUpdateProcess: false));
         }
         catch(e){
-          print('catch');
+
           emit(state.copyWith(isUpdateProcess: false));
         }
       }

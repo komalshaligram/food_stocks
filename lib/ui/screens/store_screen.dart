@@ -69,8 +69,14 @@ class StoreScreenWidget extends StatelessWidget {
     StoreBloc bloc = context.read<StoreBloc>();
     return BlocListener<StoreBloc, StoreState>(
       listener: (context, state) {
+        if(state.isCartCountChange){
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.updateCartCountEvent());
+        }
+        if(state.isAccountPermissionShimmering){
+          BlocProvider.of<BottomNavBloc>(context)
+              .add(BottomNavEvent.seeWalletPermissionUpdateEvent());
+        }
       },
       child: BlocBuilder<StoreBloc, StoreState>(
         builder: (context, state) {
@@ -122,6 +128,7 @@ class StoreScreenWidget extends StatelessWidget {
                             context: context));
                         bloc.add(StoreEvent.getPreviousOrderProductsListEvent(
                             context: context));
+                        bloc.add(StoreEvent.getPermissionList(context: context));
                         state.refreshController.refreshCompleted();
                         state.refreshController.loadComplete();
                       },
@@ -239,14 +246,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                               .productCategoryList[
                                                           index]
                                                               .categoryName,
-                                                          /* AppStrings
-                                                                        .searchString:
-                                                                    state
-                                                                        .search,
-                                                                AppStrings
-                                                                        .searchResultString:
-                                                                    state
-                                                                        .searchList*/
+
                                                         });
                                                     if (searchResult !=
                                                         null) {

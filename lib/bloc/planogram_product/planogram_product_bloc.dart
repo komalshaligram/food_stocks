@@ -331,11 +331,7 @@ class PlanogramProductBloc
             [state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title:
-                  '${AppLocalizations.of(event.context)!.please_select_supplier}',
-                  type: SnackBarType.FAILURE);
+
               return;
             }
             productStockList[state.productListIndex]
@@ -490,11 +486,6 @@ class PlanogramProductBloc
       else if (event is _AddToCartProductEvent) {
         if (state.productStockList[state.productListIndex][state.productStockUpdateIndex]
             .productSupplierIds.isEmpty) {
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title:
-              '${AppLocalizations.of(event.context)!.please_select_supplier}',
-              type: SnackBarType.FAILURE);
           return;
         }
         if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity ==

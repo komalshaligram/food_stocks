@@ -23,7 +23,7 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
 
         try {
           emit(state.copyWith(isShimmering: true , subUserId: event.subUserId));
-          print('subUserId____${event.subUserId}');
+          debugPrint('subUserId____${event.subUserId}');
           final res = await DioClient(event.context).get(
               path: '${AppUrls.getSupplierPermissionUrl}${event.subUserId}');
           SupplierPermissionResModel response = SupplierPermissionResModel.fromJson(res);
@@ -34,7 +34,6 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
             emit(state.copyWith(isShimmering:false));
             List<permissionModel>supplierPermissionList = [];
 
-            print('lendth_____${response.data!.length}');
             emit(state.copyWith(isSelectAll: true));
 
             for(int i = 0 ; i < (response.data?.length ?? 0); i++ ){
@@ -147,7 +146,6 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
           emit(state.copyWith(isUpdateProcess: false));
         }
         catch(e){
-          print('catch');
           emit(state.copyWith(isUpdateProcess: false));
         }
       }

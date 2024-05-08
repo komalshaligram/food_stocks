@@ -201,7 +201,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               if(response.product != null){
                 add(HomeEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
-              if ( (event.isBarcode )) {
+              if (event.isBarcode) {
 
                 productStockList[0][0] =  productStockList[0][0]
                     .copyWith(
@@ -353,10 +353,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } on ServerException {
             Navigator.pop(event.context);
             // emit(state.copyWith(isProductLoading: false));
-          } /*catch (e) {
-          debugPrint('bs error = $e');
-          // Navigator.pop(event.context);
-        }*/
+          }
         }
         else if (event is _IncreaseQuantityOfProduct) {
           List<List<ProductStockModel>> productStockList =
@@ -372,11 +369,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               [state.productStockUpdateIndex]
                   .productSupplierIds
                   .isEmpty) {
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title:
-                    '${AppLocalizations.of(event.context)!.please_select_supplier}',
-                    type: SnackBarType.FAILURE);
+
                 return;
               }
               productStockList[state.productListIndex]
@@ -396,7 +389,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   context: event.context,
                   title:
                   "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
-                  // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                   type: SnackBarType.FAILURE);
             }
           }
@@ -469,16 +461,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
           }
         }
-        else if (event is _ChangeNoteOfProduct) {
-          if (state.productStockUpdateIndex != -1) {
-            List<List<ProductStockModel> >productStockList =
-            state.productStockList.toList(growable: false);
-            productStockList[state.productListIndex][state.productStockUpdateIndex] =
-                productStockList[state.productListIndex][state.productStockUpdateIndex]
-                    .copyWith(note: /*event.newNote*/ state.noteController.text);
-            emit(state.copyWith(productStockList: productStockList));
-          }
-        }
+
         else if (event is _ChangeSupplierSelectionExpansionEvent) {
           emit(state.copyWith(
               isSelectSupplier:
@@ -510,8 +493,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         : supplierList[event.supplierIndex]
                         .supplierSales[event.supplierSaleIndex]
                         .saleId);
-            /*debugPrint(
-              'selected stock supplier = ${productStockList[state.productStockUpdateIndex]}');*/
             supplierList = supplierList
                 .map((supplier) => supplier.copyWith(selectedIndex: -1))
                 .toList();
@@ -528,14 +509,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         }
         else if (event is _AddToCartProductEvent) {
-          print('cart id_____${preferences.getCartId()}');
+          debugPrint('cart id_____${preferences.getCartId()}');
           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex]
               .productSupplierIds.isEmpty) {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:
-                '${AppLocalizations.of(event.context)!.please_select_supplier}',
-                type: SnackBarType.FAILURE);
+
             return;
           }
           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity ==
@@ -689,7 +666,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     type: SnackBarType.FAILURE);
               } else {
                 emit(state.copyWith(isLoading: false));
-                print('responsemessage___add__${response.message}');
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(

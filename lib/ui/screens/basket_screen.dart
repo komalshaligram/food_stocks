@@ -59,6 +59,10 @@ class BasketScreenWidget extends StatelessWidget {
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.updateCartCountEvent());
         }
+        if(state.isAccountPermissionShimmering){
+          BlocProvider.of<BottomNavBloc>(context)
+              .add(BottomNavEvent.seeWalletPermissionUpdateEvent());
+        }
         if(state.isOrderPending){
           showDialog(
             context:context,

@@ -35,7 +35,7 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
            } else {
              dir = await getApplicationDocumentsDirectory();
            }
-           print('path______${state.invoiceDetailsList.link?.split('/').last.split('.').first}');
+           debugPrint('path______${state.invoiceDetailsList.link?.split('/').last.split('.').first}');
 
            String filePath =
                '${dir.path}/${state.invoiceDetailsList.link?.split('/').last.split('.').first}_${DateTime.now().day}_${DateTime.now().month}_${DateTime.now().hour}_${DateTime.now().minute}${'.pdf'}';

@@ -177,17 +177,16 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
 
                 emit(state.copyWith(
-                  isAccountPermissionShimmering: false,
                     isSubUserSeeOrder: preferences.getCanSeeOrder(),
                     isSubUserCanManageSubUser: preferences.getCanManageSubUser(),
                     isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(),
                     isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(),
                     isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(),
-                    isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles()
+                    isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(),
+                    isAccountPermissionShimmering: false,
                 ));
 
               } else {
-                emit(state.copyWith(isAccountPermissionShimmering: false));
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
@@ -198,13 +197,11 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
 
               }
             } on ServerException {
-              emit(state.copyWith(isAccountPermissionShimmering: false));
             } catch (e) {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: e.toString(),
                   type: SnackBarType.FAILURE);
-              emit(state.copyWith(isAccountPermissionShimmering: false));
             }
           }
 

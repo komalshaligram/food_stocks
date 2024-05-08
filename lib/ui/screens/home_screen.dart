@@ -79,7 +79,7 @@ class HomeScreenWidget extends StatelessWidget {
         }
         if(state.isAccountPermissionShimmering){
           BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.updateCartCountEvent());
+              .add(BottomNavEvent.seeWalletPermissionUpdateEvent());
         }
       },
       child: BlocBuilder<HomeBloc, HomeState>(

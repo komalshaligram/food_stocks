@@ -308,11 +308,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             if (productStockList[state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title:
-                      '${AppLocalizations.of(event.context)!.please_select_supplier}',
-                  type: SnackBarType.FAILURE);
+
               return;
             }
             productStockList[state.productStockUpdateIndex] =
@@ -438,11 +434,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
       } else if (event is _AddToCartProductEvent) {
         if (state.productStockList[state.productStockUpdateIndex]
             .productSupplierIds.isEmpty) {
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title:
-                  '${AppLocalizations.of(event.context)!.please_select_supplier}',
-              type: SnackBarType.FAILURE);
+
           return;
         }
         if (state.productStockList[state.productStockUpdateIndex].quantity ==
