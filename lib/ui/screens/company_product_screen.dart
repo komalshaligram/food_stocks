@@ -75,7 +75,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
-          floatingActionButton:  !state.isGuestUser?FloatingActionButton(
+          floatingActionButton:  !state.isGuestUser ? FloatingActionButton(
             elevation: 0,
             child:  Stack(
               children: [

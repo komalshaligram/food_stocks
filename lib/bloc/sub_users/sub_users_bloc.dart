@@ -69,7 +69,6 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
                       (response.data?.totalRecords ?? 0)
                       ? true
                       : false));
-              print('index__${state.subUserList.first.contactName}');
             } else {
               emit(state.copyWith(isShimmering: false, isLoadMore: false));
             }

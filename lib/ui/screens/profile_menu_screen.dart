@@ -44,8 +44,10 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     ProfileMenuBloc bloc = context.read<ProfileMenuBloc>();
     return BlocListener<ProfileMenuBloc, ProfileMenuState>(
       listenWhen: (previous, current) {
-        BlocProvider.of<BottomNavBloc>(context)
-            .add(BottomNavEvent.updateCartCountEvent());
+        if (current.isAccountPermissionShimmering){
+          BlocProvider.of<BottomNavBloc>(context)
+              .add(BottomNavEvent.seeWalletPermissionUpdateEvent());
+        }
         if (previous.isHebrewLanguage != current.isHebrewLanguage) {
           return true;
         } else {

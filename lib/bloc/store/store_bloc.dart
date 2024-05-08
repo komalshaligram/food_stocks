@@ -559,13 +559,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             if (productStockList[state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
-             CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title:
-                      '${AppLocalizations.of(event.context)!.please_select_supplier}',
-                  type: SnackBarType.FAILURE,
 
-              );
               return;
             }
             productStockList[state.productStockUpdateIndex] =
@@ -654,16 +648,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         }
       }
       else if (event is _AddToCartProductEvent) {
-        print('cart id_ store____${preferencesHelper.getCartId()}');
         if (state.productStockList[state.productStockUpdateIndex]
             .productSupplierIds.isEmpty) {
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title:
-                  '${AppLocalizations.of(event.context)!.please_select_supplier}',
-              type: SnackBarType.FAILURE,
 
-          );
           return;
         }
         if (state.productStockList[state.productStockUpdateIndex].quantity ==
@@ -807,10 +794,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 productSaleId: '',
               );
               Vibration.vibrate(amplitude: 128);
+
               emit(state.copyWith(
                   isLoading: false,
                   productStockList: productStockList,
-                  isCartCountChange: true));
+                  ));
 
               emit(state.copyWith(isCartCountChange: false));
 
@@ -859,7 +847,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
-        
+        emit(state.copyWith(isCartCountChange: true));
         debugPrint('cart count store= ${preferences.getCartCount()}');
 
       }
@@ -1200,7 +1188,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       else  if(event is _getPermissionList){
         if(preferencesHelper.getSubUser()){
           try {
-            emit(state.copyWith(isAccountPermissionShimmering: true));
+
             final res = await DioClient(event.context).get(
                 path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
@@ -1209,6 +1197,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             if (response.status == 200) {
               var res = response.data?.permissions;
               preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+              emit(state.copyWith(isAccountPermissionShimmering: true));
               preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
               preferencesHelper.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
               preferencesHelper.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
@@ -1222,7 +1211,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()
               ));
             } else {
-              emit(state.copyWith(isAccountPermissionShimmering: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
@@ -1233,13 +1221,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
             }
           } on ServerException {
-            emit(state.copyWith(isAccountPermissionShimmering: false));
           } catch (e) {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: e.toString(),
                 type: SnackBarType.FAILURE);
-            emit(state.copyWith(isAccountPermissionShimmering: false));
           }
         }
 

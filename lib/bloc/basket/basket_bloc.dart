@@ -256,11 +256,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           if (state.productStockList[state.productListIndex][state
               .productStockUpdateIndex]
               .productSupplierIds.isEmpty) {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:
-                '${AppLocalizations.of(event.context)!.please_select_supplier}',
-                type: SnackBarType.FAILURE);
             return;
           }
           if (state.productStockList[state.productListIndex][state
@@ -704,12 +699,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               [state.productStockUpdateIndex]
                   .productSupplierIds
                   .isEmpty) {
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title:
-                    '${AppLocalizations.of(event.context)!
-                        .please_select_supplier}',
-                    type: SnackBarType.FAILURE);
                 return;
               }
               productStockList[state.productListIndex]
@@ -1003,7 +992,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else  if(event is _getPermissionList){
           if(preferencesHelper.getSubUser()){
             try {
-              emit(state.copyWith(isAccountPermissionShimmering: true));
+
               final res = await DioClient(event.context).get(
                   path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
@@ -1013,6 +1002,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
                 var res = response.data?.permissions;
                 preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+                emit(state.copyWith(isAccountPermissionShimmering: true));
                 preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
                 preferencesHelper.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
                 preferencesHelper.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
@@ -1022,14 +1012,14 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
                 preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
                 preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
-                emit(state.copyWith(isAnimation: true));
+
                 emit(state.copyWith(isAccountPermissionShimmering:false,
                   isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(),
                     isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()
                 ));
-                emit(state.copyWith(isAnimation: false));
+
               } else {
-                emit(state.copyWith(isAccountPermissionShimmering: false));
+
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
@@ -1040,13 +1030,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
               }
             } on ServerException {
-              emit(state.copyWith(isAccountPermissionShimmering: false));
+
             } catch (e) {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: e.toString(),
                   type: SnackBarType.FAILURE);
-              emit(state.copyWith(isAccountPermissionShimmering: false));
+
             }
           }
 

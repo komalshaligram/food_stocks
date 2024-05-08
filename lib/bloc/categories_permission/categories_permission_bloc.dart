@@ -27,7 +27,7 @@ class CategoriesPermissionBloc
       if (event is _getPermissionList) {
         try {
           emit(state.copyWith(isShimmering: true, subUserId: event.subUserId));
-          print('subUserId____${event.subUserId}');
+          debugPrint('subUserId____${event.subUserId}');
           final res = await DioClient(event.context).get(
               path: '${AppUrls.getCategoriesPermissionUrl}${event.subUserId}');
           CategoriesPermissionResModel response =
@@ -238,7 +238,7 @@ class CategoriesPermissionBloc
         } on ServerException {
           emit(state.copyWith(isUpdateProcess: false));
         } catch (e) {
-          print('catch');
+
           emit(state.copyWith(isUpdateProcess: false));
         }
       }
