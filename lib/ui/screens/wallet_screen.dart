@@ -834,12 +834,11 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
       return AppLocalizations.of(context)!.monthly_credit;
     } else if (type == 'debit') {
       return AppLocalizations.of(context)!.order;
-    }else if (type == 'refund') {
-      return AppLocalizations.of(context)!.refund_for_order;
-    }else if (type == 'surfaceAmount') {
+    } else if (type == 'refund') {
+       return AppLocalizations.of(context)!.refund_for_order;
+    } else if (type == 'surfaceAmount') {
       return AppLocalizations.of(context)!.surfaces_order;
-    }
-    else {
+    } else {
       return AppLocalizations.of(context)!.refund;
     }
   }

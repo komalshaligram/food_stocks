@@ -55,8 +55,8 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 24
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 27
-        versionName "1.0.23"
+        versionCode 28
+        versionName "1.0.24"
     }
 
     buildTypes {
@@ -95,4 +95,3 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.android.support:multidex:1.0.3'
 }
-

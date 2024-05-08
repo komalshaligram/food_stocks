@@ -91,7 +91,6 @@ class PushNotificationService {
     });
     enableIOSNotifications();
     await registerNotificationListeners();
-
   }
 
   Future<void> registerNotificationListeners() async {
