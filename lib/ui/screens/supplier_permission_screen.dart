@@ -65,6 +65,8 @@ class SupplierPermissionScreenWidget extends StatelessWidget {
             SizedBox(
               height: getScreenHeight(context) * 0.8,
               child: Center(
+
+
                   child: Text(
                     AppLocalizations.of(context)!.no_data,
                     style: AppStyles.pVRegularTextStyle(
