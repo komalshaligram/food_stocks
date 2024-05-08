@@ -16,6 +16,7 @@ import '../../data/model/req_model/company_products_req_model/company_products_r
 import '../../data/model/req_model/global_search_req_model/global_search_req_model.dart';
 import '../../data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
+import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/company_products_res_model/company_products_res_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
     as InsertCartModel;
@@ -53,7 +54,7 @@ class CompanyProductsBloc
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
       if (event is _GetCompanyProductsIdEvent) {
-        emit(state.copyWith(companyId: event.companyId, isGuestUser: preferences.getGuestUser(),isCompanyProductGrid: preferences.getCompanyProductGrid()));
+        emit(state.copyWith(isSubUserAddToBasket : preferences.getCanAddToBasket(),companyId: event.companyId, isGuestUser: preferences.getGuestUser(),isCompanyProductGrid: preferences.getCompanyProductGrid()));
         debugPrint('company id = ${state.companyId}');
       } else if (event is _GetCompanyProductsListEvent) {
 
@@ -61,9 +62,6 @@ class CompanyProductsBloc
           return;
         }
         if (state.isBottomOfProducts) {
-          return;
-        }
-        if (state.isShimmering) {
           return;
         }
         try {
@@ -116,9 +114,6 @@ class CompanyProductsBloc
                         (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
-
-
-
           } else {
             emit(state.copyWith(isLoadMore: false,isShimmering: false,isRefreshingProduct: false));
             CustomSnackBar.showSnackBar(
@@ -136,6 +131,7 @@ class CompanyProductsBloc
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
       } else if (event is _RefreshListEvent) {
+        add(CompanyProductsEvent.getPermissionList(context: event.context));
         emit(state.copyWith(
             pageNum: 0,
             productList: [],
@@ -613,8 +609,7 @@ class CompanyProductsBloc
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
                 isNoteOpen: false,
-                quantity: /*state.productStockList[state.productStockUpdateIndex]
-                    .quantity +*/ _productQuantity,
+                quantity:  _productQuantity,
                 productSupplierIds: '',
                 totalPrice: 0.0,
                 productSaleId: '',
@@ -622,8 +617,6 @@ class CompanyProductsBloc
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
 
-              emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
 
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -632,6 +625,7 @@ class CompanyProductsBloc
                       event.context),
                   type: SnackBarType.SUCCESS);
             } else {
+              Navigator.pop(event.context);
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -642,10 +636,12 @@ class CompanyProductsBloc
                   type: SnackBarType.FAILURE);
             }
           } on ServerException {
-            emit(state.copyWith(isLoading: false));
+            Navigator.pop(event.context);
+
           } catch (e) {
+            Navigator.pop(event.context);
             debugPrint('err = $e');
-            emit(state.copyWith(isLoading: false));
+
           }
         } else {
           try {
@@ -725,6 +721,7 @@ class CompanyProductsBloc
                       response.message?.toLocalization() ?? response.message!, event.context),
                   type: SnackBarType.SUCCESS);
             } else if (response.status == 403) {
+              Navigator.pop(event.context);
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -774,7 +771,7 @@ class CompanyProductsBloc
 
       else if (event is _getCartCountEvent) {
         emit(
-            state.copyWith(cartCount: preferences.getCartCount()));
+            state.copyWith(cartCount: preferences.getCartCount(),isSubUserAddToBasket : preferences.getCanAddToBasket()));
       }
 
       else if (event is _getGridListView) {
@@ -1029,6 +1026,54 @@ class CompanyProductsBloc
       else if(event is _RemoveRelatedProductEvent){
         add(CompanyProductsEvent.getCartCountEvent());
         emit(state.copyWith(relatedProductList: []));
+      }
+      else  if(event is _getPermissionList){
+        if(preferences.getSubUser()){
+          try {
+
+            final res = await DioClient(event.context).get(
+                path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+            AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
+            debugPrint('AccountPermission response = ${response.data.toString()}');
+            debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+            if (response.status == 200) {
+              var res = response.data?.permissions;
+              preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+              preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+              preferences.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+              preferences.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+              preferences.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+              preferences.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+              preferences.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
+              preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
+              preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
+              preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+              emit(state.copyWith(
+                isSubUserAddToBasket :res?.canAddToCart ?? false,
+              ));
+            } else {
+
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
+                  type: SnackBarType.FAILURE);
+
+            }
+          } on ServerException {
+
+          } catch (e) {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: e.toString(),
+                type: SnackBarType.FAILURE);
+
+          }
+        }
+
+
       }
 
 

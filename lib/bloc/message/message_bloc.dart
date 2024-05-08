@@ -174,8 +174,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response[AppStrings.messageString].toLocalization() ??
-                        response.message!,
+                    response[AppStrings.messageString].toString().toLocalization() ,
                     event.context),
                 type: SnackBarType.FAILURE);
           }

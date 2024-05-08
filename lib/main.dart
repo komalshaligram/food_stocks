@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:eraser/eraser.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,6 +13,7 @@ import 'package:food_stock/ui/screens/my_app_screen.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -26,6 +28,8 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     debugPrint("Handling a background message:${message.data.toString()}");
     var data = json.decode(message.data['data'].toString());
 
+
+    Eraser.clearAppNotificationsByTag(data['messageId']);
     FlutterAppBadger.updateBadgeCount(PushNotificationService().notificationCount+1);
     if(data!=null){
       debugPrint('noti from  main');

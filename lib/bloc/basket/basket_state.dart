@@ -31,6 +31,9 @@ class BasketState with _$BasketState {
     required int productListIndex,
     required bool isAnimation,
     required bool isOrderPending,
+    required bool isSubUserAddToBasket,
+    required bool isSubUserCanCreateOrder,
+    required bool isAccountPermissionShimmering
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -61,6 +64,10 @@ class BasketState with _$BasketState {
      productListIndex: -1,
      isAnimation: false,
      isOrderPending: false,
+     isSubUserAddToBasket: false,
+     isSubUserCanCreateOrder: false,
+     isAccountPermissionShimmering: false
+
 
 );
 }

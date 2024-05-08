@@ -461,7 +461,33 @@
       "show_order":"Show order",
      "please_enter_surfaces":"Please enter the number of Returning surfaces",
      "pallets_return":"How many pallets do you return?",
-   "sub_user": "Sub Users"
+   "sub_user": "Sub Users",
+   "new_user": "New",
+   "new_sub_user": "New sub user",
+   "full_name": "Full name",
+   "phone_number": "Phone number for login",
+      "please_enter_sub_user": "Please enter sub user",
+      "account_permission": "Account Permission",
+      "categories_permissions": "Categories Permissions",
+      "brand_permissions": "Brands permissions",
+      "supplier_permissions": "Supplier permissions",
+      "account_admin": "Account admin",
+      "can_see_wallet": "Can see wallet",
+      "can_add_basket": "Can Add to basket",
+      "can_create_order": "Can create orders",
+      "can_approve_order": "Can approve orders",
+      "can_duplicate_order": "Can duplicate orders",
+      "can_see_update_business_info": "Can see and update business info",
+      "can_see_update_additional_info": "Can see and update additional info",
+      "can_see_update_times_info": "Can see and update times info",
+      "can_see_files_forms": "Can see files and forms",
+      "can_manage_sub_users": "Can manage sub users",
+      "select_all": "Select all",
+      "see_order": "Can see My orders",
+      "select_none": "Select none",
+      "notsufficientpermission":"notsufficientpermission"
+
+
 
 
 }

@@ -15,6 +15,7 @@ import '../../data/model/req_model/global_search_req_model/global_search_req_mod
 import '../../data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
+import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
@@ -52,7 +53,7 @@ class RecommendationProductsBloc
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
       if (event is _GetRecommendationProductsEvent) {
-        emit(state.copyWith(cartCount: preferences.getCartCount(),isGridView: preferences.getRecommendationProductGrid(),bottleDeposit: preferences.getBottleTax()));
+        emit(state.copyWith(isSubUserAddToBasket :preferences.getCanAddToBasket(),cartCount: preferences.getCartCount(),isGridView: preferences.getRecommendationProductGrid(),bottleDeposit: preferences.getBottleTax()));
         if (state.isLoadMore) {
           return;
         }
@@ -131,6 +132,7 @@ class RecommendationProductsBloc
       }
 
       else if (event is _RefreshListEvent) {
+        add(RecommendationProductsEvent.getPermissionList(context: event.context));
         emit(state.copyWith(
             pageNum: 0,
             recommendationProductsList: [],
@@ -611,8 +613,6 @@ class RecommendationProductsBloc
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
 
-              emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
 
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -759,7 +759,7 @@ class RecommendationProductsBloc
       }
       else if (event is _getCartCountEvent) {
         emit(
-            state.copyWith(cartCount: preferences.getCartCount()));
+            state.copyWith(cartCount: preferences.getCartCount(),isSubUserAddToBasket :preferences.getCanAddToBasket()));
       }
       else if (event is _getGridListView) {
         preferences.setRecommendationProductGridListView(isRecommendationProductGrid: !state.isGridView);
@@ -1015,6 +1015,55 @@ class RecommendationProductsBloc
       }
       else if(event is _RemoveRelatedProductEvent){
         emit(state.copyWith(relatedProductList: []));
+      }
+      else  if(event is _getPermissionList){
+        if(preferences.getSubUser()){
+          try {
+
+            final res = await DioClient(event.context).get(
+                path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+            AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
+            debugPrint('AccountPermission response = ${response.data.toString()}');
+            debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+            if (response.status == 200) {
+              var res = response.data?.permissions;
+              preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+              preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+              preferences.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+              preferences.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+              preferences.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+              preferences.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+              preferences.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
+              preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
+              preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
+              preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+              emit(state.copyWith(
+                isSubUserAddToBasket :res?.canAddToCart ?? false,
+              ));
+            } else {
+
+
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
+                  type: SnackBarType.FAILURE);
+
+            }
+          } on ServerException {
+
+          } catch (e) {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: e.toString(),
+                type: SnackBarType.FAILURE);
+
+          }
+        }
+
+
       }
 
 

@@ -90,8 +90,8 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^24.2.8
   flutter_screenutil: ^5.9.0
   modal_bottom_sheet: ^3.0.0-pre
-  device_preview:
   eraser: ^2.0.2
+
 
 dev_dependencies:
   flutter_test:

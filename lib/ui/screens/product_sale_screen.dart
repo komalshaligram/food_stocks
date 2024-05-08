@@ -264,6 +264,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              isSubUserAddToBasket: state.isSubUserAddToBasket,
                               bottleTax: state.bottleDeposit,
                               totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
                                   .productStockList[state.productStockUpdateIndex].quantity),

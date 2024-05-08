@@ -177,18 +177,18 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             reqUpdate.ProfileDetailsUpdateResModel response =
                 reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
             if (response.status == 200) {
-              preferencesHelper.removeCompanyLogo();
-              preferencesHelper.setUserCompanyLogoUrl(
-                  logoUrl: response.data!.client!.logo.toString());
+
               emit(state.copyWith(isLoading: false,companyLogo: preferencesHelper.getUserCompanyLogoUrl()));
-              preferencesHelper.setUserCompanyLogoUrl(
-                  logoUrl: response.data?.client?.logo.toString() ?? '');
+
               preferencesHelper.setEmailId(
                   userEmailId: response.data?.client?.email ?? '');
+              if(!preferencesHelper.getSubUser()){
               preferencesHelper.setUserName(
                   name: response
                       .data?.client?.clientDetail?.ownerName ??
                       '');
+              }
+
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -262,24 +262,22 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   accToken: profileResModel.data?.authToken?.accessToken ?? '');
               preferencesHelper.setRefreshToken(
                   refToken: profileResModel.data?.authToken?.refreshToken ?? '');
-              if ((profileResModel.data?.client?.clientData?.profileImage ??
-                      '') !=
-                  '') {
-                preferencesHelper.setUserImageUrl(
-                    imageUrl: profileResModel
-                            .data?.client?.clientData?.profileImage ??
+
+              if(!preferencesHelper.getSubUser()){
+                preferencesHelper.setUserName(
+                    name: profileResModel
+                        .data?.client?.clientData?.clientDetail?.ownerName ??
                         '');
+                if ((profileResModel.data?.client?.clientData?.profileImage ??
+                    '') !=
+                    '') {
+                  preferencesHelper.setUserImageUrl(
+                      imageUrl: profileResModel
+                          .data?.client?.clientData?.profileImage ??
+                          '');
+                }
               }
-              if ((profileResModel.data?.client?.clientData?.logo ?? '') !=
-                  '') {
-                preferencesHelper.setUserCompanyLogoUrl(
-                    logoUrl:
-                        profileResModel.data?.client?.clientData?.logo ?? '');
-              }
-              preferencesHelper.setUserName(
-                  name: profileResModel
-                          .data?.client?.clientData?.clientDetail?.ownerName ??
-                      '');
+
               preferencesHelper.setUserId(
                   id: profileResModel.data?.client?.clientData?.id ?? '');
               preferencesHelper.setEmailId(

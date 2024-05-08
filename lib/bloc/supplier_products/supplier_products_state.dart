@@ -34,6 +34,7 @@ class SupplierProductsState with _$SupplierProductsState {
     required int productListIndex,
     required String searchArg,
     required double bottleDeposit,
+    required bool isSubUserAddToBasket,
   }) = _SupplierProductsState;
 
   factory SupplierProductsState.initial() => SupplierProductsState(
@@ -71,5 +72,8 @@ class SupplierProductsState with _$SupplierProductsState {
       isRelatedShimmering: false,
       productListIndex: 0,
       searchArg: '',
-      bottleDeposit: 0);
+      bottleDeposit: 0,
+    isSubUserAddToBasket: false
+
+  );
 }

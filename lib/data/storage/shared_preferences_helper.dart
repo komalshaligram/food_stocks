@@ -1,3 +1,4 @@
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
@@ -29,6 +30,22 @@ class SharedPreferencesHelper {
   static const String planogramProductGrid = 'isPlanogramProductGrid';
   static const String recommendationProductGrid = 'isrecommendationProductGrid';
   static const String reorderProductGrid = 'isReorderProductGrid';
+  static const String subUser = 'isSubUser';
+
+  static const String accountAdmin = 'accountAdmin';
+  static const String seeWallet = 'seeWallet';
+  static const String addBasket = 'addBasket';
+  static const String createOrder = 'createOrder';
+  static const String seeOrder = 'seeOrder';
+  static const String approveOrder = 'approveOrder';
+  static const String duplicateOrder = 'duplicateOrder';
+  static const String updateBusinessInfo = 'updateBusinessInfo';
+  static const String updateAdditionalInfo = 'updateAdditionalInfo';
+  static const String updateTimeInfo = 'updateTimeInfo';
+  static const String seeFormsFiles = 'seeFormsFiles';
+  static const String manageSubUser = 'manageSubUser';
+  static const String subUserId = 'subUserId';
+
 
   final SharedPreferences prefs;
 
@@ -54,6 +71,22 @@ class SharedPreferencesHelper {
       await prefs.remove(lang);
       await prefs.remove(userLoggedIn);
       await prefs.remove(appVersion);
+      await prefs.remove(subUser);
+
+
+      await prefs.remove(accountAdmin);
+      await prefs.remove(seeWallet);
+      await prefs.remove(createOrder);
+      await prefs.remove(seeOrder);
+      await prefs.remove(approveOrder);
+      await prefs.remove(duplicateOrder);
+      await prefs.remove(updateAdditionalInfo);
+      await prefs.remove(updateBusinessInfo);
+      await prefs.remove(updateTimeInfo);
+      await prefs.remove(seeFormsFiles);
+      await prefs.remove(manageSubUser);
+      await prefs.remove(addBasket);
+      await prefs.remove(subUserId);
 
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
@@ -165,9 +198,71 @@ class SharedPreferencesHelper {
     await prefs.setBool(recommendationProductGrid, isRecommendationProductGrid);
   }
 
+  Future<void> setIsSubUser({required bool isSubUser}) async {
+    await prefs.setBool(subUser, isSubUser);
+  }
+
+  //permission
+
+  Future<void> setAccountAdmin({required bool isAccountAdmin}) async {
+    await prefs.setBool(accountAdmin, isAccountAdmin);
+  }
+
+  Future<void> setCanSeeWallet({required bool isSeeWallet}) async {
+    await prefs.setBool(seeWallet, isSeeWallet);
+  }
+
+  Future<void> setCanAddBasket({required bool isAddBasket}) async {
+    await prefs.setBool(addBasket, isAddBasket);
+  }
+
+  Future<void> setCanCreateOrder({required bool isCreateOrder}) async {
+    await prefs.setBool(createOrder, isCreateOrder);
+  }
+
+  Future<void> setCanSeeOrder({required bool isSeeOrder}) async {
+    await prefs.setBool(seeOrder, isSeeOrder);
+  }
+
+
+  Future<void> setCanApproveOrder({required bool isApproveOrder}) async {
+    await prefs.setBool(approveOrder, isApproveOrder);
+  }
+
+  Future<void> setCanDuplicateOrder({required bool isDuplicateOrder}) async {
+    await prefs.setBool(duplicateOrder, isDuplicateOrder);
+  }
+
+  Future<void> setCanUpdateBusinessInfo({required bool isUpdateBusinessInfo}) async {
+    await prefs.setBool(updateBusinessInfo, isUpdateBusinessInfo);
+  }
+
+  Future<void> setCanUpdateAdditionalInfo({required bool isUpdateAdditionalInfo}) async {
+    await prefs.setBool(updateAdditionalInfo, isUpdateAdditionalInfo);
+  }
+
+  Future<void> setCanUpdateTimeInfo({required bool isUpdateTimeInfo}) async {
+    await prefs.setBool(updateTimeInfo, isUpdateTimeInfo);
+  }
+
+
+  Future<void> setCanSeeFormsFiles({required bool isSeeFormsFiles}) async {
+    await prefs.setBool(seeFormsFiles, isSeeFormsFiles);
+  }
+
+  Future<void> setManageSubUser({required bool isManageSubUser}) async {
+    await prefs.setBool(manageSubUser, isManageSubUser);
+  }
+
+  Future<void> setSubUserId({required String id}) async {
+    await prefs.setString(subUserId, id);
+  }
+
+
+
 
   String getAppLanguage() {
-    return prefs.getString(lang) ?? 'he';
+    return prefs.getString(lang) ?? AppStrings.hebrewString;
   }
 
   bool getUserLoggedIn() {
@@ -262,5 +357,62 @@ class SharedPreferencesHelper {
   bool getReorderProductGrid() {
     return prefs.getBool(reorderProductGrid) ?? true;
   }
+
+  bool getSubUser() {
+    return prefs.getBool(subUser) ?? false;
+  }
+
+  //permission
+
+  bool getCanAccountAdmin() {
+    return prefs.getBool(accountAdmin) ?? true;
+  }
+
+  bool getCanSeeWallet() {
+    return prefs.getBool(seeWallet) ?? true;
+  }
+
+  bool getCanAddToBasket() {
+    return prefs.getBool(addBasket) ?? true;
+  }
+
+  bool getCanCreateOrder() {
+    return prefs.getBool(createOrder) ?? true;
+  }
+
+  bool getCanSeeOrder() {
+    return prefs.getBool(seeOrder) ?? true;
+  }
+
+  bool getCanApproveOrder() {
+    return prefs.getBool(approveOrder) ?? true;
+  }
+
+  bool getCanDuplicateOrder() {
+    return prefs.getBool(duplicateOrder) ?? true;
+  }
+
+  bool getCanUpdateBusinessInfo() {
+    return prefs.getBool(updateBusinessInfo) ?? true;
+  }
+
+  bool getCanUpdateAdditionalInfo() {
+    return prefs.getBool(updateAdditionalInfo) ?? true;
+  }
+  bool getCanUpdateTimeInfo() {
+    return prefs.getBool(updateTimeInfo) ?? true;
+  }
+  bool getCanSeeFormsFiles() {
+    return prefs.getBool(seeFormsFiles) ?? true;
+  }
+
+  bool getCanManageSubUser() {
+    return prefs.getBool(manageSubUser) ?? true;
+  }
+
+  String getSubUserId() {
+    return prefs.getString(subUserId) ?? '';
+  }
+
 
 }

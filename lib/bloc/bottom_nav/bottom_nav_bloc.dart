@@ -34,7 +34,8 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
 
       }
       else if (event is _UpdateCartCountEvent) {
-  //   emit(state.copyWith(isAnimation: false));
+        print('____bottomnav');
+     emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
      if(state.cartCount < preferencesHelper.getCartCount()){
        emit(state.copyWith(isAnimation: true));
      }
@@ -45,11 +46,14 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
           emit(state.copyWith(duringCelebration:true));
           await Future.delayed(const Duration(milliseconds: 2000));
           emit(state.copyWith(duringCelebration:false,isAnimation: false));
+
         }
         debugPrint('cart count bottom= ${state.cartCount}');
       }
 
       else if(event is _NavigateToStoreScreenEvent){
+
+          emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
 
         if(event.basketScreen == 'true'){
           emit(state.copyWith(index: 2 , arg : event.basketScreen));

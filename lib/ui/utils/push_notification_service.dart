@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:eraser/eraser.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
@@ -136,16 +137,17 @@ class PushNotificationService {
       final RemoteNotification? notification = message.notification;
       if (notification != null) {
         final String? messageId = message.messageId;
-        debugPrint('messageId___3___${messageId}');
+        debugPrint('open app___${messageId}');
         final AndroidNotification? android = message.notification?.android;
         debugPrint('data:${data.toString()}');
+
         if (data != null) {
           showNotification(
               notiId: notification.hashCode,
               androidIcon: android?.smallIcon ?? '',
               data: data,
               isNavigate: false,
-              showNotification: false,
+              showNotification: true,
               isAppOpen: true);
         }
 

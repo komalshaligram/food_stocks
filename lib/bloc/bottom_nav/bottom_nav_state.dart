@@ -11,17 +11,17 @@ class BottomNavState with _$BottomNavState {
     required String isStoreScreen,
     required bool isGuestUser,
     required String arg,
+    required bool isSubUserSeeWallet,
   }) = _BottomNavState;
 
-  factory BottomNavState.initial() =>  BottomNavState(
-        index: 0,
-        cartCount: 0,
-        isAnimation: false,
-        pushNotificationPath: '',
-        duringCelebration: false,
-    isStoreScreen: '',
-    isGuestUser: false,
-    arg: ''
-
-      );
+  factory BottomNavState.initial() => BottomNavState(
+      index: 0,
+      cartCount: 0,
+      isAnimation: false,
+      pushNotificationPath: '',
+      duringCelebration: false,
+      isStoreScreen: '',
+      isGuestUser: false,
+      arg: '',
+      isSubUserSeeWallet: false);
 }

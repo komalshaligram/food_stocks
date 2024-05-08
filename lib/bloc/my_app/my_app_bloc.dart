@@ -40,13 +40,14 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
         Map<String, dynamic> req = updatedProfileModel.toJson();
         Map<String, dynamic>? clientDetail =
             updatedProfileModel.clientDetail?.toJson();
-        debugPrint("update before Model = ${req}");
+
         clientDetail?.removeWhere((key, value) {
           if (value != null) {
             debugPrint("[$key] = $value");
           }
           return value == null;
         });
+
         req[AppStrings.clientDetailString] = clientDetail;
         req.removeWhere((key, value) {
           if (value != null) {
@@ -54,6 +55,7 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
           }
           return value == null;
         });
+        debugPrint("update before Model = ${req}");
         try {
           debugPrint('profile req = ${req}');
           final res = await DioClient(event.context).post(
@@ -65,7 +67,13 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
                 ProfileDetailsUpdateResModel.fromJson(res);
             debugPrint('profile response = ${response}');
             if (response.status == 200) {
+
+
               debugPrint('______success');
+
+
+
+
             } else {}
           }
         } on ServerException {}

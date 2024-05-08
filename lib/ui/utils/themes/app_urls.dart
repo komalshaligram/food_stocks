@@ -1,5 +1,5 @@
 class AppUrls {
- //static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
+// static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
   static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///devUrl
   static const String baseFileUrl = 'https://foodstock-buckets.s3.il-central-1.amazonaws.com/';
 
@@ -87,4 +87,13 @@ class AppUrls {
   static const String termsConditionUrl = '/v1/clients/getTermsAndConditionForm';
   static const String duplicateOrderUrl = '/v1/cart/duplicateOrder';
   static const String clientInvoicesUrl = '/v1/clients/clientInvoices';
+  static const String createSubUserUrl = '/v1/subuser/createSubuser';
+  static const String getAccountPermissionUrl = '/v1/subuser/accountpermissions/';
+  static const String getCategoriesPermissionUrl = '/v1/subuser/categorypermissions/';
+  static const String getBrandPermissionUrl = '/v1/subuser/brandpermissions/';
+  static const String getSupplierPermissionUrl = '/v1/subuser/supplierpermissions/';
+  static const String updatePermissionUrl = '/v1/subuser/updatepermissions/';
+  static const String getAllSubUserUrl = '/v1/subuser/getAllSubusers';
+  static const String deleteClientSubUserUrl = '/v1/subuser/deleteClientSubuser';
+  static const String updateSubUserUrl = '/v1/subuser/updateSubuser';
 }

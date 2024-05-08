@@ -33,6 +33,7 @@ import 'package:vibration/vibration.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
+import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
 import '../../data/model/res_model/previous_order_products_res_model/previous_order_products_res_model.dart';
@@ -81,7 +82,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       }
       else if (event is _GetProductCategoriesListEvent) {
          debugPrint('getGuestUser_____${preferencesHelper.getGuestUser()}');
-        emit(state.copyWith(isGuestUser: preferencesHelper.getGuestUser()));
+        emit(state.copyWith(isGuestUser: preferencesHelper.getGuestUser(),
+        isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()
+        ));
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
@@ -139,6 +142,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
                   .toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
+          debugPrint('sale response____${response}');
+
           if (response.status == 200) {
             List<ProductSale> saleProductsList =
                 response.data?.toList(growable: true) ?? [];
@@ -163,7 +168,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                type: SnackBarType.SUCCESS,
+                type: SnackBarType.FAILURE,
             );
           }
         } on ServerException {
@@ -174,10 +179,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       }
 
       else if (event is _GetRecommendationProductsListEvent) {
+
         if(!preferencesHelper.getGuestUser()){
           try {
-            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-                prefs: await SharedPreferences.getInstance());
+
             emit(state.copyWith(isShimmering: true));
             final res = await DioClient(event.context).post(
                 AppUrls.getRecommendationProductsUrl,
@@ -186,7 +191,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     .toJson(),);
             RecommendationProductsResModel response =
             RecommendationProductsResModel.fromJson(res);
-             debugPrint('storeresponse____${response}');
+             debugPrint('recommadation response____${response}');
+            debugPrint('recommadation url____${AppUrls.baseUrl}${AppUrls.getRecommendationProductsUrl}');
+
             if (response.status == 200) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: true);
@@ -205,10 +212,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               emit(state.copyWith(isShimmering: false));
               CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:
-                '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                type: SnackBarType.SUCCESS,
-
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
+                type: SnackBarType.FAILURE,
               );
             }
           } on ServerException {
@@ -646,6 +654,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         }
       }
       else if (event is _AddToCartProductEvent) {
+        print('cart id_ store____${preferencesHelper.getCartId()}');
         if (state.productStockList[state.productStockUpdateIndex]
             .productSupplierIds.isEmpty) {
           CustomSnackBar.showSnackBar(
@@ -1086,6 +1095,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 );
                 PreviousOrderProductsResModel response =
                 PreviousOrderProductsResModel.fromJson(res);
+                debugPrint(
+                    'previous order response = ${response}');
+                debugPrint(
+                    'previous order url = ${AppUrls.baseUrl}${AppUrls.getPreviousOrderProductsUrl}');
                 if (response.status == 200) {
                   debugPrint(
                       'previous order products len = ${response.previousProductData?.length}');
@@ -1108,9 +1121,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   emit(state.copyWith(isShimmering: false));
                   CustomSnackBar.showSnackBar(
                     context: event.context,
-                    title:
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                    type: SnackBarType.SUCCESS,
+                    title: AppStrings.getLocalizedStrings(
+                        response.message?.toLocalization() ??
+                            response.message!,
+                        event.context),
+                    type: SnackBarType.FAILURE,
 
                   );
                 }
@@ -1180,6 +1195,55 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
+      }
+
+      else  if(event is _getPermissionList){
+        if(preferencesHelper.getSubUser()){
+          try {
+            emit(state.copyWith(isAccountPermissionShimmering: true));
+            final res = await DioClient(event.context).get(
+                path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+            AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
+            debugPrint('AccountPermission response = ${response.data.toString()}');
+            debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+            if (response.status == 200) {
+              var res = response.data?.permissions;
+              preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+              preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+              preferencesHelper.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+              preferencesHelper.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+              preferencesHelper.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+              preferencesHelper.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+              preferencesHelper.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
+              preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
+              preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
+              preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+              emit(state.copyWith(isAccountPermissionShimmering:false,
+                  isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()
+              ));
+            } else {
+              emit(state.copyWith(isAccountPermissionShimmering: false));
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
+                  type: SnackBarType.FAILURE);
+
+            }
+          } on ServerException {
+            emit(state.copyWith(isAccountPermissionShimmering: false));
+          } catch (e) {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: e.toString(),
+                type: SnackBarType.FAILURE);
+            emit(state.copyWith(isAccountPermissionShimmering: false));
+          }
+        }
+
+
       }
 
     });

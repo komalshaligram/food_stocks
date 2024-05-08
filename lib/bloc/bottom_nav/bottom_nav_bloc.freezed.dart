@@ -544,6 +544,7 @@ mixin _$BottomNavState {
   String get isStoreScreen => throw _privateConstructorUsedError;
   bool get isGuestUser => throw _privateConstructorUsedError;
   String get arg => throw _privateConstructorUsedError;
+  bool get isSubUserSeeWallet => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BottomNavStateCopyWith<BottomNavState> get copyWith =>
@@ -564,7 +565,8 @@ abstract class $BottomNavStateCopyWith<$Res> {
       bool duringCelebration,
       String isStoreScreen,
       bool isGuestUser,
-      String arg});
+      String arg,
+      bool isSubUserSeeWallet});
 }
 
 /// @nodoc
@@ -588,6 +590,7 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
     Object? isStoreScreen = null,
     Object? isGuestUser = null,
     Object? arg = null,
+    Object? isSubUserSeeWallet = null,
   }) {
     return _then(_value.copyWith(
       index: null == index
@@ -622,6 +625,10 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
           ? _value.arg
           : arg // ignore: cast_nullable_to_non_nullable
               as String,
+      isSubUserSeeWallet: null == isSubUserSeeWallet
+          ? _value.isSubUserSeeWallet
+          : isSubUserSeeWallet // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -642,7 +649,8 @@ abstract class _$$BottomNavStateImplCopyWith<$Res>
       bool duringCelebration,
       String isStoreScreen,
       bool isGuestUser,
-      String arg});
+      String arg,
+      bool isSubUserSeeWallet});
 }
 
 /// @nodoc
@@ -664,6 +672,7 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
     Object? isStoreScreen = null,
     Object? isGuestUser = null,
     Object? arg = null,
+    Object? isSubUserSeeWallet = null,
   }) {
     return _then(_$BottomNavStateImpl(
       index: null == index
@@ -698,6 +707,10 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
           ? _value.arg
           : arg // ignore: cast_nullable_to_non_nullable
               as String,
+      isSubUserSeeWallet: null == isSubUserSeeWallet
+          ? _value.isSubUserSeeWallet
+          : isSubUserSeeWallet // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -713,7 +726,8 @@ class _$BottomNavStateImpl implements _BottomNavState {
       required this.duringCelebration,
       required this.isStoreScreen,
       required this.isGuestUser,
-      required this.arg});
+      required this.arg,
+      required this.isSubUserSeeWallet});
 
   @override
   final int index;
@@ -731,10 +745,12 @@ class _$BottomNavStateImpl implements _BottomNavState {
   final bool isGuestUser;
   @override
   final String arg;
+  @override
+  final bool isSubUserSeeWallet;
 
   @override
   String toString() {
-    return 'BottomNavState(index: $index, cartCount: $cartCount, isAnimation: $isAnimation, pushNotificationPath: $pushNotificationPath, duringCelebration: $duringCelebration, isStoreScreen: $isStoreScreen, isGuestUser: $isGuestUser, arg: $arg)';
+    return 'BottomNavState(index: $index, cartCount: $cartCount, isAnimation: $isAnimation, pushNotificationPath: $pushNotificationPath, duringCelebration: $duringCelebration, isStoreScreen: $isStoreScreen, isGuestUser: $isGuestUser, arg: $arg, isSubUserSeeWallet: $isSubUserSeeWallet)';
   }
 
   @override
@@ -755,12 +771,23 @@ class _$BottomNavStateImpl implements _BottomNavState {
                 other.isStoreScreen == isStoreScreen) &&
             (identical(other.isGuestUser, isGuestUser) ||
                 other.isGuestUser == isGuestUser) &&
-            (identical(other.arg, arg) || other.arg == arg));
+            (identical(other.arg, arg) || other.arg == arg) &&
+            (identical(other.isSubUserSeeWallet, isSubUserSeeWallet) ||
+                other.isSubUserSeeWallet == isSubUserSeeWallet));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, index, cartCount, isAnimation,
-      pushNotificationPath, duringCelebration, isStoreScreen, isGuestUser, arg);
+  int get hashCode => Object.hash(
+      runtimeType,
+      index,
+      cartCount,
+      isAnimation,
+      pushNotificationPath,
+      duringCelebration,
+      isStoreScreen,
+      isGuestUser,
+      arg,
+      isSubUserSeeWallet);
 
   @JsonKey(ignore: true)
   @override
@@ -779,7 +806,8 @@ abstract class _BottomNavState implements BottomNavState {
       required final bool duringCelebration,
       required final String isStoreScreen,
       required final bool isGuestUser,
-      required final String arg}) = _$BottomNavStateImpl;
+      required final String arg,
+      required final bool isSubUserSeeWallet}) = _$BottomNavStateImpl;
 
   @override
   int get index;
@@ -797,6 +825,8 @@ abstract class _BottomNavState implements BottomNavState {
   bool get isGuestUser;
   @override
   String get arg;
+  @override
+  bool get isSubUserSeeWallet;
   @override
   @JsonKey(ignore: true)
   _$$BottomNavStateImplCopyWith<_$BottomNavStateImpl> get copyWith =>

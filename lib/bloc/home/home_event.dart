@@ -106,4 +106,7 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
   const factory HomeEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
 
+  const factory HomeEvent.getPermissionList(
+      {required BuildContext context }) = _getPermissionList;
+
 }

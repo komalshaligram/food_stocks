@@ -32,6 +32,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
     required bool isRelatedShimmering,
     required int productListIndex,
     required double bottleDeposit,
+    required bool isSubUserAddToBasket,
   }) = _RecommendationProductsState;
 
   factory RecommendationProductsState.initial() => RecommendationProductsState(
@@ -67,5 +68,8 @@ class RecommendationProductsState with _$RecommendationProductsState {
       relatedProductList: [],
       isRelatedShimmering: false,
       productListIndex: -1,
-      bottleDeposit: 0);
+      bottleDeposit: 0,
+    isSubUserAddToBasket: false
+
+  );
 }

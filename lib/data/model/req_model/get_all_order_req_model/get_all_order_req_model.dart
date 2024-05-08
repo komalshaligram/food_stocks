@@ -11,11 +11,10 @@ part 'get_all_order_req_model.g.dart';
 class GetAllOrderReqModel with _$GetAllOrderReqModel {
   const factory GetAllOrderReqModel({
 
-    String? search,
 
-    String? orderId,
     int? pageNum,
     int? pageLimit,
+    String? userId
 
   }) = _GetAllOrderReqModel;
 

@@ -1,8 +1,7 @@
-import 'dart:io';
+
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/product_stock_model/product_stock_model.dart';
@@ -21,6 +20,7 @@ import 'package:vibration/vibration.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/order_model/product_details_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
+import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/order_send_res_model/order_send_res_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
@@ -49,6 +49,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       }
       else {
         if (event is _getAllCartEvent) {
+          emit(state.copyWith(isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(),
+          isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()));
           debugPrint('cartId____${preferencesHelper.getCartId()}');
 
           emit(state.copyWith(
@@ -183,7 +185,11 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 isLoading: false,
               ));
             } else {
-              emit(state.copyWith(isLoading: false));
+              list[event.listIndex].isProcess = false;
+              emit(state.copyWith(
+                basketProductList: list,
+                isLoading: false,
+              ));
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
@@ -193,7 +199,11 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   type: SnackBarType.FAILURE);
             }
           } on ServerException {
-            emit(state.copyWith(isLoading: false));
+            list[event.listIndex].isProcess = false;
+            emit(state.copyWith(
+              basketProductList: list,
+              isLoading: false,
+            ));
           }
         }
 
@@ -609,12 +619,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               debugPrint('supplier list = ${supplierList}');
               // debugPrint(
               //     'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
-              String note = productStockList.isEmpty
-                  ? ''
-                  : productStockList.indexOf(state.productStockList.last) ==
-                  productListIndex
-                  ? ''
-                  : productStockList[productListIndex][0].note;
+
               emit(state.copyWith(productStockList: []));
 
               emit(state.copyWith(
@@ -722,6 +727,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               emit(state.copyWith(productStockList: []));
               emit(state.copyWith(productStockList: productStockList));
             } else {
+
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
@@ -992,6 +998,59 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         }
         else if (event is _refreshEvent) {
           emit(state.copyWith(isOrderPending: false));
+        }
+
+        else  if(event is _getPermissionList){
+          if(preferencesHelper.getSubUser()){
+            try {
+              emit(state.copyWith(isAccountPermissionShimmering: true));
+              final res = await DioClient(event.context).get(
+                  path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+              AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
+              debugPrint('AccountPermission response = ${response.data.toString()}');
+              debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+              if (response.status == 200) {
+
+                var res = response.data?.permissions;
+                preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+                preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+                preferencesHelper.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+                preferencesHelper.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+                preferencesHelper.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+                preferencesHelper.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+                preferencesHelper.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
+                preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
+                preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
+                preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+                emit(state.copyWith(isAnimation: true));
+                emit(state.copyWith(isAccountPermissionShimmering:false,
+                  isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(),
+                    isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()
+                ));
+                emit(state.copyWith(isAnimation: false));
+              } else {
+                emit(state.copyWith(isAccountPermissionShimmering: false));
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: AppStrings.getLocalizedStrings(
+                        response.message?.toLocalization() ??
+                            response.message!,
+                        event.context),
+                    type: SnackBarType.FAILURE);
+
+              }
+            } on ServerException {
+              emit(state.copyWith(isAccountPermissionShimmering: false));
+            } catch (e) {
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: e.toString(),
+                  type: SnackBarType.FAILURE);
+              emit(state.copyWith(isAccountPermissionShimmering: false));
+            }
+          }
+
+
         }
       }
     });

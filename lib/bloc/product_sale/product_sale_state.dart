@@ -23,6 +23,7 @@ class ProductSaleState with _$ProductSaleState {
     required List<RelatedProductDatum> relatedProductList,
     required bool isRelatedShimmering,
     required double bottleDeposit,
+    required bool isSubUserAddToBasket,
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => ProductSaleState(
@@ -45,6 +46,7 @@ class ProductSaleState with _$ProductSaleState {
       isGuestUser : false,
     relatedProductList: [],
     isRelatedShimmering: false,
-      bottleDeposit:0
+      bottleDeposit:0,
+    isSubUserAddToBasket: false
       );
 }

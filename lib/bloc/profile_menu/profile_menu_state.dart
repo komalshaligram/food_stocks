@@ -12,6 +12,14 @@ class ProfileMenuState with _$ProfileMenuState {
     required String language,
     required String applicationVersion,
     required String buildNumber,
+    required bool isSubUserUpdateBusinessInfo,
+    required bool isSubUserUpdateAdditionalInfo,
+    required bool isSubUserUpdateTimeInfo,
+    required bool isSubUserSeeFormsFiles,
+    required bool isSubUserCanManageSubUser,
+    required bool isSubUserSeeOrder,
+    required bool isAccountPermissionShimmering
+
   }) = _ProfileMenuState;
 
   factory ProfileMenuState.initial() => ProfileMenuState(
@@ -23,6 +31,13 @@ class ProfileMenuState with _$ProfileMenuState {
     isLogOutProcess: false,
     language: 'he',
       applicationVersion: "1.0.0",
-      buildNumber: '1'
+      buildNumber: '1',
+    isSubUserSeeFormsFiles: false,
+    isSubUserUpdateAdditionalInfo: false,
+    isSubUserUpdateBusinessInfo: false,
+    isSubUserUpdateTimeInfo: false,
+    isSubUserCanManageSubUser: false,
+    isSubUserSeeOrder: false,
+      isAccountPermissionShimmering: false
       );
 }

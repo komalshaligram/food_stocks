@@ -158,6 +158,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
           body: FocusDetector(
             onFocusGained: (){
               bloc.add(PlanogramProductEvent.getCartCountEvent());
+              bloc.add(PlanogramProductEvent.getPermissionList(context: context));
             },
             child: SafeArea(
                 child: Stack(
@@ -634,6 +635,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              isSubUserAddToBasket: state.isSubUserAddToBasket,
                               totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
                                   .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]

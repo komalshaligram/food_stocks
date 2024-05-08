@@ -571,18 +571,12 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 ),
                 OperationTime(Saturday: saturdayAndHolidaysList),
 
-                /*   Tuesday: tuesdayList,
-                  Wednesday: wednesdayList,
-                  Thursday: thursdayList,
-                  Friday: fridayAndHolidayEvesList,
-                  Saturday: saturdayAndHolidaysList,*/
               ]);
 
               debugPrint('operation time reqMap + $reqMap');
               try {
                 final response1 = await DioClient(event.context).post(
                     AppUrls.operationTimeUrl + '/' + preferences.getUserId(),
-                    //  AppUrls.operationTimeUrl + '/' + '651ff55af3c2b715fe5f1ba8',
                     data: reqMap);
                 res.ActivityTimeResModel operationTimeResModel =
                     res.ActivityTimeResModel.fromJson(response1);
@@ -617,6 +611,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           } else {
             emit(state.copyWith(isLoading: true));
 
+
             ProfileDetailsUpdateReqModel reqMap = ProfileDetailsUpdateReqModel(
                 clientDetail: ClientDetail(operationTime: [
                   OperationTime(Sunday: sundayList),
@@ -638,6 +633,9 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               }
               return value == null;
             });
+
+
+
             req[AppStrings.clientDetailString] = clientDetail;
             req.removeWhere((key, value) {
               if (value != null) {

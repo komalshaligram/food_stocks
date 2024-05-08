@@ -42,4 +42,9 @@ class AppColors {
       end: Alignment.centerRight,
       colors: [AppColors.greyColor,AppColors.greyColor]);
 
+  static Gradient redGradientColor =  LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [AppColors.redColor,AppColors.redColor]);
+
 }
