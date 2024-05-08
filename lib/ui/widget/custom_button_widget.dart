@@ -18,6 +18,7 @@ class CustomButtonWidget extends StatelessWidget {
   final bool isFromConnectScreen;
   final double width;
   final double fontSize;
+  final bool isDeleteButton;
 
   CustomButtonWidget(
       {super.key,
@@ -34,6 +35,7 @@ class CustomButtonWidget extends StatelessWidget {
       this.loadingColor = Colors.white,
         this.width = double.maxFinite,
         this.fontSize = 18,
+        this.isDeleteButton = false
       });
 
   @override
@@ -43,7 +45,10 @@ class CustomButtonWidget extends StatelessWidget {
       width:width,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-          gradient: isFromConnectScreen ? AppColors.connectGradientColor: !enable ? AppColors.disableGradientColor: AppColors.appMainGradientColor,
+          gradient: isDeleteButton && !enable ?
+          AppColors.disableGradientColor
+              :  isDeleteButton && enable ? AppColors.redGradientColor :
+          isFromConnectScreen ? AppColors.connectGradientColor: !enable ? AppColors.disableGradientColor: AppColors.appMainGradientColor,
           border: Border.all(color: borderColor),
           borderRadius: BorderRadius.all(
               Radius.circular(radius ?? AppConstants.radius_10))),

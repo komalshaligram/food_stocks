@@ -75,4 +75,8 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
   const factory CompanyProductsEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
   const factory CompanyProductsEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
 
+
+  const factory CompanyProductsEvent.getPermissionList(
+      {required BuildContext context }) = _getPermissionList;
+
 }

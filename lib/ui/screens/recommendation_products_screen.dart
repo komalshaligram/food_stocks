@@ -165,6 +165,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
           body: FocusDetector(
             onFocusGained: (){
               bloc.add(RecommendationProductsEvent.getCartCountEvent());
+                bloc.add(RecommendationProductsEvent.getPermissionList(context: context));
             },
             child: SafeArea(
               child: Stack(
@@ -765,6 +766,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              isSubUserAddToBasket: state.isSubUserAddToBasket,
                               bottleTax: state.bottleDeposit,
                               totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
                                   .productStockList[state.productListIndex][

@@ -11,6 +11,7 @@ class OrderSuccessfulState with _$OrderSuccessfulState {
     required double balance,
     required double expensePercentage,
     required bool duringCelebration,
+    required bool isSubUserCanSeeWallet,
   }) = _OrderSuccessfulState;
 
   factory OrderSuccessfulState.initial() =>
@@ -21,7 +22,8 @@ class OrderSuccessfulState with _$OrderSuccessfulState {
         thisMonthExpense: 0,
         totalCredit: 0,
         expensePercentage: 0,
-        duringCelebration: true
+        duringCelebration: true,
+        isSubUserCanSeeWallet: false
       );
 
 }

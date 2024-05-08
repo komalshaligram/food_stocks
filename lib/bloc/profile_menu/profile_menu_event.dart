@@ -17,4 +17,8 @@ class ProfileMenuEvent with _$ProfileMenuEvent {
     required BuildContext context,
   }) = _getProfileDetailsEvent;
 
+  const factory ProfileMenuEvent.getPermissionList(
+      {required BuildContext context}) = _getPermissionList;
+
+
 }

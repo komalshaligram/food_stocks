@@ -71,4 +71,7 @@ class ReorderEvent with _$ReorderEvent {
   const factory ReorderEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
   const factory ReorderEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
 
+  const factory ReorderEvent.getPermissionList(
+      {required BuildContext context }) = _getPermissionList;
+
 }

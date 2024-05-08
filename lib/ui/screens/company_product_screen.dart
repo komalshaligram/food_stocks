@@ -1,6 +1,4 @@
 
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -11,7 +9,6 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/company_products/company_products_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
-
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -59,7 +56,8 @@ class CompanyProductsScreen extends StatelessWidget {
       create: (context) => CompanyProductsBloc()
         ..add(CompanyProductsEvent.getCompanyProductsIdEvent(
             companyId: args?[AppStrings.companyIdString]))
-        ..add(CompanyProductsEvent.getCompanyProductsListEvent(context: context)),
+        ..add(CompanyProductsEvent.getCompanyProductsListEvent(context: context))
+        ..add(CompanyProductsEvent.getPermissionList(context: context)),
       child: CompanyProductsScreenWidget(companyName:companyName,companyLogo:companyLogo),
     );
   }
@@ -75,7 +73,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
     CompanyProductsBloc bloc = context.read<CompanyProductsBloc>();
     return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
       builder: (context, state) {
-print('width___${getScreenWidth(context)}');
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
           floatingActionButton:  !state.isGuestUser?FloatingActionButton(
@@ -791,6 +788,7 @@ print('width___${getScreenWidth(context)}');
                          child: Column(
                            children: [
                              CommonProductDetailsWidget(
+                               isSubUserAddToBasket: state.isSubUserAddToBasket,
                                totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
                                    .productStockList[state.productListIndex][
                                state.productStockUpdateIndex]

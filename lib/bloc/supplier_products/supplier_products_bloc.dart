@@ -24,6 +24,7 @@ import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.d
 as InsertCartModel;
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
+import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
@@ -59,7 +60,7 @@ class SupplierProductsBloc
         debugPrint(
             'supplier id = ${state.supplierId}, search = ${state.search}');
       } else if (event is _GetSupplierProductsListEvent) {
-        emit(state.copyWith(isGuestUser: preferences.getGuestUser(),
+        emit(state.copyWith(isGuestUser: preferences.getGuestUser(),isSubUserAddToBasket :preferences.getCanAddToBasket(),
             isGridView: preferences.getSupplierProductGrid(),bottleDeposit:preferences.getBottleTax()));
         if (state.isLoadMore) {
           return;
@@ -219,6 +220,7 @@ class SupplierProductsBloc
         }
       }
       else if (event is _RefreshListEvent) {
+        add(SupplierProductsEvent.getPermissionList(context: event.context));
         emit(state.copyWith(
             pageNum: 0,
             productList: [],
@@ -772,7 +774,7 @@ class SupplierProductsBloc
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
-              add(SupplierProductsEvent.setCartCountEvent());
+            //  add(SupplierProductsEvent.setCartCountEvent());
               Vibration.vibrate();
               Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
@@ -829,6 +831,7 @@ class SupplierProductsBloc
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
+        emit(state.copyWith(isSubUserAddToBasket: preferences.getCanAddToBasket()));
         
         debugPrint('cart count supplier= ${preferences.getCartCount()}');
       } 
@@ -1043,6 +1046,54 @@ class SupplierProductsBloc
       }
       else if (event is _RemoveRelatedProductEvent) {
         emit(state.copyWith(relatedProductList: []));
+      }
+      else  if(event is _getPermissionList){
+        if(preferences.getSubUser()){
+          try {
+
+            final res = await DioClient(event.context).get(
+                path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+            AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
+            debugPrint('AccountPermission response = ${response.data.toString()}');
+            debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+            if (response.status == 200) {
+              var res = response.data?.permissions;
+              preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+              preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+              preferences.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+              preferences.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+              preferences.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+              preferences.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+              preferences.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
+              preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
+              preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
+              preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+              emit(state.copyWith(
+                isSubUserAddToBasket :res?.canAddToCart ?? false,
+              ));
+            } else {
+
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
+                  type: SnackBarType.FAILURE);
+
+            }
+          } on ServerException {
+
+          } catch (e) {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: e.toString(),
+                type: SnackBarType.FAILURE);
+
+          }
+        }
+
+
       }
     });
   }

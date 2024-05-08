@@ -1,29 +1,28 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/bloc/basket/basket_bloc.dart';
+
 import 'package:food_stock/data/model/req_model/remove_issue/remove_issue_req_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vibration/vibration.dart';
+
 import '../../data/error/exceptions.dart';
-import '../../data/model/order_model/product_details_model.dart';
+
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/req_model/create_issue/create_issue_req_model.dart'
     as create;
-import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
+
+import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
-import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
-import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
-as InsertCartModel;
+
 part 'product_details_event.dart';
 
 part 'product_details_state.dart';
@@ -31,8 +30,7 @@ part 'product_details_state.dart';
 part 'product_details_bloc.freezed.dart';
 
 class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> {
-  bool _isProductInCart = false;
-  String _cartProductId = '';
+
   ProductDetailsBloc() : super(ProductDetailsState.initial()) {
     on<ProductDetailsEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
@@ -41,7 +39,8 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
       if (event is _getOrderByIdEvent) {
         debugPrint('token___${preferencesHelper.getAuthToken()}');
         debugPrint('orderid___${event.orderId}');
-        emit(state.copyWith(isShimmering: true, isLoading: true , language:preferencesHelper.getAppLanguage()));
+        emit(state.copyWith(isShimmering: true, isLoading: true , language:preferencesHelper.getAppLanguage(),
+        isSubUserCreateDuplicateOrder: preferencesHelper.getCanDuplicateOrder()));
         try {
           final res = await DioClient(event.context).get(
             path: '${AppUrls.getOrderById}${preferencesHelper.getOrderId()}',
@@ -68,7 +67,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {emit(state.copyWith(
             isShimmering: false ,isLoading: false));}
@@ -78,7 +77,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),
-              type: SnackBarType.SUCCESS);
+              type: SnackBarType.FAILURE);
         }
       }
 
@@ -158,9 +157,8 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
                 'createIssue url  = ${AppUrls.baseUrl}${AppUrls.createIssueUrl}${event.orderId}');
             debugPrint('createIssue Req  = $reqMap');
             debugPrint('[order Id ] = ${event.orderId}');
-            if (AppStrings.statusString == 201) {
+            if (response[AppStrings.statusString] == 201) {
 
-              add(ProductDetailsEvent.getOrderByIdEvent(context: event.context, orderId: preferencesHelper.getOrderId()));
               emit(state.copyWith(isLoading: false));
 
                 Navigator.pop(event.BottomSheetContext,{AppStrings.issueString : event.issue});
@@ -173,17 +171,27 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
                           .toLocalization(),
                       event.context),
                   type: SnackBarType.SUCCESS);
+
             } else {
+              Navigator.pop(event.BottomSheetContext,{AppStrings.issueString :''});
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          response.message!,
+                      response[AppStrings.messageString].toString().toLocalization(),
                       event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.FAILURE);
             }
-          } on ServerException {}
+          } on ServerException {
+            Navigator.pop(event.BottomSheetContext,{AppStrings.issueString : ''});
+          }
+          catch(e){
+            Navigator.pop(event.BottomSheetContext,{AppStrings.issueString : ''});
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: e.toString(),
+                type: SnackBarType.FAILURE);
+          }
         } else {
           emit(state.copyWith(isLoading: false));
           Navigator.pop(event.context);
@@ -225,10 +233,10 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             );
 
             debugPrint(
-                'removeIssue url  = ${AppUrls.baseUrl}${AppUrls.removeIssueUrl}${event.orderId}');
+                'removeIssue url  = ${AppUrls.baseUrl}${AppUrls.removeIssueUrl}${'/'}${event.orderId}');
             debugPrint('removeIssue Req  = $reqMap');
             debugPrint('[order Id ] = ${event.orderId}');
-            if (AppStrings.statusString == 200) {
+            if (response[AppStrings.statusString] == 200) {
 
               add(ProductDetailsEvent.getOrderByIdEvent(context: event.context, orderId: preferencesHelper.getOrderId()));
               emit(state.copyWith(isRemoveProcess: false));
@@ -248,17 +256,16 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response[AppStrings.messageString].toLocalization() ??
-                          response[AppStrings.messageString],
+                      response[AppStrings.messageString].toString().toLocalization() ,
                       event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.FAILURE);
             }
           } on ServerException {  emit(state.copyWith(isRemoveProcess: false));}
         catch(e){
           CustomSnackBar.showSnackBar(
               context: event.context,
               title:e.toString(),
-              type: SnackBarType.SUCCESS);
+              type: SnackBarType.FAILURE);
         }
         }
 
@@ -279,31 +286,23 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           debugPrint('[cart Id ] = ${preferencesHelper.getCartId()}');
           debugPrint('duplicateOrder response = ${response}');
 
-          if (response['status'] == 200) {
-        //    add(ProductDetailsEvent.getAllCartEvent(context: event.context));
+          if (response[AppStrings.statusString] == 200) {
+
            Navigator.pop(event.dialogContext);
-           /* CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response[AppStrings.messageString]
-                        .toString()
-                        .toLocalization(),
-                    event.context),
-                type: SnackBarType.SUCCESS);*/
-          //  emit(state.copyWith(isCartCount: false));
+
             Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name,
                 arguments: {AppStrings.isBasketScreenString: 'true'}
             );
            emit(state.copyWith(isDuplicateOrderProcess: false));
           } else {
+            Navigator.pop(event.dialogContext);
             emit(state.copyWith(isDuplicateOrderProcess: false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response[AppStrings.messageString].toLocalization() ??
-                        response[AppStrings.messageString],
+                    response[AppStrings.messageString].toString().toLocalization(),
                     event.context),
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {
           emit(state.copyWith(isDuplicateOrderProcess: false));
@@ -313,11 +312,11 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           CustomSnackBar.showSnackBar(
               context: event.context,
               title:e.toString(),
-              type: SnackBarType.SUCCESS);
+              type: SnackBarType.FAILURE);
         }
       }
 
-      else   if (event is _getAllCartEvent) {
+      else if (event is _getAllCartEvent) {
         debugPrint('cartId____${preferencesHelper.getCartId()}');
 
         emit(state.copyWith(isDuplicateOrderProcess: true));
@@ -357,16 +356,65 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.FAILURE);
           }
-        } on ServerException { emit(state.copyWith( isDuplicateOrderProcess: false));}
+        } on ServerException { emit(state.copyWith(isDuplicateOrderProcess: false));}
         catch(e){
           emit(state.copyWith( isDuplicateOrderProcess: false));
           CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),
-              type: SnackBarType.SUCCESS);
+              type: SnackBarType.FAILURE);
         }
+      }
+
+      else  if(event is _getPermissionList){
+        if(preferencesHelper.getSubUser()){
+          try {
+
+            final res = await DioClient(event.context).get(
+                path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+            AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
+            debugPrint('AccountPermission response = ${response.data.toString()}');
+            debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+            if (response.status == 200) {
+              var res = response.data?.permissions;
+              preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+              preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+              preferencesHelper.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+              preferencesHelper.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+              preferencesHelper.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+              preferencesHelper.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+              preferencesHelper.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
+              preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
+              preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
+              preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+            /*  emit(state.copyWith(
+
+                 :res?.canAddToCart ?? false,
+              ));*/
+            } else {
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
+                  type: SnackBarType.FAILURE);
+
+            }
+          } on ServerException {
+
+          } catch (e) {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: e.toString(),
+                type: SnackBarType.FAILURE);
+
+          }
+        }
+
+
       }
 
 

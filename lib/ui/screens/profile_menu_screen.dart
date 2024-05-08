@@ -44,6 +44,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     ProfileMenuBloc bloc = context.read<ProfileMenuBloc>();
     return BlocListener<ProfileMenuBloc, ProfileMenuState>(
       listenWhen: (previous, current) {
+        BlocProvider.of<BottomNavBloc>(context)
+            .add(BottomNavEvent.updateCartCountEvent());
         if (previous.isHebrewLanguage != current.isHebrewLanguage) {
           return true;
         } else {
@@ -59,8 +61,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
             onFocusGained: () {
               bloc.add(ProfileMenuEvent.getPreferenceDataEvent());
               bloc.add(ProfileMenuEvent.getAppLanguage());
-              bloc.add(
-                  ProfileMenuEvent.getProfileDetailsEvent(context: context));
+              bloc.add(ProfileMenuEvent.getProfileDetailsEvent(context: context));
+              bloc.add(ProfileMenuEvent.getPermissionList(context: context));
             },
             child: Scaffold(
               backgroundColor: AppColors.pageColor,
@@ -143,9 +145,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Expanded(
+                   Expanded(
                       child: SingleChildScrollView(
-                        child: AnimationLimiter(
+                        child:  AnimationLimiter(
                           child: Column(
                             children: AnimationConfiguration.toStaggeredList(
                               duration: const Duration(seconds: 1),
@@ -156,7 +158,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                   child: FadeInAnimation(child: widget)),
                               children: [
                                 15.height,
-                                profileMenuTiles(
+                                state.isSubUserSeeOrder ? profileMenuTiles(
                                     title:
                                         AppLocalizations.of(context)!.my_orders,
                                     onTap: () {
@@ -164,7 +166,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                         context,
                                         RouteDefine.orderScreen.name,
                                       );
-                                    }),
+                                    }) : 0.width,
                                profileMenuTiles(
                                     title:
                                     AppLocalizations.of(context)!.my_invoices,
@@ -174,7 +176,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                         RouteDefine.invoiceScreen.name,
                                       );
                                     }),
-                                profileMenuTiles(
+                               state.isSubUserUpdateBusinessInfo ?  profileMenuTiles(
                                     title: AppLocalizations.of(context)!
                                         .business_details,
                                     onTap: () {
@@ -183,8 +185,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                           arguments: {
                                             AppStrings.isUpdateParamString: true
                                           });
-                                    }),
-                                profileMenuTiles(
+                                    }) : 0.width,
+                                state.isSubUserUpdateAdditionalInfo ?profileMenuTiles(
                                     title: AppLocalizations.of(context)!
                                         .more_details,
                                     onTap: () {
@@ -193,8 +195,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                           arguments: {
                                             AppStrings.isUpdateParamString: true
                                           });
-                                    }),
-                                profileMenuTiles(
+                                    }) : 0.width,
+                               state.isSubUserUpdateTimeInfo? profileMenuTiles(
                                     title: AppLocalizations.of(context)!
                                         .activity_time,
                                     onTap: () {
@@ -203,8 +205,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                           arguments: {
                                             AppStrings.isUpdateParamString: true
                                           });
-                                    }),
-                                profileMenuTiles(
+                                    }) : 0.width,
+                                state.isSubUserSeeFormsFiles ? profileMenuTiles(
                                     title: AppLocalizations.of(context)!
                                         .files,
                                     onTap: () {
@@ -213,17 +215,15 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                           arguments: {
                                             AppStrings.isUpdateParamString: true
                                           });
-                                    }),
-                         /*       profileMenuTiles(
+                                    }) : 0.width,
+                             state.isSubUserCanManageSubUser ? profileMenuTiles(
                                     title:
-                                    AppLocalizations.of(context)!.log_out,
+                                    AppLocalizations.of(context)!.sub_user,
                                     onTap: () {
-                                      !state.isLogOutProcess
-                                          ? logOutDialog(
-                                          context: context,
-                                          directionality: state.language)
-                                          : CupertinoActivityIndicator();
-                                    }),*/
+                                      Navigator.pushNamed(context,
+                                          RouteDefine.subUsersScreen.name,
+                                        );
+                                    }) : 0.width,
                                 profileMenuTiles(
                                     title:
                                         AppLocalizations.of(context)!.log_out,
@@ -251,7 +251,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-
+                    10.height,
                     Text('${AppLocalizations.of(context)!.application_version}${' '}${state.applicationVersion} (${state.buildNumber})',
                       style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,

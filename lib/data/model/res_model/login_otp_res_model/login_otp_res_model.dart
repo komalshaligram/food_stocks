@@ -27,6 +27,8 @@ class Data with _$Data {
     String? cartId,
     @JsonKey(name: "wallet")
     String? wallet,
+    String? adminType,
+    SubUserPermissions? subUserPermissions,
 
   }) = _Data;
 
@@ -46,6 +48,38 @@ class AuthToken with _$AuthToken {
 }
 
 @freezed
+class SubUserPermissions with _$SubUserPermissions {
+  const factory SubUserPermissions({
+    @JsonKey(name: "accountAdmin")
+    bool? accountAdmin,
+    @JsonKey(name: "canSeeWallet")
+    bool? canSeeWallet,
+    @JsonKey(name: "canCreateOrder")
+    bool? canCreateOrder,
+    @JsonKey(name: "canAddToCart")
+    bool? canAddToCart,
+    @JsonKey(name: "canSeeOrders")
+    bool? canSeeOrders,
+    @JsonKey(name: "canApproveOrders")
+    bool? canApproveOrders,
+    @JsonKey(name: "canDuplicateOrders")
+    bool? canDuplicateOrders,
+    @JsonKey(name: "canSeeAndUpdateBusinessInfo")
+    bool? canSeeAndUpdateBusinessInfo,
+    @JsonKey(name: "canSeeAndUpdateAdditionalInfo")
+    bool? canSeeAndUpdateAdditionalInfo,
+    @JsonKey(name: "canSeeFileAndForms")
+    bool? canSeeFileAndForms,
+    @JsonKey(name: "canManageSubUsers")
+    bool? canManageSubUsers,
+    @JsonKey(name: "canSeeAndUpdateTimesInfo")
+    bool? canSeeAndUpdateTimesInfo,
+  }) = _SubUserPermissions;
+
+  factory SubUserPermissions.fromJson(Map<String, dynamic> json) => _$SubUserPermissionsFromJson(json);
+}
+
+@freezed
 class User with _$User {
   const factory User({
     @JsonKey(name: "_id")
@@ -60,6 +94,8 @@ class User with _$User {
     String? profileImage,
     @JsonKey(name: "clientDetail")
     ClientDetail? clientDetail,
+    String? createdBy,
+    String? contactName,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

@@ -79,16 +79,37 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   accToken: response.data?.authToken?.accessToken ?? '');
               preferencesHelper.setRefreshToken(
                   refToken: response.data?.authToken?.refreshToken ?? '');
-              preferencesHelper.setUserId(id: response.data?.user?.id ?? '');
-              preferencesHelper.setUserName(
-                  name: response.data?.user?.clientDetail?.ownerName ?? '');
+              preferencesHelper.setUserId(id: (response.data?.adminType == AppStrings.subuserString) ? response.data?.user?.createdBy ?? '' :  response.data?.user?.id ?? '');
+              if(response.data?.adminType == AppStrings.subuserString){
+                preferencesHelper.setUserName(
+                    name: response.data?.user?.contactName ?? '');
+              }
+              else{
+                preferencesHelper.setUserName(
+                    name: response.data?.user?.clientDetail?.ownerName ?? '');
+              }
+
               preferencesHelper.setUserImageUrl(
                   imageUrl: response.data?.user?.profileImage ?? '');
-              preferencesHelper.setUserCompanyLogoUrl(
-                  logoUrl: response.data?.user?.logo ?? '');
               preferencesHelper.setUserLoggedIn(isLoggedIn: true);
               preferencesHelper.setWalletId(
                   UserWalletId: response.data?.wallet ?? '');
+              preferencesHelper.setIsSubUser(
+                  isSubUser: (response.data?.adminType == AppStrings.subuserString) ? true : false);
+              if(response.data?.adminType == AppStrings.subuserString){
+                var res = response.data?.subUserPermissions;
+                preferencesHelper.setSubUserId(id: response.data?.user?.id ?? '');
+                preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+                preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+                preferencesHelper.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+                preferencesHelper.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+                preferencesHelper.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+                preferencesHelper.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+                preferencesHelper.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
+                preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
+                preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
+                preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+              }
 
               emit(state.copyWith(isLoading: false));
               Navigator.popUntil(event.context,

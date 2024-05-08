@@ -22,6 +22,8 @@ class AppStrings {
   static const pendingString = 'pending';
   static const navigateToStore = 'true';
   static const orderStatusNo = 'orderStatusNo';
+  static const subuserString = 'subuser';
+
 
   //language Strings
   static const englishString = 'en';
@@ -93,6 +95,7 @@ class AppStrings {
 
 
 
+
   //validation strings
   static const businessNameValString = 'businessNameVal';
   static const hpValString = 'hpVal';
@@ -111,6 +114,8 @@ class AppStrings {
   static const branchValString = 'branchVal';
   static const accountValString = 'accountVal';
   static const surfaceValString = 'surfacesVal';
+  static const subUserValString = 'subUserNameVal';
+
 
 
 
@@ -138,6 +143,12 @@ class AppStrings {
   static const termsConditionParamString = 'termsConditionParam';
   static const privacyPolicyPdfString = 'pdf';
   static const clientFormString = 'clientForm';
+  static const subUserIdString = 'id';
+  static const subUserNameString = 'subUserName';
+  static const subUserPhoneNumberString = 'subUserPhoneNumber';
+  static const subUserEmailString = 'subUserEmail';
+  static const subUserIsraelIdString = 'subUserIsraelId';
+  static const isPopString = 'isPop';
 
   //hint strings
   static const hintNumberString = '1234567890';
@@ -408,6 +419,10 @@ class AppStrings {
         return AppLocalizations.of(context)!.comax_client_error;
       case 'issueremoved':
         return AppLocalizations.of(context)!.issueremoved;
+      case 'notsufficientpermission':
+        return AppLocalizations.of(context)!.notsufficientpermission;
+      case 'needtoapprovepreviousorder':
+        return AppLocalizations.of(context)!.needtoapprovepreviousorder;
     }
     return key;
   }

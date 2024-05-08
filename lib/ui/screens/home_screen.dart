@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
-
-//import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:flutter/services.dart';
@@ -57,7 +55,8 @@ class HomeScreen extends StatelessWidget {
         ..add(HomeEvent.getOrderCountEvent(context: context))
         ..add(HomeEvent.getWalletRecordEvent(context: context))
         ..add(HomeEvent.getMessageListEvent(context: context))
-        ..add(HomeEvent.getRecommendationProductsListEvent(context: context)),
+        ..add(HomeEvent.getRecommendationProductsListEvent(context: context))
+      ..add(HomeEvent.getPermissionList(context: context)),
       child: HomeScreenWidget(isNavigation: isSubCategory),
     );
   }
@@ -75,6 +74,10 @@ class HomeScreenWidget extends StatelessWidget {
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
         if(state.isCartCountChange){
+          BlocProvider.of<BottomNavBloc>(context)
+              .add(BottomNavEvent.updateCartCountEvent());
+        }
+        if(state.isAccountPermissionShimmering){
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.updateCartCountEvent());
         }
@@ -96,6 +99,7 @@ class HomeScreenWidget extends StatelessWidget {
                 bloc.add(HomeEvent.getCartCountEvent(context: context));
                 bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
                 bloc.add(HomeEvent.generalSettings(context: context));
+                bloc.add(HomeEvent.getPermissionList(context: context));
               },
               child: SafeArea(
                 child: Column(
@@ -276,7 +280,7 @@ class HomeScreenWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 80.height,
-                                GestureDetector(
+                                state.isSubUserSeeWallet ? GestureDetector(
                                   onTap: () {
                                     context
                                         .read<BottomNavBloc>()
@@ -302,7 +306,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             Radius.circular(10.0))),
                                     child: Row(
                                       children: [
-                                        Expanded(
+                                      Expanded(
                                             flex: 1,
                                             child: Column(
                                               mainAxisAlignment:
@@ -339,7 +343,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                   ),
                                                 ),
                                               ],
-                                            )),
+                                            )) ,
                                         5.width,
                                         Expanded(
                                           flex: 3,
@@ -405,7 +409,7 @@ class HomeScreenWidget extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                ),
+                                ) : 0.width,
                                 20.height,
                                  state.pesachBannerShimmering && state.pesachBannerURL.isEmpty  ? PesachBannerShimmerWidget():  state.showPesachBanner ?InkWell(
                                   onTap: (){
@@ -1092,6 +1096,7 @@ class HomeScreenWidget extends StatelessWidget {
                             child: Column(
                                 children: [
                                   CommonProductDetailsWidget(
+                                    isSubUserAddToBasket: state.isSubUserAddToBasket,
                                     totalBottleDeposit: (state.bottlePrice * state.productDetails.first.numberOfUnit!.toDouble()* state
                                         .productStockList[state.productListIndex][
                                     state.productStockUpdateIndex]

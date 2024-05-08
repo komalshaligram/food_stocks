@@ -163,6 +163,7 @@ class ReorderScreenWidget extends StatelessWidget {
           body: FocusDetector(
             onFocusGained: (){
               bloc.add(ReorderEvent.getCartCountEvent());
+              bloc.add(ReorderEvent.getPermissionList(context: context));
             },
             child: SafeArea(
               child: Stack(
@@ -757,6 +758,7 @@ class ReorderScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              isSubUserAddToBasket: state.isSubUserAddToBasket,
                               bottleTax: state.bottleDeposit,
                               totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
                                   .productStockList[state.productListIndex][

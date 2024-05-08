@@ -12,7 +12,6 @@ import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/file_upload_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../bloc/file_upload/file_upload_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';

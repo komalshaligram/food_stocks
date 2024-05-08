@@ -102,7 +102,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                             ),
                           ),
                           20.height,
-                          Container(
+                          state.isSubUserCanSeeWallet ? Container(
                             width: getScreenWidth(context),
                             clipBehavior: Clip.hardEdge,
                             padding: const EdgeInsets.symmetric(
@@ -221,7 +221,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                 ),
                               ],
                             ),
-                          ),
+                          ) : 0.width,
                           Expanded(
                             flex: 5,
                             child: SizedBox(

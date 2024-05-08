@@ -19,8 +19,11 @@ import 'package:food_stock/ui/screens/reorder_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
 import 'package:food_stock/ui/screens/store_category_screen.dart';
 import 'package:food_stock/ui/screens/supplier_products_screen.dart';
+import '../ui/screens/account_permission_screen.dart';
 import '../ui/screens/bank_info_screen.dart';
 import '../ui/screens/basket_screen.dart';
+import '../ui/screens/brands_permission_screen.dart';
+import '../ui/screens/categories_permission_screen.dart';
 import '../ui/screens/company_product_screen.dart';
 import '../ui/screens/company_screen.dart';
 import '../ui/screens/connect_screen.dart';
@@ -38,6 +41,9 @@ import '../ui/screens/profile_screen.dart';
 import '../ui/screens/more_details_screen.dart';
 import '../ui/screens/shipment_verification_screen.dart';
 import '../ui/screens/store_screen.dart';
+import '../ui/screens/sub_users_profile_screen.dart';
+import '../ui/screens/sub_users_screen.dart';
+import '../ui/screens/supplier_permission_screen.dart';
 import '../ui/screens/supplier_screen.dart';
 import '../ui/screens/wallet_screen.dart';
 
@@ -84,7 +90,14 @@ enum RouteDefine {
   formDataScreen,
   bankInfoScreen, privacyPolicyScreen,
   previewScreen,
-  invoiceScreen, invoicePdfScreen,
+  invoiceScreen,
+  invoicePdfScreen,
+  subUsersScreen,
+  subUsersProfileScreen,
+  accountPermissionScreen,
+  categoriesPermissionScreen,
+  brandPermissionScreen,
+  supplierPermissionScreen,
 
 }
 
@@ -139,6 +152,13 @@ class AppRouting {
       RouteDefine.previewScreen.name: (_) => PreviewScreenRoute.route,
       RouteDefine.invoiceScreen.name: (_) => InvoiceRoute.route,
       RouteDefine.invoicePdfScreen.name: (_) => InvoicePdfRoute.route,
+      RouteDefine.subUsersScreen.name: (_) => SubUsersRoute.route,
+      RouteDefine.subUsersProfileScreen.name: (_) => SubUsersProfileRoute.route,
+      RouteDefine.accountPermissionScreen.name: (_) => AccountPermissionRoute.route,
+      RouteDefine.categoriesPermissionScreen.name: (_) => CategoriesPermissionRoute.route,
+      RouteDefine.brandPermissionScreen.name: (_) => BrandsPermissionRoute.route,
+      RouteDefine.supplierPermissionScreen.name: (_) => SupplierPermissionRoute.route,
+
     };
 
     final routeBuilder = routes[settings.name];

@@ -10,6 +10,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart';
+import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
 
 import '../../data/services/locale_provider.dart';
@@ -38,7 +39,16 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
           debugPrint('[UserImageUrl]  ${preferences.getUserImageUrl()}');
           debugPrint('[username]   ${preferences.getUserName()}');
           debugPrint('[logo]  ${preferences.getUserCompanyLogoUrl()}');
-          emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl(),language: preferences.getAppLanguage()));
+
+          emit(state.copyWith(
+              UserImageUrl: preferences.getUserImageUrl(),language: preferences.getAppLanguage(),
+            isSubUserSeeOrder: preferences.getCanSeeOrder(),
+            isSubUserCanManageSubUser: preferences.getCanManageSubUser(),
+            isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(),
+            isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(),
+            isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(),
+            isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles()
+          ));
           emit(state.copyWith(
               UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
           emit(state.copyWith(userName: preferences.getUserName()));
@@ -118,14 +128,14 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             if (response.status == 200) {
               debugPrint(
                   'image = ${response.data?.clients?.first.profileImage}');
-              preferences.setUserImageUrl(imageUrl: response.data?.clients?.first.profileImage ?? '');
-              preferences.setUserCompanyLogoUrl(logoUrl: response.data?.clients?.first.logo ?? '');
-              emit(
-                state.copyWith(
+              if(!preferences.getSubUser()){
+                preferences.setUserImageUrl(imageUrl: response.data?.clients?.first.profileImage ?? '');
+                emit(
+                  state.copyWith(
                     UserImageUrl: response.data?.clients?.first.profileImage ?? '',
-                    UserCompanyLogoUrl :response.data?.clients?.first.logo ?? ''
-                ),
-              );
+                  ),
+                );
+              }
             } else {
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -140,6 +150,64 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
           } catch (e) {
 
           }
+
+        }
+
+        else  if(event is _getPermissionList){
+          if(preferences.getSubUser()){
+            try {
+
+              final res = await DioClient(event.context).get(
+                  path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+              AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
+              debugPrint('AccountPermission response = ${response.data.toString()}');
+              debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+              if (response.status == 200) {
+                var res = response.data?.permissions;
+                preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+                emit(state.copyWith(isAccountPermissionShimmering: true));
+                preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+                preferences.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+                preferences.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+                preferences.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+                preferences.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+                preferences.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
+                preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
+                preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
+                preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+
+                emit(state.copyWith(
+                  isAccountPermissionShimmering: false,
+                    isSubUserSeeOrder: preferences.getCanSeeOrder(),
+                    isSubUserCanManageSubUser: preferences.getCanManageSubUser(),
+                    isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(),
+                    isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(),
+                    isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(),
+                    isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles()
+                ));
+
+              } else {
+                emit(state.copyWith(isAccountPermissionShimmering: false));
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: AppStrings.getLocalizedStrings(
+                        response.message?.toLocalization() ??
+                            response.message!,
+                        event.context),
+                    type: SnackBarType.FAILURE);
+
+              }
+            } on ServerException {
+              emit(state.copyWith(isAccountPermissionShimmering: false));
+            } catch (e) {
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: e.toString(),
+                  type: SnackBarType.FAILURE);
+              emit(state.copyWith(isAccountPermissionShimmering: false));
+            }
+          }
+
 
         }
       }

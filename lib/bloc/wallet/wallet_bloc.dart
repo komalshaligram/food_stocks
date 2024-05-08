@@ -76,7 +76,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
             debugPrint('WalletRecord url  = ${AppUrls.baseUrl}${AppUrls.walletRecordUrl}');
             WalletRecordResModel response = WalletRecordResModel.fromJson(res);
-            //    debugPrint('WalletRecordResModel  = $response');
+                debugPrint('WalletRecordResModel  = $response');
 
             if (response.status == 200) {
               emit(state.copyWith(
@@ -114,7 +114,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 'totalExpenseByYearUrl url  = ${AppUrls.baseUrl}${AppUrls.totalExpenseByYearUrl}');
             expense.TotalExpenseResModel response =
             expense.TotalExpenseResModel.fromJson(res);
-            //  debugPrint('TotalExpenseResModel  = $response');
+              debugPrint('TotalExpenseRes  = $response');
 
             if (response.status == 200) {
 
@@ -198,7 +198,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 'AllWalletTransaction url  = ${AppUrls.baseUrl}${AppUrls.getAllWalletTransactionUrl}');
             AllWalletTransactionResModel response =
             AllWalletTransactionResModel.fromJson(res);
-            // debugPrint('AllWalletTransactionResModel  = $response');
+             debugPrint('AllWalletTransactionResModel  = $response');
 
             if (response.status == 200) {
               List<Datum> temp =
@@ -323,6 +323,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           } on ServerException {
             emit(state.copyWith(isExportShimmering: false));
           } catch (e) {
+            debugPrint('catch1');
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),
@@ -355,12 +356,13 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
             debugPrint('getOrdersCountUrl url  = ${AppUrls.baseUrl}${AppUrls.getOrdersCountUrl}');
             GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
-            //   debugPrint('getOrdersCount response  = ${response}');
+               debugPrint('getOrdersCount response  = ${response}');
             if (response.status == 200) {
-              emit(state.copyWith(orderThisMonth: response.data!.toInt()));
+              emit(state.copyWith(orderThisMonth: (response.data?.toInt() ?? 0 )));
             }
           } on ServerException {
           } catch (e) {
+            debugPrint('catch');
           /*  CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),

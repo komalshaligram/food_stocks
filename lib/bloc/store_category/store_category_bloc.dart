@@ -25,6 +25,7 @@ import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.d
 as InsertCartModel;
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
+import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/get_planogram_by_id/get_planogram_by_id_model.dart';
 import '../../data/model/res_model/get_planogram_product/get_planogram_product_model.dart';
@@ -60,7 +61,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       if (event is _isCategoryEvent) {
          debugPrint('isSubCategory_____${event.isSubCategory}');
         emit(state.copyWith(isSubCategory: event.isSubCategory ,isGridView: preferences.getIsGridView(),
-            isGuestUser: preferences.getGuestUser(),bottleDeposit: preferences.getBottleTax()
+            isGuestUser: preferences.getGuestUser(),bottleDeposit: preferences.getBottleTax(),
+          isSubUserAddToBasket: preferences.getCanAddToBasket()
         ));
       }
       if (event is _ChangeCategoryExpansionEvent) {
@@ -214,6 +216,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         state.subCategoryRefreshController.loadComplete();
       }
       else if (event is _SubCategoryRefreshListEvent) {
+        add(StoreCategoryEvent.getPermissionList(context: event.context));
         emit(state.copyWith(
             subCategoryPageNum: 0,
             subCategoryList: [],
@@ -227,6 +230,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
       else if (event is _GetPlanoGramProductsEvent) {
 
+
         if (state.isLoadMore) {
           return;
         }
@@ -235,6 +239,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
           }
           else{
+
             add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
           }
           return;
@@ -343,13 +348,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     ? true
                     : false
             ));
-
-         /*     emit(state.copyWith(
-                  isBottomOfPlanoGrams: planoGramsList.length ==
-                      (response.metaData?.totalFilteredCount ?? 0)
-                      ? true
-                      : false));*/
-
 
           } else {
             emit(state.copyWith(isLoadMore: false));
@@ -1173,7 +1171,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
           if (response.status == 200) {
             add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
-            // add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
             parentCategoryId = response.data?.planogram?.categoryId ?? '';
             emit(state.copyWith(
                 categoryName : response.data?.planogram?.categoryName ?? '',
@@ -1192,7 +1189,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       }
 
       else if(event is _getPlanogramAllProductEvent){
-
+        add(StoreCategoryEvent.getPermissionList(context: event.context));
         if (state.isLoadMore) {
           return;
         }
@@ -1204,7 +1201,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           List<PlanogramAllProduct> planogramProductList =
           state.planogramProductList.toList(growable: true);
           emit(state.copyWith(isPlanogramProductShimmering: true));
-
 
           GetSubCategoriesProductReqModel getSubCategoriesProductReqModel = GetSubCategoriesProductReqModel(
               subCategoryId: state.subCategoryId,
@@ -1318,12 +1314,58 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             title: AppStrings.getLocalizedStrings(
                 response.message.toLocalization(),
                 event.context),
-            type: SnackBarType.SUCCESS,
+            type: SnackBarType.FAILURE,
           );
         }
       }
       else if(event is _RemoveRelatedProductEvent){
         emit(state.copyWith(relatedProductList: []));
+      }
+      else  if(event is _getPermissionList){
+        if(preferences.getSubUser()){
+          try {
+            final res = await DioClient(event.context).get(
+                path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+            AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
+            debugPrint('AccountPermission response = ${response.data.toString()}');
+            debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+            if (response.status == 200) {
+              var res = response.data?.permissions;
+              preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+              preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+              preferences.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+              preferences.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+              preferences.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+              preferences.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+              preferences.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
+              preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
+              preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
+              preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+              emit(state.copyWith(
+                isSubUserAddToBasket :res?.canAddToCart ?? false,
+              ));
+            } else {
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
+                  type: SnackBarType.FAILURE);
+
+            }
+          } on ServerException {
+
+          } catch (e) {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: e.toString(),
+                type: SnackBarType.FAILURE);
+
+          }
+        }
+
+
       }
 
     });

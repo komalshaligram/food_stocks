@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/pesach_products/pesach_products_bloc.dart';
-import 'package:food_stock/bloc/supplier_products/supplier_products_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/data/model/search_model/search_model.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -169,6 +168,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
             body: FocusDetector(
               onFocusGained: (){
                 bloc.add(PesachProductsEvent.getCartCountEvent());
+                bloc.add(PesachProductsEvent.getPermissionList(context: context));
               },
               child: SafeArea(
                 child: Stack(
@@ -822,6 +822,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              isSubUserAddToBasket: state.isSubUserAddToBasket,
                               totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
                                   .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
