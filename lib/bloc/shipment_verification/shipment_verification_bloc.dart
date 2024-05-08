@@ -40,7 +40,7 @@ class ShipmentVerificationBloc
 
     else  if (event is _deliveryConfirmEvent) {
         String signUrl = '';
-        print('surfaces____${state.surfacesController.text}');
+        debugPrint('surfaces____${state.surfacesController.text}');
         emit(state.copyWith(isLoading: true));
         if (event.signPath.isNotEmpty) {
           try {

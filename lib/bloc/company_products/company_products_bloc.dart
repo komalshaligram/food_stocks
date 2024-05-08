@@ -400,11 +400,7 @@ class CompanyProductsBloc
             [state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title:
-                  '${AppLocalizations.of(event.context)!.please_select_supplier}',
-                  type: SnackBarType.FAILURE);
+
               return;
             }
             productStockList[state.productListIndex]
@@ -560,11 +556,7 @@ class CompanyProductsBloc
       else if (event is _AddToCartProductEvent) {
         if (state.productStockList[state.productListIndex][state.productStockUpdateIndex]
             .productSupplierIds.isEmpty) {
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title:
-                  '${AppLocalizations.of(event.context)!.please_select_supplier}',
-              type: SnackBarType.FAILURE);
+
           return;
         }
         if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity ==
@@ -703,7 +695,6 @@ class CompanyProductsBloc
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
-                isNoteOpen: false,
                 quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                 productSupplierIds: '',
                 totalPrice: 0.0,
@@ -713,7 +704,7 @@ class CompanyProductsBloc
 
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,duringCelebration: true));
-              await Future.delayed(const Duration(milliseconds: 500));
+              await Future.delayed(const Duration(milliseconds: 1000));
               emit(state.copyWith(duringCelebration: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -753,7 +744,6 @@ class CompanyProductsBloc
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
-        
         debugPrint('cart count company= ${preferences.getCartCount()}');
       }
       else if (event is _UpdateImageIndexEvent) {

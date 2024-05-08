@@ -573,6 +573,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont, color: AppColors.orangeColor),
                           ) : 0.height,
+                          !isSubUserAddToBasket ? 13.height : 0.width,
                           isSubUserAddToBasket ? CommonProductDetailsButton(
                               isLoading: isLoading,
                               isSupplierAvailable: true,

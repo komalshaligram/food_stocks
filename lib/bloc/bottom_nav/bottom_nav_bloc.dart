@@ -34,8 +34,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
 
       }
       else if (event is _UpdateCartCountEvent) {
-        print('____bottomnav');
-     emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
+
      if(state.cartCount < preferencesHelper.getCartCount()){
        emit(state.copyWith(isAnimation: true));
      }
@@ -61,6 +60,9 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         else if(event.storeScreen != ''){
           emit(state.copyWith(index: 1,  arg : event.storeScreen));
         }
+      }
+      else if(event is _seeWalletPermissionUpdateEvent){
+        emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
       }
     });
   }

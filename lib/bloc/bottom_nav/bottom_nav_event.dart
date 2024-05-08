@@ -12,4 +12,6 @@ class BottomNavEvent with _$BottomNavEvent {
         required String storeScreen,
         required String basketScreen,
       }) = _NavigateToStoreScreenEvent;
+
+  const factory BottomNavEvent.seeWalletPermissionUpdateEvent() = _seeWalletPermissionUpdateEvent;
 }
