@@ -3,7 +3,6 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/data/error/exceptions.dart';
-import 'package:food_stock/data/model/req_model/supplier_products_req_model/supplier_products_req_model.dart';
 import 'package:food_stock/data/model/res_model/pesach_products_res_model/pesach_products_res_model.dart';
 import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -22,6 +21,7 @@ as InsertCartModel;
 import '../../data/model/req_model/pesach_product_req_model/pesach_product_req_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
+import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
@@ -54,7 +54,9 @@ class PesachProductsBloc
       if (event is _GetSupplierProductsListEvent) {
         emit(state.copyWith(isGuestUser: preferences.getGuestUser(),
             bottleDeposit: preferences.getBottleTax(),
-            isGridView: preferences.getSupplierProductGrid()));
+            isGridView: preferences.getSupplierProductGrid(),
+          isSubUserAddToBasket :preferences.getCanAddToBasket(),
+        ));
         if (state.isLoadMore) {
           return;
         }
@@ -143,6 +145,7 @@ class PesachProductsBloc
       }
 
       else if (event is _RefreshListEvent) {
+        add(PesachProductsEvent.getPermissionList(context: event.context));
         emit(state.copyWith(
             pageNum: 0,
             productList: [],
@@ -737,7 +740,7 @@ class PesachProductsBloc
       else if (event is _SetCartCountEvent) {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
-        await preferences.setCartCount(count: preferences.getCartCount() + 1);
+        await preferences.setCartCount(count: preferences.getCartCount() + 1, );
         
         debugPrint('cart count supplier= ${preferences.getCartCount()}');
       }
@@ -956,7 +959,57 @@ class PesachProductsBloc
       }
       else if (event is _getCartCountEvent) {
         emit(
-            state.copyWith(cartCount: preferences.getCartCount()));
+            state.copyWith(cartCount: preferences.getCartCount(), isSubUserAddToBasket :preferences.getCanAddToBasket(),));
+      }
+      else  if(event is _getPermissionList){
+        if(preferences.getSubUser()){
+          try {
+
+            final res = await DioClient(event.context).get(
+                path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+            AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
+            debugPrint('AccountPermission response = ${response.data.toString()}');
+            debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+            if (response.status == 200) {
+              var res = response.data?.permissions;
+              preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+              preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+              preferences.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+              preferences.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+              preferences.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+              preferences.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+              preferences.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
+              preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
+              preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
+              preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+              emit(state.copyWith(
+
+                isSubUserAddToBasket :res?.canAddToCart ?? false,
+              ));
+            } else {
+
+
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
+                  type: SnackBarType.FAILURE);
+
+            }
+          } on ServerException {
+
+          } catch (e) {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: e.toString(),
+                type: SnackBarType.FAILURE);
+
+          }
+        }
+
+
       }
 
     });

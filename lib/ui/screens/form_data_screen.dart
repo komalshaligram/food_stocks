@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/form_data/form_data_bloc.dart';
-import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
@@ -15,8 +14,7 @@ import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import '../widget/form_data_screen_shimmer_widget.dart';
-import '../widget/more_details_screen_shimmer_widget.dart';
-import '../widget/profile_screen_shimmer_widget.dart';
+
 
 class FormDataRoute {
   static Widget get route => const FormDataScreen();

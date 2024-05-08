@@ -26,10 +26,10 @@ class OrderSuccessfulBloc
 
   OrderSuccessfulBloc() : super(OrderSuccessfulState.initial()) {
     on<OrderSuccessfulEvent>((event, emit) async {
-
+      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+          prefs: await SharedPreferences.getInstance());
       if (event is _getWalletRecordEvent) {
-        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-            prefs: await SharedPreferences.getInstance());
+
         try {
           WalletRecordReqModel reqMap =
               WalletRecordReqModel(userId: preferencesHelper.getUserId());
@@ -64,6 +64,7 @@ class OrderSuccessfulBloc
       }
 
       if(event is _getOrderCountEvent){
+        emit(state.copyWith(isSubUserCanSeeWallet:preferencesHelper.getCanSeeWallet()));
         try {
           int daysInMonth(DateTime date) => DateTimeRange(
               start: DateTime(date.year, date.month, 1),

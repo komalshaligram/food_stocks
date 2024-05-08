@@ -25,6 +25,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           prefs: await SharedPreferences.getInstance());
       debugPrint('[token]   ${preferencesHelper.getAuthToken()}');
       if(event is _getAllOrderEvent){
+
         if (state.isLoadMore) {
           return;
         }
@@ -34,11 +35,13 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         try {
           emit(state.copyWith(
               isShimmering: state.pageNum == 0 ? true : false,
-              isLoadMore: state.pageNum == 0 ? false : true));
+              isLoadMore: state.pageNum == 0 ? false : true
+          ));
 
           GetAllOrderReqModel reqMap = GetAllOrderReqModel(
             pageNum: state.pageNum + 1,
             pageLimit: AppConstants.orderPageLimit,
+            userId: preferencesHelper.getUserId()
           );
           debugPrint('[getAllOrder req] = $reqMap}');
           final res = await DioClient(event.context).post(

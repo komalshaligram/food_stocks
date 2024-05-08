@@ -28,6 +28,7 @@ import '../../data/model/req_model/product_details_req_model/product_details_req
 import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart';
 import '../../data/model/req_model/recommendation_products_req_model/recommendation_products_req_model.dart';
 import '../../data/model/req_model/wallet_record_req/wallet_record_req_model.dart';
+import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/get_messages_res_model/get_messages_res_model.dart';
 import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
@@ -73,7 +74,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               'getUserCompanyLogoUrl ${preferences.getUserCompanyLogoUrl()}');
           debugPrint('cart count ${preferences.getCartCount()}');
           debugPrint('message count ${preferences.getMessageCount()}');
+          debugPrint('can add basket ${preferences.getCanAddToBasket()}');
+          debugPrint('can see wallet ${preferences.getCanSeeWallet()}');
           emit(state.copyWith(
+            isSubUserSeeWallet: preferences.getCanSeeWallet(),
+              isSubUserAddToBasket :preferences.getCanAddToBasket(),
             UserImageUrl: preferences.getUserImageUrl(),
             UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
             messageCount: preferences.getMessageCount(),
@@ -85,18 +90,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           try {
             final res = await DioClient(event.context).post(
                 '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                options: Options(headers: {
-                  HttpHeaders.authorizationHeader:
-                  'Bearer ${preferences.getAuthToken()}'
-                }));
+              );
             GetAllCartResModel response = GetAllCartResModel.fromJson(res);
             if (response.status == 200) {
               debugPrint('cart1 = ${response.data}');
               debugPrint('main cart count = ${response.data?.data?.length}');
+              emit(state.copyWith(isCartCountChange: true));
               await preferences.setCartCount(
                   count: response.data?.data?.length ??
                       preferences.getCartCount());
-              emit(state.copyWith(cartCount: preferences.getCartCount()));
+              emit(state.copyWith(cartCount: preferences.getCartCount(),isCartCountChange: false));
             }
           } on ServerException {}
           //message count
@@ -115,6 +118,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   count: response.data ?? preferences.getMessageCount());
               emit(state.copyWith(messageCount: response.data ?? 0));
             }
+
           } on ServerException {} catch (e) {}
         }
         else if (event is _GetProductDetailsEvent) {
@@ -524,6 +528,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         }
         else if (event is _AddToCartProductEvent) {
+          print('cart id_____${preferences.getCartId()}');
           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex]
               .productSupplierIds.isEmpty) {
             CustomSnackBar.showSnackBar(
@@ -684,6 +689,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     type: SnackBarType.FAILURE);
               } else {
                 emit(state.copyWith(isLoading: false));
+                print('responsemessage___add__${response.message}');
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
@@ -890,19 +896,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             if (response.status == 200) {
               debugPrint(
                   'image = ${response.data?.clients?.first.profileImage}');
-              preferences.setUserImageUrl(imageUrl: response.data?.clients
-                  ?.first.profileImage ?? '');
-              preferences.setUserCompanyLogoUrl(logoUrl: response.data?.clients
-                  ?.first.logo ?? '');
+
+              if(!preferences.getSubUser()){
+                preferences.setUserImageUrl(imageUrl: response.data?.clients
+                    ?.first.profileImage ?? '');
+                emit(
+                  state.copyWith(
+                    UserImageUrl: response.data?.clients?.first.profileImage ?? '',
+                  ),
+                );
+              }
+
               preferences.setEmailId(userEmailId: response.data?.clients?.first
                   .email ?? '');
-              emit(
-                state.copyWith(
-                    UserImageUrl: response.data?.clients?.first.profileImage ??
-                        '',
-                    UserCompanyLogoUrl: response.data?.clients?.first.logo ?? ''
-                ),
-              );
+
             } else {
 
             }
@@ -943,13 +950,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   isShimmering: false));
             } else {
               emit(state.copyWith(isShimmering: false));
-              /*CustomSnackBar.showSnackBar(
+
+              CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:
-                '${AppLocalizations.of(event.context)!
-                    .something_is_wrong_try_again}',
-                type: SnackBarType.SUCCESS,
-              );*/
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
+                type: SnackBarType.FAILURE,
+              );
             }
           } on ServerException {
             emit(state.copyWith(isShimmering: false));
@@ -1084,6 +1093,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   search: state.searchController.text,
                   isSearching: false));
             } else {
+
               emit(state.copyWith(isSearching: false));
             }
           } on ServerException {
@@ -1142,6 +1152,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   searchList: searchList,
                   isShimmering: false));
             } else {
+
               emit(state.copyWith(isShimmering: false));
               CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -1179,10 +1190,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
         else if(event is _RelatedProductsEvent){
           emit(state.copyWith(isRelatedShimmering:true));
-          debugPrint('productId____${event.productId}');
+          debugPrint('productId__11__${event.productId}');
           final res = await DioClient(event.context).post(
               AppUrls.relatedProductsUrl,
               data: {'mainProductId':event.productId});
+
+          debugPrint('related product url__${AppUrls.relatedProductsUrl}');
+
           RelatedProductResModel response =
           RelatedProductResModel.fromJson(res);
           debugPrint('product categories = ${response.data.length
@@ -1203,6 +1217,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 relatedProductList:response.data,
                 isRelatedShimmering: false,productStockList: productStockList));
           } else {
+
             emit(state.copyWith(isRelatedShimmering: false));
             CustomSnackBar.showSnackBar(
               context: event.context,
@@ -1227,6 +1242,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               preferences.setBottleTax(bottleDeposit: response.data.bottlePrice);
               emit(state.copyWith(pesachBannerShimmering:false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner,bottlePrice:response.data.bottlePrice));
             } else {
+
               emit(state.copyWith(pesachBannerShimmering: false));
             }
           } on ServerException {
@@ -1234,6 +1250,58 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } catch (exc) {
             emit(state.copyWith(pesachBannerShimmering: false));
           }
+        }
+
+      else  if(event is _getPermissionList){
+        if(preferences.getSubUser()){
+          try {
+
+            final res = await DioClient(event.context).get(
+                path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+            AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
+            debugPrint('AccountPermission response = ${response.data.toString()}');
+            debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+            if (response.status == 200) {
+              var res = response.data?.permissions;
+              preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+              emit(state.copyWith(isAccountPermissionShimmering: true));
+              preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+              preferences.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+              preferences.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+              preferences.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+              preferences.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+              preferences.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
+              preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
+              preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
+              preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+              emit(state.copyWith(isAccountPermissionShimmering:false,
+                isSubUserSeeWallet: res?.canSeeWallet ?? false,
+                isSubUserAddToBasket :res?.canAddToCart ?? false,
+              ));
+            } else {
+
+
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
+                  type: SnackBarType.FAILURE);
+
+            }
+          } on ServerException {
+
+          } catch (e) {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: e.toString(),
+                type: SnackBarType.FAILURE);
+
+          }
+        }
+
+
         }
       }
     });

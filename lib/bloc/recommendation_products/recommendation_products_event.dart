@@ -72,4 +72,7 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
   const factory RecommendationProductsEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
   const factory RecommendationProductsEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
 
+  const factory RecommendationProductsEvent.getPermissionList(
+      {required BuildContext context }) = _getPermissionList;
+
 }

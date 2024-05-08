@@ -107,7 +107,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             }
           }
       //  }
-      }   else if (event is _DeleteAccountEvent) {
+      }
+      else if (event is _DeleteAccountEvent) {
         try {
           final res = await DioClient(event.context).post(
               '${AppUrls.deleteAccountUrl}${state.userId}');
@@ -199,12 +200,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson(),
-                options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                        'Bearer ${preferences.getAuthToken()}',
-                  },
-                ));
+              );
             debugPrint('res = ${res}');
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
@@ -309,11 +305,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           reqUpdate.ProfileDetailsUpdateResModel response =
               reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == 200) {
-            await preferences.setUserName(name: state.ownerNameController.text);
-            preferences.setUserImageUrl(
-                imageUrl: response.data?.client?.profileImage.toString() ?? '');
-            emit(state.copyWith(isLoading: false));
+
+
+
             emit(state.copyWith(UserImageUrl: response.data?.client?.profileImage.toString() ?? ''));
+
+            if(!preferences.getSubUser()){
+              preferences.setUserName(name: state.ownerNameController.text);
+              preferences.setUserImageUrl(imageUrl: response.data?.client?.profileImage.toString() ?? '');
+              emit(state.copyWith(UserImageUrl: response.data?.client?.profileImage.toString() ?? ''));
+            }
+
+
+
+            emit(state.copyWith(isLoading: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
               context: event.context,

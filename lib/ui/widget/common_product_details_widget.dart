@@ -6,12 +6,10 @@ import 'package:food_stock/ui/widget/common_product_details_button.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:html/parser.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
-import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
 
@@ -50,6 +48,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final bool isBottle;
   final double bottleTax;
   final double totalBottleDeposit;
+  final bool isSubUserAddToBasket;
   const CommonProductDetailsWidget(
       {super.key,
       required this.context,
@@ -85,7 +84,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
       required this.nmMashlim,
         required this.isBottle,
         required this.bottleTax,
-        required this.totalBottleDeposit
+        required this.totalBottleDeposit,
+        required this.isSubUserAddToBasket
       });
 
   @override
@@ -403,7 +403,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                     isBottle?Container(
                                    padding: EdgeInsets.only(top:3),
                                         child: Text('${AppLocalizations.of(context)?.bottle_deposit}:${AppLocalizations.of(context)!.currency}${totalBottleDeposit.toStringAsFixed(AppConstants.amountFrLength)}')):0.height,
-                                    Text(
+                                  /*  Text(
                                       "${parse(productSaleDescription).body?.text}",
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
@@ -411,7 +411,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           fontWeight: FontWeight.w400),
                                       maxLines: 3,
                                       overflow: TextOverflow.ellipsis,
-                                    ),
+                                    ),*/
                                   ],
                                 ),
                               ),
@@ -573,12 +573,12 @@ class CommonProductDetailsWidget extends StatelessWidget {
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont, color: AppColors.orangeColor),
                           ) : 0.height,
-                          CommonProductDetailsButton(
+                          isSubUserAddToBasket ? CommonProductDetailsButton(
                               isLoading: isLoading,
                               isSupplierAvailable: true,
                               productStock: (productStock.toString()),
                               onAddToOrderPressed:
-                                  isLoading ? null : addToOrderTap),
+                                  isLoading ? null : addToOrderTap) : 0.width,
                         ],
                       ),
               ),

@@ -85,6 +85,7 @@ class BasketScreenWidget extends StatelessWidget {
             body: FocusDetector(
               onFocusGained: () {
                 bloc.add(BasketEvent.getAllCartEvent(context: context));
+                bloc.add(BasketEvent.getPermissionList(context: context));
               },
               child: SafeArea(
                 child: Padding(
@@ -271,7 +272,7 @@ class BasketScreenWidget extends StatelessWidget {
             ),
 
             5.height,
-            CustomButtonWidget(
+           state.isSubUserCanCreateOrder ?  CustomButtonWidget(
               buttonText: AppLocalizations.of(context)!.submit,
               bGColor: AppColors.mainColor,
               isLoading: state.isLoading,
@@ -292,7 +293,7 @@ class BasketScreenWidget extends StatelessWidget {
                 }
               },
               fontColors: AppColors.whiteColor,
-            ),
+            ) : 0.width,
             10.height
           ],
         ));
@@ -771,7 +772,6 @@ class BasketScreenWidget extends StatelessWidget {
       isBarcode: false,
       context: context,
       productListIndex: productListIndex
-
     ));
     showMaterialModalBottomSheet(
       context: context,
@@ -829,6 +829,7 @@ class BasketScreenWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 CommonProductDetailsWidget(
+                                  isSubUserAddToBasket: state.isSubUserAddToBasket,
                                   totalBottleDeposit: (state.bottleTax* state.productDetails.first.numberOfUnit!.toDouble()* state
                                       .productStockList[state.productListIndex][
                                   state.productStockUpdateIndex]

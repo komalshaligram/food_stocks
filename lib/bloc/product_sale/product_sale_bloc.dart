@@ -48,7 +48,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           prefs: await SharedPreferences.getInstance());
 
       if (event is _GetProductSalesListEvent) {
-        emit(state.copyWith(isGuestUser: preferences.getGuestUser(),bottleDeposit: preferences.getBottleTax()));
+        emit(state.copyWith(isGuestUser: preferences.getGuestUser(),bottleDeposit: preferences.getBottleTax(),isSubUserAddToBasket :preferences.getCanAddToBasket(),));
 
         if (state.isLoadMore) {
           return;

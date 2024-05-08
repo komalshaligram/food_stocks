@@ -53,6 +53,7 @@ class BottomNavScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BottomNavBloc bloc = context.read<BottomNavBloc>();
+
     return BlocListener<BottomNavBloc, BottomNavState>(
       listenWhen: (previous, current) => current.pushNotificationPath != '',
       listener: (context, state) {
@@ -105,7 +106,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                       state: state,
                       isCart: true,
                     ),
-                    _navItem(
+                     _navItem(
                       pos: 3,
                       img: AppImagePath.wallet,
                       isRTL: context.rtl,
@@ -133,11 +134,15 @@ class BottomNavScreenWidget extends StatelessWidget {
                       else{
                         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                       }
-                    }else{
+                    }
+                    else if(!state.isSubUserSeeWallet && index == 3){
+
+                    }
+                    else{
                       bloc.add(BottomNavEvent.changePage(index: index));
                     }
                   },
-                  letIndexChange: (index) => true,
+                  letIndexChange: (index) => !state.isSubUserSeeWallet && index == 3 ? false: true,
                 ),
               ),
               body: FocusDetector(
@@ -190,6 +195,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       required String img,
       bool isCart = false,
       required BottomNavState state}) {
+
     return GestureDetector(
       child: Stack(
         children: [

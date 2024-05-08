@@ -113,4 +113,7 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
   const factory StoreCategoryEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
 
+  const factory StoreCategoryEvent.getPermissionList(
+      {required BuildContext context }) = _getPermissionList;
+
 }

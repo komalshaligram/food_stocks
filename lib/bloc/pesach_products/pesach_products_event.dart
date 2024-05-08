@@ -73,6 +73,9 @@ class PesachProductsEvent with _$PesachProductsEvent {
   const factory PesachProductsEvent.getCartCountEvent(
       ) = _getCartCountEvent;
 
+  const factory PesachProductsEvent.getPermissionList(
+      {required BuildContext context }) = _getPermissionList;
+
 
 
 }

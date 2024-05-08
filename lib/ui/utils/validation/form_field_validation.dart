@@ -188,4 +188,17 @@ class FormFieldValidation {
     return null;
   }
 
+  String? subUserNameField(String value,BuildContext context) {
+    RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.please_enter_sub_user}';
+    } else if (regex.hasMatch(value)) {
+      return '${AppLocalizations.of(context)!.please_enter_alphabets_only}';
+    } else if (!regex1.hasMatch(value)) {
+      return '${AppLocalizations.of(context)!.enter_valid_owner_name}';
+    }
+    return null;
+  }
+
 }
