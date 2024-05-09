@@ -46,8 +46,10 @@ class InvoicePdfScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    InvoicePdfBloc bloc = context.read<InvoicePdfBloc>();
     return BlocBuilder<InvoicePdfBloc, InvoicePdfState>(
       builder: (context, state) {
+        print('invoiceDetailsList_____${state.invoiceDetailsList.link}');
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
@@ -72,7 +74,6 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                         'Running on android version ${androidInfo.version.sdkInt}');
                     if (androidInfo.version.sdkInt < 33) {
                       if (!statuses[Permission.storage]!.isGranted) {
-                        debugPrint('Dont go');
                         CustomSnackBar.showSnackBar(
                             context: context,
                             title:
@@ -235,6 +236,13 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                           '${AppUrls.baseFileUrl}${state.invoiceDetailsList.link ?? ''}',
                           key: _pdfViewerKey,
                           controller: _pdfViewerController,
+                          onDocumentLoaded: (details) {
+                            print('details_____++++${details}');
+                          },
+                          onDocumentLoadFailed: (details) {
+                           // bloc.add(InvoicePdfEvent.getArgumentEvent(invoiceDetailsList: invoiceDetailsList));
+                          },
+
                         ),
                       ),
                     ],

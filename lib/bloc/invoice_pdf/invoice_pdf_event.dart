@@ -7,4 +7,7 @@ class InvoicePdfEvent with _$InvoicePdfEvent {
 
   factory InvoicePdfEvent.pdfDownloadEvent({required BuildContext context,}) =
   _pdfDownloadEvent;
+
+  factory InvoicePdfEvent.pdfRefreshEvent({required BuildContext context,}) =
+  _pdfRefreshEvent;
 }
