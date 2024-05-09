@@ -150,7 +150,6 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
                   type: SnackBarType.SUCCESS);
             } else {
               emit(state.copyWith(isUpdateProcess: false));
-
             }
         } on ServerException {
           emit(state.copyWith(isUpdateProcess: false));
