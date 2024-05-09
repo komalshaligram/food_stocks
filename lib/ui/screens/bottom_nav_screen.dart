@@ -54,22 +54,16 @@ class BottomNavScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BottomNavBloc bloc = context.read<BottomNavBloc>();
-//    List<Widget> itemList = [];
+
     return BlocListener<BottomNavBloc, BottomNavState>(
       listenWhen: (previous, current) => current.pushNotificationPath != '',
       listener: (context, state) {
-       /* itemList.clear();
-        for(int i =0;i<state.navList.length;i++){
-          itemList.add(navItem(pos: state.navList.elementAt(i).pos, isRTL: state.navList.elementAt(i).isRTL, img: state.navList.elementAt(i).imagePath, state: state.navList.elementAt(i).state));
-        }*/
+
         bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
-      //    itemList.clear();
-        /*  for(int i =0;i<state.navList.length;i++){
-            itemList.add(navItem(pos: state.navList.elementAt(i).pos, isRTL: state.navList.elementAt(i).isRTL, img: state.navList.elementAt(i).imagePath, state: state.navList.elementAt(i).state));
-          }*/
+
           return WillPopScope(
             onWillPop: () {
               if (state.index == 0) {
