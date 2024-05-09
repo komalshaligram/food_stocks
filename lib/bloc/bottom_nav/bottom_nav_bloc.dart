@@ -1,6 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/data/model/bottom_nav_model/bottom_nav_model.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../ui/utils/themes/app_strings.dart';
@@ -20,7 +23,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         debugPrint("isGuestUser:$isGuestUser");
         if(!isGuestUser){
           if(state.arg != '' && preferencesHelper.getAppLanguage() == AppStrings.hebrewString){
-            emit(state.copyWith(index: state.index));
+            emit(state.copyWith(index: state.index,));
           }
           else{
             emit(state.copyWith(index: event.index,));
@@ -33,7 +36,8 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
 
       }
       else if (event is _UpdateCartCountEvent) {
-
+        print('____bottomnav');
+     emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
      if(state.cartCount < preferencesHelper.getCartCount()){
        emit(state.copyWith(isAnimation: true ,isRefreshing: !state.isRefreshing));
      }
@@ -44,7 +48,6 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
           emit(state.copyWith(duringCelebration:true));
           await Future.delayed(const Duration(milliseconds: 2000));
           emit(state.copyWith(duringCelebration:false,isAnimation: false));
-
         }
         debugPrint('cart count bottom= ${state.cartCount}');
       }
