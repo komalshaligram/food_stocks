@@ -12,6 +12,7 @@ class BottomNavState with _$BottomNavState {
     required bool isGuestUser,
     required String arg,
     required bool isSubUserSeeWallet,
+    required bool isRefreshing,
   }) = _BottomNavState;
 
   factory BottomNavState.initial() => BottomNavState(
@@ -23,5 +24,8 @@ class BottomNavState with _$BottomNavState {
       isStoreScreen: '',
       isGuestUser: false,
       arg: '',
-      isSubUserSeeWallet: false);
+      isSubUserSeeWallet: false,
+    isRefreshing: false
+
+  );
 }

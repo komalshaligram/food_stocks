@@ -36,6 +36,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
           prefs: await SharedPreferences.getInstance());
 
       if(event is _getAppLanguageEvent){
+
         emit(state.copyWith(language: preferences.getAppLanguage()));
       }
      else if (event is _pickProfileImageEvent) {

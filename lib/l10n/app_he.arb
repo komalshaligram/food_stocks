@@ -487,7 +487,9 @@
                   "select_all": "בחר הכל",
                   "see_order": "יכול לראות רשימת הזמנות",
                   "select_none": "נקה הכל",
-                  "notsufficientpermission":"אין לך הרשאה"
+                  "notsufficientpermission":"אין לך הרשאה",
+                  "phone_number_of_other_subuser" : "מספר הטלפון כבר משוייך למשתמש אחר",
+                "delete_sub_user_account" : "מחיקת "
 
 
 

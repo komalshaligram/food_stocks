@@ -485,9 +485,8 @@
       "select_all": "Select all",
       "see_order": "Can see My orders",
       "select_none": "Select none",
-      "notsufficientpermission":"notsufficientpermission"
-
-
-
+      "notsufficientpermission":"notsufficientpermission",
+      "phone_number_of_other_subuser" : "The phone number is already associated with another user",
+                "delete_sub_user_account" : "Delete"
 
 }
