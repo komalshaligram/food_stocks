@@ -1029,6 +1029,7 @@ class RecommendationProductsBloc
               preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
               preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
               preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+              preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices  ?? false);
               emit(state.copyWith(
                 isSubUserAddToBasket :res?.canAddToCart ?? false,
               ));

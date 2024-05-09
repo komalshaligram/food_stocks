@@ -115,10 +115,6 @@ class AppStrings {
   static const accountValString = 'accountVal';
   static const surfaceValString = 'surfacesVal';
   static const subUserValString = 'subUserNameVal';
-
-
-
-
   static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
 
   //page parameters strings

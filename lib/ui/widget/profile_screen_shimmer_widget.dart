@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -7,8 +8,9 @@ import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
 
 class ProfileScreenShimmerWidget extends StatelessWidget {
+   bool isProfileImage;
 
-  const ProfileScreenShimmerWidget({super.key});
+   ProfileScreenShimmerWidget({super.key,this.isProfileImage = true});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               10.height,
-              Center(
+              isProfileImage ?  Center(
                 child: Stack(
                   children: [
                     CommonShimmerWidget(
@@ -42,9 +44,9 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
+              ) : 0.width,
               3.height,
-              Center(
+              isProfileImage ?   Center(
                 child: CommonShimmerWidget(
                   child: Container(
                     width: 90,
@@ -52,7 +54,7 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
                     color: AppColors.whiteColor,
                   ),
                 ),
-              ),
+              ) : 0.width,
               buildTextFieldTitle(),
               buildTextField(),
               7.height,

@@ -1247,6 +1247,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
               preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
               preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+              preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices  ?? false);
               emit(state.copyWith(isAccountPermissionShimmering:false,
                 isSubUserSeeWallet: res?.canSeeWallet ?? false,
                 isSubUserAddToBasket :res?.canAddToCart ?? false,
