@@ -758,8 +758,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               );
 
             GetMessagesResModel response = GetMessagesResModel.fromJson(res);
-
-
             debugPrint('getMessage response  = ${response}');
             if (response.status == 200) {
               List<MessageData> messageList =

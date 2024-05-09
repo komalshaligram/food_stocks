@@ -47,7 +47,8 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(),
             isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(),
             isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(),
-            isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles()
+            isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(),
+            isCanSeeInvoices: preferences.getCanSeeInvoices()
           ));
           emit(state.copyWith(
               UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
@@ -154,9 +155,10 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         }
 
         else  if(event is _getPermissionList){
+          print('preferences.getSubUser()____${preferences.getSubUser()}');
+
           if(preferences.getSubUser()){
             try {
-
               final res = await DioClient(event.context).get(
                   path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
