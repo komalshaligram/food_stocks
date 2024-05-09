@@ -36,8 +36,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
 
       }
       else if (event is _UpdateCartCountEvent) {
-        print('____bottomnav');
-     emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
+
      if(state.cartCount < preferencesHelper.getCartCount()){
        emit(state.copyWith(isAnimation: true ,isRefreshing: !state.isRefreshing));
      }
@@ -48,22 +47,22 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
           emit(state.copyWith(duringCelebration:true));
           await Future.delayed(const Duration(milliseconds: 2000));
           emit(state.copyWith(duringCelebration:false,isAnimation: false));
+
         }
         debugPrint('cart count bottom= ${state.cartCount}');
       }
 
       else if(event is _NavigateToStoreScreenEvent){
 
-          emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
-
+        emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
         if(event.basketScreen == 'true'){
-          emit(state.copyWith(index: 2 , arg : event.basketScreen));
+          emit(state.copyWith (index: 2 , arg : event.basketScreen));
         }
         else if(event.storeScreen != ''){
           emit(state.copyWith(index: 1,  arg : event.storeScreen));
         }
       }
-      else if(event is _seeWalletPermissionUpdateEvent){
+      else if(event is _seeWalletPermissionUpdateEvent) {
         emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
       }
     });
