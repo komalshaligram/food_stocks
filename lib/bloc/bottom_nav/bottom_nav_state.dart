@@ -12,6 +12,8 @@ class BottomNavState with _$BottomNavState {
     required bool isGuestUser,
     required String arg,
     required bool isSubUserSeeWallet,
+    required bool isRefreshing,
+    required List<BottomNavModel> navList,
   }) = _BottomNavState;
 
   factory BottomNavState.initial() => BottomNavState(
@@ -24,5 +26,8 @@ class BottomNavState with _$BottomNavState {
       isGuestUser: false,
       arg: '',
       isSubUserSeeWallet: false,
+    isRefreshing: false,
+    navList: []
+
   );
 }

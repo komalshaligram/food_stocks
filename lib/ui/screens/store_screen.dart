@@ -71,11 +71,11 @@ class StoreScreenWidget extends StatelessWidget {
       listener: (context, state) {
         if(state.isCartCountChange){
           BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.updateCartCountEvent());
+              .add(BottomNavEvent.updateCartCountEvent(context: context));
         }
         if(state.isAccountPermissionShimmering){
           BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.seeWalletPermissionUpdateEvent());
+              .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
       },
       child: BlocBuilder<StoreBloc, StoreState>(

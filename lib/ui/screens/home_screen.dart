@@ -75,11 +75,11 @@ class HomeScreenWidget extends StatelessWidget {
       listener: (context, state) {
         if(state.isCartCountChange){
           BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.updateCartCountEvent());
+              .add(BottomNavEvent.updateCartCountEvent(context: context));
         }
         if(state.isAccountPermissionShimmering){
           BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.seeWalletPermissionUpdateEvent());
+              .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
       },
       child: BlocBuilder<HomeBloc, HomeState>(
@@ -117,7 +117,7 @@ class HomeScreenWidget extends StatelessWidget {
                             onTap: () {
                               context
                                   .read<BottomNavBloc>()
-                                  .add(BottomNavEvent.changePage(index: 4));
+                                  .add(BottomNavEvent.changePage(index: 4,context: context));
                             },
                             child: Container(
                               height: 60,
@@ -284,7 +284,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   onTap: () {
                                     context
                                         .read<BottomNavBloc>()
-                                        .add(BottomNavEvent.changePage(index: 3));
+                                        .add(BottomNavEvent.changePage(index: 3,context: context));
                                   },
                                   child: Container(
                                     width: getScreenWidth(context),
@@ -536,7 +536,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   AppLocalizations.of(context)!.new_order,
                                   onPressed: () {
                                     context.read<BottomNavBloc>().add(
-                                        BottomNavEvent.changePage(index: 1));
+                                        BottomNavEvent.changePage(index: 1,context: context));
                                   },
                                   svgImage: AppImagePath.add,
                                 )
@@ -546,7 +546,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   AppLocalizations.of(context)!.my_basket,
                                   onPressed: () {
                                     context.read<BottomNavBloc>().add(
-                                        BottomNavEvent.changePage(index: 2));
+                                        BottomNavEvent.changePage(index: 2,context: context));
                                   },
                                   svgImage: AppImagePath.cart,
                                   cartCount: state.cartCount,

@@ -16,34 +16,36 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$BottomNavEvent {
+  BuildContext get context => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int index) changePage,
-    required TResult Function() updateCartCountEvent,
+    required TResult Function(int index, BuildContext context) changePage,
+    required TResult Function(BuildContext context) updateCartCountEvent,
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
         NavigateToStoreScreenEvent,
-    required TResult Function() seeWalletPermissionUpdateEvent,
+    required TResult Function(BuildContext context)
+        seeWalletPermissionUpdateEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int index)? changePage,
-    TResult? Function()? updateCartCountEvent,
+    TResult? Function(int index, BuildContext context)? changePage,
+    TResult? Function(BuildContext context)? updateCartCountEvent,
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
-    TResult? Function()? seeWalletPermissionUpdateEvent,
+    TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int index)? changePage,
-    TResult Function()? updateCartCountEvent,
+    TResult Function(int index, BuildContext context)? changePage,
+    TResult Function(BuildContext context)? updateCartCountEvent,
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
-    TResult Function()? seeWalletPermissionUpdateEvent,
+    TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -78,6 +80,10 @@ mixin _$BottomNavEvent {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $BottomNavEventCopyWith<BottomNavEvent> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -85,6 +91,8 @@ abstract class $BottomNavEventCopyWith<$Res> {
   factory $BottomNavEventCopyWith(
           BottomNavEvent value, $Res Function(BottomNavEvent) then) =
       _$BottomNavEventCopyWithImpl<$Res, BottomNavEvent>;
+  @useResult
+  $Res call({BuildContext context});
 }
 
 /// @nodoc
@@ -96,15 +104,30 @@ class _$BottomNavEventCopyWithImpl<$Res, $Val extends BottomNavEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? context = null,
+  }) {
+    return _then(_value.copyWith(
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
+    ) as $Val);
+  }
 }
 
 /// @nodoc
-abstract class _$$ChangePageEventImplCopyWith<$Res> {
+abstract class _$$ChangePageEventImplCopyWith<$Res>
+    implements $BottomNavEventCopyWith<$Res> {
   factory _$$ChangePageEventImplCopyWith(_$ChangePageEventImpl value,
           $Res Function(_$ChangePageEventImpl) then) =
       __$$ChangePageEventImplCopyWithImpl<$Res>;
+  @override
   @useResult
-  $Res call({int index});
+  $Res call({int index, BuildContext context});
 }
 
 /// @nodoc
@@ -119,12 +142,17 @@ class __$$ChangePageEventImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? index = null,
+    Object? context = null,
   }) {
     return _then(_$ChangePageEventImpl(
       index: null == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
               as int,
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
     ));
   }
 }
@@ -132,14 +160,16 @@ class __$$ChangePageEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$ChangePageEventImpl implements _ChangePageEvent {
-  _$ChangePageEventImpl({required this.index});
+  _$ChangePageEventImpl({required this.index, required this.context});
 
   @override
   final int index;
+  @override
+  final BuildContext context;
 
   @override
   String toString() {
-    return 'BottomNavEvent.changePage(index: $index)';
+    return 'BottomNavEvent.changePage(index: $index, context: $context)';
   }
 
   @override
@@ -147,11 +177,12 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ChangePageEventImpl &&
-            (identical(other.index, index) || other.index == index));
+            (identical(other.index, index) || other.index == index) &&
+            (identical(other.context, context) || other.context == context));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, index);
+  int get hashCode => Object.hash(runtimeType, index, context);
 
   @JsonKey(ignore: true)
   @override
@@ -163,42 +194,43 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int index) changePage,
-    required TResult Function() updateCartCountEvent,
+    required TResult Function(int index, BuildContext context) changePage,
+    required TResult Function(BuildContext context) updateCartCountEvent,
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
         NavigateToStoreScreenEvent,
-    required TResult Function() seeWalletPermissionUpdateEvent,
+    required TResult Function(BuildContext context)
+        seeWalletPermissionUpdateEvent,
   }) {
-    return changePage(index);
+    return changePage(index, context);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int index)? changePage,
-    TResult? Function()? updateCartCountEvent,
+    TResult? Function(int index, BuildContext context)? changePage,
+    TResult? Function(BuildContext context)? updateCartCountEvent,
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
-    TResult? Function()? seeWalletPermissionUpdateEvent,
+    TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
   }) {
-    return changePage?.call(index);
+    return changePage?.call(index, context);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int index)? changePage,
-    TResult Function()? updateCartCountEvent,
+    TResult Function(int index, BuildContext context)? changePage,
+    TResult Function(BuildContext context)? updateCartCountEvent,
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
-    TResult Function()? seeWalletPermissionUpdateEvent,
+    TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     required TResult orElse(),
   }) {
     if (changePage != null) {
-      return changePage(index);
+      return changePage(index, context);
     }
     return orElse();
   }
@@ -248,19 +280,28 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
 }
 
 abstract class _ChangePageEvent implements BottomNavEvent {
-  factory _ChangePageEvent({required final int index}) = _$ChangePageEventImpl;
+  factory _ChangePageEvent(
+      {required final int index,
+      required final BuildContext context}) = _$ChangePageEventImpl;
 
   int get index;
+  @override
+  BuildContext get context;
+  @override
   @JsonKey(ignore: true)
   _$$ChangePageEventImplCopyWith<_$ChangePageEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$UpdateCartCountEventImplCopyWith<$Res> {
+abstract class _$$UpdateCartCountEventImplCopyWith<$Res>
+    implements $BottomNavEventCopyWith<$Res> {
   factory _$$UpdateCartCountEventImplCopyWith(_$UpdateCartCountEventImpl value,
           $Res Function(_$UpdateCartCountEventImpl) then) =
       __$$UpdateCartCountEventImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({BuildContext context});
 }
 
 /// @nodoc
@@ -270,67 +311,93 @@ class __$$UpdateCartCountEventImplCopyWithImpl<$Res>
   __$$UpdateCartCountEventImplCopyWithImpl(_$UpdateCartCountEventImpl _value,
       $Res Function(_$UpdateCartCountEventImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? context = null,
+  }) {
+    return _then(_$UpdateCartCountEventImpl(
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
-  const _$UpdateCartCountEventImpl();
+  const _$UpdateCartCountEventImpl({required this.context});
+
+  @override
+  final BuildContext context;
 
   @override
   String toString() {
-    return 'BottomNavEvent.updateCartCountEvent()';
+    return 'BottomNavEvent.updateCartCountEvent(context: $context)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UpdateCartCountEventImpl);
+            other is _$UpdateCartCountEventImpl &&
+            (identical(other.context, context) || other.context == context));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, context);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateCartCountEventImplCopyWith<_$UpdateCartCountEventImpl>
+      get copyWith =>
+          __$$UpdateCartCountEventImplCopyWithImpl<_$UpdateCartCountEventImpl>(
+              this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int index) changePage,
-    required TResult Function() updateCartCountEvent,
+    required TResult Function(int index, BuildContext context) changePage,
+    required TResult Function(BuildContext context) updateCartCountEvent,
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
         NavigateToStoreScreenEvent,
-    required TResult Function() seeWalletPermissionUpdateEvent,
+    required TResult Function(BuildContext context)
+        seeWalletPermissionUpdateEvent,
   }) {
-    return updateCartCountEvent();
+    return updateCartCountEvent(context);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int index)? changePage,
-    TResult? Function()? updateCartCountEvent,
+    TResult? Function(int index, BuildContext context)? changePage,
+    TResult? Function(BuildContext context)? updateCartCountEvent,
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
-    TResult? Function()? seeWalletPermissionUpdateEvent,
+    TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
   }) {
-    return updateCartCountEvent?.call();
+    return updateCartCountEvent?.call(context);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int index)? changePage,
-    TResult Function()? updateCartCountEvent,
+    TResult Function(int index, BuildContext context)? changePage,
+    TResult Function(BuildContext context)? updateCartCountEvent,
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
-    TResult Function()? seeWalletPermissionUpdateEvent,
+    TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     required TResult orElse(),
   }) {
     if (updateCartCountEvent != null) {
-      return updateCartCountEvent();
+      return updateCartCountEvent(context);
     }
     return orElse();
   }
@@ -380,15 +447,25 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
 }
 
 abstract class _UpdateCartCountEvent implements BottomNavEvent {
-  const factory _UpdateCartCountEvent() = _$UpdateCartCountEventImpl;
+  const factory _UpdateCartCountEvent({required final BuildContext context}) =
+      _$UpdateCartCountEventImpl;
+
+  @override
+  BuildContext get context;
+  @override
+  @JsonKey(ignore: true)
+  _$$UpdateCartCountEventImplCopyWith<_$UpdateCartCountEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$NavigateToStoreScreenEventImplCopyWith<$Res> {
+abstract class _$$NavigateToStoreScreenEventImplCopyWith<$Res>
+    implements $BottomNavEventCopyWith<$Res> {
   factory _$$NavigateToStoreScreenEventImplCopyWith(
           _$NavigateToStoreScreenEventImpl value,
           $Res Function(_$NavigateToStoreScreenEventImpl) then) =
       __$$NavigateToStoreScreenEventImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call({BuildContext context, String storeScreen, String basketScreen});
 }
@@ -472,12 +549,13 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int index) changePage,
-    required TResult Function() updateCartCountEvent,
+    required TResult Function(int index, BuildContext context) changePage,
+    required TResult Function(BuildContext context) updateCartCountEvent,
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
         NavigateToStoreScreenEvent,
-    required TResult Function() seeWalletPermissionUpdateEvent,
+    required TResult Function(BuildContext context)
+        seeWalletPermissionUpdateEvent,
   }) {
     return NavigateToStoreScreenEvent(context, storeScreen, basketScreen);
   }
@@ -485,12 +563,12 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int index)? changePage,
-    TResult? Function()? updateCartCountEvent,
+    TResult? Function(int index, BuildContext context)? changePage,
+    TResult? Function(BuildContext context)? updateCartCountEvent,
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
-    TResult? Function()? seeWalletPermissionUpdateEvent,
+    TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
   }) {
     return NavigateToStoreScreenEvent?.call(context, storeScreen, basketScreen);
   }
@@ -498,12 +576,12 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int index)? changePage,
-    TResult Function()? updateCartCountEvent,
+    TResult Function(int index, BuildContext context)? changePage,
+    TResult Function(BuildContext context)? updateCartCountEvent,
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
-    TResult Function()? seeWalletPermissionUpdateEvent,
+    TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     required TResult orElse(),
   }) {
     if (NavigateToStoreScreenEvent != null) {
@@ -562,20 +640,26 @@ abstract class _NavigateToStoreScreenEvent implements BottomNavEvent {
       required final String storeScreen,
       required final String basketScreen}) = _$NavigateToStoreScreenEventImpl;
 
+  @override
   BuildContext get context;
   String get storeScreen;
   String get basketScreen;
+  @override
   @JsonKey(ignore: true)
   _$$NavigateToStoreScreenEventImplCopyWith<_$NavigateToStoreScreenEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$seeWalletPermissionUpdateEventImplCopyWith<$Res> {
+abstract class _$$seeWalletPermissionUpdateEventImplCopyWith<$Res>
+    implements $BottomNavEventCopyWith<$Res> {
   factory _$$seeWalletPermissionUpdateEventImplCopyWith(
           _$seeWalletPermissionUpdateEventImpl value,
           $Res Function(_$seeWalletPermissionUpdateEventImpl) then) =
       __$$seeWalletPermissionUpdateEventImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({BuildContext context});
 }
 
 /// @nodoc
@@ -587,68 +671,94 @@ class __$$seeWalletPermissionUpdateEventImplCopyWithImpl<$Res>
       _$seeWalletPermissionUpdateEventImpl _value,
       $Res Function(_$seeWalletPermissionUpdateEventImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? context = null,
+  }) {
+    return _then(_$seeWalletPermissionUpdateEventImpl(
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$seeWalletPermissionUpdateEventImpl
     implements _seeWalletPermissionUpdateEvent {
-  const _$seeWalletPermissionUpdateEventImpl();
+  const _$seeWalletPermissionUpdateEventImpl({required this.context});
+
+  @override
+  final BuildContext context;
 
   @override
   String toString() {
-    return 'BottomNavEvent.seeWalletPermissionUpdateEvent()';
+    return 'BottomNavEvent.seeWalletPermissionUpdateEvent(context: $context)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$seeWalletPermissionUpdateEventImpl);
+            other is _$seeWalletPermissionUpdateEventImpl &&
+            (identical(other.context, context) || other.context == context));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, context);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$seeWalletPermissionUpdateEventImplCopyWith<
+          _$seeWalletPermissionUpdateEventImpl>
+      get copyWith => __$$seeWalletPermissionUpdateEventImplCopyWithImpl<
+          _$seeWalletPermissionUpdateEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int index) changePage,
-    required TResult Function() updateCartCountEvent,
+    required TResult Function(int index, BuildContext context) changePage,
+    required TResult Function(BuildContext context) updateCartCountEvent,
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
         NavigateToStoreScreenEvent,
-    required TResult Function() seeWalletPermissionUpdateEvent,
+    required TResult Function(BuildContext context)
+        seeWalletPermissionUpdateEvent,
   }) {
-    return seeWalletPermissionUpdateEvent();
+    return seeWalletPermissionUpdateEvent(context);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int index)? changePage,
-    TResult? Function()? updateCartCountEvent,
+    TResult? Function(int index, BuildContext context)? changePage,
+    TResult? Function(BuildContext context)? updateCartCountEvent,
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
-    TResult? Function()? seeWalletPermissionUpdateEvent,
+    TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
   }) {
-    return seeWalletPermissionUpdateEvent?.call();
+    return seeWalletPermissionUpdateEvent?.call(context);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int index)? changePage,
-    TResult Function()? updateCartCountEvent,
+    TResult Function(int index, BuildContext context)? changePage,
+    TResult Function(BuildContext context)? updateCartCountEvent,
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
         NavigateToStoreScreenEvent,
-    TResult Function()? seeWalletPermissionUpdateEvent,
+    TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     required TResult orElse(),
   }) {
     if (seeWalletPermissionUpdateEvent != null) {
-      return seeWalletPermissionUpdateEvent();
+      return seeWalletPermissionUpdateEvent(context);
     }
     return orElse();
   }
@@ -698,8 +808,17 @@ class _$seeWalletPermissionUpdateEventImpl
 }
 
 abstract class _seeWalletPermissionUpdateEvent implements BottomNavEvent {
-  const factory _seeWalletPermissionUpdateEvent() =
+  const factory _seeWalletPermissionUpdateEvent(
+          {required final BuildContext context}) =
       _$seeWalletPermissionUpdateEventImpl;
+
+  @override
+  BuildContext get context;
+  @override
+  @JsonKey(ignore: true)
+  _$$seeWalletPermissionUpdateEventImplCopyWith<
+          _$seeWalletPermissionUpdateEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -713,6 +832,8 @@ mixin _$BottomNavState {
   bool get isGuestUser => throw _privateConstructorUsedError;
   String get arg => throw _privateConstructorUsedError;
   bool get isSubUserSeeWallet => throw _privateConstructorUsedError;
+  bool get isRefreshing => throw _privateConstructorUsedError;
+  List<BottomNavModel> get navList => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BottomNavStateCopyWith<BottomNavState> get copyWith =>
@@ -734,7 +855,9 @@ abstract class $BottomNavStateCopyWith<$Res> {
       String isStoreScreen,
       bool isGuestUser,
       String arg,
-      bool isSubUserSeeWallet});
+      bool isSubUserSeeWallet,
+      bool isRefreshing,
+      List<BottomNavModel> navList});
 }
 
 /// @nodoc
@@ -759,6 +882,8 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
     Object? isGuestUser = null,
     Object? arg = null,
     Object? isSubUserSeeWallet = null,
+    Object? isRefreshing = null,
+    Object? navList = null,
   }) {
     return _then(_value.copyWith(
       index: null == index
@@ -797,6 +922,14 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
           ? _value.isSubUserSeeWallet
           : isSubUserSeeWallet // ignore: cast_nullable_to_non_nullable
               as bool,
+      isRefreshing: null == isRefreshing
+          ? _value.isRefreshing
+          : isRefreshing // ignore: cast_nullable_to_non_nullable
+              as bool,
+      navList: null == navList
+          ? _value.navList
+          : navList // ignore: cast_nullable_to_non_nullable
+              as List<BottomNavModel>,
     ) as $Val);
   }
 }
@@ -818,7 +951,9 @@ abstract class _$$BottomNavStateImplCopyWith<$Res>
       String isStoreScreen,
       bool isGuestUser,
       String arg,
-      bool isSubUserSeeWallet});
+      bool isSubUserSeeWallet,
+      bool isRefreshing,
+      List<BottomNavModel> navList});
 }
 
 /// @nodoc
@@ -841,6 +976,8 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
     Object? isGuestUser = null,
     Object? arg = null,
     Object? isSubUserSeeWallet = null,
+    Object? isRefreshing = null,
+    Object? navList = null,
   }) {
     return _then(_$BottomNavStateImpl(
       index: null == index
@@ -879,6 +1016,14 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
           ? _value.isSubUserSeeWallet
           : isSubUserSeeWallet // ignore: cast_nullable_to_non_nullable
               as bool,
+      isRefreshing: null == isRefreshing
+          ? _value.isRefreshing
+          : isRefreshing // ignore: cast_nullable_to_non_nullable
+              as bool,
+      navList: null == navList
+          ? _value._navList
+          : navList // ignore: cast_nullable_to_non_nullable
+              as List<BottomNavModel>,
     ));
   }
 }
@@ -895,7 +1040,10 @@ class _$BottomNavStateImpl implements _BottomNavState {
       required this.isStoreScreen,
       required this.isGuestUser,
       required this.arg,
-      required this.isSubUserSeeWallet});
+      required this.isSubUserSeeWallet,
+      required this.isRefreshing,
+      required final List<BottomNavModel> navList})
+      : _navList = navList;
 
   @override
   final int index;
@@ -915,10 +1063,19 @@ class _$BottomNavStateImpl implements _BottomNavState {
   final String arg;
   @override
   final bool isSubUserSeeWallet;
+  @override
+  final bool isRefreshing;
+  final List<BottomNavModel> _navList;
+  @override
+  List<BottomNavModel> get navList {
+    if (_navList is EqualUnmodifiableListView) return _navList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_navList);
+  }
 
   @override
   String toString() {
-    return 'BottomNavState(index: $index, cartCount: $cartCount, isAnimation: $isAnimation, pushNotificationPath: $pushNotificationPath, duringCelebration: $duringCelebration, isStoreScreen: $isStoreScreen, isGuestUser: $isGuestUser, arg: $arg, isSubUserSeeWallet: $isSubUserSeeWallet)';
+    return 'BottomNavState(index: $index, cartCount: $cartCount, isAnimation: $isAnimation, pushNotificationPath: $pushNotificationPath, duringCelebration: $duringCelebration, isStoreScreen: $isStoreScreen, isGuestUser: $isGuestUser, arg: $arg, isSubUserSeeWallet: $isSubUserSeeWallet, isRefreshing: $isRefreshing, navList: $navList)';
   }
 
   @override
@@ -941,7 +1098,10 @@ class _$BottomNavStateImpl implements _BottomNavState {
                 other.isGuestUser == isGuestUser) &&
             (identical(other.arg, arg) || other.arg == arg) &&
             (identical(other.isSubUserSeeWallet, isSubUserSeeWallet) ||
-                other.isSubUserSeeWallet == isSubUserSeeWallet));
+                other.isSubUserSeeWallet == isSubUserSeeWallet) &&
+            (identical(other.isRefreshing, isRefreshing) ||
+                other.isRefreshing == isRefreshing) &&
+            const DeepCollectionEquality().equals(other._navList, _navList));
   }
 
   @override
@@ -955,7 +1115,9 @@ class _$BottomNavStateImpl implements _BottomNavState {
       isStoreScreen,
       isGuestUser,
       arg,
-      isSubUserSeeWallet);
+      isSubUserSeeWallet,
+      isRefreshing,
+      const DeepCollectionEquality().hash(_navList));
 
   @JsonKey(ignore: true)
   @override
@@ -975,7 +1137,9 @@ abstract class _BottomNavState implements BottomNavState {
       required final String isStoreScreen,
       required final bool isGuestUser,
       required final String arg,
-      required final bool isSubUserSeeWallet}) = _$BottomNavStateImpl;
+      required final bool isSubUserSeeWallet,
+      required final bool isRefreshing,
+      required final List<BottomNavModel> navList}) = _$BottomNavStateImpl;
 
   @override
   int get index;
@@ -995,6 +1159,10 @@ abstract class _BottomNavState implements BottomNavState {
   String get arg;
   @override
   bool get isSubUserSeeWallet;
+  @override
+  bool get isRefreshing;
+  @override
+  List<BottomNavModel> get navList;
   @override
   @JsonKey(ignore: true)
   _$$BottomNavStateImplCopyWith<_$BottomNavStateImpl> get copyWith =>
