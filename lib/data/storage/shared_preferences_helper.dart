@@ -45,6 +45,7 @@ class SharedPreferencesHelper {
   static const String seeFormsFiles = 'seeFormsFiles';
   static const String manageSubUser = 'manageSubUser';
   static const String subUserId = 'subUserId';
+  static const String canSeeInvoices = 'canSeeInvoices';
 
 
   final SharedPreferences prefs;
@@ -87,6 +88,7 @@ class SharedPreferencesHelper {
       await prefs.remove(manageSubUser);
       await prefs.remove(addBasket);
       await prefs.remove(subUserId);
+      await prefs.remove(canSeeInvoices);
 
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
@@ -258,6 +260,9 @@ class SharedPreferencesHelper {
     await prefs.setString(subUserId, id);
   }
 
+  Future<void> setCanSeeInvoices({required bool isCanSeeInvoices}) async {
+    await prefs.setBool(canSeeInvoices, isCanSeeInvoices);
+  }
 
 
 
@@ -413,6 +418,12 @@ class SharedPreferencesHelper {
   String getSubUserId() {
     return prefs.getString(subUserId) ?? '';
   }
+
+  bool getCanSeeInvoices() {
+    return prefs.getBool(canSeeInvoices) ?? true;
+  }
+
+
 
 
 }

@@ -68,6 +68,7 @@ class Permissions with _$Permissions {
     @JsonKey(name: "canManageSubUsers")
     bool? canManageSubUsers,
     bool? canSeeAndUpdateTimesInfo,
+    bool? canSeeInvoices,
   }) = _Permissions;
 
   factory Permissions.fromJson(Map<String, dynamic> json) => _$PermissionsFromJson(json);

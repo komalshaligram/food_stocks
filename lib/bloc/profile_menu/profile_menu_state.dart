@@ -18,7 +18,8 @@ class ProfileMenuState with _$ProfileMenuState {
     required bool isSubUserSeeFormsFiles,
     required bool isSubUserCanManageSubUser,
     required bool isSubUserSeeOrder,
-    required bool isAccountPermissionShimmering
+    required bool isAccountPermissionShimmering,
+    required bool isCanSeeInvoices,
 
   }) = _ProfileMenuState;
 
@@ -38,6 +39,7 @@ class ProfileMenuState with _$ProfileMenuState {
     isSubUserUpdateTimeInfo: false,
     isSubUserCanManageSubUser: false,
     isSubUserSeeOrder: false,
-      isAccountPermissionShimmering: false
+      isAccountPermissionShimmering: false,
+    isCanSeeInvoices: false
       );
 }

@@ -489,7 +489,9 @@
                   "select_none": "נקה הכל",
                   "notsufficientpermission":"אין לך הרשאה",
                   "phone_number_of_other_subuser" : "מספר הטלפון כבר משוייך למשתמש אחר",
-                "delete_sub_user_account" : "מחיקת "
+                "delete_sub_user_account" : "מחיקת ",
+                "can_see_invoices" : "יכול לראות חשבוניות"
+
 
 
 

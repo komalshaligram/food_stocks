@@ -78,7 +78,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
           ),
           body: SingleChildScrollView(
             child: state.isShimmering && state.isUpdate
-                ? ProfileScreenShimmerWidget()
+                ? ProfileScreenShimmerWidget(isProfileImage: false,)
                 : Padding(
                     padding: EdgeInsets.only(
                         left: getScreenWidth(context) * 0.1,
@@ -88,7 +88,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                         key: _formKey,
                         child: Column(
                           children: [
-                            Center(
+                            /*Center(
                               child: GestureDetector(
                                 onTap: () {
                                   showModalBottomSheet(
@@ -426,7 +426,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                                     color: AppColors.textColor),
                               ),
                             ),
-                            7.height,
+                            7.height,*/
                             CustomContainerWidget(
                               name: AppLocalizations.of(context)!.full_name,
                               star: '*',
@@ -511,7 +511,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                               fontColors: AppColors.whiteColor,
                             ),
                             10.height,
-                            profileMenuTiles(
+                            state.isEnable ?  profileMenuTiles(
                                 title:
                                 AppLocalizations.of(context)!.account_permission.toCapitalized(),
                                 onTap: () {
@@ -524,10 +524,10 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                                         });
                                   }
 
-                                }),
+                                }):0.width,
 
                             10.height,
-                            profileMenuTiles(
+                            state.isEnable ? profileMenuTiles(
                                 title:
                                 AppLocalizations.of(context)!.categories_permissions.toCapitalized(),
                                 onTap: () {
@@ -539,10 +539,10 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                                           state.subUserId
                                         });
                                   }
-                                }),
+                                }) : 0.width,
 
                             10.height,
-                            profileMenuTiles(
+                          state.isEnable ?  profileMenuTiles(
                                 title:
                                 AppLocalizations.of(context)!.brand_permissions.toCapitalized(),
                                 onTap: () {
@@ -554,10 +554,10 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                                           state.subUserId
                                         });
                                   }
-                                }),
+                                }) : 0.width,
 
                             10.height,
-                            profileMenuTiles(
+                           state.isEnable ? profileMenuTiles(
                                 title:
                                 AppLocalizations.of(context)!.supplier_permissions.toCapitalized(),
                                 onTap: () {
@@ -569,7 +569,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                                           state.subUserId
                                         });
                                   }
-                                }),
+                                }): 0.width,
 
                             15.height,
                             state.isEnable ? GestureDetector(

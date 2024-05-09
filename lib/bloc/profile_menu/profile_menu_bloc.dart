@@ -175,6 +175,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
                 preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+                preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices  ?? false);
 
                 emit(state.copyWith(
                     isSubUserSeeOrder: preferences.getCanSeeOrder(),
@@ -184,6 +185,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                     isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(),
                     isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(),
                     isAccountPermissionShimmering: false,
+                    isCanSeeInvoices: preferences.getCanSeeInvoices()
                 ));
 
               } else {
