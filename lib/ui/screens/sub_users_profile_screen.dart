@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/ui/widget/profile_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -488,7 +489,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                               validator: AppStrings.idValString,
                             ),
                             20.height,
-                            CustomButtonWidget(
+                          state.isUpdate || state.isEnable ?  CustomButtonWidget(
                               buttonText: AppLocalizations.of(context)!
                                   .save
                                   .toUpperCase(),
@@ -496,12 +497,13 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                               isLoading: state.isLoading,
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  if (!state.isUpdate) {
+                                  if (!state.isUpdate && !state.isEnable) {
                                     bloc.add(
                                         SubUsersProfileEvent.createSubUserEvent(
-                                      context: context,
-                                    ));
-                                  } else {
+                                          context: context,
+                                        ));
+                                  }
+                                  else if(state.isUpdate || state.isEnable) {
                                     bloc.add(
                                         SubUsersProfileEvent.updateSubUserEvent(
                                             context: context));
@@ -509,7 +511,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                                 }
                               },
                               fontColors: AppColors.whiteColor,
-                            ),
+                            ) : 0.width,
                             10.height,
                             state.isEnable ?  profileMenuTiles(
                                 title:
@@ -599,6 +601,33 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                     ),
                   ),
           ),
+          bottomNavigationBar:  !state.isUpdate && !state.isEnable ? Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 35,vertical: 20),
+            child: CustomButtonWidget(
+              buttonText: AppLocalizations.of(context)!
+                  .save
+                  .toUpperCase(),
+              bGColor: AppColors.mainColor,
+              isLoading: state.isLoading,
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+
+                  if (!state.isUpdate && !state.isEnable) {
+                    bloc.add(
+                        SubUsersProfileEvent.createSubUserEvent(
+                          context: context,
+                        ));
+                  }
+                  else if(state.isUpdate) {
+                    bloc.add(
+                        SubUsersProfileEvent.updateSubUserEvent(
+                            context: context));
+                  }
+                }
+              },
+              fontColors: AppColors.whiteColor,
+            ),
+          ) : 0.width,
         );
       },
     );

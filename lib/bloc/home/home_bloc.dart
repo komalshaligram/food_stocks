@@ -634,7 +634,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 Navigator.pop(event.context);
                 List<List<ProductStockModel>> productStockList =
                 state.productStockList.toList(growable: true);
-                debugPrint('quandjfd____${state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
                 productStockList[state.productListIndex][state.productStockUpdateIndex] =
                     productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                       note: '',
