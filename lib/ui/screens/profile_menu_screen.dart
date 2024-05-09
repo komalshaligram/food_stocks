@@ -46,7 +46,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
       listenWhen: (previous, current) {
         if (current.isAccountPermissionShimmering){
           BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.seeWalletPermissionUpdateEvent());
+              .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
         if (previous.isHebrewLanguage != current.isHebrewLanguage) {
           return true;
@@ -55,7 +55,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
         }
       },
       listener: (context, state) {
-        context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 0));
+        context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 0,context: context));
       },
       child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(
         builder: (context, state) {

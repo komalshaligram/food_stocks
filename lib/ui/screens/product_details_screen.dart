@@ -971,8 +971,7 @@ class _ProductDetailsScreenWidgetState
                                         AppColors.shadowColor.withOpacity(0.15),
                                     blurRadius: AppConstants.blur_10),
                               ],
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_5)),
+                              borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,

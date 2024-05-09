@@ -91,18 +91,15 @@ void appFlyerSetup() {
               prefs: await SharedPreferences.getInstance());
           getVersion(preferencesHelper);
           //getDeviceId();
-
           debugPrint('${preferencesHelper.getUserLoggedIn()}');
           if (preferencesHelper.getUserLoggedIn()) {
             Navigator.pushReplacementNamed(
                 context, RouteDefine.bottomNavScreen.name, arguments: {
               AppStrings.pushNavigationString: state.pushNavigation
             });
-
           } else {
             Navigator.pushReplacementNamed(
                 context, RouteDefine.connectScreen.name);
-
           }
         }
       },

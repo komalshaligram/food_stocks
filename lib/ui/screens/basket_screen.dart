@@ -57,11 +57,11 @@ class BasketScreenWidget extends StatelessWidget {
       listener: (context, state) {
         if(state.isAnimation){
           BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.updateCartCountEvent());
+              .add(BottomNavEvent.updateCartCountEvent(context: context));
         }
         if(state.isAccountPermissionShimmering){
           BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.seeWalletPermissionUpdateEvent());
+              .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
         if(state.isOrderPending){
           showDialog(

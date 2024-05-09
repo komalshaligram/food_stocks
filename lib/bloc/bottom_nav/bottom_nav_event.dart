@@ -2,9 +2,9 @@ part of 'bottom_nav_bloc.dart';
 
 @freezed
 class BottomNavEvent with _$BottomNavEvent {
-  factory BottomNavEvent.changePage({required int index}) = _ChangePageEvent;
+  factory BottomNavEvent.changePage({required int index,required BuildContext context,}) = _ChangePageEvent;
 
-  const factory BottomNavEvent.updateCartCountEvent() = _UpdateCartCountEvent;
+  const factory BottomNavEvent.updateCartCountEvent({required BuildContext context}) = _UpdateCartCountEvent;
 
 
   const factory BottomNavEvent.NavigateToStoreScreenEvent(
@@ -13,5 +13,5 @@ class BottomNavEvent with _$BottomNavEvent {
         required String basketScreen,
       }) = _NavigateToStoreScreenEvent;
 
-  const factory BottomNavEvent.seeWalletPermissionUpdateEvent() = _seeWalletPermissionUpdateEvent;
+  const factory BottomNavEvent.seeWalletPermissionUpdateEvent({required BuildContext context}) = _seeWalletPermissionUpdateEvent;
 }

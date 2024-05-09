@@ -50,6 +50,7 @@ class BottomNavScreenWidget extends StatelessWidget {
 
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
+
   @override
   Widget build(BuildContext context) {
     BottomNavBloc bloc = context.read<BottomNavBloc>();
@@ -57,16 +58,18 @@ class BottomNavScreenWidget extends StatelessWidget {
     return BlocListener<BottomNavBloc, BottomNavState>(
       listenWhen: (previous, current) => current.pushNotificationPath != '',
       listener: (context, state) {
-        bloc.add(BottomNavEvent.updateCartCountEvent());
+
+        bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
+
           return WillPopScope(
             onWillPop: () {
               if (state.index == 0) {
                 return Future.value(true);
               } else {
-                bloc.add(BottomNavEvent.changePage(index: 0));
+                bloc.add(BottomNavEvent.changePage(index: 0,context: context));
                 return Future.value(false);
               }
             },
@@ -86,64 +89,66 @@ class BottomNavScreenWidget extends StatelessWidget {
                   height: 65.0,
                 cartCount: state.cartCount,
                 isRTL: context.rtl,
-                  items: state.isSubUserSeeWallet ? [
-                    _navItem(
+                  items: state.isSubUserSeeWallet?
+                  [
+                    navItem(
                       pos: 0,
                       img: AppImagePath.home,
                       isRTL: context.rtl,
                       state: state,
                     ),
-                    _navItem(
+                    navItem(
                       pos: 1,
                       img: AppImagePath.store,
                       isRTL: context.rtl,
                       state: state,
                     ),
-                    _navItem(
+                    navItem(
                       pos: 2,
                       img: AppImagePath.cart,
                       isRTL: context.rtl,
                       state: state,
                       isCart: true,
                     ),
-                     _navItem(
+                    navItem(
                       pos: 3,
                       img: AppImagePath.wallet,
                       isRTL: context.rtl,
                       state: state,
                     ),
-                    _navItem(
+                    navItem(
                       pos: 4,
                       img: AppImagePath.profile,
                       isRTL: context.rtl,
                       state: state,
                     ),
-                  ] : [
-                    _navItem(
+                  ]: [
+                    navItem(
                       pos: 0,
                       img: AppImagePath.home,
                       isRTL: context.rtl,
                       state: state,
                     ),
-                    _navItem(
+                    navItem(
                       pos: 1,
                       img: AppImagePath.store,
                       isRTL: context.rtl,
                       state: state,
                     ),
-                    _navItem(
+                    navItem(
                       pos: 2,
                       img: AppImagePath.cart,
                       isRTL: context.rtl,
                       state: state,
                       isCart: true,
                     ),
-                    _navItem(
+                    navItem(
                       pos: 3,
                       img: AppImagePath.profile,
                       isRTL: context.rtl,
                       state: state,
                     ),
+
                   ],
                   color: AppColors.whiteColor,
                   buttonBackgroundColor: AppColors.whiteColor,
@@ -155,14 +160,14 @@ class BottomNavScreenWidget extends StatelessWidget {
                         prefs: await SharedPreferences.getInstance());
                     if(preferencesHelper.getGuestUser()){
                       if(index == 1){
-                        bloc.add(BottomNavEvent.changePage(index: index));
+                        bloc.add(BottomNavEvent.changePage(index: index,context:context));
                       }
                       else{
                         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                       }
                     }
                     else{
-                      bloc.add(BottomNavEvent.changePage(index: index));
+                      bloc.add(BottomNavEvent.changePage(index: index,context:context));
                     }
                   },
                   letIndexChange: (index) {
@@ -172,7 +177,7 @@ class BottomNavScreenWidget extends StatelessWidget {
               ),
               body: FocusDetector(
                 onFocusGained: () {
-                  bloc.add(BottomNavEvent.updateCartCountEvent());
+                  bloc.add(BottomNavEvent.updateCartCountEvent(context:context));
                 },
                 child: SafeArea(
                   child: Stack(
@@ -219,7 +224,7 @@ class BottomNavScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget _navItem(
+  Widget navItem(
       {required int pos,
       required bool isRTL,
       required String img,

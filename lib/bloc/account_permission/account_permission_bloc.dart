@@ -8,7 +8,6 @@ import '../../data/model/req_model/update_permission/update_permission_model.dar
 import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
@@ -72,7 +71,6 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
                   isEnable: response.data?.permissions?.canManageSubUsers ?? false
               ),
             ];
-
             emit(state.copyWith(isShimmering:false,permissionList: permissionList));
           } else {
             emit(state.copyWith(isShimmering: false));
@@ -82,7 +80,6 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
-
       }
 
       else if(event is _switchButtonEvent){
@@ -153,19 +150,14 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
                   type: SnackBarType.SUCCESS);
             } else {
               emit(state.copyWith(isUpdateProcess: false));
-
             }
         } on ServerException {
-
           emit(state.copyWith(isUpdateProcess: false));
         }
         catch(e){
-
           emit(state.copyWith(isUpdateProcess: false));
         }
       }
-
-
     });
   }
 }
