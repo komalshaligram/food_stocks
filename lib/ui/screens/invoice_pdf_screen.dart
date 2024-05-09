@@ -7,6 +7,7 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../bloc/invoice_pdf/invoice_pdf_bloc.dart';
+import '../../data/model/res_model/invoices_res/invoices_res_model.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
@@ -32,13 +33,14 @@ class InvoicePdfScreen extends StatelessWidget {
       create: (context) => InvoicePdfBloc()
         ..add(InvoicePdfEvent.getArgumentEvent(
             invoiceDetailsList: args?[AppStrings.invoiceListString])),
-      child: InvoicePdfScreenWidget(),
+      child: InvoicePdfScreenWidget(invoiceDetailsList: args?[AppStrings.invoiceListString]),
     );
   }
 }
 
 class InvoicePdfScreenWidget extends StatelessWidget {
-  InvoicePdfScreenWidget({super.key});
+ final  Invoice invoiceDetailsList;
+  InvoicePdfScreenWidget({super.key, required this.invoiceDetailsList});
 
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
 
@@ -49,7 +51,6 @@ class InvoicePdfScreenWidget extends StatelessWidget {
     InvoicePdfBloc bloc = context.read<InvoicePdfBloc>();
     return BlocBuilder<InvoicePdfBloc, InvoicePdfState>(
       builder: (context, state) {
-        print('invoiceDetailsList_____${state.invoiceDetailsList.link}');
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
@@ -70,8 +71,6 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
                     AndroidDeviceInfo androidInfo =
                         await deviceInfo.androidInfo;
-                    debugPrint(
-                        'Running on android version ${androidInfo.version.sdkInt}');
                     if (androidInfo.version.sdkInt < 33) {
                       if (!statuses[Permission.storage]!.isGranted) {
                         CustomSnackBar.showSnackBar(
@@ -85,7 +84,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                   } else {
                     //for ios permission
                   }
-                  if (state.invoiceDetailsList.link?.isNotEmpty ?? false) {
+                  if (invoiceDetailsList.link?.isNotEmpty ?? false) {
                     context
                         .read<InvoicePdfBloc>()
                         .add(InvoicePdfEvent.pdfDownloadEvent(
@@ -132,7 +131,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                     flexValue: 2,
                                     title: AppLocalizations.of(context)!
                                         .invoice_number,
-                                    value: state.invoiceDetailsList.invoiceNumber
+                                    value: invoiceDetailsList.invoiceNumber
                                         .toString(),
                                     titleColor: AppColors.mainColor,
                                     valueColor: AppColors.blackColor,
@@ -149,7 +148,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                     flexValue: 2,
                                     title:
                                         AppLocalizations.of(context)!.invoice_date,
-                                    value: state.invoiceDetailsList.invoiceDate
+                                    value: invoiceDetailsList.invoiceDate
                                         .toString(),
                                     titleColor: AppColors.mainColor,
                                     valueColor: AppColors.blackColor,
@@ -170,7 +169,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                     flexValue: 2,
                                     title:
                                     AppLocalizations.of(context)!.invoice_type,
-                                    value: state.invoiceDetailsList.invoiceType
+                                    value: invoiceDetailsList.invoiceType
                                         .toString()
                                         .toCapitalized(),
                                     titleColor: AppColors.mainColor,
@@ -188,7 +187,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                     flexValue: 2,
                                     title: AppLocalizations.of(context)!
                                         .invoice_status,
-                                    value: state.invoiceDetailsList.paymentStatus
+                                    value: invoiceDetailsList.paymentStatus
                                         .toString()
                                         .toCapitalized(),
                                     titleColor: AppColors.mainColor,
@@ -211,8 +210,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                     title: AppLocalizations.of(context)!
                                         .invoice_amount,
                                     value: formatNumber(
-                                        value: (state
-                                            .invoiceDetailsList.invoiceAmount ??
+                                        value: (invoiceDetailsList.invoiceAmount ??
                                             '0.0'),
                                         local: AppStrings.hebrewLocal),
                                     titleColor: AppColors.mainColor,
@@ -233,15 +231,9 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                         color: Colors.white,
                         height: getScreenHeight(context) * 0.7,
                         child: SfPdfViewer.network(
-                          '${AppUrls.baseFileUrl}${state.invoiceDetailsList.link ?? ''}',
+                          '${AppUrls.baseFileUrl}${invoiceDetailsList.link ?? ''}',
                           key: _pdfViewerKey,
                           controller: _pdfViewerController,
-                          onDocumentLoaded: (details) {
-                            print('details_____++++${details}');
-                          },
-                          onDocumentLoadFailed: (details) {
-                           bloc.add(InvoicePdfEvent.pdfRefreshEvent(pdfUrl: state.invoiceDetailsList.link ?? ''));
-                          },
 
                         ),
                       ),
@@ -265,7 +257,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 CupertinoActivityIndicator(
-                                  color: AppColors.blackColor,
+                                  color: AppColors.mainColor,
                                   radius: AppConstants.radius_10,
                                 ),
                                 10.height,
