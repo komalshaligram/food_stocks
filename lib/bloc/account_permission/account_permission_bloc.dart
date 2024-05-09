@@ -71,6 +71,10 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
               permissionModel(title: AppLocalizations.of(event.context)!.can_manage_sub_users,
                   isEnable: response.data?.permissions?.canManageSubUsers ?? false
               ),
+              permissionModel(title: AppLocalizations.of(event.context)!.can_see_invoices,
+                  isEnable: response.data?.permissions?.canSeeInvoices ?? false
+              ),
+
             ];
 
             emit(state.copyWith(isShimmering:false,permissionList: permissionList));
@@ -109,6 +113,7 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
               canSeeAndUpdateTimesInfo: state.permissionList[9].isEnable,
               canSeeFileAndForms: state.permissionList[10].isEnable,
               canManageSubUsers: state.permissionList[11].isEnable,
+              canSeeInvoices: state.permissionList[12].isEnable,
             )
           );
 
@@ -144,6 +149,7 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
                 preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: state.permissionList[9].isEnable);
                 preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: state.permissionList[10].isEnable);
                 preferencesHelper.setManageSubUser(isManageSubUser:state.permissionList[11].isEnable);
+                preferencesHelper.setCanSeeInvoices(isCanSeeInvoices:state.permissionList[12].isEnable);
               }
               emit(state.copyWith(isUpdateProcess: false));
               Navigator.pop(event.context);

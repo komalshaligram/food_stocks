@@ -1,3 +1,4 @@
+
 import 'dart:math';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -150,12 +151,12 @@ class BottomNavScreenWidget extends StatelessWidget {
                   backgroundColor: Colors.transparent,
                   animationCurve: Curves.decelerate,
                   animationDuration: Duration(milliseconds: 600),
-                  onTap: (index) async {
+                  onTap: (index) async  {
                     SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                         prefs: await SharedPreferences.getInstance());
                     if(preferencesHelper.getGuestUser()){
                       if(index == 1){
-                        bloc.add(BottomNavEvent.changePage(index: index));
+                       bloc.add(BottomNavEvent.changePage(index: index));
                       }
                       else{
                         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
@@ -165,7 +166,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                       bloc.add(BottomNavEvent.changePage(index: index));
                     }
                   },
-                  letIndexChange: (index) {
+                  letIndexChange: (index)  {
                     return true;
                   },
                 ),
@@ -192,7 +193,6 @@ class BottomNavScreenWidget extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _pageContainers(
       {required double screenHeight,

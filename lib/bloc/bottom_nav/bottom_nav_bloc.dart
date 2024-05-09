@@ -35,7 +35,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       else if (event is _UpdateCartCountEvent) {
 
      if(state.cartCount < preferencesHelper.getCartCount()){
-       emit(state.copyWith(isAnimation: true ,isRefreshing: !state.isRefreshing));
+       emit(state.copyWith(isAnimation: true ));
      }
 
      emit(state.copyWith(cartCount: preferencesHelper.getCartCount()));
@@ -50,7 +50,6 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       }
 
       else if(event is _NavigateToStoreScreenEvent){
-
           emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
 
         if(event.basketScreen == 'true'){

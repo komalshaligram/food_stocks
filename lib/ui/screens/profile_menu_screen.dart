@@ -169,7 +169,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                         RouteDefine.orderScreen.name,
                                       );
                                     }) : 0.width,
-                               profileMenuTiles(
+                              state.isCanSeeInvoices ?  profileMenuTiles(
                                     title:
                                     AppLocalizations.of(context)!.my_invoices,
                                     onTap: () {
@@ -177,7 +177,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                         context,
                                         RouteDefine.invoiceScreen.name,
                                       );
-                                    }),
+                                    }) : 0.width,
                                state.isSubUserUpdateBusinessInfo ?  profileMenuTiles(
                                     title: AppLocalizations.of(context)!
                                         .business_details,
@@ -188,7 +188,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                             AppStrings.isUpdateParamString: true
                                           });
                                     }) : 0.width,
-                                state.isSubUserUpdateAdditionalInfo ?profileMenuTiles(
+                                state.isSubUserUpdateAdditionalInfo ? profileMenuTiles(
                                     title: AppLocalizations.of(context)!
                                         .more_details,
                                     onTap: () {
