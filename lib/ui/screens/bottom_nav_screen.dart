@@ -58,7 +58,6 @@ class BottomNavScreenWidget extends StatelessWidget {
     return BlocListener<BottomNavBloc, BottomNavState>(
       listenWhen: (previous, current) => current.pushNotificationPath != '',
       listener: (context, state) {
-
         bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
@@ -238,7 +237,7 @@ class BottomNavScreenWidget extends StatelessWidget {
             width: 50,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-              gradient: pos == ( state.index ) ? AppColors.appMainGradientColor : LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]),
+              gradient: pos == (state.index) ? AppColors.appMainGradientColor : LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]),
                 borderRadius: const BorderRadius.all(
                     Radius.circular(AppConstants.radius_100))),
             child: Center(

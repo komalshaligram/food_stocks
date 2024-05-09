@@ -64,6 +64,9 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
                type: SnackBarType.FAILURE);
          }
        }
+       else if(event is _pdfRefreshEvent){
+         emit(state.copyWith(isRefreshing: !state.isRefreshing ,));
+       }
     });
   }
 }
