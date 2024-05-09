@@ -60,7 +60,7 @@ class SubUserScreenWidget extends StatelessWidget {
                 radius: 5,
                 fontSize: AppConstants.font_13,
                 onPressed: () {
-                 // bloc.add(SubUsersEvent.popEvent(context: context));
+                  bloc.add(SubUsersEvent.popEvent(context: context));
                   Navigator.pushNamed(
                       context, RouteDefine.subUsersProfileScreen.name);
                 },
@@ -69,7 +69,7 @@ class SubUserScreenWidget extends StatelessWidget {
           ),
           body: FocusDetector(
             onFocusGained: (){
-             // context.read<SubUsersBloc>().add(SubUsersEvent.getSubUserList(context: context));
+              context.read<SubUsersBloc>().add(SubUsersEvent.getSubUserList(context: context));
             },
             child: SafeArea(
               child: SmartRefresher(
@@ -112,7 +112,7 @@ class SubUserScreenWidget extends StatelessWidget {
                         title:state.subUserList[index].contactName,
                         phoneNumber: state.subUserList[index].phoneNumber,
                         onTap: () {
-
+                          bloc.add(SubUsersEvent.popEvent(context: context));
                           Navigator.pushNamed(context, RouteDefine.subUsersProfileScreen.name,
                           arguments: {
                             AppStrings.isUpdateParamString: true,
@@ -124,7 +124,6 @@ class SubUserScreenWidget extends StatelessWidget {
                             AppStrings.profileImageString : state.subUserList[index].profileImage ?? '',
                           }
                           ) ;
-                        //  state.isSubUserCanManageSubUser ? bloc.add(SubUsersEvent.popEvent(context: context)) : 0.width;
                         });
 
                   },),

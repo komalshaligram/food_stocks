@@ -45,7 +45,7 @@ class SubUserProfileScreen extends StatelessWidget {
             ? true
             : false,
         subUserId: args?[AppStrings.subUserIdString] ?? '',
-      )),
+      ))..add(SubUsersProfileEvent.getAppLanguageEvent(context: context)),
       child: SubUserProfileScreenWidget(),
     );
   }
@@ -572,22 +572,27 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                                 }),
 
                             15.height,
-                            CustomButtonWidget(
-                              fontColors: AppColors.whiteColor,
-                              enable: state.isEnable,
-                              isDeleteButton: true,
-                              buttonText: AppLocalizations.of(context)!
-                                  .delete_account
-                                  .toUpperCase(),
-                              onPressed: () {
+                            state.isEnable ? GestureDetector(
+                              onTap: (){
                                 deleteConfirmDialog(
                                     bloc: bloc,
                                     context: context,
                                     directionality: state.language,
                                     isDeleteProcess: state.isDeleteProcess);
                               },
-                            ),
-                            15.height,
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .delete_sub_user_account
+                                    .toUpperCase(),
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.mediumFont,
+                                    color: AppColors.redColor,
+                                  fontWeight: FontWeight.w400
+                                ),
+                              ),
+                            ) : 0.width,
+
+                            20.height,
                           ],
                         ),
                       ),
@@ -663,11 +668,6 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                   positiveOnTap: () async {
                     bloc.add(SubUsersProfileEvent.deleteAccountEvent(
                         context: context, dialogContext: context1));
-                    //Navigator.pop(context);
-                    /*deleteDialog(
-                 context: context,
-                 directionality: directionality,
-                 bloc: bloc);*/
                   },
                 );
               },
@@ -676,21 +676,4 @@ class SubUserProfileScreenWidget extends StatelessWidget {
         });
   }
 
-  void deleteDialog({
-    required SubUsersProfileBloc bloc,
-    required BuildContext context,
-    required String directionality,
-  }) {
-    showDialog(
-        context: context,
-        builder: (context1) => CommonAlertDialog(
-              directionality: directionality,
-              title: '${AppLocalizations.of(context)!.delete_account}',
-              subTitle: '${AppLocalizations.of(context)!.delete_pop_up_msg}',
-              positiveTitle: '${AppLocalizations.of(context)!.close}',
-              positiveOnTap: () async {
-                Navigator.pop(context1);
-              },
-            ));
-  }
 }

@@ -18,13 +18,12 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       if (event is _ChangePageEvent) {
         bool isGuestUser = preferencesHelper.getGuestUser();
         debugPrint("isGuestUser:$isGuestUser");
-
         if(!isGuestUser){
           if(state.arg != '' && preferencesHelper.getAppLanguage() == AppStrings.hebrewString){
             emit(state.copyWith(index: state.index));
           }
           else{
-            emit(state.copyWith(index: event.index));
+            emit(state.copyWith(index: event.index,));
           }
         }
         else{
@@ -36,7 +35,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       else if (event is _UpdateCartCountEvent) {
 
      if(state.cartCount < preferencesHelper.getCartCount()){
-       emit(state.copyWith(isAnimation: true));
+       emit(state.copyWith(isAnimation: true ,isRefreshing: !state.isRefreshing));
      }
 
      emit(state.copyWith(cartCount: preferencesHelper.getCartCount()));
