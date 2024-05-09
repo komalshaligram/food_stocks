@@ -240,7 +240,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                             print('details_____++++${details}');
                           },
                           onDocumentLoadFailed: (details) {
-                           // bloc.add(InvoicePdfEvent.getArgumentEvent(invoiceDetailsList: invoiceDetailsList));
+                           bloc.add(InvoicePdfEvent.pdfRefreshEvent(pdfUrl: state.invoiceDetailsList.link ?? ''));
                           },
 
                         ),
