@@ -57,6 +57,7 @@ class BottomNavScreenWidget extends StatelessWidget {
     return BlocListener<BottomNavBloc, BottomNavState>(
       listenWhen: (previous, current) => current.pushNotificationPath != '',
       listener: (context, state) {
+        bloc.add(BottomNavEvent.updateCartCountEvent());
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
@@ -69,7 +70,6 @@ class BottomNavScreenWidget extends StatelessWidget {
                 return Future.value(false);
               }
             },
-
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               backgroundColor: AppColors.pageColor,
@@ -86,7 +86,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                   height: 65.0,
                 cartCount: state.cartCount,
                 isRTL: context.rtl,
-                  items: [
+                  items: state.isSubUserSeeWallet ? [
                     _navItem(
                       pos: 0,
                       img: AppImagePath.home,
@@ -118,6 +118,32 @@ class BottomNavScreenWidget extends StatelessWidget {
                       isRTL: context.rtl,
                       state: state,
                     ),
+                  ] : [
+                    _navItem(
+                      pos: 0,
+                      img: AppImagePath.home,
+                      isRTL: context.rtl,
+                      state: state,
+                    ),
+                    _navItem(
+                      pos: 1,
+                      img: AppImagePath.store,
+                      isRTL: context.rtl,
+                      state: state,
+                    ),
+                    _navItem(
+                      pos: 2,
+                      img: AppImagePath.cart,
+                      isRTL: context.rtl,
+                      state: state,
+                      isCart: true,
+                    ),
+                    _navItem(
+                      pos: 3,
+                      img: AppImagePath.profile,
+                      isRTL: context.rtl,
+                      state: state,
+                    ),
                   ],
                   color: AppColors.whiteColor,
                   buttonBackgroundColor: AppColors.whiteColor,
@@ -135,14 +161,13 @@ class BottomNavScreenWidget extends StatelessWidget {
                         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                       }
                     }
-                    else if(!state.isSubUserSeeWallet && index == 3){
-
-                    }
                     else{
                       bloc.add(BottomNavEvent.changePage(index: index));
                     }
                   },
-                  letIndexChange: (index) => !state.isSubUserSeeWallet && index == 3 ? false: true,
+                  letIndexChange: (index) {
+                    return true;
+                  },
                 ),
               ),
               body: FocusDetector(
@@ -177,13 +202,18 @@ class BottomNavScreenWidget extends StatelessWidget {
       height: screenHeight,
       width: screenWidth,
       child: FadeIndexedStack(
-        index:  state.index,
-        children: [
+        index: state.index,
+        children: state.isSubUserSeeWallet ?  [
           HomeScreen(isSubCategory: 'false') ,
           StoreScreen(),
           BasketScreen(),
-          WalletScreen(),
-          ProfileMenuScreen(),
+           WalletScreen(),
+           ProfileMenuScreen(),
+        ] : [
+          HomeScreen(isSubCategory: 'false') ,
+          StoreScreen(),
+          BasketScreen(),
+          ProfileMenuScreen()
         ]
       ),
     );
@@ -195,7 +225,6 @@ class BottomNavScreenWidget extends StatelessWidget {
       required String img,
       bool isCart = false,
       required BottomNavState state}) {
-
     return GestureDetector(
       child: Stack(
         children: [
@@ -204,7 +233,7 @@ class BottomNavScreenWidget extends StatelessWidget {
             width: 50,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-              gradient: pos == ( state.index )?AppColors.appMainGradientColor:LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]),
+              gradient: pos == ( state.index ) ? AppColors.appMainGradientColor : LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]),
                 borderRadius: const BorderRadius.all(
                     Radius.circular(AppConstants.radius_100))),
             child: Center(

@@ -176,10 +176,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
                 final res = await DioClient(event.context).post(
                     '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                    options: Options(headers: {
-                      HttpHeaders.authorizationHeader:
-                      'Bearer ${preferences.getAuthToken()}'
-                    }));
+                  );
                 GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                 if (response.status == 200) {
                   debugPrint('cart before = ${response.data}');
