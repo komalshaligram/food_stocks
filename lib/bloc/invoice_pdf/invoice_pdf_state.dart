@@ -7,16 +7,12 @@ class InvoicePdfState with _$InvoicePdfState{
     required Invoice invoiceDetailsList,
     required bool isDownloading,
     required int downloadProgress,
-    required bool isRefreshing,
-
   }) = _InvoicePdfState;
 
   factory InvoicePdfState.initial()=>  InvoicePdfState(
  invoiceDetailsList: Invoice(),
     downloadProgress: 0,
     isDownloading: false,
-      isRefreshing : false
-
   );
 
 }
