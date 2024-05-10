@@ -419,6 +419,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.notsufficientpermission;
       case 'needtoapprovepreviousorder':
         return AppLocalizations.of(context)!.needtoapprovepreviousorder;
+      case 'subuserphonenumberalreadyexist':
+        return AppLocalizations.of(context)!.phone_number_of_other_subuser;
     }
     return key;
   }
