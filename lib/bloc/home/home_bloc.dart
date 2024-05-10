@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/req_model/update_cart/update_cart_req_model.dart';
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
@@ -352,6 +353,55 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             // emit(state.copyWith(isProductLoading: false));
           }
         }
+        else if (event is _GetProductSalesListEvent) {
+          try {
+            emit(state.copyWith(isShimmering: true));
+            final res = await DioClient(event.context).post(
+                AppUrls.getSaleProductsUrl,
+                data: ProductSalesReqModel(
+                    pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
+                    .toJson());
+            ProductSalesResModel response = ProductSalesResModel.fromJson(res);
+            debugPrint('sale response____${response}');
+
+            if (response.status == 200) {
+              List<ProductSale> saleProductsList =
+                  response.data?.toList(growable: true) ?? [];
+              debugPrint('sale Products = ${saleProductsList.length}');
+              debugPrint('sale Products = ${response.data?.length}');
+             List< List<ProductStockModel>> productStockList =
+              state.productStockList.toList(growable: true);
+              List<ProductStockModel>stockList = [];
+              /*ProductStockModel barcodeStock = productStockList.removeLast();*/
+              stockList.addAll(response.data?.map(
+                      (saleProduct) =>
+                      ProductStockModel(
+                        productId: saleProduct.id ?? '',
+                        stock: (saleProduct.numberOfUnit ?? '0')
+                      )) ??
+                  []);
+              productStockList[3].addAll(stockList);
+
+              emit(state.copyWith(
+                  productSalesList: response.data ?? [],
+                  productStockList: productStockList,
+                  isShimmering: false));
+            } else {
+              emit(state.copyWith(isShimmering: false));
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title:
+                '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                type: SnackBarType.FAILURE,
+              );
+            }
+          } on ServerException {
+            emit(state.copyWith(isShimmering: false));
+          } catch (exc) {
+            emit(state.copyWith(isShimmering: false));
+          }
+        }
+
         else if (event is _IncreaseQuantityOfProduct) {
           List<List<ProductStockModel>> productStockList =
           state.productStockList.toList(growable: false);

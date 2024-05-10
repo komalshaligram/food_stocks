@@ -21,6 +21,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_product_details_widget.dart';
+import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -55,6 +56,7 @@ class HomeScreen extends StatelessWidget {
         ..add(HomeEvent.getOrderCountEvent(context: context))
         ..add(HomeEvent.getWalletRecordEvent(context: context))
         ..add(HomeEvent.getMessageListEvent(context: context))
+        ..add(HomeEvent.getProductSalesListEvent(context: context))
         ..add(HomeEvent.getRecommendationProductsListEvent(context: context))
       ..add(HomeEvent.getPermissionList(context: context)),
       child: HomeScreenWidget(isNavigation: isSubCategory),
@@ -100,6 +102,7 @@ class HomeScreenWidget extends StatelessWidget {
                 bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
                 bloc.add(HomeEvent.generalSettings(context: context));
                 bloc.add(HomeEvent.getPermissionList(context: context));
+                bloc.add(HomeEvent.getProductSalesListEvent(context: context));
               },
               child: SafeArea(
                 child: Column(
@@ -528,7 +531,127 @@ class HomeScreenWidget extends StatelessWidget {
                                         ? CrossFadeState.showFirst
                                         : CrossFadeState.showSecond,
                                     duration: Duration(milliseconds: 300)),
+                                30.height,
+                                AnimatedCrossFade(
+                                    firstChild:
+                                    getScreenWidth(context).width,
+                                    secondChild: Column(
+                                      children: [
+                                        buildListTitles(
+                                            context: context,
+                                            title: AppLocalizations.of(
+                                                context)!
+                                                .sales,
+                                            subTitle: /*state.productSalesList
+                                              .length <
+                                              6
+                                              ? ''
+                                              : */
+                                            AppLocalizations.of(
+                                                context)!
+                                                .all_sales,
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .productSaleScreen
+                                                      .name);
+                                            }),
+                                        SizedBox(
+                                          width: getScreenWidth(context),
+                                          height: state.isGuestUser ? 200 :AppConstants.relatedProductItemHeight ,
+                                          child: ListView.builder(
+                                            itemCount: state
+                                                .productSalesList.length,
+                                            shrinkWrap: true,
+                                            scrollDirection:
+                                            Axis.horizontal,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: AppConstants
+                                                    .padding_5),
+                                            itemBuilder:
+                                                (context, index) {
+                                              return CommonProductItemWidget(
+                                                  isGuestUser: state.isGuestUser,
+                                                  height: 180,
+                                                  width: 140,
+                                                  productName: state.productSalesList[index].productName??'',
+                                                  productImage: state
+                                                      .productSalesList[
+                                                  index]
+                                                      .mainImage ??
+                                                      '',
+                                                lowStock: '',
+                                                productStock: '',
+                                                /*  lowStock: state
+                                                      .productSalesList[
+                                                  index]
+                                                      .lowStock.toString(),
+                                                  productStock: state
+                                                      .productSalesList[
+                                                  index]
+                                                      .productStock.toString(),*/
 
+                                               price: state.productSalesList[index].discountedPrice,
+
+                                               totalSaleCount: 2,
+                                               isPesach: state.productSalesList[index].isPesach,
+                                               saleDesc: state.productSalesList[index].salesDescription,
+
+                                               /*   title: state
+                                                      .productSalesList[
+                                                  index]
+                                                      .salesName ??
+                                                      '',
+                                                  description: parse(state
+                                                      .productSalesList[
+                                                  index]
+                                                      .salesDescription ??
+                                                      '')
+                                                      .body
+                                                      ?.text ??
+                                                      '',
+                                                  salePercentage:
+                                                  double.parse(state
+                                                      .productSalesList[
+                                                  index]
+                                                      .discountPercentage ??
+                                                      '0.0'),
+                                                  discountedPrice: state
+                                                      .productSalesList[
+                                                  index]
+                                                      .discountedPrice ??
+                                                      0,*/
+                                                  onButtonTap: () {
+                                                    debugPrint("tap 1");
+                                                    if(!state.isGuestUser){
+                                                      showProductDetails(
+                                                        context: context,
+                                                        productListIndex: 3,
+                                                        productId: state
+                                                            .productSalesList[
+                                                        index]
+                                                            .id ??
+                                                            '',
+                                                      );
+                                                    }
+                                                    else{
+                                                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                    }
+
+                                                  });
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    crossFadeState:
+                                    state.productSalesList.isEmpty
+                                        ? CrossFadeState.showFirst
+                                        : CrossFadeState.showSecond,
+                                    duration:
+                                    Duration(milliseconds: 300)),
+                                30.height,
                                 state.cartCount == 0
                                     ? CustomTextIconButtonWidget(
                                   width: double.maxFinite,

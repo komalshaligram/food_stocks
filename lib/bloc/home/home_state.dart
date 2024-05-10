@@ -64,6 +64,7 @@ class HomeState with _$HomeState {
       productStockList: [
         [ProductStockModel(productId: '')],
         [],
+        [],
         []
       ],
       isSelectSupplier: false,

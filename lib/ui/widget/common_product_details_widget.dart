@@ -49,6 +49,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final double bottleTax;
   final double totalBottleDeposit;
   final bool isSubUserAddToBasket;
+  final bool isSaleOn;
   const CommonProductDetailsWidget(
       {super.key,
       required this.context,
@@ -85,7 +86,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
         required this.isBottle,
         required this.bottleTax,
         required this.totalBottleDeposit,
-        required this.isSubUserAddToBasket
+        required this.isSubUserAddToBasket,
+        this.isSaleOn = false
       });
 
   @override

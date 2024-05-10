@@ -159,7 +159,6 @@ class BasketScreenWidget extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
-
                               },
                               child: Container(
                                 child: Row(
@@ -208,6 +207,7 @@ class BasketScreenWidget extends StatelessWidget {
                                         isPesach: state.basketProductList[index].isPesach??false,
                                         index: index,
                                         context: context,
+                                        isSaleOn: true,
                                         lowStock: state.basketProductList[index].lowStock.toString(),
                                         productStock: state.basketProductList[index].productStock ?? 0
                                       ),
@@ -328,7 +328,7 @@ class BasketScreenWidget extends StatelessWidget {
   }
 
   Widget basketListItem({required int index, required BuildContext context,
-    required String lowStock, required double productStock,required bool isPesach}) {
+    required String lowStock, required double productStock,required bool isPesach,required bool isSaleOn}) {
     return BlocBuilder<BasketBloc, BasketState>(
       builder: (context, state) {
         BasketBloc bloc = context.read<BasketBloc>();
@@ -514,6 +514,16 @@ class BasketScreenWidget extends StatelessWidget {
                                       ),
                                 ) : 0.width,
                                 lowStock.isNotEmpty?5.height:0.height,
+                                isSaleOn?3.height:0.height,
+                                isSaleOn ?Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.all(Radius.circular(8))
+                                  ),
+                                  child: Text('On Sale',style: TextStyle(color: Colors.white,fontSize: AppConstants.font_12),),
+                                ):Container(),
+                                isSaleOn?3.height:0.height,
                                 isPesachLabelShow(isPesach, context),
                                 isPesach?5.height:0.height,
                                 Text(

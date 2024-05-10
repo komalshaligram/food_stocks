@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:html/parser.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -25,6 +26,7 @@ class CommonProductItemWidget extends StatelessWidget {
   final double? imageWidth;
   final String lowStock;
   final bool? isPesach;
+  final String? saleDesc;
 
   const CommonProductItemWidget(
       {super.key,
@@ -40,6 +42,7 @@ class CommonProductItemWidget extends StatelessWidget {
       this.imageHeight = 80,
       this.imageWidth = 80,
          this.isPesach = false,
+        this.saleDesc = '',
         required   this.lowStock });
 
   @override
@@ -126,19 +129,11 @@ class CommonProductItemWidget extends StatelessWidget {
             ),
             2.height,
             Expanded(
-              child: totalSaleCount == 0 || isGuestUser
+              child: saleDesc!.isEmpty || isGuestUser
                   ? 0.width
-                  : Text(
-                      "${totalSaleCount} ${AppLocalizations.of(context)!.discount}",
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_10,
-                          color: AppColors.saleRedColor,
-                          fontWeight: FontWeight.w600),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                    ),
+                  : saleDescWidget(context,parse(saleDesc).body!.text)
             ),
+            2.height,
         isGuestUser ? 0.height
                     : (productStock) == '0' || productStock =='0.0'?Text(
                         AppLocalizations.of(context)!.out_of_stock1,
