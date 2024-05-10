@@ -54,7 +54,6 @@ class BottomNavScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BottomNavBloc bloc = context.read<BottomNavBloc>();
-
     return BlocListener<BottomNavBloc, BottomNavState>(
       listenWhen: (previous, current) => current.pushNotificationPath != '',
       listener: (context, state) {
@@ -62,7 +61,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
-
+          debugPrint('index final :${state.index}');
           return WillPopScope(
             onWillPop: () {
               if (state.index == 0) {
@@ -84,7 +83,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                 ]),
                 child: CurvedNavigationBar(
                   key: _bottomNavigationKey,
-                  index: state.index,
+                  index: state.index==4 && !state.isSubUserSeeWallet?(state.index-1):state.index,
                   height: 65.0,
                 cartCount: state.cartCount,
                 isRTL: context.rtl,
