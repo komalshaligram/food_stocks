@@ -22,6 +22,12 @@ class UpdateSubUserReqModel with _$UpdateSubUserReqModel {
     String? email,
     @JsonKey(name: "phoneNumber")
     String? phoneNumber,
+    @JsonKey(name: "applicationVersion")
+    String? applicationVersion,
+    @JsonKey(name: "deviceType")
+    String? deviceType,
+    @JsonKey(name: "lastSeen")
+    DateTime? lastSeen,
   }) = _UpdateSubUserReqModel;
 
   factory UpdateSubUserReqModel.fromJson(Map<String, dynamic> json) => _$UpdateSubUserReqModelFromJson(json);
