@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/product_sale/product_sale_bloc.dart';
@@ -6,10 +5,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import 'package:food_stock/ui/widget/common_product_list_widget.dart';
 import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
 import 'package:food_stock/ui/widget/common_sale_description_dialog.dart';
 import 'package:food_stock/ui/widget/product_sale_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
@@ -34,13 +35,11 @@ class ProductSaleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint('product sale args = $args');
     return BlocProvider(
       create: (context) => ProductSaleBloc()
-        ..add(ProductSaleEvent.setSearchEvent(
-            search: args?[AppStrings.searchString] ?? ''))
+        ..add(ProductSaleEvent.setSearchEvent(search: args?[AppStrings.searchString] ?? ''))
         ..add(ProductSaleEvent.getProductSalesListEvent(context: context)),
       child: ProductSaleScreenWidget(),
     );
@@ -67,6 +66,11 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(context);
                 },
+                trailingWidget: GestureDetector(
+                    onTap: () {
+                      context.read<ProductSaleBloc>().add(ProductSaleEvent.getGridListView());
+                    },
+                    child: Icon(state.isGridView ? Icons.list : Icons.grid_view)),
               ),
             ),
             body: SafeArea(
@@ -82,20 +86,18 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 ),
                 enablePullUp: !state.isBottomOfProducts,
                 onRefresh: () {
-                  context
-                      .read<ProductSaleBloc>()
-                      .add(ProductSaleEvent.refreshListEvent(context: context));
+                  context.read<ProductSaleBloc>().add(ProductSaleEvent.refreshListEvent(context: context));
                 },
                 onLoading: () {
-                  context.read<ProductSaleBloc>().add(
-                      ProductSaleEvent.getProductSalesListEvent(
-                          context: context));
+                  context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductSalesListEvent(context: context));
                 },
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
                       state.isShimmering
-                          ? ProductSaleScreenShimmerWidget()
+                          ? state.isGridView
+                              ? ProductSaleScreenShimmerWidget()
+                              : StoreCategoryScreenSubcategoryShimmerWidget()
                           : state.productSalesList.length == 0
                               ? Container(
                                   height: getScreenHeight(context) - 80,
@@ -103,75 +105,67 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                   alignment: Alignment.center,
                                   child: Text(
                                     '${AppLocalizations.of(context)!.currently_products_are_not_on_sale}',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.smallFont,
-                                        color: AppColors.textColor),
+                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
                                   ),
                                 )
-                              : GridView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: state.productSalesList.length,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: AppConstants.padding_10),
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 3,
-                                          childAspectRatio:
-                                          getChildAspectRatio(context)),
-                                  itemBuilder: (context, index) {
-                                    return buildProductSaleListItem(
-                                      isGuestUser: state.isGuestUser,
-                                      index: index,
-                                      context: context,
-                                      saleImage: state.productSalesList[index]
-                                              .mainImage ??
-                                          '',
-                                      title: state.productSalesList[index]
-                                              .salesName ??
-                                          '',
-                                      productName: state.productSalesList[index]
-                                              .productName ??
-                                          '',
-                                      description: parse(state
-                                                      .productSalesList[index]
-                                                      .salesDescription ??
-                                                  '')
-                                              .body
-                                              ?.text ??
-                                          '',
-                                      salePercentage: double.parse(state
-                                              .productSalesList[index]
-                                              .discountPercentage ??
-                                          '0.0'),
-                                      discountedPrice: state
-                                              .productSalesList[index]
-                                              .discountedPrice ??
-                                          0,
-                                      onButtonTap: () {
-                                        if (!state.isGuestUser) {
-                                          showProductDetails(
-                                            context: context,
-                                            productId: state
-                                                    .productSalesList[index]
-                                                    .id ??
-                                                '',
-                                            startDate: state
-                                                .productSalesList[index]
-                                                .fromDate
-                                                .toString(),
-                                            endDate: state
-                                                .productSalesList[index].endDate
-                                                .toString(),
-                                          );
-                                        } else {
-                                          Navigator.pushNamed(context,
-                                              RouteDefine.connectScreen.name);
-                                        }
+                              : state.isGridView
+                                  ? GridView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: state.productSalesList.length,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.55),
+                                      //getChildAspectRatio(context)),
+                                      itemBuilder: (context, index) {
+                                        return buildProductSaleListItem(
+                                          isGuestUser: state.isGuestUser,
+                                          index: index,
+                                          context: context,
+                                          saleImage: state.productSalesList[index].mainImage ?? '',
+                                          title: state.productSalesList[index].salesName ?? '',
+                                          productName: state.productSalesList[index].productName ?? '',
+                                          description: parse(state.productSalesList[index].salesDescription ?? '').body?.text ?? '',
+                                          salePercentage: double.parse(state.productSalesList[index].discountPercentage ?? '0.0'),
+                                          discountedPrice: state.productSalesList[index].discountedPrice ?? 0,
+                                          onButtonTap: () {
+                                            if (!state.isGuestUser) {
+                                              showProductDetails(
+                                                context: context,
+                                                productId: state.productSalesList[index].id ?? '',
+                                                startDate: state.productSalesList[index].fromDate.toString(),
+                                                endDate: state.productSalesList[index].endDate.toString(),
+                                              );
+                                            } else {
+                                              Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                            }
+                                          },
+                                        );
                                       },
-                                    );
-                                  },
-                                ),
+                                    )
+                                  : ListView.builder(
+                                      itemCount: state.productSalesList.length,
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                      itemBuilder: (context, index) => CommonProductListWidget(
+                                          isFromSale: true,
+                                          isGuestUser: state.isGuestUser,
+                                          isPesach: state.productSalesList[index].isPesach,
+                                          numberOfUnits: state.productSalesList[index].numberOfUnit.toString(),
+                                          lowStock: state.productSalesList[index].lowStock.toString(),
+                                          productStock: '1',
+                                          productImage: state.productSalesList[index].mainImage ?? '',
+                                          productName: state.productSalesList[index].productName ?? '',
+                                          price: state.productSalesList[index].discountedPrice ?? 0.0,
+                                          onButtonTap: () {
+                                            showProductDetails(
+                                              context: context,
+                                              productId: state.productSalesList[index].id ?? '',
+                                              startDate: state.productSalesList[index].fromDate.toString(),
+                                              endDate: state.productSalesList[index].endDate.toString(),
+                                            );
+                                          }),
+                                    ),
                     ],
                   ),
                 ),
@@ -196,18 +190,17 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required bool isGuestUser,
   }) {
     return CommonProductSaleItemWidget(
-          imageHeight: getScreenHeight(context) >= 1000
-      ? getScreenHeight(context) * 0.17
-      : 70,
-          isGuestUser: isGuestUser,
-          saleImage: saleImage,
-          title: title,
-          description: description,
-          salePercentage: salePercentage,
-          onButtonTap: onButtonTap,
-          productName: productName,
-          discountedPrice: discountedPrice,
-        );
+      height: AppConstants.salesProductItemHeight,
+      width: 140,
+      isGuestUser: isGuestUser,
+      saleImage: saleImage,
+      title: title,
+      description: description,
+      salePercentage: salePercentage,
+      onButtonTap: onButtonTap,
+      productName: productName,
+      discountedPrice: discountedPrice,
+    );
   }
 
   void showProductDetails({
@@ -217,16 +210,15 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required String endDate,
     String productStock = '0',
   }) async {
-    context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductDetailsEvent(
-        context: context, productId: productId));
+    context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductDetailsEvent(context: context, productId: productId));
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-     // isScrollControlled: true,
+      // isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-    //  showDragHandle: true,
-    //  useSafeArea: true,
+      //  showDragHandle: true,
+      //  useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
         return BlocProvider.value(
@@ -237,17 +229,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 bottom: false,
                 child: DraggableScrollableSheet(
                   expand: true,
-                  maxChildSize: 1 -
-                      (MediaQuery.of(context).viewPadding.top /
-                          getScreenHeight(context)*0.2),
-                  minChildSize:  productStock == '0' ? 0.9 :  1 -
-                      (MediaQuery.of(context).viewPadding.top /
-                          getScreenHeight(context)*0.2),
-                  initialChildSize:  productStock == '0' ? 0.9 :  1 -
-                      (MediaQuery.of(context).viewPadding.top /
-                          getScreenHeight(context)*0.2),
-                  builder:
-                      (BuildContext context1, ScrollController scrollController) {
+                  maxChildSize: 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
+                  minChildSize: productStock == '0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
+                  initialChildSize: productStock == '0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
+                  builder: (BuildContext context1, ScrollController scrollController) {
                     return Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
@@ -260,176 +245,107 @@ class ProductSaleScreenWidget extends StatelessWidget {
                       child: state.isProductLoading
                           ? ProductDetailsShimmerWidget()
                           : SingleChildScrollView(
-                        controller:  ModalScrollController.of(context),
-                        child: Column(
-                          children: [
-                            CommonProductDetailsWidget(
-                              isSubUserAddToBasket: state.isSubUserAddToBasket,
-                              bottleTax: state.bottleDeposit,
-                              totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
-                                  .productStockList[state.productStockUpdateIndex].quantity),
-                              isBottle:state.productDetails.first.isBottle??false,
-                              nmMashlim: state.productDetails.first.nmMashlim??'',
-                              isPesach: state.productDetails.first.isPesach??false,
-                              lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
-                              qrCode:
-                              state.productDetails.first.qrcode ?? '',
-                              isLoading: state.isLoading,
-                              addToOrderTap: () {
-                                context.read<ProductSaleBloc>().add(
-                                    ProductSaleEvent.addToCartProductEvent(
-                                        context: context1));
-                              },
-                              imageOnTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return SafeArea(
-                                      bottom: false,
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            height: getScreenHeight(context) -
-                                                MediaQuery.of(context)
-                                                    .padding
-                                                    .top,
-                                            width: getScreenWidth(context),
-                                            child: GestureDetector(
-                                              onVerticalDragStart:
-                                                  (dragDetails) {
-                                                  debugPrint('onVerticalDragStart');
-                                              },
-                                              onVerticalDragUpdate:
-                                                  (dragDetails) {
-                                                  debugPrint('onVerticalDragUpdate');
-                                              },
-                                              onVerticalDragEnd:
-                                                  (endDetails) {
-                                                 debugPrint('onVerticalDragEnd');
-                                                Navigator.pop(context);
-                                              },
-                                              child: PhotoView(
-                                                imageProvider:
-                                                NetworkImage(
-                                                  '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                              controller: ModalScrollController.of(context),
+                              child: Column(
+                                children: [
+                                  CommonProductDetailsWidget(
+                                    isSaleOn: true,
+                                    isSubUserAddToBasket: state.isSubUserAddToBasket,
+                                    bottleTax: state.bottleDeposit,
+                                    totalBottleDeposit: (state.bottleDeposit * state.productDetails.first.numberOfUnit!.toDouble() * state.productStockList[state.productStockUpdateIndex].quantity),
+                                    isBottle: state.productDetails.first.isBottle ?? false,
+                                    nmMashlim: state.productDetails.first.nmMashlim ?? '',
+                                    isPesach: state.productDetails.first.isPesach ?? false,
+                                    lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
+                                    qrCode: state.productDetails.first.qrcode ?? '',
+                                    isLoading: state.isLoading,
+                                    addToOrderTap: () {
+                                      context.read<ProductSaleBloc>().add(ProductSaleEvent.addToCartProductEvent(context: context1));
+                                    },
+                                    imageOnTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return SafeArea(
+                                            bottom: false,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
+                                                  width: getScreenWidth(context),
+                                                  child: GestureDetector(
+                                                    onVerticalDragStart: (dragDetails) {
+                                                      debugPrint('onVerticalDragStart');
+                                                    },
+                                                    onVerticalDragUpdate: (dragDetails) {
+                                                      debugPrint('onVerticalDragUpdate');
+                                                    },
+                                                    onVerticalDragEnd: (endDetails) {
+                                                      debugPrint('onVerticalDragEnd');
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: PhotoView(
+                                                      imageProvider: NetworkImage(
+                                                        '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
+                                                GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(top: 10.0),
+                                                      child: Icon(
+                                                        Icons.close,
+                                                        color: Colors.white,
+                                                      ),
+                                                    )),
+                                              ],
                                             ),
-                                          ),
-                                          GestureDetector(
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top:10.0),
-                                                child: Icon(
-                                                  Icons.close,
-                                                  color: Colors.white,
-                                                ),
-                                              )),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                              startDate: startDate,
-                              endDate: endDate,
-                              context: context,
-                              productImageIndex: state.imageIndex,
-                              onPageChanged: (index, p1) {
-                                context.read<ProductSaleBloc>().add(
-                                    ProductSaleEvent.updateImageIndexEvent(
-                                        index: index));
-                              },
-                              productImages: [
-                                state.productDetails.first.mainImage ?? '',
-                                ...state.productDetails.first.images?.map(
-                                        (image) => image.imageUrl ?? '') ??
-                                    []
-                              ],
-                              productPerUnit:
-                              state.productDetails.first.numberOfUnit ??
-                                  0,
-                              productUnitPrice: state
-                                  .productStockList[
-                              state.productStockUpdateIndex]
-                                  .totalPrice,
-                              productName:
-                              state.productDetails.first.productName ??
-                                  '',
-                              productCompanyName:
-                              state.productDetails.first.brandName ??
-                                  '',
-                              productDescription: state.productDetails.first
-                                  .productDescription ??
-                                  '',
-                              productSaleDescription: state.productDetails
-                                  .first.productDescription ??
-                                  '',
-                              productPrice: state
-                                  .productStockList[
-                              state.productStockUpdateIndex]
-                                  .totalPrice *
-                                  state
-                                      .productStockList[
-                                  state.productStockUpdateIndex]
-                                      .quantity *
-                                  (state.productDetails.first
-                                      .numberOfUnit ??
-                                      0),
-                              productScaleType: state.productDetails.first
-                                  .scales?.scaleType ??
-                                  '',
-                              productWeight: state
-                                  .productDetails.first.itemsWeight
-                                  ?.toDouble() ??
-                                  0.0,
-                              productStock: state
-                                  .productStockList[
-                              state.productStockUpdateIndex]
-                                  .stock.toString(),
-                              isRTL: context.rtl,
-                              isSupplierAvailable:
-                              state.productSupplierList.isEmpty
-                                  ? false
-                                  : true,
-                              scrollController: scrollController,
-                              productQuantity: state
-                                  .productStockList[
-                              state.productStockUpdateIndex]
-                                  .quantity,
-                              onQuantityChanged: (quantity) {
-                                context.read<ProductSaleBloc>().add(
-                                    ProductSaleEvent
-                                        .updateQuantityOfProduct(
-                                        context: context1,
-                                        quantity: quantity));
-                              },
-                              onQuantityIncreaseTap: () {
-                                context.read<ProductSaleBloc>().add(
-                                    ProductSaleEvent
-                                        .increaseQuantityOfProduct(
-                                        context: context1));
-                              },
-                              onQuantityDecreaseTap: () {
-                                if (state
-                                    .productStockList[
-                                state.productStockUpdateIndex]
-                                    .quantity >
-                                    1) {
-                                  context.read<ProductSaleBloc>().add(
-                                      ProductSaleEvent
-                                          .decreaseQuantityOfProduct(
-                                          context: context1));
-                                }
-                              },
+                                          );
+                                        },
+                                      );
+                                    },
+                                    startDate: startDate,
+                                    endDate: endDate,
+                                    context: context,
+                                    productImageIndex: state.imageIndex,
+                                    onPageChanged: (index, p1) {
+                                      context.read<ProductSaleBloc>().add(ProductSaleEvent.updateImageIndexEvent(index: index));
+                                    },
+                                    productImages: [state.productDetails.first.mainImage ?? '', ...state.productDetails.first.images?.map((image) => image.imageUrl ?? '') ?? []],
+                                    productPerUnit: state.productDetails.first.numberOfUnit ?? 0,
+                                    productUnitPrice: state.productStockList[state.productStockUpdateIndex].totalPrice,
+                                    productName: state.productDetails.first.productName ?? '',
+                                    productCompanyName: state.productDetails.first.brandName ?? '',
+                                    productDescription: state.productDetails.first.productDescription ?? '',
+                                    productSaleDescription: state.productDetails.first.productDescription ?? '',
+                                    productPrice: state.productStockList[state.productStockUpdateIndex].totalPrice * state.productStockList[state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 0),
+                                    productScaleType: state.productDetails.first.scales?.scaleType ?? '',
+                                    productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
+                                    productStock: state.productStockList[state.productStockUpdateIndex].stock.toString(),
+                                    isRTL: context.rtl,
+                                    isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
+                                    scrollController: scrollController,
+                                    productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
+                                    onQuantityChanged: (quantity) {
+                                      context.read<ProductSaleBloc>().add(ProductSaleEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
+                                    },
+                                    onQuantityIncreaseTap: () {
+                                      context.read<ProductSaleBloc>().add(ProductSaleEvent.increaseQuantityOfProduct(context: context1));
+                                    },
+                                    onQuantityDecreaseTap: () {
+                                      if (state.productStockList[state.productStockUpdateIndex].quantity > 1) {
+                                        context.read<ProductSaleBloc>().add(ProductSaleEvent.decreaseQuantityOfProduct(context: context1));
+                                      }
+                                    },
+                                  ),
+                                  state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context)
+                                ],
+                              ),
                             ),
-                            state.relatedProductList.isEmpty
-                                ? 0.width : relatedProductWidget(context1, state.relatedProductList,context)
-                          ],
-                        ),
-                      ),
                     );
                   },
                 ),
@@ -441,21 +357,18 @@ class ProductSaleScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context){
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Align(
-          alignment:
-          context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+          alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: Text(
               AppLocalizations.of(context)!.related_products,
-              style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.mediumFont,
-                  color: AppColors.blackColor),
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
@@ -464,38 +377,34 @@ class ProductSaleScreenWidget extends StatelessWidget {
         ),
         Container(
           height: AppConstants.relatedProductItemHeight,
-          padding: EdgeInsets.only(left: 10,right: 10),
+          padding: EdgeInsets.only(left: 10, right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
-            itemBuilder: (context2,i){
+            itemBuilder: (context2, i) {
               return CommonProductItemWidget(
                 isPesach: relatedProductList.elementAt(i).isPesach,
                 lowStock: relatedProductList.elementAt(i).lowStock.toString(),
-                productStock:relatedProductList.elementAt(i).productStock.toString(),
+                productStock: relatedProductList.elementAt(i).productStock.toString(),
                 width: AppConstants.relatedProductItemWidth,
-                productImage:relatedProductList[i].mainImage,
+                productImage: relatedProductList[i].mainImage,
                 productName: relatedProductList.elementAt(i).productName,
                 totalSaleCount: relatedProductList.elementAt(i).totalSale,
-                price:relatedProductList.elementAt(i).productPrice,
-                onButtonTap: (){
+                price: relatedProductList.elementAt(i).productPrice,
+                onButtonTap: () {
                   Navigator.of(prevContext).pop();
-                  showProductDetails(
-                      context: context,
-                      productId: relatedProductList[i].id,
-                      endDate: '',
-                      startDate: '');
+                  showProductDetails(context: context, productId: relatedProductList[i].id, endDate: '', startDate: '');
                 },
-              );},itemCount: relatedProductList.length,),
+              );
+            },
+            itemCount: relatedProductList.length,
+          ),
         )
       ],
     );
   }
 
-
-
-  void showConditionDialog(
-      {required BuildContext context, required String saleCondition}) {
+  void showConditionDialog({required BuildContext context, required String saleCondition}) {
     showDialog(
         context: context,
         builder: (context) => CommonSaleDescriptionDialog(

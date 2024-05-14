@@ -1190,7 +1190,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(isShimmering: false));
           }
         }
-       else if (event is _checkVersionOfAppEvent) {
+     /*  else if (event is _checkVersionOfAppEvent) {
           final _checker = StoreVersionChecker();
           _checker.checkUpdate().then((value) {
             debugPrint('update available');
@@ -1207,7 +1207,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     event.context, preferences.getAppLanguage(),value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
               }
           });
-        }
+        }*/
         else if(event is _RelatedProductsEvent){
           emit(state.copyWith(isRelatedShimmering:true));
           debugPrint('productId__11__${event.productId}');

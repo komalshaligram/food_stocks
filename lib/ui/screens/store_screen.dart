@@ -482,57 +482,62 @@ class StoreScreenWidget extends StatelessWidget {
                                                     .padding_5),
                                             itemBuilder:
                                                 (context, index) {
-                                              return CommonProductSaleItemWidget(
-                                                  isGuestUser: state.isGuestUser,
-                                                  height: 180,
-                                                  width: 140,
-                                                  productName: state.productSalesList[index].productName??'',
-                                                  saleImage: state
-                                                      .productSalesList[
-                                                  index]
-                                                      .mainImage ??
-                                                      '',
-                                                  title: state
-                                                      .productSalesList[
-                                                  index]
-                                                      .salesName ??
-                                                      '',
-                                                  description: parse(state
-                                                      .productSalesList[
-                                                  index]
-                                                      .salesDescription ??
-                                                      '')
-                                                      .body
-                                                      ?.text ??
-                                                      '',
-                                                  salePercentage:
-                                                  double.parse(state
-                                                      .productSalesList[
-                                                  index]
-                                                      .discountPercentage ??
-                                                      '0.0'),
-                                                  discountedPrice: state
-                                                      .productSalesList[
-                                                  index]
-                                                      .discountedPrice ??
-                                                      0,
-                                                  onButtonTap: () {
-                                                     debugPrint("tap 1");
-                                                    if(!state.isGuestUser){
-                                                      showProductDetails(
-                                                        context: context,
-                                                        productId: state
-                                                            .productSalesList[
-                                                        index]
-                                                            .id ??
-                                                            '',
-                                                      );
-                                                    }
-                                                    else{
-                                                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                                    }
+                                                  return CommonProductSaleItemWidget(
+                                                      isGuestUser: state.isGuestUser,
+                                                      height:AppConstants.salesProductItemHeight ,
+                                                      width: 140,
+                                                      productName: state.productSalesList[index].productName??'',
+                                                      saleImage: state
+                                                          .productSalesList[
+                                                      index]
+                                                          .mainImage ??
+                                                          '',
+                                                      title: state
+                                                          .productSalesList[
+                                                      index]
+                                                          .salesName ??
+                                                          '',
+                                                      description: parse(state
+                                                          .productSalesList[
+                                                      index]
+                                                          .salesDescription ??
+                                                          '')
+                                                          .body
+                                                          ?.text ??
+                                                          '',
+                                                      salePercentage:
+                                                      double.parse(state
+                                                          .productSalesList[
+                                                      index]
+                                                          .discountPercentage ??
+                                                          '0.0'),
+                                                      discountedPrice: state
+                                                          .productSalesList[
+                                                      index]
+                                                          .discountedPrice ??
+                                                          0,
+                                                      originalPrice:state
+                                                          .productSalesList[
+                                                      index]
+                                                          .originalPrice ??
+                                                          0 ,
+                                                      onButtonTap: () {
+                                                        debugPrint("tap 1");
+                                                        if(!state.isGuestUser){
+                                                          showProductDetails(
+                                                            context: context,
+                                                            productId: state
+                                                                .productSalesList[
+                                                            index]
+                                                                .id ??
+                                                                '',
+                                                          );
+                                                        }
+                                                        else{
+                                                          Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                        }
 
-                                                  });
+                                                      });
                                             },
                                           ),
                                         ),
@@ -583,7 +588,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                         .recommendedProductsList[
                                                     index]
                                                         .productStock.toString() ,
-                                                    height: 160,
+                                                    height: 200,
                                                     width: 140,
                                                     productImage: state
                                                         .recommendedProductsList[

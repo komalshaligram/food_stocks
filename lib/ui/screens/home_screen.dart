@@ -432,6 +432,7 @@ class HomeScreenWidget extends StatelessWidget {
                                       },
                                     ),
                                 )):Container(),
+                                10.height,
                                 AnimatedCrossFade(
                                     firstChild: getScreenWidth(context).width,
                                     secondChild: Column(
@@ -531,7 +532,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         ? CrossFadeState.showFirst
                                         : CrossFadeState.showSecond,
                                     duration: Duration(milliseconds: 300)),
-                                30.height,
+
                                 AnimatedCrossFade(
                                     firstChild:
                                     getScreenWidth(context).width,
@@ -542,11 +543,10 @@ class HomeScreenWidget extends StatelessWidget {
                                             title: AppLocalizations.of(
                                                 context)!
                                                 .sales,
-                                            subTitle: /*state.productSalesList
-                                              .length <
-                                              6
+                                            subTitle: /*state.productSalesLis.length <
+                                             6
                                               ? ''
-                                              : */
+                                           : */
                                             AppLocalizations.of(
                                                 context)!
                                                 .all_sales,
@@ -559,7 +559,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             }),
                                         SizedBox(
                                           width: getScreenWidth(context),
-                                          height: state.isGuestUser ? 200 :AppConstants.relatedProductItemHeight ,
+                                          height:AppConstants.salesProductItemHeight ,
                                           child: ListView.builder(
                                             itemCount: state
                                                 .productSalesList.length,
@@ -571,75 +571,74 @@ class HomeScreenWidget extends StatelessWidget {
                                                     .padding_5),
                                             itemBuilder:
                                                 (context, index) {
-                                              return CommonProductItemWidget(
-                                                  isGuestUser: state.isGuestUser,
-                                                  height: 180,
-                                                  width: 140,
-                                                  productName: state.productSalesList[index].productName??'',
-                                                  productImage: state
-                                                      .productSalesList[
-                                                  index]
-                                                      .mainImage ??
-                                                      '',
-                                                lowStock: '',
-                                                productStock: '',
-                                                /*  lowStock: state
-                                                      .productSalesList[
-                                                  index]
-                                                      .lowStock.toString(),
-                                                  productStock: state
-                                                      .productSalesList[
-                                                  index]
-                                                      .productStock.toString(),*/
+                                                  return CommonProductSaleItemWidget(
+                                                      isGuestUser: state.isGuestUser,
+                                                      height: AppConstants.salesProductItemHeight,
+                                                      width: 140,
+                                                      productName: state.productSalesList[index].productName??'',
+                                                      saleImage: state
+                                                          .productSalesList[
+                                                      index]
+                                                          .mainImage ??
+                                                          '',
+                                                      title: state
+                                                          .productSalesList[
+                                                      index]
+                                                          .salesName ??
+                                                          '',
+                                                      description: parse(state
+                                                          .productSalesList[
+                                                      index]
+                                                          .salesDescription ??
+                                                          '')
+                                                          .body
+                                                          ?.text ??
+                                                          '',
+                                                      salePercentage:
+                                                      double.parse(state
+                                                          .productSalesList[
+                                                      index]
+                                                          .discountPercentage ??
+                                                          '0.0'),
+                                                      discountedPrice: state
+                                                          .productSalesList[
+                                                      index]
+                                                          .discountedPrice ??
+                                                          0,
+                                                      originalPrice:state
+                                                          .productSalesList[
+                                                      index]
+                                                          .originalPrice ??
+                                                          0 ,
+                                                      productStock: '0',
+                                                      lowStock: state
+                                                          .productSalesList[
+                                                      index]
+                                                          .lowStock??'',
+                                                      isPesach: state
+                                                          .productSalesList[
+                                                      index]
+                                                          .isPesach,
 
-                                               price: state.productSalesList[index].discountedPrice,
+                                                      onButtonTap: () {
+                                                        debugPrint("tap 1");
+                                                        if(!state.isGuestUser){
+                                                          showProductDetails(
+                                                            productListIndex: 3,
+                                                            context: context,
+                                                            productId: state
+                                                                .productSalesList[
+                                                            index]
+                                                                .id ??
+                                                                '',
+                                                          );
+                                                        }
+                                                        else{
+                                                          Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                        }
 
-                                               totalSaleCount: 2,
-                                               isPesach: state.productSalesList[index].isPesach,
-                                               saleDesc: state.productSalesList[index].salesDescription,
+                                                      });
 
-                                               /*   title: state
-                                                      .productSalesList[
-                                                  index]
-                                                      .salesName ??
-                                                      '',
-                                                  description: parse(state
-                                                      .productSalesList[
-                                                  index]
-                                                      .salesDescription ??
-                                                      '')
-                                                      .body
-                                                      ?.text ??
-                                                      '',
-                                                  salePercentage:
-                                                  double.parse(state
-                                                      .productSalesList[
-                                                  index]
-                                                      .discountPercentage ??
-                                                      '0.0'),
-                                                  discountedPrice: state
-                                                      .productSalesList[
-                                                  index]
-                                                      .discountedPrice ??
-                                                      0,*/
-                                                  onButtonTap: () {
-                                                    debugPrint("tap 1");
-                                                    if(!state.isGuestUser){
-                                                      showProductDetails(
-                                                        context: context,
-                                                        productListIndex: 3,
-                                                        productId: state
-                                                            .productSalesList[
-                                                        index]
-                                                            .id ??
-                                                            '',
-                                                      );
-                                                    }
-                                                    else{
-                                                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                                    }
-
-                                                  });
                                             },
                                           ),
                                         ),
@@ -651,7 +650,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         : CrossFadeState.showSecond,
                                     duration:
                                     Duration(milliseconds: 300)),
-                                30.height,
+
                                 state.cartCount == 0
                                     ? CustomTextIconButtonWidget(
                                   width: double.maxFinite,
@@ -1224,6 +1223,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         .productStockList[state.productListIndex][
                                     state.productStockUpdateIndex]
                                         .quantity),
+
                                     bottleTax: state.bottlePrice,
                                     isBottle:state.productDetails.first.isBottle??false,
                                     nmMashlim: state.productDetails.first.nmMashlim??'',
@@ -1376,8 +1376,8 @@ class HomeScreenWidget extends StatelessWidget {
                                 ),
                                 state.relatedProductList.isEmpty ? 0.height :
                                 relatedProductWidget(context1,state.relatedProductList,context,scrollController),
-                                                          ],
-                                                      ),
+                              ],
+                              ),
                           ),
                     );
                   },

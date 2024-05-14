@@ -145,7 +145,7 @@ class PushNotificationService {
               notiId: notification.hashCode,
               androidIcon: android?.smallIcon ?? '',
               data: data,
-              isNavigate: false,
+              isNavigate: true,
               showNotification: true,
               isAppOpen: true);
         }
@@ -232,7 +232,7 @@ class PushNotificationService {
         // payload: message.data.toString(),
       );
     }
-    if (isNavigate && showNotification) {
+    if (/*isNavigate && */showNotification) {
       print('___________navigation');
       manageNavigation(isAppOpen, mainPage!, subPage!, id!);
     }
@@ -248,22 +248,22 @@ class PushNotificationService {
     if (isAppOpen) {
       debugPrint('subPage  1 = ${subPage}');
       if (subPage == '') {
-        if (mainPage == 'companyScreen/') {
+        if (mainPage == 'companyScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.companyScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-        if (mainPage == 'saleScreen/') {
+        if (mainPage == 'saleScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.productSaleScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-        if (mainPage == 'supplierScreen/') {
+        if (mainPage == 'supplierScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.supplierScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-        if (mainPage == 'storeScreen/') {
+        if (mainPage == 'storeScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.bottomNavScreen.name, arguments: {
             AppStrings.companyIdString: id,

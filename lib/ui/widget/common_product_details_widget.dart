@@ -159,7 +159,24 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
+                    isSaleOn?
+                    Text.rich(TextSpan(
+                      text: '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}: ',
+                      children: <TextSpan>[
+                         TextSpan(
+                          text: '${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)} ',
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.font_14, color: AppColors.blackColor).copyWith(decoration: TextDecoration.lineThrough),
+                        ),
+                         TextSpan(
+                          text: ' ${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
+                           style: AppStyles.rkRegularTextStyle(
+                               size: AppConstants.font_14, color: AppColors.redColor),
+                        ),
+                      ],
+                    ),
+                    )
+                   :Text(
                       '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.font_14, color: AppColors.blackColor),

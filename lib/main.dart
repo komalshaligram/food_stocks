@@ -39,7 +39,7 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           data: data,
           isNavigate: true,
           showNotification: true,
-          isAppOpen: true
+          isAppOpen: false
       );
   }
 }

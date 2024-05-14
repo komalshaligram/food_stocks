@@ -275,7 +275,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                         );
                                       });
                                   }
-                              ):ListView.builder(
+                              ):
+                              ListView.builder(
                                 itemCount: state.recommendationProductsList.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -598,109 +599,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildRecommendationProducts({
-    required BuildContext context,
-    required int totalSale,
-    required String productImage,
-    required String productName,
-    required double productPrice,
-    required void Function() onPressed,
-  }) {
-    return Container(
-      // height: 150,
-      // width: 130,
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius:
-            BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        boxShadow: [
-          BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.15),
-              blurRadius: AppConstants.blur_10),
-        ],
-      ),
-      clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.symmetric(
-          vertical: AppConstants.padding_10,
-          horizontal: AppConstants.padding_5),
-      padding: EdgeInsets.symmetric(
-          vertical: AppConstants.padding_5,
-          horizontal: AppConstants.padding_10),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-            child: Image.network(
-              "${AppUrls.baseFileUrl}$productImage",
-              height: 70,
-              fit: BoxFit.fitHeight,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress?.cumulativeBytesLoaded !=
-                    loadingProgress?.expectedTotalBytes) {
-                  return CommonShimmerWidget(
-                    child: Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(AppConstants.radius_10)),
-                      ),
-                    ),
-                  );
-                }
-                return child;
-              },
-              errorBuilder: (context, error, stackTrace) {
-                // debugPrint('sale list image error : $error');
-                return Container(
-                  child: Image.asset(AppImagePath.imageNotAvailable5,
-                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                );
-              },
-            ),
-          ),
-          5.height,
-          Text(
-            productName,
-            style: AppStyles.rkBoldTextStyle(
-                size: AppConstants.font_12,
-                color: AppColors.blackColor,
-                fontWeight: FontWeight.w600),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          5.height,
-          Expanded(
-            child: totalSale == 0
-                ? 0.width
-                : Text(
-                    "${totalSale} ${AppLocalizations.of(context)!.discount}",
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_10,
-                        color: AppColors.saleRedColor,
-                        fontWeight: FontWeight.w600),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-          ),
-          5.height,
-          Center(
-            child: CommonProductButtonWidget(
-              title:
-                  "${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}",
-              onPressed: onPressed,
-              textColor: AppColors.whiteColor,
-              bgColor: AppColors.mainColor,
-              borderRadius: AppConstants.radius_3,
-              textSize: AppConstants.font_12,
-            ),
-          )
-        ],
-      ),
-    );
-  }
+
   void showProductDetails({
     required BuildContext context, required String productId,
     bool? isBarcode , String productStock = '0',

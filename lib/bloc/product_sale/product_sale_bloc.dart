@@ -48,7 +48,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           prefs: await SharedPreferences.getInstance());
 
       if (event is _GetProductSalesListEvent) {
-        emit(state.copyWith(isGuestUser: preferences.getGuestUser(),bottleDeposit: preferences.getBottleTax(),isSubUserAddToBasket :preferences.getCanAddToBasket(),));
+
+        emit(state.copyWith(isGuestUser: preferences.getGuestUser(),bottleDeposit: preferences.getBottleTax(),isSubUserAddToBasket :preferences.getCanAddToBasket(),isGridView: preferences.getSalesProductGrid()));
 
         if (state.isLoadMore) {
           return;
@@ -121,6 +122,9 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             productStockList: [],
             isBottomOfProducts: false));
         add(ProductSaleEvent.getProductSalesListEvent(context: event.context));
+      }   else if (event is _getGridListView) {
+        preferences.setSalesProductGridListView(isSalesProductGrid: !state.isGridView);
+        emit(state.copyWith(isGridView: !state.isGridView));
       } else if (event is _GetProductDetailsEvent) {
         add(ProductSaleEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
