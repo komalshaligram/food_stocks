@@ -59,10 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCZyZXcdL4kHiVUUD9SMiETCG3SEYHIR6k',
-    appId: '1:229653257750:ios:719e4f2c51c73d887e5f37',
+    appId: '1:229653257750:ios:270e086c514c19647e5f37',
     messagingSenderId: '229653257750',
     projectId: 'foodstock-dev',
     storageBucket: 'foodstock-dev.appspot.com',
-    iosBundleId: 'com.foodstock',
+    iosBundleId: 'net.dev.tavili',
   );
+
 }

@@ -19,7 +19,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final String title;
   final String description;
   final String productName;
-  final double salePercentage;
+
   final double discountedPrice;
   final void Function() onButtonTap;
   final bool isGuestUser;
@@ -37,7 +37,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     required this.saleImage,
     required this.title,
     required this.description,
-    required this.salePercentage,
+
     required this.productName,
     required this.onButtonTap,
     required this.discountedPrice,
@@ -72,99 +72,109 @@ class CommonProductSaleItemWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: !isGuestUser
-                  ? saleImage.isNotEmpty
-                      ? CachedNetworkImage(
-                          imageUrl: "${AppUrls.baseFileUrl}$saleImage",
-                          height: imageHeight,
-                          fit: BoxFit.fitHeight,
-                          placeholder: (context, url) {
-                            return CommonShimmerWidget(
-                              child: Container(
-                                height: imageHeight,
-                                width: 70,
-                                decoration: BoxDecoration(
-                                  color: AppColors.whiteColor,
-                                  borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-                                ),
-                              ),
-                            );
-                          },
-                          errorWidget: (context, error, stackTrace) {
-                            return Container(
-                              child: Image.asset(AppImagePath.imageNotAvailable5, height: imageHeight, width: double.maxFinite, fit: BoxFit.cover),
-                            );
-                          },
-                        )
-                      : Image.asset(
-                          AppImagePath.imageNotAvailable5,
-                          height: imageHeight,
-                          width: 70,
-                        )
-                  : Image.asset(
+            Expanded(
+              child: Column(
+                children: [
+                  Center(
+                    child: !isGuestUser
+                        ? saleImage.isNotEmpty
+                        ? CachedNetworkImage(
+                      imageUrl: "${AppUrls.baseFileUrl}$saleImage",
+                      height: imageHeight,
+                      fit: BoxFit.fitHeight,
+                      placeholder: (context, url) {
+                        return CommonShimmerWidget(
+                          child: Container(
+                            height: imageHeight,
+                            width: 70,
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+                            ),
+                          ),
+                        );
+                      },
+                      errorWidget: (context, error, stackTrace) {
+                        return Container(
+                          child: Image.asset(AppImagePath.imageNotAvailable5, height: imageHeight, width: double.maxFinite, fit: BoxFit.cover),
+                        );
+                      },
+                    )
+                        : Image.asset(
+                      AppImagePath.imageNotAvailable5,
+                      height: imageHeight,
+                      width: 70,
+                    )
+                        : Image.asset(
                       AppImagePath.imageNotAvailable5,
                       height: imageHeight,
                       width: 70,
                     ),
-            ),
-           3.height,
-            Text(
-              productName,
-              style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          /*  Text(
-              title,
-              style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.saleRedColor, fontWeight: FontWeight.w600),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),*/
-            4.height,
-            Center(
-              child: Container(
-                width: width!-30,
-                padding: EdgeInsets.all(3),
-                decoration: BoxDecoration(color: AppColors.redColor, border: Border.all(color: AppColors.redColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
-                child: Text(
-                 "${parse(description).body?.text}",
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor,),
-                  maxLines: 3,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-            isGuestUser ? 0.height
-                : (productStock) == '0' || productStock =='0.0'?Container(
-              alignment: Alignment.center,
-                  padding: const EdgeInsets.only(top:5.0),
-                  child: Text(
-                                AppLocalizations.of(context)!.out_of_stock1,
-                                textAlign: TextAlign.center,
-                                style: AppStyles.rkBoldTextStyle(
-                    size: AppConstants.font_12,
-                    color: AppColors.redColor,
-                    fontWeight: FontWeight.w400),
-                              ),
-                )
-                : lowStock.isNotEmpty?Text(lowStock,
-                style: AppStyles.rkBoldTextStyle(
-                    size: AppConstants.font_12,
-                    color: AppColors.orangeColor,
-                    fontWeight: FontWeight.w400)):0.height,
-            2.height,
-            isPesachLabelShow(isPesach!, context),
-            isPesach! ? 3.height :0.height,
-            !isGuestUser
-                ? Center(
-                  child: Text(
-                                "${AppLocalizations.of(context)!.currency}${originalPrice?.toStringAsFixed(2)}",
+                  ),
+                  3.height,
+                  Text(
+                    productName,
+                    style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  /*  Text(
+                title,
+                style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.saleRedColor, fontWeight: FontWeight.w600),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),*/
+                  4.height,
+                  Center(
+                    child: Container(
+                      width: width!-10,
+                      padding: EdgeInsets.all(3),
+                      decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                      child: Text(
+                        "${parse(description).body?.text}",
+                        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor,),
+                        maxLines: 3,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                  isGuestUser ? 0.height
+                      : (productStock) == '0' || productStock =='0.0'?Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(top:5.0),
+                    child: Text(
+                      AppLocalizations.of(context)!.out_of_stock1,
+                      textAlign: TextAlign.center,
+                      style: AppStyles.rkBoldTextStyle(
+                          size: AppConstants.font_12,
+                          color: AppColors.redColor,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  )
+                      : lowStock.isNotEmpty?Text(lowStock,
+                      style: AppStyles.rkBoldTextStyle(
+                          size: AppConstants.font_12,
+                          color: AppColors.orangeColor,
+                          fontWeight: FontWeight.w400)):Text(lowStock,
+                      style: AppStyles.rkBoldTextStyle(
+                          size: AppConstants.font_12,
+                          color: AppColors.whiteColor,
+                          fontWeight: FontWeight.w400)),
+                  2.height,
+                  Center(child: isPesachLabelShow(isPesach!, context)),
+                  isPesach! ? 3.height :0.height,
+                  !isGuestUser
+                      ? Center(
+                    child: Text(
+                      "${AppLocalizations.of(context)!.currency}${originalPrice?.toStringAsFixed(2)}",
                       style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600,).copyWith(decoration: TextDecoration.lineThrough),
                     ),
-                )
-                : 0.width,
+                  )
+                      : 0.width,
+                ],
+              ),
+            ),
             !isGuestUser
                 ? Center(
                     child: CommonProductButtonWidget(

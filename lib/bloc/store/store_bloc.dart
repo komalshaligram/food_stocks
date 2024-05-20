@@ -155,7 +155,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             productStockList.addAll(response.data?.map((saleProduct) =>
                     ProductStockModel(
                         productId: saleProduct.id ?? '',
-                        stock: (saleProduct.numberOfUnit ?? '0'))) ??
+                        stock: (saleProduct.productStock.toString() ?? '0'))) ??
                 []);
             productStockList.add(barcodeStock);
             emit(state.copyWith(
@@ -326,13 +326,13 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             productStockList.indexOf(productStockList.last)]
                 .copyWith(
               quantity: _productQuantity,
-              productId: response.product?.first.id ?? '',
-              stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
+              productId: response.product.first.id ?? '',
+              stock: (response.product.first.supplierSales.first.productStock.toString()),
               productSaleId: '',
               productSupplierIds: '',
               note: '',
               isNoteOpen: false,
-                totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
+                totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
             );
 
             emit(state.copyWith(productStockList: productStockList));
@@ -367,7 +367,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               }
             } on ServerException {}
             if(response.product != null){
-              add(StoreEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+              add(StoreEvent.RelatedProductsEvent(context: event.context, productId: response.product.first.id ?? ''));
             }
 
             if ( (event.isBarcode ?? false)) {
@@ -378,8 +378,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       productStockList.indexOf(productStockList.last)]
                   .copyWith(
                 quantity: _productQuantity,
-                productId: response.product?.first.id ?? '',
-                stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
+                productId: response.product.first.id ?? '',
+                stock: (response.product.first.supplierSales.first.productStock.toString() ?? '0'),
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',
@@ -402,13 +402,13 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             debugPrint(
                 'product stock = ${state.productStockList[productStockUpdateIndex].stock}');
             debugPrint(
-                'supplier list stock = ${response.product?.first.supplierSales?.map((e) => e.productStock)}');
+                'supplier list stock = ${response.product.first.supplierSales.map((e) => e.productStock)}');
             List<ProductSupplierModel> supplierList = [];
             debugPrint(
                 'supplier id = ${state.productStockList[productStockUpdateIndex].productSupplierIds}');
 
-            supplierList.addAll(response.product?.first.supplierSales
-                    ?.map((supplier) => ProductSupplierModel(
+            supplierList.addAll(response.product.first.supplierSales
+                    .map((supplier) => ProductSupplierModel(
                           supplierId: supplier.supplierId ?? '',
                           companyName: supplier.supplierCompanyName ?? '',
                           basePrice:
@@ -419,34 +419,34 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                                   state
                                       .productStockList[productStockUpdateIndex]
                                       .productSupplierIds
-                              ? supplier.saleProduct?.indexOf(
-                                          supplier.saleProduct?.firstWhere(
+                              ? supplier.saleProduct.indexOf(
+                                          supplier.saleProduct.firstWhere(
                                                 (sale) =>
                                                     sale.saleId ==
                                                     state
                                                         .productStockList[
                                                             productStockUpdateIndex]
                                                         .productSaleId,
-                                                orElse: () => SaleProduct(),
+                                                orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                                               ) ??
-                                              SaleProduct()) ==
+                                              SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                                       -1
                                   ? -2
-                                  : supplier.saleProduct?.indexOf(
-                                          supplier.saleProduct?.firstWhere(
+                                  : supplier.saleProduct.indexOf(
+                                          supplier.saleProduct.firstWhere(
                                                 (sale) =>
                                                     sale.saleId ==
                                                     state
                                                         .productStockList[
                                                             productStockUpdateIndex]
                                                         .productSaleId,
-                                                orElse: () => SaleProduct(),
+                                                orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                                               ) ??
-                                              SaleProduct()) ??
+                                              SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                                       -1
                               : -1,
                           supplierSales: supplier.saleProduct
-                                  ?.map((sale) => SupplierSaleModel(
+                                  .map((sale) => SupplierSaleModel(
                                       saleId: sale.saleId ?? '',
                                       saleName: sale.saleName ?? '',
                                       saleDescription:
@@ -465,7 +465,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 []);
             supplierList.removeWhere((supplier) => supplier.stock == 0);
             debugPrint(
-                'response list = ${response.product?.first.supplierSales?.length}');
+                'response list = ${response.product.first.supplierSales.length}');
             debugPrint('supplier list = ${supplierList.length}');
             debugPrint(
                 'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
@@ -476,7 +476,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     : state.productStockList[productStockUpdateIndex].note;
             emit(state.copyWith(
               productStockList: state.productStockList,
-                productDetails: response.product ?? [],
+                productDetails: response.product,
                 productStockUpdateIndex: productStockUpdateIndex,
                 noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
@@ -965,10 +965,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             searchList.addAll(response.data?.supplierData
                     ?.map((supplier) => SearchModel(
                         searchId: supplier.id ?? '',
-                        name: supplier.supplierDetail?.companyName ?? '',
+                        name: supplier.brandName?? '',
                         searchType: SearchTypes.supplier,
-                        image: supplier.logo ?? '',
-                isPesach: supplier.isPesach??false
+                        image: supplier.mainImage ?? '',
+                isPesach: supplier.isPesach??false,
+              salePrice: double.parse(supplier.sale.salePrice.toString()),
+              salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                  .body
+                  ?.text ??
+                  '',
 
             ))
                     .toList() ??
@@ -981,7 +986,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         searchType: SearchTypes.sale,
               numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                         image: sale.mainImage ?? '',
-                isPesach: sale.isPesach??false
+                isPesach: sale.isPesach??false,
+          //    salePrice: double.parse(sale.salePrice.toString()),
+              salesDesc:  parse(sale.salesDescription ?? '')
+                  .body
+                  ?.text ??
+                  '',
 
             ))
                     .toList() ??
@@ -997,7 +1007,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
               priceOfBox: double.parse(supplier.productPrice.toString()) ,
                 lowStock: supplier.lowStock.toString(),
-                isPesach: supplier.isPesach??false
+                isPesach: supplier.isPesach??false,
+              salePrice: double.parse(supplier.sale.salePrice.toString()),
+              salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                  .body
+                  ?.text ??
+                  '',
             )).toList() ??
                 []);
             debugPrint('store search list = ${searchList.length}');

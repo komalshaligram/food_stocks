@@ -514,16 +514,16 @@ class BasketScreenWidget extends StatelessWidget {
                                       ),
                                 ) : 0.width,
                                 lowStock.isNotEmpty?5.height:0.height,
-                                isSaleOn?3.height:0.height,
                                 isSaleOn ?Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.only(top:3,bottom:5),
                                   padding: EdgeInsets.all(5),
                                   decoration: BoxDecoration(
-                                    color: Colors.red,
+                                    color: AppColors.saleBGColor,
                                     borderRadius: BorderRadius.all(Radius.circular(8))
                                   ),
-                                  child: Text('On Sale',style: TextStyle(color: Colors.white,fontSize: AppConstants.font_12),),
+                                  child: Center(child: Text('Sale Description',style: TextStyle(color: Colors.white,fontSize: AppConstants.font_12),)),
                                 ):Container(),
-                                isSaleOn?3.height:0.height,
                                 isPesachLabelShow(isPesach, context),
                                 isPesach?5.height:0.height,
                                 Text(
@@ -843,16 +843,21 @@ class BasketScreenWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 CommonProductDetailsWidget(
+                                  salePrice: double.parse(state.productDetails.first.sale.salePrice),
+                                  maxQty: state.productDetails.first.sale.saleMaxQuantity,
+                                  endDate: state.productDetails.first.sale.saleUntilDate,
+                                  startDate: state.productDetails.first.sale.saleFromDate,
+                                  isSaleOn: state.productDetails.first.sale.isSale,
                                   isSubUserAddToBasket: state.isSubUserAddToBasket,
-                                  totalBottleDeposit: (state.bottleTax* state.productDetails.first.numberOfUnit!.toDouble()* state
+                                  totalBottleDeposit: (state.bottleTax* state.productDetails.first.numberOfUnit.toDouble()* state
                                       .productStockList[state.productListIndex][
                                   state.productStockUpdateIndex]
                                       .quantity),
                                   bottleTax: state.bottleTax,
-                                  isBottle:state.productDetails.first.isBottle??false,
+                                  isBottle:state.productDetails.first.isBottle,
                                   nmMashlim: state.productDetails.first.nmMashlim??'',
-                                  isPesach: state.productDetails.first.isPesach??false,
-                                  lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
+                                  isPesach: state.productDetails.first.isPesach,
+                                  lowStock: state.productDetails.first.supplierSales.first.lowStock ?? '',
                                   qrCode:state.productDetails.first.qrcode ?? '' ,
                                   addToOrderTap: () {
                                     context.read<BasketBloc>().add(
@@ -918,7 +923,7 @@ class BasketScreenWidget extends StatelessWidget {
                                     state.productDetails.first.mainImage ??
                                         '',
                                     ...state.productDetails.first.images
-                                        ?.map((image) =>
+                                        .map((image) =>
                                     image.imageUrl ?? '') ??
                                         []
                                   ],
@@ -928,21 +933,10 @@ class BasketScreenWidget extends StatelessWidget {
                                   productName: state.productDetails.first
                                       .productName ??
                                       '',
-                                  productCompanyName: state
-                                      .productDetails.first.brandName ??
-                                      '',
-                                  productDescription: parse(state
-                                      .productDetails
-                                      .first
-                                      .productDescription ??
-                                      '')
-                                      .body
-                                      ?.text ??
-                                      '',
                                   productSaleDescription: parse(state
                                       .productDetails
                                       .first
-                                      .productDescription ??
+                                      .sale.saleDescription??
                                       '')
                                       .body
                                       ?.text ??
@@ -956,15 +950,10 @@ class BasketScreenWidget extends StatelessWidget {
                                       state.productStockUpdateIndex]
                                           .quantity *
                                       (state.productDetails.first
-                                          .numberOfUnit ??
-                                          0) ,
-                                  productScaleType: state.productDetails
-                                      .first.scales?.scaleType ??
-                                      '',
+                                          .numberOfUnit) ,
                                   productWeight: state
                                       .productDetails.first.itemsWeight
-                                      ?.toDouble() ??
-                                      0.0,
+                                      .toDouble(),
                                   productStock:(state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                   isRTL: context.rtl,
                                   isSupplierAvailable:
@@ -1001,7 +990,6 @@ class BasketScreenWidget extends StatelessWidget {
                                 state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context),
                               ],
                             ))
-
                     );
                   },
                 ),
@@ -1066,5 +1054,4 @@ class BasketScreenWidget extends StatelessWidget {
       ],
     );
   }
-
 }

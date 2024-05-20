@@ -197,9 +197,9 @@ class PlanogramProductBloc
                         productListIndex][
                         productStockUpdateIndex]
                             .productSaleId,
-                    orElse: () => SaleProduct(),
+                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                   ) ??
-                      SaleProduct()) ==
+                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                   -1
                   ? -2
                   : supplier.saleProduct?.indexOf(
@@ -211,9 +211,9 @@ class PlanogramProductBloc
                         productListIndex][
                         productStockUpdateIndex]
                             .productSaleId,
-                    orElse: () => SaleProduct(),
+                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                   ) ??
-                      SaleProduct()) ??
+                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                   -1
                   : -1,
               supplierSales: supplier.saleProduct
@@ -782,9 +782,9 @@ class PlanogramProductBloc
                 ?.map((supplier) =>
                 SearchModel(
                   searchId: supplier.id ?? '',
-                  name: supplier.supplierDetail?.companyName ?? '',
+                  name: supplier.brandName?? '',
                   searchType: SearchTypes.supplier,
-                  image: supplier.logo ?? '',
+                  image: supplier.mainImage ?? '',
                   isPesach: supplier.isPesach??false,
                 ))
                 .toList() ??

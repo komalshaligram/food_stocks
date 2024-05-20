@@ -2,92 +2,134 @@
 //
 //     final productDetailsResModel = productDetailsResModelFromJson(jsonString);
 
+import 'package:meta/meta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
 part 'product_details_res_model.freezed.dart';
-
 part 'product_details_res_model.g.dart';
 
-ProductDetailsResModel productDetailsResModelFromJson(String str) =>
-    ProductDetailsResModel.fromJson(json.decode(str));
+ProductDetailsResModel productDetailsResModelFromJson(String str) => ProductDetailsResModel.fromJson(json.decode(str));
 
-String productDetailsResModelToJson(ProductDetailsResModel data) =>
-    json.encode(data.toJson());
+String productDetailsResModelToJson(ProductDetailsResModel data) => json.encode(data.toJson());
 
 @freezed
 class ProductDetailsResModel with _$ProductDetailsResModel {
   const factory ProductDetailsResModel({
-    @JsonKey(name: "status") int? status,
-    @JsonKey(name: "product") List<Product>? product,
-    @JsonKey(name: "message") String? message,
+    @JsonKey(name: "status")
+    required int status,
+    @JsonKey(name: "product")
+    required List<Product> product,
+    @JsonKey(name: "message")
+    required String message,
   }) = _ProductDetailsResModel;
 
-  factory ProductDetailsResModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductDetailsResModelFromJson(json);
+  factory ProductDetailsResModel.fromJson(Map<String, dynamic> json) => _$ProductDetailsResModelFromJson(json);
 }
 
 @freezed
 class Product with _$Product {
   const factory Product({
-    @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "productName") String? productName,
-    @JsonKey(name: "brandName") String? brandName,
-    @JsonKey(name: "healthAndLifestye") String? healthAndLifestye,
-    @JsonKey(name: "productDescription") String? productDescription,
-    @JsonKey(name: "component") String? component,
-    @JsonKey(name: "nutritionalValue") String? nutritionalValue,
-    @JsonKey(name: "sku") String? sku,
-    @JsonKey(name: "kosharMilk") bool? kosharMilk,
-    @JsonKey(name: "dairyMeatyAndFur") String? dairyMeatyAndFur,
-    @JsonKey(name: "categoryId") String? categoryId,
-    @JsonKey(name: "subCategoryId") String? subCategoryId,
-    @JsonKey(name: "subSubCategoryId") String? subSubCategoryId,
-    @JsonKey(name: "manufacturingCountryId") String? manufacturingCountryId,
-    @JsonKey(name: "status") String? status,
-    @JsonKey(name: "isDeleted") bool? isDeleted,
-    @JsonKey(name: "images") List<Image>? images,
-    @JsonKey(name: "createdAt") DateTime? createdAt,
-    @JsonKey(name: "updatedAt") DateTime? updatedAt,
-    @JsonKey(name: "__v") int? v,
-    @JsonKey(name: "qrcode") String? qrcode,
-    @JsonKey(name: "mainImage") String? mainImage,
-    @JsonKey(name: "itemsWeight") double? itemsWeight,
-    @JsonKey(name: "totalWeight") int? totalWeight,
-    @JsonKey(name: "totalWeightCardboard") double? totalWeightCardboard,
-    @JsonKey(name: "totalWeightSurface") double? totalWeightSurface,
-    @JsonKey(name: "numberOfUnit") int? numberOfUnit,
-    @JsonKey(name: "scaleId") String? scaleId,
-    @JsonKey(name: "scales") Scales? scales,
-    @JsonKey(name: "supplierSales") List<SupplierSale>? supplierSales,
-    @JsonKey(name: "isPesach") bool? isPesach,
-    @JsonKey(name: "nmMashlim") String? nmMashlim,
-    @JsonKey(name: "isBottle") bool? isBottle,
-
+    @JsonKey(name: "_id")
+    required String id,
+    @JsonKey(name: "productName")
+    required String productName,
+    @JsonKey(name: "brandId")
+    required String brandId,
+    @JsonKey(name: "mainImage")
+    required String mainImage,
+    @JsonKey(name: "qrcode")
+    required String qrcode,
+    @JsonKey(name: "sku")
+    required String sku,
+    @JsonKey(name: "numberOfUnit")
+    required int numberOfUnit,
+    @JsonKey(name: "itemsWeight")
+    required int itemsWeight,
+    @JsonKey(name: "totalWeightCardboard")
+    required int totalWeightCardboard,
+    @JsonKey(name: "totalWeightSurface")
+    required int totalWeightSurface,
+    @JsonKey(name: "totalWeight")
+    required int totalWeight,
+    @JsonKey(name: "kosharMilk")
+    required bool kosharMilk,
+    @JsonKey(name: "dairyMeatyAndFur")
+    required String dairyMeatyAndFur,
+    @JsonKey(name: "categoryId")
+    required String categoryId,
+    @JsonKey(name: "subCategoryId")
+    required String subCategoryId,
+    @JsonKey(name: "manufacturingCountryId")
+    required String manufacturingCountryId,
+    @JsonKey(name: "caseTypeId")
+    required String caseTypeId,
+    @JsonKey(name: "scaleId")
+    required String scaleId,
+    @JsonKey(name: "status")
+    required String status,
+    @JsonKey(name: "isDeleted")
+    required bool isDeleted,
+    @JsonKey(name: "productNumber")
+    required int productNumber,
+    @JsonKey(name: "images")
+    required List<dynamic> images,
+    @JsonKey(name: "isBottle")
+    required bool isBottle,
+    @JsonKey(name: "nmMashlim")
+    required String nmMashlim,
+    @JsonKey(name: "isPesach")
+    required bool isPesach,
+    @JsonKey(name: "statusId")
+    required String statusId,
+    @JsonKey(name: "sale")
+    required SaleProduct sale,
+    @JsonKey(name: "scales")
+    required Scales scales,
+    @JsonKey(name: "supplierSales")
+    required List<SupplierSale> supplierSales,
   }) = _Product;
 
-  factory Product.fromJson(Map<String, dynamic> json) =>
-      _$ProductFromJson(json);
+  factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 }
 
 @freezed
-class Image with _$Image {
-  const factory Image({
-    @JsonKey(name: "imageUrl") String? imageUrl,
-    @JsonKey(name: "order") int? order,
-  }) = _Image;
+class SaleProduct with _$SaleProduct {
+  const factory SaleProduct({
+    @JsonKey(name: "isSale")
+    required bool isSale,
+    @JsonKey(name: "salePrice")
+    required String salePrice,
+    @JsonKey(name: "saleFromDate")
+    required String saleFromDate,
+    @JsonKey(name: "saleUntilDate")
+    required String saleUntilDate,
+    @JsonKey(name: "saleMaxQuantity")
+    required String saleMaxQuantity,
+    @JsonKey(name: "saleDescription")
+    required String saleDescription,
+  }) = _SaleProduct;
 
-  factory Image.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
+  factory SaleProduct.fromJson(Map<String, dynamic> json) => _$SaleProductFromJson(json);
 }
 
 @freezed
 class Scales with _$Scales {
   const factory Scales({
-    @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "scaleType") String? scaleType,
-    @JsonKey(name: "createdAt") DateTime? createdAt,
-    @JsonKey(name: "updatedAt") DateTime? updatedAt,
-    @JsonKey(name: "__v") int? v,
+    @JsonKey(name: "_id")
+    required String id,
+    @JsonKey(name: "scaleType")
+    required String scaleType,
+    @JsonKey(name: "createdAt")
+    required DateTime createdAt,
+    @JsonKey(name: "updatedAt")
+    required DateTime updatedAt,
+    @JsonKey(name: "__v")
+    required int v,
+    @JsonKey(name: "isDeleted")
+    required bool isDeleted,
+    @JsonKey(name: "scaleNumber")
+    required int scaleNumber,
   }) = _Scales;
 
   factory Scales.fromJson(Map<String, dynamic> json) => _$ScalesFromJson(json);
@@ -96,42 +138,37 @@ class Scales with _$Scales {
 @freezed
 class SupplierSale with _$SupplierSale {
   const factory SupplierSale({
-    @JsonKey(name: "_id") Id? id,
-    @JsonKey(name: "supplierId") String? supplierId,
-    @JsonKey(name: "supplierName") String? supplierName,
-    @JsonKey(name: "supplierCompanyName") String? supplierCompanyName,
-    @JsonKey(name: "productPrice") String? productPrice,
-    @JsonKey(name: "productStock") String? productStock,
-    @JsonKey(name: "saleProduct") List<SaleProduct>? saleProduct,
-    String? lowStock
+    @JsonKey(name: "_id")
+    required Id id,
+    @JsonKey(name: "supplierId")
+    required String supplierId,
+    @JsonKey(name: "supplierName")
+    required String supplierName,
+    @JsonKey(name: "supplierCompanyName")
+    required String supplierCompanyName,
+    @JsonKey(name: "productPrice")
+    required String productPrice,
+    @JsonKey(name: "productStock")
+    required String productStock,
+    @JsonKey(name: "saleProduct")
+    required List<dynamic> saleProduct,
+    @JsonKey(name: "boxes")
+    required int boxes,
+    @JsonKey(name: "lowStock")
+    required String lowStock,
   }) = _SupplierSale;
 
-  factory SupplierSale.fromJson(Map<String, dynamic> json) =>
-      _$SupplierSaleFromJson(json);
+  factory SupplierSale.fromJson(Map<String, dynamic> json) => _$SupplierSaleFromJson(json);
 }
 
 @freezed
 class Id with _$Id {
   const factory Id({
-    @JsonKey(name: "supplierId") String? supplierId,
-    @JsonKey(name: "productId") String? productId,
+    @JsonKey(name: "supplierId")
+    required String supplierId,
+    @JsonKey(name: "productId")
+    required String productId,
   }) = _Id;
 
   factory Id.fromJson(Map<String, dynamic> json) => _$IdFromJson(json);
-}
-
-@freezed
-class SaleProduct with _$SaleProduct {
-  const factory SaleProduct({
-    @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "price") String? price,
-    @JsonKey(name: "discountPercentage") String? discountPercentage,
-    @JsonKey(name: "discountedPrice") String? discountedPrice,
-    @JsonKey(name: "saleId") String? saleId,
-    @JsonKey(name: "saleName") String? saleName,
-    @JsonKey(name: "salesDescription") String? salesDescription,
-  }) = _SaleProduct;
-
-  factory SaleProduct.fromJson(Map<String, dynamic> json) =>
-      _$SaleProductFromJson(json);
 }

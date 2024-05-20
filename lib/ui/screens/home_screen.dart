@@ -120,7 +120,7 @@ class HomeScreenWidget extends StatelessWidget {
                             onTap: () {
                               context
                                   .read<BottomNavBloc>()
-                                  .add(BottomNavEvent.changePage(index: 4,context: context));
+                                  .add(BottomNavEvent.changePage(index: state.isSubUserSeeWallet?4:3,context: context));
                             },
                             child: Container(
                               height: 60,
@@ -517,7 +517,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                               .recommendedProductsList[
                                                           index]
                                                               .productStock.toString()),
-                                                          productListIndex: 1
+                                                          productListIndex: 1,
+
                                                         );
 
                                                       }
@@ -584,31 +585,25 @@ class HomeScreenWidget extends StatelessWidget {
                                                       title: state
                                                           .productSalesList[
                                                       index]
-                                                          .salesName ??
+                                                          .name ??
                                                           '',
                                                       description: parse(state
                                                           .productSalesList[
-                                                      index]
-                                                          .salesDescription ??
+                                                      index].sale
+                                                          .saleDescription ??
                                                           '')
                                                           .body
                                                           ?.text ??
                                                           '',
-                                                      salePercentage:
+                                                      discountedPrice:
                                                       double.parse(state
                                                           .productSalesList[
-                                                      index]
-                                                          .discountPercentage ??
-                                                          '0.0'),
-                                                      discountedPrice: state
-                                                          .productSalesList[
-                                                      index]
-                                                          .discountedPrice ??
-                                                          0,
+                                                      index].sale.salePrice),
+
                                                       originalPrice:state
                                                           .productSalesList[
                                                       index]
-                                                          .originalPrice ??
+                                                          .productPrice ??
                                                           0 ,
                                                       productStock: '0',
                                                       lowStock: state
@@ -624,6 +619,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                         debugPrint("tap 1");
                                                         if(!state.isGuestUser){
                                                           showProductDetails(
+                                                            isFromSale: true,
                                                             productListIndex: 3,
                                                             context: context,
                                                             productId: state
@@ -822,6 +818,8 @@ class HomeScreenWidget extends StatelessWidget {
                               shrinkWrap: true,
                               itemBuilder: (listViewContext, index) {
                                 return _buildSearchItem(
+                                  salePrice: state.searchList[index].salePrice,
+                                  saleDesc: state.searchList[index].salesDesc,
                                     isPesach: state.searchList[index].isPesach,
                                     lowStock: state.searchList[index].lowStock.toString(),
                                     numberOfUnits:state.searchList[index].numberOfUnits,
@@ -1064,7 +1062,7 @@ class HomeScreenWidget extends StatelessWidget {
                     notiId: message.notification.hashCode,
                     androidIcon:message.notification?.android?.smallIcon,
                     data: data,
-                    isNavigate: true,
+                    isNavigate: false,
                     showNotification: false,
                     isAppOpen: true
                 );
@@ -1155,6 +1153,7 @@ class HomeScreenWidget extends StatelessWidget {
     bool isRelated = false,
     bool isBottle = false,
     int productListIndex = 0,
+    bool isFromSale = false,
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
       context: context,
@@ -1217,19 +1216,25 @@ class HomeScreenWidget extends StatelessWidget {
                         controller:  ModalScrollController.of(context),
                             child: Column(
                                 children: [
+
                                   CommonProductDetailsWidget(
+
+                                    salePrice: double.parse(state.productDetails.first.sale.salePrice),
+                                    maxQty: state.productDetails.first.sale.saleMaxQuantity,
+                                    endDate: state.productDetails.first.sale.saleUntilDate,
+                                    startDate: state.productDetails.first.sale.saleFromDate,
+                                    isSaleOn: state.productDetails.first.sale.isSale,
                                     isSubUserAddToBasket: state.isSubUserAddToBasket,
-                                    totalBottleDeposit: (state.bottlePrice * state.productDetails.first.numberOfUnit!.toDouble()* state
+                                    bottleTax: state.bottlePrice,
+                                    totalBottleDeposit: (state.bottlePrice* state.productDetails.first.numberOfUnit!.toDouble()* state
                                         .productStockList[state.productListIndex][
                                     state.productStockUpdateIndex]
                                         .quantity),
-
-                                    bottleTax: state.bottlePrice,
-                                    isBottle:state.productDetails.first.isBottle??false,
-                                    nmMashlim: state.productDetails.first.nmMashlim??'',
-                                    isPesach: state.productDetails.first.isPesach??false,
-                                    lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
-                                    qrCode:state.productDetails.first.qrcode ?? '' ,
+                                    isBottle:state.productDetails.first.isBottle,
+                                    nmMashlim: state.productDetails.first.nmMashlim,
+                                    isPesach: state.productDetails.first.isPesach,
+                                    lowStock: state.productDetails.first.supplierSales.first.lowStock.toString() ,
+                                    qrCode:state.productDetails.first.qrcode ,
                                     addToOrderTap: () {
                                       context.read<HomeBloc>().add(
                                           HomeEvent.addToCartProductEvent(
@@ -1242,32 +1247,29 @@ class HomeScreenWidget extends StatelessWidget {
                                       showDialog(
                                         context: context,
                                         builder: (dialogContext) {
-                                          return SafeArea(
-                                            bottom: false,
-                                            child: Stack(
-                                              children: [
-                                                Container(
-                                                  height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
-                                                  width: getScreenWidth(context),
-                                                  child: GestureDetector(
-                                                    onVerticalDragStart: (dragDetails) {
-                                                        debugPrint('onVerticalDragStart');
-                                                    },
-                                                    onVerticalDragUpdate: (dragDetails) {
-                                                        debugPrint('onVerticalDragUpdate');
-                                                    },
-                                                    onVerticalDragEnd: (endDetails) {
-                                                       debugPrint('onVerticalDragEnd');
-                                                      Navigator.pop(dialogContext);
-                                                    },
-                                                    child: PhotoView(
-                                                      imageProvider: NetworkImage(
-                                                        '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
-                                                      ),
+                                          return Stack(
+                                            children: [
+                                              Container(
+                                                height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                                width: getScreenWidth(context),
+                                                child: GestureDetector(
+                                                  onVerticalDragStart: (dragDetails) {
+                                                    debugPrint('onVerticalDragStart');
+                                                  },
+                                                  onVerticalDragUpdate: (dragDetails) {
+                                                    debugPrint('onVerticalDragUpdate');
+                                                  },
+                                                  onVerticalDragEnd: (endDetails) {
+                                                    debugPrint('onVerticalDragEnd');
+                                                    Navigator.pop(dialogContext);
+                                                  },
+                                                  child: PhotoView(
+                                                    imageProvider: NetworkImage(
+                                                      '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                     ),
                                                   ),
                                                 ),
-
+                                              ),
                                               GestureDetector(
                                                   onTap: (){
                                                     Navigator.pop(dialogContext);
@@ -1279,101 +1281,81 @@ class HomeScreenWidget extends StatelessWidget {
                                                     ),
                                                   )),
                                             ],
-                                                                                    ),
                                           );
-                                      },);
-                                  },
-                                  context: context,
-                                  productImageIndex: state.imageIndex,
-                                  onPageChanged: (index, p1) {
-                                    context.read<HomeBloc>().add(
-                                        HomeEvent.updateImageIndexEvent(
-                                            index: index));
-                                  },
-                                  productImages: [
-                                    state.productDetails.first.mainImage ??
-                                        '',
-                                    ...state.productDetails.first.images
-                                        ?.map((image) =>
-                                    image.imageUrl ?? '') ??
-                                        []
-                                  ],
-                                  productPerUnit: state.productDetails.first
-                                      .numberOfUnit ?? 0,
-                                    productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
+                                        },);
+                                    },
+                                    context: context,
+                                    productImageIndex: state.imageIndex,
+                                    onPageChanged: (index, p1) {
+                                      context.read<HomeBloc>().add(
+                                          HomeEvent.updateImageIndexEvent(
+                                              index: index));
+                                    },
+                                    productImages: [
+                                      state.productDetails.first.mainImage,
+                                      ...state.productDetails.first.images.map((image) =>
+                                      image.imageUrl ?? '')
+                                    ],
+                                    productPerUnit: state.productDetails.first
+                                        .numberOfUnit ,
+                                    productUnitPrice: double.parse(state.productDetails.first.supplierSales.first.productPrice.toString()??'0'),
                                     productName: state.productDetails.first
-                                      .productName ??
-                                      '',
-                                  productCompanyName: state
-                                      .productDetails.first.brandName ??
-                                      '',
-                                  productDescription: parse(state
-                                      .productDetails
-                                      .first
-                                      .productDescription ??
-                                      '')
-                                      .body
-                                      ?.text ??
-                                      '',
-                                  productSaleDescription: parse(state
-                                      .productDetails
-                                      .first
-                                      .productDescription ??
-                                      '')
-                                      .body
-                                      ?.text ??
-                                      '',
-                                  productPrice: state
-                                      .productStockList[state.productListIndex][
-                                  state.productStockUpdateIndex]
-                                      .totalPrice *
-                                      state
-                                          .productStockList[state.productListIndex][
-                                      state.productStockUpdateIndex]
-                                          .quantity *
-                                      (state.productDetails.first
-                                          .numberOfUnit ??
-                                          0) ,
-                                  productScaleType: state.productDetails
-                                      .first.scales?.scaleType ??
-                                      '',
-                                  productWeight: state
-                                      .productDetails.first.itemsWeight
-                                      ?.toDouble() ??
-                                      0.0,
-                                  productStock:(state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
-                                  isRTL: context.rtl,
-                                  isSupplierAvailable:
-                                  state.productSupplierList.isEmpty
-                                      ? false
-                                      : true,
-                                  scrollController: scrollController,
-                                  productQuantity:  state
-                                      .productStockList[state.productListIndex][
-                                  state.productStockUpdateIndex]
-                                      .quantity,
-                                  onQuantityChanged: (quantity) {
-                                    context.read<HomeBloc>().add(
-                                        HomeEvent.updateQuantityOfProduct(
-                                            context: context1,
-                                            quantity: quantity));
-                                  },
-                                  onQuantityIncreaseTap: () {
-                                    context.read<HomeBloc>().add(
-                                        HomeEvent.increaseQuantityOfProduct(
-                                            context: context1));
-                                  },
-                                  onQuantityDecreaseTap: () {
-                                    if(state
+                                        .productName,
+                                    productSaleDescription: parse(state
+                                        .productDetails
+                                        .first
+                                        .sale.saleDescription ??
+                                        '')
+                                        .body
+                                        ?.text ??
+                                        '',
+                                    productPrice: state
                                         .productStockList[state.productListIndex][
                                     state.productStockUpdateIndex]
-                                        .quantity > 1){
+                                        .totalPrice *
+                                        state.productStockList
+                                            [state.productListIndex][
+                                  state.productStockUpdateIndex]
+                                          .quantity*
+                                        (state.productDetails.first
+                                            .numberOfUnit) ,
+
+                                    productWeight: state
+                                        .productDetails.first.itemsWeight
+                                        .toDouble(),
+                                    productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
+                                    isRTL: context.rtl,
+                                    isSupplierAvailable:
+                                    state.productSupplierList.isEmpty
+                                        ? false
+                                        : true,
+                                    scrollController: scrollController,
+                                    productQuantity:  state
+                                        .productStockList[state.productListIndex][
+                                    state.productStockUpdateIndex]
+                                        .quantity,
+                                    onQuantityChanged: (quantity) {
                                       context.read<HomeBloc>().add(
-                                          HomeEvent.decreaseQuantityOfProduct(
+                                          HomeEvent.updateQuantityOfProduct(
+                                              context: context1,
+                                              quantity: quantity));
+                                    },
+                                    onQuantityIncreaseTap: () {
+                                      context.read<HomeBloc>().add(
+                                          HomeEvent.increaseQuantityOfProduct(
                                               context: context1));
-                                    }
-                                  },
-                                ),
+                                    },
+                                    onQuantityDecreaseTap: () {
+                                      if(state
+                                          .productStockList[state.productListIndex][
+                                      state.productStockUpdateIndex]
+                                          .quantity > 1){
+                                        context.read<HomeBloc>().add(
+                                            HomeEvent.decreaseQuantityOfProduct(
+                                                context: context1));
+                                      }
+                                    },
+                                  ),
                                 state.relatedProductList.isEmpty ? 0.height :
                                 relatedProductWidget(context1,state.relatedProductList,context,scrollController),
                               ],
@@ -1547,9 +1529,11 @@ class HomeScreenWidget extends StatelessWidget {
     bool? isLastItem, required String productStock,
     required int numberOfUnits,
     required double priceOfBox,
-    required bool isPesach
+    required double salePrice,
+    required bool isPesach,
+    required String saleDesc
   }) {
-    debugPrint('isPesach:$isPesach');
+    debugPrint('saleDesc:$saleDesc');
     return Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1603,7 +1587,7 @@ class HomeScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != '0' || lowStock.isEmpty ? isPesach?110: 90 : isPesach?110: 90,
+            height: (productStock) != '0' || lowStock.isEmpty ? isPesach?130: 110 : isPesach?130: 110,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1622,7 +1606,7 @@ class HomeScreenWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  height: 60,
+                  height: 70,
                   width: 50,
                   child: Image.network(
                     '${AppUrls.baseFileUrl}$searchImage',
@@ -1659,15 +1643,15 @@ class HomeScreenWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: getScreenWidth(context) * 0.45,
+                      width: getScreenWidth(context) /1.5,
                       child: Text(
                         searchName,
                         style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.font_12,
                           color: AppColors.blackColor,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
+                        overflow: TextOverflow.visible,
                       ),
                     ),
                     Row(
@@ -1709,6 +1693,26 @@ class HomeScreenWidget extends StatelessWidget {
                             ],
                           ),
                         ),
+                        salePrice!=0.0? Container(
+                          child: Column(
+                            children: [
+                              Text(
+                                '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.blueColor,
+                                    fontWeight: FontWeight.w400).copyWith(decoration: TextDecoration.lineThrough),
+                              ),
+                              Text(
+                                '${AppLocalizations.of(context)!.currency}${salePrice.toString()}',
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.redColor,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          ),
+                        ):
                         priceOfBox != 0.0 ? Container(
                           width: 60,
                           child: Text(
@@ -1724,6 +1728,23 @@ class HomeScreenWidget extends StatelessWidget {
                     3.height,
                     isPesach?
                     isPesachLabelShow(isPesach,context)
+                        :0.height,
+                    saleDesc.isNotEmpty?
+                    Container(
+                      width:getScreenWidth(context)/1.5,
+                      padding: EdgeInsets.all(3),
+                      margin: EdgeInsets.only(top:5),
+                      decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                      child: Center(
+                        child: Text(
+                          "${parse(saleDesc).body?.text}",
+                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor,),
+                          maxLines: 3,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    )
                         :0.height
                   ],
                 ),

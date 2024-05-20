@@ -46,7 +46,6 @@ final String? salesDesc;
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: onButtonTap,
       child: Container(
@@ -155,18 +154,16 @@ final String? salesDesc;
                         color: AppColors.blackColor,
                         fontWeight: FontWeight.w400),
                   ) : 0.width : 0.width,
-                  isFromSale!?Center(
-                    child: Container(
-                      width: width!-30,
-                      padding: EdgeInsets.all(3),
-                      decoration: BoxDecoration(color: AppColors.redColor, border: Border.all(color: AppColors.redColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
-                      child: Text(
-                        "${parse(salesDesc).body?.text}",
-                        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor,),
-                        maxLines: 3,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                  salesDesc!.isNotEmpty?Container(
+                    padding: EdgeInsets.all(3),
+                    margin: EdgeInsets.zero,
+                    decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                    child: Text(
+                      "${parse(salesDesc).body?.text}",
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor,fontWeight: FontWeight.w500),
+                      maxLines: 3,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ):0.width,
                   !isGuestUser? numberOfUnits !='0' && price != 0.0 ? isFromSale!?Text.rich(TextSpan(

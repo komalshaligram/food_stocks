@@ -72,8 +72,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           if (response.status == 200) {
             List<ProductSale> saleProductsList =
                 response.data?.toList(growable: true) ?? [];
-            saleProductsList
-                .forEach((sale) => debugPrint('p = ${sale.endDate}'));
+       /*     saleProductsList
+                .forEach((sale) => debugPrint('p = ${sale.endDate}'));*/
             // saleProductsList.removeWhere(
             //     (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
             debugPrint('sale Products = ${saleProductsList.length}');
@@ -169,19 +169,19 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            add(ProductSaleEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+            add(ProductSaleEvent.RelatedProductsEvent(context: event.context, productId: response.product.first.id ?? ''));
 
 
             debugPrint('product stock update index = $productStockUpdateIndex');
             debugPrint(
                 'product stock = ${state.productStockList[productStockUpdateIndex].stock}');
             debugPrint(
-                'supplier list stock = ${response.product?.first.supplierSales?.map((e) => e.productStock)}');
+                'supplier list stock = ${response.product.first.supplierSales.map((e) => e.productStock)}');
             List<ProductSupplierModel> supplierList = [];
             debugPrint(
                 'supplier id = ${state.productStockList[productStockUpdateIndex].productSupplierIds}');
-            supplierList.addAll(response.product?.first.supplierSales
-                    ?.map((supplier) => ProductSupplierModel(
+            supplierList.addAll(response.product.first.supplierSales
+                .map((supplier) => ProductSupplierModel(
                           supplierId: supplier.supplierId ?? '',
                           companyName: supplier.supplierCompanyName ?? '',
                           basePrice:
@@ -192,34 +192,33 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                                   state
                                       .productStockList[productStockUpdateIndex]
                                       .productSupplierIds
-                              ? supplier.saleProduct?.indexOf(
-                                          supplier.saleProduct?.firstWhere(
+                              ? supplier.saleProduct.indexOf(
+                                          supplier.saleProduct.firstWhere(
                                                 (sale) =>
                                                     sale.saleId ==
                                                     state
                                                         .productStockList[
                                                             productStockUpdateIndex]
                                                         .productSaleId,
-                                                orElse: () => SaleProduct(),
+                                                orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                                               ) ??
-                                              SaleProduct()) ==
+                                              SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                                       -1
                                   ? -2
-                                  : supplier.saleProduct?.indexOf(
-                                          supplier.saleProduct?.firstWhere(
+                                  : supplier.saleProduct.indexOf(
+                                          supplier.saleProduct.firstWhere(
                                                 (sale) =>
                                                     sale.saleId ==
                                                     state
                                                         .productStockList[
                                                             productStockUpdateIndex]
                                                         .productSaleId,
-                                                orElse: () => SaleProduct(),
+                                                orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                                               ) ??
-                                              SaleProduct()) ??
-                                      -1
+                                              SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),)
                               : -1,
                           supplierSales: supplier.saleProduct
-                                  ?.map((sale) => SupplierSaleModel(
+                                  .map((sale) => SupplierSaleModel(
                                       saleId: sale.saleId ?? '',
                                       saleName: sale.saleName ?? '',
                                       saleDescription:
@@ -231,19 +230,18 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                                           sale.discountedPrice ?? '0.0'),
                                       saleDiscount: double.parse(
                                           sale.discountPercentage ?? '0.0')))
-                                  .toList() ??
-                              [],
+                                  .toList(),
                         ))
                     .toList() ??
                 []);
             supplierList.removeWhere((supplier) => supplier.stock == 0);
             debugPrint(
-                'response list = ${response.product?.first.supplierSales?.length}');
+                'response list = ${response.product.first.supplierSales.length}');
             debugPrint('supplier list = ${supplierList.length}');
             debugPrint(
                 'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
             emit(state.copyWith(
-                productDetails: response.product ?? [],
+                productDetails: response.product,
                 productStockUpdateIndex: productStockUpdateIndex,
                 noteController: TextEditingController(
                     text: state.productStockList[productStockUpdateIndex].note),

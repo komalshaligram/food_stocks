@@ -498,9 +498,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                         planoGramIndex][
                         productStockUpdateIndex]
                             .productSaleId,
-                    orElse: () => SaleProduct(),
+                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                   ) ??
-                      SaleProduct()) ==
+                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                   -1
                   ? -2
                   : supplier.saleProduct?.indexOf(
@@ -512,9 +512,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                         planoGramIndex][
                         productStockUpdateIndex]
                             .productSaleId,
-                    orElse: () => SaleProduct(),
+                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                   ) ??
-                      SaleProduct()) ??
+                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                   -1
                   : -1,
               supplierSales: supplier.saleProduct
@@ -1063,10 +1063,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             searchList.addAll(response.data?.supplierData
                 ?.map((supplier) => SearchModel(
                 searchId: supplier.id ?? '',
-                name: supplier.supplierDetail?.companyName ?? '',
+                name: supplier.brandName?? '',
                 searchType: SearchTypes.supplier,
                 isPesach: supplier.isPesach??false,
-                image: supplier.logo ?? ''))
+                salePrice: double.parse(supplier.sale.salePrice.toString()),
+                salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                    .body
+                    ?.text ??
+                    '',
+                image: supplier.mainImage ?? ''))
                 .toList() ??
                 []);
             //sale search result
@@ -1076,6 +1081,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 name: sale.productName ?? '',
                 searchType: SearchTypes.sale,
                 isPesach: sale.isPesach??false,
+             //   salePrice: double.parse(supplier.sale.salePrice.toString()),
+                salesDesc:  parse(sale.salesDescription ?? '')
+                    .body
+                    ?.text ??
+                    '',
                 numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                 image: sale.mainImage ?? ''))
                 .toList() ??
@@ -1091,6 +1101,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 lowStock: supplier.lowStock.toString(),
                 numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
                 priceOfBox: double.parse(supplier.productPrice.toString()),
+                salePrice: double.parse(supplier.sale.salePrice.toString()),
+                salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                    .body
+                    ?.text ??
+                    '',
                 image: supplier.mainImage ?? '')).toList() ??
                 []);
             debugPrint('store cat search list = ${searchList.length}');
@@ -1099,9 +1114,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 // previousSearch: state.searchController.text,
                 isSearching: false));
           } else {
-
             emit(state.copyWith(isSearching: false));
-
           }
         } on ServerException {
           emit(state.copyWith(isSearching: false));

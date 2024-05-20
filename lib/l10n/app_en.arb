@@ -487,7 +487,9 @@
       "select_none": "Select none",
       "notsufficientpermission":"notsufficientpermission",
       "phone_number_of_other_subuser" : "The phone number is already associated with another user",
-                "delete_sub_user_account" : "Delete",
-                "can_see_invoices" : "Can see invoices"
+       "delete_sub_user_account" : "Delete",
+      "can_see_invoices" : "Can see invoices",
+      "maximum_qty" : "Maximum Quantity"
+
 
 }

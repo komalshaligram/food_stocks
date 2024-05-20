@@ -206,7 +206,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             ));
           }
         }
-
         else if (event is _SupplierSelectionEvent) {
           debugPrint(
               'supplier[${event.supplierIndex}][${event.supplierSaleIndex}]');
@@ -546,8 +545,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
               List<ProductSupplierModel> supplierList = [];
 
-              supplierList.addAll(response.product?.first.supplierSales
-                  ?.map((supplier) =>
+              supplierList.addAll(response.product.first.supplierSales.map((supplier) =>
                   ProductSupplierModel(
                     supplierId: supplier.supplierId ?? '',
                     companyName: supplier.supplierCompanyName ?? '',
@@ -560,8 +558,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                             .productStockList[productListIndex]
                         [productStockUpdateIndex]
                             .productSupplierIds
-                        ? supplier.saleProduct?.indexOf(
-                        supplier.saleProduct?.firstWhere(
+                        ? supplier.saleProduct.indexOf(
+                        supplier.saleProduct.firstWhere(
                               (sale) =>
                           sale.saleId ==
                               state
@@ -569,9 +567,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                               productListIndex][
                               productStockUpdateIndex]
                                   .productSaleId,
-                          orElse: () => SaleProduct(),
+                          orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                         ) ??
-                            SaleProduct()) ==
+                            SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                         -1
                         ? -2
                         : supplier.saleProduct?.indexOf(
@@ -583,9 +581,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                               productListIndex][
                               productStockUpdateIndex]
                                   .productSaleId,
-                          orElse: () => SaleProduct(),
+                          orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                         ) ??
-                            SaleProduct()) ??
+                            SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                         -1
                         : -1,
                     supplierSales: supplier.saleProduct
@@ -877,7 +875,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if (event is _updateImageIndexEvent) {
           emit(state.copyWith(productImageIndex: event.index));
         }
-
         else if (event is _orderSendEvent) {
           List<OrderSendModel.Product> ProductReqMap = [];
           emit(state.copyWith(isLoading: true));
@@ -988,7 +985,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if (event is _refreshEvent) {
           emit(state.copyWith(isOrderPending: false));
         }
-
         else  if(event is _getPermissionList){
           if(preferencesHelper.getSubUser()){
             try {

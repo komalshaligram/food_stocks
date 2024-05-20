@@ -350,9 +350,9 @@ class SupplierProductsBloc
                         productListIndex][
                         productStockUpdateIndex]
                             .productSaleId,
-                    orElse: () => SaleProduct(),
+                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                   ) ??
-                      SaleProduct()) ==
+                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                   -1
                   ? -2
                   : supplier.saleProduct?.indexOf(
@@ -364,9 +364,9 @@ class SupplierProductsBloc
                         productListIndex][
                         productStockUpdateIndex]
                             .productSaleId,
-                    orElse: () => SaleProduct(),
+                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                   ) ??
-                      SaleProduct()) ??
+                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                   -1
                   : -1,
               supplierSales: supplier.saleProduct
@@ -906,6 +906,7 @@ class SupplierProductsBloc
                   categoryId: subCategory.parentCategoryId ?? '',
                   categoryName: subCategory.parentCategoryName ?? '',
                   isPesach: subCategory.isPesach??false,
+
                 ))
                 .toList() ??
                 []);
@@ -926,10 +927,15 @@ class SupplierProductsBloc
                 ?.map((supplier) =>
                 SearchModel(
                   searchId: supplier.id ?? '',
-                  name: supplier.supplierDetail?.companyName ?? '',
+                  name: supplier.brandName ?? '',
                   searchType: SearchTypes.supplier,
-                  image: supplier.logo ?? '',
+                  image: supplier.mainImage,
                   isPesach: supplier.isPesach??false,
+                  salePrice: double.parse(supplier.sale.salePrice.toString()),
+                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                      .body
+                      ?.text ??
+                      '',
                 ))
                 .toList() ??
                 []);
@@ -943,6 +949,11 @@ class SupplierProductsBloc
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                   image: sale.mainImage ?? '',
                   isPesach: sale.isPesach??false,
+               //   salePrice: double.parse(supplier.sale.salePrice.toString()),
+                  salesDesc:  parse(sale.salesDescription ?? '')
+                      .body
+                      ?.text ??
+                      '',
                 ))
                 .toList() ??
                 []);
@@ -958,7 +969,12 @@ class SupplierProductsBloc
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
                   lowStock: supplier.lowStock.toString(),
-                    isPesach: supplier.isPesach??false
+                    isPesach: supplier.isPesach??false,
+                  salePrice: double.parse(supplier.sale.salePrice.toString()),
+                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                      .body
+                      ?.text ??
+                      '',
                 ))
                 .toList() ??
                 []);

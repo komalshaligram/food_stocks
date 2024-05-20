@@ -13,7 +13,6 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:store_version_checker/store_version_checker.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/error/exceptions.dart';
@@ -50,9 +49,7 @@ import '../../data/model/res_model/recommendation_products_res_model/recommendat
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 
 part 'home_event.dart';
-
 part 'home_state.dart';
-
 part 'home_bloc.freezed.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
@@ -64,9 +61,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeEvent>((event, emit) async {
       SharedPreferencesHelper preferences =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      if (preferences.getGuestUser()) {
-
-      }
+      if (preferences.getGuestUser()) {}
       else {
         if (event is _getPreferencesDataEvent) {
           debugPrint(
@@ -148,30 +143,34 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               //1 for recommendation product.
               //2 related product.
 
-              List<List<ProductStockModel>> productStockList =
-              state.productStockList.toList(growable: true);
+
               int productListIndex  = event.productListIndex;
-              debugPrint('productStockList___${productStockList[2].length}');
+             // debugPrint('productStockList___${productStockList[2].length}');
               debugPrint('productListIndex___${event.productListIndex}');
-              int productStockUpdateIndex = 0;
+              int productStockUpdateIndex = -1;
               if(event.isBarcode ){
                 productStockUpdateIndex = 0;
                 debugPrint('responseproductid____${response.product?.first.id}');
-                productStockList[0][0] =productStockList[0][0].copyWith(
-                    quantity: _productQuantity,
-                    productId: response.product?.first.id ?? '' ,
-                    stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
-                    totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
-                );
+
               }
               else{
                 productStockUpdateIndex = state.productStockList[productListIndex]
                     .indexWhere((productStock) =>
                 productStock.productId == event.productId);
               }
-
               emit(state.copyWith(productListIndex:productListIndex,productStockUpdateIndex:productStockUpdateIndex));
-              debugPrint('planoGramUpdateIndex___${state.productListIndex}');
+              List<List<ProductStockModel>> productStockList =
+              state.productStockList.toList(growable: true);
+              productStockList[state.productListIndex][state.productStockUpdateIndex] =
+                  productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
+                  quantity: _productQuantity,
+                  productId: response.product?.first.id ?? '' ,
+                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
+                  totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
+              );
+
+              emit(state.copyWith(productStockList: productStockList));
+              debugPrint('productStockList${state.productStockList.length}');
               debugPrint('productStockUpdateIndex___${state.productStockUpdateIndex}');
               try {
 
@@ -200,8 +199,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 add(HomeEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
               if (event.isBarcode) {
-
-                productStockList[0][0] =  productStockList[0][0]
+                List<List<ProductStockModel>> productStockList =
+                state.productStockList.toList(growable: true);
+                productStockList[state.productListIndex][state.productStockUpdateIndex] =
+                    productStockList[state.productListIndex][state.productStockUpdateIndex]
                     .copyWith(
                     quantity: _productQuantity,
                     productId: response.product?.first.id ?? '' ,
@@ -209,7 +210,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 );
 
                 emit(state.copyWith(productStockList: productStockList));
-
+                productStockUpdateIndex =
+                    productStockList.indexOf(productStockList.last);
               }
 
 
@@ -223,6 +225,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 double.parse(supplier.productPrice ?? '0.0'),
                 quantity: _productQuantity,
                 stock: supplier.productStock.toString(),
+
                 selectedIndex: (supplier.supplierId ?? '') ==
                     state
                         .productStockList[productListIndex]
@@ -237,9 +240,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                           productListIndex][
                           productStockUpdateIndex]
                               .productSaleId,
-                      orElse: () => SaleProduct(),
+                      orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate:  '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate: '' ),
                     ) ??
-                        SaleProduct()) ==
+                        SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate: '' ),) ==
                     -1
                     ? -2
                     : supplier.saleProduct?.indexOf(
@@ -251,15 +254,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                           productListIndex][
                           productStockUpdateIndex]
                               .productSaleId,
-                      orElse: () => SaleProduct(),
+                      orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate:  '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:''),
                     ) ??
-                        SaleProduct()) ??
+                        SaleProduct(isSale: false,saleDescription: '',saleFromDate:  '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate: ''),) ??
                     -1
                     : -1,
-                supplierSales: supplier.saleProduct
-                    ?.map((sale) => SupplierSaleModel(
+                supplierSales: supplier.saleProduct.map((sale) => SupplierSaleModel(
                     saleId: sale.saleId ?? '',
                     saleName: sale.saleName ?? '',
+
                     saleDescription:
                     parse(sale.salesDescription ?? '')
                         .body
@@ -286,11 +289,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   productListIndex
                   ? ''
                   : productStockList[productListIndex][0].note;
-              emit(state.copyWith(productStockList: []));
+             // emit(state.copyWith(productStockList: []));
 
               emit(state.copyWith(
                   productDetails: response.product ?? [],
-                  productStockList: productStockList,
+                  productStockList: state.productStockList,
                   productStockUpdateIndex: productStockUpdateIndex,
                   noteController: TextEditingController(text: note),
                   productSupplierList: supplierList,
@@ -366,7 +369,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
             if (response.status == 200) {
               List<ProductSale> saleProductsList =
-                  response.data?.toList(growable: true) ?? [];
+                  response.data.toList(growable: true) ?? [];
               debugPrint('sale Products = ${saleProductsList.length}');
               debugPrint('sale Products = ${response.data?.length}');
              List< List<ProductStockModel>> productStockList =
@@ -377,7 +380,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       (saleProduct) =>
                       ProductStockModel(
                         productId: saleProduct.id ?? '',
-                        stock: (saleProduct.numberOfUnit ?? '0')
+                        stock: (saleProduct.productStock.toString() ?? '0')
                       )) ??
                   []);
               productStockList[3].addAll(stockList);
@@ -401,7 +404,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(isShimmering: false));
           }
         }
-
         else if (event is _IncreaseQuantityOfProduct) {
           List<List<ProductStockModel>> productStockList =
           state.productStockList.toList(growable: false);
@@ -508,14 +510,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
           }
         }
-
         else if (event is _ChangeSupplierSelectionExpansionEvent) {
           emit(state.copyWith(
               isSelectSupplier:
               event.isSelectSupplier ?? !state.isSelectSupplier));
           debugPrint('supplier selection : ${state.isSelectSupplier}');
         }
-        else if (event is _SupplierSelectionEvent) {
+/*        else if (event is _SupplierSelectionEvent) {
           debugPrint(
               'supplier[${event.supplierIndex}][${event.supplierSaleIndex}]');
           if (event.supplierIndex >= 0) {
@@ -554,7 +555,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
 
           }
-        }
+        }*/
         else if (event is _AddToCartProductEvent) {
           debugPrint('cart id_____${preferences.getCartId()}');
           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex]
@@ -692,6 +693,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       productSupplierIds: '',
                       totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                       productSaleId: '',
+
                     );
 
                 emit(state.copyWith(
@@ -730,7 +732,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         }
         else if (event is _SetCartCountEvent) {
-          
           await preferences.setCartCount(count: preferences.getCartCount() + 1);
           emit(state.copyWith(cartCount: preferences.getCartCount(),isCartCountChange: true));
           debugPrint('cart count home = ${state.cartCount}');
@@ -958,6 +959,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               stockList.addAll(response.data?.map(
                       (recommendationProduct) =>
                       ProductStockModel(
+
                           productId: recommendationProduct.id ?? '',
                           stock: recommendationProduct.productStock.toString(),
                       )) ??
@@ -1024,6 +1026,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       name: category.categoryName ?? '',
                       searchType: SearchTypes.category,
                       image: category.categoryImage ?? '',
+
                   )));
               emit(state.copyWith(searchList: searchList, isSearching: false));
               return;
@@ -1072,9 +1075,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   ?.map((supplier) =>
                   SearchModel(
                     searchId: supplier.id ?? '',
-                    name: supplier.supplierDetail?.companyName ?? '',
+                    name: supplier.brandName ?? '',
                     searchType: SearchTypes.supplier,
-                    image: supplier.logo ?? '',
+                    image: supplier.mainImage ?? '',
+                    salePrice: double.parse(supplier.sale.salePrice.toString()),
+                    salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                        .body
+                        ?.text ??
+                        '',
+
                   ))
                   .toList() ??
                   []);
@@ -1087,6 +1096,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     searchType: SearchTypes.sale,
                     image: sale.mainImage ?? '',
                     numberOfUnits: int.parse(sale.numberOfUnit.toString()),
+                    salesDesc:   parse(sale.salesDescription ?? '')
+                        .body
+                        ?.text ??
+                        '',
+                  //  salePrice:double.parse(sale.salePrice.toString()),
                   ))
                   .toList() ??
                   []);
@@ -1102,7 +1116,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                     priceOfBox: double.parse(supplier.productPrice.toString()),
                     lowStock: supplier.lowStock.toString(),
-                    isPesach: supplier.isPesach??false
+                    isPesach: supplier.isPesach??false,
+                    salePrice: double.parse(supplier.sale.salePrice.toString()),
+                    salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                        .body
+                        ?.text ??
+                        '',
 
                   ))
                   .toList() ??
@@ -1271,8 +1290,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(pesachBannerShimmering: false));
           }
         }
-
-      else  if(event is _getPermissionList){
+        else  if(event is _getPermissionList){
         if(preferences.getSubUser()){
           try {
 
