@@ -71,7 +71,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == 200) {
             List<ProductSale> saleProductsList =
-                response.data?.toList(growable: true) ?? [];
+                response.data.toList(growable: true) ?? [];
        /*     saleProductsList
                 .forEach((sale) => debugPrint('p = ${sale.endDate}'));*/
             // saleProductsList.removeWhere(
@@ -99,7 +99,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 isShimmering: false));
             emit(state.copyWith(
                 isBottomOfProducts: productSaleList.length ==
-                    (response.metaData?.totalFilteredCount ?? 0)
+                    (response.metaData.totalFilteredCount ?? 0)
                     ? true
                     : false));
           } else {
@@ -297,7 +297,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
+                    response.message.toLocalization() ??
                         response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
@@ -306,18 +306,18 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           // emit(state.copyWith(isProductLoading: false));
         }
       } else if (event is _IncreaseQuantityOfProduct) {
+
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
+        debugPrint('maxQty: ${productStockList[state.productStockUpdateIndex].maxQty}');
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
             double.parse ( productStockList[state.productStockUpdateIndex].stock.toString())) {
             if (productStockList[state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
-
               return;
             }
-
               if(productStockList[state.productStockUpdateIndex].maxQty!=-1){
                 if (productStockList[state.productStockUpdateIndex].quantity >=
                     productStockList[state.productStockUpdateIndex].maxQty) {

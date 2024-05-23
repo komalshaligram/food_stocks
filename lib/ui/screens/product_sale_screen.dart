@@ -126,12 +126,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                           isGuestUser: state.isGuestUser,
                                           index: index,
                                           context: context,
-
                                           saleImage: state.productSalesList[index].mainImage,
                                           title: state.productSalesList[index].name,
                                           productName: state.productSalesList[index].productName,
                                           description: parse(state.productSalesList[index].sale.saleDescription ?? '').body?.text ?? '',
-
                                           discountedPrice: double.parse(state.productSalesList[index].sale.salePrice),
                                           onButtonTap: () {
                                             if (!state.isGuestUser) {
@@ -153,7 +151,6 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                       physics: const NeverScrollableScrollPhysics(),
                                       padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                       itemBuilder: (context, index) => commonSaleListView(
-
                                           context: context,
                                           discountedPrice: double.parse(state.productSalesList[index].sale.salePrice),
                                           isFromSale: state.productSalesList[index].sale.isSale,
