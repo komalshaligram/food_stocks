@@ -582,7 +582,72 @@ class StoreScreenWidget extends StatelessWidget {
                                                       .padding_5),
                                               itemBuilder: (context,
                                                   index) =>
-                                                  CommonProductItemWidget(
+                                               CommonProductSaleItemWidget(
+                                              isGuestUser: state.isGuestUser,
+                                              height: AppConstants.salesProductItemHeight,
+                                              width: 140,
+                                              productName: state.recommendedProductsList[index].productName??'',
+                                              saleImage: state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .mainImage ??
+                                                  '',
+                                              title: state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .name ??
+                                                  '',
+                                              description: parse(state
+                                                  .recommendedProductsList[
+                                              index].sale
+                                                  .saleDescription ??
+                                                  '')
+                                                  .body
+                                                  ?.text ??
+                                                  '',
+                                              discountedPrice:
+                                              double.parse(state
+                                                  .recommendedProductsList[
+                                              index].sale.salePrice),
+
+                                              originalPrice:state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .productPrice ??
+                                                  0 ,
+                                              productStock: state.recommendedProductsList[
+                                              index]
+                                                  .productStock.toString()??'0',
+                                              lowStock: state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .lowStock??'',
+                                              isPesach: state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .isPesach,
+                                              onButtonTap: () {
+                                                debugPrint("tap 2");
+                                                if(!state.isGuestUser){
+                                                  showProductDetails(
+                                                      context:
+                                                      context,
+                                                      productId: state
+                                                          .recommendedProductsList[
+                                                      index]
+                                                          .id ??
+                                                          '',
+                                                      productStock:  state
+                                                          .recommendedProductsList[
+                                                      index]
+                                                          .productStock.toString()
+                                                  );
+                                                }
+                                                else{
+                                                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                }
+                                              })
+                                              /*    CommonProductItemWidget(
                                                     isPesach: state.recommendedProductsList[index].isPesach,
                                                     lowStock: state
                                                         .recommendedProductsList[
@@ -638,7 +703,7 @@ class StoreScreenWidget extends StatelessWidget {
 
 
                                                     },
-                                                  )
+                                                  )*/
                                           ),
                                         ),
                                       ],

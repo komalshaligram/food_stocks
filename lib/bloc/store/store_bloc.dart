@@ -147,14 +147,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
           if (response.status == 200) {
             List<ProductSale> saleProductsList =
-                response.data?.toList(growable: true) ?? [];
+                response.data.toList(growable: true) ?? [];
             debugPrint('sale Products = ${saleProductsList.length}');
-            debugPrint('sale Products = ${response.data?.length}');
+            debugPrint('sale Products = ${response.data.length}');
             List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
             ProductStockModel barcodeStock = productStockList.removeLast();
-            productStockList.addAll(response.data?.map((saleProduct) =>
+            productStockList.addAll(response.data.map((saleProduct) =>
                     ProductStockModel(
+                      maxQty: int.parse(saleProduct.sale.saleMaxQuantity),
                         productId: saleProduct.id ?? '',
                         stock: (saleProduct.productStock.toString() ?? '0'))) ??
                 []);
@@ -199,8 +200,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: true);
               ProductStockModel barcodeStock = productStockList.removeLast();
-              productStockList.addAll(response.data?.map(
+              productStockList.addAll(response.data.map(
                       (recommendationProduct) => ProductStockModel(
+                        maxQty: recommendationProduct.sale.isSale ? int.parse(recommendationProduct.sale.saleMaxQuantity) : -1,
                       productId: recommendationProduct.id ?? '',
                       stock: recommendationProduct.productStock.toString())) ??
                   []);
@@ -323,18 +325,18 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(productStockUpdateIndex:productStockUpdateIndex));
             List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
+
+
             productStockList[productStockList
                 .indexOf(productStockList.last)] = productStockList[
             productStockList.indexOf(productStockList.last)]
                 .copyWith(
               quantity: _productQuantity,
-              maxQty: int.parse(response.product.first.sale.saleMaxQuantity),
+              maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
               productId: response.product.first.id ?? '',
               stock: (response.product.first.supplierSales.first.productStock.toString()),
               productSaleId: '',
               productSupplierIds: '',
-              note: '',
-              isNoteOpen: false,
                 totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
             );
 
@@ -382,7 +384,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       productStockList.indexOf(productStockList.last)]
                   .copyWith(
                 quantity: _productQuantity,
-                maxQty: _maxQuantity,
+                maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
                 productId: response.product.first.id ?? '',
                 stock: (response.product.first.supplierSales.first.productStock.toString() ?? '0'),
                 productSaleId: '',
@@ -416,11 +418,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     .map((supplier) => ProductSupplierModel(
                           supplierId: supplier.supplierId ?? '',
                           companyName: supplier.supplierCompanyName ?? '',
-                          basePrice:
-                              double.parse(supplier.productPrice ?? '0.0'),
+              maxQty:response.product.first.sale.isSale? int.parse(response.product.first.sale.saleMaxQuantity.toString()):-1,
+              basePrice: double.parse(supplier.productPrice ?? '0.0'),
               stock: supplier.productStock.toString(),
                           quantity: _productQuantity,
-                          maxQty: _maxQuantity,
                           selectedIndex: (supplier.supplierId ?? '') ==
                                   state
                                       .productStockList[productStockUpdateIndex]
@@ -455,6 +456,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                                   .map((sale) => SupplierSaleModel(
                                       saleId: sale.saleId ?? '',
                                       saleName: sale.saleName ?? '',
+                                      maxQty: sale.saleMaxQuantity,
                                       saleDescription:
                                           parse(sale.salesDescription ?? '')
                                                   .body
@@ -556,6 +558,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
 
       else if (event is _IncreaseQuantityOfProduct) {
+        debugPrint('store max qty:${ state.productStockList[state.productStockUpdateIndex]
+            .maxQty} ');
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {

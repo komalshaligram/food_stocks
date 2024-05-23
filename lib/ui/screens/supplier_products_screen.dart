@@ -32,6 +32,7 @@ import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_list_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
+import '../widget/common_sale_listview.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
@@ -168,13 +169,14 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   padding: EdgeInsets.symmetric(
                                                       horizontal:
                                                           AppConstants.padding_5),
-                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.48),
+                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.52),
                                                   itemBuilder: (context, index) {
 
                                                     return CommonProductSaleItemWidget(
                                                         isGuestUser: state.isGuestUser,
                                                         height: AppConstants.salesProductItemHeight,
                                                         width: 140,
+                                                        isSale:state.productList[index].sale!.isSale ,
                                                         productName: state.productList[index].productName??'',
                                                         saleImage: state
                                                             .productList[
@@ -198,7 +200,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         double.parse(state
                                                             .productList[
                                                         index].sale!.salePrice)??0.0,
-
 
                                                         originalPrice:double.parse(state
                                                             .productList[
@@ -321,7 +322,47 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                       horizontal:
                                                           AppConstants.padding_5),
                                                   itemBuilder: (context, index) =>
-                                                      CommonProductListWidget(
+                                                      CommonSaleListView(
+                                                        context: context,
+                                                        discountedPrice: double.parse(state.productList[index].sale!.salePrice),
+                                                        isFromSale: state.productList[index].sale?.isSale,
+                                                        salesDesc: state.productList[index].sale?.saleDescription,
+                                                        isPesach: state.productList[index].isPesach,
+                                                        numberOfUnits: state.productList[index].numberOfUnit.toString(),
+                                                        lowStock: state.productList[index].lowStock.toString(),
+                                                        productStock:  state.productList[index].productStock.toString(),
+                                                        productImage: state.productList[index].mainImage??'' ,
+                                                        productName: state.productList[index].productName ??'',
+                                                        price: double.parse(state.productList[index].productPrice.toString()),
+                                                        onButtonTap: () {
+                                                          if (!state.isGuestUser) {
+                                                            showProductDetails(
+                                                              productListIndex: 1,
+                                                              context: context,
+                                                              productId: state
+                                                                  .searchType ==
+                                                                  SearchTypes
+                                                                      .product
+                                                                      .toString()
+                                                                  ? state.productList[index].id ??
+                                                                  ''
+                                                                  : state.productList[index]
+                                                                  .productId ??
+                                                                  '',
+                                                              productStock: state
+                                                                  .productList[index]
+                                                                  .productStock
+                                                                  .toString(),
+                                                            );
+                                                          } else {
+                                                            Navigator.pushNamed(
+                                                                context,
+                                                                RouteDefine
+                                                                    .connectScreen
+                                                                    .name);
+                                                          }
+                                                        }, isGuestUser: false,),
+                                                    /*  CommonProductListWidget(
                                                         isPesach: state.productList[index].isPesach,
                                                     lowStock: state
                                                         .productList[index]
@@ -378,7 +419,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                       }
                                                     },
                                                     totalSaleCount: 0,
-                                                  ),
+                                                  ),*/
                                                 ),
                                 ],
                               ),

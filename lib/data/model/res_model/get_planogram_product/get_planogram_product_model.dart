@@ -1,7 +1,10 @@
+
+
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'dart:convert';
+
 part 'get_planogram_product_model.freezed.dart';
 part 'get_planogram_product_model.g.dart';
-
 
 
 @freezed
@@ -25,14 +28,14 @@ class PlanogramAllProduct with _$PlanogramAllProduct {
   const factory PlanogramAllProduct({
     @JsonKey(name: "_id")
     String? id,
-    @JsonKey(name: "productId")
-    String? productId,
     @JsonKey(name: "subCategoryId")
     String? subCategoryId,
+    @JsonKey(name: "productId")
+    String? productId,
     @JsonKey(name: "__v")
     int? v,
     @JsonKey(name: "createdAt")
-    DateTime? createdAt,
+    String? createdAt,
     @JsonKey(name: "isDeleted")
     bool? isDeleted,
     @JsonKey(name: "isHomePreference")
@@ -40,7 +43,7 @@ class PlanogramAllProduct with _$PlanogramAllProduct {
     @JsonKey(name: "order")
     int? order,
     @JsonKey(name: "updatedAt")
-    DateTime? updatedAt,
+    String? updatedAt,
     @JsonKey(name: "product")
     PlanoProduct? product,
     @JsonKey(name: "sortField")
@@ -61,14 +64,22 @@ class PlanoProduct with _$PlanoProduct {
     String? totalWeightCardboard,
     @JsonKey(name: "totalWeightSurface")
     String? totalWeightSurface,
-    @JsonKey(name: "totalWeight")
-    String? totalWeight,
     @JsonKey(name: "createdAt")
     String? createdAt,
     @JsonKey(name: "updatedAt")
     String? updatedAt,
     @JsonKey(name: "isBottle")
     bool? isBottle,
+    @JsonKey(name: "filterProductId")
+    String? filterProductId,
+    @JsonKey(name: "filterBrandId")
+    String? filterBrandId,
+    @JsonKey(name: "filterCategoryId")
+    String? filterCategoryId,
+    @JsonKey(name: "totalWeight")
+    String? totalWeight,
+    @JsonKey(name: "sale")
+    Sale? sale,
     @JsonKey(name: "_id")
     String? id,
     @JsonKey(name: "productName")
@@ -95,6 +106,10 @@ class PlanoProduct with _$PlanoProduct {
     String? qrcode,
     @JsonKey(name: "sku")
     String? sku,
+    @JsonKey(name: "isPesach")
+    bool? isPesach,
+    @JsonKey(name: "nmMashlim")
+    String? nmMashlim,
     @JsonKey(name: "createdBy")
     String? createdBy,
     @JsonKey(name: "updatedBy")
@@ -119,12 +134,31 @@ class PlanoProduct with _$PlanoProduct {
     double? productPrice,
     @JsonKey(name: "totalSale")
     int? totalSale,
+    @JsonKey(name: "lowStock")
     String? lowStock,
-    @JsonKey(name: "isPesach") bool? isPesach,
-    @JsonKey(name: "nmMashlim") String? nmMashlim,
-  }) = _PlanoProduct;
+  }) = _ProductData;
 
   factory PlanoProduct.fromJson(Map<String, dynamic> json) => _$PlanoProductFromJson(json);
+}
+
+@freezed
+class Sale with _$Sale {
+  const factory Sale({
+    @JsonKey(name: "isSale")
+    bool? isSale,
+    @JsonKey(name: "salePrice")
+    String? salePrice,
+    @JsonKey(name: "saleFromDate")
+    String? saleFromDate,
+    @JsonKey(name: "saleUntilDate")
+    String? saleUntilDate,
+    @JsonKey(name: "saleMaxQuantity")
+    String? saleMaxQuantity,
+    @JsonKey(name: "saleDescription")
+    String? saleDescription,
+  }) = _Sale;
+
+  factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
 }
 
 @freezed

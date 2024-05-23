@@ -28,7 +28,9 @@ import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_list_widget.dart';
+import '../widget/common_product_sale_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
+import '../widget/common_sale_listview.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
@@ -230,7 +232,70 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                       crossAxisCount: 3,
                                       childAspectRatio: getChildAspectRatio(context)),
                                   itemBuilder: (context, index) {
-                                    return CommonProductItemWidget(
+                                    return CommonProductSaleItemWidget(
+                                        isSale: state.recommendationProductsList[index].sale.isSale,
+                                        height: AppConstants.salesProductItemHeight,
+                                        width: 140,
+                                        productName: state.recommendationProductsList[index].productName??'',
+                                        saleImage: state
+                                            .recommendationProductsList[
+                                        index]
+                                            .mainImage ??
+                                            '',
+                                        title: state
+                                            .recommendationProductsList[
+                                        index]
+                                            .name ??
+                                            '',
+                                        description: parse(state
+                                            .recommendationProductsList[
+                                        index].sale
+                                            .saleDescription ??
+                                            '')
+                                            .body
+                                            ?.text ??
+                                            '',
+                                        discountedPrice:
+                                        double.parse(state
+                                            .recommendationProductsList[
+                                        index].sale.salePrice),
+
+                                        originalPrice:state
+                                            .recommendationProductsList[
+                                        index]
+                                            .productPrice ??
+                                            0 ,
+                                        productStock: state.recommendationProductsList[
+                                        index]
+                                            .productStock.toString()??'0',
+                                        lowStock: state
+                                            .recommendationProductsList[
+                                        index]
+                                            .lowStock??'',
+                                        isPesach: state
+                                            .recommendationProductsList[
+                                        index]
+                                            .isPesach,
+
+                                        onButtonTap: () {
+                                          debugPrint("tap 1");
+                                          showProductDetails(
+                                              context: context,
+                                              productId: state
+                                                  .recommendationProductsList[
+                                              index]
+                                                  .id ??
+                                                  '',
+                                              productStock:  state
+                                                  .recommendationProductsList[
+                                              index]
+                                                  .productStock.toString(),
+                                              productListIndex: 1,
+                                          );
+
+
+                                        });
+                                 /*   return CommonProductItemWidget(
                                       isPesach: state.recommendationProductsList[index].isPesach,
                                     lowStock:  state.recommendationProductsList[index].lowStock.toString(),
                                       imageWidth: getScreenWidth(context) >= 700 ? 100 : 70,
@@ -273,7 +338,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                 .productStock.toString(),
                                             productListIndex: 1
                                         );
-                                      });
+                                      });*/
                                   }
                               ):
                               ListView.builder(
@@ -282,7 +347,32 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                 physics: const NeverScrollableScrollPhysics(),
                                 padding: EdgeInsets.symmetric(
                                     horizontal: AppConstants.padding_5),
-                                itemBuilder: (context, index) => CommonProductListWidget(
+                                itemBuilder: (context, index) =>
+                                    CommonSaleListView(
+                                        context: context,
+                                        discountedPrice: double.parse(state.recommendationProductsList[index].sale.salePrice),
+                                        isFromSale: state.recommendationProductsList[index].sale.isSale,
+                                        salesDesc: state.recommendationProductsList[index].sale.saleDescription,
+                                        isPesach: state.recommendationProductsList[index].isPesach,
+                                        numberOfUnits: state.recommendationProductsList[index].numberOfUnit.toString(),
+                                        lowStock: state.recommendationProductsList[index].lowStock.toString(),
+                                        productStock:  state.recommendationProductsList[index].productStock.toString(),
+                                        productImage: state.recommendationProductsList[index].mainImage ,
+                                        productName: state.recommendationProductsList[index].productName ,
+                                        price: double.parse(state.recommendationProductsList[index].productPrice.toString()),
+                                        onButtonTap: () {
+                                          showProductDetails(
+                                              context: context,
+                                              productId: state
+                                                  .recommendationProductsList[index]
+                                                  .id ??
+                                                  '',
+                                              productStock: state.recommendationProductsList[index].productStock.toString(),
+                                              productListIndex: 1
+
+                                          );
+                                        }, isGuestUser: false,),
+                                 /*   CommonProductListWidget(
                                   isPesach:state.recommendationProductsList[index].isPesach,
                                   numberOfUnits: state.recommendationProductsList[index].numberOfUnit.toString(),
                                   lowStock: state.recommendationProductsList[index].lowStock.toString(),
@@ -311,7 +401,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                           productListIndex: 1
 
                                       );
-                                    }),
+                                    }),*/
                               ),
                             ],
                           ),

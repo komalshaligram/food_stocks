@@ -16,6 +16,7 @@ import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import 'package:food_stock/ui/widget/common_sale_listview.dart';
 import 'package:food_stock/ui/widget/common_search_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
@@ -23,6 +24,7 @@ import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../../data/model/res_model/get_planogram_product/get_planogram_product_model.dart';
 import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../widget/common_product_button_widget.dart';
@@ -499,7 +501,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 physics: NeverScrollableScrollPhysics(),
                                                 padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context)),
-                                                itemBuilder: (context, index) => CommonProductItemWidget(
+                                                itemBuilder: (context, index) =>
+
+                                                    CommonProductItemWidget(
                                                   isPesach: state.planogramProductList[index].product?.isPesach,
                                                   lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
                                                     imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
@@ -534,6 +538,36 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               itemBuilder:
                                                   (context,
                                                   index) {
+                                              /*  return  CommonSaleListView(
+                                                  isPesach: state.planogramProductList[index].product?.isPesach??false,
+                                                  lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
+                                                  numberOfUnits:state.planogramProductList[index].product?.numberOfUnit ??
+                                                      '0',
+                                                  isGuestUser: state
+                                                      .isGuestUser,
+                                                  productStock: (state.planogramProductList[index].product?.productStock.toString() ?? '0'),
+                                                  productImage: state.planogramProductList[index].product?.mainImage ??
+                                                      '',
+                                                  productName: state.planogramProductList[index].product?.productName ??
+                                                      '',
+                                                  price: state.planogramProductList[index].product?.productPrice ??
+                                                      0.0,
+                                                  context: context,
+                                                  discountedPrice: double.parse(state.planogramProductList[index].sale.salePrice),
+                                                  isFromSale: state.planogramProductList[index].sale.isSale,
+                                                  salesDesc: state.planogramProductList[index].sale.saleDescription,
+                                                  onButtonTap: () {
+                                                    if (!state.isGuestUser) {
+                                                      showProductDetails(
+                                                          context: context,
+                                                          productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
+                                                          productId: state.planogramProductList[index].productId ?? '',
+                                                          planoGramIndex: 3,
+                                                          isBarcode: false);
+                                                    } else {
+                                                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                    }
+                                                  },);*/
                                                 return CommonProductListWidget(
                                                   isPesach: state.planogramProductList[index].product?.isPesach??false,
                                                     lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',

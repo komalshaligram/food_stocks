@@ -63,8 +63,6 @@ class Product with _$Product {
     required String categoryId,
     @JsonKey(name: "subCategoryId",includeIfNull: false)
     required String subCategoryId,
-    @JsonKey(name: "manufacturingCountryId",includeIfNull: false)
-    required String manufacturingCountryId,
     @JsonKey(name: "caseTypeId")
     required String caseTypeId,
     @JsonKey(name: "scaleId")
