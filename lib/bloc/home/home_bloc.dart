@@ -160,8 +160,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                    maxQty: _maxQty,
                 //    maxQty: response.product.first.sale.isSale?int.parse(response.product.first.sale.saleMaxQuantity):-1,
                     productId: response.product?.first.id ?? '' ,
-                    stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
-                    totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
+                    stock: (response.product?.first.supplierSales.first.productStock.toString() ?? "0") ,
+                    totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
                 );
               }
               else{

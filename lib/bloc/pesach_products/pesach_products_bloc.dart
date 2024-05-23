@@ -46,6 +46,7 @@ class PesachProductsBloc
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
+  int _maxQty = -1;
 
   PesachProductsBloc() : super(PesachProductsState.initial()) {
     on<PesachProductsEvent>((event, emit) async {
@@ -398,7 +399,7 @@ class PesachProductsBloc
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-        int _maxQty = -1;
+         _maxQty = -1;
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -484,22 +485,23 @@ print('bool___${response.product.first.sale.isSale}');
 
             List<ProductSupplierModel> supplierList = [];
 
-            supplierList.addAll(response.product?.first.supplierSales
-                ?.map((supplier) => ProductSupplierModel(
+            supplierList.addAll(response.product.first.supplierSales
+                .map((supplier) => ProductSupplierModel(
               supplierId: supplier.supplierId ?? '',
               companyName: supplier.supplierCompanyName ?? '',
               basePrice:
               double.parse(supplier.productPrice ?? '0.0'),
               quantity: _productQuantity,
               stock: supplier.productStock.toString(),
+              maxQty: _maxQty,
 
               selectedIndex: (supplier.supplierId ?? '') ==
                   state
                       .productStockList[productListIndex]
                   [productStockUpdateIndex]
                       .productSupplierIds
-                  ? supplier.saleProduct?.indexOf(
-                supplier.saleProduct?.firstWhere(
+                  ? supplier.saleProduct.indexOf(
+                supplier.saleProduct.firstWhere(
                       (sale) =>
                   sale.saleId ==
                       state
@@ -512,8 +514,8 @@ print('bool___${response.product.first.sale.isSale}');
                     SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                   -1
                   ? -2
-                  : supplier.saleProduct?.indexOf(
-                supplier.saleProduct?.firstWhere(
+                  : supplier.saleProduct.indexOf(
+                supplier.saleProduct.firstWhere(
                       (sale) =>
                   sale.saleId ==
                       state
@@ -532,6 +534,7 @@ print('bool___${response.product.first.sale.isSale}');
                   quantity: _productQuantity,
                   saleId: sale.saleId ?? '',
                   saleName: sale.saleName ?? '',
+                  maxQty: _maxQty,
                   saleDescription:
                   parse(sale.salesDescription ?? '')
                       .body
@@ -625,6 +628,12 @@ print('bool___${response.product.first.sale.isSale}');
         }
       }
       else if (event is _IncreaseQuantityOfProduct) {
+        debugPrint('maxQty:${ state.productStockList[state.productListIndex]
+        [state.productStockUpdateIndex]
+            .maxQty}');
+        debugPrint('quantity:${ state.productStockList[state.productListIndex]
+        [state.productStockUpdateIndex]
+            .quantity}');
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -641,6 +650,23 @@ print('bool___${response.product.first.sale.isSale}');
 
               return;
             }
+            if(productStockList[state.productListIndex]
+            [state.productStockUpdateIndex]
+                .maxQty!=-1){
+              if (productStockList[state.productListIndex]
+              [state.productStockUpdateIndex]
+                  .quantity >=
+                  productStockList[state.productListIndex]
+                  [state.productStockUpdateIndex]
+                      .maxQty) {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                    type: SnackBarType.FAILURE);
+                return;
+              }
+            }
+            debugPrint('hi');
             productStockList[state.productListIndex]
             [state.productStockUpdateIndex] =
                 productStockList[state.productListIndex]
