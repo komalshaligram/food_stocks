@@ -33,20 +33,53 @@ class PreviousOrderProductsResModel with _$PreviousOrderProductsResModel {
 @freezed
 class PreviousOrderProductData with _$PreviousOrderProductData {
   const factory PreviousOrderProductData({
-    @JsonKey(name: "_id") String? id,
-     double? productStock,
-     int? totalSale,
-     double? productPrice,
-     String? mainImage,
-    String? productName,
-    int? numberOfUnit,
-    String? lowStock,
-    bool? isPesach,
-   String? nmMashlim,
+    @JsonKey(name: "_id")
+    required String id,
+    @JsonKey(name: "productStock")
+    required int productStock,
+    @JsonKey(name: "totalSale")
+    required int totalSale,
+    @JsonKey(name: "productPrice")
+    required double productPrice,
+    @JsonKey(name: "boxes")
+    required int boxes,
+    @JsonKey(name: "lowStock")
+    required String lowStock,
+    @JsonKey(name: "mainImage")
+    required String mainImage,
+    @JsonKey(name: "isPesach")
+    required bool isPesach,
+    @JsonKey(name: "nmMashlim")
+    required String nmMashlim,
+    @JsonKey(name: "productName")
+    required String productName,
+    @JsonKey(name: "numberOfUnit")
+    required int numberOfUnit,
+    @JsonKey(name: "sale")
+    required Sale sale,
   }) = _PreviousOrderProductData;
 
   factory PreviousOrderProductData.fromJson(Map<String, dynamic> json) =>
       _$PreviousOrderProductDataFromJson(json);
+}
+@freezed
+class Sale with _$Sale {
+  const factory Sale({
+    @JsonKey(name: "isSale")
+    required bool isSale,
+    @JsonKey(name: "salePrice")
+    required String salePrice,
+    @JsonKey(name: "saleFromDate")
+    required String saleFromDate,
+    @JsonKey(name: "saleUntilDate")
+    required String saleUntilDate,
+    @JsonKey(name: "saleMaxQuantity")
+    required String saleMaxQuantity,
+    @JsonKey(name: "saleDescription")
+    required String saleDescription,
+  }) = _Sale;
+
+  factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
 }
 
 @freezed

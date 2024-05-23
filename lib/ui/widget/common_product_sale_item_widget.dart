@@ -48,7 +48,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     this.originalPrice = 0.0,
     this.lowStock = '',
     this.isPesach = false,
-    this.isSale = true,
+    required this.isSale,
     this.productStock = '0'
   });
 
