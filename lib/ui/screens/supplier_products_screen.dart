@@ -168,13 +168,14 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   padding: EdgeInsets.symmetric(
                                                       horizontal:
                                                           AppConstants.padding_5),
-                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.48),
+                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.52),
                                                   itemBuilder: (context, index) {
 
                                                     return CommonProductSaleItemWidget(
                                                         isGuestUser: state.isGuestUser,
                                                         height: AppConstants.salesProductItemHeight,
                                                         width: 140,
+                                                        isSale:state.productList[index].sale!.isSale ,
                                                         productName: state.productList[index].productName??'',
                                                         saleImage: state
                                                             .productList[
@@ -198,7 +199,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         double.parse(state
                                                             .productList[
                                                         index].sale!.salePrice)??0.0,
-
 
                                                         originalPrice:double.parse(state
                                                             .productList[
