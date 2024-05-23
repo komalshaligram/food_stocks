@@ -204,6 +204,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required String productStock
   }) {
     return CommonProductSaleItemWidget(
+        isSale: true,
       height: AppConstants.salesProductItemHeight,
       width: 140,
       isGuestUser: isGuestUser,
@@ -388,6 +389,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
 
   Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList, BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -405,32 +407,54 @@ class ProductSaleScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.relatedProductItemHeight,
+          height: AppConstants.salesProductItemHeight,
           padding: EdgeInsets.only(left: 10, right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemBuilder: (context2, i) {
-              return CommonProductItemWidget(
-                isPesach: relatedProductList.elementAt(i).isPesach,
-                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
-                productStock: relatedProductList.elementAt(i).productStock.toString(),
-                width: AppConstants.relatedProductItemWidth,
-                productImage: relatedProductList[i].mainImage,
-                productName: relatedProductList.elementAt(i).productName,
-                totalSaleCount: relatedProductList.elementAt(i).totalSale,
-                price: relatedProductList.elementAt(i).productPrice,
+              return CommonProductSaleItemWidget(
+                isSale:  relatedProductList.elementAt(i).sale.isSale,
+                isGuestUser: false,
+                height: AppConstants.salesProductItemHeight,
+                width: 140,
+                productName: relatedProductList.elementAt(i).productName??'',
+                saleImage: relatedProductList.elementAt(i)
+                    .mainImage ??
+                    '',
+                title:  relatedProductList.elementAt(i)
+                    .name ??
+                    '',
+                description: parse( relatedProductList.elementAt(i).sale
+                    .saleDescription ??
+                    '')
+                    .body
+                    ?.text ??
+                    '',
+                discountedPrice:
+                double.parse( relatedProductList.elementAt(i).sale.salePrice),
+
+                originalPrice: relatedProductList.elementAt(i)
+                    .productPrice ??
+                    0 ,
+                productStock: relatedProductList.elementAt(i)
+                    .productStock.toString()??'0',
+                lowStock: relatedProductList.elementAt(i)
+                    .lowStock??'',
+                isPesach: relatedProductList.elementAt(i)
+                    .isPesach,
+
                 onButtonTap: () {
                   Navigator.of(prevContext).pop();
                   showProductDetails(context: context, productId: relatedProductList[i].id,);
-                },
-              );
+                },);
             },
             itemCount: relatedProductList.length,
           ),
         )
       ],
     );
+
   }
 
   void showConditionDialog({required BuildContext context, required String saleCondition}) {

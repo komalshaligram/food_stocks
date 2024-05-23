@@ -29,7 +29,9 @@ import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_item_widget.dart';
 import '../widget/common_product_list_widget.dart';
+import '../widget/common_product_sale_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
+import '../widget/common_sale_listview.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
@@ -223,8 +225,72 @@ class ReorderScreenWidget extends StatelessWidget {
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
                                               childAspectRatio:
-                                              getChildAspectRatio(context)),
-                                      itemBuilder: (context, index) => CommonProductItemWidget(
+                                              0.52),
+                                      itemBuilder: (context, index) =>
+                                          CommonProductSaleItemWidget(
+                                              isSale: state.previousOrderProductsList[index].sale.isSale,
+                                              isGuestUser: false,
+
+                                              height: AppConstants.salesProductItemHeight,
+                                              width: 140,
+                                              productName: state.previousOrderProductsList[index].productName??'',
+                                              saleImage: state
+                                                  .previousOrderProductsList[
+                                              index]
+                                                  .mainImage ??
+                                                  '',
+                                              title: state
+                                                  .previousOrderProductsList[
+                                              index]
+                                                  .name ??
+                                                  '',
+                                              description: parse(state
+                                                  .previousOrderProductsList[
+                                              index].sale
+                                                  .saleDescription ??
+                                                  '')
+                                                  .body
+                                                  ?.text ??
+                                                  '',
+                                              discountedPrice:
+                                              double.parse(state
+                                                  .previousOrderProductsList[
+                                              index].sale.salePrice),
+
+                                              originalPrice:state
+                                                  .previousOrderProductsList[
+                                              index]
+                                                  .productPrice ??
+                                                  0 ,
+                                              productStock: state.previousOrderProductsList[
+                                              index]
+                                                  .productStock.toString()??'0',
+                                              lowStock: state
+                                                  .previousOrderProductsList[
+                                              index]
+                                                  .lowStock??'',
+                                              isPesach: state
+                                                  .previousOrderProductsList[
+                                              index]
+                                                  .isPesach,
+                                              onButtonTap: () {
+                                                showProductDetails(
+                                                    context: context,
+                                                    productId: state
+                                                        .previousOrderProductsList[
+                                                    index]
+                                                        .id ??
+                                                        '',
+                                                    productListIndex: 1,
+
+                                                    isBarcode: false,
+                                                    productStock: state
+                                                        .previousOrderProductsList[
+                                                    index]
+                                                        .productStock.toString()
+                                                );
+                                              })
+                                         /* CommonProductItemWidget(
                                         isPesach: state.previousOrderProductsList[index].isPesach,
                                         lowStock: state
                                             .previousOrderProductsList[
@@ -273,7 +339,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                                 .productStock.toString()
                                           );
                                         },
-                                      )
+                                      )*/
                                       ):
                           ListView.builder(
                             itemCount: state.previousOrderProductsList.length,
@@ -281,7 +347,32 @@ class ReorderScreenWidget extends StatelessWidget {
                             physics: const NeverScrollableScrollPhysics(),
                             padding: EdgeInsets.symmetric(
                                 horizontal: AppConstants.padding_5),
-                            itemBuilder: (context, index) => CommonProductListWidget(
+                            itemBuilder: (context, index) =>
+                                CommonSaleListView(
+                                    context: context,
+                                    discountedPrice: double.parse(state.previousOrderProductsList[index].sale.salePrice),
+                                    isFromSale: state.previousOrderProductsList[index].sale.isSale,
+                                    salesDesc: state.previousOrderProductsList[index].sale.saleDescription,
+                                    isGuestUser:false,
+                                    isPesach: state.previousOrderProductsList[index].isPesach,
+                                    numberOfUnits: state.previousOrderProductsList[index].numberOfUnit.toString(),
+                                    lowStock: state.previousOrderProductsList[index].lowStock.toString(),
+                                    productStock: state.previousOrderProductsList[index].productStock.toString(),
+                                    productImage: state.previousOrderProductsList[index].mainImage ,
+                                    productName: state.previousOrderProductsList[index].productName ,
+                                    price: double.parse(state.previousOrderProductsList[index].productPrice.toString()),
+                                    onButtonTap: () {
+                                      showProductDetails(
+                                        productListIndex: 1,
+                                        context: context,
+                                        productId: state
+                                            .previousOrderProductsList[index]
+                                            .id ??
+                                            '',
+                                        productStock: state.previousOrderProductsList[index].productStock.toString(),
+                                      );
+                                    })
+                              /*  CommonProductListWidget(
                                 isPesach:state.previousOrderProductsList[index].isPesach,
                              numberOfUnits: state.previousOrderProductsList[index].numberOfUnit.toString(),
                                 lowStock: state.previousOrderProductsList[index].lowStock.toString(),
@@ -309,7 +400,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                         '',
                                     productStock: state.previousOrderProductsList[index].productStock.toString(),
                                   );
-                                }),
+                                }),*/
                           ),
                         ],
                       ),
@@ -936,33 +1027,57 @@ class ReorderScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.relatedProductItemHeight,
+          height: AppConstants.salesProductItemHeight,
           padding: EdgeInsets.only(left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemBuilder: (context2,i){
-              return CommonProductItemWidget(
-                isPesach: relatedProductList.elementAt(i).isPesach,
-                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
-                productStock:relatedProductList.elementAt(i).productStock.toString(),
-                width: AppConstants.relatedProductItemWidth,
-                productImage:relatedProductList[i].mainImage,
-                productName: relatedProductList.elementAt(i).productName,
-                totalSaleCount: relatedProductList.elementAt(i).totalSale,
-                price:relatedProductList.elementAt(i).productPrice,
-                onButtonTap: (){
-                  Navigator.pop(prevContext);
-                  showProductDetails(
-                    productListIndex: 2,
-                      context: context,
-                      productId:
-                          relatedProductList[i].id,
-                      isBarcode: false,
-                      productStock: (relatedProductList[i].productStock.toString())
-                  );
-                },
-              );},itemCount: relatedProductList.length,),
+              return CommonProductSaleItemWidget(
+                isSale:  relatedProductList.elementAt(i).sale.isSale,
+                isGuestUser: false,
+                height: AppConstants.salesProductItemHeight,
+                width: 140,
+                productName: relatedProductList.elementAt(i).productName??'',
+                saleImage: relatedProductList.elementAt(i)
+                    .mainImage ??
+                    '',
+                title:  relatedProductList.elementAt(i)
+                    .name ??
+                    '',
+                description: parse( relatedProductList.elementAt(i).sale
+                    .saleDescription ??
+                    '')
+                    .body
+                    ?.text ??
+                    '',
+                discountedPrice:
+                double.parse( relatedProductList.elementAt(i).sale.salePrice),
+
+                originalPrice: relatedProductList.elementAt(i)
+                    .productPrice ??
+                    0 ,
+                productStock: relatedProductList.elementAt(i)
+                    .productStock.toString()??'0',
+                lowStock: relatedProductList.elementAt(i)
+                    .lowStock??'',
+                isPesach: relatedProductList.elementAt(i)
+                    .isPesach,
+
+                onButtonTap: () {
+                    Navigator.pop(prevContext);
+                    showProductDetails(
+                        productListIndex: 2,
+                        context: context,
+                        productId:
+                        relatedProductList[i].id,
+                        isBarcode: false,
+                        productStock: (relatedProductList[i].productStock.toString())
+                    );
+                  },);
+  }
+
+            ,itemCount: relatedProductList.length,),
         )
       ],
     );
