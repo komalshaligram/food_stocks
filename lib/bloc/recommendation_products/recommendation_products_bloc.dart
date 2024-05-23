@@ -47,7 +47,7 @@ class RecommendationProductsBloc
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-
+  int _maxQuantity = -1;
   RecommendationProductsBloc() : super(RecommendationProductsState.initial()) {
     on<RecommendationProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -152,6 +152,7 @@ class RecommendationProductsBloc
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
+        _maxQuantity = -1;
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -181,6 +182,7 @@ class RecommendationProductsBloc
                debugPrint('responseproductid____${response.product?.first.id}');
               productStockList[0][0] =productStockList[0][0].copyWith(
                   quantity: _productQuantity,
+                  maxQty: int.parse(response.product.first.sale.saleMaxQuantity),
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
                   totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
@@ -192,7 +194,7 @@ class RecommendationProductsBloc
               productStock.productId == event.productId);
             }
 
-            emit(state.copyWith(productListIndex:productListIndex,productStockUpdateIndex:productStockUpdateIndex));
+            emit(state.copyWith(productListIndex:productListIndex,productStockUpdateIndex:productStockUpdateIndex,productStockList: productStockList));
              debugPrint('planoGramUpdateIndex___${state.productListIndex}');
              debugPrint('productStockUpdateIndex___${state.productStockUpdateIndex}');
             try {
@@ -214,6 +216,7 @@ class RecommendationProductsBloc
                     _isProductInCart = true;
                     _cartProductId = cartProduct.cartProductId ?? '';
                     _productQuantity = cartProduct.totalQuantity ?? 0;
+                    _maxQuantity = cartProduct.sale.saleMaxQuantity??-1;
                     return;
                   }
                 });
@@ -228,15 +231,13 @@ class RecommendationProductsBloc
 
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
+                  maxQty: _maxQuantity,
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
               );
-
               emit(state.copyWith(productStockList: productStockList));
-
             }
-
 
             List<ProductSupplierModel> supplierList = [];
 
@@ -247,6 +248,7 @@ class RecommendationProductsBloc
               basePrice:
               double.parse(supplier.productPrice ?? '0.0'),
               quantity: _productQuantity,
+              maxQty:response.product.first.sale.isSale? int.parse(response.product.first.sale.saleMaxQuantity.toString()):-1,
               stock: supplier.productStock.toString(),
               selectedIndex: (supplier.supplierId ?? '') ==
                   state
@@ -285,6 +287,7 @@ class RecommendationProductsBloc
                   ?.map((sale) => SupplierSaleModel(
                   saleId: sale.saleId ?? '',
                   saleName: sale.saleName ?? '',
+                  maxQty: sale.saleMaxQuantity??-1,
                   saleDescription:
                   parse(sale.salesDescription ?? '')
                       .body
@@ -399,6 +402,23 @@ class RecommendationProductsBloc
 
               return;
             }
+            if(productStockList[state.productListIndex]
+            [state.productStockUpdateIndex]
+                .maxQty!=-1){
+              if (productStockList[state.productListIndex]
+              [state.productStockUpdateIndex]
+                  .quantity >=
+                  productStockList[state.productListIndex]
+                  [state.productStockUpdateIndex]
+                      .maxQty) {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                    type: SnackBarType.FAILURE);
+                return;
+              }
+            }
+
             productStockList[state.productListIndex]
             [state.productStockUpdateIndex] =
                 productStockList[state.productListIndex]
@@ -596,6 +616,7 @@ class RecommendationProductsBloc
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
                     isNoteOpen: false,
+                    maxQty: _maxQuantity,
                     quantity: /*state.productStockList[state.productStockUpdateIndex]
                     .quantity +*/ _productQuantity,
                     productSupplierIds: '',

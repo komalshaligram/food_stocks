@@ -457,7 +457,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             }),
                                         SizedBox(
                                           width: getScreenWidth(context),
-                                          height: AppConstants.relatedProductItemHeight,
+                                          height: AppConstants.salesProductItemHeight,
                                           child: ListView.builder(
                                               itemCount: state
                                                   .recommendedProductsList.length,
@@ -467,7 +467,77 @@ class HomeScreenWidget extends StatelessWidget {
                                                   horizontal:
                                                   AppConstants.padding_5),
                                               itemBuilder: (context, index) =>
-                                                  CommonProductItemWidget(
+                                               CommonProductSaleItemWidget(
+                                             isSale: state.recommendedProductsList[index].sale.isSale,
+                                              isGuestUser: state.isGuestUser,
+                                              height: AppConstants.salesProductItemHeight,
+                                              width: 140,
+                                              productName: state.recommendedProductsList[index].productName??'',
+                                              saleImage: state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .mainImage ??
+                                                  '',
+                                              title: state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .name ??
+                                                  '',
+                                              description: parse(state
+                                                  .recommendedProductsList[
+                                              index].sale
+                                                  .saleDescription ??
+                                                  '')
+                                                  .body
+                                                  ?.text ??
+                                                  '',
+                                              discountedPrice:
+                                              double.parse(state
+                                                  .recommendedProductsList[
+                                              index].sale.salePrice),
+
+                                              originalPrice:state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .productPrice ??
+                                                  0 ,
+                                              productStock: state.recommendedProductsList[
+                                              index]
+                                                  .productStock.toString()??'0',
+                                              lowStock: state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .lowStock??'',
+                                              isPesach: state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .isPesach,
+
+                                              onButtonTap: () {
+                                                debugPrint("tap 1");
+                                                if(!state.isGuestUser){
+                                                  showProductDetails(
+                                                    context: context,
+                                                    productId: state
+                                                        .recommendedProductsList[
+                                                    index]
+                                                        .id ??
+                                                        '',
+                                                    productStock:(state
+                                                        .recommendedProductsList[
+                                                    index]
+                                                        .productStock.toString()),
+                                                    productListIndex: 1,
+                                                    maxQty: int.parse(state.recommendedProductsList[index].sale.saleMaxQuantity)
+                                                  );
+                                                }
+                                                else{
+                                                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                }
+
+                                              })
+
+                                                 /* CommonProductItemWidget(
                                                     isPesach: state.recommendedProductsList[index].isPesach,
                                                     lowStock: state
                                                         .recommendedProductsList[
@@ -519,7 +589,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                           productListIndex: 1,
                                                         );
                                                       }
-                                                  )
+                                                  )*/
 
                                           ),
                                         ),
