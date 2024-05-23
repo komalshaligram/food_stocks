@@ -120,12 +120,6 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  /*  Text(
-                title,
-                style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.saleRedColor, fontWeight: FontWeight.w600),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),*/
                   4.height,
                   description.isNotEmpty?Center(
                     child: Container(

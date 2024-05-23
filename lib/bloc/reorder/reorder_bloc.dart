@@ -86,9 +86,10 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 state.productStockList.toList(growable: true);
             List<ProductStockModel> stockList = [];
             stockList.addAll(response.previousProductData?.map(
-                    (recommendationProduct) => ProductStockModel(
-                        productId: recommendationProduct.id ?? '',
-                        stock: recommendationProduct.productStock.toString())) ??
+                    (reorder) => ProductStockModel(
+                      maxQty: reorder.sale.isSale ? int.parse(reorder.sale.saleMaxQuantity) : -1,
+                        productId: reorder.id ?? '',
+                        stock: reorder.productStock.toString())) ??
                 []);
             productStockList[1].addAll(stockList);
             debugPrint(
@@ -181,7 +182,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                debugPrint('responseproductid____${response.product?.first.id}');
               productStockList[0][0] =productStockList[0][0].copyWith(
                   quantity: _productQuantity,
-                  maxQty: _maxQuantity,
+                  maxQty: response.product.first.sale.isSale ?  int.parse(response.product.first.sale.saleMaxQuantity) : -1,
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
                   totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
@@ -226,7 +227,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             if ( (event.isBarcode )) {
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
-                maxQty: _maxQuantity,
+                  maxQty: response.product.first.sale.isSale ?  int.parse(response.product.first.sale.saleMaxQuantity) : -1,
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
@@ -284,7 +285,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               supplierSales: supplier.saleProduct.map((sale) => SupplierSaleModel(
                   saleId: sale.saleId ?? '',
                   saleName: sale.saleName ?? '',
-                  maxQty: _maxQuantity,
+                  maxQty: sale.saleMaxQuantity,
                   saleDescription:
                   parse(sale.salesDescription ?? '')
                       .body
@@ -368,7 +369,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
+                    response.message.toLocalization() ??
                         response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);

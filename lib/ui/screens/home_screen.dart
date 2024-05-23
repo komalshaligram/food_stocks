@@ -536,61 +536,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                 }
 
                                               })
-
-                                                 /* CommonProductItemWidget(
-                                                    isPesach: state.recommendedProductsList[index].isPesach,
-                                                    lowStock: state
-                                                        .recommendedProductsList[
-                                                    index]
-                                                        .lowStock.toString(),
-                                                      productStock: state
-                                                          .recommendedProductsList[
-                                                      index]
-                                                          .productStock.toString(),
-                                                      height: 160,
-                                                      width:  140,
-                                                      productImage: state
-                                                          .recommendedProductsList[
-                                                      index]
-                                                          .mainImage ??
-                                                          '',
-                                                      productName: state
-                                                          .recommendedProductsList[
-                                                      index]
-                                                          .productName ??
-                                                          '',
-                                                      totalSaleCount: state
-                                                          .recommendedProductsList[
-                                                      index]
-                                                          .totalSale ??
-                                                          0,
-                                                      price: state
-                                                          .recommendedProductsList[
-                                                      index]
-                                                          .productPrice
-                                                          ?.toDouble() ??
-                                                          0.0,
-                                                      onButtonTap: () {
-                                                        debugPrint('recommendedProductsList id: ${ state
-                                                            .recommendedProductsList[
-                                                        index]
-                                                            .id}');
-                                                        showProductDetails(
-                                                          context: context,
-                                                          productId: state
-                                                              .recommendedProductsList[
-                                                          index]
-                                                              .id ??
-                                                              '',
-                                                          productStock:(state
-                                                              .recommendedProductsList[
-                                                          index]
-                                                              .productStock.toString()),
-                                                          productListIndex: 1,
-                                                        );
-                                                      }
-                                                  )*/
-
                                           ),
                                         ),
                                       ],
@@ -1784,13 +1729,43 @@ class HomeScreenWidget extends StatelessWidget {
                                     color: AppColors.blackColor,
                                     fontWeight: FontWeight.w400),
                               ) : 0.width,
-                              numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
+                              numberOfUnits != 0 && priceOfBox != 0.0 ?
+                              salePrice!=0.0 ?   Text.rich(TextSpan(
+                                text: '${AppLocalizations
+                                    .of(context)
+                                    ?.price_par_box} ',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.blackColor),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: '${AppLocalizations
+                                        .of(context)
+                                        ?.currency}${(priceOfBox *
+                                        (numberOfUnits)).toStringAsFixed(
+                                        2)} ',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_12,
+                                        color: AppColors.blackColor).copyWith(
+                                        decoration: TextDecoration.lineThrough),
+                                  ),
+                                  TextSpan(
+                                    text: ' ${AppLocalizations
+                                        .of(context)
+                                        ?.currency}${(salePrice *
+                                        (numberOfUnits)).toStringAsFixed(
+                                        2)}',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_12,
+                                        color: AppColors.redColor),
+                                  ),
+                                ],
+                              ),) :Text(
                                 '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.blueColor,
-                                    fontWeight: FontWeight.w400),
-                              ) : 0.width,
+                                    fontWeight: FontWeight.w400),): 0.width
                             ],
                           ),
                         ),

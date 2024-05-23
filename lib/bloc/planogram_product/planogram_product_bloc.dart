@@ -58,6 +58,7 @@ class PlanogramProductBloc
         stockList = event.planogram.planogramproducts
                 ?.map((product) => ProductStockModel(
                     productId: product.id ?? '',
+                    maxQty: (product.sale?.isSale ?? false) ? int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : -1,
                     stock: product.productStock.toString()))
                 .toList() ??
             [];
@@ -71,7 +72,6 @@ class PlanogramProductBloc
             productStockList: productStockList,
         isGridView: preferences.getPlanogramProductGrid(),
           isGuestUser: preferences.getGuestUser(),
-
         ));
 
       }
@@ -113,12 +113,13 @@ class PlanogramProductBloc
 
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
-               debugPrint('responseproductid____${response.product?.first.id}');
+               debugPrint('productid____${response.product.first.id}');
               productStockList[0][0] =productStockList[0][0].copyWith(
                   quantity: _productQuantity,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
-                  totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
+                  maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
+                  productId: response.product.first.id ?? '' ,
+                  stock: (response.product.first.supplierSales.first.productStock.toString() ?? "0") ,
+                  totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
               );
             }
             else{
@@ -164,8 +165,9 @@ class PlanogramProductBloc
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                   quantity: _productQuantity,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
+                  maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
+                  productId: response.product.first.id ?? '' ,
+                  stock: (response.product.first.supplierSales.first.productStock.toString() ?? "0")
               );
 
               emit(state.copyWith(productStockList: productStockList));
@@ -175,21 +177,21 @@ class PlanogramProductBloc
 
             List<ProductSupplierModel> supplierList = [];
 
-            supplierList.addAll(response.product?.first.supplierSales
-                ?.map((supplier) => ProductSupplierModel(
+            supplierList.addAll(response.product.first.supplierSales.map((supplier) => ProductSupplierModel(
               supplierId: supplier.supplierId ?? '',
               companyName: supplier.supplierCompanyName ?? '',
               basePrice:
               double.parse(supplier.productPrice ?? '0.0'),
               quantity: _productQuantity,
+              maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
               stock: supplier.productStock.toString(),
               selectedIndex: (supplier.supplierId ?? '') ==
                   state
                       .productStockList[productListIndex]
                   [productStockUpdateIndex]
                       .productSupplierIds
-                  ? supplier.saleProduct?.indexOf(
-                  supplier.saleProduct?.firstWhere(
+                  ? supplier.saleProduct.indexOf(
+                  supplier.saleProduct.firstWhere(
                         (sale) =>
                     sale.saleId ==
                         state
@@ -202,8 +204,8 @@ class PlanogramProductBloc
                       SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                   -1
                   ? -2
-                  : supplier.saleProduct?.indexOf(
-                  supplier.saleProduct?.firstWhere(
+                  : supplier.saleProduct.indexOf(
+                  supplier.saleProduct.firstWhere(
                         (sale) =>
                     sale.saleId ==
                         state
@@ -216,12 +218,11 @@ class PlanogramProductBloc
                       SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                   -1
                   : -1,
-              supplierSales: supplier.saleProduct
-                  ?.map((sale) => SupplierSaleModel(
+              supplierSales: supplier.saleProduct.map((sale) => SupplierSaleModel(
                   saleId: sale.saleId ?? '',
                   saleName: sale.saleName ?? '',
-                  saleDescription:
-                  parse(sale.salesDescription ?? '')
+                  maxQty: sale.saleMaxQuantity??'',
+                  saleDescription: parse(sale.salesDescription ?? '')
                       .body
                       ?.text ??
                       '',
@@ -236,7 +237,7 @@ class PlanogramProductBloc
                 []);
             supplierList.removeWhere((supplier) => supplier.stock == 0);
             debugPrint(
-                'response list = ${response.product?.first.supplierSales?.length}');
+                'response list = ${response.product.first.supplierSales.length}');
             debugPrint('supplier list = ${supplierList}');
             // debugPrint(
             //     'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
@@ -317,7 +318,7 @@ class PlanogramProductBloc
         }
       }
 
-      else if (event is _IncreaseQuantityOfProduct) {
+      /*else if (event is _IncreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -352,6 +353,63 @@ class PlanogramProductBloc
                 title:
                 "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
                 // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
+                type: SnackBarType.FAILURE);
+          }
+        }
+      }*/
+
+      else if (event is _IncreaseQuantityOfProduct) {
+        List<List<ProductStockModel>> productStockList =
+        state.productStockList.toList(growable: false);
+        print('madQty_____${productStockList[state.productListIndex]
+        [state.productStockUpdateIndex]
+            .maxQty}');
+        if (state.productStockUpdateIndex != -1) {
+          if (productStockList[state.productListIndex]
+          [state.productStockUpdateIndex]
+              .quantity <
+              double.parse(productStockList[state.productListIndex]
+              [state.productStockUpdateIndex]
+                  .stock.toString())) {
+            if (productStockList[state.productListIndex]
+            [state.productStockUpdateIndex]
+                .productSupplierIds
+                .isEmpty) {
+              return;
+            }
+            if(productStockList[state.productListIndex]
+            [state.productStockUpdateIndex]
+                .maxQty!=-1){
+              if (productStockList[state.productListIndex]
+              [state.productStockUpdateIndex]
+                  .quantity >=
+                  productStockList[state.productListIndex]
+                  [state.productStockUpdateIndex]
+                      .maxQty) {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                    type: SnackBarType.FAILURE);
+                return;
+              }
+            }
+            productStockList[state.productListIndex]
+            [state.productStockUpdateIndex] =
+                productStockList[state.productListIndex]
+                [state.productStockUpdateIndex].copyWith(
+                    quantity: productStockList[state.productListIndex]
+                    [state.productStockUpdateIndex]
+                        .quantity +
+                        1);
+            debugPrint(
+                'product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+            emit(state.copyWith(productStockList: []));
+            emit(state.copyWith(productStockList: productStockList));
+          } else {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title:
+                "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
                 type: SnackBarType.FAILURE);
           }
         }
@@ -799,6 +857,11 @@ class PlanogramProductBloc
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                   image: sale.mainImage ?? '',
                   isPesach: sale.isPesach??false,
+                  salePrice: double.parse(sale.discountPercentage.toString()),
+                  salesDesc:  parse(sale.salesDescription ?? '')
+                      .body
+                      ?.text ??
+                      '',
                 ))
                 .toList() ??
                 []);
@@ -815,7 +878,12 @@ class PlanogramProductBloc
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
                   lowStock: supplier.lowStock.toString(),
-                  isPesach: supplier.isPesach??false
+                  isPesach: supplier.isPesach??false,
+                  salePrice: double.parse(supplier.sale.salePrice.toString()),
+                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                      .body
+                      ?.text ??
+                      '',
                 ))
                 .toList() ??
                 []);
