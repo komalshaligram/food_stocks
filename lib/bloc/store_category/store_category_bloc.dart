@@ -1227,7 +1227,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 data: getSubCategoriesProductReqModel
             );
 
-
           debugPrint('getAllProduct_____$res');
           GetPlanogramProductModel response = GetPlanogramProductModel.fromJson(res);
           debugPrint('getSubCategoriesProduct response_____${response}');

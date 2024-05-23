@@ -1476,7 +1476,7 @@ class HomeScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.relatedProductItemHeight,
+          height: AppConstants.salesProductItemHeight,
           padding: EdgeInsets.only(left: 10,right: 10,bottom: 5),
           child: ListView.builder(
             controller: ScrollController(),
@@ -1484,17 +1484,38 @@ class HomeScreenWidget extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemBuilder: (context2,i){
-              return CommonProductItemWidget(
-                isPesach: relatedProductList.elementAt(i).isPesach,
-                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
-                productStock:relatedProductList.elementAt(i).productStock.toString(),
-                width: AppConstants.relatedProductItemWidth,
-                productImage:relatedProductList[i].mainImage,
-                productName: relatedProductList.elementAt(i).productName,
-                totalSaleCount: relatedProductList.elementAt(i).totalSale,
-                price:relatedProductList.elementAt(i).productPrice,
-                onButtonTap: (){
-                  Navigator.pop(prevContext);
+              return CommonProductSaleItemWidget(
+                isSale:  relatedProductList.elementAt(i).sale.isSale,
+                isGuestUser: false,
+                height: AppConstants.salesProductItemHeight,
+                width: 140,
+                productName: relatedProductList.elementAt(i).productName??'',
+                saleImage: relatedProductList.elementAt(i)
+                    .mainImage ??
+                    '',
+                title:  relatedProductList.elementAt(i)
+                    .name ??
+                    '',
+                description: parse( relatedProductList.elementAt(i).sale
+                    .saleDescription ??
+                    '')
+                    .body
+                    ?.text ??
+                    '',
+                discountedPrice:
+                double.parse( relatedProductList.elementAt(i).sale.salePrice),
+
+                originalPrice: relatedProductList.elementAt(i)
+                    .productPrice ??
+                    0 ,
+                productStock: relatedProductList.elementAt(i)
+                    .productStock.toString()??'0',
+                lowStock: relatedProductList.elementAt(i)
+                    .lowStock??'',
+                isPesach: relatedProductList.elementAt(i)
+                    .isPesach,
+
+                onButtonTap: () {
                   showProductDetails(
                       context: context,
                       productId: relatedProductList[i].id,
@@ -1502,8 +1523,9 @@ class HomeScreenWidget extends StatelessWidget {
                       productListIndex: 2,
                       productStock: (relatedProductList[i].productStock.toString())
                   );
-                },
-              );},itemCount: relatedProductList.length,),
+                },);
+
+              },itemCount: relatedProductList.length,),
         )
       ],
     );

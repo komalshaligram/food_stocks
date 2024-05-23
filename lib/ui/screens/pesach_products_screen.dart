@@ -30,6 +30,7 @@ import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_list_widget.dart';
+import '../widget/common_product_sale_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/confetti.dart';
@@ -1041,22 +1042,43 @@ class PesachProductsScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.relatedProductItemHeight,
+          height: AppConstants.salesProductItemHeight,
           padding: EdgeInsets.only(left: 10, right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemBuilder: (context2, i) {
-              return CommonProductItemWidget(
-                isPesach: relatedProductList.elementAt(i).isPesach,
-                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
-                productStock:
-                relatedProductList.elementAt(i).productStock.toString(),
-                width: AppConstants.relatedProductItemWidth,
-                productImage: relatedProductList[i].mainImage,
-                productName: relatedProductList.elementAt(i).productName,
-                totalSaleCount: relatedProductList.elementAt(i).totalSale,
-                price: relatedProductList.elementAt(i).productPrice,
+              return CommonProductSaleItemWidget(
+                isSale:  relatedProductList.elementAt(i).sale.isSale,
+                isGuestUser: false,
+                height: AppConstants.salesProductItemHeight,
+                width: 140,
+                productName: relatedProductList.elementAt(i).productName??'',
+                saleImage: relatedProductList.elementAt(i)
+                    .mainImage ??
+                    '',
+                title:  relatedProductList.elementAt(i)
+                    .name ??
+                    '',
+                description: parse( relatedProductList.elementAt(i).sale
+                    .saleDescription ??
+                    '')
+                    .body
+                    ?.text ??
+                    '',
+                discountedPrice:
+                double.parse( relatedProductList.elementAt(i).sale.salePrice),
+
+                originalPrice: relatedProductList.elementAt(i)
+                    .productPrice ??
+                    0 ,
+                productStock: relatedProductList.elementAt(i)
+                    .productStock.toString()??'0',
+                lowStock: relatedProductList.elementAt(i)
+                    .lowStock??'',
+                isPesach: relatedProductList.elementAt(i)
+                    .isPesach,
+
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
@@ -1066,8 +1088,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                       productListIndex: 2,
                       productStock:
                       (relatedProductList[i].productStock.toString()));
-                },
-              );
+                },);
+
             },
             itemCount: relatedProductList.length,
           ),

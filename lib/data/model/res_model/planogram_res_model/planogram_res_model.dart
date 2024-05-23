@@ -31,16 +31,56 @@ class PlanogramResModel with _$PlanogramResModel {
 @freezed
 class PlanogramDatum with _$PlanogramDatum {
   const factory PlanogramDatum({
-    @JsonKey(name: "planogramproducts")
-    List<Planogramproduct>? planogramproducts,
-    @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "planogramName") String? planogramName,
-    @JsonKey(name: "fromDate") DateTime? fromDate,
-    @JsonKey(name: "untilDate") DateTime? untilDate,
+    @JsonKey(name: "_id")
+    required String id,
+    @JsonKey(name: "productStock")
+    required int productStock,
+    @JsonKey(name: "totalSale")
+    required int totalSale,
+    @JsonKey(name: "productPrice")
+    required double productPrice,
+    @JsonKey(name: "boxes")
+    required int boxes,
+    @JsonKey(name: "lowStock")
+    required String lowStock,
+    @JsonKey(name: "isPesach")
+    required bool isPesach,
+    @JsonKey(name: "nmMashlim")
+    required String nmMashlim,
+    @JsonKey(name: "mainImage")
+    required String mainImage,
+    @JsonKey(name: "productName")
+    required String productName,
+    @JsonKey(name: "order")
+    required int order,
+    @JsonKey(name: "numberOfUnit")
+    required int numberOfUnit,
+    @JsonKey(name: "sale")
+    required Sale sale,
   }) = _PlanogramDatum;
 
   factory PlanogramDatum.fromJson(Map<String, dynamic> json) =>
       _$PlanogramDatumFromJson(json);
+}
+
+@freezed
+class Sale with _$Sale {
+  const factory Sale({
+    @JsonKey(name: "isSale")
+    required bool isSale,
+    @JsonKey(name: "salePrice")
+    required String salePrice,
+    @JsonKey(name: "saleFromDate")
+    required String saleFromDate,
+    @JsonKey(name: "saleUntilDate")
+    required String saleUntilDate,
+    @JsonKey(name: "saleMaxQuantity")
+    required String saleMaxQuantity,
+    @JsonKey(name: "saleDescription")
+    required String saleDescription,
+  }) = _Sale;
+
+  factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
 }
 
 @freezed
