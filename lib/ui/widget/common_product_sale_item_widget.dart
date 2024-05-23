@@ -29,6 +29,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final String lowStock;
   final bool? isPesach;
   final String productStock;
+  final bool? isSale;
 
   const CommonProductSaleItemWidget({
     super.key,
@@ -47,6 +48,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     this.originalPrice = 0.0,
     this.lowStock = '',
     this.isPesach = false,
+    this.isSale = true,
     this.productStock = '0'
   });
 
@@ -125,7 +127,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),*/
                   4.height,
-                  Center(
+                  description.isNotEmpty?Center(
                     child: Container(
                       width: width!-10,
                       padding: EdgeInsets.all(3),
@@ -138,7 +140,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                  ),
+                  ):0.height,
                   isGuestUser ? 0.height
                       : (productStock) == '0' || productStock =='0.0'?Container(
                     alignment: Alignment.center,
@@ -165,12 +167,12 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                   Center(child: isPesachLabelShow(isPesach!, context)),
                   isPesach! ? 3.height :0.height,
                   !isGuestUser
-                      ? Center(
+                      ? isSale!?Center(
                     child: Text(
                       "${AppLocalizations.of(context)!.currency}${originalPrice?.toStringAsFixed(2)}",
                       style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600,).copyWith(decoration: TextDecoration.lineThrough),
                     ),
-                  )
+                  ):0.width
                       : 0.width,
                 ],
               ),
@@ -178,7 +180,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
             !isGuestUser
                 ? Center(
                     child: CommonProductButtonWidget(
-                      title: "${AppLocalizations.of(context)!.currency}${discountedPrice.toStringAsFixed(2)}",
+                      title: isSale!?"${AppLocalizations.of(context)!.currency}${discountedPrice.toStringAsFixed(2)}":"${AppLocalizations.of(context)!.currency}${originalPrice?.toStringAsFixed(2)}",
                       onPressed: onButtonTap,
                       // height: 35,
                       width: 110,

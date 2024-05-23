@@ -14,6 +14,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
+import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_products_screen_shimmer_widget.dart';
@@ -167,11 +168,86 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   padding: EdgeInsets.symmetric(
                                                       horizontal:
                                                           AppConstants.padding_5),
-                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                                      crossAxisCount: 3,
-                                                      childAspectRatio: getChildAspectRatio(context)),
+                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.48),
                                                   itemBuilder: (context, index) {
-                                                    return CommonProductItemWidget(
+
+                                                    return CommonProductSaleItemWidget(
+                                                        isGuestUser: state.isGuestUser,
+                                                        height: AppConstants.salesProductItemHeight,
+                                                        width: 140,
+                                                        productName: state.productList[index].productName??'',
+                                                        saleImage: state
+                                                            .productList[
+                                                        index]
+                                                            .mainImage ??
+                                                            '',
+                                                        title: state
+                                                            .productList[
+                                                        index]
+                                                            .name ??
+                                                            '',
+                                                        description: parse(state
+                                                            .productList[
+                                                        index].sale!
+                                                            .saleDescription ??
+                                                            '')
+                                                            .body
+                                                            ?.text ??
+                                                            '',
+                                                        discountedPrice:
+                                                        double.parse(state
+                                                            .productList[
+                                                        index].sale!.salePrice)??0.0,
+
+
+                                                        originalPrice:double.parse(state
+                                                            .productList[
+                                                        index]
+                                                            .productPrice.toString()) ??
+                                                            0.0 ,
+                                                        productStock: state.productList[
+                                                        index]
+                                                            .productStock.toString()??'0',
+                                                        lowStock: state
+                                                            .productList[
+                                                        index]
+                                                            .lowStock??'',
+                                                        isPesach: state
+                                                            .productList[
+                                                        index]
+                                                            .isPesach,
+                                                        onButtonTap: () {
+                                                          if (!state
+                                                              .isGuestUser) {
+                                                            showProductDetails(
+                                                              productListIndex: 1,
+                                                              context:
+                                                              context,
+                                                              productId: state
+                                                                  .searchType ==
+                                                                  SearchTypes
+                                                                      .product
+                                                                      .toString()
+                                                                  ? state.productList[index].id ??
+                                                                  ''
+                                                                  : state.productList[index]
+                                                                  .productId ??
+                                                                  '',
+                                                              productStock: state
+                                                                  .productList[
+                                                              index]
+                                                                  .productStock.toString(),
+                                                            );
+                                                          } else {
+                                                            Navigator.pushNamed(
+                                                                context,
+                                                                RouteDefine
+                                                                    .connectScreen
+                                                                    .name);
+                                                          }
+                                                        });
+                                               /*     return CommonProductItemWidget(
+                                                      discountedPrice: state.productList[index].brandName,
                                                       isPesach: state.productList[index].isPesach,
                                                         lowStock: state
                                                             .productList[index]
@@ -233,7 +309,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                                     .connectScreen
                                                                     .name);
                                                           }
-                                                        });
+                                                        });*/
                                                   })
                                               : ListView.builder(
                                                   itemCount:
@@ -891,7 +967,15 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 .body
                                                 ?.text ??
                                             '',
-                                        productPrice: state
+                                        productPrice: state.productDetails.first.sale.isSale?
+                                        double.parse(state.productDetails.first.sale.salePrice) *
+                                            state
+                                                .productStockList[state.productListIndex][state
+                                                .productStockUpdateIndex]
+                                                .quantity *
+                                            (state.productDetails.first
+                                                .numberOfUnit)
+                                            : state
                                                 .productStockList[state.productListIndex][state
                                                     .productStockUpdateIndex]
                                                 .totalPrice *

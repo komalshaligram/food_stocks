@@ -506,7 +506,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                         index]
                                                             .id}');
                                                         showProductDetails(
-
                                                           context: context,
                                                           productId: state
                                                               .recommendedProductsList[
@@ -518,9 +517,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                           index]
                                                               .productStock.toString()),
                                                           productListIndex: 1,
-
                                                         );
-
                                                       }
                                                   )
 
@@ -533,7 +530,6 @@ class HomeScreenWidget extends StatelessWidget {
                                         ? CrossFadeState.showFirst
                                         : CrossFadeState.showSecond,
                                     duration: Duration(milliseconds: 300)),
-
                                 AnimatedCrossFade(
                                     firstChild:
                                     getScreenWidth(context).width,
@@ -605,7 +601,9 @@ class HomeScreenWidget extends StatelessWidget {
                                                       index]
                                                           .productPrice ??
                                                           0 ,
-                                                      productStock: '0',
+                                                      productStock: state.productSalesList[
+                                                      index]
+                                                          .productStock.toString()??'0',
                                                       lowStock: state
                                                           .productSalesList[
                                                       index]
@@ -627,6 +625,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             index]
                                                                 .id ??
                                                                 '',
+                                                            productStock: state.productSalesList[index].productStock.toString()
                                                           );
                                                         }
                                                         else{
@@ -955,6 +954,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             isFromSearch: true,
                                             isBarcode:  true,
                                             productListIndex: 0,
+
                                             productStock: (state.searchList[index].productStock.toString())
                                         );
                                       } else if (state
@@ -1154,12 +1154,14 @@ class HomeScreenWidget extends StatelessWidget {
     bool isBottle = false,
     int productListIndex = 0,
     bool isFromSale = false,
+    int maxQty = 0
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
       context: context,
       productId: productId,
       isBarcode: isBarcode,
       productListIndex:  productListIndex,
+
     ));
     showMaterialModalBottomSheet(
       context: context,
@@ -1309,7 +1311,14 @@ class HomeScreenWidget extends StatelessWidget {
                                         .body
                                         ?.text ??
                                         '',
-                                    productPrice: state
+                                    productPrice: state.productDetails.first.sale.isSale?
+                                    double.parse(state.productDetails.first.sale.salePrice) *
+                                        state.productStockList
+                                        [state.productListIndex][
+                                        state.productStockUpdateIndex]
+                                            .quantity*
+                                        (state.productDetails.first
+                                            .numberOfUnit):state
                                         .productStockList[state.productListIndex][
                                     state.productStockUpdateIndex]
                                         .totalPrice *

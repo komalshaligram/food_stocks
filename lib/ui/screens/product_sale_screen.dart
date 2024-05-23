@@ -126,6 +126,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                           isGuestUser: state.isGuestUser,
                                           index: index,
                                           context: context,
+
                                           saleImage: state.productSalesList[index].mainImage,
                                           title: state.productSalesList[index].name,
                                           productName: state.productSalesList[index].productName,
@@ -152,15 +153,16 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                       physics: const NeverScrollableScrollPhysics(),
                                       padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                       itemBuilder: (context, index) => commonSaleListView(
+
                                           context: context,
                                           discountedPrice: double.parse(state.productSalesList[index].sale.salePrice),
-                                          isFromSale: true,
+                                          isFromSale: state.productSalesList[index].sale.isSale,
                                           salesDesc: state.productSalesList[index].sale.saleDescription,
                                           isGuestUser: state.isGuestUser,
                                           isPesach: state.productSalesList[index].isPesach,
                                           numberOfUnits: state.productSalesList[index].numberOfUnit.toString(),
                                           lowStock: state.productSalesList[index].lowStock.toString(),
-                                          productStock: '1',
+                                          productStock: state.productStockList[index].stock,
                                           productImage: state.productSalesList[index].mainImage ,
                                           productName: state.productSalesList[index].productName ,
                                           price: double.parse(state.productSalesList[index].productPrice.toString()),
@@ -539,7 +541,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         .body
                                         ?.text ??
                                         '',
-                                    productPrice: state.productStockList[state.productStockUpdateIndex].totalPrice * state.productStockList[state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 0),
+                                    productPrice:state.productDetails.first.sale.isSale?
+                                    double.parse(state.productDetails.first.sale.salePrice) * state.productStockList[state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit)
+                                        :
+                                    state.productStockList[state.productStockUpdateIndex].totalPrice * state.productStockList[state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 0),
                                     productWeight: state.productDetails.first.itemsWeight.toDouble() ?? 0.0,
                                     productStock: state.productStockList[state.productStockUpdateIndex].stock.toString(),
                                     isRTL: context.rtl,

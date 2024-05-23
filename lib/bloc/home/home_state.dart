@@ -48,6 +48,7 @@ class HomeState with _$HomeState {
     required bool isSubUserAddToBasket,
     required bool isSubUserSeeWallet,
     required bool isAccountPermissionShimmering,
+
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(

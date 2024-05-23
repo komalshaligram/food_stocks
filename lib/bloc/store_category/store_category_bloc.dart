@@ -50,6 +50,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
+  int _maxQty = -1;
   String isSubCategoryString = '';
   String categoryId = '';
   String parentCategoryId = '';
@@ -383,6 +384,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
+        _maxQty = -1;
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -416,13 +418,14 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
-               debugPrint('responseproductid____${response.product?.first.id}');
+               debugPrint('responseproductid____${response.product.first.id}');
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                   quantity: _productQuantity,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
-                  totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
+                  maxQty: int.parse(response.product.first.sale.saleMaxQuantity),
+                  productId: response.product.first.id ?? '' ,
+                  stock: (response.product.first.supplierSales.first.productStock.toString() ?? "0") ,
+                  totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
               );
             }
             else{
@@ -453,6 +456,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     _isProductInCart = true;
                     _cartProductId = cartProduct.cartProductId ?? '';
                     _productQuantity = cartProduct.totalQuantity ?? 0;
+                    _maxQty = cartProduct.sale.saleMaxQuantity;
                     return;
                   }
                 });
@@ -467,6 +471,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                   quantity: _productQuantity,
+                  maxQty: _maxQty,
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
               );
@@ -483,6 +488,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               basePrice:
               double.parse(supplier.productPrice ?? '0.0'),
               quantity: _productQuantity,
+              maxQty: _maxQty,
               stock: supplier.productStock.toString(),
               selectedIndex: (supplier.supplierId ?? '') ==
                   state
@@ -521,6 +527,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   ?.map((sale) => SupplierSaleModel(
                   saleId: sale.saleId ?? '',
                   saleName: sale.saleName ?? '',
+                  maxQty: sale.saleMaxQuantity??'',
                   saleDescription:
                   parse(sale.salesDescription ?? '')
                       .body
@@ -752,6 +759,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 productSupplierIds:
                 supplierList[event.supplierIndex].supplierId,
                 stock: supplierList[event.supplierIndex].stock,
+                maxQty: supplierList[event.supplierIndex].maxQty,
                 quantity:supplierList[event.supplierIndex].quantity != 0 ?supplierList[event.supplierIndex].quantity : 1 ,
                 totalPrice: event.supplierSaleIndex == -2
                     ? supplierList[event.supplierIndex].basePrice
@@ -1063,15 +1071,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             searchList.addAll(response.data?.supplierData
                 ?.map((supplier) => SearchModel(
                 searchId: supplier.id ?? '',
-                name: supplier.brandName?? '',
+                name: supplier.supplierDetail?.companyName?? '',
                 searchType: SearchTypes.supplier,
                 isPesach: supplier.isPesach??false,
-                salePrice: double.parse(supplier.sale.salePrice.toString()),
-                salesDesc:  parse(supplier.sale.saleDescription ?? '')
-                    .body
-                    ?.text ??
-                    '',
-                image: supplier.mainImage ?? ''))
+                // salePrice: double.parse(supplier.sale.salePrice.toString()),
+                // salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                //     .body
+                //     ?.text ??
+                //     '',
+                image: supplier.logo ?? ''))
                 .toList() ??
                 []);
             //sale search result

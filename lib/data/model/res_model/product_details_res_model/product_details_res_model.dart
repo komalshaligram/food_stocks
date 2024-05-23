@@ -14,7 +14,9 @@ ProductDetailsResModel productDetailsResModelFromJson(String str) => ProductDeta
 String productDetailsResModelToJson(ProductDetailsResModel data) => json.encode(data.toJson());
 
 @freezed
-class ProductDetailsResModel with _$ProductDetailsResModel {
+class ProductDetailsResModel with _$ProductDetailsResModel
+{
+  @JsonSerializable(includeIfNull: false)
   const factory ProductDetailsResModel({
     @JsonKey(name: "status")
     required int status,
@@ -29,6 +31,7 @@ class ProductDetailsResModel with _$ProductDetailsResModel {
 
 @freezed
 class Product with _$Product {
+  @JsonSerializable(includeIfNull: true)
   const factory Product({
     @JsonKey(name: "_id")
     required String id,
@@ -56,11 +59,11 @@ class Product with _$Product {
     required bool kosharMilk,
     @JsonKey(name: "dairyMeatyAndFur")
     required String dairyMeatyAndFur,
-    @JsonKey(name: "categoryId")
+    @JsonKey(name: "categoryId",includeIfNull: false)
     required String categoryId,
-    @JsonKey(name: "subCategoryId")
+    @JsonKey(name: "subCategoryId",includeIfNull: false)
     required String subCategoryId,
-    @JsonKey(name: "manufacturingCountryId")
+    @JsonKey(name: "manufacturingCountryId",includeIfNull: false)
     required String manufacturingCountryId,
     @JsonKey(name: "caseTypeId")
     required String caseTypeId,
@@ -78,7 +81,7 @@ class Product with _$Product {
     required bool isBottle,
     @JsonKey(name: "nmMashlim")
     required String nmMashlim,
-    @JsonKey(name: "isPesach")
+    @JsonKey(name: "isPesach",includeIfNull: false)
     required bool isPesach,
     @JsonKey(name: "statusId")
     required String statusId,
@@ -95,6 +98,7 @@ class Product with _$Product {
 
 @freezed
 class SaleProduct with _$SaleProduct {
+  @JsonSerializable(includeIfNull: false)
   const factory SaleProduct({
     @JsonKey(name: "isSale")
     required bool isSale,
@@ -115,6 +119,7 @@ class SaleProduct with _$SaleProduct {
 
 @freezed
 class Scales with _$Scales {
+  @JsonSerializable(includeIfNull: false)
   const factory Scales({
     @JsonKey(name: "_id")
     required String id,
@@ -137,6 +142,7 @@ class Scales with _$Scales {
 
 @freezed
 class SupplierSale with _$SupplierSale {
+  @JsonSerializable(includeIfNull: false)
   const factory SupplierSale({
     @JsonKey(name: "_id")
     required Id id,
@@ -152,8 +158,6 @@ class SupplierSale with _$SupplierSale {
     required String productStock,
     @JsonKey(name: "saleProduct")
     required List<dynamic> saleProduct,
-    @JsonKey(name: "boxes")
-    required int boxes,
     @JsonKey(name: "lowStock")
     required String lowStock,
   }) = _SupplierSale;

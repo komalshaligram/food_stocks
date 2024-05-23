@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/routes/app_routes.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -1095,15 +1096,15 @@ class CompanyProductsBloc
                 ?.map((supplier) =>
                 SearchModel(
                   searchId: supplier.id ?? '',
-                  name: supplier.brandName ?? '',
+                  name: supplier.supplierDetail?.companyName ?? '',
                   searchType: SearchTypes.supplier,
-                  image: supplier.mainImage ?? '',
+                  image: supplier.logo ?? '',
                   isPesach: supplier.isPesach??false,
-                  salePrice: double.parse(supplier.sale.salePrice.toString()),
+                 /* salePrice: double.parse(supplier.sale.salePrice.toString()),
                   salesDesc:  parse(supplier.sale.saleDescription ?? '')
                       .body
                       ?.text ??
-                      '',
+                      '',*/
                 ))
                 .toList() ??
                 []);

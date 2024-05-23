@@ -847,15 +847,15 @@ class RecommendationProductsBloc
                 ?.map((supplier) =>
                 SearchModel(
                   searchId: supplier.id ?? '',
-                  name: supplier.brandName?? '',
+                  name: supplier.supplierDetail?.companyName?? '',
                   searchType: SearchTypes.supplier,
-                  image: supplier.mainImage ?? '',
+                  image: supplier.logo ?? '',
                   isPesach: supplier.isPesach??false,
-                  salePrice: double.parse(supplier.sale.salePrice.toString()),
+                 /* salePrice: double.parse(supplier.sale.salePrice.toString()),
                   salesDesc:  parse(supplier.sale.saleDescription ?? '')
                       .body
                       ?.text ??
-                      '',
+                      '',*/
                 ))
                 .toList() ??
                 []);

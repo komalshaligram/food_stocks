@@ -41,7 +41,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-
+  int _maxQuantity = -1;
   ProductSaleBloc() : super(ProductSaleState.initial()) {
     on<ProductSaleEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -131,6 +131,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
+        _maxQuantity = -1;
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
           final res = await DioClient(event.context).post(
@@ -162,6 +163,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                     _isProductInCart = true;
                     _cartProductId = cartProduct.cartProductId ?? '';
                     _productQuantity = cartProduct.totalQuantity ?? 0;
+                    _maxQuantity = cartProduct.sale.saleMaxQuantity;
                     return;
                   }
                 });
@@ -187,6 +189,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                           basePrice:
                               double.parse(supplier.productPrice ?? '0.0'),
                           quantity: _productQuantity,
+              maxQty:_maxQuantity,
               stock: supplier.productStock.toString(),
                           selectedIndex: (supplier.supplierId ?? '') ==
                                   state
@@ -221,6 +224,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                                   .map((sale) => SupplierSaleModel(
                                       saleId: sale.saleId ?? '',
                                       saleName: sale.saleName ?? '',
+                                      maxQty: _maxQuantity,
                                       saleDescription:
                                           parse(sale.salesDescription ?? '')
                                                   .body
@@ -313,6 +317,17 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
 
               return;
             }
+
+              if(productStockList[state.productStockUpdateIndex].maxQty!=-1){
+                if (productStockList[state.productStockUpdateIndex].quantity >=
+                    productStockList[state.productStockUpdateIndex].maxQty) {
+                  CustomSnackBar.showSnackBar(
+                      context: event.context,
+                      title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                      type: SnackBarType.FAILURE);
+                  return;
+                }
+              }
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]
@@ -482,6 +497,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                   productStockList[state.productStockUpdateIndex].copyWith(
                 note: '',
                 isNoteOpen: false,
+                maxQty: _maxQuantity,
                 quantity: 0,
                 productSupplierIds: '',
                 totalPrice: 0.0,

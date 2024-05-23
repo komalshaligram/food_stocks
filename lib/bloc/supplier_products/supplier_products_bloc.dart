@@ -49,7 +49,7 @@ class SupplierProductsBloc
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-
+  int _maxQty = -1;
   SupplierProductsBloc() : super(SupplierProductsState.initial()) {
     on<SupplierProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -240,6 +240,7 @@ class SupplierProductsBloc
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
+        _maxQty = -1;
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -269,6 +270,7 @@ class SupplierProductsBloc
               debugPrint('responseproductid____${response.product?.first.id}');
               productStockList[0][0] =productStockList[0][0].copyWith(
                   quantity: _productQuantity,
+                  maxQty : int.parse(response.product.first.sale.saleMaxQuantity),
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
                   totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
@@ -302,6 +304,7 @@ class SupplierProductsBloc
                     _isProductInCart = true;
                     _cartProductId = cartProduct.cartProductId ?? '';
                     _productQuantity = cartProduct.totalQuantity ?? 0;
+                    _maxQty = cartProduct.sale.saleMaxQuantity;
                     return;
                   }
                 });
@@ -317,6 +320,7 @@ class SupplierProductsBloc
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                   quantity: _productQuantity,
+                  maxQty:_maxQty,
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
               );
@@ -335,14 +339,15 @@ class SupplierProductsBloc
               basePrice:
               double.parse(supplier.productPrice ?? '0.0'),
               quantity: _productQuantity,
+              maxQty: _maxQty,
               stock: supplier.productStock.toString(),
               selectedIndex: (supplier.supplierId ?? '') ==
                   state
                       .productStockList[productListIndex]
                   [productStockUpdateIndex]
                       .productSupplierIds
-                  ? supplier.saleProduct?.indexOf(
-                  supplier.saleProduct?.firstWhere(
+                  ? supplier.saleProduct.indexOf(
+                  supplier.saleProduct.firstWhere(
                         (sale) =>
                     sale.saleId ==
                         state
@@ -355,8 +360,8 @@ class SupplierProductsBloc
                       SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                   -1
                   ? -2
-                  : supplier.saleProduct?.indexOf(
-                  supplier.saleProduct?.firstWhere(
+                  : supplier.saleProduct.indexOf(
+                  supplier.saleProduct.firstWhere(
                         (sale) =>
                     sale.saleId ==
                         state
@@ -370,7 +375,7 @@ class SupplierProductsBloc
                   -1
                   : -1,
               supplierSales: supplier.saleProduct
-                  ?.map((sale) => SupplierSaleModel(
+                  .map((sale) => SupplierSaleModel(
                   saleId: sale.saleId ?? '',
                   saleName: sale.saleName ?? '',
                   saleDescription:
@@ -391,8 +396,7 @@ class SupplierProductsBloc
             debugPrint(
                 'response list = ${response.product?.first.supplierSales?.length}');
             debugPrint('supplier list = ${supplierList}');
-            // debugPrint(
-            //     'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
+
             String note = productStockList.isEmpty
                 ? ''
                 : productStockList.indexOf(state.productStockList.last) ==
@@ -484,8 +488,23 @@ class SupplierProductsBloc
             [state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
-
               return;
+            }
+            if(productStockList[state.productListIndex]
+            [state.productStockUpdateIndex]
+                .maxQty!=-1){
+              if (productStockList[state.productListIndex]
+              [state.productStockUpdateIndex]
+                  .quantity >=
+                  productStockList[state.productListIndex]
+                  [state.productStockUpdateIndex]
+                      .maxQty) {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                    type: SnackBarType.FAILURE);
+                return;
+              }
             }
             productStockList[state.productListIndex]
             [state.productStockUpdateIndex] =
@@ -612,6 +631,7 @@ class SupplierProductsBloc
                       .supplierSales[event.supplierSaleIndex]
                       .salePrice,
                   stock: supplierList[event.supplierIndex].stock,
+                  maxQty:supplierList[event.supplierIndex].maxQty,
                   quantity:  supplierList[event.supplierIndex].quantity != 0 ? supplierList[event.supplierIndex].quantity : 1,
                   productSaleId: event.supplierSaleIndex == -2
                       ? ''
@@ -685,6 +705,7 @@ class SupplierProductsBloc
                     isNoteOpen: false,
                     quantity: /*state.productStockList[state.productStockUpdateIndex]
                     .quantity +*/ _productQuantity,
+                    maxQty: _maxQty,
                     productSupplierIds: '',
                     totalPrice: 0.0,
                     productSaleId: '',
@@ -927,15 +948,15 @@ class SupplierProductsBloc
                 ?.map((supplier) =>
                 SearchModel(
                   searchId: supplier.id ?? '',
-                  name: supplier.brandName ?? '',
+                  name: supplier.supplierDetail?.companyName ?? '',
                   searchType: SearchTypes.supplier,
-                  image: supplier.mainImage,
+                  image: supplier.logo??'',
                   isPesach: supplier.isPesach??false,
-                  salePrice: double.parse(supplier.sale.salePrice.toString()),
+                 /* salePrice: double.parse(supplier.sale.salePrice.toString()),
                   salesDesc:  parse(supplier.sale.saleDescription ?? '')
                       .body
                       ?.text ??
-                      '',
+                      '',*/
                 ))
                 .toList() ??
                 []);

@@ -57,6 +57,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
+  int _maxQuantity = -1;
 
   StoreBloc() : super(StoreState.initial()) {
     on<StoreEvent>((event, emit) async {
@@ -300,6 +301,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
+        _maxQuantity =-1;
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
           final res = await DioClient(event.context).post(
@@ -326,6 +328,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             productStockList.indexOf(productStockList.last)]
                 .copyWith(
               quantity: _productQuantity,
+              maxQty: int.parse(response.product.first.sale.saleMaxQuantity),
               productId: response.product.first.id ?? '',
               stock: (response.product.first.supplierSales.first.productStock.toString()),
               productSaleId: '',
@@ -359,6 +362,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     _isProductInCart = true;
                     _cartProductId = cartProduct.cartProductId ?? '';
                     _productQuantity = cartProduct.totalQuantity ?? 0;
+                    _maxQuantity = cartProduct.sale.saleMaxQuantity;
                     return;
                   }
                 });
@@ -378,6 +382,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       productStockList.indexOf(productStockList.last)]
                   .copyWith(
                 quantity: _productQuantity,
+                maxQty: _maxQuantity,
                 productId: response.product.first.id ?? '',
                 stock: (response.product.first.supplierSales.first.productStock.toString() ?? '0'),
                 productSaleId: '',
@@ -415,6 +420,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                               double.parse(supplier.productPrice ?? '0.0'),
               stock: supplier.productStock.toString(),
                           quantity: _productQuantity,
+                          maxQty: _maxQuantity,
                           selectedIndex: (supplier.supplierId ?? '') ==
                                   state
                                       .productStockList[productStockUpdateIndex]
@@ -562,6 +568,19 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
               return;
             }
+             if(productStockList[state.productStockUpdateIndex]
+                 .maxQty!=-1){
+               if (productStockList[state.productStockUpdateIndex]
+                   .quantity >=
+                   productStockList[state.productStockUpdateIndex]
+                       .maxQty) {
+                 CustomSnackBar.showSnackBar(
+                     context: event.context,
+                     title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                     type: SnackBarType.FAILURE);
+                 return;
+               }
+             }
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]
@@ -866,6 +885,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       supplierList[event.supplierIndex].supplierId,
                   stock: supplierList[event.supplierIndex].stock,
                   quantity:  supplierList[event.supplierIndex].quantity != 0 ? supplierList[event.supplierIndex].quantity : 1,
+                  maxQty: supplierList[event.supplierIndex].maxQty,
                   totalPrice: event.supplierSaleIndex == -2
                       ? supplierList[event.supplierIndex].basePrice
                       : supplierList[event.supplierIndex]
@@ -906,13 +926,13 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               data: globalSearchReqModel.toJson());
           debugPrint('data1 = $res');
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
-          debugPrint('cat len = ${response.data?.categoryData?.length}');
+       /*   debugPrint('cat len = ${response.data?.categoryData?.length}');
           debugPrint('sub cat len = ${response.data?.subCategoryData?.length}');
           debugPrint('com len = ${response.data?.companyData?.length}');
           debugPrint('sale len = ${response.data?.saleData?.length}');
           debugPrint('sup len = ${response.data?.supplierData?.length}');
           debugPrint(
-              'sup prod len = ${response.data?.supplierProductData?.length}');
+              'sup prod len = ${response.data?.supplierProductData?.length}');*/
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList.addAll(state.productCategoryList.map((category) =>
@@ -965,15 +985,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             searchList.addAll(response.data?.supplierData
                     ?.map((supplier) => SearchModel(
                         searchId: supplier.id ?? '',
-                        name: supplier.brandName?? '',
+                        name: supplier.supplierDetail?.companyName?? '',
                         searchType: SearchTypes.supplier,
-                        image: supplier.mainImage ?? '',
+                        image: supplier.logo ?? '',
                 isPesach: supplier.isPesach??false,
-              salePrice: double.parse(supplier.sale.salePrice.toString()),
+        /*      salePrice: double.parse(supplier.sale.salePrice.toString()),
               salesDesc:  parse(supplier.sale.saleDescription ?? '')
                   .body
                   ?.text ??
-                  '',
+                  '',*/
 
             ))
                     .toList() ??

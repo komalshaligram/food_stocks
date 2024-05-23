@@ -514,7 +514,7 @@ class BasketScreenWidget extends StatelessWidget {
                                       ),
                                 ) : 0.width,
                                 lowStock.isNotEmpty?5.height:0.height,
-                                isSaleOn ?Container(
+                                state.basketProductList[index].isSale ?Container(
                                   width: MediaQuery.of(context).size.width,
                                   margin: EdgeInsets.only(top:3,bottom:5),
                                   padding: EdgeInsets.all(5),
@@ -522,7 +522,7 @@ class BasketScreenWidget extends StatelessWidget {
                                     color: AppColors.saleBGColor,
                                     borderRadius: BorderRadius.all(Radius.circular(8))
                                   ),
-                                  child: Center(child: Text('Sale Description',style: TextStyle(color: Colors.white,fontSize: AppConstants.font_12),)),
+                                  child: Center(child: Text(state.basketProductList[index].saleDesc,style: TextStyle(color: Colors.white,fontSize: AppConstants.font_12),)),
                                 ):Container(),
                                 isPesachLabelShow(isPesach, context),
                                 isPesach?5.height:0.height,
@@ -576,22 +576,11 @@ class BasketScreenWidget extends StatelessWidget {
                                                       .cartProductId ??
                                                       '',
                                                   totalPayment: state.totalPayment,
-                                                  saleId: ((state
+                                                  saleId: state
                                                       .CartItemList
                                                       .data
                                                       ?.data?[index]
-                                                      .sales
-                                                      ?.length ==
-                                                      0)
-                                                      ? ''
-                                                      : (state
-                                                      .CartItemList
-                                                      .data
-                                                      ?.data?[index]
-                                                      .sales
-                                                      ?.first
-                                                      .id ??
-                                                      '')),
+                                                      .id??''
                                                 ));
                                           } else {
                                             CustomSnackBar.showSnackBar(
@@ -664,22 +653,11 @@ class BasketScreenWidget extends StatelessWidget {
                                                       .cartProductId ??
                                                       '',
                                                   totalPayment: state.totalPayment,
-                                                  saleId: ((state
-                                                      .CartItemList
-                                                      .data
-                                                      ?.data?[index]
-                                                      .sales
-                                                      ?.length ==
-                                                      0)
-                                                      ? ''
-                                                      : (state
-                                                      .CartItemList
-                                                      .data
-                                                      ?.data?[index]
-                                                      .sales
-                                                      ?.first
-                                                      .id ??
-                                                      '')),
+                                                    saleId: state
+                                                        .CartItemList
+                                                        .data
+                                                        ?.data?[index]
+                                                        .id??''
                                                 ));
                                           }
                                           else{
@@ -929,6 +907,7 @@ class BasketScreenWidget extends StatelessWidget {
                                   ],
                                   productPerUnit: state.productDetails.first
                                       .numberOfUnit ?? 0,
+
                                   productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
                                   productName: state.productDetails.first
                                       .productName ??
@@ -941,7 +920,13 @@ class BasketScreenWidget extends StatelessWidget {
                                       .body
                                       ?.text ??
                                       '',
-                                  productPrice: state
+                                  productPrice:state.productDetails.first.sale.isSale?double.parse( state.productDetails.first.sale.salePrice.toString()) *
+                                      state
+                                          .productStockList[state.productListIndex][
+                                      state.productStockUpdateIndex]
+                                          .quantity *
+                                      (state.productDetails.first
+                                          .numberOfUnit):state
                                       .productStockList[state.productListIndex][
                                   state.productStockUpdateIndex]
                                       .totalPrice *

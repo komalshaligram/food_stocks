@@ -491,16 +491,6 @@
    "phone_number_of_other_subuser" : "מספר הטלפון כבר משוייך למשתמש אחר",
     "delete_sub_user_account" : "מחיקת ",
     "can_see_invoices" : "יכול לראות חשבוניות",
-    "maximum_qty" : "Maximum Quantity"
-
-
-
-
-
-
-
-
-
-
-
+    "maximum_qty" : "מקסימום מארזים להזמנה עבור המבצע",
+  "not_add_more_than_max_qty": "לא ניתן להוסיף יותר מהמקסימום עבור המבצע הזה"
 }

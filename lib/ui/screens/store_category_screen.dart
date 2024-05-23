@@ -80,7 +80,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
     return BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
       builder: (context, state) {
-
         return WillPopScope(
           onWillPop: () {
             if (state.isSubCategory) {

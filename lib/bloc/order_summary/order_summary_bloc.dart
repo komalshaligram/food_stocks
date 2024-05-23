@@ -65,9 +65,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             supplierId: element.suppliers?.first.id ?? '',
             productId: element.productDetails?.id ?? '',
             quantity: element.totalQuantity,
-            saleId: (element.sales?.length == 0)
-                ? ''
-                : (element.sales?.first.id ?? ''),
+          saleId: element.id
           ));
         });
 
