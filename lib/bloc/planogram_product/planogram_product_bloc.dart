@@ -58,6 +58,7 @@ class PlanogramProductBloc
         stockList = event.planogram.planogramproducts
                 ?.map((product) => ProductStockModel(
                     productId: product.id ?? '',
+                    maxQty: (product.sale?.isSale ?? false) ? int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : -1,
                     stock: product.productStock.toString()))
                 .toList() ??
             [];
@@ -71,7 +72,6 @@ class PlanogramProductBloc
             productStockList: productStockList,
         isGridView: preferences.getPlanogramProductGrid(),
           isGuestUser: preferences.getGuestUser(),
-
         ));
 
       }
@@ -113,7 +113,7 @@ class PlanogramProductBloc
 
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
-               debugPrint('responseproductid____${response.product?.first.id}');
+               debugPrint('productid____${response.product.first.id}');
               productStockList[0][0] =productStockList[0][0].copyWith(
                   quantity: _productQuantity,
                   maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
@@ -177,8 +177,7 @@ class PlanogramProductBloc
 
             List<ProductSupplierModel> supplierList = [];
 
-            supplierList.addAll(response.product?.first.supplierSales
-                ?.map((supplier) => ProductSupplierModel(
+            supplierList.addAll(response.product.first.supplierSales.map((supplier) => ProductSupplierModel(
               supplierId: supplier.supplierId ?? '',
               companyName: supplier.supplierCompanyName ?? '',
               basePrice:
@@ -191,8 +190,8 @@ class PlanogramProductBloc
                       .productStockList[productListIndex]
                   [productStockUpdateIndex]
                       .productSupplierIds
-                  ? supplier.saleProduct?.indexOf(
-                  supplier.saleProduct?.firstWhere(
+                  ? supplier.saleProduct.indexOf(
+                  supplier.saleProduct.firstWhere(
                         (sale) =>
                     sale.saleId ==
                         state
@@ -205,8 +204,8 @@ class PlanogramProductBloc
                       SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                   -1
                   ? -2
-                  : supplier.saleProduct?.indexOf(
-                  supplier.saleProduct?.firstWhere(
+                  : supplier.saleProduct.indexOf(
+                  supplier.saleProduct.firstWhere(
                         (sale) =>
                     sale.saleId ==
                         state
@@ -219,12 +218,11 @@ class PlanogramProductBloc
                       SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                   -1
                   : -1,
-              supplierSales: supplier.saleProduct
-                  ?.map((sale) => SupplierSaleModel(
+              supplierSales: supplier.saleProduct.map((sale) => SupplierSaleModel(
                   saleId: sale.saleId ?? '',
                   saleName: sale.saleName ?? '',
-                  saleDescription:
-                  parse(sale.salesDescription ?? '')
+                  maxQty: sale.saleMaxQuantity??'',
+                  saleDescription: parse(sale.salesDescription ?? '')
                       .body
                       ?.text ??
                       '',
@@ -239,7 +237,7 @@ class PlanogramProductBloc
                 []);
             supplierList.removeWhere((supplier) => supplier.stock == 0);
             debugPrint(
-                'response list = ${response.product?.first.supplierSales?.length}');
+                'response list = ${response.product.first.supplierSales.length}');
             debugPrint('supplier list = ${supplierList}');
             // debugPrint(
             //     'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
@@ -363,6 +361,9 @@ class PlanogramProductBloc
       else if (event is _IncreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
+        print('madQty_____${productStockList[state.productListIndex]
+        [state.productStockUpdateIndex]
+            .maxQty}');
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productListIndex]
           [state.productStockUpdateIndex]

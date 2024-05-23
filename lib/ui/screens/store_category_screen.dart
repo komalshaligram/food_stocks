@@ -16,6 +16,7 @@ import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import 'package:food_stock/ui/widget/common_sale_listview.dart';
 import 'package:food_stock/ui/widget/common_search_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
@@ -28,8 +29,8 @@ import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart'
 import '../../data/model/search_model/search_model.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
-
-import '../widget/common_product_sale_item_widget.dart';
+import '../widget/common_product_item_widget.dart';
+import '../widget/common_product_list_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
@@ -494,14 +495,15 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             color:
                                             AppColors.pageColor,
                                             child: state.isGridView
-                                                ? Container()
-                                            /*GridView.builder(
+                                                ? GridView.builder(
                                                 itemCount: state.planogramProductList.length,
                                                 shrinkWrap: true,
                                                 physics: NeverScrollableScrollPhysics(),
                                                 padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context)),
-                                                itemBuilder: (context, index) => CommonProductItemWidget(
+                                                itemBuilder: (context, index) =>
+
+                                                    CommonProductItemWidget(
                                                   isPesach: state.planogramProductList[index].product?.isPesach,
                                                   lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
                                                     imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
@@ -523,7 +525,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                       } else {
                                                         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                       }
-                                                    }))*/
+                                                    }))
                                                 : ListView
                                                 .builder(
                                               itemCount: state
@@ -536,8 +538,37 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               itemBuilder:
                                                   (context,
                                                   index) {
-                                                return Container();
-                                              /*  return CommonProductListWidget(
+                                              /*  return  CommonSaleListView(
+                                                  isPesach: state.planogramProductList[index].product?.isPesach??false,
+                                                  lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
+                                                  numberOfUnits:state.planogramProductList[index].product?.numberOfUnit ??
+                                                      '0',
+                                                  isGuestUser: state
+                                                      .isGuestUser,
+                                                  productStock: (state.planogramProductList[index].product?.productStock.toString() ?? '0'),
+                                                  productImage: state.planogramProductList[index].product?.mainImage ??
+                                                      '',
+                                                  productName: state.planogramProductList[index].product?.productName ??
+                                                      '',
+                                                  price: state.planogramProductList[index].product?.productPrice ??
+                                                      0.0,
+                                                  context: context,
+                                                  discountedPrice: double.parse(state.planogramProductList[index].sale.salePrice),
+                                                  isFromSale: state.planogramProductList[index].sale.isSale,
+                                                  salesDesc: state.planogramProductList[index].sale.saleDescription,
+                                                  onButtonTap: () {
+                                                    if (!state.isGuestUser) {
+                                                      showProductDetails(
+                                                          context: context,
+                                                          productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
+                                                          productId: state.planogramProductList[index].productId ?? '',
+                                                          planoGramIndex: 3,
+                                                          isBarcode: false);
+                                                    } else {
+                                                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                    }
+                                                  },);*/
+                                                return CommonProductListWidget(
                                                   isPesach: state.planogramProductList[index].product?.isPesach??false,
                                                     lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
                                                     numberOfUnits:state.planogramProductList[index].product?.numberOfUnit ??
@@ -565,7 +596,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                       } else {
                                                         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                       }
-                                                    });*/
+                                                    });
                                               },
                                             ),
                                           ),
@@ -1566,43 +1597,21 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.salesProductItemHeight,
+          height: AppConstants.relatedProductItemHeight,
           padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemBuilder: (context2,i){
-              return CommonProductSaleItemWidget(
-                isSale:  relatedProductList.elementAt(i).sale.isSale,
-                isGuestUser: false,
-                height: AppConstants.salesProductItemHeight,
-                width: 140,
-                productName: relatedProductList.elementAt(i).productName??'',
-                saleImage: relatedProductList.elementAt(i)
-                    .mainImage ??
-                    '',
-                title:  relatedProductList.elementAt(i)
-                    .name ??
-                    '',
-                description: parse( relatedProductList.elementAt(i).sale
-                    .saleDescription ??
-                    '')
-                    .body
-                    ?.text ??
-                    '',
-                discountedPrice:
-                double.parse( relatedProductList.elementAt(i).sale.salePrice),
-
-                originalPrice: relatedProductList.elementAt(i)
-                    .productPrice ??
-                    0 ,
-                productStock: relatedProductList.elementAt(i)
-                    .productStock.toString()??'0',
-                lowStock: relatedProductList.elementAt(i)
-                    .lowStock??'',
-                isPesach: relatedProductList.elementAt(i)
-                    .isPesach,
-
+              return CommonProductItemWidget(
+                isPesach: relatedProductList.elementAt(i).isPesach,
+                lowStock: relatedProductList.elementAt(i).lowStock.toString(),
+                productStock:relatedProductList.elementAt(i).productStock.toString(),
+                width: AppConstants.relatedProductItemWidth,
+                productImage:relatedProductList[i].mainImage,
+                productName: relatedProductList.elementAt(i).productName,
+                totalSaleCount: relatedProductList.elementAt(i).totalSale,
+                price:relatedProductList.elementAt(i).productPrice,
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
@@ -1612,9 +1621,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       isBarcode: false,
                       productStock: (relatedProductList[i].productStock.toString() )
                   );
-                },);
-
-              },itemCount: relatedProductList.length,),
+                },
+              );},itemCount: relatedProductList.length,),
         )
       ],
     );
