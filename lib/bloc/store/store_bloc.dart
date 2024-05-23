@@ -418,11 +418,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     .map((supplier) => ProductSupplierModel(
                           supplierId: supplier.supplierId ?? '',
                           companyName: supplier.supplierCompanyName ?? '',
+                          maxQty:int.parse(response.product.first.sale.saleMaxQuantity),
                           basePrice:
                               double.parse(supplier.productPrice ?? '0.0'),
+
               stock: supplier.productStock.toString(),
                           quantity: _productQuantity,
-                          maxQty: _maxQuantity,
                           selectedIndex: (supplier.supplierId ?? '') ==
                                   state
                                       .productStockList[productStockUpdateIndex]
@@ -457,6 +458,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                                   .map((sale) => SupplierSaleModel(
                                       saleId: sale.saleId ?? '',
                                       saleName: sale.saleName ?? '',
+                                      maxQty: sale.saleMaxQuantity,
                                       saleDescription:
                                           parse(sale.salesDescription ?? '')
                                                   .body
@@ -558,6 +560,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
 
       else if (event is _IncreaseQuantityOfProduct) {
+        debugPrint('store max qty:${ state.productStockList[state.productStockUpdateIndex]
+            .maxQty} ');
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {

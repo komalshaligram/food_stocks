@@ -42,7 +42,6 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
   String _cartProductId = '';
   int _productQuantity = 0;
   int _maxQuantity = -1;
-
   ProductSaleBloc() : super(ProductSaleState.initial()) {
     on<ProductSaleEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(

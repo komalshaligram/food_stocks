@@ -465,6 +465,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                               child: Column(
                                 children: [
                                   CommonProductDetailsWidget(
+
                                     salePrice: double.parse(state.productDetails.first.sale.salePrice),
                                     maxQty: state.productDetails.first.sale.saleMaxQuantity,
                                     endDate: state.productDetails.first.sale.saleUntilDate,
