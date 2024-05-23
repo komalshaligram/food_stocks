@@ -120,12 +120,14 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                       //getChildAspectRatio(context)),
                                       itemBuilder: (context, index) {
                                         return buildProductSaleListItem(
+                                          productStock: state.productStockList[index].stock,
                                           isPesach: state.productSalesList[index].isPesach,
                                           lowStock: state.productSalesList[index].lowStock,
                                           originalPrice:state.productSalesList[index].productPrice,
                                           isGuestUser: state.isGuestUser,
                                           index: index,
                                           context: context,
+
 
                                           saleImage: state.productSalesList[index].mainImage,
                                           title: state.productSalesList[index].name,
@@ -197,7 +199,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required bool isGuestUser,
     required double originalPrice,
     required bool isPesach,
-    required String lowStock
+    required String lowStock,
+    required String productStock
   }) {
     return CommonProductSaleItemWidget(
       height: AppConstants.salesProductItemHeight,
@@ -212,6 +215,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
       discountedPrice: discountedPrice,
       isPesach: isPesach,
       lowStock: lowStock,
+        productStock : productStock
 
     );
   }
