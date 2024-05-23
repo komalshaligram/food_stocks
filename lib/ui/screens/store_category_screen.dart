@@ -24,6 +24,7 @@ import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../../data/model/res_model/get_planogram_product/get_planogram_product_model.dart';
 import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../widget/common_product_button_widget.dart';
