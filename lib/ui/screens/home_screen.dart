@@ -1729,13 +1729,43 @@ class HomeScreenWidget extends StatelessWidget {
                                     color: AppColors.blackColor,
                                     fontWeight: FontWeight.w400),
                               ) : 0.width,
-                              numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
+                              numberOfUnits != 0 && priceOfBox != 0.0 ?
+                              salePrice!=0.0 ?   Text.rich(TextSpan(
+                                text: '${AppLocalizations
+                                    .of(context)
+                                    ?.price_par_box} ',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.blackColor),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: '${AppLocalizations
+                                        .of(context)
+                                        ?.currency}${(priceOfBox *
+                                        (numberOfUnits)).toStringAsFixed(
+                                        2)} ',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_12,
+                                        color: AppColors.blackColor).copyWith(
+                                        decoration: TextDecoration.lineThrough),
+                                  ),
+                                  TextSpan(
+                                    text: ' ${AppLocalizations
+                                        .of(context)
+                                        ?.currency}${(salePrice *
+                                        (numberOfUnits)).toStringAsFixed(
+                                        2)}',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_12,
+                                        color: AppColors.redColor),
+                                  ),
+                                ],
+                              ),) :Text(
                                 '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.blueColor,
-                                    fontWeight: FontWeight.w400),
-                              ) : 0.width,
+                                    fontWeight: FontWeight.w400),): 0.width
                             ],
                           ),
                         ),

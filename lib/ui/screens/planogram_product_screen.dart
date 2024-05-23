@@ -306,6 +306,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (listViewContext, index) {
                           return _buildSearchItem(
+                              salePrice: state.searchList[index].salePrice,
+                              saleDesc: state.searchList[index].salesDesc,
                               isPesach: state.searchList[index].isPesach,
                               lowStock: state.searchList[index].lowStock.toString(),
                             isGuestUser: state.isGuestUser,
@@ -901,7 +903,11 @@ class PlanogramProductScreenWidget extends StatelessWidget {
     required int numberOfUnits,
     required double priceOfBox,
     required bool isPesach,
+    required double salePrice,
+    required String saleDesc
+
   }) {
+    print('sale___$saleDesc');
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -955,7 +961,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  80 :110 : 80,
+            height: !isGuestUser ?  lowStock.isNotEmpty || (productStock) != '0' ? isPesach?155:130 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ?  110 :130 : 110,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1064,13 +1070,47 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     color: AppColors.blackColor,
                                     fontWeight: FontWeight.w400),
                               ) : 0.width : 0.width,
-                              !isGuestUser?numberOfUnits != 0 && priceOfBox != 0.0 ? Text(
+
+                              numberOfUnits != 0 && priceOfBox != 0.0 ?
+                              !isGuestUser?  salePrice!=0.0 ?   Text.rich(TextSpan(
+                                text: '${AppLocalizations
+                                    .of(context)
+                                    ?.price_par_box} ',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.blackColor),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: '${AppLocalizations
+                                        .of(context)
+                                        ?.currency}${(priceOfBox *
+                                        (numberOfUnits)).toStringAsFixed(
+                                        2)} ',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_12,
+                                        color: AppColors.blackColor).copyWith(
+                                        decoration: TextDecoration.lineThrough),
+                                  ),
+                                  TextSpan(
+                                    text: ' ${AppLocalizations
+                                        .of(context)
+                                        ?.currency}${(salePrice *
+                                        (numberOfUnits)).toStringAsFixed(
+                                        2)}',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_12,
+                                        color: AppColors.redColor),
+                                  ),
+                                ],
+                              ),) :Text(
                                 '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_12,
                                     color: AppColors.blueColor,
-                                    fontWeight: FontWeight.w400),
-                              ) : 0.width: 0.width,
+                                    fontWeight: FontWeight.w400),): 0.width : 0.width
+
+
+
                             ],
                           ),
                         ),
@@ -1088,7 +1128,24 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                       ],
 
                     ),
-                    isPesachLabelShow(isPesach,context)
+                    isPesachLabelShow(isPesach,context),
+                    saleDesc.isNotEmpty?
+                    Container(
+                      width:getScreenWidth(context)/1.5,
+                      padding: EdgeInsets.all(3),
+                      margin: EdgeInsets.only(top:5),
+                      decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                      child: Center(
+                        child: Text(
+                          "${parse(saleDesc).body?.text}",
+                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor,),
+                          maxLines: 3,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    )
+                        :0.height
                   ],
                 ),
 
