@@ -113,14 +113,14 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                       width: 70,
                     ),
                   ),
-                  3.height,
+                  2.height,
                   Text(
                     productName,
                     style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  4.height,
+                  2.height,
                   description.isNotEmpty?Center(
                     child: Container(
                       width: width!-10,
@@ -157,9 +157,9 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                           size: AppConstants.font_12,
                           color: AppColors.whiteColor,
                           fontWeight: FontWeight.w400)),
-                  2.height,
+                  1.height,
                   Center(child: isPesachLabelShow(isPesach!, context)),
-                  isPesach! ? 3.height :0.height,
+                  isPesach! ? 2.height :0.height,
                   !isGuestUser
                       ? isSale!?Center(
                     child: Text(

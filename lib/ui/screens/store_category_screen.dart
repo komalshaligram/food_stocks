@@ -1154,7 +1154,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         required bool isGuestUser,
         required String lowStock,
         required bool isPesach,
-required bool isSale,
+        required bool isSale,
         required String saleDesc,
         required String discountPrice,
       }) {
@@ -1163,7 +1163,7 @@ required bool isSale,
       child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
         builder: (context1, state) {
           return Container(
-            height: AppConstants.relatedProductItemHeight,
+            height: AppConstants.salesProductItemHeight,
             width: width,
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
@@ -1242,7 +1242,7 @@ required bool isSale,
                       height: 70,
                     ),
                   ),
-                  5.height,
+                  3.height,
                   Text(
                     "${list[index].planogramproducts?[subIndex].productName}",
                     style: AppStyles.rkBoldTextStyle(
@@ -1252,7 +1252,7 @@ required bool isSale,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  4.height,
+                  3.height,
                   isSale?Center(
                     child: Container(
                       width: width!-10,
@@ -1267,7 +1267,7 @@ required bool isSale,
                       ),
                     ),
                   ):0.height,
-                  isSale?3.height:0.height,
+                  isSale?2.height:0.height,
                   ((list[index].planogramproducts?[subIndex].productStock ?? 0)  >
                       0)&& lowStock.isEmpty ||
                       isGuestUser
@@ -1300,16 +1300,16 @@ required bool isSale,
                     ),
                   ),
                   5.height,
-                  isPesach?
-                  Container(
-                      padding: EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                          color: AppColors.pesachBGColor,
-                          border: Border.all(color: AppColors.pesachBGColor),
-                          borderRadius: BorderRadius.all(Radius.circular(10))
-                      ),
-                      child: Text(AppLocalizations.of(context)!.pesach)):0.height,
-                  isPesach?5.height:0.height,
+                  Center(child: isPesachLabelShow(isPesach!, context)),
+                  isPesach! ? 3.height :0.height,
+                  !isGuestUser
+                      ? isSale!?Center(
+                    child: Text(
+                      "${AppLocalizations.of(context)!.currency}${list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(2)}",
+                      style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600,).copyWith(decoration: TextDecoration.lineThrough),
+                    ),
+                  ):0.width
+                      : 0.width,
                   !isGuestUser
                       ? Center(
                     child: CommonProductButtonWidget(
@@ -1339,7 +1339,6 @@ required bool isSale,
       ),
     );
   }
-
 
 
   void showProductDetails({

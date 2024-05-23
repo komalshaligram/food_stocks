@@ -1460,6 +1460,7 @@ class HomeScreenWidget extends StatelessWidget {
                     .isPesach,
 
                 onButtonTap: () {
+                  Navigator.pop(prevContext);
                   showProductDetails(
                       context: context,
                       productId: relatedProductList[i].id,

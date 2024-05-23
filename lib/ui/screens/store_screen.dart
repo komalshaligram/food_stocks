@@ -537,6 +537,10 @@ class StoreScreenWidget extends StatelessWidget {
                                                             index]
                                                                 .id ??
                                                                 '',
+                                                              productStock: state
+                                                                  .productSalesList[
+                                                              index]
+                                                                  .productStock.toString()
                                                           );
                                                         }
                                                         else{
