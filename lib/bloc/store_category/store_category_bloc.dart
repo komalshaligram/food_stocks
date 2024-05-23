@@ -1245,6 +1245,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       debugPrint('product.product?.productStock  :${product.product?.productStock }');
                       return ProductStockModel(
                     productId: product.productId ?? '',
+                  //  maxQty:product.product!.sale.isSale? int.parse(product.product!.sale.saleMaxQuantity):-1,
                     stock:(product.product?.productStock.toString()??'0'));
                     }) ?? []);
             productStockList[3].addAll(stockList);

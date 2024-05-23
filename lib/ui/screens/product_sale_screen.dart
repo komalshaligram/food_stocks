@@ -204,6 +204,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required String productStock
   }) {
     return CommonProductSaleItemWidget(
+        isSale: true,
       height: AppConstants.salesProductItemHeight,
       width: 140,
       isGuestUser: isGuestUser,

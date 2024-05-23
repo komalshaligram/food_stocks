@@ -639,6 +639,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             itemBuilder:
                                                 (context, index) {
                                                   return CommonProductSaleItemWidget(
+                                                      isSale: state.productSalesList[index].sale.isSale,
                                                       isGuestUser: state.isGuestUser,
                                                       height: AppConstants.salesProductItemHeight,
                                                       width: 140,

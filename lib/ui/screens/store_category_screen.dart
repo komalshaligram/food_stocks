@@ -16,7 +16,6 @@ import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:food_stock/ui/widget/common_sale_listview.dart';
 import 'package:food_stock/ui/widget/common_search_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
@@ -494,15 +493,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             color:
                                             AppColors.pageColor,
                                             child: state.isGridView
-                                                ? GridView.builder(
+                                                ? Container()
+                                            /*GridView.builder(
                                                 itemCount: state.planogramProductList.length,
                                                 shrinkWrap: true,
                                                 physics: NeverScrollableScrollPhysics(),
                                                 padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context)),
-                                                itemBuilder: (context, index) =>
-
-                                                    CommonProductItemWidget(
+                                                itemBuilder: (context, index) => CommonProductItemWidget(
                                                   isPesach: state.planogramProductList[index].product?.isPesach,
                                                   lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
                                                     imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
@@ -524,7 +522,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                       } else {
                                                         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                       }
-                                                    }))
+                                                    }))*/
                                                 : ListView
                                                 .builder(
                                               itemCount: state
@@ -537,37 +535,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               itemBuilder:
                                                   (context,
                                                   index) {
-                                              /*  return  CommonSaleListView(
-                                                  isPesach: state.planogramProductList[index].product?.isPesach??false,
-                                                  lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
-                                                  numberOfUnits:state.planogramProductList[index].product?.numberOfUnit ??
-                                                      '0',
-                                                  isGuestUser: state
-                                                      .isGuestUser,
-                                                  productStock: (state.planogramProductList[index].product?.productStock.toString() ?? '0'),
-                                                  productImage: state.planogramProductList[index].product?.mainImage ??
-                                                      '',
-                                                  productName: state.planogramProductList[index].product?.productName ??
-                                                      '',
-                                                  price: state.planogramProductList[index].product?.productPrice ??
-                                                      0.0,
-                                                  context: context,
-                                                  discountedPrice: double.parse(state.planogramProductList[index].sale.salePrice),
-                                                  isFromSale: state.planogramProductList[index].sale.isSale,
-                                                  salesDesc: state.planogramProductList[index].sale.saleDescription,
-                                                  onButtonTap: () {
-                                                    if (!state.isGuestUser) {
-                                                      showProductDetails(
-                                                          context: context,
-                                                          productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
-                                                          productId: state.planogramProductList[index].productId ?? '',
-                                                          planoGramIndex: 3,
-                                                          isBarcode: false);
-                                                    } else {
-                                                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                                    }
-                                                  },);*/
-                                                return CommonProductListWidget(
+                                                return Container();
+                                              /*  return CommonProductListWidget(
                                                   isPesach: state.planogramProductList[index].product?.isPesach??false,
                                                     lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
                                                     numberOfUnits:state.planogramProductList[index].product?.numberOfUnit ??
@@ -595,7 +564,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                       } else {
                                                         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                       }
-                                                    });
+                                                    });*/
                                               },
                                             ),
                                           ),

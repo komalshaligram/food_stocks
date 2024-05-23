@@ -230,7 +230,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 3,
-                                      childAspectRatio: getChildAspectRatio(context)),
+                                      childAspectRatio: 0.52),
                                   itemBuilder: (context, index) {
                                     return CommonProductSaleItemWidget(
                                         isSale: state.recommendationProductsList[index].sale.isSale,
@@ -964,7 +964,9 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       productStock: (relatedProductList[i].productStock.toString())
                   );
                 },
-              );},itemCount: relatedProductList.length,),
+              );
+
+              },itemCount: relatedProductList.length,),
         )
       ],
     );

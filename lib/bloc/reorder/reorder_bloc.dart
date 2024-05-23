@@ -46,7 +46,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-
+  int _maxQuantity = -1;
   ReorderBloc() : super(ReorderState.initial()) {
 
     on<ReorderEvent>((event, emit) async {
@@ -145,6 +145,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
+        _maxQuantity = -1;
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -180,6 +181,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                debugPrint('responseproductid____${response.product?.first.id}');
               productStockList[0][0] =productStockList[0][0].copyWith(
                   quantity: _productQuantity,
+                  maxQty: _maxQuantity,
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
                   totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
@@ -210,6 +212,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                     _isProductInCart = true;
                     _cartProductId = cartProduct.cartProductId ?? '';
                     _productQuantity = cartProduct.totalQuantity ?? 0;
+                    _maxQuantity = cartProduct.sale.saleMaxQuantity;
                     return;
                   }
                 });
@@ -223,6 +226,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             if ( (event.isBarcode )) {
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
+                maxQty: _maxQuantity,
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
@@ -242,6 +246,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               basePrice:
               double.parse(supplier.productPrice ?? '0.0'),
               quantity: _productQuantity,
+              maxQty:response.product.first.sale.isSale? int.parse(response.product.first.sale.saleMaxQuantity.toString()):-1,
               stock: supplier.productStock.toString(),
               selectedIndex: (supplier.supplierId ?? '') ==
                   state
@@ -279,6 +284,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               supplierSales: supplier.saleProduct.map((sale) => SupplierSaleModel(
                   saleId: sale.saleId ?? '',
                   saleName: sale.saleName ?? '',
+                  maxQty: _maxQuantity,
                   saleDescription:
                   parse(sale.salesDescription ?? '')
                       .body
@@ -392,6 +398,19 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 .isEmpty) {
 
               return;
+            }
+            if(productStockList[state.productListIndex][state.productStockUpdateIndex]
+                .maxQty!=-1){
+              if (productStockList[state.productListIndex][state.productStockUpdateIndex]
+                  .quantity >=
+                  productStockList[state.productListIndex][state.productStockUpdateIndex]
+                      .maxQty) {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                    type: SnackBarType.FAILURE);
+                return;
+              }
             }
             productStockList[state.productListIndex]
             [state.productStockUpdateIndex] =
@@ -822,6 +841,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   categoryId: subCategory.parentCategoryId ?? '',
                   categoryName: subCategory.parentCategoryName ?? '',
                   isPesach: subCategory.isPesach??false,
+
                 ))
                 .toList() ??
                 []);
@@ -845,8 +865,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   name: supplier.supplierDetail?.companyName ?? '',
                   searchType: SearchTypes.supplier,
                   image: supplier.logo ?? '',
+
                   isPesach: supplier.isPesach??false,
-               /*   salePrice: double.parse(supplier.sale.salePrice.toString()),
+             /*     salePrice: double.parse(response.data..sale.salePrice.toString()),
                   salesDesc:  parse(supplier.sale.saleDescription ?? '')
                       .body
                       ?.text ??
@@ -864,7 +885,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                   image: sale.mainImage ?? '',
                   isPesach: sale.isPesach??false,
-                 // salePrice: double.parse(sale.salePrice.toString()),
+                  salePrice: double.parse(sale.discountPercentage.toString()),
                   salesDesc:  parse(sale.salesDescription ?? '')
                       .body
                       ?.text ??
