@@ -243,7 +243,74 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                           childAspectRatio: getChildAspectRatio(context)
                                       ),
                                       itemBuilder: (context, index) {
-                                        return CommonProductItemWidget(
+                                        return      CommonProductSaleItemWidget(
+                                            isSale: state.productList[index].sale?.isSale,
+                                            isGuestUser: state.isGuestUser,
+                                            height: AppConstants.salesProductItemHeight,
+                                            width: 140,
+                                            productName: state.productList[index].productName??'',
+                                            saleImage: state
+                                                .productList[
+                                            index]
+                                                .mainImage ??
+                                                '',
+                                            title: state
+                                                .productList[
+                                            index]
+                                                .name ??
+                                                '',
+                                            description: parse(state
+                                                .productList[
+                                            index].sale
+                                                ?.saleDescription ??
+                                                '')
+                                                .body
+                                                ?.text ??
+                                                '',
+                                            discountedPrice:
+                                            double.parse(state.productList[index].sale!.salePrice.toString()),
+
+                                            originalPrice:state
+                                                .productList[
+                                            index]
+                                                .productPrice ??
+                                                0 ,
+                                            productStock: state.productList[
+                                            index]
+                                                .productStock.toString()??'0',
+                                            lowStock: state
+                                                .productList[
+                                            index]
+                                                .lowStock??'',
+                                            isPesach: state
+                                                .productList[
+                                            index]
+                                                .isPesach,
+
+                                            onButtonTap: () {
+                                              if (!state
+                                                  .isGuestUser) {
+                                                showProductDetails(
+                                                  maxQty: int.parse(state.productList[index].sale?.saleMaxQuantity.toString() ?? '0 '),
+                                                  productListIndex: 1,
+                                                  context:
+                                                  context,
+                                                  productId: state.productList[index].id?? '',
+                                                  productStock: state
+                                                      .productList[
+                                                  index]
+                                                      .productStock.toString(),
+                                                );
+                                              } else {
+                                                Navigator.pushNamed(
+                                                    context,
+                                                    RouteDefine
+                                                        .connectScreen
+                                                        .name);
+                                              }
+
+                                            });
+                                    /*    return CommonProductItemWidget(
                                           isPesach: state.productList[index].isPesach,
                                             lowStock: state
                                                 .productList[index]
@@ -296,7 +363,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                         .connectScreen
                                                         .name);
                                               }
-                                            });
+                                            });*/
                                       })
                                       : ListView.builder(
                                     itemCount:
@@ -763,6 +830,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
       {required BuildContext context,
         required String productId,
         required int productListIndex,
+        int maxQty = 0,
         bool? isBarcode,
         String productStock = '0'}) async {
     context.read<PesachProductsBloc>().add(

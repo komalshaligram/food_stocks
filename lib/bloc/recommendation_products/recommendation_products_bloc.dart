@@ -70,18 +70,12 @@ class RecommendationProductsBloc
                   pageNum: state.pageNum + 1,
 
               );
-          SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-              prefs: await SharedPreferences.getInstance());
+
           debugPrint('recommendation products req = ${request.toJson()}');
           final res = await DioClient(event.context)
               .post(AppUrls.getRecommendationProductsUrl,
                   data: request.toJson(),
-                  options: Options(
-                    headers: {
-                      HttpHeaders.authorizationHeader:
-                          'Bearer ${preferencesHelper.getAuthToken()}',
-                    },
-                  ));
+               );
           RecommendationProductsResModel response =
               RecommendationProductsResModel.fromJson(res);
           debugPrint('recommendation Products res = ${response.data}');
@@ -92,9 +86,10 @@ class RecommendationProductsBloc
             List<List<ProductStockModel>> productStockList =
                 state.productStockList.toList(growable: true);
             List<ProductStockModel> stockList = [];
-            stockList.addAll(response.data?.map(
+            stockList.addAll(response.data.map(
                     (recommendationProduct) => ProductStockModel(
                         productId: recommendationProduct.id ?? '',
+                        maxQty: recommendationProduct.sale.isSale ? int.parse(recommendationProduct.sale.saleMaxQuantity) : -1,
                         stock: recommendationProduct.productStock.toString())) ??
                 []);
             debugPrint(
@@ -179,13 +174,13 @@ class RecommendationProductsBloc
             int productStockUpdateIndex = 0;
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
-               debugPrint('responseproductid____${response.product?.first.id}');
+               debugPrint('responseproductid____${response.product.first.id}');
               productStockList[0][0] =productStockList[0][0].copyWith(
                   quantity: _productQuantity,
-                  maxQty: int.parse(response.product.first.sale.saleMaxQuantity),
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
-                  totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
+                  maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
+                  productId: response.product.first.id ?? '' ,
+                  stock: (response.product.first.supplierSales.first.productStock.toString() ?? "0") ,
+                  totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
               );
             }
             else{
@@ -227,21 +222,21 @@ class RecommendationProductsBloc
             if(response.product != null){
               add(RecommendationProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
-            if ( (event.isBarcode )) {
+            if ( event.isBarcode ) {
 
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
-                  maxQty: _maxQuantity,
+                  maxQty:response.product.first.sale.isSale ?  int.parse(response.product.first.sale.saleMaxQuantity) : -1,
                   quantity: _productQuantity,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
+                  productId: response.product.first.id ?? '' ,
+                  stock: (response.product.first.supplierSales.first.productStock.toString() ?? "0")
               );
               emit(state.copyWith(productStockList: productStockList));
             }
 
             List<ProductSupplierModel> supplierList = [];
 
-            supplierList.addAll(response.product?.first.supplierSales
+            supplierList.addAll(response.product.first.supplierSales
                 ?.map((supplier) => ProductSupplierModel(
               supplierId: supplier.supplierId ?? '',
               companyName: supplier.supplierCompanyName ?? '',
@@ -384,8 +379,68 @@ class RecommendationProductsBloc
           // Navigator.pop(event.context);
         }*/
       }
-
       else if (event is _IncreaseQuantityOfProduct) {
+        debugPrint('maxQty:${ state.productStockList[state.productListIndex]
+        [state.productStockUpdateIndex]
+            .maxQty}');
+        debugPrint('quantity:${ state.productStockList[state.productListIndex]
+        [state.productStockUpdateIndex]
+            .quantity}');
+        List<List<ProductStockModel>> productStockList =
+        state.productStockList.toList(growable: false);
+        if (state.productStockUpdateIndex != -1) {
+          if (productStockList[state.productListIndex]
+          [state.productStockUpdateIndex]
+              .quantity <
+              double.parse(productStockList[state.productListIndex]
+              [state.productStockUpdateIndex]
+                  .stock.toString())) {
+            if (productStockList[state.productListIndex]
+            [state.productStockUpdateIndex]
+                .productSupplierIds
+                .isEmpty) {
+
+              return;
+            }
+            if(productStockList[state.productListIndex]
+            [state.productStockUpdateIndex]
+                .maxQty!=-1){
+              if (productStockList[state.productListIndex]
+              [state.productStockUpdateIndex]
+                  .quantity >=
+                  productStockList[state.productListIndex]
+                  [state.productStockUpdateIndex]
+                      .maxQty) {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                    type: SnackBarType.FAILURE);
+                return;
+              }
+            }
+            debugPrint('hi');
+            productStockList[state.productListIndex]
+            [state.productStockUpdateIndex] =
+                productStockList[state.productListIndex]
+                [state.productStockUpdateIndex].copyWith(
+                    quantity: productStockList[state.productListIndex]
+                    [state.productStockUpdateIndex]
+                        .quantity +
+                        1);
+            debugPrint(
+                'product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+            emit(state.copyWith(productStockList: []));
+            emit(state.copyWith(productStockList: productStockList));
+          } else {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title:
+                "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
+                type: SnackBarType.FAILURE);
+          }
+        }
+      }
+    /*  else if (event is _IncreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -440,7 +495,7 @@ class RecommendationProductsBloc
                 type: SnackBarType.FAILURE);
           }
         }
-      }
+      }*/
       else if (event is _DecreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);

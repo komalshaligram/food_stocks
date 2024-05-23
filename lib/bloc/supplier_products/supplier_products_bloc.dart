@@ -120,6 +120,7 @@ class SupplierProductsBloc
            List<ProductStockModel>stockList= [];
             stockList.addAll(response.data?.map((product) {
               return ProductStockModel(
+                maxQty:(product.sale?.isSale ?? false) ?  int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : -1,
                   productId: event.searchType == SearchTypes.product.toString()
                       ? product.id ?? ''
                       : product.productId ?? '',
@@ -185,6 +186,7 @@ class SupplierProductsBloc
             List<ProductStockModel>stockList= [];
             stockList.addAll(response.data?.map((product) =>
                 ProductStockModel(
+                  maxQty: product.sale!.isSale ? int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : -1,
                     productId: product.productId ?? '',
                     stock: (product.productStock.toString()))) ??
                 []);
@@ -270,10 +272,10 @@ class SupplierProductsBloc
               debugPrint('responseproductid____${response.product?.first.id}');
               productStockList[0][0] =productStockList[0][0].copyWith(
                   quantity: _productQuantity,
-                  maxQty : int.parse(response.product.first.sale.saleMaxQuantity),
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
-                  totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
+                  maxQty : response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
+                  productId: response.product.first.id ?? '' ,
+                  stock: (response.product.first.supplierSales.first.productStock.toString() ?? "0") ,
+                  totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
               );
             }
             else{
@@ -320,26 +322,23 @@ class SupplierProductsBloc
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                   quantity: _productQuantity,
-                  maxQty:_maxQty,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
+                  maxQty : response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
+                  productId: response.product.first.id ?? '' ,
+                  stock: (response.product.first.supplierSales.first.productStock.toString() ?? "0")
               );
-
               emit(state.copyWith(productStockList: productStockList));
-
             }
-
 
             List<ProductSupplierModel> supplierList = [];
 
-            supplierList.addAll(response.product?.first.supplierSales
-                ?.map((supplier) => ProductSupplierModel(
+            supplierList.addAll(response.product.first.supplierSales
+                .map((supplier) => ProductSupplierModel(
               supplierId: supplier.supplierId ?? '',
               companyName: supplier.supplierCompanyName ?? '',
               basePrice:
               double.parse(supplier.productPrice ?? '0.0'),
               quantity: _productQuantity,
-              maxQty: _maxQty,
+              maxQty:response.product.first.sale.isSale? int.parse(response.product.first.sale.saleMaxQuantity.toString()):-1,
               stock: supplier.productStock.toString(),
               selectedIndex: (supplier.supplierId ?? '') ==
                   state
