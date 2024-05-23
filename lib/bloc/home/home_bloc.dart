@@ -158,7 +158,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 productStockList[0][0] =productStockList[0][0].copyWith(
                     quantity: _productQuantity,
                   // maxQty: _maxQty,
-                    maxQty: response.product.first.sale.isSale?int.parse(response.product.first.sale.saleMaxQuantity):-1,
+                    maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity):-1,
                     productId: response.product?.first.id ?? '' ,
                     stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
                     totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
@@ -199,7 +199,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 }
               } on ServerException {}
               if(response.product != null){
-                add(HomeEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+                add(HomeEvent.RelatedProductsEvent(context: event.context, productId: response.product.first.id ?? ''));
               }
               if (event.isBarcode) {
 
@@ -372,7 +372,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               state.productStockList.toList(growable: true);
               List<ProductStockModel>stockList = [];
               /*ProductStockModel barcodeStock = productStockList.removeLast();*/
-              stockList.addAll(response.data?.map(
+              stockList.addAll(response.data.map(
                       (saleProduct) =>
                       ProductStockModel(
                         productId: saleProduct.id ?? '',

@@ -323,6 +323,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(productStockUpdateIndex:productStockUpdateIndex));
             List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
+
+
             productStockList[productStockList
                 .indexOf(productStockList.last)] = productStockList[
             productStockList.indexOf(productStockList.last)]

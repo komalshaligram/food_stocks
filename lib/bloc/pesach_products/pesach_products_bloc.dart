@@ -83,7 +83,7 @@ class PesachProductsBloc
             }
             return value == '';
           });
-          debugPrint('supplier products req = $req');
+          debugPrint('pesach products req = $req');
           PesachProductsResModel response;
           if (event.searchType == SearchTypes.product.toString()) {
             emit(state.copyWith(searchType: event.searchType.toString()));
@@ -105,6 +105,7 @@ class PesachProductsBloc
             List<ProductStockModel>stockList = [];
             stockList.addAll(response.data?.map((product) {
               return ProductStockModel(
+                  maxQty:(product.sale?.isSale ?? false) ?  int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : -1,
                   productId:product.id ?? '',
                   stock:product.productStock.toString());
             }) ??
@@ -397,6 +398,7 @@ class PesachProductsBloc
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
+        int _maxQty = -1;
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -423,7 +425,7 @@ class PesachProductsBloc
             int productStockUpdateIndex = -1;
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
-              debugPrint('responseproductid____${response.product?.first.id}');
+              debugPrint('responseproductid____${response.product.first.id}');
 
             }
             else{
@@ -431,8 +433,6 @@ class PesachProductsBloc
                   .indexWhere((productStock) =>
               productStock.productId == event.productId);
             }
-
-
 
             emit(state.copyWith(productListIndex:productListIndex,productStockUpdateIndex:productStockUpdateIndex));
             debugPrint('planoGramUpdateIndex___${state.productListIndex}');
@@ -453,6 +453,7 @@ class PesachProductsBloc
                     _isProductInCart = true;
                     _cartProductId = cartProduct.cartProductId ?? '';
                     _productQuantity = cartProduct.totalQuantity ?? 0;
+                    _maxQty = cartProduct.sale.saleMaxQuantity ?? 0;
                     return;
                   }
                 });
@@ -461,19 +462,19 @@ class PesachProductsBloc
               }
             } on ServerException {}
             if(response.product != null){
-              add(PesachProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+              add(PesachProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product.first.id ?? ''));
             }
             if (event.isBarcode) {
-
+print('saleqty___${response.product.first.sale.saleMaxQuantity}');
+print('bool___${response.product.first.sale.isSale}');
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                 quantity: _productQuantity,
                 productId: response.product.first.id ?? '',
                 stock: (response.product.first.supplierSales.first.productStock.toString() ?? '0'),
+                maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
                 productSaleId: '',
                 productSupplierIds: '',
-                note: '',
-                isNoteOpen: false,
               );
 
               emit(state.copyWith(productStockList: productStockList));

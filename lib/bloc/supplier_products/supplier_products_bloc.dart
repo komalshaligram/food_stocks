@@ -120,6 +120,7 @@ class SupplierProductsBloc
            List<ProductStockModel>stockList= [];
             stockList.addAll(response.data?.map((product) {
               return ProductStockModel(
+                maxQty:(product.sale?.isSale ?? false) ?  int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : -1,
                   productId: event.searchType == SearchTypes.product.toString()
                       ? product.id ?? ''
                       : product.productId ?? '',

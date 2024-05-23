@@ -140,6 +140,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                               showProductDetails(
                                                 context: context,
                                                 productId: state.productSalesList[index].id,
+                                                productStock: state.productSalesList[index].productStock.toString()
 
                                               );
                                             } else {
@@ -172,6 +173,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                             showProductDetails(
                                               context: context,
                                               productId: state.productSalesList[index].id,
+                                                productStock: state.productSalesList[index].productStock.toString()
                                             );
                                           }),
                                     ),
@@ -618,7 +620,9 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 price: relatedProductList.elementAt(i).productPrice,
                 onButtonTap: () {
                   Navigator.of(prevContext).pop();
-                  showProductDetails(context: context, productId: relatedProductList[i].id,);
+                  showProductDetails(context: context, productId: relatedProductList[i].id,
+                      productStock:relatedProductList.elementAt(i).productStock.toString()
+                  );
                 },
               );
             },
