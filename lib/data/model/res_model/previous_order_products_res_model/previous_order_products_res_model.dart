@@ -36,13 +36,13 @@ class PreviousOrderProductData with _$PreviousOrderProductData {
     @JsonKey(name: "_id")
     required String id,
     @JsonKey(name: "productStock")
-    required int productStock,
+    required double productStock,
     @JsonKey(name: "totalSale")
     required int totalSale,
     @JsonKey(name: "productPrice")
     required double productPrice,
     @JsonKey(name: "boxes")
-    required int boxes,
+    required double boxes,
     @JsonKey(name: "lowStock")
     required String lowStock,
     @JsonKey(name: "mainImage")

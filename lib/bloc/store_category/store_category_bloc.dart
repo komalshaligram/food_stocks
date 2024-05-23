@@ -493,8 +493,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       .productStockList[planoGramIndex]
                   [productStockUpdateIndex]
                       .productSupplierIds
-                  ? supplier.saleProduct?.indexOf(
-                  supplier.saleProduct?.firstWhere(
+                  ? supplier.saleProduct.indexOf(
+                  supplier.saleProduct.firstWhere(
                         (sale) =>
                     sale.saleId ==
                         state
@@ -507,8 +507,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                   -1
                   ? -2
-                  : supplier.saleProduct?.indexOf(
-                  supplier.saleProduct?.firstWhere(
+                  : supplier.saleProduct.indexOf(
+                  supplier.saleProduct.firstWhere(
                         (sale) =>
                     sale.saleId ==
                         state
@@ -521,8 +521,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                   -1
                   : -1,
-              supplierSales: supplier.saleProduct
-                  ?.map((sale) => SupplierSaleModel(
+              supplierSales: supplier.saleProduct.map((sale) => SupplierSaleModel(
                   saleId: sale.saleId ?? '',
                   saleName: sale.saleName ?? '',
                   maxQty: sale.saleMaxQuantity??'',
