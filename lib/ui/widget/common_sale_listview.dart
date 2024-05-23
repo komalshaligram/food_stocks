@@ -158,11 +158,10 @@ class CommonSaleListView extends StatelessWidget {
                         !isGuestUser ? Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text('${AppLocalizations.of(context)?.currency}${price.toStringAsFixed(2)}',  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.redColor,fontWeight: FontWeight.w500).copyWith(decoration: TextDecoration.lineThrough,decorationColor: AppColors.redColor),),
+                            isFromSale!?Text('${AppLocalizations.of(context)?.currency}${price.toStringAsFixed(2)}',  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.redColor,fontWeight: FontWeight.w500).copyWith(decoration: TextDecoration.lineThrough,decorationColor: AppColors.redColor),):0.height,
                             2.height,
                             CommonProductButtonWidget(
-                              title:
-                              "${AppLocalizations.of(context)!.currency}${discountedPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : discountedPrice.toStringAsFixed(AppConstants.amountFrLength)}",
+                              title: isFromSale!?"${AppLocalizations.of(context)!.currency}${discountedPrice.toStringAsFixed(2)}":"${AppLocalizations.of(context)!.currency}${price?.toStringAsFixed(2)}",
                               onPressed: onButtonTap,
                               textColor: AppColors.whiteColor,
                               bgColor: AppColors.mainColor,
@@ -222,8 +221,6 @@ class CommonSaleListView extends StatelessWidget {
 
               ],
             ),
-
-
           ],
         ),
       ),
