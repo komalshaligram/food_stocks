@@ -262,9 +262,9 @@ class RecommendationProductsBloc
                         productListIndex][
                         productStockUpdateIndex]
                             .productSaleId,
-                    orElse: () => SaleProduct(),
+                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                   ) ??
-                      SaleProduct()) ==
+                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                   -1
                   ? -2
                   : supplier.saleProduct?.indexOf(
@@ -276,9 +276,9 @@ class RecommendationProductsBloc
                         productListIndex][
                         productStockUpdateIndex]
                             .productSaleId,
-                    orElse: () => SaleProduct(),
+                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                   ) ??
-                      SaleProduct()) ??
+                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                   -1
                   : -1,
               supplierSales: supplier.saleProduct
@@ -847,10 +847,15 @@ class RecommendationProductsBloc
                 ?.map((supplier) =>
                 SearchModel(
                   searchId: supplier.id ?? '',
-                  name: supplier.supplierDetail?.companyName ?? '',
+                  name: supplier.supplierDetail?.companyName?? '',
                   searchType: SearchTypes.supplier,
                   image: supplier.logo ?? '',
                   isPesach: supplier.isPesach??false,
+                 /* salePrice: double.parse(supplier.sale.salePrice.toString()),
+                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                      .body
+                      ?.text ??
+                      '',*/
                 ))
                 .toList() ??
                 []);
@@ -864,6 +869,11 @@ class RecommendationProductsBloc
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                   image: sale.mainImage ?? '',
                   isPesach: sale.isPesach??false,
+                //  salePrice: double.parse(sale.salePrice.toString()),
+                  salesDesc:  parse(sale.salesDescription ?? '')
+                      .body
+                      ?.text ??
+                      '',
                 ))
                 .toList() ??
                 []);
@@ -880,6 +890,11 @@ class RecommendationProductsBloc
                   priceOfBox: double.parse(supplier.productPrice.toString()),
                     lowStock: supplier.lowStock.toString(),
                   isPesach: supplier.isPesach??false,
+                  salePrice: double.parse(supplier.sale.salePrice.toString()),
+                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                      .body
+                      ?.text ??
+                      '',
                 ))
                 .toList() ??
                 []);

@@ -159,7 +159,6 @@ class BasketScreenWidget extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
-
                               },
                               child: Container(
                                 child: Row(
@@ -208,6 +207,7 @@ class BasketScreenWidget extends StatelessWidget {
                                         isPesach: state.basketProductList[index].isPesach??false,
                                         index: index,
                                         context: context,
+                                        isSaleOn: true,
                                         lowStock: state.basketProductList[index].lowStock.toString(),
                                         productStock: state.basketProductList[index].productStock ?? 0
                                       ),
@@ -328,7 +328,7 @@ class BasketScreenWidget extends StatelessWidget {
   }
 
   Widget basketListItem({required int index, required BuildContext context,
-    required String lowStock, required double productStock,required bool isPesach}) {
+    required String lowStock, required double productStock,required bool isPesach,required bool isSaleOn}) {
     return BlocBuilder<BasketBloc, BasketState>(
       builder: (context, state) {
         BasketBloc bloc = context.read<BasketBloc>();
@@ -514,6 +514,16 @@ class BasketScreenWidget extends StatelessWidget {
                                       ),
                                 ) : 0.width,
                                 lowStock.isNotEmpty?5.height:0.height,
+                                state.basketProductList[index].isSale ?Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.only(top:3,bottom:5),
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.saleBGColor,
+                                    borderRadius: BorderRadius.all(Radius.circular(8))
+                                  ),
+                                  child: Center(child: Text(state.basketProductList[index].saleDesc,style: TextStyle(color: Colors.white,fontSize: AppConstants.font_12),)),
+                                ):Container(),
                                 isPesachLabelShow(isPesach, context),
                                 isPesach?5.height:0.height,
                                 Text(
@@ -566,22 +576,11 @@ class BasketScreenWidget extends StatelessWidget {
                                                       .cartProductId ??
                                                       '',
                                                   totalPayment: state.totalPayment,
-                                                  saleId: ((state
+                                                  saleId: state
                                                       .CartItemList
                                                       .data
                                                       ?.data?[index]
-                                                      .sales
-                                                      ?.length ==
-                                                      0)
-                                                      ? ''
-                                                      : (state
-                                                      .CartItemList
-                                                      .data
-                                                      ?.data?[index]
-                                                      .sales
-                                                      ?.first
-                                                      .id ??
-                                                      '')),
+                                                      .id??''
                                                 ));
                                           } else {
                                             CustomSnackBar.showSnackBar(
@@ -654,22 +653,11 @@ class BasketScreenWidget extends StatelessWidget {
                                                       .cartProductId ??
                                                       '',
                                                   totalPayment: state.totalPayment,
-                                                  saleId: ((state
-                                                      .CartItemList
-                                                      .data
-                                                      ?.data?[index]
-                                                      .sales
-                                                      ?.length ==
-                                                      0)
-                                                      ? ''
-                                                      : (state
-                                                      .CartItemList
-                                                      .data
-                                                      ?.data?[index]
-                                                      .sales
-                                                      ?.first
-                                                      .id ??
-                                                      '')),
+                                                    saleId: state
+                                                        .CartItemList
+                                                        .data
+                                                        ?.data?[index]
+                                                        .id??''
                                                 ));
                                           }
                                           else{
@@ -833,16 +821,21 @@ class BasketScreenWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 CommonProductDetailsWidget(
+                                  salePrice: double.parse(state.productDetails.first.sale.salePrice),
+                                  maxQty: state.productDetails.first.sale.saleMaxQuantity,
+                                  endDate: state.productDetails.first.sale.saleUntilDate,
+                                  startDate: state.productDetails.first.sale.saleFromDate,
+                                  isSaleOn: state.productDetails.first.sale.isSale,
                                   isSubUserAddToBasket: state.isSubUserAddToBasket,
-                                  totalBottleDeposit: (state.bottleTax* state.productDetails.first.numberOfUnit!.toDouble()* state
+                                  totalBottleDeposit: (state.bottleTax* state.productDetails.first.numberOfUnit.toDouble()* state
                                       .productStockList[state.productListIndex][
                                   state.productStockUpdateIndex]
                                       .quantity),
                                   bottleTax: state.bottleTax,
-                                  isBottle:state.productDetails.first.isBottle??false,
+                                  isBottle:state.productDetails.first.isBottle,
                                   nmMashlim: state.productDetails.first.nmMashlim??'',
-                                  isPesach: state.productDetails.first.isPesach??false,
-                                  lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
+                                  isPesach: state.productDetails.first.isPesach,
+                                  lowStock: state.productDetails.first.supplierSales.first.lowStock ?? '',
                                   qrCode:state.productDetails.first.qrcode ?? '' ,
                                   addToOrderTap: () {
                                     context.read<BasketBloc>().add(
@@ -908,36 +901,32 @@ class BasketScreenWidget extends StatelessWidget {
                                     state.productDetails.first.mainImage ??
                                         '',
                                     ...state.productDetails.first.images
-                                        ?.map((image) =>
+                                        .map((image) =>
                                     image.imageUrl ?? '') ??
                                         []
                                   ],
                                   productPerUnit: state.productDetails.first
                                       .numberOfUnit ?? 0,
+
                                   productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
                                   productName: state.productDetails.first
                                       .productName ??
                                       '',
-                                  productCompanyName: state
-                                      .productDetails.first.brandName ??
-                                      '',
-                                  productDescription: parse(state
-                                      .productDetails
-                                      .first
-                                      .productDescription ??
-                                      '')
-                                      .body
-                                      ?.text ??
-                                      '',
                                   productSaleDescription: parse(state
                                       .productDetails
                                       .first
-                                      .productDescription ??
+                                      .sale.saleDescription??
                                       '')
                                       .body
                                       ?.text ??
                                       '',
-                                  productPrice: state
+                                  productPrice:state.productDetails.first.sale.isSale?double.parse( state.productDetails.first.sale.salePrice.toString()) *
+                                      state
+                                          .productStockList[state.productListIndex][
+                                      state.productStockUpdateIndex]
+                                          .quantity *
+                                      (state.productDetails.first
+                                          .numberOfUnit):state
                                       .productStockList[state.productListIndex][
                                   state.productStockUpdateIndex]
                                       .totalPrice *
@@ -946,15 +935,10 @@ class BasketScreenWidget extends StatelessWidget {
                                       state.productStockUpdateIndex]
                                           .quantity *
                                       (state.productDetails.first
-                                          .numberOfUnit ??
-                                          0) ,
-                                  productScaleType: state.productDetails
-                                      .first.scales?.scaleType ??
-                                      '',
+                                          .numberOfUnit) ,
                                   productWeight: state
                                       .productDetails.first.itemsWeight
-                                      ?.toDouble() ??
-                                      0.0,
+                                      .toDouble(),
                                   productStock:(state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                   isRTL: context.rtl,
                                   isSupplierAvailable:
@@ -991,7 +975,6 @@ class BasketScreenWidget extends StatelessWidget {
                                 state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context),
                               ],
                             ))
-
                     );
                   },
                 ),
@@ -1056,5 +1039,4 @@ class BasketScreenWidget extends StatelessWidget {
       ],
     );
   }
-
 }

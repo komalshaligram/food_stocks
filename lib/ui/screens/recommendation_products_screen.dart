@@ -275,7 +275,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                         );
                                       });
                                   }
-                              ):ListView.builder(
+                              ):
+                              ListView.builder(
                                 itemCount: state.recommendationProductsList.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -378,6 +379,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
+                          salePrice: state.searchList[index].salePrice,
+                          saleDesc: state.searchList[index].salesDesc,
                           isPesach: state.searchList[index].isPesach,
                           lowStock: state.searchList[index].lowStock,
                             numberOfUnits:state.searchList[index].numberOfUnits,
@@ -598,109 +601,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildRecommendationProducts({
-    required BuildContext context,
-    required int totalSale,
-    required String productImage,
-    required String productName,
-    required double productPrice,
-    required void Function() onPressed,
-  }) {
-    return Container(
-      // height: 150,
-      // width: 130,
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius:
-            BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        boxShadow: [
-          BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.15),
-              blurRadius: AppConstants.blur_10),
-        ],
-      ),
-      clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.symmetric(
-          vertical: AppConstants.padding_10,
-          horizontal: AppConstants.padding_5),
-      padding: EdgeInsets.symmetric(
-          vertical: AppConstants.padding_5,
-          horizontal: AppConstants.padding_10),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-            child: Image.network(
-              "${AppUrls.baseFileUrl}$productImage",
-              height: 70,
-              fit: BoxFit.fitHeight,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress?.cumulativeBytesLoaded !=
-                    loadingProgress?.expectedTotalBytes) {
-                  return CommonShimmerWidget(
-                    child: Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(AppConstants.radius_10)),
-                      ),
-                    ),
-                  );
-                }
-                return child;
-              },
-              errorBuilder: (context, error, stackTrace) {
-                // debugPrint('sale list image error : $error');
-                return Container(
-                  child: Image.asset(AppImagePath.imageNotAvailable5,
-                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                );
-              },
-            ),
-          ),
-          5.height,
-          Text(
-            productName,
-            style: AppStyles.rkBoldTextStyle(
-                size: AppConstants.font_12,
-                color: AppColors.blackColor,
-                fontWeight: FontWeight.w600),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          5.height,
-          Expanded(
-            child: totalSale == 0
-                ? 0.width
-                : Text(
-                    "${totalSale} ${AppLocalizations.of(context)!.discount}",
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_10,
-                        color: AppColors.saleRedColor,
-                        fontWeight: FontWeight.w600),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-          ),
-          5.height,
-          Center(
-            child: CommonProductButtonWidget(
-              title:
-                  "${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}",
-              onPressed: onPressed,
-              textColor: AppColors.whiteColor,
-              bgColor: AppColors.mainColor,
-              borderRadius: AppConstants.radius_3,
-              textSize: AppConstants.font_12,
-            ),
-          )
-        ],
-      ),
-    );
-  }
+
   void showProductDetails({
     required BuildContext context, required String productId,
     bool? isBarcode , String productStock = '0',
@@ -766,6 +667,11 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              salePrice: double.parse(state.productDetails.first.sale.salePrice),
+                              maxQty: state.productDetails.first.sale.saleMaxQuantity,
+                              endDate: state.productDetails.first.sale.saleUntilDate,
+                              startDate: state.productDetails.first.sale.saleFromDate,
+                              isSaleOn: state.productDetails.first.sale.isSale,
                               isSubUserAddToBasket: state.isSubUserAddToBasket,
                               bottleTax: state.bottleDeposit,
                               totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
@@ -850,21 +756,11 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               productName: state.productDetails.first
                                   .productName ??
                                   '',
-                              productCompanyName: state
-                                  .productDetails.first.brandName ??
-                                  '',
-                              productDescription: parse(state
-                                  .productDetails
-                                  .first
-                                  .productDescription ??
-                                  '')
-                                  .body
-                                  ?.text ??
-                                  '',
+
                               productSaleDescription: parse(state
                                   .productDetails
                                   .first
-                                  .productDescription ??
+                                  .sale.saleDescription ??
                                   '')
                                   .body
                                   ?.text ??
@@ -878,15 +774,10 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   state.productStockUpdateIndex]
                                       .quantity *
                                   (state.productDetails.first
-                                      .numberOfUnit ??
-                                      0) ,
-                              productScaleType: state.productDetails
-                                  .first.scales?.scaleType ??
-                                  '',
+                                      .numberOfUnit) ,
+
                               productWeight: state
-                                  .productDetails.first.itemsWeight
-                                  ?.toDouble() ??
-                                  0.0,
+                                  .productDetails.first.itemsWeight.toDouble(),
                               productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable:
@@ -1015,7 +906,10 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
     bool? isLastItem, required String productStock,
     required int numberOfUnits,
     required double priceOfBox,
-    required bool isPesach
+    required bool isPesach,
+    required double salePrice,
+    required String saleDesc
+
   }) {
     debugPrint('isPesach:$isPesach');
     return Column(
@@ -1071,7 +965,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: lowStock.isNotEmpty || (productStock) != '0' ? isPesach?135:120 :  searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company || searchType == SearchTypes.supplier ? 80 :110,
+            height: (productStock) != '0' || lowStock.isEmpty ? isPesach?130: 110 : isPesach?130: 110,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1090,7 +984,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  height: 60,
+                  height: 70,
                   width: 50,
                   child: Image.network(
                     '${AppUrls.baseFileUrl}$searchImage',
@@ -1109,7 +1003,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       }
                     },
                     errorBuilder: (context, error, stackTrace) {
-                      debugPrint('home error 1_____${error}');
                       return searchType == SearchTypes.subCategory
                           ? Image.asset(AppImagePath.imageNotAvailable5,
                           height: 60, width: 50, fit: BoxFit.cover)
@@ -1128,18 +1021,17 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: getScreenWidth(context) * 0.45,
+                      width: getScreenWidth(context) /1.5,
                       child: Text(
                         searchName,
                         style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.font_12,
                           color: AppColors.blackColor,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
+                        overflow: TextOverflow.visible,
                       ),
                     ),
-
                     Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -1179,6 +1071,26 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                             ],
                           ),
                         ),
+                        salePrice!=0.0? Container(
+                          child: Column(
+                            children: [
+                              Text(
+                                '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.blueColor,
+                                    fontWeight: FontWeight.w400).copyWith(decoration: TextDecoration.lineThrough),
+                              ),
+                              Text(
+                                '${AppLocalizations.of(context)!.currency}${salePrice.toString()}',
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_12,
+                                    color: AppColors.redColor,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          ),
+                        ):
                         priceOfBox != 0.0 ? Container(
                           width: 60,
                           child: Text(
@@ -1189,14 +1101,31 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                 fontWeight: FontWeight.w400),
                           ),
                         ) : 0.width,
-
                       ],
                     ),
-                    isPesachLabelShow(isPesach, context),
-                    isPesach ? 3.height :0.height,
+                    3.height,
+                    isPesach?
+                    isPesachLabelShow(isPesach,context)
+                        :0.height,
+                    saleDesc.isNotEmpty?
+                    Container(
+                      width:getScreenWidth(context)/1.5,
+                      padding: EdgeInsets.all(3),
+                      margin: EdgeInsets.only(top:5),
+                      decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                      child: Center(
+                        child: Text(
+                          "${parse(saleDesc).body?.text}",
+                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor,),
+                          maxLines: 3,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    )
+                        :0.height
                   ],
                 ),
-
               ],
             ),
           ),

@@ -54,11 +54,33 @@ class SupplierProductsData with _$SupplierProductsData {
     @JsonKey(name: "productStock") dynamic productStock,
     @JsonKey(name: "isPesach") bool? isPesach,
     @JsonKey(name: "nmMashlim") String? nmMashlim,
+    @JsonKey(name: "sale") Sale? sale,
     String? lowStock,
   }) = _SupplierProductsData;
 
   factory SupplierProductsData.fromJson(Map<String, dynamic> json) =>
       _$SupplierProductsDataFromJson(json);
+}
+
+
+@freezed
+class Sale with _$Sale {
+  const factory Sale({
+    @JsonKey(name: "isSale")
+    required bool isSale,
+    @JsonKey(name: "salePrice")
+    required String salePrice,
+    @JsonKey(name: "saleFromDate")
+    required String saleFromDate,
+    @JsonKey(name: "saleUntilDate")
+    required String saleUntilDate,
+    @JsonKey(name: "saleMaxQuantity")
+    required String saleMaxQuantity,
+    @JsonKey(name: "saleDescription")
+    required String saleDescription,
+  }) = _Sale;
+
+  factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
 }
 
 @freezed

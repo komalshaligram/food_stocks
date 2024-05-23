@@ -257,9 +257,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                         productListIndex][
                         productStockUpdateIndex]
                             .productSaleId,
-                    orElse: () => SaleProduct(),
+                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                   ) ??
-                      SaleProduct()) ==
+                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                   -1
                   ? -2
                   : supplier.saleProduct?.indexOf(
@@ -271,13 +271,12 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                         productListIndex][
                         productStockUpdateIndex]
                             .productSaleId,
-                    orElse: () => SaleProduct(),
+                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                   ) ??
-                      SaleProduct()) ??
+                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                   -1
                   : -1,
-              supplierSales: supplier.saleProduct
-                  ?.map((sale) => SupplierSaleModel(
+              supplierSales: supplier.saleProduct.map((sale) => SupplierSaleModel(
                   saleId: sale.saleId ?? '',
                   saleName: sale.saleName ?? '',
                   saleDescription:
@@ -847,6 +846,11 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   searchType: SearchTypes.supplier,
                   image: supplier.logo ?? '',
                   isPesach: supplier.isPesach??false,
+               /*   salePrice: double.parse(supplier.sale.salePrice.toString()),
+                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                      .body
+                      ?.text ??
+                      '',*/
                 ))
                 .toList() ??
                 []);
@@ -860,6 +864,11 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                   image: sale.mainImage ?? '',
                   isPesach: sale.isPesach??false,
+                 // salePrice: double.parse(sale.salePrice.toString()),
+                  salesDesc:  parse(sale.salesDescription ?? '')
+                      .body
+                      ?.text ??
+                      '',
                 ))
                 .toList() ??
                 []);
@@ -877,6 +886,11 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   priceOfBox: double.parse(supplier.productPrice.toString()),
                     lowStock: supplier.lowStock.toString(),
                   isPesach: supplier.isPesach??false,
+                  salePrice: double.parse(supplier.sale.salePrice.toString()),
+                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                      .body
+                      ?.text ??
+                      '',
                 ))
                 .toList() ??
                 []);

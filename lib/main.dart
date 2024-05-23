@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:eraser/eraser.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -28,16 +27,14 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     debugPrint("Handling a background message:${message.data.toString()}");
     var data = json.decode(message.data['data'].toString());
 
-
-    Eraser.clearAppNotificationsByTag(data['messageId']);
     FlutterAppBadger.updateBadgeCount(PushNotificationService().notificationCount+1);
     if(data!=null){
-      debugPrint('noti from  main');
+      debugPrint('notifrom main');
       PushNotificationService().showNotification(
           notiId: message.notification.hashCode,
           androidIcon:message.notification?.android?.smallIcon,
           data: data,
-          isNavigate: true,
+          isNavigate: false,
           showNotification: true,
           isAppOpen: true
       );
@@ -52,7 +49,6 @@ void main() async {
     if(Platform.isAndroid){
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     }
-    //await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     SharedPreferencesHelper preferencesHelper =

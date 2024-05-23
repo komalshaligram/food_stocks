@@ -14,6 +14,9 @@ class ProductDetailsModel{
  String? lowStock;
  double? productStock;
  bool? isPesach;
+ String saleDesc;
+ double? discountPrice;
+ bool isSale;
 
   ProductDetailsModel({
     this.isProductIssue = false,
@@ -28,8 +31,11 @@ class ProductDetailsModel{
      this.isProcess = false,
     this.lowStock = '',
     this.productStock = 0,
-required this.isPesach
-   //required this.discountPercentage,
+required this.isPesach,
+    required this.saleDesc,
+   required this.discountPrice,
+     this.isSale = false
+
   });
 
 

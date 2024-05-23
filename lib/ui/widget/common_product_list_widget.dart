@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:html/parser.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -24,24 +25,27 @@ class CommonProductListWidget extends StatelessWidget {
   final String numberOfUnits;
   final String lowStock;
 final bool? isPesach;
+final bool? isFromSale;
+final String? salesDesc;
 
     CommonProductListWidget({super.key,
      this.height,
-     this.width,
+     this.width = 140,
      required this.productImage,
      required this.productName,
-     required this.totalSaleCount,
+      this.totalSaleCount =0,
      required this.price,
      required this.onButtonTap, this.productStock = '0',
      this.isGuestUser = false,
      this.numberOfUnits = '0',
       required this.lowStock,
-      required this.isPesach
+      required this.isPesach,
+       this.isFromSale = false,
+      this.salesDesc = ''
    });
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: onButtonTap,
       child: Container(
@@ -100,7 +104,6 @@ final bool? isPesach;
                   vertical: AppConstants.padding_15,
                   horizontal: AppConstants.padding_10),
               width: 150,
-           //   height: 100,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,18 +154,45 @@ final bool? isPesach;
                         color: AppColors.blackColor,
                         fontWeight: FontWeight.w400),
                   ) : 0.width : 0.width,
-
-                  !isGuestUser? numberOfUnits !='0' && price != 0.0 ? Text(
+                  salesDesc!.isNotEmpty?Container(
+                    padding: EdgeInsets.all(3),
+                    margin: EdgeInsets.zero,
+                    decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                    child: Text(
+                      "${parse(salesDesc).body?.text}",
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor,fontWeight: FontWeight.w500),
+                      maxLines: 3,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ):0.width,
+                  !isGuestUser? numberOfUnits !='0' && price != 0.0 ? isFromSale!?Text.rich(TextSpan(
+                    text: '${AppLocalizations.of(context)?.price_par_box} ',
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_12, color: AppColors.blackColor),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: '${AppLocalizations.of(context)?.currency}${(price * int.parse(numberOfUnits)).toStringAsFixed(2)} ',
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.font_12, color: AppColors.blackColor).copyWith(decoration: TextDecoration.lineThrough),
+                      ),
+                      TextSpan(
+                        text: ' ${AppLocalizations.of(context)?.currency}${(price * int.parse(numberOfUnits)).toStringAsFixed(2)}',
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.font_12, color: AppColors.redColor),
+                      ),
+                    ],
+                  ),
+                  ) :Text(
                     '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(price * int.parse(numberOfUnits)).toStringAsFixed(2)}',
                     style: AppStyles.rkBoldTextStyle(
                         size: AppConstants.font_12,
                         color: AppColors.blueColor,
                         fontWeight: FontWeight.w400),
-                  ) : 0.width : 0.width,
+                  ): 0.width : 0.width,
                 ],
               ),
             ),
-
             !isGuestUser ? CommonProductButtonWidget(
               title:
               "${AppLocalizations.of(context)!.currency}${price.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : price.toStringAsFixed(AppConstants.amountFrLength)}",

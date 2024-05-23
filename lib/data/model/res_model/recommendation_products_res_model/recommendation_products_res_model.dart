@@ -1,62 +1,88 @@
-// To parse this JSON data, do
-//
-//     final recommendationProductsResModel = recommendationProductsResModelFromJson(jsonString);
-
+import 'package:meta/meta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
+
 
 part 'recommendation_products_res_model.freezed.dart';
-
 part 'recommendation_products_res_model.g.dart';
-
-RecommendationProductsResModel recommendationProductsResModelFromJson(
-        String str) =>
-    RecommendationProductsResModel.fromJson(json.decode(str));
-
-String recommendationProductsResModelToJson(
-        RecommendationProductsResModel data) =>
-    json.encode(data.toJson());
 
 @freezed
 class RecommendationProductsResModel with _$RecommendationProductsResModel {
   const factory RecommendationProductsResModel({
-    @JsonKey(name: "status") int? status,
-    @JsonKey(name: "message") String? message,
-    @JsonKey(name: "data") List<RecommendationData>? data,
-    @JsonKey(name: "metaData") MetaData? metaData,
+    @JsonKey(name: "status")
+    required int status,
+    @JsonKey(name: "message")
+    required String message,
+    @JsonKey(name: "data")
+    required List<RecommendationData> data,
+    @JsonKey(name: "metaData")
+    required MetaData metaData,
   }) = _RecommendationProductsResModel;
 
-  factory RecommendationProductsResModel.fromJson(Map<String, dynamic> json) =>
-      _$RecommendationProductsResModelFromJson(json);
+  factory RecommendationProductsResModel.fromJson(Map<String, dynamic> json) => _$RecommendationProductsResModelFromJson(json);
 }
 
 @freezed
 class RecommendationData with _$RecommendationData {
   const factory RecommendationData({
-    @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "productStock") double? productStock,
-    @JsonKey(name: "totalSale") int? totalSale,
-    @JsonKey(name: "productPrice") double? productPrice,
-    @JsonKey(name: "mainImage") String? mainImage,
-    @JsonKey(name: "productName") String? productName,
-    @JsonKey(name: "isPesach") bool? isPesach,
-    @JsonKey(name: "nmMashlim") String? nmMashlim,
-     int? numberOfUnit,
-    String? lowStock,
+    @JsonKey(name: "_id")
+    required String id,
+    @JsonKey(name: "productStock")
+    required int productStock,
+    @JsonKey(name: "totalSale")
+    required int totalSale,
+    @JsonKey(name: "productPrice")
+    required double productPrice,
+    @JsonKey(name: "boxes")
+    required int boxes,
+    @JsonKey(name: "lowStock")
+    required String lowStock,
+    @JsonKey(name: "mainImage")
+    required String mainImage,
+    @JsonKey(name: "isPesach")
+    required bool isPesach,
+    @JsonKey(name: "nmMashlim")
+    required String nmMashlim,
+    @JsonKey(name: "productName")
+    required String productName,
+    @JsonKey(name: "numberOfUnit")
+    required int numberOfUnit,
+    @JsonKey(name: "sale")
+    required Sale sale,
   }) = _RecommendationData;
 
-  factory RecommendationData.fromJson(Map<String, dynamic> json) =>
-      _$RecommendationDataFromJson(json);
+  factory RecommendationData.fromJson(Map<String, dynamic> json) => _$RecommendationDataFromJson(json);
+}
+
+@freezed
+class Sale with _$Sale {
+  const factory Sale({
+    @JsonKey(name: "isSale")
+    required bool isSale,
+    @JsonKey(name: "salePrice")
+    required String salePrice,
+    @JsonKey(name: "saleFromDate")
+    required String saleFromDate,
+    @JsonKey(name: "saleUntilDate")
+    required String saleUntilDate,
+    @JsonKey(name: "saleMaxQuantity")
+    required String saleMaxQuantity,
+    @JsonKey(name: "saleDescription")
+    required String saleDescription,
+  }) = _Sale;
+
+  factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
 }
 
 @freezed
 class MetaData with _$MetaData {
   const factory MetaData({
-    @JsonKey(name: "currentPage") int? currentPage,
-    @JsonKey(name: "totalFilteredCount") int? totalFilteredCount,
-    @JsonKey(name: "totalFilteredPage") int? totalFilteredPage,
+    @JsonKey(name: "currentPage")
+    required int currentPage,
+    @JsonKey(name: "totalFilteredCount")
+    required int totalFilteredCount,
+    @JsonKey(name: "totalFilteredPage")
+    required int totalFilteredPage,
   }) = _MetaData;
 
-  factory MetaData.fromJson(Map<String, dynamic> json) =>
-      _$MetaDataFromJson(json);
+  factory MetaData.fromJson(Map<String, dynamic> json) => _$MetaDataFromJson(json);
 }

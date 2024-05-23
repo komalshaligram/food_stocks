@@ -16,6 +16,7 @@ class ProductSupplierModel with _$ProductSupplierModel {
     @Default('0') String stock,
     // @Default(false) bool isSelected,
     @Default(-1) int selectedIndex,
+    @Default(-1) int maxQty,
   }) = _ProductSupplierModel;
 
   factory ProductSupplierModel.fromJson(Map<String, dynamic> json) =>

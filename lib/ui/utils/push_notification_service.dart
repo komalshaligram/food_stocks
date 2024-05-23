@@ -35,7 +35,7 @@ class PushNotificationService {
 
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
-  _handleMessage(RemoteMessage message) {
+  _handleMessage(RemoteMessage message,bool showNoti) {
     var data = json.decode(message.data['data'].toString());
     final RemoteNotification? notification = message.notification;
     final String? messageId = message.messageId;
@@ -50,8 +50,8 @@ class PushNotificationService {
           notiId: notification.hashCode,
           androidIcon: android?.smallIcon ?? '',
           data: data,
-          isNavigate: true,
-          showNotification: false,
+          isNavigate: !showNoti,
+          showNotification: showNoti,
           isAppOpen: false);
     }
     FlutterAppBadger.updateBadgeCount(notificationCount);
@@ -79,7 +79,7 @@ class PushNotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) async {
         if (message != null) {
-          _handleMessage(message);
+          _handleMessage(message,false);
         }
       },
     );
@@ -87,7 +87,7 @@ class PushNotificationService {
     FirebaseMessaging.instance.getInitialMessage().then((message) async {
       debugPrint('_______background calling...');
       if (message != null) {
-        _handleMessage(message);
+        _handleMessage(message,true);
       }
     });
     enableIOSNotifications();
@@ -141,7 +141,7 @@ class PushNotificationService {
         debugPrint('data:${data.toString()}');
 
         if (data != null) {
-          showNotification(
+            showNotification(
               notiId: notification.hashCode,
               androidIcon: android?.smallIcon ?? '',
               data: data,
@@ -245,25 +245,25 @@ class PushNotificationService {
     debugPrint('id 1= ${id}');
     debugPrint('isAppOpen = ${isAppOpen}');
 
-    if (isAppOpen) {
+   // if (isAppOpen) {
       debugPrint('subPage  1 = ${subPage}');
       if (subPage == '') {
-        if (mainPage == 'companyScreen/') {
+        if (mainPage == 'companyScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.companyScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-        if (mainPage == 'saleScreen/') {
+        if (mainPage == 'saleScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.productSaleScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-        if (mainPage == 'supplierScreen/') {
+        if (mainPage == 'supplierScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.supplierScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-        if (mainPage == 'storeScreen/') {
+        if (mainPage == 'storeScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.bottomNavScreen.name, arguments: {
             AppStrings.companyIdString: id,
@@ -274,6 +274,10 @@ class PushNotificationService {
         if (subPage == 'companyProductsScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.companyProductsScreen.name,
+              arguments: {AppStrings.companyIdString: id});
+        } else if (subPage == 'saleProductScreen') {
+          Navigator.pushNamed(navigatorKey.currentState!.context,
+              RouteDefine.productSaleScreen.name,
               arguments: {AppStrings.companyIdString: id});
         } else if (subPage == 'supplierProductsScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
@@ -298,11 +302,11 @@ class PushNotificationService {
           ));
         }
       }
-    } else {
+  /*  } else {
       AppRouting.generateRoute(RouteSettings(
         name: RouteDefine.splashScreen.name,
-      ));
-    }
+      ));*/
+  //  }
   }
 
   Future<void> enableIOSNotifications() async {

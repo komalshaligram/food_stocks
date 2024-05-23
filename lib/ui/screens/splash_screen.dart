@@ -1,8 +1,5 @@
-import 'dart:io';
-import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:food_stock/bloc/splash/splash_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -37,9 +34,8 @@ class SplashScreen extends StatelessWidget {
 class SplashScreenWidget extends StatelessWidget {
   SplashScreenWidget({Key? key}) : super(key: key);
 
-  //String? deviceId;
 
-  getVersion(SharedPreferencesHelper preferencesHelper) async {
+  void getVersion(SharedPreferencesHelper preferencesHelper) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     debugPrint("package info : ${packageInfo.toString()}");
     String version = packageInfo.version;
@@ -47,50 +43,16 @@ class SplashScreenWidget extends StatelessWidget {
     debugPrint("splash pref = ${preferencesHelper.getUserLoggedIn()}");
   }
 
- /* getDeviceId() async {
-    try {
-      deviceId = await PlatformDeviceId.getDeviceId;
-      debugPrint('deviceId:$deviceId');
-    } on PlatformException {
-      deviceId = 'Failed to get deviceId.';
-    }
-    return deviceId;
-  }*/
-
-void appFlyerSetup() {
-    AppsflyerSdk? _appsflyerSdk;
-    final AppsFlyerOptions options = AppsFlyerOptions(
-        afDevKey: dotenv.env["DEV_KEY"] ?? '',
-        showDebug: true,
-        appId: Platform.isAndroid?'com.foodstock.dev':'id6468264054',
-        timeToWaitForATTUserAuthorization: 15);
-    _appsflyerSdk = AppsflyerSdk(options);
-    _appsflyerSdk.initSdk(
-        registerConversionDataCallback: true,
-        registerOnAppOpenAttributionCallback: true,
-        registerOnDeepLinkingCallback: false);
-    _appsflyerSdk.onAppOpenAttribution((res) {
-      debugPrint("onAppOpenAttribution res: " + res.toString());
-      return _appsflyerSdk?.logEvent('App Open', res);
-    });
-    _appsflyerSdk.onInstallConversionData((res) {
-      debugPrint("onInstallConversionData res: " + res.toString());
-      return _appsflyerSdk?.logEvent('App Install', res);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) async {
-        if(Platform.isAndroid){
-        // appFlyerSetup();
-        }
         if (state.isRedirected) {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
           getVersion(preferencesHelper);
-          //getDeviceId();
+
           debugPrint('${preferencesHelper.getUserLoggedIn()}');
           if (preferencesHelper.getUserLoggedIn()) {
             Navigator.pushReplacementNamed(

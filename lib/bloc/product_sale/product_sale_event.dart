@@ -48,5 +48,8 @@ class ProductSaleEvent with _$ProductSaleEvent {
       {required BuildContext context}) = _RefreshListEvent;
   const factory ProductSaleEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
   const factory ProductSaleEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
+  const factory ProductSaleEvent.getGridListView(
+      ) = _getGridListView;
+
 
 }

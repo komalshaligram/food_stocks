@@ -77,6 +77,22 @@ Widget isPesachLabelShow(bool isPesach,BuildContext context,){
  }
 }
 
+Widget saleDescWidget(BuildContext context,String salesDesc){
+
+    return Container(
+        padding: EdgeInsets.only(left: 5,right: 5),
+        decoration: BoxDecoration(
+            color: AppColors.redColor,
+            border: Border.all(color: AppColors.redColor),
+            borderRadius: BorderRadius.all(Radius.circular(10))
+        ),
+        child: Text(salesDesc,
+          style: AppStyles.rkRegularTextStyle(
+            size: AppConstants.font_13,
+          ),
+        ));
+
+}
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
   static void showSnackBar({

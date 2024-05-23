@@ -24,6 +24,7 @@ class ProductSaleState with _$ProductSaleState {
     required bool isRelatedShimmering,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
+    required bool isGridView
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => ProductSaleState(
@@ -47,6 +48,7 @@ class ProductSaleState with _$ProductSaleState {
     relatedProductList: [],
     isRelatedShimmering: false,
       bottleDeposit:0,
-    isSubUserAddToBasket: false
+    isSubUserAddToBasket: false,
+      isGridView : true
       );
 }

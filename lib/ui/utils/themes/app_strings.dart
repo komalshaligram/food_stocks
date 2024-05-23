@@ -421,6 +421,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.needtoapprovepreviousorder;
       case 'subuserphonenumberalreadyexist':
         return AppLocalizations.of(context)!.phone_number_of_other_subuser;
+      case 'salemaxquantity':
+        return AppLocalizations.of(context)!.not_add_more_than_max_qty;
     }
     return key;
   }
