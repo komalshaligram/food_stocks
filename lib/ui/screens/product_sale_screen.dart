@@ -128,8 +128,6 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                           isGuestUser: state.isGuestUser,
                                           index: index,
                                           context: context,
-
-
                                           saleImage: state.productSalesList[index].mainImage,
                                           title: state.productSalesList[index].name,
                                           productName: state.productSalesList[index].productName,
