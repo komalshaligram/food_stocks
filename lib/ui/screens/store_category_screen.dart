@@ -501,7 +501,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 shrinkWrap: true,
                                                 physics: NeverScrollableScrollPhysics(),
                                                 padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.52),
+                                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context)),
                                                 itemBuilder: (context, index) =>
                                                     CommonProductSaleItemWidget(
                                                         isSale: state.planogramProductList[index].product.sale.isSale,

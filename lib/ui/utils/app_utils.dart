@@ -53,9 +53,9 @@ Future<String> getBottleTax() async {
  double getChildAspectRatio(BuildContext context){
   return Platform.isAndroid? getScreenHeight(context) > 900
        ? AppConstants.productGridAspectRatio9 :getScreenHeight(context) >  820
-      && getScreenHeight(context) <  900? AppConstants.productGridAspectRatio8
-       : AppConstants.productGridAspectRatio75: getScreenHeight(context) > 820
-       ? AppConstants.productGridAspectRatio8:AppConstants.productGridAspectRatio75;
+      && getScreenHeight(context) <  900? AppConstants.productGridAspectRatio51
+       : AppConstants.productGridAspectRatio51: getScreenHeight(context) > 820
+       ? AppConstants.productGridAspectRatio51:AppConstants.productGridAspectRatio51;
  }
 
 Widget isPesachLabelShow(bool isPesach,BuildContext context,){

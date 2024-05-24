@@ -633,7 +633,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                         debugPrint("tap 1");
                                                         if(!state.isGuestUser){
                                                           showProductDetails(
-                                                            isFromSale: true,
                                                             productListIndex: 3,
                                                             context: context,
                                                             productId: state
@@ -1169,7 +1168,6 @@ class HomeScreenWidget extends StatelessWidget {
     bool isRelated = false,
     bool isBottle = false,
     int productListIndex = 0,
-    bool isFromSale = false,
     int maxQty = 0
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
