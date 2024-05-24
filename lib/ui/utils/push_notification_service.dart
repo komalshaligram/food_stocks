@@ -255,8 +255,7 @@ class PushNotificationService {
         }
         if (mainPage == 'saleScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
-              RouteDefine.productSaleScreen.name,
-              arguments: {AppStrings.companyIdString: id});
+              RouteDefine.productSaleScreen.name,);
         }
         if (mainPage == 'supplierScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,

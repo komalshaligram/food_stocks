@@ -49,7 +49,7 @@ class SupplierProductsBloc
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-  int _maxQty = -1;
+
   SupplierProductsBloc() : super(SupplierProductsState.initial()) {
     on<SupplierProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -242,7 +242,7 @@ class SupplierProductsBloc
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-        _maxQty = -1;
+
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -306,7 +306,6 @@ class SupplierProductsBloc
                     _isProductInCart = true;
                     _cartProductId = cartProduct.cartProductId ?? '';
                     _productQuantity = cartProduct.totalQuantity ?? 0;
-                    _maxQty = cartProduct.sale.saleMaxQuantity;
                     return;
                   }
                 });
@@ -701,9 +700,7 @@ class SupplierProductsBloc
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
                     isNoteOpen: false,
-                    quantity: /*state.productStockList[state.productStockUpdateIndex]
-                    .quantity +*/ _productQuantity,
-                    maxQty: _maxQty,
+                    quantity: _productQuantity,
                     productSupplierIds: '',
                     totalPrice: 0.0,
                     productSaleId: '',

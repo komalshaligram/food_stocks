@@ -157,7 +157,7 @@ class PlanogramProductBloc
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            if(response.product != null){
+            if(response.product.isNotEmpty){
               add(PlanogramProductEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if ( (event.isBarcode )) {
@@ -166,8 +166,8 @@ class PlanogramProductBloc
                   .copyWith(
                   quantity: _productQuantity,
                   maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
-                  productId: response.product.first.id ?? '' ,
-                  stock: (response.product.first.supplierSales.first.productStock.toString() ?? "0")
+                  productId: response.product.first.id  ,
+                  stock: (response.product.first.supplierSales.first.productStock.toString() )
               );
 
               emit(state.copyWith(productStockList: productStockList));
@@ -178,14 +178,14 @@ class PlanogramProductBloc
             List<ProductSupplierModel> supplierList = [];
 
             supplierList.addAll(response.product.first.supplierSales.map((supplier) => ProductSupplierModel(
-              supplierId: supplier.supplierId ?? '',
-              companyName: supplier.supplierCompanyName ?? '',
+              supplierId: supplier.supplierId ,
+              companyName: supplier.supplierCompanyName ,
               basePrice:
-              double.parse(supplier.productPrice ?? '0.0'),
+              double.parse(supplier.productPrice ),
               quantity: _productQuantity,
               maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
               stock: supplier.productStock.toString(),
-              selectedIndex: (supplier.supplierId ?? '') ==
+              selectedIndex: (supplier.supplierId ) ==
                   state
                       .productStockList[productListIndex]
                   [productStockUpdateIndex]
@@ -304,8 +304,7 @@ class PlanogramProductBloc
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
+                    response.message.toLocalization(),
                     event.context),
                 type: SnackBarType.FAILURE);
           }
