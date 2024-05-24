@@ -46,7 +46,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-  int _maxQuantity = -1;
   ReorderBloc() : super(ReorderState.initial()) {
 
     on<ReorderEvent>((event, emit) async {
@@ -146,7 +145,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-        _maxQuantity = -1;
+
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -213,7 +212,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                     _isProductInCart = true;
                     _cartProductId = cartProduct.cartProductId ?? '';
                     _productQuantity = cartProduct.totalQuantity ?? 0;
-                    _maxQuantity = cartProduct.sale.saleMaxQuantity;
                     return;
                   }
                 });

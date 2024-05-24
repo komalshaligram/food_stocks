@@ -18,10 +18,10 @@ String PesachProductReqModelToJson(PesachProductReqModel data) =>
 @freezed
 class PesachProductReqModel with _$PesachProductReqModel {
   const factory PesachProductReqModel({
-    @JsonKey(name: "pageLimit") int? pageLimit,
-    @JsonKey(name: "pageNum") int? pageNum,
-    @JsonKey(name:"onlySearch") bool? onlySearch,
-    @JsonKey(name:"isPesach") bool? isPesach,
+ int? pageLimit,
+   int? pageNum,
+    bool? onlySearch,
+   bool? isPesach,
     String? sortField,
     String? sortOrder,
 

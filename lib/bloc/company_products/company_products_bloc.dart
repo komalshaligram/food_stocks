@@ -303,8 +303,7 @@ class CompanyProductsBloc
                       sale.discountedPrice ?? '0.0'),
                   saleDiscount: double.parse(
                       sale.discountPercentage ?? '0.0')))
-                  .toList() ??
-                  [],
+                  .toList(),
             ))
                 .toList() ??
                 []);
@@ -323,7 +322,7 @@ class CompanyProductsBloc
             emit(state.copyWith(productStockList: []));
 
             emit(state.copyWith(
-                productDetails: response.product ?? [],
+                productDetails: response.product ,
                 productStockList: productStockList,
                 productStockUpdateIndex: productStockUpdateIndex,
                 noteController: TextEditingController(text: note),
@@ -429,13 +428,13 @@ class CompanyProductsBloc
 
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
-              debugPrint('responseproductid____${response.product?.first.id}');
+              debugPrint('response productid____${response.product.first.id}');
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                   quantity: _productQuantity,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
-                  totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
+                  productId: response.product.first.id ?? '' ,
+                  stock: (response.product.first.supplierSales.first.productStock.toString() ?? "0") ,
+                  totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
               );
             }
             else{
@@ -473,7 +472,7 @@ class CompanyProductsBloc
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            if(response.product != null){
+            if(response.product.isNotEmpty){
               add(CompanyProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if ( (event.isBarcode )) {
@@ -489,22 +488,21 @@ class CompanyProductsBloc
             }
 
             List<ProductSupplierModel> supplierList = [];
-            supplierList.addAll(response.product?.first.supplierSales
-                ?.map((supplier) => ProductSupplierModel(
+            supplierList.addAll(response.product.first.supplierSales.map((supplier) => ProductSupplierModel(
               maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
-              supplierId: supplier.supplierId ?? '',
-              companyName: supplier.supplierCompanyName ?? '',
+              supplierId: supplier.supplierId ,
+              companyName: supplier.supplierCompanyName ,
               basePrice:
-              double.parse(supplier.productPrice ?? '0.0'),
+              double.parse(supplier.productPrice ),
               quantity: _productQuantity,
               stock: supplier.productStock.toString(),
-              selectedIndex: (supplier.supplierId ?? '') ==
+              selectedIndex: (supplier.supplierId) ==
                   state
                       .productStockList[productListIndex]
                   [productStockUpdateIndex]
                       .productSupplierIds
-                  ? supplier.saleProduct?.indexOf(
-                supplier.saleProduct?.firstWhere(
+                  ? supplier.saleProduct.indexOf(
+                supplier.saleProduct.firstWhere(
                       (sale) =>
                   sale.saleId ==
                       state
@@ -517,8 +515,8 @@ class CompanyProductsBloc
                     SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                   -1
                   ? -2
-                  : supplier.saleProduct?.indexOf(
-                supplier.saleProduct?.firstWhere(
+                  : supplier.saleProduct.indexOf(
+                supplier.saleProduct.firstWhere(
                       (sale) =>
                   sale.saleId ==
                       state
@@ -531,8 +529,7 @@ class CompanyProductsBloc
                     SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                   -1
                   : -1,
-              supplierSales: supplier.saleProduct
-                  ?.map((sale) => SupplierSaleModel(
+              supplierSales: supplier.saleProduct.map((sale) => SupplierSaleModel(
                   saleId: sale.saleId ?? '',
                   saleName: sale.saleName ?? '',
                   saleDescription:
@@ -564,7 +561,7 @@ class CompanyProductsBloc
 
             emit(state.copyWith(
                 bottleDeposit:preferences.getBottleTax(),
-                productDetails: response.product ?? [],
+                productDetails: response.product,
                 productStockList: productStockList,
                 productStockUpdateIndex: productStockUpdateIndex,
                 noteController: TextEditingController(text: note),

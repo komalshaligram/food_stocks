@@ -46,7 +46,7 @@ class PesachProductsBloc
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-  int _maxQty = -1;
+
 
   PesachProductsBloc() : super(PesachProductsState.initial()) {
     on<PesachProductsEvent>((event, emit) async {
@@ -399,7 +399,6 @@ class PesachProductsBloc
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-         _maxQty = -1;
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -454,7 +453,6 @@ class PesachProductsBloc
                     _isProductInCart = true;
                     _cartProductId = cartProduct.cartProductId ?? '';
                     _productQuantity = cartProduct.totalQuantity ?? 0;
-                    _maxQty = cartProduct.sale.saleMaxQuantity ?? 0;
                     return;
                   }
                 });
@@ -466,13 +464,11 @@ class PesachProductsBloc
               add(PesachProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product.first.id ?? ''));
             }
             if (event.isBarcode) {
-print('saleqty___${response.product.first.sale.saleMaxQuantity}');
-print('bool___${response.product.first.sale.isSale}');
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                 quantity: _productQuantity,
-                productId: response.product.first.id ?? '',
-                stock: (response.product.first.supplierSales.first.productStock.toString() ?? '0'),
+                productId: response.product.first.id ,
+                stock: (response.product.first.supplierSales.first.productStock.toString() ),
                 maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
                 productSaleId: '',
                 productSupplierIds: '',
@@ -487,15 +483,14 @@ print('bool___${response.product.first.sale.isSale}');
 
             supplierList.addAll(response.product.first.supplierSales
                 .map((supplier) => ProductSupplierModel(
-              supplierId: supplier.supplierId ?? '',
-              companyName: supplier.supplierCompanyName ?? '',
+              supplierId: supplier.supplierId ,
+              companyName: supplier.supplierCompanyName ,
               basePrice:
-              double.parse(supplier.productPrice ?? '0.0'),
+              double.parse(supplier.productPrice ),
               quantity: _productQuantity,
               stock: supplier.productStock.toString(),
-              maxQty: _maxQty,
-
-              selectedIndex: (supplier.supplierId ?? '') ==
+                maxQty:response.product.first.sale.isSale? int.parse(response.product.first.sale.saleMaxQuantity.toString()):-1,
+                selectedIndex: (supplier.supplierId ) ==
                   state
                       .productStockList[productListIndex]
                   [productStockUpdateIndex]
@@ -534,7 +529,7 @@ print('bool___${response.product.first.sale.isSale}');
                   quantity: _productQuantity,
                   saleId: sale.saleId ?? '',
                   saleName: sale.saleName ?? '',
-                  maxQty: _maxQty,
+                  maxQty: sale.saleMaxQuantity,
                   saleDescription:
                   parse(sale.salesDescription ?? '')
                       .body
