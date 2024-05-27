@@ -128,7 +128,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    state.cartCount!=0? Positioned(
+                    state.cartCount != 0? Positioned(
                       top: 5,
                       right: context.rtl ? null : 0,
                       left: context.rtl ? 0 : null,
@@ -259,9 +259,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                   .isEmpty
                                               ? Container(
                                             height:
-                                            getScreenHeight(
-                                                context) -
-                                                160,
+                                            getScreenHeight(context) - 160,
                                             width: getScreenWidth(
                                                 context),
                                             alignment:
@@ -1184,7 +1182,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         required bool isGuestUser,
         required String lowStock,
         required bool isPesach,
-required bool isSale,
+          required bool isSale,
         required String saleDesc,
         required String discountPrice,
       }) {
@@ -1193,7 +1191,7 @@ required bool isSale,
       child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
         builder: (context1, state) {
           return Container(
-            height: AppConstants.relatedProductItemHeight,
+            height: 250,
             width: width,
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
@@ -1833,7 +1831,7 @@ required bool isSale,
                         : ''),
                 5.height,
                 SizedBox(
-                  height: AppConstants.relatedProductItemHeight,
+                  height: getScreenHeight(context) * 0.3,
                   child: list.isEmpty
                       ? Center(
                     child: Text(
@@ -1864,7 +1862,7 @@ required bool isSale,
                           list: list,
                           index: index,
                           subIndex: subIndex,
-                          height: 150,
+                          height: 165,
                           lowStock: list[index].planogramproducts?[subIndex].lowStock.toString() ?? '',
                           width: getScreenWidth(context) / 3.2);
                     },

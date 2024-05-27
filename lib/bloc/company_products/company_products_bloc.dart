@@ -482,9 +482,7 @@ class CompanyProductsBloc
                   productId: response.product?.first.id ?? '' ,
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
               );
-
               emit(state.copyWith(productStockList: productStockList));
-
             }
 
             List<ProductSupplierModel> supplierList = [];
