@@ -35,18 +35,21 @@ class BottomNavScreen extends StatelessWidget {
         ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint('bottom nav args = $args');
     return BlocProvider(
-      create: (context) => BottomNavBloc()..add(BottomNavEvent.NavigateToStoreScreenEvent(context: context, storeScreen: args?[AppStrings.pushNavigationString] ?? '',
-          basketScreen:  args?[AppStrings.isBasketScreenString] ?? '',
-      )),
+      create: (context) => BottomNavBloc()
+       /* ..add(BottomNavEvent.NavigateToStoreScreenEvent(context: context, storeScreen: args?[AppStrings.pushNavigationString] ?? '', basketScreen:  args?[AppStrings.isBasketScreenString] ?? '',
+      ))*/,
       child: BottomNavScreenWidget(
+        basketScreen: args?[AppStrings.isBasketScreenString] ?? '',
+        storeScreen: args?[AppStrings.pushNavigationString] ?? '',
       ),
     );
   }
 }
 
 class BottomNavScreenWidget extends StatelessWidget {
-
-   BottomNavScreenWidget({super.key,});
+ String storeScreen;
+ String basketScreen;
+   BottomNavScreenWidget({super.key,this.storeScreen = '' , this.basketScreen = ''});
 
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
@@ -55,9 +58,9 @@ class BottomNavScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     BottomNavBloc bloc = context.read<BottomNavBloc>();
     return BlocListener<BottomNavBloc, BottomNavState>(
-      listenWhen: (previous, current) => current.pushNotificationPath != '',
       listener: (context, state) {
         bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
+        bloc.add(BottomNavEvent.NavigateToStoreScreenEvent(context: context,storeScreen: storeScreen,basketScreen: basketScreen));
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
@@ -83,7 +86,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                 ]),
                 child: CurvedNavigationBar(
                   key: _bottomNavigationKey,
-                  index: state.index==4 && !state.isSubUserSeeWallet?(state.index-1):state.index,
+                  index: state.index == 4 && !state.isSubUserSeeWallet ? (state.index-1):state.index,
                   height: 65.0,
                 cartCount: state.cartCount,
                 isRTL: context.rtl,
@@ -176,6 +179,7 @@ class BottomNavScreenWidget extends StatelessWidget {
               body: FocusDetector(
                 onFocusGained: () {
                   bloc.add(BottomNavEvent.updateCartCountEvent(context:context));
+               //   bloc.add(BottomNavEvent.NavigateToStoreScreenEvent(context:context,storeScreen: 'snjdd',basketScreen: 'ksd'));
                 },
                 child: SafeArea(
                   child: Stack(

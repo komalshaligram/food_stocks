@@ -194,7 +194,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                 ),
                 productSaleDescription.isNotEmpty?8.height:0.height ,
                 productSaleDescription.isNotEmpty?Container(
-                  width: 200,
+                  width: getScreenWidth(context) - 50,
                   padding: EdgeInsets.all(3),
                   margin: EdgeInsets.zero,
                   decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),

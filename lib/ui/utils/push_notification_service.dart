@@ -28,9 +28,9 @@ class PushNotificationService {
   var fileName;
 
   late AndroidNotificationChannel channel;
-  String? mainPage;
-  String? subPage;
-  String? id;
+  String mainPage = '';
+  String subPage = '';
+  String id = '';
   int notificationCount = 0;
 
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
@@ -79,7 +79,7 @@ class PushNotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) async {
         if (message != null) {
-          _handleMessage(message,false);
+          _handleMessage(message,true);
         }
       },
     );
@@ -124,7 +124,7 @@ class PushNotificationService {
       onDidReceiveNotificationResponse: (NotificationResponse details) {
         debugPrint("__________details______:${details}");
         FlutterAppBadger.removeBadge();
-            manageNavigation(true, mainPage!, subPage!, id!);
+            manageNavigation(isAppOpen: true,mainPage:  mainPage,subPage:  subPage, id: id);
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
@@ -167,10 +167,24 @@ class PushNotificationService {
     channel = androidNotificationChannel();
     String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
     String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
-    mainPage = data['message']['mainPage'] ?? '';
-    subPage = data['message']['subPage'] ?? '';
-    id = data['message']['id'] ?? '';
-    String imageUrl = data['message']['imageUrl'] ?? '';
+    SharedPreferencesHelper preferences = SharedPreferencesHelper(
+        prefs: await SharedPreferences.getInstance());
+    String imageUrl = '';
+    print('preference____${preferences.getSubUser()}');
+    if(preferences.getSubUser()){
+      mainPage = data['message']['subUserMainPage'] ?? '';
+      subPage = data['message']['subUserSubPage'] ?? '';
+      id = data['message']['subUserId'] ?? '';
+      imageUrl = data['message']['imageUrl'] ?? '';
+    }
+    else{
+      mainPage = data['message']['mainPage'] ?? '';
+      subPage = data['message']['subPage'] ?? '';
+      id = data['message']['id'] ?? '';
+      imageUrl = data['message']['imageUrl'] ?? '';
+    }
+
+
     Uint8List? imageByte;
     if (imageUrl.isNotEmpty) {
       Directory dir;
@@ -232,20 +246,23 @@ class PushNotificationService {
         // payload: message.data.toString(),
       );
     }
-    if (isNavigate && showNotification) {
+    if (isNavigate /*&& showNotification*/) {
       print('___________navigation');
-      manageNavigation(isAppOpen, mainPage!, subPage!, id!);
+      manageNavigation(isAppOpen: isAppOpen, mainPage: mainPage, subPage: subPage, id: id);
     }
   }
 
   void manageNavigation(
-      bool isAppOpen, String mainPage, String subPage, String id) {
+      {bool isAppOpen = false,
+      String?mainPage = '',
+      String? subPage = '',
+      String? id = ''}) {
     debugPrint('main  1 = ${mainPage}');
     debugPrint('subPage   1= ${subPage}');
     debugPrint('id 1= ${id}');
     debugPrint('isAppOpen = ${isAppOpen}');
 
-   // if (isAppOpen) {
+    if (isAppOpen) {
       debugPrint('subPage  1 = ${subPage}');
       if (subPage == '') {
         if (mainPage == 'companyScreen') {
@@ -301,11 +318,11 @@ class PushNotificationService {
           ));
         }
       }
-  /*  } else {
+    } else {
       AppRouting.generateRoute(RouteSettings(
         name: RouteDefine.splashScreen.name,
-      ));*/
-  //  }
+      ));
+    }
   }
 
   Future<void> enableIOSNotifications() async {

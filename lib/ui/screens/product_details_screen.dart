@@ -21,7 +21,7 @@ import '../widget/common_order_content_widget.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_dialog.dart';
 import '../widget/custom_form_field_widget.dart';
-import '../widget/product_details_screen-shimmer_widget.dart';
+import '../widget/product_details_screen_shimmer_widget.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class ProductDetailsRoute {

@@ -2,8 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/bottom_nav_model/bottom_nav_model.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../ui/utils/themes/app_strings.dart';
@@ -14,6 +12,7 @@ part 'bottom_nav_bloc.freezed.dart';
 
 class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
   BottomNavBloc() : super(BottomNavState.initial()) {
+    bool isNavigation = true;
     on<BottomNavEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
@@ -56,13 +55,15 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       else if(event is _NavigateToStoreScreenEvent){
 
         emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
-
-        if(event.basketScreen == 'true'){
-          emit(state.copyWith (index: 2 , arg : event.basketScreen));
-        }
-        else if(event.storeScreen != ''){
-          emit(state.copyWith(index: 1,  arg : event.storeScreen));
-        }
+       if(isNavigation){
+    if(event.basketScreen == 'true'){
+      emit(state.copyWith (index: 2 , arg : event.basketScreen));
+    }
+    else if(event.storeScreen == 'storeScreen'){
+      emit(state.copyWith(index: 1,  arg : event.storeScreen));
+    }
+  }
+        isNavigation = false;
       }
       else if(event is _seeWalletPermissionUpdateEvent) {
         emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
