@@ -78,8 +78,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               stockList.addAll(response.data?.data?.map(
                       (product) =>
                       ProductStockModel(
-                          quantity: product.totalQuantity ?? 0,
-                          productId: product.id ?? '',
+                          quantity: product.totalQuantity,
+                          productId: product.id,
                           stock: product.productStock.toString(),
                           lowStock: product.lowStock.toString(),
                       )) ??
@@ -90,17 +90,17 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   saleDesc: element.sale.saleDescription,
                   isSale: element.sale.isSale,
                   discountPrice: element.sale.isSale?double.parse(element.sale.salePrice.toString()):0.0,
-                  isPesach: element.productDetails?.isPesach ?? false,
+                  isPesach: element.productDetails.isPesach ,
                   totalQuantity: element.totalQuantity,
-                  productName: element.productDetails?.productName ?? '',
-                  mainImage: element.productDetails?.mainImage ?? '',
+                  productName: element.productDetails.productName,
+                  mainImage: element.productDetails.mainImage ,
                   totalPayment:
-                  double.parse(element.totalAmount?.toString() ?? '0'),
-                  cartProductId: element.cartProductId ?? '',
-                  scales: element.productDetails?.scales ?? '',
-                  weight:element.productDetails!.itemsWeight.toDouble()?? 0,
-                  lowStock: element.lowStock ?? '',
-                  productStock: element.productStock.toDouble() ?? 0,
+                  double.parse(element.totalAmount.toString()),
+                  cartProductId: element.cartProductId ,
+                  scales: element.productDetails.scales,
+                  weight:element.productDetails.itemsWeight.toDouble(),
+                  lowStock: element.lowStock ,
+                  productStock: element.productStock.toDouble() ,
                 ));
               });
 
@@ -534,17 +534,17 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-              if (response.product != null) {
+              if (response.product.isNotEmpty) {
                 add(BasketEvent.RelatedProductsEvent(context: event.context,
-                    productId: response.product?.first.id ?? ''));
+                    productId: response.product.first.id ?? ''));
               }
               if ((event.isBarcode)) {
                 productStockList[0][0] = productStockList[0][0]
                     .copyWith(
                     quantity: _productQuantity,
                     maxQty: _maxQty,
-                    productId: response.product?.first.id ?? '',
-                    stock: (response.product?.first.supplierSales?.first
+                    productId: response.product.first.id ?? '',
+                    stock: (response.product.first.supplierSales.first
                         .productStock.toString() ?? "0")
                 );
 

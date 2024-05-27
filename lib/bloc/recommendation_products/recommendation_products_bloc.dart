@@ -47,7 +47,7 @@ class RecommendationProductsBloc
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-  int _maxQuantity = -1;
+
   RecommendationProductsBloc() : super(RecommendationProductsState.initial()) {
     on<RecommendationProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -106,7 +106,7 @@ class RecommendationProductsBloc
                 isLoadMore: false));
             emit(state.copyWith(
                 isBottomOfProducts: state.recommendationProductsList.length ==
-                        (response.metaData?.totalFilteredCount ?? 0)
+                        (response.metaData.totalFilteredCount ?? 0)
                     ? true
                     : false));
           } else {
@@ -114,8 +114,7 @@ class RecommendationProductsBloc
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
+                    response.message.toLocalization(),
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -147,7 +146,7 @@ class RecommendationProductsBloc
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-        _maxQuantity = -1;
+
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -211,7 +210,7 @@ class RecommendationProductsBloc
                     _isProductInCart = true;
                     _cartProductId = cartProduct.cartProductId ?? '';
                     _productQuantity = cartProduct.totalQuantity ?? 0;
-                    _maxQuantity = cartProduct.sale.saleMaxQuantity??-1;
+
                     return;
                   }
                 });
@@ -440,62 +439,6 @@ class RecommendationProductsBloc
           }
         }
       }
-    /*  else if (event is _IncreaseQuantityOfProduct) {
-        List<List<ProductStockModel>> productStockList =
-        state.productStockList.toList(growable: false);
-        if (state.productStockUpdateIndex != -1) {
-          if (productStockList[state.productListIndex]
-          [state.productStockUpdateIndex]
-              .quantity <
-              double.parse(productStockList[state.productListIndex]
-              [state.productStockUpdateIndex]
-                  .stock.toString())) {
-            if (productStockList[state.productListIndex]
-            [state.productStockUpdateIndex]
-                .productSupplierIds
-                .isEmpty) {
-
-              return;
-            }
-            if(productStockList[state.productListIndex]
-            [state.productStockUpdateIndex]
-                .maxQty!=-1){
-              if (productStockList[state.productListIndex]
-              [state.productStockUpdateIndex]
-                  .quantity >=
-                  productStockList[state.productListIndex]
-                  [state.productStockUpdateIndex]
-                      .maxQty) {
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
-                    type: SnackBarType.FAILURE);
-                return;
-              }
-            }
-
-            productStockList[state.productListIndex]
-            [state.productStockUpdateIndex] =
-                productStockList[state.productListIndex]
-                [state.productStockUpdateIndex].copyWith(
-                    quantity: productStockList[state.productListIndex]
-                    [state.productStockUpdateIndex]
-                        .quantity +
-                        1);
-            debugPrint(
-                'product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
-            emit(state.copyWith(productStockList: []));
-            emit(state.copyWith(productStockList: productStockList));
-          } else {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:
-                "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
-                // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
-                type: SnackBarType.FAILURE);
-          }
-        }
-      }*/
       else if (event is _DecreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
@@ -619,8 +562,6 @@ class RecommendationProductsBloc
           emit(state.copyWith(
               productSupplierList: supplierList,
               productStockList: productStockList));
-
-
         }
       }
       else if (event is _AddToCartProductEvent) {
@@ -671,7 +612,7 @@ class RecommendationProductsBloc
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
                     isNoteOpen: false,
-                    maxQty: _maxQuantity,
+                //    maxQty: _maxQuantity,
                     quantity: /*state.productStockList[state.productStockUpdateIndex]
                     .quantity +*/ _productQuantity,
                     productSupplierIds: '',

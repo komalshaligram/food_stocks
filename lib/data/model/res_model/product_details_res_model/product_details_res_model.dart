@@ -1,6 +1,4 @@
-// To parse this JSON data, do
-//
-//     final productDetailsResModel = productDetailsResModelFromJson(jsonString);
+
 
 import 'package:meta/meta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -18,11 +16,11 @@ class ProductDetailsResModel with _$ProductDetailsResModel
 {
   @JsonSerializable(includeIfNull: false)
   const factory ProductDetailsResModel({
-    @JsonKey(name: "status")
+
     required int status,
-    @JsonKey(name: "product")
+
     required List<Product> product,
-    @JsonKey(name: "message")
+
     required String message,
   }) = _ProductDetailsResModel;
 
@@ -35,29 +33,29 @@ class Product with _$Product {
   const factory Product({
     @JsonKey(name: "_id")
     required String id,
-    @JsonKey(name: "productName")
+
     required String productName,
-    @JsonKey(name: "brandId")
+
     required String brandId,
-    @JsonKey(name: "mainImage")
+
     required String mainImage,
-    @JsonKey(name: "qrcode")
+
     required String qrcode,
-    @JsonKey(name: "sku")
+
     required String sku,
-    @JsonKey(name: "numberOfUnit")
+
     required int numberOfUnit,
-    @JsonKey(name: "itemsWeight")
+
     required int itemsWeight,
-    @JsonKey(name: "totalWeightCardboard")
+
     required int totalWeightCardboard,
-    @JsonKey(name: "totalWeightSurface")
+
     required int totalWeightSurface,
-    @JsonKey(name: "totalWeight")
+
     required int totalWeight,
-    @JsonKey(name: "kosharMilk")
+
     required bool kosharMilk,
-    @JsonKey(name: "dairyMeatyAndFur")
+
     required String dairyMeatyAndFur,
     @JsonKey(name: "categoryId",includeIfNull: false)
     required String categoryId,

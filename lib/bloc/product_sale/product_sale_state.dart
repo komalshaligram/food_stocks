@@ -6,7 +6,7 @@ class ProductSaleState with _$ProductSaleState {
     required List<ProductSale> productSalesList,
     required String search,
     required List<Product> productDetails,
-    required List<ProductStockModel> productStockList,
+    required List<List<ProductStockModel>> productStockList,
     required bool isShimmering,
     required bool isLoading,
     required bool isProductLoading,
@@ -24,7 +24,8 @@ class ProductSaleState with _$ProductSaleState {
     required bool isRelatedShimmering,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
-    required bool isGridView
+    required bool isGridView,
+    required int productListIndex,
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => ProductSaleState(
@@ -35,7 +36,11 @@ class ProductSaleState with _$ProductSaleState {
         isLoading: false,
         isProductLoading: false,
         productStockUpdateIndex: -1,
-        productStockList: [],
+      productStockList: [
+        [ProductStockModel(productId: '')],
+        [],
+        []
+      ],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,
@@ -49,6 +54,7 @@ class ProductSaleState with _$ProductSaleState {
     isRelatedShimmering: false,
       bottleDeposit:0,
     isSubUserAddToBasket: false,
-      isGridView : true
+      isGridView : true,
+    productListIndex: -1
       );
 }

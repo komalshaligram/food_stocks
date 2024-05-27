@@ -124,7 +124,7 @@ class PushNotificationService {
       onDidReceiveNotificationResponse: (NotificationResponse details) {
         debugPrint("__________details______:${details}");
         FlutterAppBadger.removeBadge();
-        //    manageNavigation(true, mainPage!, subPage!, id!);
+            manageNavigation(true, mainPage!, subPage!, id!);
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
@@ -255,8 +255,7 @@ class PushNotificationService {
         }
         if (mainPage == 'saleScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
-              RouteDefine.productSaleScreen.name,
-              arguments: {AppStrings.companyIdString: id});
+              RouteDefine.productSaleScreen.name,);
         }
         if (mainPage == 'supplierScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,

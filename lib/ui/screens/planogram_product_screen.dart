@@ -176,10 +176,10 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
-                                childAspectRatio:0.52
+                                childAspectRatio:getChildAspectRatio(context)
                             ),
                             itemBuilder: (context, index) => buildPlanoGramProductItem(
-                              originalPrice: state.planogramProductList[index].productPrice.toString(),
+                                originalPrice: state.planogramProductList[index].productPrice ?? 0.0,
                               isSale: state.planogramProductList[index].sale?.isSale??false,
                               discountedPrice: state.planogramProductList[index].sale?.salePrice??'',
                               salesDesc: state.planogramProductList[index].sale?.saleDescription??'',
@@ -555,14 +555,13 @@ class PlanogramProductScreenWidget extends StatelessWidget {
         required bool isSale,
         required String salesDesc,
         required String discountedPrice,
-        required String originalPrice,
+        required double originalPrice,
       }) {
     return CommonProductSaleItemWidget(
-
+      originalPrice: originalPrice,
         isPesach: isPesach,
         lowStock: lowStock,
         width: 140,
-        originalPrice:double.parse(originalPrice) ,
         isGuestUser: isGuestUser,
         imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
         imageWidth: getScreenWidth(context) >= 700 ? 100 : 70,

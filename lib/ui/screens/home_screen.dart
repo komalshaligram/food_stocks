@@ -528,7 +528,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                     index]
                                                         .productStock.toString()),
                                                     productListIndex: 1,
-                                                    maxQty: int.parse(state.recommendedProductsList[index].sale.saleMaxQuantity)
                                                   );
                                                 }
                                                 else{
@@ -633,7 +632,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                         debugPrint("tap 1");
                                                         if(!state.isGuestUser){
                                                           showProductDetails(
-                                                            isFromSale: true,
                                                             productListIndex: 3,
                                                             context: context,
                                                             productId: state
@@ -967,7 +965,6 @@ class HomeScreenWidget extends StatelessWidget {
                                             context: context,
                                             productId: state
                                                 .searchList[index].searchId,
-                                            isFromSearch: true,
                                             isBarcode:  true,
                                             productListIndex: 0,
 
@@ -1164,13 +1161,8 @@ class HomeScreenWidget extends StatelessWidget {
     required BuildContext context,
     required String productId,
     bool isBarcode= false,
-    bool isFromSearch = false,
     String productStock  = '0',
-    bool isRelated = false,
-    bool isBottle = false,
     int productListIndex = 0,
-    bool isFromSale = false,
-    int maxQty = 0
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
       context: context,

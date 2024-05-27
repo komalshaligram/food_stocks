@@ -230,7 +230,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 3,
-                                      childAspectRatio: 0.52),
+                                      childAspectRatio: getChildAspectRatio(context)),
                                   itemBuilder: (context, index) {
                                     return CommonProductSaleItemWidget(
                                         isSale: state.recommendationProductsList[index].sale.isSale,

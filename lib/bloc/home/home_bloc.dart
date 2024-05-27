@@ -13,6 +13,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:store_version_checker/store_version_checker.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/error/exceptions.dart';
@@ -218,23 +219,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
               List<ProductSupplierModel> supplierList = [];
 
-              supplierList.addAll(response.product?.first.supplierSales
-                  ?.map((supplier) => ProductSupplierModel(
-                supplierId: supplier.supplierId ?? '',
-                companyName: supplier.supplierCompanyName ?? '',
+              supplierList.addAll(response.product.first.supplierSales.map((supplier) => ProductSupplierModel(
+                supplierId: supplier.supplierId ,
+                companyName: supplier.supplierCompanyName ,
                 basePrice:
-                double.parse(supplier.productPrice ?? '0.0'),
+                double.parse(supplier.productPrice ),
                 quantity: _productQuantity,
                 maxQty:response.product.first.sale.isSale? int.parse(response.product.first.sale.saleMaxQuantity.toString()):-1,
                 stock: supplier.productStock.toString(),
 
-                selectedIndex: (supplier.supplierId ?? '') ==
+                selectedIndex: (supplier.supplierId ) ==
                     state
                         .productStockList[productListIndex]
                     [productStockUpdateIndex]
                         .productSupplierIds
-                    ? supplier.saleProduct?.indexOf(
-                    supplier.saleProduct?.firstWhere(
+                    ? supplier.saleProduct.indexOf(
+                    supplier.saleProduct.firstWhere(
                           (sale) =>
                       sale.saleId ==
                           state
@@ -246,8 +246,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate: '' ),) ==
                     -1
                     ? -2
-                    : supplier.saleProduct?.indexOf(
-                    supplier.saleProduct?.firstWhere(
+                    : supplier.saleProduct.indexOf(
+                    supplier.saleProduct.firstWhere(
                           (sale) =>
                       sale.saleId ==
                           state
@@ -281,7 +281,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   []);
               supplierList.removeWhere((supplier) => supplier.stock == 0);
               debugPrint(
-                  'response list = ${response.product?.first.supplierSales?.length}');
+                  'response list = ${response.product.first.supplierSales.length}');
               debugPrint('productStockUpdateIndex$productStockUpdateIndex');
               // debugPrint(
               //     'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
@@ -342,8 +342,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          response.message!,
+                      response.message.toLocalization(),
                       event.context),
                   type: SnackBarType.FAILURE);
             }
@@ -365,24 +364,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
             if (response.status == 200) {
               List<ProductSale> saleProductsList =
-                  response.data.toList(growable: true) ?? [];
+                  response.data.toList(growable: true);
               debugPrint('sale Products = ${saleProductsList.length}');
-              debugPrint('sale Products = ${response.data?.length}');
+              debugPrint('sale Products = ${response.data.length}');
              List< List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               List<ProductStockModel>stockList = [];
               /*ProductStockModel barcodeStock = productStockList.removeLast();*/
-              stockList.addAll(response.data?.map(
+              stockList.addAll(response.data.map(
                       (saleProduct) =>
                       ProductStockModel(
-                        productId: saleProduct.id ?? '',
-                        stock: (saleProduct.productStock.toString() ?? '0')
+                        productId: saleProduct.id ,
+                        stock: (saleProduct.productStock.toString())
                       )) ??
                   []);
               productStockList[3].addAll(stockList);
 
               emit(state.copyWith(
-                  productSalesList: response.data ?? [],
+                  productSalesList: response.data ,
                   productStockList: productStockList,
                   isShimmering: false));
             } else {
@@ -578,7 +577,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
         else if (event is _AddToCartProductEvent) {
           debugPrint('cart id_____${preferences.getCartId()}');
-          debugPrint('quantityquantity :${state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+          debugPrint('quantity  quantity :${state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex]
               .productSupplierIds.isEmpty) {
             return;
@@ -1237,7 +1236,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(isShimmering: false));
           }
         }
-     /*  else if (event is _checkVersionOfAppEvent) {
+       else if (event is _checkVersionOfAppEvent) {
           final _checker = StoreVersionChecker();
           _checker.checkUpdate().then((value) {
             debugPrint('update available');
@@ -1254,7 +1253,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     event.context, preferences.getAppLanguage(),value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
               }
           });
-        }*/
+        }
         else if(event is _RelatedProductsEvent){
           emit(state.copyWith(isRelatedShimmering:true));
           debugPrint('productId__11__${event.productId}');

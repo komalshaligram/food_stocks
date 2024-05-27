@@ -169,9 +169,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   padding: EdgeInsets.symmetric(
                                                       horizontal:
                                                           AppConstants.padding_5),
-                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.52),
+                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context)),
                                                   itemBuilder: (context, index) {
-
                                                     return CommonProductSaleItemWidget(
                                                         isGuestUser: state.isGuestUser,
                                                         height: AppConstants.salesProductItemHeight,

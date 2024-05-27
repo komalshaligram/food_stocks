@@ -7,6 +7,8 @@ class ProductSaleEvent with _$ProductSaleEvent {
 
   const factory ProductSaleEvent.getProductDetailsEvent(
       {required BuildContext context,
+        required bool isBarcode,
+        required int productListIndex,
       required String productId}) = _GetProductDetailsEvent;
 
   const factory ProductSaleEvent.increaseQuantityOfProduct(
@@ -31,7 +33,9 @@ class ProductSaleEvent with _$ProductSaleEvent {
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory ProductSaleEvent.addToCartProductEvent(
-      {required BuildContext context}) = _AddToCartProductEvent;
+      {required BuildContext context,
+      required String productId
+      }) = _AddToCartProductEvent;
 
   const factory ProductSaleEvent.setCartCountEvent() = _SetCartCountEvent;
 
