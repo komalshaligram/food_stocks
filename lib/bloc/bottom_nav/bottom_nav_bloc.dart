@@ -20,13 +20,17 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       if (event is _ChangePageEvent) {
         bool isGuestUser = preferencesHelper.getGuestUser();
         debugPrint("isGuestUser:$isGuestUser");
-        if(!isGuestUser){
+        if(!isGuestUser && !preferencesHelper.getSubUser()){
           if(state.arg != '' && preferencesHelper.getAppLanguage() == AppStrings.hebrewString){
             emit(state.copyWith(index: state.index,));
           }
           else{
             emit(state.copyWith(index: event.index,));
           }
+        }
+        else if(preferencesHelper.getSubUser() && preferencesHelper.getCanSeeWallet() != state.isSubUserSeeWallet){
+          print('gkfgtr');
+          emit(state.copyWith(index: 0));
         }
         else{
           emit(state.copyWith(isGuestUser:isGuestUser ,index: event.index));
@@ -66,6 +70,9 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         isNavigation = false;
       }
       else if(event is _seeWalletPermissionUpdateEvent) {
+        emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
+      }
+      else if(event is _getPreferencesDataEvent){
         emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
       }
     });

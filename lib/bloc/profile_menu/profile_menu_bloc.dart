@@ -19,6 +19,8 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../bottom_nav/bottom_nav_bloc.dart';
+
 part 'profile_menu_event.dart';
 
 part 'profile_menu_state.dart';
@@ -159,11 +161,12 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
 
           if(preferences.getSubUser()){
             try {
+              debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
               final res = await DioClient(event.context).get(
                   path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
               debugPrint('AccountPermission response = ${response.data.toString()}');
-              debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+
               if (response.status == 200) {
                 var res = response.data?.permissions;
                 preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
@@ -178,7 +181,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
                 preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices  ?? false);
-
+                event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 4,context: event.context));
                 emit(state.copyWith(
                     isSubUserSeeOrder: preferences.getCanSeeOrder(),
                     isSubUserCanManageSubUser: preferences.getCanManageSubUser(),

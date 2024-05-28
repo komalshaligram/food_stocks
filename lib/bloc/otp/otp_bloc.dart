@@ -47,7 +47,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         } else {
           emit(state.copyWith(otpTimer: state.otpTimer - 1));
         }
-      } else if (event is _cancelTimerscriptionEvent) {
+      }
+      else if (event is _cancelTimerscriptionEvent) {
         _periodicOtpTimerSubscription.cancel();
       }
 
@@ -58,14 +59,14 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         if (event.otp.length == 4) {
           emit(state.copyWith(isLoading: true));
           try {
-            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-                prefs: await SharedPreferences.getInstance());
 
+            debugPrint('otp res = ${ preferencesHelper.getFCMToken().toString()}');
             OtpReqModel reqMap = OtpReqModel(
                 contact: event.contact,
                 otp: event.otp,
                 tokenId: preferencesHelper.getFCMToken());
             debugPrint('otp req = $reqMap');
+            debugPrint('otp url = ${AppUrls.baseUrl}${AppUrls.loginOTPUrl}');
 
             final res = await DioClient(event.context)
                 .post(AppUrls.loginOTPUrl, data: reqMap);
@@ -174,14 +175,12 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         if (event.otp.length == 4) {
           emit(state.copyWith(isLoading: true));
           try {
-            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-                prefs: await SharedPreferences.getInstance());
-
             OtpReqModel reqMap = OtpReqModel(
               contact: event.contact,
               otp: event.otp,
             );
             debugPrint('otp req = $reqMap');
+            debugPrint('otp url = ${AppUrls.baseUrl}${AppUrls.otpVerifyUrl}');
 
             final res = await DioClient(event.context)
                 .post(AppUrls.otpVerifyUrl, data: reqMap);

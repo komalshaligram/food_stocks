@@ -36,8 +36,8 @@ class BottomNavScreen extends StatelessWidget {
     debugPrint('bottom nav args = $args');
     return BlocProvider(
       create: (context) => BottomNavBloc()
-       /* ..add(BottomNavEvent.NavigateToStoreScreenEvent(context: context, storeScreen: args?[AppStrings.pushNavigationString] ?? '', basketScreen:  args?[AppStrings.isBasketScreenString] ?? '',
-      ))*/,
+        ..add(BottomNavEvent.getPreferencesDataEvent(context: context,
+      )),
       child: BottomNavScreenWidget(
         basketScreen: args?[AppStrings.isBasketScreenString] ?? '',
         storeScreen: args?[AppStrings.pushNavigationString] ?? '',
@@ -47,8 +47,8 @@ class BottomNavScreen extends StatelessWidget {
 }
 
 class BottomNavScreenWidget extends StatelessWidget {
- String storeScreen;
- String basketScreen;
+final  String storeScreen;
+final String basketScreen;
    BottomNavScreenWidget({super.key,this.storeScreen = '' , this.basketScreen = ''});
 
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
@@ -61,6 +61,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       listener: (context, state) {
         bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
         bloc.add(BottomNavEvent.NavigateToStoreScreenEvent(context: context,storeScreen: storeScreen,basketScreen: basketScreen));
+
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
@@ -90,7 +91,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                   height: 65.0,
                 cartCount: state.cartCount,
                 isRTL: context.rtl,
-                  items: state.isSubUserSeeWallet?
+                  items: state.isSubUserSeeWallet ?
                   [
                     navItem(
                       pos: 0,
@@ -179,7 +180,6 @@ class BottomNavScreenWidget extends StatelessWidget {
               body: FocusDetector(
                 onFocusGained: () {
                   bloc.add(BottomNavEvent.updateCartCountEvent(context:context));
-               //   bloc.add(BottomNavEvent.NavigateToStoreScreenEvent(context:context,storeScreen: 'snjdd',basketScreen: 'ksd'));
                 },
                 child: SafeArea(
                   child: Stack(

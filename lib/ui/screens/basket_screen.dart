@@ -89,8 +89,8 @@ class BasketScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-                bloc.add(BasketEvent.getAllCartEvent(context: context));
                 bloc.add(BasketEvent.getPermissionList(context: context));
+                bloc.add(BasketEvent.getAllCartEvent(context: context));
               },
               child: SafeArea(
                 child: Padding(
@@ -230,7 +230,7 @@ class BasketScreenWidget extends StatelessWidget {
                       ) : BasketScreenShimmerWidget(),
                       (state.basketProductList.length)  ==
                           0
-                          ? CupertinoActivityIndicator()
+                          ? SizedBox()
                           : totalAmountCard(state,context)
                     ],
                   ),

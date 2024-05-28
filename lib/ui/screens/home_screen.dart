@@ -1225,7 +1225,6 @@ class HomeScreenWidget extends StatelessWidget {
                         controller:  ModalScrollController.of(context),
                             child: Column(
                                 children: [
-
                                   CommonProductDetailsWidget(
                                     salePrice: double.parse(state.productDetails.first.sale.salePrice),
                                     maxQty: state.productDetails.first.sale.saleMaxQuantity,

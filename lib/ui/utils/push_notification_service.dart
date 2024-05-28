@@ -113,10 +113,11 @@ class PushNotificationService {
     String? fcmToken = '';
 
     fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getToken();
-    debugPrint("FCM Token: ${fcmToken}");
+
     SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     preferences.setFCMToken(fcmTokenId: fcmToken??'');
+    debugPrint("FCM Token: ${preferences.getFCMToken()}");
     const InitializationSettings initSettings =
         InitializationSettings(android: androidSettings, iOS: iOSSettings);
     flutterLocalNotificationsPlugin.initialize(

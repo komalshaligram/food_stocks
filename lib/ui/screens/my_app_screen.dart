@@ -2,6 +2,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:food_stock/bloc/my_app/my_app_bloc.dart';
 import 'package:food_stock/data/services/my_behavior.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -35,7 +36,7 @@ class MyAppWidget extends StatefulWidget {
 }
 
 class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
-
+  final Smartlook smartlook = Smartlook.instance;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -43,6 +44,8 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
     WidgetsBinding.instance.addObserver(this);
+    smartlook.start();
+    smartlook.preferences.setProjectKey('f013d8766395574feb8ebfe995e0fc33df3dfe06');
     super.initState();
   }
 
@@ -59,32 +62,34 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
     return ChangeNotifierProvider(
       create: (context) => LocaleProvider()..setAppLocale(),
       builder: (context, child) {
-        return MaterialApp(
-            key: scaffoldKey,
-            navigatorKey: navigatorKey,
-            debugShowCheckedModeBanner: false,
-            locale: Provider.of<LocaleProvider>(context).locale,
-            title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
-            initialRoute: RouteDefine.splashScreen.name,
-            supportedLocales: AppLocalizations.supportedLocales,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            theme: ThemeData(
-              textSelectionTheme: TextSelectionThemeData(
-                cursorColor: AppColors.mainColor,
-                selectionColor: AppColors.mainColor,
-                selectionHandleColor: Colors.transparent,
+        return SmartlookRecordingWidget(
+          child: MaterialApp(
+              key: scaffoldKey,
+              navigatorKey: navigatorKey,
+              debugShowCheckedModeBanner: false,
+              locale: Provider.of<LocaleProvider>(context).locale,
+              title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
+              initialRoute: RouteDefine.splashScreen.name,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              theme: ThemeData(
+                textSelectionTheme: TextSelectionThemeData(
+                  cursorColor: AppColors.mainColor,
+                  selectionColor: AppColors.mainColor,
+                  selectionHandleColor: Colors.transparent,
+                ),
+                primarySwatch: Colors.green,
+                canvasColor: Colors.white,
+                cardColor: AppColors.whiteColor,
+                snackBarTheme: SnackBarThemeData(
+                  backgroundColor: AppColors.mainColor,
+                  actionTextColor: AppColors.textColor,
+                ),
               ),
-              primarySwatch: Colors.green,
-              canvasColor: Colors.white,
-              cardColor: AppColors.whiteColor,
-              snackBarTheme: SnackBarThemeData(
-                backgroundColor: AppColors.mainColor,
-                actionTextColor: AppColors.textColor,
-              ),
+              scrollBehavior: MyBehavior(),
+              onGenerateRoute: AppRouting.generateRoute,
             ),
-            scrollBehavior: MyBehavior(),
-            onGenerateRoute: AppRouting.generateRoute,
-          );
+        );
 
       },
     );

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/error/exceptions.dart';
 import 'package:food_stock/data/model/product_supplier_model/product_supplier_model.dart';
 import 'package:food_stock/data/model/req_model/company_req_model/company_req_model.dart';
@@ -46,6 +47,7 @@ import '../../ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../ui/utils/themes/app_strings.dart';
+import '../bottom_nav/bottom_nav_bloc.dart';
 
 part 'store_event.dart';
 
@@ -1246,6 +1248,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
               preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
               preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+              event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 1,context: event.context));
               emit(state.copyWith(isAccountPermissionShimmering:false,
                   isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()
               ));

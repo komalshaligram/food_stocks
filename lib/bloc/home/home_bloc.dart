@@ -1235,7 +1235,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(isShimmering: false));
           }
         }
-     /*  else if (event is _checkVersionOfAppEvent) {
+       /*else if (event is _checkVersionOfAppEvent) {
           final _checker = StoreVersionChecker();
           _checker.checkUpdate().then((value) {
             debugPrint('update available');
@@ -1339,6 +1339,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
               preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
               preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices  ?? false);
+
               emit(state.copyWith(isAccountPermissionShimmering:false,
                 isSubUserSeeWallet: res?.canSeeWallet ?? false,
                 isSubUserAddToBasket :res?.canAddToCart ?? false,
