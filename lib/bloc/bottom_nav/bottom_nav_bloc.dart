@@ -29,7 +29,6 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
           }
         }
         else if(preferencesHelper.getSubUser() && preferencesHelper.getCanSeeWallet() != state.isSubUserSeeWallet){
-          print('gkfgtr');
           emit(state.copyWith(index: 0));
         }
         else{

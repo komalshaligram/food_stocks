@@ -61,6 +61,7 @@ final String basketScreen;
       listener: (context, state) {
         bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
         bloc.add(BottomNavEvent.NavigateToStoreScreenEvent(context: context,storeScreen: storeScreen,basketScreen: basketScreen));
+        bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
 
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(

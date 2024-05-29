@@ -16,6 +16,7 @@ import '../../data/model/req_model/export_wallet_transaction/export_wallet_trans
 import '../../data/model/req_model/get_order_count/get_order_count_req_model.dart';
 import '../../data/model/req_model/total_expense_req/total_expense_req_model.dart';
 import '../../data/model/req_model/wallet_record_req/wallet_record_req_model.dart';
+import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/all_wallet_transaction_res/all_wallet_transaction_res_model.dart';
 import '../../data/model/res_model/export_wallet_res/export_wallet_transactions_res_model.dart';
 import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
@@ -369,6 +370,52 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               type: SnackBarType.FAILURE,
             );*/
           }
+        }
+        else  if(event is _getPermissionList){
+          if(preferencesHelper.getSubUser()){
+            try {
+              final res = await DioClient(event.context).get(
+                  path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+              AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
+              debugPrint('AccountPermission response = ${response.data.toString()}');
+              debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+              if (response.status == 200) {
+                var res = response.data?.permissions;
+                preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+               emit(state.copyWith(isAccountPermissionShimmering: true));
+                preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+                preferencesHelper.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+                preferencesHelper.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+                preferencesHelper.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+                preferencesHelper.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+                preferencesHelper.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
+                preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
+                preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
+                preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
+                preferencesHelper.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices  ?? false);
+                emit(state.copyWith(isAccountPermissionShimmering: false));
+              } else {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: AppStrings.getLocalizedStrings(
+                        response.message?.toLocalization() ??
+                            response.message!,
+                        event.context),
+                    type: SnackBarType.FAILURE);
+
+              }
+            } on ServerException {
+
+            } catch (e) {
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: e.toString(),
+                  type: SnackBarType.FAILURE);
+
+            }
+          }
+
+
         }
       }
 

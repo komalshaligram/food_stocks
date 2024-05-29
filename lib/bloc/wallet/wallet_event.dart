@@ -42,6 +42,8 @@ class WalletEvent with _$WalletEvent {
     required BuildContext context,
   }) = _getOrderCountEvent;
 
+  const factory WalletEvent.getPermissionList(
+      {required BuildContext context }) = _getPermissionList;
 
 
 }
