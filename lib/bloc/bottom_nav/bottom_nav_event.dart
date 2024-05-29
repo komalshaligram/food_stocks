@@ -14,6 +14,5 @@ class BottomNavEvent with _$BottomNavEvent {
       }) = _NavigateToStoreScreenEvent;
 
   const factory BottomNavEvent.seeWalletPermissionUpdateEvent({required BuildContext context}) = _seeWalletPermissionUpdateEvent;
-
   const factory BottomNavEvent.getPreferencesDataEvent({required BuildContext context}) = _getPreferencesDataEvent;
 }
