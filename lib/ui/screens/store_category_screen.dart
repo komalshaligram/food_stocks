@@ -128,7 +128,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    state.cartCount!=0? Positioned(
+                    state.cartCount != 0? Positioned(
                       top: 5,
                       right: context.rtl ? null : 0,
                       left: context.rtl ? 0 : null,
@@ -259,9 +259,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                   .isEmpty
                                               ? Container(
                                             height:
-                                            getScreenHeight(
-                                                context) -
-                                                160,
+                                            getScreenHeight(context) - 160,
                                             width: getScreenWidth(
                                                 context),
                                             alignment:
@@ -1184,7 +1182,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         required bool isGuestUser,
         required String lowStock,
         required bool isPesach,
-        required bool isSale,
+          required bool isSale,
         required String saleDesc,
         required String discountPrice,
       }) {
@@ -1193,7 +1191,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
         builder: (context1, state) {
           return Container(
-            height: AppConstants.salesProductItemHeight,
+            height: 250,
             width: width,
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
@@ -1272,7 +1270,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       height: 70,
                     ),
                   ),
-                  3.height,
+                  5.height,
                   Text(
                     "${list[index].planogramproducts?[subIndex].productName}",
                     style: AppStyles.rkBoldTextStyle(
@@ -1282,7 +1280,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  3.height,
+                  4.height,
                   isSale?Center(
                     child: Container(
                       width: width!-10,
@@ -1297,7 +1295,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       ),
                     ),
                   ):0.height,
-                  isSale?2.height:0.height,
+                  isSale?3.height:0.height,
                   ((list[index].planogramproducts?[subIndex].productStock ?? 0)  >
                       0)&& lowStock.isEmpty ||
                       isGuestUser
@@ -1330,16 +1328,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     ),
                   ),
                   5.height,
-                  Center(child: isPesachLabelShow(isPesach!, context)),
-                  isPesach! ? 3.height :0.height,
-                  !isGuestUser
-                      ? isSale!?Center(
-                    child: Text(
-                      "${AppLocalizations.of(context)!.currency}${list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(2)}",
-                      style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600,).copyWith(decoration: TextDecoration.lineThrough),
-                    ),
-                  ):0.width
-                      : 0.width,
+                  isPesach?
+                  Container(
+                      padding: EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                          color: AppColors.pesachBGColor,
+                          border: Border.all(color: AppColors.pesachBGColor),
+                          borderRadius: BorderRadius.all(Radius.circular(10))
+                      ),
+                      child: Text(AppLocalizations.of(context)!.pesach)):0.height,
+                  isPesach?5.height:0.height,
                   !isGuestUser
                       ? Center(
                     child: CommonProductButtonWidget(
@@ -1369,6 +1367,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       ),
     );
   }
+
 
 
   void showProductDetails({
@@ -1832,7 +1831,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         : ''),
                 5.height,
                 SizedBox(
-                  height: AppConstants.relatedProductItemHeight,
+                  height: getScreenHeight(context) * 0.3,
                   child: list.isEmpty
                       ? Center(
                     child: Text(
@@ -1863,7 +1862,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           list: list,
                           index: index,
                           subIndex: subIndex,
-                          height: 150,
+                          height: 165,
                           lowStock: list[index].planogramproducts?[subIndex].lowStock.toString() ?? '',
                           width: getScreenWidth(context) / 3.2);
                     },

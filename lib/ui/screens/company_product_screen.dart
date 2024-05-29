@@ -160,7 +160,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
-             title:  companyName ?? '',
+             title: state.productList.isNotEmpty ? state.productList.elementAt(0).product?.brandId ??'':companyName??'',
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);

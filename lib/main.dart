@@ -34,7 +34,7 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           notiId: message.notification.hashCode,
           androidIcon:message.notification?.android?.smallIcon,
           data: data,
-          isNavigate: false,
+          isNavigate: true,
           showNotification: true,
           isAppOpen: true
       );
