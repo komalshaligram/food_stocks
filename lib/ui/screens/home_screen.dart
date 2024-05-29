@@ -1449,8 +1449,8 @@ class HomeScreenWidget extends StatelessWidget {
                     .lowStock??'',
                 isPesach: relatedProductList.elementAt(i)
                     .isPesach,
-
                 onButtonTap: () {
+                  Navigator.pop(prevContext);
                   showProductDetails(
                       context: context,
                       productId: relatedProductList[i].id,
