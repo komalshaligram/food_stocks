@@ -39,7 +39,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-  int _maxQty = -1;
+  //int _maxQty = -1;
   BasketBloc() : super(BasketState.initial()) {
     on<BasketEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
@@ -78,7 +78,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               stockList.addAll(response.data?.data?.map(
                       (product) =>
                       ProductStockModel(
-                          quantity: product.totalQuantity,
+                        maxQty: product.sale.isSale ? int.parse(product.sale.saleMaxQuantity.toString()) : -1,
+                        quantity: product.totalQuantity,
                           productId: product.id,
                           stock: product.productStock.toString(),
                           lowStock: product.lowStock.toString(),
@@ -474,7 +475,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           _isProductInCart = false;
           _cartProductId = '';
           _productQuantity = 0;
-          _maxQty = -1;
+         // _maxQty = -1;
           try {
             emit(state.copyWith(
                 isProductLoading: true, isSelectSupplier: false));
@@ -526,7 +527,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       _isProductInCart = true;
                       _cartProductId = cartProduct.cartProductId ?? '';
                       _productQuantity = cartProduct.totalQuantity ?? 0;
-                      _maxQty = cartProduct.sale.saleMaxQuantity??0;
+                      //_maxQty = cartProduct.sale.saleMaxQuantity??0;
                       return;
                     }
                   });
@@ -542,7 +543,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 productStockList[0][0] = productStockList[0][0]
                     .copyWith(
                     quantity: _productQuantity,
-                    maxQty: _maxQty,
+                    maxQty: response.product.first.sale.isSale?int.parse(response.product.first.sale.saleMaxQuantity):-1,
                     productId: response.product.first.id ?? '',
                     stock: (response.product.first.supplierSales.first
                         .productStock.toString() ?? "0")
@@ -561,7 +562,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     basePrice:
                     double.parse(supplier.productPrice ?? '0.0'),
                     quantity: _productQuantity,
-                    maxQty: _maxQty,
+                    maxQty:response.product.first.sale.isSale? int.parse(response.product.first.sale.saleMaxQuantity.toString()):-1,
                     stock: supplier.productStock.toString(),
                     selectedIndex: (supplier.supplierId ?? '') ==
                         state
