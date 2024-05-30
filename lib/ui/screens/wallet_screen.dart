@@ -13,7 +13,9 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/wallet_screen_shimmer_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -94,7 +96,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
     };
 
     return BlocListener<WalletBloc, WalletState>(
-      listener: (context, state) {
+      listener: (context, state)  {
         if(state.isExportComplete){
           showDialog(
             context:context,
@@ -104,15 +106,16 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                 directionality: state.language,
                 width: 80,
                 positiveTitle: AppLocalizations.of(context)!.close,
-                positiveOnTap:()=>Navigator.pop(context1) ,
-                Subtitle:AppLocalizations.of(context)!.wallet_information_sent_to_your_email ,
+                positiveOnTap:()=>Navigator.pop(context1),
+                Subtitle:AppLocalizations.of(context)!.wallet_information_sent_to_your_email,
               );
             },).then((value) {
             context.read<WalletBloc>().add(WalletEvent.checkLanguage());
           });
         }
-        else if(state.isAccountPermissionShimmering){
-          BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
+        else if(state.isAccountPermissionShimmering ){
+          BlocProvider.of<BottomNavBloc>(context)
+              .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
 
       },
@@ -134,6 +137,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                 bloc.add(WalletEvent.getTotalExpenseEvent(
                     year: state.year, context: context));
                 bloc.add(WalletEvent.getDropDownElementEvent(year: state.year));
+                bloc.add(WalletEvent.getPermissionList(context: context));
                 bloc.add(WalletEvent.checkLanguage());
                 minDate = DateTime(state.yearList.last, 1, 1);
               },

@@ -47,7 +47,6 @@ import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
-
 part 'home_event.dart';
 part 'home_state.dart';
 part 'home_bloc.freezed.dart';

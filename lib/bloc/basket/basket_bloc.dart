@@ -1020,11 +1020,15 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               final res = await DioClient(event.context).get(
                   path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-              debugPrint('AccountPermission response = ${response.data.toString()}');
+              debugPrint('AccountPermission response basket = ${response.data.toString()}');
               debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
               if (response.status == 200) {
 
                 var res = response.data?.permissions;
+                if(preferencesHelper.getAppLanguage() == AppStrings.englishString && preferencesHelper.getCanSeeWallet() != res?.canSeeWallet){
+                  event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(
+                      index: 2,context: event.context));
+                }
                 preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
                 emit(state.copyWith(isAccountPermissionShimmering: true));
                 preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
@@ -1036,7 +1040,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
                 preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
                 preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
-                event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 2,context: event.context));
                 emit(state.copyWith(isAccountPermissionShimmering:false,
                   isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(),
                     isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()

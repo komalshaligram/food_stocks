@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/order_summary_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-
 import '../../bloc/account_permission/account_permission_bloc.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
@@ -60,8 +59,8 @@ class AccountPermissionScreenWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10,vertical: AppConstants.padding_5),
               child: SingleChildScrollView(
-                child:    state.isShimmering ? OrderSummaryScreenShimmerWidget(itemCount: 10,containerHeight: 40,):
-                !state.isShimmering &&   state.permissionList.isEmpty?
+                child: state.isShimmering ? OrderSummaryScreenShimmerWidget(itemCount: 10,containerHeight: 40,):
+                !state.isShimmering && state.permissionList.isEmpty?
                 SizedBox(
                   height: getScreenHeight(context) * 0.8,
                   child: Center(

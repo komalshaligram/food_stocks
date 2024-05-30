@@ -165,10 +165,15 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               final res = await DioClient(event.context).get(
                   path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-              debugPrint('AccountPermission response = ${response.data.toString()}');
+              debugPrint('AccountPermission response profileMenu= ${response.data.toString()}');
 
               if (response.status == 200) {
                 var res = response.data?.permissions;
+
+                if(/*preferences.getAppLanguage() == AppStrings.englishString &&*/ preferences.getCanSeeWallet() != res?.canSeeWallet){
+                  event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(
+                      index: preferences.getCanSeeWallet() ? 4 : 3,context: event.context));
+                }
                 preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
                 emit(state.copyWith(isAccountPermissionShimmering: true));
                 preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
@@ -181,7 +186,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
                 preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices  ?? false);
-                event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 4,context: event.context));
                 emit(state.copyWith(
                     isSubUserSeeOrder: preferences.getCanSeeOrder(),
                     isSubUserCanManageSubUser: preferences.getCanManageSubUser(),

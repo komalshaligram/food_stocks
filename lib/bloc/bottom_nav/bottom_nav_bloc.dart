@@ -28,14 +28,23 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
             emit(state.copyWith(index: event.index,));
           }
         }
-        else if(preferencesHelper.getSubUser() && preferencesHelper.getCanSeeWallet() != state.isSubUserSeeWallet){
-          emit(state.copyWith(index: 0));
+        else if(preferencesHelper.getSubUser()){
+          if(preferencesHelper.getCanSeeWallet() != state.isSubUserSeeWallet){
+            emit(state.copyWith(index: 0));
+          }
+        else if(state.arg != '' && preferencesHelper.getAppLanguage() == AppStrings.hebrewString){
+            emit(state.copyWith(index: state.index,));
+          }
+          else{
+            emit(state.copyWith(index: event.index,));
+          }
+
         }
         else{
           emit(state.copyWith(isGuestUser:isGuestUser ,index: event.index));
         }
         emit(state.copyWith(arg: ''));
-
+        emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
       }
       else if (event is _UpdateCartCountEvent) {
      emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));

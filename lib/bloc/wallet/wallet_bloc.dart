@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_date_range_picker/flutter_date_range_picker.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
@@ -27,6 +28,7 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_urls.dart';
+import '../bottom_nav/bottom_nav_bloc.dart';
 
 
 part 'wallet_event.dart';
@@ -377,10 +379,14 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               final res = await DioClient(event.context).get(
                   path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-              debugPrint('AccountPermission response = ${response.data.toString()}');
+              debugPrint('AccountPermission response wallet= ${response.data.toString()}');
               debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
               if (response.status == 200) {
                 var res = response.data?.permissions;
+                if(preferencesHelper.getAppLanguage() == AppStrings.englishString && preferencesHelper.getCanSeeWallet() != res?.canSeeWallet){
+                  event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(
+                      index: 4,context: event.context));
+                }
                 preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
                emit(state.copyWith(isAccountPermissionShimmering: true));
                 preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);

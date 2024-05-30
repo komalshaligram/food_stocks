@@ -27,6 +27,7 @@ import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 
+import '../../data/storage/shared_preferences_helper.dart';
 import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_product_sale_item_widget.dart';
 import '../widget/custom_dialog.dart';
@@ -61,6 +62,12 @@ class BasketScreenWidget extends StatelessWidget {
               .add(BottomNavEvent.updateCartCountEvent(context: context));
         }
         if(state.isAccountPermissionShimmering){
+          print('basket_______${state.isAccountPermissionShimmering}');
+
+       /*   if(state.language == AppStrings.englishString){
+            BlocProvider.of<BottomNavBloc>(context)
+                .add(BottomNavEvent.changePage(index: 2,context: context));
+          }*/
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }

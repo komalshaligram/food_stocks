@@ -59,10 +59,9 @@ final String basketScreen;
     BottomNavBloc bloc = context.read<BottomNavBloc>();
     return BlocListener<BottomNavBloc, BottomNavState>(
       listener: (context, state) {
+        bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
         bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
         bloc.add(BottomNavEvent.NavigateToStoreScreenEvent(context: context,storeScreen: storeScreen,basketScreen: basketScreen));
-        bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
-
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
@@ -181,6 +180,7 @@ final String basketScreen;
               body: FocusDetector(
                 onFocusGained: () {
                   bloc.add(BottomNavEvent.updateCartCountEvent(context:context));
+                  bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
                 },
                 child: SafeArea(
                   child: Stack(
