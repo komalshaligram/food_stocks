@@ -45,8 +45,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     return BlocListener<ProfileMenuBloc, ProfileMenuState>(
       listenWhen: (previous, current) {
         if (current.isAccountPermissionShimmering){
-          BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
+          /*BlocProvider.of<BottomNavBloc>(context)
+              .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));*/
         }
         if (previous.isHebrewLanguage != current.isHebrewLanguage) {
           return true;
@@ -54,17 +54,19 @@ class ProfileMenuScreenWidget extends StatelessWidget {
           return false;
         }
       },
-      listener: (context, state) {
-        context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 0,context: context));
+      listener: (context, state) async {
+
+       context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 0,context: context));
+
       },
       child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(
         builder: (context, state) {
           return FocusDetector(
             onFocusGained: () {
+              bloc.add(ProfileMenuEvent.getPermissionList(context: context));
               bloc.add(ProfileMenuEvent.getPreferenceDataEvent());
               bloc.add(ProfileMenuEvent.getAppLanguage());
               bloc.add(ProfileMenuEvent.getProfileDetailsEvent(context: context));
-              bloc.add(ProfileMenuEvent.getPermissionList(context: context));
             },
             child: Scaffold(
               backgroundColor: AppColors.pageColor,

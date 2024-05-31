@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/error/exceptions.dart';
 import 'package:food_stock/data/model/product_supplier_model/product_supplier_model.dart';
 import 'package:food_stock/data/model/req_model/company_req_model/company_req_model.dart';
@@ -46,6 +47,7 @@ import '../../ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../ui/utils/themes/app_strings.dart';
+import '../bottom_nav/bottom_nav_bloc.dart';
 
 part 'store_event.dart';
 
@@ -1242,10 +1244,14 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             final res = await DioClient(event.context).get(
                 path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-            debugPrint('AccountPermission response = ${response.data.toString()}');
+            debugPrint('AccountPermission response store= ${response.data.toString()}');
             debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
             if (response.status == 200) {
               var res = response.data?.permissions;
+              if(preferencesHelper.getAppLanguage() == AppStrings.englishString && preferencesHelper.getCanSeeWallet() != res?.canSeeWallet){
+                event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(
+                    index: 1,context: event.context));
+              }
               preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
               emit(state.copyWith(isAccountPermissionShimmering: true));
               preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);

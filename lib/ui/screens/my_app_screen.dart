@@ -9,7 +9,6 @@ import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
-
 import 'package:provider/provider.dart';
 import '../../app_config.dart';
 import '../../data/services/locale_provider.dart';
@@ -36,7 +35,7 @@ class MyAppWidget extends StatefulWidget {
 }
 
 class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
-  final Smartlook smartlook = Smartlook.instance;
+  final Smartlook smartLook = Smartlook.instance;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -44,8 +43,8 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
     WidgetsBinding.instance.addObserver(this);
-     smartlook.start();
-     smartlook.preferences.setProjectKey('631f9cd07764b2da91b24a34016c51dc6ba359c4');
+     smartLook.start();
+    smartLook.preferences.setProjectKey('631f9cd07764b2da91b24a34016c51dc6ba359c4');
     super.initState();
   }
 

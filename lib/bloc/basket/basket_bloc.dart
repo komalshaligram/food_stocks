@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/product_stock_model/product_stock_model.dart';
 import 'package:food_stock/data/model/product_supplier_model/product_supplier_model.dart';
 import 'package:food_stock/data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart' as InsertCartModel;
@@ -31,6 +32,8 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../bottom_nav/bottom_nav_bloc.dart';
 part 'basket_event.dart';
 part 'basket_state.dart';
 part 'basket_bloc.freezed.dart';
@@ -1029,11 +1032,15 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               final res = await DioClient(event.context).get(
                   path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-              debugPrint('AccountPermission response = ${response.data.toString()}');
+              debugPrint('AccountPermission response basket = ${response.data.toString()}');
               debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
               if (response.status == 200) {
 
                 var res = response.data?.permissions;
+                if(preferencesHelper.getAppLanguage() == AppStrings.englishString && preferencesHelper.getCanSeeWallet() != res?.canSeeWallet){
+                  event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(
+                      index: 2,context: event.context));
+                }
                 preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
                 emit(state.copyWith(isAccountPermissionShimmering: true));
                 preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
@@ -1045,7 +1052,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
                 preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
                 preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
-
                 emit(state.copyWith(isAccountPermissionShimmering:false,
                   isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(),
                     isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()

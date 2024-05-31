@@ -47,7 +47,6 @@ import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
-
 part 'home_event.dart';
 part 'home_state.dart';
 part 'home_bloc.freezed.dart';
@@ -1240,7 +1239,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(isShimmering: false));
           }
         }
-     /*  else if (event is _checkVersionOfAppEvent) {
+       /*else if (event is _checkVersionOfAppEvent) {
           final _checker = StoreVersionChecker();
           _checker.checkUpdate().then((value) {
             debugPrint('update available');
@@ -1344,6 +1343,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
               preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
               preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices  ?? false);
+
               emit(state.copyWith(isAccountPermissionShimmering:false,
                 isSubUserSeeWallet: res?.canSeeWallet ?? false,
                 isSubUserAddToBasket :res?.canAddToCart ?? false,
