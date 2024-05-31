@@ -25,7 +25,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
             emit(state.copyWith(index: state.index,));
           }
           else{
-            emit(state.copyWith(index: event.index,));
+            emit(state.copyWith(index: event.index));
           }
         }
         else{
