@@ -686,6 +686,17 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           );
           return;
         }
+        if(state.productStockList[state.productStockUpdateIndex].maxQty > 0){
+          if (state.productStockList[state.productStockUpdateIndex].quantity >
+              state.productStockList[state.productStockUpdateIndex].maxQty
+          ) {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                type: SnackBarType.FAILURE);
+            return;
+          }
+        }
         if (_isProductInCart) {
           debugPrint('update cart');
           try {

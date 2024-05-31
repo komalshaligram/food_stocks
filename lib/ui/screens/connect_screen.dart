@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 
@@ -68,7 +69,6 @@ class ConnectScreenWidget extends StatelessWidget {
                     buttonText: AppLocalizations.of(context)!.register,
                     bGColor: AppColors.mainColor,
                     onPressed: () {
-
                       Navigator.pushNamed(context, RouteDefine.loginScreen.name,
                           arguments: {AppStrings.isRegisterString: true});
                     },
@@ -80,7 +80,6 @@ class ConnectScreenWidget extends StatelessWidget {
                     borderColor: AppColors.mainColor,
                     isFromConnectScreen: true,
                     onPressed: () {
-
                      Navigator.pushNamed(context, RouteDefine.loginScreen.name,
                           arguments: {AppStrings.isRegisterString: false});
                     },

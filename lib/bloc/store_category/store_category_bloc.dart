@@ -824,6 +824,20 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               type: SnackBarType.FAILURE);
           return;
         }
+        if(state.productStockList[state.planoGramUpdateIndex]
+        [state.productStockUpdateIndex].maxQty > 0){
+          if (state.productStockList[state.planoGramUpdateIndex]
+          [state.productStockUpdateIndex].quantity >
+              state.productStockList[state.planoGramUpdateIndex]
+              [state.productStockUpdateIndex].maxQty
+          ) {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                type: SnackBarType.FAILURE);
+            return;
+          }
+        }
         if (_isProductInCart) {
           debugPrint('update cart');
           try {
