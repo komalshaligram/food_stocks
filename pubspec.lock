@@ -663,10 +663,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_smartlook
-      sha256: "0ee10c1c79fb9f37e20703e93e911f0eebd62f0c6beb89d59bfbdace036d2f31"
+      sha256: "1eead296df26711ca100a8850f3268f8dc618e605f40dee202bac26c6bd09aa1"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.18"
+    version: "4.1.22"
   flutter_staggered_animations:
     dependency: "direct main"
     description:

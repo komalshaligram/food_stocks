@@ -55,7 +55,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-  int _maxQty = -1;
+ // int _maxQty = -1;
 
   HomeBloc() : super(HomeState.initial()) {
     on<HomeEvent>((event, emit) async {
@@ -125,7 +125,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           _isProductInCart = false;
           _cartProductId = '';
           _productQuantity = 0;
-          _maxQty = -1;
+         // _maxQty = -1;
           try {
             emit( state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -156,8 +156,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 debugPrint('responseproductid____${response.product?.first.id}');
                 productStockList[0][0] =productStockList[0][0].copyWith(
                     quantity: _productQuantity,
-                   maxQty: _maxQty,
-                //    maxQty: response.product.first.sale.isSale?int.parse(response.product.first.sale.saleMaxQuantity):-1,
+                 //  maxQty: _maxQty,
+                    maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity):-1,
                     productId: response.product?.first.id ?? '' ,
                     stock: (response.product?.first.supplierSales.first.productStock.toString() ?? "0") ,
                     totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
@@ -189,12 +189,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       _isProductInCart = true;
                       _cartProductId = cartProduct.cartProductId ?? '';
                       _productQuantity = cartProduct.totalQuantity ?? 0;
-                      _maxQty = cartProduct.sale.saleMaxQuantity??0;
+                      //_maxQty = cartProduct.sale.saleMaxQuantity??0;
                       return;
                     }
                   });
                   debugPrint(
-                      '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity\n4) maxqty : $_maxQty');
+                      '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
               if(response.product != null){
@@ -206,7 +206,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     .copyWith(
                     quantity: _productQuantity,
                     productId: response.product?.first.id ?? '' ,
-                    maxQty: _maxQty,
+                    maxQty: response.product.first.sale.isSale?int.parse(response.product.first.sale.saleMaxQuantity):-1,
                     stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
                 );
 
@@ -262,7 +262,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     saleId: sale.saleId ?? '',
                     saleName: sale.saleName ?? '',
                     quantity: _productQuantity,
-                      maxQty: _maxQty,
+                      maxQty: sale.saleMaxQuantity,
                     saleDescription:
                     parse(sale.salesDescription ?? '')
                         .body
@@ -372,7 +372,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               stockList.addAll(response.data.map(
                       (saleProduct) =>
                       ProductStockModel(
-                        productId: saleProduct.id ,
+                          maxQty: saleProduct.sale.isSale ? int.parse(saleProduct.sale.saleMaxQuantity) : -1,
+                          productId: saleProduct.id ,
                         stock: (saleProduct.productStock.toString())
                       )) ??
                   []);
@@ -588,13 +589,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 type: SnackBarType.FAILURE);
             return;
           }
-          if(state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity>state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty){
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
-                type: SnackBarType.FAILURE);
-            return;
+          if(state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty > 0){
+            if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity >
+                state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty
+            ) {
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                  type: SnackBarType.FAILURE);
+              return;
+            }
           }
+
+
           if (_isProductInCart) {
             debugPrint('update cart');
             try {
@@ -630,7 +637,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       note: '',
                       isNoteOpen: false,
                       quantity:  _productQuantity,
-                      maxQty: _maxQty,
                       productSupplierIds: '',
                       totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                       productSaleId: '',
@@ -718,7 +724,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       productSupplierIds: '',
                       totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                       productSaleId: '',
-
                     );
 
                 emit(state.copyWith(
@@ -984,8 +989,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               stockList.addAll(response.data?.map(
                       (recommendationProduct) =>
                       ProductStockModel(
-
-                          productId: recommendationProduct.id ?? '',
+                        maxQty: recommendationProduct.sale.isSale ? int.parse(recommendationProduct.sale.saleMaxQuantity) : -1,
+                        productId: recommendationProduct.id ?? '',
                           stock: recommendationProduct.productStock.toString(),
                       )) ??
                   []);

@@ -567,6 +567,17 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               type: SnackBarType.FAILURE);
           return;
         }
+        if(state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty > 0){
+          if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity >
+              state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty
+          ) {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                type: SnackBarType.FAILURE);
+            return;
+          }
+        }
         if (_isProductInCart) {
           debugPrint('update cart');
           try {
