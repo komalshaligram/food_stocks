@@ -24,7 +24,7 @@ version: 1.0.27+1
 environment:
   sdk: '>=2.19.6 <3.0.0'
 
-# Dependencies specify othe r packages that your package needs in order to work.
+# Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
 # dependencies can be manually updated by changing the version numbers below to
@@ -90,6 +90,7 @@ dependencies:
   flutter_screenutil: ^5.9.0
   modal_bottom_sheet: ^3.0.0-pre
   eraser: ^2.0.2
+  flutter_smartlook: ^4.1.18
 
 dependency_overrides:
   intl: ^0.18.0

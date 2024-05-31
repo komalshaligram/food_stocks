@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:food_stock/data/error/exceptions.dart';
 
 import 'package:food_stock/repository/dio_client.dart';

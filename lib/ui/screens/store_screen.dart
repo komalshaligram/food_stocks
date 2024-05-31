@@ -532,15 +532,15 @@ class StoreScreenWidget extends StatelessWidget {
                                                         if(!state.isGuestUser){
                                                           showProductDetails(
                                                             context: context,
+                                                            productStock:state
+                                                                .productSalesList[
+                                                            index]
+                                                                .productStock.toString(),
                                                             productId: state
                                                                 .productSalesList[
                                                             index]
                                                                 .id ??
-                                                                '',
-                                                              productStock: state
-                                                                  .productSalesList[
-                                                              index]
-                                                                  .productStock.toString()
+                                                                ''
                                                           );
                                                         }
                                                         else{
