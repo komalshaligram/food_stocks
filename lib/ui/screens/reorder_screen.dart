@@ -208,7 +208,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                       width: getScreenWidth(context),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        '${AppLocalizations.of(context)!.recommendation_products_are_not_available}',
+                                        '${AppLocalizations.of(context)!.no_data}',
                                         style: AppStyles.rkRegularTextStyle(
                                             size: AppConstants.smallFont,
                                             color: AppColors.textColor),

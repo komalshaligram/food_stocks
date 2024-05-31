@@ -36,8 +36,8 @@ class BottomNavScreen extends StatelessWidget {
     debugPrint('bottom nav args = $args');
     return BlocProvider(
       create: (context) => BottomNavBloc()
-       /* ..add(BottomNavEvent.NavigateToStoreScreenEvent(context: context, storeScreen: args?[AppStrings.pushNavigationString] ?? '', basketScreen:  args?[AppStrings.isBasketScreenString] ?? '',
-      ))*/,
+        ..add(BottomNavEvent.getPreferencesDataEvent(context: context,
+      )),
       child: BottomNavScreenWidget(
         basketScreen: args?[AppStrings.isBasketScreenString] ?? '',
         storeScreen: args?[AppStrings.pushNavigationString] ?? '',
@@ -179,7 +179,6 @@ class BottomNavScreenWidget extends StatelessWidget {
               body: FocusDetector(
                 onFocusGained: () {
                   bloc.add(BottomNavEvent.updateCartCountEvent(context:context));
-               //   bloc.add(BottomNavEvent.NavigateToStoreScreenEvent(context:context,storeScreen: 'snjdd',basketScreen: 'ksd'));
                 },
                 child: SafeArea(
                   child: Stack(

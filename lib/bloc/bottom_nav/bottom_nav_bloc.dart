@@ -68,6 +68,10 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       else if(event is _seeWalletPermissionUpdateEvent) {
         emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
       }
+      else if(event is _getPreferencesDataEvent) {
+        emit(state.copyWith(isSubUserSeeWallet: preferencesHelper.getCanSeeWallet()));
+      }
+
     });
   }
 }

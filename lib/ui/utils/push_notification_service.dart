@@ -291,7 +291,8 @@ class PushNotificationService {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.companyProductsScreen.name,
               arguments: {AppStrings.companyIdString: id});
-        } else if (subPage == 'saleProductScreen') {
+        }
+        else if (subPage == 'saleProductScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.productSaleScreen.name,
               arguments: {AppStrings.companyIdString: id});
