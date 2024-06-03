@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:food_stock/data/error/exceptions.dart';
-
 import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
@@ -13,12 +11,13 @@ import 'package:provider/provider.dart';
 import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart';
 import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
-
 import '../../data/services/locale_provider.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../bottom_nav/bottom_nav_bloc.dart';
 
 part 'profile_menu_event.dart';
 
@@ -160,13 +159,19 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
 
           if(preferences.getSubUser()){
             try {
+              debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
               final res = await DioClient(event.context).get(
                   path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-              debugPrint('AccountPermission response = ${response.data.toString()}');
-              debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+              debugPrint('AccountPermission response profileMenu= ${response.data.toString()}');
+
               if (response.status == 200) {
                 var res = response.data?.permissions;
+
+                if(/*preferences.getAppLanguage() == AppStrings.englishString &&*/ preferences.getCanSeeWallet() != res?.canSeeWallet){
+                  event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(
+                      index: preferences.getCanSeeWallet() ? 4 : 3,context: event.context));
+                }
                 preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
                 emit(state.copyWith(isAccountPermissionShimmering: true));
                 preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
@@ -179,7 +184,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
                 preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices  ?? false);
-
                 emit(state.copyWith(
                     isSubUserSeeOrder: preferences.getCanSeeOrder(),
                     isSubUserCanManageSubUser: preferences.getCanManageSubUser(),

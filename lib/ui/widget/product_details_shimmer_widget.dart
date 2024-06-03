@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_stock/ui/widget/bottomsheet_related_product_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
@@ -8,7 +9,7 @@ import '../utils/themes/app_constants.dart';
 import 'common_shimmer_widget.dart';
 
 class ProductDetailsShimmerWidget extends StatelessWidget {
-  const ProductDetailsShimmerWidget({super.key});
+  const ProductDetailsShimmerWidget({super.key });
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
               Expanded(child: 0.width),
               Expanded(
                 flex: 4,
-                child: Center(child: buildTextTitle(width: 120)),
+                child: Center(child: buildTextTitle(width: getScreenWidth(context) - 100)),
               ),
               Expanded(
                 child: Container(
@@ -42,15 +43,9 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              buildTextTitle(width: 70),
-              10.width,
-              buildTextTitle(width: 80)
-            ],
-          ),
-          10.height,
+          buildTextTitle(width: 100),
+          buildTextTitle(width: 150),
+          buildTextTitle(width: getScreenWidth(context) - 50),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -193,7 +188,6 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: buildTextTitle(width: 80)),
           RelatedProductShimmerWidget()
-
         ],
       ),
 
@@ -206,7 +200,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
       child: Container(
         height: height ?? AppConstants.shimmerTextHeight,
         width: width,
-        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:

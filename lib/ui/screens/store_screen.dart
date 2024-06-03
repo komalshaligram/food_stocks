@@ -25,8 +25,10 @@ import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../../bloc/store/store_bloc.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_strings.dart';
 import '../widget/common_sale_description_dialog.dart';
@@ -68,7 +70,7 @@ class StoreScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     StoreBloc bloc = context.read<StoreBloc>();
     return BlocListener<StoreBloc, StoreState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if(state.isCartCountChange){
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.updateCartCountEvent(context: context));
@@ -128,7 +130,6 @@ class StoreScreenWidget extends StatelessWidget {
                             context: context));
                         bloc.add(StoreEvent.getPreviousOrderProductsListEvent(
                             context: context));
-                        bloc.add(StoreEvent.getPermissionList(context: context));
                         state.refreshController.refreshCompleted();
                         state.refreshController.loadComplete();
                       },

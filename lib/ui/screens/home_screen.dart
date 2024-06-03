@@ -1225,7 +1225,6 @@ class HomeScreenWidget extends StatelessWidget {
                         controller:  ModalScrollController.of(context),
                             child: Column(
                                 children: [
-
                                   CommonProductDetailsWidget(
                                     salePrice: double.parse(state.productDetails.first.sale.salePrice),
                                     maxQty: state.productDetails.first.sale.saleMaxQuantity,
@@ -1624,7 +1623,7 @@ class HomeScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: (productStock) != '0' || lowStock.isEmpty ? isPesach?130: 110 : isPesach?130: 110,
+            height: (productStock) != '0' || lowStock.isEmpty ? isPesach ? 130: 110 : isPesach?130: 110,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(

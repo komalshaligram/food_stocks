@@ -9,9 +9,9 @@ class AppConfig {
 
   AppConfig(
       {required this.flavor,
-      required this.appName,
-      required this.appBaseUrl,
-      required this.primaryColor});
+        required this.appName,
+        required this.appBaseUrl,
+        required this.primaryColor});
 
   factory AppConfig.dev() {
     return AppConfig(
@@ -32,7 +32,7 @@ class AppConfig {
 
   static Future<void> initializeAppConfig(BuildContext context) async {
     final String? flavor =
-        await const MethodChannel('flavor').invokeMethod<String>('getFlavor');
+    await const MethodChannel('flavor').invokeMethod<String>('getFlavor');
     switch (flavor) {
       case 'dev':
         AppConfigManager.setAppConfig(AppConfig.dev());
@@ -50,19 +50,19 @@ class AppConfig {
     debugPrint('STARTED WITH FLAVOR ${AppConfigManager.appConfig!.flavor}');
   }
 //
- static Future<String> getAppUrl() async {
-   final String? flavor =
-       await const MethodChannel('flavor').invokeMethod<String>('getFlavor');
-   switch (flavor) {
-     case 'dev':
-       return AppConfig.dev().appBaseUrl;
-     case 'prod':
-       return AppConfig.stag().appBaseUrl;
+  static Future<String> getAppUrl() async {
+    final String? flavor =
+    await const MethodChannel('flavor').invokeMethod<String>('getFlavor');
+    switch (flavor) {
+      case 'dev':
+        return AppConfig.dev().appBaseUrl;
+      case 'prod':
+        return AppConfig.stag().appBaseUrl;
 
-     default:
-       return AppConfig.dev().appBaseUrl;
-   }
- }
+      default:
+        return AppConfig.dev().appBaseUrl;
+    }
+  }
 }
 
 class AppConfigManager {
