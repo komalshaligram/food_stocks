@@ -65,6 +65,7 @@ class PlanogramProductBloc
         productStockList[1].addAll(stockList);
 
         emit(state.copyWith(
+            isPeachBadge: preferences.getPeachBadge(),
           isSubUserAddToBasket :preferences.getCanAddToBasket(),
           bottleDeposit: preferences.getBottleTax(),
             planogramName: event.planogram.planogramName ?? '',

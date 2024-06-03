@@ -728,8 +728,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
       required void Function() onPressed,
       required bool isRTL}) {
     return Container(
-      // height: 150,
-      // width: 130,
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius:
@@ -888,6 +886,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       CommonProductDetailsWidget(
+                                        isPeachBadge: state.isPeachBadge,
                                         salePrice: double.parse(state.productDetails.first.sale.salePrice),
                                         maxQty: state.productDetails.first.sale.saleMaxQuantity,
                                         endDate: state.productDetails.first.sale.saleUntilDate,
