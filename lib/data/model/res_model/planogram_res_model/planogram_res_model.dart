@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
 
 part 'planogram_res_model.freezed.dart';
 part 'planogram_res_model.g.dart';
