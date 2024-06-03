@@ -33,7 +33,7 @@ class RecommendationData with _$RecommendationData {
     @JsonKey(name: "productPrice")
     required double productPrice,
     @JsonKey(name: "boxes")
-    required int boxes,
+    required double boxes,
     @JsonKey(name: "lowStock")
     required String lowStock,
     @JsonKey(name: "mainImage")
