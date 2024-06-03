@@ -95,5 +95,4 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.android.support:multidex:1.0.3'
-  //  implementation $/com.smartlook.android:smartlook-analytics:2.3.22/$
 }

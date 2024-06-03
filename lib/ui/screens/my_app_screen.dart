@@ -2,6 +2,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:food_stock/bloc/my_app/my_app_bloc.dart';
 import 'package:food_stock/data/services/my_behavior.dart';
@@ -44,7 +45,8 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
     });
     WidgetsBinding.instance.addObserver(this);
      smartLook.start();
-    smartLook.preferences.setProjectKey('631f9cd07764b2da91b24a34016c51dc6ba359c4');
+     debugPrint('key____${dotenv.env['SMART_LOOK_KEY']}');
+    smartLook.preferences.setProjectKey(dotenv.env['SMART_LOOK_KEY']!);
     super.initState();
   }
 
