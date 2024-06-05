@@ -948,6 +948,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             if (response.status == 200) {
               debugPrint(
                   'image = ${response.data?.clients?.first.profileImage}');
+              preferences.setBusinessName(businessName: response.data?.clients?.first.clientDetail?.bussinessName ?? '');
 
               if(!preferences.getSubUser()){
                 preferences.setUserImageUrl(imageUrl: response.data?.clients
@@ -1302,6 +1303,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emit(state.copyWith(relatedProductList: []));
         }
         else if(event is _GeneralSettings){
+
+
+
+
           try {
             emit(state.copyWith(pesachBannerShimmering: true));
             final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);

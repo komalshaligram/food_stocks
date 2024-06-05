@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:food_stock/data/model/req_model/profile_details_req_model/profile_details_req_model.dart'
     as req;
 import 'package:food_stock/data/model/res_model/business_type_model/business_type_model.dart';
@@ -167,6 +168,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else if (event is _ChangeBusinessTypeEventEvent) {
         emit(state.copyWith(selectedBusinessType: event.newBusinessType));
       } else if (event is _navigateToMoreDetailsScreenEvent) {
+        preferences.setBusinessName(businessName: state.businessNameController.text.trim());
         profileModel = ProfileModel(
           phoneNumber: mobileNo.trim(),
           profileImage: state.UserImageUrl,
@@ -206,11 +208,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
 
+              Smartlook.instance.user.properties.removeString('User business name');
+              Smartlook.instance.user.setName(response.data?.clients?.first.clientDetail?.ownerName ?? '');
+              Smartlook.instance.user.properties.putString('User business name' ,value:response.data?.clients?.first.clientDetail?.bussinessName);
+
               debugPrint(
                   'image = ${response.data?.clients?.first.profileImage}');
               emit(
                 state.copyWith(
-                  userId: response.data!.clients!.first.id!,
+                  userId: response.data?.clients?.first.id ?? '',
                   isUpdating: false,
                   UserImageUrl:
                       response.data?.clients?.first.profileImage ?? '',

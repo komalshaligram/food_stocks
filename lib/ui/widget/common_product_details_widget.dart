@@ -212,7 +212,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
             ),
           ),
           isPesach? 5.height:0.height,
-          isPeachBadge && isPesach ? Container(
+           isPesach ? Container(
             padding: EdgeInsets.only(left:3.0,right: 3.0),
             decoration: BoxDecoration(
                 color: AppColors.pesachBGColor,
