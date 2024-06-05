@@ -86,6 +86,9 @@ final String basketScreen;
                       blurRadius: AppConstants.blur_10)
                 ]),
                 child: CurvedNavigationBar(
+                  mainColor:AppColors.mainColor ,
+                  notificationColor: AppColors.notificationColor,
+                  screenWidth: getScreenWidth(context),
                   key: _bottomNavigationKey,
                   index: state.index == 4 && !state.isSubUserSeeWallet ? (state.index-1):state.index,
                   height: 65.0,
