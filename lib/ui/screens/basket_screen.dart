@@ -19,15 +19,12 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/basket_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/common_product_details_widget.dart';
-import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
-
-import '../../data/storage/shared_preferences_helper.dart';
 import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_product_sale_item_widget.dart';
 import '../widget/custom_dialog.dart';
@@ -1032,14 +1029,11 @@ class BasketScreenWidget extends StatelessWidget {
                 width: 140,
                 productName: relatedProductList.elementAt(i).productName??'',
                 saleImage: relatedProductList.elementAt(i)
-                    .mainImage ??
-                    '',
+                    .mainImage,
                 title:  relatedProductList.elementAt(i)
-                    .name ??
-                    '',
+                    .name ,
                 description: parse( relatedProductList.elementAt(i).sale
-                    .saleDescription ??
-                    '')
+                    .saleDescription)
                     .body
                     ?.text ??
                     '',
@@ -1047,15 +1041,13 @@ class BasketScreenWidget extends StatelessWidget {
                 double.parse( relatedProductList.elementAt(i).sale.salePrice),
 
                 originalPrice: relatedProductList.elementAt(i)
-                    .productPrice ??
-                    0 ,
+                    .productPrice,
                 productStock: relatedProductList.elementAt(i)
-                    .productStock.toString()??'0',
+                    .productStock.toString(),
                 lowStock: relatedProductList.elementAt(i)
-                    .lowStock??'',
+                    .lowStock,
                 isPesach: relatedProductList.elementAt(i)
                     .isPesach,
-
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(

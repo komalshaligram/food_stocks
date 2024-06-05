@@ -909,7 +909,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
     required String saleDesc
 
   }) {
-
+    print('sale___$saleDesc');
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,

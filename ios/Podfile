@@ -35,6 +35,7 @@ target 'Runner' do
 
 end
 
+
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
@@ -46,10 +47,4 @@ post_install do |installer|
       File.open(xcconfig_path, "w") { |file| file << xcconfig_mod }
     end
   end
-end
-
-target 'ImageNotification' do
-  use_frameworks!
-  pod 'Firebase/Messaging'
-  pod 'GoogleUtilities'
 end

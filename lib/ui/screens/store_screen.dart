@@ -17,7 +17,6 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_marquee_widget.dart';
 import 'package:food_stock/ui/widget/common_product_button_widget.dart';
-import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -25,10 +24,8 @@ import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../../bloc/store/store_bloc.dart';
-import '../../data/storage/shared_preferences_helper.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_strings.dart';
 import '../widget/common_sale_description_dialog.dart';
@@ -488,22 +485,19 @@ class StoreScreenWidget extends StatelessWidget {
                                                       isGuestUser: state.isGuestUser,
                                                       height: AppConstants.salesProductItemHeight,
                                                       width: 140,
-                                                      productName: state.productSalesList[index].productName??'',
+                                                      productName: state.productSalesList[index].productName,
                                                       saleImage: state
                                                           .productSalesList[
                                                       index]
-                                                          .mainImage ??
-                                                          '',
+                                                          .mainImage,
                                                       title: state
                                                           .productSalesList[
                                                       index]
-                                                          .name ??
-                                                          '',
+                                                          .name,
                                                       description: parse(state
                                                           .productSalesList[
                                                       index].sale
-                                                          .saleDescription ??
-                                                          '')
+                                                          .saleDescription)
                                                           .body
                                                           ?.text ??
                                                           '',
@@ -515,15 +509,14 @@ class StoreScreenWidget extends StatelessWidget {
                                                       originalPrice:state
                                                           .productSalesList[
                                                       index]
-                                                          .productPrice ??
-                                                          0 ,
+                                                          .productPrice,
                                                       productStock: state.productSalesList[
                                                       index]
-                                                          .productStock.toString()??'0',
+                                                          .productStock.toString(),
                                                       lowStock: state
                                                           .productSalesList[
                                                       index]
-                                                          .lowStock??'',
+                                                          .lowStock,
                                                       isPesach: state
                                                           .productSalesList[
                                                       index]
@@ -540,8 +533,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                             productId: state
                                                                 .productSalesList[
                                                             index]
-                                                                .id ??
-                                                                '',
+                                                                .id
                                                           );
                                                         }
                                                         else{
@@ -593,22 +585,19 @@ class StoreScreenWidget extends StatelessWidget {
                                               isGuestUser: state.isGuestUser,
                                               height: AppConstants.salesProductItemHeight,
                                               width: 140,
-                                              productName: state.recommendedProductsList[index].productName??'',
+                                              productName: state.recommendedProductsList[index].productName,
                                               saleImage: state
                                                   .recommendedProductsList[
                                               index]
-                                                  .mainImage ??
-                                                  '',
+                                                  .mainImage,
                                               title: state
                                                   .recommendedProductsList[
                                               index]
-                                                  .name ??
-                                                  '',
+                                                  .name,
                                               description: parse(state
                                                   .recommendedProductsList[
                                               index].sale
-                                                  .saleDescription ??
-                                                  '')
+                                                  .saleDescription)
                                                   .body
                                                   ?.text ??
                                                   '',
@@ -620,15 +609,14 @@ class StoreScreenWidget extends StatelessWidget {
                                               originalPrice:state
                                                   .recommendedProductsList[
                                               index]
-                                                  .productPrice ??
-                                                  0 ,
+                                                  .productPrice,
                                               productStock: state.recommendedProductsList[
                                               index]
-                                                  .productStock.toString()??'0',
+                                                  .productStock.toString(),
                                               lowStock: state
                                                   .recommendedProductsList[
                                               index]
-                                                  .lowStock??'',
+                                                  .lowStock,
                                               isPesach: state
                                                   .recommendedProductsList[
                                               index]
@@ -642,8 +630,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                       productId: state
                                                           .recommendedProductsList[
                                                       index]
-                                                          .id ??
-                                                          '',
+                                                          .id,
                                                       productStock:  state
                                                           .recommendedProductsList[
                                                       index]
@@ -702,22 +689,19 @@ class StoreScreenWidget extends StatelessWidget {
                                               isGuestUser: state.isGuestUser,
                                               height: AppConstants.salesProductItemHeight,
                                               width: 140,
-                                              productName: state.previousOrderProductsList[index].productName??'',
+                                              productName: state.previousOrderProductsList[index].productName,
                                               saleImage: state
                                                   .previousOrderProductsList[
                                               index]
-                                                  .mainImage ??
-                                                  '',
+                                                  .mainImage,
                                               title: state
                                                   .previousOrderProductsList[
                                               index]
-                                                  .name ??
-                                                  '',
+                                                  .name,
                                               description: parse(state
                                                   .previousOrderProductsList[
                                               index].sale
-                                                  .saleDescription ??
-                                                  '')
+                                                  .saleDescription)
                                                   .body
                                                   ?.text ??
                                                   '',
@@ -729,15 +713,14 @@ class StoreScreenWidget extends StatelessWidget {
                                               originalPrice:state
                                                   .previousOrderProductsList[
                                               index]
-                                                  .productPrice ??
-                                                  0 ,
+                                                  .productPrice,
                                               productStock: state.previousOrderProductsList[
                                               index]
-                                                  .productStock.toString()??'0',
+                                                  .productStock.toString(),
                                               lowStock: state
                                                   .previousOrderProductsList[
                                               index]
-                                                  .lowStock??'',
+                                                  .lowStock,
                                               isPesach: state
                                                   .previousOrderProductsList[
                                               index]
@@ -751,7 +734,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                       productId: state
                                                           .previousOrderProductsList[
                                                       index]
-                                                          .id ?? '',
+                                                          .id,
                                                       productStock: state
                                                           .previousOrderProductsList[
                                                       index]
@@ -1825,7 +1808,7 @@ class StoreScreenWidget extends StatelessWidget {
                               isSaleOn: state.productDetails.first.sale.isSale,
                               isSubUserAddToBasket: state.isSubUserAddToBasket,
                               bottleTax: state.bottlePrice,
-                              totalBottleDeposit: (state.bottlePrice* state.productDetails.first.numberOfUnit!.toDouble()* state
+                              totalBottleDeposit: (state.bottlePrice* state.productDetails.first.numberOfUnit.toDouble()* state
                                   .productStockList[
                               state.productStockUpdateIndex]
                                   .quantity),
@@ -1897,15 +1880,14 @@ class StoreScreenWidget extends StatelessWidget {
                               ],
                               productPerUnit: state.productDetails.first
                                   .numberOfUnit ,
-                              productUnitPrice: double.parse(state.productDetails.first.supplierSales.first.productPrice.toString()??'0'),
+                              productUnitPrice: double.parse(state.productDetails.first.supplierSales.first.productPrice.toString()),
                               productName: state.productDetails.first
                                   .productName,
 
                               productSaleDescription: parse(state
                                   .productDetails
                                   .first
-                                  .sale.saleDescription ??
-                                  '')
+                                  .sale.saleDescription)
                                   .body
                                   ?.text ??
                                   '',
