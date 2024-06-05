@@ -72,9 +72,12 @@ class PushNotificationService {
       }
     }
 
+    enableIOSNotifications();
+    await registerNotificationListeners();
 
     FirebaseMessaging.onMessageOpenedApp.listen(
-      (RemoteMessage message) async {
+          (RemoteMessage message) async {
+        debugPrint('_____open app calling...');
         if (message != null) {
           _handleMessage(message,true);
         }
@@ -87,8 +90,6 @@ class PushNotificationService {
         _handleMessage(message,true);
       }
     });
-    enableIOSNotifications();
-    await registerNotificationListeners();
   }
 
   Future<void> registerNotificationListeners() async {
@@ -109,7 +110,7 @@ class PushNotificationService {
     );
     String? fcmToken = '';
 
-    fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getToken();
+    fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getAPNSToken();
 
     SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -139,13 +140,13 @@ class PushNotificationService {
         debugPrint('data:${data.toString()}');
 
         if (data != null) {
-            showNotification(
+           /* showNotification(
               notiId: notification.hashCode,
               androidIcon: android?.smallIcon ?? '',
               data: data,
               isNavigate: false,
               showNotification: true,
-              isAppOpen: true);
+              isAppOpen: true);*/
         }
 
         FlutterAppBadger.removeBadge();
@@ -161,6 +162,7 @@ class PushNotificationService {
     required bool showNotification,
     required bool isAppOpen,
   }) async {
+    fileName = null;
     debugPrint('____notification_____');
     channel = androidNotificationChannel();
     String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
@@ -202,10 +204,44 @@ class PushNotificationService {
               .buffer
               .asUint8List();
       await file.writeAsBytes(imageByte.toList());
-
-      debugPrint('imageBytes:$imageByte');
+      await flutterLocalNotificationsPlugin.show(
+        notiId,
+        title,
+        body,
+        Platform.isAndroid
+            ? flutter_local_notifications.NotificationDetails(
+         android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            channelDescription: channel.description,
+            icon: androidIcon ?? '',
+            channelShowBadge: true,
+            largeIcon: ByteArrayAndroidBitmap(imageByte),
+        ))
+            : flutter_local_notifications.NotificationDetails(
+          iOS:  DarwinNotificationDetails(
+              attachments: [DarwinNotificationAttachment(fileName)])
+             ,
+        ),
+        // payload: message.data.toString(),
+      );
     }else{
-      fileName = null;
+      await flutterLocalNotificationsPlugin.show(
+        notiId,
+        title,
+        body,
+        Platform.isAndroid
+            ? flutter_local_notifications.NotificationDetails(
+          android: AndroidNotificationDetails(channel.id, channel.name,
+              channelDescription: channel.description,
+              icon: androidIcon ?? '',
+              channelShowBadge: true),
+        )
+            : flutter_local_notifications.NotificationDetails(
+          iOS:  DarwinNotificationDetails(),
+        ),
+        // payload: message.data.toString(),
+      );
     }
     debugPrint('subPage___${subPage}');
     debugPrint('mainPage___${mainPage}');
@@ -213,37 +249,6 @@ class PushNotificationService {
     debugPrint('isNavigate___${isNavigate}');
     debugPrint('showNotification___${showNotification}');
 
-    if (showNotification) {
-      debugPrint('fileName_____${fileName}');
-     await flutterLocalNotificationsPlugin.show(
-        notiId,
-        title,
-        body,
-        Platform.isAndroid
-            ? flutter_local_notifications.NotificationDetails(
-                android: imageByte != null
-                    ? AndroidNotificationDetails(
-                        channel.id,
-                        channel.name,
-                        channelDescription: channel.description,
-                        icon: androidIcon ?? '',
-                        channelShowBadge: true,
-                        largeIcon: ByteArrayAndroidBitmap(imageByte),
-                      )
-                    : AndroidNotificationDetails(channel.id, channel.name,
-                        channelDescription: channel.description,
-                        icon: androidIcon ?? '',
-                        channelShowBadge: true),
-              )
-            : flutter_local_notifications.NotificationDetails(
-                iOS: fileName != null
-                    ? DarwinNotificationDetails(
-                        attachments: [DarwinNotificationAttachment(fileName)])
-                    : DarwinNotificationDetails(),
-              ),
-        // payload: message.data.toString(),
-      );
-    }
     if (isNavigate /*&& showNotification*/) {
       print('___________navigation');
       manageNavigation(isAppOpen: isAppOpen, mainPage: mainPage, subPage: subPage, id: id);

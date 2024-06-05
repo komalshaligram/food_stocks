@@ -31,14 +31,14 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     FlutterAppBadger.updateBadgeCount(PushNotificationService().notificationCount+1);
     if(data!=null){
       debugPrint('notifrom main');
-      PushNotificationService().showNotification(
+    /*  PushNotificationService().showNotification(
           notiId: message.notification.hashCode,
           androidIcon:message.notification?.android?.smallIcon,
           data: data,
           isNavigate: true,
           showNotification: true,
           isAppOpen: true
-      );
+      );*/
   }
 }
 
