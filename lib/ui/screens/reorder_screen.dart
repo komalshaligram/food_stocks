@@ -372,35 +372,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                         productStock: state.previousOrderProductsList[index].productStock.toString(),
                                       );
                                     })
-                              /*  CommonProductListWidget(
-                                isPesach:state.previousOrderProductsList[index].isPesach,
-                             numberOfUnits: state.previousOrderProductsList[index].numberOfUnit.toString(),
-                                lowStock: state.previousOrderProductsList[index].lowStock.toString(),
-                                productStock: state.previousOrderProductsList[index].productStock.toString(),
-                                productImage: state.previousOrderProductsList[index]
-                                    .mainImage ??
-                                    '',
-                                productName: state.previousOrderProductsList[index]
-                                    .productName ??
-                                    '',
-                                totalSaleCount: state
-                                    .previousOrderProductsList[index]
-                                    .totalSale ??
-                                    0,
-                                price: state.previousOrderProductsList[index]
-                                    .productPrice ??
-                                    0.0,
-                                onButtonTap: () {
-                                  showProductDetails(
-                                    productListIndex: 1,
-                                    context: context,
-                                    productId: state
-                                        .previousOrderProductsList[index]
-                                        .id ??
-                                        '',
-                                    productStock: state.previousOrderProductsList[index].productStock.toString(),
-                                  );
-                                }),*/
+
                           ),
                         ],
                       ),

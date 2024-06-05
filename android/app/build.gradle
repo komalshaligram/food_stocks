@@ -56,8 +56,8 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 24
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 30
-        versionName "1.0.26"
+        versionCode 32
+        versionName "1.0.28"
     }
 
     buildTypes {
@@ -95,4 +95,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.smartlook.android:smartlook-analytics:2.3.22'
 }

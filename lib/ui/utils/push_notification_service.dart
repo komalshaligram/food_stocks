@@ -1,8 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:eraser/eraser.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:food_stock/main.dart';
@@ -292,7 +289,8 @@ class PushNotificationService {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.companyProductsScreen.name,
               arguments: {AppStrings.companyIdString: id});
-        } else if (subPage == 'saleProductScreen') {
+        }
+        else if (subPage == 'saleProductScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.productSaleScreen.name,
               arguments: {AppStrings.companyIdString: id});

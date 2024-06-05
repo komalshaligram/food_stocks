@@ -13,6 +13,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:store_version_checker/store_version_checker.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/error/exceptions.dart';
@@ -47,6 +48,7 @@ import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
+
 part 'home_event.dart';
 part 'home_state.dart';
 part 'home_bloc.freezed.dart';
@@ -1241,7 +1243,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(isShimmering: false));
           }
         }
-       /*else if (event is _checkVersionOfAppEvent) {
+       else if (event is _checkVersionOfAppEvent) {
           final _checker = StoreVersionChecker();
           _checker.checkUpdate().then((value) {
             debugPrint('update available');
@@ -1258,7 +1260,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     event.context, preferences.getAppLanguage(),value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
               }
           });
-        }*/
+        }
         else if(event is _RelatedProductsEvent){
           emit(state.copyWith(isRelatedShimmering:true));
           debugPrint('productId__11__${event.productId}');
@@ -1350,7 +1352,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
               preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
               preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices  ?? false);
-
               emit(state.copyWith(isAccountPermissionShimmering:false,
                 isSubUserSeeWallet: res?.canSeeWallet ?? false,
                 isSubUserAddToBasket :res?.canAddToCart ?? false,
