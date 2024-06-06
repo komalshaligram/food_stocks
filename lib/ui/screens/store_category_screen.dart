@@ -77,7 +77,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   StoreCategoryScreenWidget({super.key,this.isSubCategory = ''
   });
 
-
   @override
   Widget build(BuildContext context) {
     StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
@@ -1439,6 +1438,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              isPeachBadge: state.isPeachBadge,
                               salePrice: double.parse(state.productDetails.first.sale.salePrice),
                               maxQty: state.productDetails.first.sale.saleMaxQuantity,
                               endDate: state.productDetails.first.sale.saleUntilDate,

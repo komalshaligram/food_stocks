@@ -21,6 +21,7 @@ class Data with _$Data {
   const factory Data({
     required String pesachBanner,
     required bool isShowPesachBanner,
+    required bool isShowPesachBadge,
     required double bottlePrice,
   }) = _Data;
 

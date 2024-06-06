@@ -9,7 +9,7 @@ part of 'business_type_model.dart';
 _$BusinessTypeModelImpl _$$BusinessTypeModelImplFromJson(
         Map<String, dynamic> json) =>
     _$BusinessTypeModelImpl(
-      status: json['status'] as int?,
+      status: (json['status'] as num?)?.toInt(),
       data: json['data'] == null
           ? null
           : Data.fromJson(json['data'] as Map<String, dynamic>),
@@ -47,7 +47,7 @@ _$ClientTypeImpl _$$ClientTypeImplFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
-      v: json['__v'] as int?,
+      v: (json['__v'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$ClientTypeImplToJson(_$ClientTypeImpl instance) =>

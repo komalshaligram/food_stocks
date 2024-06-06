@@ -36,7 +36,8 @@ class StoreState with _$StoreState {
     required String pesachBannerURL,
     required double bottlePrice,
     required bool isSubUserAddToBasket,
-    required bool isAccountPermissionShimmering
+    required bool isAccountPermissionShimmering,
+    required bool isPeachBadge,
   }) = _StoreState;
 
   factory StoreState.initial() => StoreState(
@@ -73,6 +74,7 @@ class StoreState with _$StoreState {
       showPesachBanner: false,
       bottlePrice:0.0,
     isSubUserAddToBasket: false,
-      isAccountPermissionShimmering : false
+      isAccountPermissionShimmering : false,
+    isPeachBadge: false
       );
 }

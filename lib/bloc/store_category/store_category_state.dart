@@ -55,6 +55,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required bool isRelatedShimmering,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
+    required bool isPeachBadge,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -109,7 +110,8 @@ class StoreCategoryState with _$StoreCategoryState {
     relatedProductList: [],
     isRelatedShimmering: false,
       bottleDeposit:0,
-    isSubUserAddToBasket: false
+    isSubUserAddToBasket: false,
+    isPeachBadge: false
 
       );
 }

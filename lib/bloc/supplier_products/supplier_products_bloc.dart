@@ -56,12 +56,12 @@ class SupplierProductsBloc
           prefs: await SharedPreferences.getInstance());
       if (event is _GetSupplierProductsIdEvent) {
         emit(
-            state.copyWith(supplierId: event.supplierId, searchArg: event.search));
+            state.copyWith(supplierId: event.supplierId, searchArg: event.search,isPeachBadge: preferences.getPeachBadge()));
         debugPrint(
             'supplier id = ${state.supplierId}, search = ${state.search}');
       } else if (event is _GetSupplierProductsListEvent) {
         emit(state.copyWith(isGuestUser: preferences.getGuestUser(),isSubUserAddToBasket :preferences.getCanAddToBasket(),
-            isGridView: preferences.getSupplierProductGrid(),bottleDeposit:preferences.getBottleTax()));
+            isGridView: preferences.getSupplierProductGrid(),bottleDeposit:preferences.getBottleTax(),isPeachBadge: preferences.getPeachBadge()));
         if (state.isLoadMore) {
           return;
         }

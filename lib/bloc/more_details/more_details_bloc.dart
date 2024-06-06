@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:food_stock/data/model/req_model/profile_req_model/profile_model.dart';
 import 'package:food_stock/data/model/res_model/city_list_model/city_list_res_model.dart';
 import 'package:food_stock/data/model/res_model/file_upload_model/file_upload_model.dart';
@@ -177,9 +178,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             reqUpdate.ProfileDetailsUpdateResModel response =
                 reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
             if (response.status == 200) {
-
               emit(state.copyWith(isLoading: false,companyLogo: preferencesHelper.getUserCompanyLogoUrl()));
-
+              Smartlook.instance.user.setEmail(response.data?.client?.email ?? '');
               preferencesHelper.setEmailId(
                   userEmailId: response.data?.client?.email ?? '');
               if(!preferencesHelper.getSubUser()){
@@ -256,6 +256,15 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 
             debugPrint('profile response --- ${profileResModel}');
             if (profileResModel.status == 200) {
+
+              Smartlook.instance.user.properties.removeString('User business name');
+              Smartlook.instance.user.properties.removeString('User phone number');
+              Smartlook.instance.user.setIdentifier(profileResModel.data?.client?.clientData?.id ?? '');
+              Smartlook.instance.user.setEmail(profileResModel.data?.client?.clientData?.email ?? '');
+              Smartlook.instance.user.setName(profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');
+              Smartlook.instance.user.properties.putString('User business name' ,value:profileResModel.data?.client?.clientData?.clientDetail?.bussinessName ?? '');
+              Smartlook.instance.user.properties.putString('User phone number' ,value:profileResModel.data?.client?.clientData?.phoneNumber ?? '');
+
               preferencesHelper.setCartId(
                   cartId: profileResModel.data?.client?.cartId ?? '');
               preferencesHelper.setAuthToken(

@@ -103,6 +103,7 @@ class CompanyProductsBloc
                 'new product stock list len = ${productStockList.length}');
 
             emit(state.copyWith(
+              isPeachBadge: preferences.getPeachBadge(),
                 productList: productList,
                 productStockList: productStockList,
                 pageNum: state.pageNum + 1,

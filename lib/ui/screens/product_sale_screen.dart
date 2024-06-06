@@ -27,7 +27,7 @@ import '../widget/common_product_details_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 
-class   ProductSaleRoute {
+class ProductSaleRoute {
   static Widget get route => ProductSaleScreen();
 }
 
@@ -279,6 +279,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                               child: Column(
                                 children: [
                                   CommonProductDetailsWidget(
+                                    isPeachBadge: state.isPeachBadge,
                                     salePrice: double.parse(state.productDetails.first.sale.salePrice),
                                     maxQty: state.productDetails.first.sale.saleMaxQuantity,
                                     endDate: state.productDetails.first.sale.saleUntilDate,

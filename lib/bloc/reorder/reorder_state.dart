@@ -33,6 +33,7 @@ class ReorderState with _$ReorderState {
     required int productListIndex,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
+    required bool isPeachBadge,
   }) = _ReorderState;
 
   factory ReorderState.initial() => ReorderState(
@@ -65,7 +66,8 @@ class ReorderState with _$ReorderState {
         isRelatedShimmering: false,
         productListIndex: -1,
         bottleDeposit: 0,
-    isSubUserAddToBasket: false
+    isSubUserAddToBasket: false,
+    isPeachBadge: false
 
       );
 }

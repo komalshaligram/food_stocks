@@ -36,6 +36,7 @@ class PesachProductsState with _$PesachProductsState {
     required int productListIndex,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
+    required bool isPeachBadge,
   }) = _PesachProductsState;
 
   factory PesachProductsState.initial() => PesachProductsState(
@@ -71,7 +72,8 @@ class PesachProductsState with _$PesachProductsState {
     duringCelebration: false,
     cartCount: 0,
     productListIndex: 0,
-    isSubUserAddToBasket: false
+    isSubUserAddToBasket: false,
+    isPeachBadge: false
 
 
       );

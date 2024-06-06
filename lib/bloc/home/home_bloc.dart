@@ -57,7 +57,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
- // int _maxQty = -1;
+
 
   HomeBloc() : super(HomeState.initial()) {
     on<HomeEvent>((event, emit) async {
@@ -75,6 +75,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           debugPrint('can add basket ${preferences.getCanAddToBasket()}');
           debugPrint('can see wallet ${preferences.getCanSeeWallet()}');
           emit(state.copyWith(
+            isPeachBadge: preferences.getPeachBadge(),
             isSubUserSeeWallet: preferences.getCanSeeWallet(),
               isSubUserAddToBasket :preferences.getCanAddToBasket(),
             UserImageUrl: preferences.getUserImageUrl(),
@@ -949,6 +950,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             if (response.status == 200) {
               debugPrint(
                   'image = ${response.data?.clients?.first.profileImage}');
+              preferences.setBusinessName(businessName: response.data?.clients?.first.clientDetail?.bussinessName ?? '');
 
               if(!preferences.getSubUser()){
                 preferences.setUserImageUrl(imageUrl: response.data?.clients
@@ -1303,6 +1305,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emit(state.copyWith(relatedProductList: []));
         }
         else if(event is _GeneralSettings){
+
+
+
+
           try {
             emit(state.copyWith(pesachBannerShimmering: true));
             final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
@@ -1310,6 +1316,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
             debugPrint('general settings = ${response.data.toString()}');
             if (response.status == 200) {
+              preferences.setIsPeachBadge(isPeachBadge: response.data.isShowPesachBanner);
               preferences.setBottleTax(bottleDeposit: response.data.bottlePrice);
               emit(state.copyWith(pesachBannerShimmering:false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner,bottlePrice:response.data.bottlePrice));
             } else {

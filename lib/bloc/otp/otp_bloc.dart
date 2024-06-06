@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:food_stock/data/model/res_model/login_otp_res_model/login_otp_res_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -97,6 +98,15 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   UserWalletId: response.data?.wallet ?? '');
               preferencesHelper.setIsSubUser(
                   isSubUser: (response.data?.adminType == AppStrings.subuserString) ? true : false);
+
+              Smartlook.instance.user.properties.removeString('User business name');
+              Smartlook.instance.user.properties.removeString('User phone number');
+              Smartlook.instance.user.setIdentifier((response.data?.adminType == AppStrings.subuserString) ? response.data?.user?.createdBy ?? '' :  response.data?.user?.id ?? '');
+              Smartlook.instance.user.setEmail(response.data?.user?.email ?? '');
+              Smartlook.instance.user.setName(response.data?.user?.clientDetail?.ownerName ?? '');
+              Smartlook.instance.user.properties.putString('User business name' ,value:response.data?.user?.clientDetail?.bussinessName ?? '');
+              Smartlook.instance.user.properties.putString('User phone number' ,value:event.contact);
+
               if(response.data?.adminType == AppStrings.subuserString){
                 var res = response.data?.subUserPermissions;
                 preferencesHelper.setSubUserId(id: response.data?.user?.id ?? '');
@@ -164,7 +174,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               title: '${AppLocalizations.of(event.context)!.please_enter_otp}',
               type: SnackBarType.SUCCESS);
         }
-      } else if (event is _ChangeOtpEvent) {
+      }
+      else if (event is _ChangeOtpEvent) {
         emit(state.copyWith(otp: event.otp));
         debugPrint('new otp = ${state.otp}');
       }
