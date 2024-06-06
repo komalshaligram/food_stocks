@@ -63,7 +63,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
          debugPrint('isSubCategory_____${event.isSubCategory}');
         emit(state.copyWith(isSubCategory: event.isSubCategory ,isGridView: preferences.getIsGridView(),
             isGuestUser: preferences.getGuestUser(),bottleDeposit: preferences.getBottleTax(),
-          isSubUserAddToBasket: preferences.getCanAddToBasket()
+          isSubUserAddToBasket: preferences.getCanAddToBasket(),
         ));
       }
       if (event is _ChangeCategoryExpansionEvent) {

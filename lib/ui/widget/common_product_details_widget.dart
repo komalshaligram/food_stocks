@@ -89,7 +89,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
         required this.bottleTax,
         required this.totalBottleDeposit,
         required this.isSubUserAddToBasket,
-        this.isSaleOn = false
+        this.isSaleOn = false,
       });
 
   @override
@@ -192,8 +192,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     ):0.width*/
                   ],
                 ),
-                productSaleDescription.isNotEmpty?8.height:0.height ,
-                productSaleDescription.isNotEmpty?Container(
+                productSaleDescription.isNotEmpty ? 8.height:0.height ,
+                productSaleDescription.isNotEmpty ? Container(
                   width: getScreenWidth(context) - 50,
                   padding: EdgeInsets.all(3),
                   margin: EdgeInsets.zero,
@@ -210,7 +210,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
             ),
           ),
           isPesach? 5.height:0.height,
-          isPesach?Container(
+           isPesach ? Container(
             padding: EdgeInsets.only(left:3.0,right: 3.0),
             decoration: BoxDecoration(
                 color: AppColors.pesachBGColor,

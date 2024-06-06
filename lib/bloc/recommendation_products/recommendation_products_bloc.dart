@@ -62,6 +62,7 @@ class RecommendationProductsBloc
         }
         try {
           emit(state.copyWith(
+              
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
           RecommendationProductsReqModel request =

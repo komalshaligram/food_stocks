@@ -119,6 +119,7 @@ class PesachProductsBloc
                 'new product stock list len = ${productStockList.length}');
         
             emit(state.copyWith(
+                
                 productList: productList,
                 productStockList: productStockList,
                 pageNum: state.pageNum + 1,

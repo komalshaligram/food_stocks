@@ -61,6 +61,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         }
         try {
           emit(state.copyWith(
+              
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
           PreviousOrderProductsReqModel request = PreviousOrderProductsReqModel(

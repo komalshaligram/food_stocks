@@ -39,6 +39,7 @@ class CompanyProductsState with _$CompanyProductsState {
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
 
+
   }) = _CompanyProductsState;
 
   factory CompanyProductsState.initial() => CompanyProductsState(

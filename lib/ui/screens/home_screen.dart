@@ -1240,7 +1240,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     nmMashlim: state.productDetails.first.nmMashlim,
                                     isPesach: state.productDetails.first.isPesach,
                                     lowStock: state.productDetails.first.supplierSales.first.lowStock.toString() ,
-                                    qrCode:state.productDetails.first.qrcode ,
+                                    qrCode:state.productDetails.first.qrcode,
                                     addToOrderTap: () {
                                       context.read<HomeBloc>().add(
                                           HomeEvent.addToCartProductEvent(

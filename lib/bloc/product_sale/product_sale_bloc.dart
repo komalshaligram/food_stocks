@@ -94,6 +94,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             debugPrint(
                 'new product sale stock list len = ${productStockList.length}');
             emit(state.copyWith(
+                
                 productSalesList: productSaleList,
                 productStockList: productStockList,
                 pageNum: state.pageNum + 1,

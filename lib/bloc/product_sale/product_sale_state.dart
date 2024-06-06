@@ -26,6 +26,7 @@ class ProductSaleState with _$ProductSaleState {
     required bool isSubUserAddToBasket,
     required bool isGridView,
     required int productListIndex,
+   
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => ProductSaleState(
@@ -55,6 +56,7 @@ class ProductSaleState with _$ProductSaleState {
       bottleDeposit:0,
     isSubUserAddToBasket: false,
       isGridView : true,
-    productListIndex: -1
+    productListIndex: -1,
+    
       );
 }

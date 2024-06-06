@@ -33,7 +33,7 @@ class BasketState with _$BasketState {
     required bool isOrderPending,
     required bool isSubUserAddToBasket,
     required bool isSubUserCanCreateOrder,
-    required bool isAccountPermissionShimmering
+    required bool isAccountPermissionShimmering,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -66,7 +66,8 @@ class BasketState with _$BasketState {
      isOrderPending: false,
      isSubUserAddToBasket: false,
      isSubUserCanCreateOrder: false,
-     isAccountPermissionShimmering: false
+     isAccountPermissionShimmering: false,
+
 
 
 );

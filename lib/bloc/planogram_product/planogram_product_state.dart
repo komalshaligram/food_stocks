@@ -32,6 +32,7 @@ class PlanogramProductState with _$PlanogramProductState {
     required int productListIndex,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
+
   }) = _PlanogramProductState;
 
   factory PlanogramProductState.initial() => PlanogramProductState(
@@ -63,6 +64,7 @@ class PlanogramProductState with _$PlanogramProductState {
     isGuestUser: false,
     productListIndex: -1,
     bottleDeposit: 0.0,
-    isSubUserAddToBasket: false
+    isSubUserAddToBasket: false,
+    
       );
 }

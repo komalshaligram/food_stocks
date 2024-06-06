@@ -77,7 +77,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   StoreCategoryScreenWidget({super.key,this.isSubCategory = ''
   });
 
-
   @override
   Widget build(BuildContext context) {
     StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
