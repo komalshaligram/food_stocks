@@ -75,7 +75,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           debugPrint('can add basket ${preferences.getCanAddToBasket()}');
           debugPrint('can see wallet ${preferences.getCanSeeWallet()}');
           emit(state.copyWith(
-            isPeachBadge: preferences.getPeachBadge(),
             isSubUserSeeWallet: preferences.getCanSeeWallet(),
               isSubUserAddToBasket :preferences.getCanAddToBasket(),
             UserImageUrl: preferences.getUserImageUrl(),
@@ -1316,7 +1315,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
             debugPrint('general settings = ${response.data.toString()}');
             if (response.status == 200) {
-              preferences.setIsPeachBadge(isPeachBadge: response.data.isShowPesachBanner);
+
               preferences.setBottleTax(bottleDeposit: response.data.bottlePrice);
               emit(state.copyWith(pesachBannerShimmering:false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner,bottlePrice:response.data.bottlePrice));
             } else {

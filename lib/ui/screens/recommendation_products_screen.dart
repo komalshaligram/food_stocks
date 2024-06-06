@@ -757,7 +757,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
-                              isPeachBadge: state.isPeachBadge,
                               salePrice: double.parse(state.productDetails.first.sale.salePrice),
                               maxQty: state.productDetails.first.sale.saleMaxQuantity,
                               endDate: state.productDetails.first.sale.saleUntilDate,

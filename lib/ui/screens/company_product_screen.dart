@@ -790,7 +790,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                          child: Column(
                            children: [
                              CommonProductDetailsWidget(
-                               isPeachBadge: state.isPeachBadge,
                                isSaleOn: state.productDetails.first.sale.isSale,
                                salePrice: double.parse(state.productDetails.first.sale.salePrice),
                                maxQty: state.productDetails.first.sale.saleMaxQuantity,

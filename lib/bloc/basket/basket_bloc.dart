@@ -119,7 +119,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               emit(state.copyWith(isAnimation: true));
 
               emit(state.copyWith(
-                isPeachBadge: preferencesHelper.getPeachBadge(),
+
                   vatPercentage: response.data!.vatPercentage?.toDouble()??0.0,
                   bottleQty: response.data?.cart?.first.bottleQuantities,
                   bottleTax: response.data?.bottleTax ?? 0,

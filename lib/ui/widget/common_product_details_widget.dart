@@ -51,7 +51,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final bool isSubUserAddToBasket;
   final bool isSaleOn;
   final String maxQty;
-  final bool isPeachBadge;
 
   const CommonProductDetailsWidget(
       {super.key,
@@ -91,7 +90,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
         required this.totalBottleDeposit,
         required this.isSubUserAddToBasket,
         this.isSaleOn = false,
-        required this.isPeachBadge
       });
 
   @override

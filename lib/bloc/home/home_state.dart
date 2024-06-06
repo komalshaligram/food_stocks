@@ -48,7 +48,7 @@ class HomeState with _$HomeState {
     required bool isSubUserAddToBasket,
     required bool isSubUserSeeWallet,
     required bool isAccountPermissionShimmering,
-    required bool isPeachBadge,
+    
 
   }) = _HomeState;
 
@@ -103,7 +103,7 @@ class HomeState with _$HomeState {
       isSubUserAddToBasket: false,
       isSubUserSeeWallet: false,
     isAccountPermissionShimmering: false,
-    isPeachBadge: false
+    
 
 
   );

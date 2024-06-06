@@ -1218,7 +1218,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         emit(state.copyWith(relatedProductList: []));
       }
       else if(event is _GeneralSettings){
-        emit(state.copyWith(isPeachBadge: preferencesHelper.getPeachBadge()));
+
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
