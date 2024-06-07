@@ -490,7 +490,9 @@
        "delete_sub_user_account" : "Delete",
       "can_see_invoices" : "Can see invoices",
       "maximum_qty" : "Maximum Quantity",
-    "not_add_more_than_max_qty": "You can not add more than maximum quantity"
+    "not_add_more_than_max_qty": "You can not add more than maximum quantity",
+    "apply": "Apply",
+      "clear": "clear"
 
 
 }

@@ -11,6 +11,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import '../../data/error/exceptions.dart';
+import '../../data/model/filter_model/filter_model.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/req_model/global_search_req_model/global_search_req_model.dart';
@@ -183,9 +184,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               productStockList[0][0] =productStockList[0][0].copyWith(
                   quantity: _productQuantity,
                   maxQty: response.product.first.sale.isSale ?  int.parse(response.product.first.sale.saleMaxQuantity) : -1,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
-                  totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
+                  productId: response.product.first.id ?? '' ,
+                  stock: (response.product.first.supplierSales.first.productStock.toString() ?? "0") ,
+                  totalPrice: double.parse(response.product.first.supplierSales?.first.productPrice.toString() ?? '0')
               );
             }
             else{
@@ -601,7 +602,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   : state.productStockList[state.productListIndex][state.productStockUpdateIndex]
                   .productSaleId,
               quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex]
-                  .quantity /*+ _productQuantity*/,
+                  .quantity,
               cartProductId: _cartProductId,
             );
             SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -878,11 +879,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   image: supplier.logo ?? '',
 
                   isPesach: supplier.isPesach??false,
-             /*     salePrice: double.parse(response.data..sale.salePrice.toString()),
-                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
-                      .body
-                      ?.text ??
-                      '',*/
                 ))
                 .toList() ??
                 []);
@@ -1093,6 +1089,72 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
 
 
       }
+      else if (event is _sortingEvent){
+        emit(state.copyWith(sortingField: event.sortField));
+      }
+      else if (event is _filterEvent){
+        List<FilterModel>filterList = state.filterList.toList(growable: true);
+        filterList = [
+          FilterModel(brandModel: BrandModel (
+              FilterFieldProductList: [
+                FilterProductModel(name: 'a' ),
+                FilterProductModel(name: '6' ),
+                FilterProductModel(name: '5' ),
+              ],  filterFieldName: 'brand'),
+          ),
+          FilterModel(brandModel: BrandModel (
+              FilterFieldProductList: [
+                FilterProductModel(name: 'sd' ),
+                FilterProductModel(name: 'fv' ),
+                FilterProductModel(name: 'sd' ),
+              ],  filterFieldName: 'categories'),
+          ),
+          FilterModel(brandModel: BrandModel (
+              FilterFieldProductList: [
+                FilterProductModel(name: 'low' ),
+                FilterProductModel(name: 'no' ),
+              ],  filterFieldName: 'stock'),
+          ),
+          FilterModel(brandModel: BrandModel (
+              FilterFieldProductList: [
+                FilterProductModel(name: 'f' ),
+                FilterProductModel(name: 'dd' ),
+                FilterProductModel(name: 'sd' ),
+              ],  filterFieldName: 'sale'),
+          ),
+
+        ];
+        emit(state.copyWith(filterList: filterList));
+      }
+      else if(event is _selectFilterFieldEvent){
+        List<FilterModel>filterList = state.filterList.toList(growable: true);
+        filterList[event.mainIndex].brandModel?.FilterFieldProductList[event.subIndex].isSelected = true;
+        emit(state.copyWith(filterList: filterList,isRefresh: !state.isRefresh));
+      }
+      else if(event is _applyFilterEvent){
+        List<FilterModel>filterList = state.filterList.toList(growable: true);
+        filterList.forEach((element) {
+          element.brandModel?.FilterFieldProductList.forEach((element) {
+            if(element.isSelected){
+              print('element____${element.name}');
+            }
+          });
+        });
+      }
+      else if(event is _clearFilterEvent){
+        List<FilterModel>filterList = state.filterList.toList(growable: true);
+        filterList.forEach((element) {
+          element.brandModel?.FilterFieldProductList.forEach((element) {
+            if(element.isSelected){
+             element.isSelected = false;
+            }
+          });
+        });
+        emit(state.copyWith(filterList: filterList,isRefresh: !state.isRefresh));
+      }
+
+
+
 
     });
   }

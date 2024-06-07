@@ -74,4 +74,19 @@ class ReorderEvent with _$ReorderEvent {
   const factory ReorderEvent.getPermissionList(
       {required BuildContext context }) = _getPermissionList;
 
+  const factory ReorderEvent.filterEvent(
+      {required BuildContext context}) = _filterEvent;
+
+  const factory ReorderEvent.sortingEvent(
+      {required BuildContext context , required String sortField}) = _sortingEvent;
+
+  const factory ReorderEvent.selectFilterFieldEvent(
+      {required BuildContext context , required int mainIndex,required int subIndex }) = _selectFilterFieldEvent;
+
+  const factory ReorderEvent.applyFilterEvent(
+      {required BuildContext context}) = _applyFilterEvent;
+
+  const factory ReorderEvent.clearFilterEvent(
+      {required BuildContext context}) = _clearFilterEvent;
+
 }

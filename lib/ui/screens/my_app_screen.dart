@@ -44,9 +44,9 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
     WidgetsBinding.instance.addObserver(this);
-     smartLook.start();
+     //smartLook.start();
      debugPrint('key____${dotenv.env['SMART_LOOK_KEY']}');
-    smartLook.preferences.setProjectKey(dotenv.env['SMART_LOOK_KEY']!);
+  //  smartLook.preferences.setProjectKey(dotenv.env['SMART_LOOK_KEY']!);
     super.initState();
   }
 
@@ -63,34 +63,32 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
     return ChangeNotifierProvider(
       create: (context) => LocaleProvider()..setAppLocale(),
       builder: (context, child) {
-        return SmartlookRecordingWidget(
-          child: MaterialApp(
-              key: scaffoldKey,
-              navigatorKey: navigatorKey,
-              debugShowCheckedModeBanner: false,
-              locale: Provider.of<LocaleProvider>(context).locale,
-              title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
-              initialRoute: RouteDefine.splashScreen.name,
-              supportedLocales: AppLocalizations.supportedLocales,
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              theme: ThemeData(
-                textSelectionTheme: TextSelectionThemeData(
-                  cursorColor: AppColors.mainColor,
-                  selectionColor: AppColors.mainColor,
-                  selectionHandleColor: Colors.transparent,
-                ),
-                primarySwatch: Colors.green,
-                canvasColor: Colors.white,
-                cardColor: AppColors.whiteColor,
-                snackBarTheme: SnackBarThemeData(
-                  backgroundColor: AppColors.mainColor,
-                  actionTextColor: AppColors.textColor,
-                ),
+        return MaterialApp(
+            key: scaffoldKey,
+            navigatorKey: navigatorKey,
+            debugShowCheckedModeBanner: false,
+            locale: Provider.of<LocaleProvider>(context).locale,
+            title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
+            initialRoute: RouteDefine.splashScreen.name,
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            theme: ThemeData(
+              textSelectionTheme: TextSelectionThemeData(
+                cursorColor: AppColors.mainColor,
+                selectionColor: AppColors.mainColor,
+                selectionHandleColor: Colors.transparent,
               ),
-              scrollBehavior: MyBehavior(),
-              onGenerateRoute: AppRouting.generateRoute,
+              primarySwatch: Colors.green,
+              canvasColor: Colors.white,
+              cardColor: AppColors.whiteColor,
+              snackBarTheme: SnackBarThemeData(
+                backgroundColor: AppColors.mainColor,
+                actionTextColor: AppColors.textColor,
+              ),
             ),
-        );
+            scrollBehavior: MyBehavior(),
+            onGenerateRoute: AppRouting.generateRoute,
+          );
 
       },
     );

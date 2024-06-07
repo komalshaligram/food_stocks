@@ -32,7 +32,7 @@ class PushNotificationService {
 
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
-  _handleMessage(RemoteMessage message,bool showNoti) {
+  /*_handleMessage(RemoteMessage message,bool showNoti) {
     var data = json.decode(message.data['data'].toString());
     final RemoteNotification? notification = message.notification;
     final String? messageId = message.messageId;
@@ -52,7 +52,7 @@ class PushNotificationService {
           isAppOpen: false);
     }
     FlutterAppBadger.updateBadgeCount(notificationCount);
-  }
+  }*/
 
   Future<void> setupInteractedMessage() async {
     if (Platform.isAndroid) {
@@ -76,7 +76,7 @@ class PushNotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) async {
         if (message != null) {
-          _handleMessage(message,true);
+         // _handleMessage(message,true);
         }
       },
     );
@@ -84,7 +84,7 @@ class PushNotificationService {
     FirebaseMessaging.instance.getInitialMessage().then((message) async {
       debugPrint('_______background calling...');
       if (message != null) {
-        _handleMessage(message,true);
+      //  _handleMessage(message,true);
       }
     });
     enableIOSNotifications();
@@ -129,7 +129,18 @@ class PushNotificationService {
     // app is open
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
       debugPrint('_____onMessage_______');
-      var data = json.decode(message!.data['data'].toString());
+
+
+
+      showNotification(
+        imageUrl:(message?.data['image']?? '') ,
+          notiId: message.hashCode,
+          androidIcon: '',
+          data: message,
+          isNavigate: false,
+          showNotification: true,
+          isAppOpen: true);
+  /*    var data = json.decode(message!.data['data'].toString());
 
       final RemoteNotification? notification = message.notification;
       if (notification != null) {
@@ -138,22 +149,23 @@ class PushNotificationService {
         final AndroidNotification? android = message.notification?.android;
         debugPrint('data:${data.toString()}');
 
-        if (data != null) {
-            showNotification(
-              notiId: notification.hashCode,
+     //   if (data != null) {
+       *//*     showNotification(
+              notiId: message.notification.hashCode,
               androidIcon: android?.smallIcon ?? '',
               data: data,
               isNavigate: false,
               showNotification: true,
-              isAppOpen: true);
-        }
+              isAppOpen: true);*//*
+     //   }
 
         FlutterAppBadger.removeBadge();
-      }
+      }*/
     });
   }
 
   showNotification({
+    required String imageUrl,
     required int notiId,
     String? androidIcon,
     var data,
@@ -163,13 +175,16 @@ class PushNotificationService {
   }) async {
     debugPrint('____notification_____');
     channel = androidNotificationChannel();
-    String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
-    String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
+
+   // debugPrint('data______${ json.decode(data.toString())}');
+   // String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
+   // String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
+  // String imageUrl = data['image'] ?? '';
     SharedPreferencesHelper preferences = SharedPreferencesHelper(
         prefs: await SharedPreferences.getInstance());
-    String imageUrl = '';
+
     print('preference____${preferences.getSubUser()}');
-    if(preferences.getSubUser()){
+ /*   if(preferences.getSubUser()){
       mainPage = data['message']['subUserMainPage'] ?? '';
       subPage = data['message']['subUserSubPage'] ?? '';
       id = data['message']['subUserId'] ?? '';
@@ -180,7 +195,7 @@ class PushNotificationService {
       subPage = data['message']['subPage'] ?? '';
       id = data['message']['id'] ?? '';
       imageUrl = data['message']['imageUrl'] ?? '';
-    }
+    }*/
 
 
     Uint8List? imageByte;
@@ -217,8 +232,8 @@ class PushNotificationService {
       debugPrint('fileName_____${fileName}');
      await flutterLocalNotificationsPlugin.show(
         notiId,
-        title,
-        body,
+        'title',
+        'body',
         Platform.isAndroid
             ? flutter_local_notifications.NotificationDetails(
                 android: imageByte != null

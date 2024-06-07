@@ -29,7 +29,7 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     var data = json.decode(message.data['data'].toString());
 
     FlutterAppBadger.updateBadgeCount(PushNotificationService().notificationCount+1);
-    if(data!=null){
+   /* if(data!=null){
       debugPrint('notifrom main');
       PushNotificationService().showNotification(
           notiId: message.notification.hashCode,
@@ -39,7 +39,7 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           showNotification: true,
           isAppOpen: true
       );
-  }
+  }*/
 }
 
 void main() async {

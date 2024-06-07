@@ -7,7 +7,10 @@ class CommonDropDownButton extends StatelessWidget {
   final String value;
   final List<DropdownMenuItem<String>>? items;
   final void Function(String?)? onChanged;
-  const CommonDropDownButton({super.key,required this.value , required this.items,required this.onChanged});
+  final Color color;
+  const CommonDropDownButton({super.key,required this.value , required this.items,required this.onChanged,
+  this.color = const Color(0xffD9D9D9)
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,21 +28,21 @@ class CommonDropDownButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(
               AppConstants.radius_3),
           borderSide: BorderSide(
-            color: AppColors.borderColor,
+            color:color,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(
               AppConstants.radius_3),
           borderSide: BorderSide(
-            color: AppColors.borderColor,
+            color: color,
           ),
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(
               AppConstants.radius_3),
           borderSide: BorderSide(
-            color: AppColors.borderColor,
+            color: color,
           ),
         ),
       ),
