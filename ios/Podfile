@@ -51,5 +51,6 @@ end
 
 target 'ImageNotification' do
   use_frameworks!
+  pod 'CTNotificationService'
   pod 'Firebase/Messaging'
 end

@@ -14,33 +14,9 @@ import 'package:food_stock/ui/utils/push_notification_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
-
-@pragma('vm:entry-point')
-Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint("__________BackgroundHandler______");
-    await Firebase.initializeApp();
-    debugPrint("Handling in main${message.toString()}");
-    debugPrint("Handling a background message:${message.messageId}");
-    debugPrint("Handling a background message:${message.data.toString()}");
-    var data = json.decode(message.data['data'].toString());
-
-    FlutterAppBadger.updateBadgeCount(PushNotificationService().notificationCount+1);
-    if(data!=null){
-      debugPrint('notifrom main');
-    /*  PushNotificationService().showNotification(
-          notiId: message.notification.hashCode,
-          androidIcon:message.notification?.android?.smallIcon,
-          data: data,
-          isNavigate: true,
-          showNotification: true,
-          isAppOpen: true
-      );*/
-  }
-}
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
@@ -48,9 +24,9 @@ void main() async {
     await Firebase.initializeApp();
     await PushNotificationService().setupInteractedMessage();
     await dotenv.load(fileName: '.env');
-    if(Platform.isAndroid){
+  /*  if(Platform.isAndroid){
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    }
+    }*/
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     SharedPreferencesHelper preferencesHelper =

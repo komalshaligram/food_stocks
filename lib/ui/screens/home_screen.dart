@@ -1069,14 +1069,14 @@ class HomeScreenWidget extends StatelessWidget {
               if (data != null) {
                 debugPrint('noti from  home');
                 FlutterAppBadger.removeBadge();
-                PushNotificationService().showNotification(
+            /*    PushNotificationService().showNotification(
                     notiId: message.notification.hashCode,
                     androidIcon:message.notification?.android?.smallIcon,
-                    data: data,
-                    isNavigate: true,
-                    showNotification: false,
-                    isAppOpen: true
-                );
+                    title:message.data['title']??'',
+                    body:message.data['body']??'',
+                    isNavigate: false,
+                    showNotification: true,
+                    isAppOpen: true,  imageUrl:(message.data['image']?? ''));*/
               }
             }
           }

@@ -10,7 +10,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
-    as flutter_local_notifications;
+as flutter_local_notifications;
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:intl/intl.dart';
 
@@ -20,7 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PushNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
 
   var fileName;
 
@@ -31,28 +31,6 @@ class PushNotificationService {
   int notificationCount = 0;
 
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-
-  _handleMessage(RemoteMessage message,bool showNoti) {
-    var data = json.decode(message.data['data'].toString());
-    final RemoteNotification? notification = message.notification;
-    final String? messageId = message.messageId;
-    debugPrint('messageId___2___${messageId}');
-    final AndroidNotification? android = message.notification?.android;
-    debugPrint('data:${data.toString()}');
-    if (data['isRead']) {
-      notificationCount = notificationCount + 1;
-    }
-    if (data != null) {
-      showNotification(
-          notiId: notification.hashCode,
-          androidIcon: android?.smallIcon ?? '',
-          data: data,
-          isNavigate: !showNoti,
-          showNotification: showNoti,
-          isAppOpen: false);
-    }
-    FlutterAppBadger.updateBadgeCount(notificationCount);
-  }
 
   Future<void> setupInteractedMessage() async {
     if (Platform.isAndroid) {
@@ -72,14 +50,11 @@ class PushNotificationService {
       }
     }
 
-    enableIOSNotifications();
-    await registerNotificationListeners();
 
     FirebaseMessaging.onMessageOpenedApp.listen(
           (RemoteMessage message) async {
-        debugPrint('_____open app calling...');
         if (message != null) {
-          _handleMessage(message,true);
+
         }
       },
     );
@@ -87,9 +62,11 @@ class PushNotificationService {
     FirebaseMessaging.instance.getInitialMessage().then((message) async {
       debugPrint('_______background calling...');
       if (message != null) {
-        _handleMessage(message,true);
+
       }
     });
+    enableIOSNotifications();
+    await registerNotificationListeners();
   }
 
   Future<void> registerNotificationListeners() async {
@@ -97,13 +74,13 @@ class PushNotificationService {
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@drawable/ic_launcher1');
+    AndroidInitializationSettings('@drawable/ic_launcher1');
     const DarwinInitializationSettings iOSSettings =
-        DarwinInitializationSettings(
+    DarwinInitializationSettings(
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,
@@ -113,65 +90,51 @@ class PushNotificationService {
     fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getToken();
 
     SharedPreferencesHelper preferences =
-        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     preferences.setFCMToken(fcmTokenId: fcmToken??'');
     debugPrint("FCM Token: ${preferences.getFCMToken()}");
     const InitializationSettings initSettings =
-        InitializationSettings(android: androidSettings, iOS: iOSSettings);
+    InitializationSettings(android: androidSettings, iOS: iOSSettings);
     flutterLocalNotificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
         debugPrint("__________details______:${details}");
         FlutterAppBadger.removeBadge();
-            manageNavigation(isAppOpen: true,mainPage:  mainPage,subPage:  subPage, id: id);
+        manageNavigation(isAppOpen: true,mainPage:  mainPage,subPage:  subPage, id: id);
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
     // app is open
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
-      debugPrint('_____onMessage_______');
-      var data = json.decode(message!.data['data'].toString());
-
-      final RemoteNotification? notification = message.notification;
-      if (notification != null) {
-        final String? messageId = message.messageId;
-        debugPrint('open app___${messageId}');
-        final AndroidNotification? android = message.notification?.android;
-        debugPrint('data:${data.toString()}');
-
-        if (data != null) {
-           /* showNotification(
-              notiId: notification.hashCode,
-              androidIcon: android?.smallIcon ?? '',
-              data: data,
-              isNavigate: false,
-              showNotification: true,
-              isAppOpen: true);*/
-        }
-
-        FlutterAppBadger.removeBadge();
+      debugPrint('_____onMessage_______${message!.data['image'].toString()}');
+      if(Platform.isAndroid){
+        showNotification(imageUrl: message.data['image'], notiId: 0, title: message.notification!.title??'', body: message.notification!.body??'', isNavigate: true,  isAppOpen: true);
       }
+
     });
   }
 
   showNotification({
+    required String imageUrl,
     required int notiId,
     String? androidIcon,
-    var data,
+    required String title,
+    required String body,
     required bool isNavigate,
-    required bool showNotification,
     required bool isAppOpen,
   }) async {
-    fileName = null;
     debugPrint('____notification_____');
     channel = androidNotificationChannel();
-    String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
-    String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
+
+    // debugPrint('data______${ json.decode(data.toString())}');
+    // String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
+    // String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
+    // String imageUrl = data['image'] ?? '';
     SharedPreferencesHelper preferences = SharedPreferencesHelper(
         prefs: await SharedPreferences.getInstance());
-    String imageUrl = '';
-    print('preference____${preferences.getSubUser()}');
-    if(preferences.getSubUser()){
+
+
+    /*   if(preferences.getSubUser()){
       mainPage = data['message']['subUserMainPage'] ?? '';
       subPage = data['message']['subUserSubPage'] ?? '';
       id = data['message']['subUserId'] ?? '';
@@ -182,7 +145,7 @@ class PushNotificationService {
       subPage = data['message']['subPage'] ?? '';
       id = data['message']['id'] ?? '';
       imageUrl = data['message']['imageUrl'] ?? '';
-    }
+    }*/
 
 
     Uint8List? imageByte;
@@ -196,70 +159,67 @@ class PushNotificationService {
       // Create an image name
       fileName = '${dir.path}/image.png';
       // Save to filesystem
-      final file = File(fileName);
+      var file ;
 
-      imageByte =
-          (await NetworkAssetBundle(Uri.parse(AppUrls.baseFileUrl + imageUrl))
-                  .load(AppUrls.baseFileUrl + imageUrl))
-              .buffer
-              .asUint8List();
-      await file.writeAsBytes(imageByte.toList());
-      await flutterLocalNotificationsPlugin.show(
-        notiId,
-        title,
-        body,
-        Platform.isAndroid
-            ? flutter_local_notifications.NotificationDetails(
-         android: AndroidNotificationDetails(
-            channel.id,
-            channel.name,
-            channelDescription: channel.description,
-            icon: androidIcon ?? '',
-            channelShowBadge: true,
-            largeIcon: ByteArrayAndroidBitmap(imageByte),
-        ))
-            : flutter_local_notifications.NotificationDetails(
-          iOS:  DarwinNotificationDetails(
-              attachments: [DarwinNotificationAttachment(fileName)])
-             ,
-        ),
-        // payload: message.data.toString(),
-      );
+      imageByte = (await NetworkAssetBundle(Uri.parse(imageUrl))
+          .load(imageUrl))
+          .buffer
+          .asUint8List();
+     // await file.writeAsBytes(imageByte.toList());
+      debugPrint('isNavigate___${imageByte}');
+
     }else{
-      await flutterLocalNotificationsPlugin.show(
-        notiId,
-        title,
-        body,
-        Platform.isAndroid
-            ? flutter_local_notifications.NotificationDetails(
-          android: AndroidNotificationDetails(channel.id, channel.name,
-              channelDescription: channel.description,
-              icon: androidIcon ?? '',
-              channelShowBadge: true),
-        )
-            : flutter_local_notifications.NotificationDetails(
-          iOS:  DarwinNotificationDetails(),
-        ),
-        // payload: message.data.toString(),
-      );
+      fileName = null;
     }
     debugPrint('subPage___${subPage}');
     debugPrint('mainPage___${mainPage}');
     debugPrint('ide___${id}');
     debugPrint('isNavigate___${isNavigate}');
-    debugPrint('showNotification___${showNotification}');
 
-    if (isNavigate /*&& showNotification*/) {
+
+  //  if (showNotification) {
+      debugPrint('fileName_____${fileName}');
+      await flutterLocalNotificationsPlugin.show(
+        notiId,
+        Bidi.stripHtmlIfNeeded(title),
+        Bidi.stripHtmlIfNeeded(body),
+        Platform.isAndroid
+            ? flutter_local_notifications.NotificationDetails(
+          android: imageByte!=null
+              ? AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            channelDescription: channel.description,
+            importance: Importance.high,
+            channelShowBadge: true,
+              largeIcon:ByteArrayAndroidBitmap(imageByte!),
+          )
+              : AndroidNotificationDetails(channel.id, channel.name,
+              channelDescription: channel.description,
+              icon: androidIcon ?? '',
+              channelShowBadge: true),
+        )
+            : flutter_local_notifications.NotificationDetails(
+          iOS: fileName != null
+              ? DarwinNotificationDetails(
+                  presentBanner: true,
+              attachments: [DarwinNotificationAttachment(fileName)])
+              : DarwinNotificationDetails(),
+        ),
+        // payload: message.data.toString(),
+      );
+ //   }
+   /* if (isNavigate *//*&& showNotification*//*) {
       print('___________navigation');
       manageNavigation(isAppOpen: isAppOpen, mainPage: mainPage, subPage: subPage, id: id);
-    }
+    }*/
   }
 
   void manageNavigation(
       {bool isAppOpen = false,
-      String?mainPage = '',
-      String? subPage = '',
-      String? id = ''}) {
+        String?mainPage = '',
+        String? subPage = '',
+        String? id = ''}) {
     debugPrint('main  1 = ${mainPage}');
     debugPrint('subPage   1= ${subPage}');
     debugPrint('id 1= ${id}');
@@ -275,7 +235,7 @@ class PushNotificationService {
         }
         if (mainPage == 'saleScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
-              RouteDefine.productSaleScreen.name,);
+            RouteDefine.productSaleScreen.name,);
         }
         if (mainPage == 'supplierScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
@@ -285,9 +245,9 @@ class PushNotificationService {
         if (mainPage == 'storeScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.bottomNavScreen.name, arguments: {
-            AppStrings.companyIdString: id,
-            AppStrings.pushNavigationString: 'storeScreen'
-          });
+                AppStrings.companyIdString: id,
+                AppStrings.pushNavigationString: 'storeScreen'
+              });
         }
       } else {
         if (subPage == 'companyProductsScreen') {
@@ -343,7 +303,7 @@ class PushNotificationService {
         'high_importance_channel', // id
         'High Importance Notifications', // title
         description:
-            'This channel is used for important notifications.', // description
+        'This channel is used for important notifications.', // description
         importance: Importance.max,
         showBadge: false,
       );
