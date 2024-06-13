@@ -90,7 +90,7 @@ class HomeScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-                //handleMessageOnBackground();
+                handleMessageOnBackground();
                 bloc.add(HomeEvent.getPreferencesDataEvent());
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(
                     context: context));
@@ -1057,33 +1057,15 @@ class HomeScreenWidget extends StatelessWidget {
   }
 
   void handleMessageOnBackground() {
-    debugPrint('handleMessageOnBackground home ${isNavigation}');
-    if(isNavigation.isNotEmpty){
-      PushNotificationService().firebaseMessaging.getInitialMessage().then(
-            (message) async {
-          if (message != null) {
-            debugPrint("onMessageClosedApp: ${message.data}");
-            if (message.data.isNotEmpty) {
-              var data = json.decode(message.data['data'].toString());
-              debugPrint('data home:${data.toString()}');
-              if (data != null) {
-                debugPrint('noti from  home');
-                FlutterAppBadger.removeBadge();
-            /*    PushNotificationService().showNotification(
-                    notiId: message.notification.hashCode,
-                    androidIcon:message.notification?.android?.smallIcon,
-                    title:message.data['title']??'',
-                    body:message.data['body']??'',
-                    isNavigate: false,
-                    showNotification: true,
-                    isAppOpen: true,  imageUrl:(message.data['image']?? ''));*/
-              }
+    PushNotificationService().firebaseMessaging.getInitialMessage().then(
+          (message) async {
+            if(message!=null){
+              PushNotificationService(). handleMessage(message.data['mainPage'],message.data['subPage']??'',message.data['_id']);
             }
-          }
-        },
-      );
-      isNavigation = '';
-    }
+
+     //   await PushNotificationService().manageNavOnKilled(message!);
+      },
+    );
   }
 
   Widget titleRowWidget(

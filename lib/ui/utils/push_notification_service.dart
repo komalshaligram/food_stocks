@@ -21,12 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PushNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
-
-  var fileName;
-
   late AndroidNotificationChannel channel;
-  String mainPage = '';
-  String subPage = '';
   String id = '';
   int notificationCount = 0;
 
@@ -53,20 +48,87 @@ class PushNotificationService {
 
     FirebaseMessaging.onMessageOpenedApp.listen(
           (RemoteMessage message) async {
+            debugPrint('_____Here at onMessageOpenedApp....$message');
         if (message != null) {
-
+          debugPrint('onMessageOpenedApp:${message.data}');
+          debugPrint("main page1:${message.data['mainPage']}");
+          debugPrint("sub page1:${message.data['subPage']}");
         }
       },
     );
 
-    FirebaseMessaging.instance.getInitialMessage().then((message) async {
-      debugPrint('_______background calling...');
-      if (message != null) {
-
-      }
-    });
     enableIOSNotifications();
     await registerNotificationListeners();
+  }
+
+/*  Future<void> manageNavOnKilled(RemoteMessage message) async {
+    debugPrint('_______background calling...');
+    debugPrint('onMessageOpenedApp:$message');
+    debugPrint("main page:${message.data['mainPage']}");
+    debugPrint("sub page:${message.data['subPage']}");
+    handleMessage(message.data['mainPage'],message.data['subPage']??'',message.data['_id']);
+    }*/
+
+  Future<void> handleMessage(String mainPage,String subPage, String id)  async {
+  debugPrint('_______handleMessage...');
+    if (subPage == '') {
+      debugPrint('_______handleMessage1...');
+      if (mainPage == 'companyScreen') {
+        debugPrint('_______handleMessage2...${navigatorKey.currentState.toString()}');
+        Navigator.pushNamed(navigatorKey.currentState!.context,
+            RouteDefine.companyScreen.name,
+            arguments: {AppStrings.companyIdString: id});
+        debugPrint('_______handleMessage3...');
+      }
+      if (mainPage == 'saleScreen') {
+        Navigator.pushNamed(navigatorKey.currentState!.context,
+          RouteDefine.productSaleScreen.name,);
+      }
+      if (mainPage == 'supplierScreen') {
+        Navigator.pushNamed(navigatorKey.currentState!.context,
+            RouteDefine.supplierScreen.name,
+            arguments: {AppStrings.companyIdString: id});
+      }
+      if (mainPage == 'storeScreen') {
+        Navigator.pushNamed(navigatorKey.currentState!.context,
+            RouteDefine.bottomNavScreen.name, arguments: {
+              AppStrings.companyIdString: id,
+              AppStrings.pushNavigationString: 'storeScreen'
+            });
+      }
+    } else {
+      if (subPage == 'companyProductsScreen') {
+        Navigator.pushNamed(navigatorKey.currentState!.context,
+            RouteDefine.companyProductsScreen.name,
+            arguments: {AppStrings.companyIdString: id});
+      }
+      else if (subPage == 'saleProductScreen') {
+        Navigator.pushNamed(navigatorKey.currentState!.context,
+            RouteDefine.productSaleScreen.name,
+            arguments: {AppStrings.companyIdString: id});
+      } else if (subPage == 'supplierProductsScreen') {
+        Navigator.pushNamed(navigatorKey.currentState!.context,
+            RouteDefine.supplierProductsScreen.name,
+            arguments: {AppStrings.supplierIdString: id});
+      } else if (subPage == 'catagoryScreen' ||
+          subPage == 'storeCategoryScreen') {
+        Navigator.pushNamed(navigatorKey.currentState!.context,
+            RouteDefine.storeCategoryScreen.name,
+            arguments: {AppStrings.companyIdString: id});
+      } else if (subPage == 'planogramScreen' ||
+          subPage == 'planogramProductScreen') {
+        Navigator.pushNamed(navigatorKey.currentState!.context,
+            RouteDefine.storeCategoryScreen.name,
+            arguments: {
+              AppStrings.companyIdString: id,
+              AppStrings.isSubCategory: 'false',
+            });
+      } else {
+        AppRouting.generateRoute(RouteSettings(
+          name: RouteDefine.splashScreen.name,
+        ));
+      }
+    }
   }
 
   Future<void> registerNotificationListeners() async {
@@ -99,8 +161,7 @@ class PushNotificationService {
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
         debugPrint("__________details______:${details}");
-        FlutterAppBadger.removeBadge();
-        manageNavigation(isAppOpen: true,mainPage:  mainPage,subPage:  subPage, id: id);
+
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
@@ -108,186 +169,54 @@ class PushNotificationService {
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
       debugPrint('_____onMessage_______${message!.data['image'].toString()}');
       if(Platform.isAndroid){
-        showNotification(imageUrl: message.data['image'], notiId: 0, title: message.notification!.title??'', body: message.notification!.body??'', isNavigate: true,  isAppOpen: true);
+        showNotification(imageUrl: message.data['image'], notiId: 0, title: message.notification!.title??'', body: message.notification!.body??'');
       }
-
     });
   }
 
   showNotification({
     required String imageUrl,
     required int notiId,
-    String? androidIcon,
     required String title,
     required String body,
-    required bool isNavigate,
-    required bool isAppOpen,
   }) async {
     debugPrint('____notification_____');
     channel = androidNotificationChannel();
 
-    // debugPrint('data______${ json.decode(data.toString())}');
-    // String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
-    // String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
-    // String imageUrl = data['image'] ?? '';
-    SharedPreferencesHelper preferences = SharedPreferencesHelper(
-        prefs: await SharedPreferences.getInstance());
-
-
-    /*   if(preferences.getSubUser()){
-      mainPage = data['message']['subUserMainPage'] ?? '';
-      subPage = data['message']['subUserSubPage'] ?? '';
-      id = data['message']['subUserId'] ?? '';
-      imageUrl = data['message']['imageUrl'] ?? '';
-    }
-    else{
-      mainPage = data['message']['mainPage'] ?? '';
-      subPage = data['message']['subPage'] ?? '';
-      id = data['message']['id'] ?? '';
-      imageUrl = data['message']['imageUrl'] ?? '';
-    }*/
-
-
     Uint8List? imageByte;
     if (imageUrl.isNotEmpty) {
-      Directory dir;
-      if (Platform.isAndroid) {
-        dir = await getTemporaryDirectory();
-      } else {
-        dir = await getApplicationDocumentsDirectory();
-      }
-      // Create an image name
-      fileName = '${dir.path}/image.png';
-      // Save to filesystem
-      var file ;
-
       imageByte = (await NetworkAssetBundle(Uri.parse(imageUrl))
           .load(imageUrl))
           .buffer
           .asUint8List();
-     // await file.writeAsBytes(imageByte.toList());
-      debugPrint('isNavigate___${imageByte}');
-
-    }else{
-      fileName = null;
+      debugPrint('imageUrl__${imageByte}');
     }
-    debugPrint('subPage___${subPage}');
-    debugPrint('mainPage___${mainPage}');
+
     debugPrint('ide___${id}');
-    debugPrint('isNavigate___${isNavigate}');
-
-
-  //  if (showNotification) {
-      debugPrint('fileName_____${fileName}');
       await flutterLocalNotificationsPlugin.show(
         notiId,
         Bidi.stripHtmlIfNeeded(title),
         Bidi.stripHtmlIfNeeded(body),
-        Platform.isAndroid
-            ? flutter_local_notifications.NotificationDetails(
+       flutter_local_notifications.NotificationDetails(
           android: imageByte!=null
               ? AndroidNotificationDetails(
             channel.id,
             channel.name,
             channelDescription: channel.description,
             importance: Importance.high,
+            priority: Priority.max,
             channelShowBadge: true,
-              largeIcon:ByteArrayAndroidBitmap(imageByte!),
+              largeIcon:ByteArrayAndroidBitmap(imageByte),
           )
               : AndroidNotificationDetails(channel.id, channel.name,
               channelDescription: channel.description,
-              icon: androidIcon ?? '',
+              importance: Importance.high,
+              priority: Priority.max,
               channelShowBadge: true),
         )
-            : flutter_local_notifications.NotificationDetails(
-          iOS: fileName != null
-              ? DarwinNotificationDetails(
-                  presentBanner: true,
-              attachments: [DarwinNotificationAttachment(fileName)])
-              : DarwinNotificationDetails(),
-        ),
-        // payload: message.data.toString(),
       );
- //   }
-   /* if (isNavigate *//*&& showNotification*//*) {
-      print('___________navigation');
-      manageNavigation(isAppOpen: isAppOpen, mainPage: mainPage, subPage: subPage, id: id);
-    }*/
   }
 
-  void manageNavigation(
-      {bool isAppOpen = false,
-        String?mainPage = '',
-        String? subPage = '',
-        String? id = ''}) {
-    debugPrint('main  1 = ${mainPage}');
-    debugPrint('subPage   1= ${subPage}');
-    debugPrint('id 1= ${id}');
-    debugPrint('isAppOpen = ${isAppOpen}');
-
-    if (isAppOpen) {
-      debugPrint('subPage  1 = ${subPage}');
-      if (subPage == '') {
-        if (mainPage == 'companyScreen') {
-          Navigator.pushNamed(navigatorKey.currentState!.context,
-              RouteDefine.companyScreen.name,
-              arguments: {AppStrings.companyIdString: id});
-        }
-        if (mainPage == 'saleScreen') {
-          Navigator.pushNamed(navigatorKey.currentState!.context,
-            RouteDefine.productSaleScreen.name,);
-        }
-        if (mainPage == 'supplierScreen') {
-          Navigator.pushNamed(navigatorKey.currentState!.context,
-              RouteDefine.supplierScreen.name,
-              arguments: {AppStrings.companyIdString: id});
-        }
-        if (mainPage == 'storeScreen') {
-          Navigator.pushNamed(navigatorKey.currentState!.context,
-              RouteDefine.bottomNavScreen.name, arguments: {
-                AppStrings.companyIdString: id,
-                AppStrings.pushNavigationString: 'storeScreen'
-              });
-        }
-      } else {
-        if (subPage == 'companyProductsScreen') {
-          Navigator.pushNamed(navigatorKey.currentState!.context,
-              RouteDefine.companyProductsScreen.name,
-              arguments: {AppStrings.companyIdString: id});
-        }
-        else if (subPage == 'saleProductScreen') {
-          Navigator.pushNamed(navigatorKey.currentState!.context,
-              RouteDefine.productSaleScreen.name,
-              arguments: {AppStrings.companyIdString: id});
-        } else if (subPage == 'supplierProductsScreen') {
-          Navigator.pushNamed(navigatorKey.currentState!.context,
-              RouteDefine.supplierProductsScreen.name,
-              arguments: {AppStrings.supplierIdString: id});
-        } else if (subPage == 'catagoryScreen' ||
-            subPage == 'storeCategoryScreen') {
-          Navigator.pushNamed(navigatorKey.currentState!.context,
-              RouteDefine.storeCategoryScreen.name,
-              arguments: {AppStrings.companyIdString: id});
-        } else if (subPage == 'planogramScreen' ||
-            subPage == 'planogramProductScreen') {
-          Navigator.pushNamed(navigatorKey.currentState!.context,
-              RouteDefine.storeCategoryScreen.name,
-              arguments: {
-                AppStrings.companyIdString: id,
-                AppStrings.isSubCategory: 'false',
-              });
-        } else {
-          AppRouting.generateRoute(RouteSettings(
-            name: RouteDefine.splashScreen.name,
-          ));
-        }
-      }
-    } else {
-      AppRouting.generateRoute(RouteSettings(
-        name: RouteDefine.splashScreen.name,
-      ));
-    }
-  }
 
   Future<void> enableIOSNotifications() async {
     await FirebaseMessaging.instance

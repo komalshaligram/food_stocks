@@ -32,6 +32,7 @@ import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_list_widget.dart';
 import '../widget/common_product_sale_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
+import '../widget/common_sale_listview.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/confetti.dart';
 import '../widget/product_details_shimmer_widget.dart';
@@ -375,8 +376,13 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                         horizontal:
                                         AppConstants.padding_5),
                                     itemBuilder: (context, index) =>
-                                        CommonProductListWidget(
-                                          isPesach: state.productList[index].isPesach,
+                                        CommonSaleListView(
+                                          isFromSale: state.productList[index]
+                                              .sale?.isSale,
+                                          salesDesc: state.productList[index]
+                                              .sale?.saleDescription,
+                                          isPesach: state.productList[index]
+                                              .isPesach,
                                           lowStock: state
                                               .productList[index]
                                               .lowStock
@@ -408,7 +414,9 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                               showProductDetails(
                                                 productListIndex: 1,
                                                 context: context,
-                                                productId: state.productList[index].id?? '',
+                                                productId: state
+                                                    .productList[index].id ??
+                                                    '',
                                                 productStock: state
                                                     .productList[index]
                                                     .productStock
@@ -422,7 +430,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                       .name);
                                             }
                                           },
-                                          totalSaleCount: 0,
+                                          discountedPrice:  double.parse(state.productList[index]
+                                              .sale?.salePrice ?? '0' ), context: context,
                                         ),
                                   ),
                                 ],
