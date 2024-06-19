@@ -1,6 +1,6 @@
 class AppUrls {
-//static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
-static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///devUrl
+static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
+//static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///devUrl
   static const String baseFileUrl = 'https://foodstock-buckets.s3.il-central-1.amazonaws.com/';
   static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
   static const String loginOTPUrl = '/v1/auth/clientLogin';
@@ -94,4 +94,5 @@ static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///dev
   static const String getAllSubUserUrl = '/v1/subuser/getAllSubusers';
   static const String deleteClientSubUserUrl = '/v1/subuser/deleteClientSubuser';
   static const String updateSubUserUrl = '/v1/subuser/updateSubuser';
+  static const String verifyClientUrl = '/v1/clients/verifyClient';
 }

@@ -76,6 +76,9 @@ class PesachProductsEvent with _$PesachProductsEvent {
   const factory PesachProductsEvent.getPermissionList(
       {required BuildContext context }) = _getPermissionList;
 
+  const factory PesachProductsEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
+
 
 
 }

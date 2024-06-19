@@ -216,7 +216,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           String version = packageInfo.version;
            debugPrint('version____${version}');
-
           ProfileModel reqMap = ProfileModel(
               profileImage: profileModel.profileImage,
               phoneNumber: profileModel.phoneNumber,

@@ -6,8 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/get_sub_user/get_sub_user_req_model.dart';
 import '../../data/model/res_model/get_all_sub_user/get_sub_user_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
@@ -99,8 +101,36 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
         add(SubUsersEvent.getSubUserList(context: event.context));
       }
 
-      else if(event is _popEvent){
+      else if(event is _userApproveEvent){
         emit(state.copyWith(isBottomOfProducts: false,isPop: true,pageNum: 0));
+
+        try {
+          debugPrint('clientId_____${AppStrings.clientIdString}');
+          final res = await DioClient(event.context).post(
+              '${AppUrls.verifyClientUrl}',
+              data: {AppStrings.clientIdString:preferences.getUserId()}
+          );
+          VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+          debugPrint('verifyClient res_____$response');
+          debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+          if (response.status == 200) {
+            if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
+              Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+            }
+            else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
+              Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
+            }
+            else{
+              Navigator.pushNamed(
+                  event.context, RouteDefine.subUsersProfileScreen.name);
+            }
+          }
+        } on ServerException {}
+        catch (e) {
+          debugPrint('catch____$e');
+        }
+
+
       }
 
 

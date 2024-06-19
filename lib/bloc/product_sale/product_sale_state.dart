@@ -26,6 +26,7 @@ class ProductSaleState with _$ProductSaleState {
     required bool isSubUserAddToBasket,
     required bool isGridView,
     required int productListIndex,
+
    
   }) = _ProductSaleState;
 

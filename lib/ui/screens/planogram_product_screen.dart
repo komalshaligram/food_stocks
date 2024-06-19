@@ -49,7 +49,8 @@ class PlanogramProductScreen extends StatelessWidget {
       create: (context) => PlanogramProductBloc()
         ..add(PlanogramProductEvent.getPlanogramProductsEvent(
             planogram: args?[AppStrings.planogramProductsParamString] ??
-                PlanogramDatum(),context: context)),
+                PlanogramDatum(),context: context))
+        ..add(PlanogramProductEvent.userApproveEvent(context: context)),
       child: PlanogramProductScreenWidget(),
     );
   }
@@ -61,7 +62,11 @@ class PlanogramProductScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PlanogramProductBloc bloc = context.read<PlanogramProductBloc>();
-    return BlocBuilder<PlanogramProductBloc, PlanogramProductState>(
+    return BlocListener<PlanogramProductBloc, PlanogramProductState>(
+  listener: (context, state) {
+
+  },
+  child: BlocBuilder<PlanogramProductBloc, PlanogramProductState>(
       builder: (context, state) {
         return Scaffold(
           floatingActionButtonLocation:
@@ -535,7 +540,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
           ),
         );
       },
-    );
+    ),
+);
   }
 
   Widget buildPlanoGramProductItem(

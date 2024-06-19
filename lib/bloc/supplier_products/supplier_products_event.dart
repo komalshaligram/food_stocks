@@ -75,4 +75,7 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
   const factory SupplierProductsEvent.getPermissionList(
       {required BuildContext context }) = _getPermissionList;
 
+  const factory SupplierProductsEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
+
 }

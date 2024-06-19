@@ -43,6 +43,8 @@ import '../../data/model/res_model/recommendation_products_res_model/recommendat
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/suppliers_res_model/suppliers_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -1330,6 +1332,32 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           }
         }
 
+
+      }
+
+      else if(event is _userApproveEvent){
+        try {
+          debugPrint('clientId_____${AppStrings.clientIdString}');
+          final res = await DioClient(event.context).post(
+              '${AppUrls.verifyClientUrl}',
+              data: {AppStrings.clientIdString:preferencesHelper.getUserId()}
+          );
+          VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+          debugPrint('verifyClient res_____$response');
+          debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+          if (response.status == 200) {
+            if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
+              Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+            }
+            else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
+              Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
+            }
+
+          }
+        } on ServerException {}
+        catch (e) {
+          debugPrint('catch____$e');
+        }
 
       }
 

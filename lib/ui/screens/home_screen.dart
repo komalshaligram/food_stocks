@@ -34,7 +34,6 @@ import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
-
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/pesach_banner_shimmer.dart';
 import '../widget/search_item_widget.dart';
@@ -50,6 +49,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc()
+          ..add(HomeEvent.userApproveEvent(context: context))
         ..add(HomeEvent.generalSettings(context: context))
         ..add(HomeEvent.getPreferencesDataEvent())
         ..add(HomeEvent.getCartCountEvent(context: context))
@@ -83,6 +83,7 @@ class HomeScreenWidget extends StatelessWidget {
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
+
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
@@ -91,6 +92,7 @@ class HomeScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
+              bloc.add(HomeEvent.userApproveEvent(context: context));
                 handleMessageOnBackground();
                 bloc.add(HomeEvent.getPreferencesDataEvent());
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(

@@ -116,4 +116,7 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.getPermissionList(
       {required BuildContext context }) = _getPermissionList;
 
+  const factory StoreCategoryEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
+
 }

@@ -21,6 +21,7 @@ class ProfileMenuState with _$ProfileMenuState {
     required bool isAccountPermissionShimmering,
     required bool isCanSeeInvoices,
 
+
   }) = _ProfileMenuState;
 
   factory ProfileMenuState.initial() => ProfileMenuState(
@@ -40,6 +41,7 @@ class ProfileMenuState with _$ProfileMenuState {
     isSubUserCanManageSubUser: false,
     isSubUserSeeOrder: false,
       isAccountPermissionShimmering: false,
-    isCanSeeInvoices: false
+    isCanSeeInvoices: false,
+    
       );
 }

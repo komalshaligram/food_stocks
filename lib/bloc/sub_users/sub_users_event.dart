@@ -10,5 +10,8 @@ class SubUsersEvent with _$SubUsersEvent {
   const factory SubUsersEvent.popEvent({required BuildContext context}) =
   _popEvent;
 
+  const factory SubUsersEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
+
 
 }

@@ -57,7 +57,8 @@ class CompanyProductsScreen extends StatelessWidget {
         ..add(CompanyProductsEvent.getCompanyProductsIdEvent(
             companyId: args?[AppStrings.companyIdString]))
         ..add(CompanyProductsEvent.getCompanyProductsListEvent(context: context))
-        ..add(CompanyProductsEvent.getPermissionList(context: context)),
+        ..add(CompanyProductsEvent.getPermissionList(context: context))
+      ..add(CompanyProductsEvent.userApproveEvent(context: context)),
       child: CompanyProductsScreenWidget(companyName:companyName,companyLogo:companyLogo),
     );
   }
@@ -71,7 +72,11 @@ class CompanyProductsScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CompanyProductsBloc bloc = context.read<CompanyProductsBloc>();
-    return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
+    return BlocListener<CompanyProductsBloc, CompanyProductsState>(
+  listener: (context, state) {
+
+  },
+  child: BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
       builder: (context, state) {
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
@@ -604,7 +609,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
           ),),
         );
       },
-    );
+    ),
+);
   }
 
   Widget buildCompanyProducts(

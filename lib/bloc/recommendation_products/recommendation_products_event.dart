@@ -75,4 +75,8 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
   const factory RecommendationProductsEvent.getPermissionList(
       {required BuildContext context }) = _getPermissionList;
 
+
+  const factory RecommendationProductsEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
+
 }

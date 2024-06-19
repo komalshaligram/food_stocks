@@ -86,4 +86,7 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
   const factory PlanogramProductEvent.getPermissionList(
       {required BuildContext context }) = _getPermissionList;
 
+  const factory PlanogramProductEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
+
 }

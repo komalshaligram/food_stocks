@@ -47,7 +47,8 @@ class RecommendationProductsScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => RecommendationProductsBloc()
         ..add(RecommendationProductsEvent.getRecommendationProductsEvent(
-            context: context)),
+            context: context))
+        ..add(RecommendationProductsEvent.userApproveEvent(context: context)),
       child: RecommendationProductsScreenWidget(),
     );
   }
@@ -59,7 +60,11 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RecommendationProductsBloc bloc = context.read<RecommendationProductsBloc>();
-    return BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
+    return BlocListener<RecommendationProductsBloc, RecommendationProductsState>(
+  listener: (context, state) {
+
+  },
+  child: BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
       builder: (context, state) {
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
@@ -605,7 +610,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
           ),
         );
       },
-    );
+    ),
+);
   }
 
 

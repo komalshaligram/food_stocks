@@ -78,11 +78,13 @@ class StoreScreenWidget extends StatelessWidget {
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
+
       },
       child: BlocBuilder<StoreBloc, StoreState>(
         builder: (context, state) {
           return FocusDetector(
             onFocusGained: (){
+           bloc.add(StoreEvent.userApproveEvent(context: context));
               bloc.add(StoreEvent.getPermissionList(context: context));
             },
             child: Scaffold(

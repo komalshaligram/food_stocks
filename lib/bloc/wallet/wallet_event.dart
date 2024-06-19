@@ -45,5 +45,7 @@ class WalletEvent with _$WalletEvent {
   const factory WalletEvent.getPermissionList(
       {required BuildContext context }) = _getPermissionList;
 
+  const factory WalletEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
 
 }

@@ -92,6 +92,7 @@ class AppStrings {
   static const guarantee1SignatureString = 'guarantee1Signature';
   static const guarantee2SignatureString = 'guarantee2Signature';
   static const guaranteeNameString = 'guaranteeNameString';
+  static const clientIdString = 'clientId';
 
 
 

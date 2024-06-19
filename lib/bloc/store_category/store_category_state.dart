@@ -55,6 +55,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required bool isRelatedShimmering,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
+
     
   }) = _StoreCategoryState;
 
@@ -111,6 +112,7 @@ class StoreCategoryState with _$StoreCategoryState {
     isRelatedShimmering: false,
       bottleDeposit:0,
     isSubUserAddToBasket: false,
+    
     
 
       );

@@ -105,7 +105,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               if(businessName != '' || businessName != null  ){
                 Smartlook.instance.user.properties.removeString('User business name');
               }
-              if(phoneNumber != ''){
+              if(phoneNumber != '' || businessName != null ){
                 Smartlook.instance.user.properties.removeString('User phone number');
               }
               debugPrint('businessName___${businessName}');

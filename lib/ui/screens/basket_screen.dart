@@ -80,6 +80,7 @@ class BasketScreenWidget extends StatelessWidget {
             context.read<BasketBloc>().add(BasketEvent.refreshEvent());
           });
         }
+
       },
       child: BlocBuilder<BasketBloc, BasketState>(
         builder: (context, state) {
@@ -89,6 +90,7 @@ class BasketScreenWidget extends StatelessWidget {
               onFocusGained: () {
                 bloc.add(BasketEvent.getPermissionList(context: context));
                 bloc.add(BasketEvent.getAllCartEvent(context: context));
+                bloc.add(BasketEvent.userApproveEvent(context: context));
               },
               child: SafeArea(
                 child: Padding(

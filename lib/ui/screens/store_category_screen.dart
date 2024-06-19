@@ -78,7 +78,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
-    return BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
+    return BlocListener<StoreCategoryBloc, StoreCategoryState>(
+  listener: (context, state) {
+
+  },
+  child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
       builder: (context, state) {
         return WillPopScope(
           onWillPop: () {
@@ -93,9 +97,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   isSubCategory: true, context: context));
               return Future.value(false);
             }
+           
           },
           child: FocusDetector(
             onFocusGained: (){
+              bloc.add(StoreCategoryEvent.userApproveEvent(context: context));
               bloc.add(StoreCategoryEvent.getPermissionList(context: context));
             },
             child: Scaffold(
@@ -859,7 +865,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           ),
         );
       },
-    );
+    ),
+);
   }
 
 

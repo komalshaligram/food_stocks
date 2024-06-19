@@ -54,7 +54,9 @@ class ReorderScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
       ReorderBloc()
-        ..add(ReorderEvent.getPreviousOrderProductsEvent(context: context)),
+        ..add(ReorderEvent.getPreviousOrderProductsEvent(context: context))
+        ..add(ReorderEvent.userApproveEvent(context: context))
+    ,
       child: ReorderScreenWidget(),
     );
   }
@@ -66,7 +68,11 @@ class ReorderScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ReorderBloc bloc = context.read<ReorderBloc>();
-    return BlocBuilder<ReorderBloc, ReorderState>(
+    return BlocListener<ReorderBloc, ReorderState>(
+  listener: (context, state) {
+
+  },
+  child: BlocBuilder<ReorderBloc, ReorderState>(
       builder: (context, state) {
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation
@@ -161,12 +167,12 @@ class ReorderScreenWidget extends StatelessWidget {
               },
               trailingWidget: Row(
                 children: [
-                  GestureDetector(
+                 /* GestureDetector(
                       onTap: () {
                         bloc.add(ReorderEvent.filterEvent(context: context));
                         filterBottomSheet(context: context);
                       },
-                      child: Icon(Icons.filter_alt)),
+                      child: Icon(Icons.filter_alt)),*/
                   5.width,
                   GestureDetector(
                       onTap: () {
@@ -662,7 +668,8 @@ class ReorderScreenWidget extends StatelessWidget {
           ),
         );
       },
-    );
+    ),
+);
   }
 
   Widget buildPreviousOrderProductItem({

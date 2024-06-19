@@ -64,4 +64,8 @@ class BasketEvent with _$BasketEvent {
   const factory BasketEvent.refreshEvent() = _refreshEvent;
   const factory BasketEvent.getPermissionList(
       {required BuildContext context}) = _getPermissionList;
+
+  const factory BasketEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
+
 }

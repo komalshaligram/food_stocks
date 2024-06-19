@@ -52,7 +52,8 @@ class PesachProductsScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => PesachProductsBloc()
         ..add(PesachProductsEvent.getSupplierProductsListEvent(
-            context: context, searchType: args?[AppStrings.searchType] ?? '')),
+            context: context, searchType: args?[AppStrings.searchType] ?? ''))
+        ..add(PesachProductsEvent.userApproveEvent(context: context)),
       child: PesachProductsScreenWidget(),
     );
   }
@@ -65,7 +66,9 @@ class PesachProductsScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     PesachProductsBloc bloc = context.read<PesachProductsBloc>();
     return BlocListener<PesachProductsBloc, PesachProductsState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+
+      },
       child: BlocBuilder<PesachProductsBloc, PesachProductsState>(
         builder: (context, state) {
           return Scaffold(

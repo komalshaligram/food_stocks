@@ -54,7 +54,8 @@ class SupplierProductsScreen extends StatelessWidget {
             supplierId: args?[AppStrings.supplierIdString] ?? '',
             search: args?[AppStrings.searchString] ?? ''))
         ..add(SupplierProductsEvent.getSupplierProductsListEvent(
-            context: context, searchType: args?[AppStrings.searchType] ?? '')),
+            context: context, searchType: args?[AppStrings.searchType] ?? ''))
+        ..add(SupplierProductsEvent.userApproveEvent(context: context)),
       child: SupplierProductsScreenWidget(),
     );
   }
@@ -67,7 +68,9 @@ class SupplierProductsScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     SupplierProductsBloc bloc = context.read<SupplierProductsBloc>();
     return BlocListener<SupplierProductsBloc, SupplierProductsState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+
+      },
       child: BlocBuilder<SupplierProductsBloc, SupplierProductsState>(
         builder: (context, state) {
           return Scaffold(
