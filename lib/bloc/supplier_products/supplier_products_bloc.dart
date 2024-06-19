@@ -56,12 +56,12 @@ class SupplierProductsBloc
           prefs: await SharedPreferences.getInstance());
       if (event is _GetSupplierProductsIdEvent) {
         emit(
-            state.copyWith(supplierId: event.supplierId, searchArg: event.search,isPeachBadge: preferences.getPeachBadge()));
+            state.copyWith(supplierId: event.supplierId, searchArg: event.search,));
         debugPrint(
             'supplier id = ${state.supplierId}, search = ${state.search}');
       } else if (event is _GetSupplierProductsListEvent) {
         emit(state.copyWith(isGuestUser: preferences.getGuestUser(),isSubUserAddToBasket :preferences.getCanAddToBasket(),
-            isGridView: preferences.getSupplierProductGrid(),bottleDeposit:preferences.getBottleTax(),isPeachBadge: preferences.getPeachBadge()));
+            isGridView: preferences.getSupplierProductGrid(),bottleDeposit:preferences.getBottleTax(),));
         if (state.isLoadMore) {
           return;
         }
@@ -454,6 +454,7 @@ class SupplierProductsBloc
               }
             }
           } else {
+            emit(state.copyWith(isProductLoading: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,

@@ -260,8 +260,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 child: DraggableScrollableSheet(
                   expand: true,
                   maxChildSize: 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
-                  minChildSize: productStock == '0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
-                  initialChildSize: productStock == '0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
+                  minChildSize: productStock == '0' ||productStock == '0.0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
+                  initialChildSize: productStock == '0'||productStock == '0.0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
                   builder: (BuildContext context1, ScrollController scrollController) {
                     return Container(
                       decoration: BoxDecoration(
@@ -279,20 +279,20 @@ class ProductSaleScreenWidget extends StatelessWidget {
                               child: Column(
                                 children: [
                                   CommonProductDetailsWidget(
-                                    isPeachBadge: state.isPeachBadge,
-                                    salePrice: double.parse(state.productDetails.first.sale.salePrice),
+                                    productDetails: state.productDetails,
+                              /*      salePrice: double.parse(state.productDetails.first.sale.salePrice),
                                     maxQty: state.productDetails.first.sale.saleMaxQuantity,
                                     endDate: state.productDetails.first.sale.saleUntilDate,
                                     startDate: state.productDetails.first.sale.saleFromDate,
-                                    isSaleOn: state.productDetails.first.sale.isSale,
+                                    isSaleOn: state.productDetails.first.sale.isSale,*/
                                     isSubUserAddToBasket: state.isSubUserAddToBasket,
                                     bottleTax: state.bottleDeposit,
                                     totalBottleDeposit: (state.bottleDeposit * state.productDetails.first.numberOfUnit!.toDouble() * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
                                     isBottle: state.productDetails.first.isBottle ,
-                                    nmMashlim: state.productDetails.first.nmMashlim ,
+                                    /*nmMashlim: state.productDetails.first.nmMashlim ,
                                     isPesach: state.productDetails.first.isPesach ,
                                     lowStock: state.productDetails.first.supplierSales.first.lowStock.toString() ?? '',
-                                    qrCode: state.productDetails.first.qrcode ,
+                                    qrCode: state.productDetails.first.qrcode ,*/
                                     isLoading: state.isLoading,
 
                                     addToOrderTap: () {
@@ -350,9 +350,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     onPageChanged: (index, p1) {
                                       context.read<ProductSaleBloc>().add(ProductSaleEvent.updateImageIndexEvent(index: index));
                                     },
-                                    productImages: [state.productDetails.first.mainImage , ...state.productDetails.first.images.map((image) => image.imageUrl ?? '') ?? []],
-                                    productPerUnit: state.productDetails.first.numberOfUnit ,
                                     productUnitPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
+
+                                    productImages: [state.productDetails.first.mainImage , ...state.productDetails.first.images.map((image) => image.imageUrl ?? '') ?? []],
+                                   /* productPerUnit: state.productDetails.first.numberOfUnit ,
                                     productName: state.productDetails.first.productName,
                                     productSaleDescription: parse(state
                                         .productDetails
@@ -361,15 +362,15 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         '')
                                         .body
                                         ?.text ??
-                                        '',
+                                        '',*/
                                     productPrice:state.productDetails.first.sale.isSale?
                                     double.parse(state.productDetails.first.sale.salePrice) * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit)
                                         :
                                     state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 0),
-                                    productWeight: state.productDetails.first.itemsWeight.toDouble() ?? 0.0,
+                                  //  productWeight: state.productDetails.first.itemsWeight.toDouble() ?? 0.0,
                                     productStock: state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString(),
                                     isRTL: context.rtl,
-                                    isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
+                                  //  isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                                     scrollController: scrollController,
                                     productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                     onQuantityChanged: (quantity) {

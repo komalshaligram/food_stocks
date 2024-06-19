@@ -86,7 +86,7 @@ class RelatedProductDatum with _$RelatedProductDatum {
     @JsonKey(name: "productStock")
     required String productStock,
     @JsonKey(name: "numberProductStock")
-    required int numberProductStock,
+    required double numberProductStock,
     @JsonKey(name: "productPrice")
     required double productPrice,
     @JsonKey(name: "totalSale")

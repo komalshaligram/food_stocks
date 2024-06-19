@@ -274,4 +274,10 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    myFocusNode.dispose();
+    super.dispose();
+  }
 }

@@ -100,13 +100,23 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferencesHelper.setIsSubUser(
                   isSubUser: (response.data?.adminType == AppStrings.subuserString) ? true : false);
 
-              Smartlook.instance.user.properties.removeString('User business name');
-              Smartlook.instance.user.properties.removeString('User phone number');
+
+              String? businessName = await Smartlook.instance.user.properties.getString("User business name");
+              String? phoneNumber = await Smartlook.instance.user.properties.getString("User phone number");
+              if(businessName != '' || businessName != null  ){
+                Smartlook.instance.user.properties.removeString('User business name');
+              }
+              if(phoneNumber != ''|| phoneNumber != null ){
+                Smartlook.instance.user.properties.removeString('User phone number');
+              }
+              debugPrint('businessName___${businessName}');
+              debugPrint('phoneNumber___${phoneNumber}');
+
               Smartlook.instance.user.setIdentifier((response.data?.adminType == AppStrings.subuserString) ? response.data?.user?.createdBy ?? '' :  response.data?.user?.id ?? '');
               Smartlook.instance.user.setEmail(response.data?.user?.email ?? '');
               Smartlook.instance.user.setName(response.data?.user?.clientDetail?.ownerName ?? '');
               Smartlook.instance.user.properties.putString('User business name' ,value:response.data?.user?.clientDetail?.bussinessName ?? '');
-              Smartlook.instance.user.properties.putString('User phone number' ,value:event.contact);
+              Smartlook.instance.user.properties.putString('User phone number' ,value:response.data?.user?.phoneNumber);
 
               if(response.data?.adminType == AppStrings.subuserString){
                 var res = response.data?.subUserPermissions;
@@ -254,6 +264,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         emit(state.copyWith(isLoading: false));
         try {
           LoginReqModel reqMap = LoginReqModel(
+            applicationName: AppStrings.appName,
               contact: event.contactNumber, isRegistration: event.isRegister);
           debugPrint(
               'login req = ${reqMap.toJson()}');

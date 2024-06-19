@@ -35,7 +35,9 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         preferencesHelper.setIsGuestUser(isGuestUser: false);
         try {
           LoginReqModel reqMap = LoginReqModel(
-              contact: event.contactNumber, isRegistration: state.isRegister);
+              contact: event.contactNumber, isRegistration: state.isRegister,
+          applicationName: AppStrings.appName
+          );
           debugPrint(
               'login req = ${reqMap.toJson()}');
           debugPrint('url3 = ${AppUrls.existingUserLoginUrl}');

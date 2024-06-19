@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -20,13 +19,23 @@ final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 @pragma('vm:entry-point')
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   debugPrint("__________BackgroundHandler______");
-  await Firebase.initializeApp();
-  debugPrint("Handling in main${message.toString()}");
-  debugPrint("Handling a background message:${message.messageId}");
-  debugPrint("Handling a background data:${message.data.toString()}");
+    await Firebase.initializeApp();
+    debugPrint("Handling in main${message.toString()}");
+    debugPrint("Handling a background message:${message.messageId}");
+    debugPrint("Handling a background message:${message.data.toString()}");
 
+   /* if(data!=null){
+      debugPrint('notifrom main');
+      PushNotificationService().showNotification(
+          notiId: message.notification.hashCode,
+          androidIcon:message.notification?.android?.smallIcon,
+          data: data,
+          isNavigate: true,
+          showNotification: true,
+          isAppOpen: true
+      );
+  }*/
 }
-
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
@@ -34,7 +43,7 @@ void main() async {
     await Firebase.initializeApp();
     await PushNotificationService().setupInteractedMessage();
     await dotenv.load(fileName: '.env');
-    if(Platform.isAndroid){
+    if (Platform.isAndroid) {
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     }
     SystemChrome.setPreferredOrientations(

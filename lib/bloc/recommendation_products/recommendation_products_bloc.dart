@@ -62,7 +62,7 @@ class RecommendationProductsBloc
         }
         try {
           emit(state.copyWith(
-              isPeachBadge: preferences.getPeachBadge(),
+              
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
           RecommendationProductsReqModel request =
@@ -165,6 +165,7 @@ class RecommendationProductsBloc
             //0 for barcode and search
             //1 for recommendation product.
             //2 related product.
+            if(response.product.isNotEmpty){
 
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
@@ -361,7 +362,16 @@ class RecommendationProductsBloc
                     supplierSaleIndex: supplierSaleIndex));
               }
             }
+            else{
+              emit(state.copyWith(isProductLoading: false));
+            }
+            }
+            else{
+              emit(state.copyWith(isProductLoading: false));
+            }
+
           } else {
+            emit(state.copyWith(isProductLoading: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,

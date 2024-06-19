@@ -45,7 +45,7 @@ class ProductSale with _$ProductSale{
     @JsonKey(name: "totalWeight")
     required String totalWeight,
     @JsonKey(name: "productStock")
-    required int productStock,
+    required double productStock,
     @JsonKey(name: "sale")
     required Sale sale,
     @JsonKey(name: "_id")

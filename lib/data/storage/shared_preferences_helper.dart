@@ -32,7 +32,6 @@ class SharedPreferencesHelper {
   static const String salesProductGrid ='isSalesproductGrid';
   static const String reorderProductGrid = 'isReorderProductGrid';
   static const String subUser = 'isSubUser';
-  static const String peachBadge = 'peachBadge';
   static const String companyName = 'companyName';
 
   static const String accountAdmin = 'accountAdmin';
@@ -76,7 +75,6 @@ class SharedPreferencesHelper {
       await prefs.remove(userLoggedIn);
       await prefs.remove(appVersion);
       await prefs.remove(subUser);
-      await prefs.remove(peachBadge);
       await prefs.remove(companyName);
       await prefs.remove(emailId);
 
@@ -212,9 +210,7 @@ class SharedPreferencesHelper {
   Future<void> setIsSubUser({required bool isSubUser}) async {
     await prefs.setBool(subUser, isSubUser);
   }
-  Future<void> setIsPeachBadge({required bool isPeachBadge}) async {
-    await prefs.setBool(peachBadge, isPeachBadge);
-  }
+
   Future<void> setBusinessName({required String businessName}) async {
     await prefs.setString(companyName, businessName);
   }
@@ -384,9 +380,7 @@ class SharedPreferencesHelper {
   bool getSubUser() {
     return prefs.getBool(subUser) ?? false;
   }
-  bool getPeachBadge() {
-    return prefs.getBool(peachBadge) ?? false;
-  }
+
   String getBusinessName() {
     return prefs.getString(companyName) ?? '';
   }

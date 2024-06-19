@@ -257,9 +257,9 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           temp.addAll(state.OperationTimeList);
 
           String?  afterOpeningTime;
-          var afterStart;
+          DateTime? afterStart = DateTime.now();
 
-          var shortVar = temp[event.rowIndex].monday;
+          var shortVar = temp[event.rowIndex].monday ;
 
           String? openingTime =
           shortVar[event.timeIndex].from!.isEmpty ?'24:59': shortVar[event.timeIndex].from;
@@ -359,11 +359,9 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     selectTimeZone.isBefore(end)) {
                   shortVar.removeAt(event.timeIndex);
                   shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
-                 // shortVar.add(Day(from: selectedTime, until: closingTime));
                 } else if (closingTime == AppStrings.timeString) {
                   shortVar.removeAt(event.timeIndex);
                   shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
-                  //shortVar.add(Day(from: selectedTime, until: closingTime));
                 } else {
                   CustomSnackBar.showSnackBar(
                       context: event.context,
@@ -468,6 +466,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       if (event is _deleteTimeZoneEvent) {
         List<ActivityTimeModel> temp = [];
         temp.addAll(state.OperationTimeList);
+        print('timeIndex___${event.timeIndex}');
         temp[event.rowIndex].monday.removeAt(event.timeIndex);
         emit(state.copyWith(
             OperationTimeList: temp, isRefresh: !state.isRefresh));
@@ -475,8 +474,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
 
       if (event is _activityTimeApiEvent) {
         bool isSnackbarActive = false;
-
-
         for (int i = 0; i < state.OperationTimeList.length; i++) {
 
           if(state.OperationTimeList[i].monday != [] && state.OperationTimeList[i].monday.isNotEmpty  ){

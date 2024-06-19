@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:food_stock/main.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 as flutter_local_notifications;
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -159,13 +161,16 @@ class PushNotificationService {
 
       },
     );
-// onMessage is called when the app is in foreground and a notification is received
+// onMessage is called when the app is in foreground and a notific
+// ation is received
     // app is open
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
-      debugPrint('_____onMessage_______${message!.data['image'].toString()}');
-      debugPrint('_____onMessage_______${message.data['image'].toString()}');
+      var data = json.decode(message!.data['data'].toString());
+      debugPrint('_____onMessage_______${data.toString()}');
+      debugPrint('_____onMessage_______${data['data']['image'].toString()}');
+      debugPrint('_____onMessage Noti_______${message.notification.toString()}');
       if(Platform.isAndroid){
-        showNotification(imageUrl: message.data['image'], notiId: 0, title: message.notification!.title??'', body: message.notification!.body??'');
+        showNotification(imageUrl:AppUrls.baseFileUrl+ data['data']['image'], notiId: 0, title: message.notification!.title??'', body: message.notification!.body??'');
       }
     });
   }

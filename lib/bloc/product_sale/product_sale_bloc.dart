@@ -94,7 +94,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             debugPrint(
                 'new product sale stock list len = ${productStockList.length}');
             emit(state.copyWith(
-                isPeachBadge: preferences.getPeachBadge(),
+                
                 productSalesList: productSaleList,
                 productStockList: productStockList,
                 pageNum: state.pageNum + 1,
@@ -161,6 +161,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             //0 for barcode and search
             //1 for recommendation product.
             //2 related product.
+            if(response.product.isNotEmpty){
 
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
@@ -353,8 +354,14 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                     context: event.context,
                     supplierSaleIndex: supplierSaleIndex));
               }
+            }}
+            else{
+              emit(state.copyWith(isProductLoading: false));
             }
-          } else {
+          }
+
+          else {
+            emit(state.copyWith(isProductLoading: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -366,11 +373,12 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           }
         } on ServerException {
           Navigator.pop(event.context);
-          // emit(state.copyWith(isProductLoading: false));
-        } /*catch (e) {
+           emit(state.copyWith(isProductLoading: false));
+        } catch (e) {
           debugPrint('bs error = $e');
           // Navigator.pop(event.context);
-        }*/
+
+        }
       }
 
       else if (event is _IncreaseQuantityOfProduct) {

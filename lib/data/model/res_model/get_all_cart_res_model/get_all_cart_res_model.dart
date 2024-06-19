@@ -65,7 +65,7 @@ class Datum with _$Datum {
     @JsonKey(name: "suppliers")
     required List<Supplier> suppliers,
     @JsonKey(name: "productStock")
-    required int productStock,
+    required double productStock,
     @JsonKey(name: "lowStockBox")
     required int lowStockBox,
     @JsonKey(name: "sale")

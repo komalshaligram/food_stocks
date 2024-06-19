@@ -38,7 +38,7 @@ class CompanyProductsState with _$CompanyProductsState {
     required int productListIndex,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
-    required bool isPeachBadge,
+
 
   }) = _CompanyProductsState;
 
@@ -78,7 +78,6 @@ class CompanyProductsState with _$CompanyProductsState {
     productListIndex: -1,
     bottleDeposit: 0.0,
     isSubUserAddToBasket: false,
-    isPeachBadge: false
 
       );
 }

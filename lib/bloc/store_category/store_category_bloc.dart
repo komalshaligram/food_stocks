@@ -50,7 +50,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-  int _maxQty = -1;
   String isSubCategoryString = '';
   String categoryId = '';
   String parentCategoryId = '';
@@ -64,7 +63,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         emit(state.copyWith(isSubCategory: event.isSubCategory ,isGridView: preferences.getIsGridView(),
             isGuestUser: preferences.getGuestUser(),bottleDeposit: preferences.getBottleTax(),
           isSubUserAddToBasket: preferences.getCanAddToBasket(),
-            isPeachBadge: preferences.getPeachBadge()
         ));
       }
       if (event is _ChangeCategoryExpansionEvent) {
@@ -386,7 +384,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-        _maxQty = -1;
+
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -455,7 +453,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     _isProductInCart = true;
                     _cartProductId = cartProduct.cartProductId ?? '';
                     _productQuantity = cartProduct.totalQuantity ?? 0;
-                    _maxQty = cartProduct.sale.saleMaxQuantity;
                     return;
                   }
                 });
@@ -605,6 +602,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               }
             }
           } else {
+            emit(state.copyWith(isProductLoading: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,

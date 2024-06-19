@@ -15,6 +15,7 @@ class LoginReqModel with _$LoginReqModel {
   const factory LoginReqModel({
     required String contact,
     required bool isRegistration,
+    required String applicationName,
   }) = _LoginReqModel;
 
   factory LoginReqModel.fromJson(Map<String, dynamic> json) => _$LoginReqModelFromJson(json);

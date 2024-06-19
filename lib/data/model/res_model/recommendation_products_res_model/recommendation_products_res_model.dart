@@ -27,7 +27,7 @@ class RecommendationData with _$RecommendationData {
     @JsonKey(name: "_id")
     required String id,
     @JsonKey(name: "productStock")
-    required int productStock,
+    required double productStock,
     @JsonKey(name: "totalSale")
     required int totalSale,
     @JsonKey(name: "productPrice")

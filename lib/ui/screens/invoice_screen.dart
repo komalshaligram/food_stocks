@@ -56,8 +56,7 @@ class InvoiceScreenWidget extends StatelessWidget {
               child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: SmartRefresher(
-              enablePullDown: /*state.isShimmering || state.isLoading ? false : */
-              true,
+              enablePullDown: true,
               controller: state.refreshController,
               header: RefreshWidget(),
               footer: CustomFooter(

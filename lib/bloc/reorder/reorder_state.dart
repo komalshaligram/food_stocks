@@ -33,7 +33,13 @@ class ReorderState with _$ReorderState {
     required int productListIndex,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
-    required bool isPeachBadge,
+    required List<String>sortingList,
+    required String sortingField,
+    required List<FilterModel> filterList,
+    required bool isRefresh,
+    required bool isFilterShimmering,
+    required bool isExpansionChanged,
+
   }) = _ReorderState;
 
   factory ReorderState.initial() => ReorderState(
@@ -67,7 +73,14 @@ class ReorderState with _$ReorderState {
         productListIndex: -1,
         bottleDeposit: 0,
     isSubUserAddToBasket: false,
-    isPeachBadge: false
-
+    sortingList: [
+      'Lowes price to Highest price','Highest price to Lowes price',
+      'A - Z','Z-A'
+    ],
+    sortingField: 'Lowes price to Highest price',
+    filterList: [],
+    isRefresh: false,
+    isFilterShimmering: false,
+      isExpansionChanged: false
       );
 }

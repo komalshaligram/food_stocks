@@ -18,7 +18,7 @@ class ProductDetailsResModel with _$ProductDetailsResModel
   const factory ProductDetailsResModel({
 
     required int status,
-
+    @JsonKey(name: "data")
     required List<Product> product,
 
     required String message,
