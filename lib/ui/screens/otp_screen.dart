@@ -48,7 +48,17 @@ class OTPScreenWidget extends StatefulWidget {
 
 class _OTPScreenWidgetState extends State<OTPScreenWidget> {
   String _code="";
-  FocusNode inputNode = FocusNode();
+  late FocusNode myFocusNode;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    myFocusNode = FocusNode();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      FocusScope.of(context).requestFocus(myFocusNode);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +120,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                             ),
                             currentCode: _code,
                             autoFocus: true,
-                            focusNode: inputNode,
+                            focusNode:myFocusNode,
                             enableInteractiveSelection:false ,
                             codeLength: 4,
                             onCodeSubmitted: (code) {

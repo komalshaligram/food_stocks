@@ -57,6 +57,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         if (state.isLoading) {
           return;
         }
+
         if (event.otp.length == 4) {
           emit(state.copyWith(isLoading: true));
           try {

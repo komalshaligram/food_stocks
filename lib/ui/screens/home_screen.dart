@@ -1062,8 +1062,6 @@ class HomeScreenWidget extends StatelessWidget {
             if(message!=null){
               PushNotificationService(). handleMessage(message.data['mainPage'],message.data['subPage']??'',message.data['_id']);
             }
-
-     //   await PushNotificationService().manageNavOnKilled(message!);
       },
     );
   }
@@ -1206,7 +1204,7 @@ class HomeScreenWidget extends StatelessWidget {
                         controller:  ModalScrollController.of(context),
                             child: Column(
                                 children: [
-                                  CommonProductDetailsWidget(
+                               CommonProductDetailsWidget(
                                     isPeachBadge: state.isPeachBadge,
                                     salePrice: double.parse(state.productDetails.first.sale.salePrice),
                                     maxQty: state.productDetails.first.sale.saleMaxQuantity,

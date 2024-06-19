@@ -9,6 +9,7 @@ class OtpState with _$OtpState {
     required String otp,
     required bool isLoading,
     required String errorMessage,
+
   }) = _OtpState;
 
   factory OtpState.initial() =>  OtpState(
@@ -16,6 +17,7 @@ class OtpState with _$OtpState {
       otp: '',
       isLoading: false,
       errorMessage: '',
+
   ) ;
 
 
