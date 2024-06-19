@@ -208,8 +208,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
 
-              Smartlook.instance.user.properties.removeString('User business name');
-              Smartlook.instance.user.setName(response.data?.clients?.first.clientDetail?.ownerName ?? '');
+              String? businessName = await Smartlook.instance.user.properties.getString("User business name");
+
+              if(businessName != '' || businessName != null  ){
+                Smartlook.instance.user.properties.removeString('User business name');
+              }
+
+         Smartlook.instance.user.setName(response.data?.clients?.first.clientDetail?.ownerName ?? '');
               Smartlook.instance.user.properties.putString('User business name' ,value:response.data?.clients?.first.clientDetail?.bussinessName);
 
               debugPrint(

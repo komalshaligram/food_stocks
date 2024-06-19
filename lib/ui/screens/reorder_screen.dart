@@ -35,7 +35,9 @@ import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
 import '../widget/custom_button_widget.dart';
+import '../widget/filter_bottom_sheet_shimmer_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
+import '../widget/search_item_widget.dart';
 import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
 import '../widget/supplier_products_screen_shimmer_widget.dart';
 
@@ -165,6 +167,7 @@ class ReorderScreenWidget extends StatelessWidget {
                         filterBottomSheet(context: context);
                       },
                       child: Icon(Icons.filter_alt)),
+                  5.width,
                   GestureDetector(
                       onTap: () {
                         context.read<ReorderBloc>().add(
@@ -434,7 +437,7 @@ class ReorderScreenWidget extends StatelessWidget {
                       itemCount: state.searchList.length,
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
-                        return _buildSearchItem(
+                        return SearchItemWidget(
                             salePrice: state.searchList[index].salePrice,
                             saleDesc: state.searchList[index].salesDesc,
                             isPesach: state.searchList[index].isPesach,
@@ -826,21 +829,45 @@ class ReorderScreenWidget extends StatelessWidget {
                       child: state.isProductLoading
                           ? ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
-                          ? Center(
-                        child: Text(
-                            AppLocalizations.of(context)!.no_product,
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.normalFont,
-                              color: AppColors.redColor,
-                              fontWeight: FontWeight.w500,
-                            )),
+                          ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Icon(
+                                  Icons.close,
+                                  size: 36,
+                                  color: AppColors.blackColor,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: getScreenHeight(context) * 0.7,
+                              child: Center(
+                                child: Text(
+                                    AppLocalizations.of(context)!.no_product,
+                                    style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.normalFont,
+                                      color: AppColors.redColor,
+                                      fontWeight: FontWeight.w500,
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                           : SingleChildScrollView(
                         controller: ModalScrollController.of(context),
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
-                              salePrice: double.parse(
+                              productDetails: state.productDetails,
+                            /*  salePrice: double.parse(
                                   state.productDetails.first.sale.salePrice),
                               maxQty: state.productDetails.first.sale
                                   .saleMaxQuantity,
@@ -848,7 +875,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                   .saleUntilDate,
                               startDate: state.productDetails.first.sale
                                   .saleFromDate,
-                              isSaleOn: state.productDetails.first.sale.isSale,
+                              isSaleOn: state.productDetails.first.sale.isSale,*/
                               isSubUserAddToBasket: state.isSubUserAddToBasket,
                               bottleTax: state.bottleDeposit,
                               totalBottleDeposit: (state.bottleDeposit *
@@ -858,11 +885,11 @@ class ReorderScreenWidget extends StatelessWidget {
                               state.productStockUpdateIndex]
                                   .quantity),
                               isBottle: state.productDetails.first.isBottle,
-                              nmMashlim: state.productDetails.first.nmMashlim,
+                            /*  nmMashlim: state.productDetails.first.nmMashlim,
                               isPesach: state.productDetails.first.isPesach,
                               lowStock: state.productDetails.first.supplierSales
                                   .first.lowStock.toString() ?? '',
-                              qrCode: state.productDetails.first.qrcode ?? '',
+                              qrCode: state.productDetails.first.qrcode ?? '',*/
                               addToOrderTap: () {
                                 context.read<ReorderBloc>().add(
                                     ReorderEvent.addToCartProductEvent(
@@ -936,11 +963,12 @@ class ReorderScreenWidget extends StatelessWidget {
                                     image) =>
                                 image.imageUrl ?? '')
                               ],
-                              productPerUnit: state.productDetails.first
+                            productUnitPrice: double.parse(
+                                state.productDetails.first.supplierSales
+                                    .first.productPrice.toString() ?? '0'),
+                          /*    productPerUnit: state.productDetails.first
                                   .numberOfUnit,
-                              productUnitPrice: double.parse(
-                                  state.productDetails.first.supplierSales
-                                      .first.productPrice.toString() ?? '0'),
+                             ,
                               productName: state.productDetails.first
                                   .productName,
 
@@ -951,7 +979,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                   '')
                                   .body
                                   ?.text ??
-                                  '',
+                                  '',*/
                               productPrice: state
                                   .productStockList[state
                                   .productListIndex][state
@@ -964,16 +992,16 @@ class ReorderScreenWidget extends StatelessWidget {
                                   (state.productDetails.first
                                       .numberOfUnit),
 
-                              productWeight: state
-                                  .productDetails.first.itemsWeight.toDouble(),
+                              /*productWeight: state
+                                  .productDetails.first.itemsWeight.toDouble(),*/
                               productStock: (state.productStockList[state
                                   .productListIndex][state
                                   .productStockUpdateIndex].stock.toString()),
                               isRTL: context.rtl,
-                              isSupplierAvailable:
+                             /* isSupplierAvailable:
                               state.productSupplierList.isEmpty
                                   ? false
-                                  : true,
+                                  : true,*/
                               scrollController: scrollController,
                               productQuantity: state
                                   .productStockList[state.productListIndex][
@@ -1083,14 +1111,14 @@ class ReorderScreenWidget extends StatelessWidget {
 
                 originalPrice: relatedProductList
                     .elementAt(i)
-                    .productPrice ,
+                    .productPrice,
                 productStock: relatedProductList
                     .elementAt(i)
                     .productStock
-                    .toString() ,
+                    .toString(),
                 lowStock: relatedProductList
                     .elementAt(i)
-                    .lowStock ,
+                    .lowStock,
                 isPesach: relatedProductList
                     .elementAt(i)
                     .isPesach,
@@ -1708,305 +1736,13 @@ class ReorderScreenWidget extends StatelessWidget {
                 buttonTitle: "${AppLocalizations.of(context)!.ok}"));
   }
 
-  Widget _buildSearchItem({
-    required String lowStock,
-    required BuildContext context,
-    required String searchName,
-    required String searchImage,
-    required SearchTypes searchType,
-    required bool isShowSearchLabel,
-    required bool isMoreResults,
-    required void Function() onTap,
-    required void Function() onSeeAllTap,
-    bool? isLastItem, required String productStock,
-    required int numberOfUnits,
-    required double priceOfBox,
-    required bool isPesach,
-    required double salePrice,
-    required String saleDesc
-
-  }) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        isShowSearchLabel
-            ? Padding(
-          padding: const EdgeInsets.only(
-              left: AppConstants.padding_20,
-              right: AppConstants.padding_20,
-              top: AppConstants.padding_15,
-              bottom: AppConstants.padding_5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                searchType == SearchTypes.category
-                    ? AppLocalizations.of(context)!.categories
-                    : searchType == SearchTypes.subCategory
-                    ? AppLocalizations.of(context)!.sub_categories
-                    : searchType == SearchTypes.company
-                    ? AppLocalizations.of(context)!.companies
-                    : searchType == SearchTypes.sale
-                    ? AppLocalizations.of(context)!.sales
-                    : searchType == SearchTypes.supplier
-                    ? AppLocalizations.of(context)!
-                    .suppliers
-                    : AppLocalizations.of(context)!
-                    .products,
-                style: AppStyles.rkBoldTextStyle(
-                    size: AppConstants.smallFont,
-                    color: AppColors.blackColor,
-                    fontWeight: FontWeight.w500),
-              ),
-
-              isMoreResults
-                  ? GestureDetector(
-                onTap: onSeeAllTap,
-                child: Text(
-                  AppLocalizations.of(context)!.see_all,
-                  style: AppStyles.rkBoldTextStyle(
-                      size: AppConstants.font_14,
-                      color: AppColors.mainColor),
-                ),
-              )
-                  : 0.width,
-            ],
-          ),
-        )
-            : 0.width,
-        InkWell(
-          onTap: onTap,
-          child: Container(
-            height: (productStock) != '0' || lowStock.isEmpty ? isPesach
-                ? 130
-                : 110 : isPesach ? 130 : 110,
-            decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                border: Border(
-                    bottom: (isLastItem ?? false)
-                        ? BorderSide.none
-                        : BorderSide(
-                        color: AppColors.borderColor.withOpacity(0.5),
-                        width: 1))),
-            padding: EdgeInsets.only(
-                top: AppConstants.padding_5,
-                left: getScreenHeight(context) > 850
-                    ? AppConstants.padding_20
-                    : AppConstants.padding_10,
-                right: getScreenHeight(context) > 850
-                    ? AppConstants.padding_20
-                    : AppConstants.padding_10,
-                bottom: AppConstants.padding_5),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  height: 70,
-                  width: 50,
-                  child: Image.network(
-                    '${AppUrls.baseFileUrl}$searchImage',
-                    fit: BoxFit.scaleDown,
-                    height: 60,
-                    width: 50,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return Container(
-                            height: 60,
-                            width: 50,
-                            child: CupertinoActivityIndicator())
-                        ;
-                      }
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return searchType == SearchTypes.subCategory
-                          ? Image.asset(AppImagePath.imageNotAvailable5,
-                          height: 60, width: 50, fit: BoxFit.cover)
-                          : SvgPicture.asset(
-                        AppImagePath.splashLogo,
-                        fit: BoxFit.scaleDown,
-                        width: 60,
-                        height: 50,
-                      );
-                    },
-                  ),
-                ),
-                10.width,
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: getScreenWidth(context) / 1.5,
-                      child: Text(
-                        searchName,
-                        style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.blackColor,
-                        ),
-                        maxLines: 3,
-                        overflow: TextOverflow.visible,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: 200,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              double.parse(productStock) > 0 && lowStock.isEmpty
-                                  ? 0.width
-                                  : productStock == '0' && lowStock.isNotEmpty
-                                  ? Text(
-                                AppLocalizations.of(context)!
-                                    .out_of_stock1,
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.redColor,
-                                    fontWeight: FontWeight.w400),
-                              )
-                                  : Text(lowStock,
-                                  style: AppStyles.rkBoldTextStyle(
-                                      size: AppConstants.font_12,
-                                      color: AppColors.orangeColor,
-                                      fontWeight: FontWeight.w400)
-                              ),
-                              numberOfUnits != 0 ? Text(
-                                '${numberOfUnits
-                                    .toString()}${' '}${AppLocalizations.of(
-                                    context)!.unit_in_box}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.blackColor,
-                                    fontWeight: FontWeight.w400),
-                              ) : 0.width,
-                              numberOfUnits != 0 && priceOfBox != 0.0 ?
-                              salePrice != 0.0 ? Text.rich(TextSpan(
-                                text: '${AppLocalizations
-                                    .of(context)
-                                    ?.price_par_box} ',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.blackColor),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: '${AppLocalizations
-                                        .of(context)
-                                        ?.currency}${(priceOfBox *
-                                        (numberOfUnits)).toStringAsFixed(
-                                        2)} ',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.font_12,
-                                        color: AppColors.blackColor).copyWith(
-                                        decoration: TextDecoration.lineThrough),
-                                  ),
-                                  TextSpan(
-                                    text: ' ${AppLocalizations
-                                        .of(context)
-                                        ?.currency}${(salePrice *
-                                        (numberOfUnits)).toStringAsFixed(
-                                        2)}',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.font_12,
-                                        color: AppColors.redColor),
-                                  ),
-                                ],
-                              ),) : Text(
-                                '${AppLocalizations
-                                    .of(context)
-                                    ?.price_par_box}${' '}${AppLocalizations
-                                    .of(context)
-                                    ?.currency}${(priceOfBox * numberOfUnits)
-                                    .toStringAsFixed(2)}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.blueColor,
-                                    fontWeight: FontWeight.w400),) : 0.width
-                            ],
-                          ),
-                        ),
-                        salePrice != 0.0 ? Container(
-                          child: Column(
-                            children: [
-                              Text(
-                                '${AppLocalizations.of(context)!
-                                    .currency}${priceOfBox.toString()}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.blueColor,
-                                    fontWeight: FontWeight.w400).copyWith(
-                                    decoration: TextDecoration.lineThrough),
-                              ),
-                              Text(
-                                '${AppLocalizations.of(context)!
-                                    .currency}${salePrice.toString()}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.redColor,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ],
-                          ),
-                        ) :
-                        priceOfBox != 0.0 ? Container(
-                          width: 60,
-                          child: Text(
-                            '${AppLocalizations.of(context)!
-                                .currency}${priceOfBox.toString()}',
-                            style: AppStyles.rkBoldTextStyle(
-                                size: AppConstants.font_12,
-                                color: AppColors.blueColor,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ) : 0.width,
-                      ],
-                    ),
-                    3.height,
-                    isPesach ?
-                    isPesachLabelShow(isPesach, context)
-                        : 0.height,
-                    saleDesc.isNotEmpty ?
-                    Container(
-                      width: getScreenWidth(context) / 1.5,
-                      padding: EdgeInsets.all(3),
-                      margin: EdgeInsets.only(top: 5),
-                      decoration: BoxDecoration(color: AppColors.saleBGColor,
-                          border: Border.all(color: AppColors.saleBGColor),
-                          borderRadius: BorderRadius.circular(
-                              AppConstants.radius_3)),
-                      child: Center(
-                        child: Text(
-                          "${parse(saleDesc).body?.text}",
-                          style: AppStyles.rkRegularTextStyle(size: AppConstants
-                              .font_10, color: AppColors.whiteColor,),
-                          maxLines: 3,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    )
-                        : 0.height
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   void filterBottomSheet({required BuildContext context}) {
-    showModalBottomSheet(
-      backgroundColor: Colors.white,
+    showMaterialModalBottomSheet(
+      backgroundColor: AppColors.whiteColor,
       context: context,
-      isScrollControlled: true,
+      isDismissible: true,
+      clipBehavior: Clip.hardEdge,
+      enableDrag: true,
       shape: OutlineInputBorder(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(
@@ -2015,20 +1751,23 @@ class ReorderScreenWidget extends StatelessWidget {
                   AppConstants.radius_20)),
           borderSide: BorderSide.none),
       builder: (context1) {
+        ReorderBloc bloc = context.read<ReorderBloc>();
         return BlocProvider.value(
           value: context.read<ReorderBloc>(),
           child: DraggableScrollableSheet(
             expand: false,
             maxChildSize: 0.8,
             minChildSize: 0.4,
-            initialChildSize: 0.7,
+            initialChildSize: 0.8,
             builder: (context, scrollController) {
               return BlocBuilder<ReorderBloc, ReorderState>(
                 builder: (context, state) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 30, vertical: 20),
-                    child: Column(
+                    child: state.isFilterShimmering
+                        ? FilterBottomSheetShimmerWidget()
+                        : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Align(
@@ -2041,104 +1780,265 @@ class ReorderScreenWidget extends StatelessWidget {
                         ),
                         15.height,
                         Text(
-                          "Sorting",
+                          AppLocalizations.of(context)!.sorting,
                           style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.mediumFont,
                             color: AppColors.blackColor,),
                           textAlign: TextAlign.center,
                         ),
-                        15.height,
-                        CommonDropDownButton(
-                          color: AppColors.blackColor,
-                          value: state.sortingField,
-                          items: state.sortingList.map((element) {
-                            return DropdownMenuItem<String>(
-                              value: element,
-                              child: Text(element),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            context.read<ReorderBloc>().add(
-                                ReorderEvent.sortingEvent(
-                                    context: context, sortField: value ?? ''));
-                          },),
+                        10.height,
+                        Container(
+                          color: AppColors.pageColor,
+                          child: CommonDropDownButton(
+                            color: AppColors.borderColor,
+                            value: state.sortingField,
+                            items: state.sortingList.map((element) {
+                              return DropdownMenuItem<String>(
+                                value: element,
+                                child: Text(element),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              bloc.add(
+                                  ReorderEvent.sortingEvent(
+                                      context: context,
+                                      sortField: value ?? ''));
+                            },),
+                        ),
                         15.height,
                         Text(
-                          "Filtering",
+                          AppLocalizations.of(context)!.filtering,
                           style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.mediumFont,
                             color: AppColors.blackColor,),
                           textAlign: TextAlign.center,
                         ),
-                        15.height,
                         Expanded(
                           child: ListView.builder(
                             itemCount: state.filterList.length,
                             scrollDirection: Axis.vertical,
                             shrinkWrap: true,
+                            physics: AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding: const EdgeInsets.only(bottom: 20),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      color: AppColors.whiteColor.withOpacity(0.3),
+                                      color: AppColors.whiteColor.withOpacity(
+                                          0.3),
                                       border: Border.all(
-                                        color: AppColors.blackColor,
+                                        color: AppColors.borderColor,
                                       )),
                                   child: Theme(
-                                    data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                                    child: ExpansionTile(
-                                      title: Text(
-                                          state.filterList[index].brandModel
-                                              ?.filterFieldName ?? '',
-                                          style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.mediumFont,
-                                            color: AppColors.blackColor,)),
-                                      children: <Widget>[
-                                        ListView.builder(
-                                          scrollDirection: Axis.vertical,
-                                          shrinkWrap: true,
-                                          itemCount: state.filterList[index]
-                                              .brandModel?.FilterFieldProductList.length,
-                                          itemBuilder: (context, subIndex) {
-                                            return Container(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 10,vertical: 5),
-                                              decoration: BoxDecoration(
-                                                  color: AppColors.whiteColor,
-                                                  border: Border(
-                                                    bottom: BorderSide(
-                                                        color: AppColors
-                                                            .greyColor
-                                                            .withOpacity(0.4)),
-                                                  )),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Text(state.filterList[index]
-                                                      .brandModel!
-                                                      .FilterFieldProductList[subIndex].name,
-                                                      style: AppStyles
-                                                          .rkRegularTextStyle(
-                                                          size: AppConstants
-                                                              .mediumFont,
-                                                          color: AppColors
-                                                              .blackColor)),
-                                                  CommonCheckBox(
-                                                    value: state.filterList[index].brandModel?.FilterFieldProductList[subIndex].isSelected ?? false,
-                                                    onChanged: (value) {
-                                                      context.read<ReorderBloc>().add(
-                                                          ReorderEvent.selectFilterFieldEvent(
-                                                              context: context, mainIndex: index,subIndex: subIndex));
-                                                    },
-                                                  )
-
-                                                ],
-                                              ),
-                                            );
-                                          },
+                                    data: Theme.of(context).copyWith(
+                                      dividerColor: Colors.transparent,
+                                    ),
+                                    child: ListTileTheme(
+                                      dense: true,
+                                      child: Container(
+                                        color: AppColors.pageColor,
+                                        child: ExpansionTile(
+                                          title: Text(
+                                              state.filterList[index].brandModel
+                                                  ?.filterFieldName ?? '',
+                                              style: AppStyles
+                                                  .rkRegularTextStyle(
+                                                size: AppConstants.mediumFont,
+                                                color: AppColors.blackColor,)),
+                                          children: <Widget>[
+                                            ListView.builder(
+                                              scrollDirection: Axis.vertical,
+                                              shrinkWrap: true,
+                                              itemCount: state.filterList[index]
+                                                  .brandModel
+                                                  ?.FilterFieldProductList
+                                                  .length,
+                                              physics: ClampingScrollPhysics(),
+                                              itemBuilder: (context, subIndex) {
+                                                return Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 5),
+                                                  decoration: BoxDecoration(
+                                                      color: AppColors
+                                                          .pageColor,
+                                                      border: Border(
+                                                        bottom: BorderSide(
+                                                            color: AppColors
+                                                                .borderColor
+                                                                .withOpacity(
+                                                                0.4)),
+                                                      )),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment
+                                                        .spaceBetween,
+                                                    children: [
+                                                      (state.filterList[index]
+                                                          .brandModel
+                                                          ?.FilterFieldProductList[subIndex]
+                                                          .subCategoriesList
+                                                          .isEmpty ?? false)
+                                                          ?
+                                                      Text(state
+                                                          .filterList[index]
+                                                          .brandModel!
+                                                          .FilterFieldProductList[subIndex]
+                                                          .name,
+                                                          style: AppStyles
+                                                              .rkRegularTextStyle(
+                                                              size: AppConstants
+                                                                  .mediumFont,
+                                                              color: AppColors
+                                                                  .blackColor))
+                                                          : Expanded(
+                                                        child: ExpansionTile(
+                                                          tilePadding: EdgeInsets.zero,
+                                                            leading: (state.filterList[index].brandModel?.FilterFieldProductList[subIndex].subCategoriesList.isNotEmpty ?? false) ? (state
+                                                                .filterList[index]
+                                                                .brandModel?.FilterFieldProductList[subIndex].isExpansion ?? false) ?
+                                                            Icon(Icons.keyboard_arrow_up_outlined) :
+                                                            Icon(Icons.keyboard_arrow_down_rounded): 0.width,
+                                                            trailing : SizedBox(
+                                                              width: 75,
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                children: [
+                                                                  (state.filterList[index].brandModel?.FilterFieldProductList[subIndex].subCategoriesList.isNotEmpty ?? false) ?  CommonCheckBox(
+                                                                    value: state
+                                                                        .filterList[index]
+                                                                        .brandModel
+                                                                        ?.FilterFieldProductList[subIndex]
+                                                                        .isSelected ??
+                                                                        false,
+                                                                    onChanged: (value) {
+                                                                     bloc.add(
+                                                                          ReorderEvent
+                                                                              .selectFilterFieldEvent(
+                                                                              context: context,
+                                                                              mainIndex: index,
+                                                                              subIndex: subIndex,
+                                                                              subCatIndex: -1
+                                                                          ));
+                                                                    },
+                                                                  ) : 0.width,
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          onExpansionChanged: (value){
+                                                           bloc.add(ReorderEvent.expansionChangeEvent(isExpansionChanged: value,
+                                                           subIndex: subIndex,mainIndex: index,
+                                                           ));
+                                                          },
+                                                          title: Text(state
+                                                              .filterList[index]
+                                                              .brandModel!
+                                                              .FilterFieldProductList[subIndex]
+                                                              .name,
+                                                              style: AppStyles
+                                                                  .rkRegularTextStyle(
+                                                                  size: AppConstants
+                                                                      .mediumFont,
+                                                                  color: AppColors
+                                                                      .blackColor)),
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets.all(8.0),
+                                                              child: ListView.builder(
+                                                                scrollDirection: Axis
+                                                                    .vertical,
+                                                                shrinkWrap: true,
+                                                                itemCount: state
+                                                                    .filterList[index]
+                                                                    .brandModel?.FilterFieldProductList[subIndex]
+                                                                    .subCategoriesList
+                                                                    .length,
+                                                                physics: ClampingScrollPhysics(),
+                                                                itemBuilder: (
+                                                                    BuildContext context,
+                                                                    int subCatIndex) {
+                                                                  return Container(
+                                                                    padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                        horizontal: 10,
+                                                                        vertical: 5),
+                                                                    decoration: BoxDecoration(
+                                                                        color: AppColors
+                                                                            .pageColor,
+                                                                        border: Border(
+                                                                          bottom: BorderSide(
+                                                                              color: AppColors
+                                                                                  .borderColor
+                                                                                  .withOpacity(
+                                                                                  0.4)),
+                                                                        )),
+                                                                    child: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      children: [
+                                                                        Text((state.filterList[index]
+                                                                            .brandModel?.FilterFieldProductList[subIndex]
+                                                                            .subCategoriesList[subCatIndex]
+                                                                            .name ?? ''),
+                                                                            style: AppStyles
+                                                                                .rkRegularTextStyle(
+                                                                                size: AppConstants
+                                                                                    .mediumFont,
+                                                                                color: AppColors
+                                                                                    .blackColor)),
+                                                                       CommonCheckBox(
+                                                                          value: state
+                                                                              .filterList[index]
+                                                                              .brandModel
+                                                                              ?.FilterFieldProductList[subIndex].subCategoriesList[subCatIndex]
+                                                                              .isSelected ??
+                                                                              false,
+                                                                          onChanged: (
+                                                                              value) {
+                                                                            bloc.add(
+                                                                                ReorderEvent
+                                                                                    .selectFilterFieldEvent(
+                                                                                    context: context,
+                                                                                    mainIndex: index,
+                                                                                    subIndex: subIndex,
+                                                                                  subCatIndex: subCatIndex
+                                                                                ));
+                                                                          },
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      (state.filterList[index].brandModel?.FilterFieldProductList[subIndex].subCategoriesList.isEmpty ?? false) ?  CommonCheckBox(
+                                                        value: state
+                                                            .filterList[index]
+                                                            .brandModel
+                                                            ?.FilterFieldProductList[subIndex]
+                                                            .isSelected ??
+                                                            false,
+                                                        onChanged: (value) {
+                                                         bloc.add(
+                                                              ReorderEvent
+                                                                  .selectFilterFieldEvent(
+                                                                  context: context,
+                                                                  mainIndex: index,
+                                                                  subIndex: subIndex,
+                                                                subCatIndex: -1
+                                                              ));
+                                                        },
+                                                      ) : SizedBox()
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -2184,7 +2084,6 @@ class ReorderScreenWidget extends StatelessWidget {
                 },
               );
             },
-
           ),
         );
       },);

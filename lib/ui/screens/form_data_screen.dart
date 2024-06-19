@@ -292,8 +292,6 @@ class FormDataScreenWidget extends StatelessWidget {
                           ),
                         ],
                       ) : SizedBox(),
-
-
                       40.height,
                       CustomButtonWidget(
                         buttonText: AppLocalizations.of(context)!

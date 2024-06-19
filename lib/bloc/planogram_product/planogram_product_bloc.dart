@@ -65,7 +65,6 @@ class PlanogramProductBloc
         productStockList[1].addAll(stockList);
 
         emit(state.copyWith(
-            
           isSubUserAddToBasket :preferences.getCanAddToBasket(),
           bottleDeposit: preferences.getBottleTax(),
             planogramName: event.planogram.planogramName ?? '',
@@ -99,6 +98,7 @@ class PlanogramProductBloc
             //0 for barcode and search
             //1 for company product.
             //2 related product.
+            if(response.product.isNotEmpty){
 
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
@@ -298,9 +298,14 @@ class PlanogramProductBloc
                     supplierIndex: supplierIndex,
                     context: event.context,
                     supplierSaleIndex: supplierSaleIndex));
-              }
+              }}
+
+            }
+            else{
+              emit(state.copyWith(isProductLoading: false));
             }
           } else {
+            emit(state.copyWith(isProductLoading: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -310,54 +315,15 @@ class PlanogramProductBloc
                 type: SnackBarType.FAILURE);
           }
         } on ServerException {
+          emit(state.copyWith(isProductLoading: false));
           Navigator.pop(event.context);
 
         } catch (e) {
           debugPrint('bs error = $e');
           // Navigator.pop(event.context);
+
         }
       }
-
-      /*else if (event is _IncreaseQuantityOfProduct) {
-        List<List<ProductStockModel>> productStockList =
-        state.productStockList.toList(growable: false);
-        if (state.productStockUpdateIndex != -1) {
-          if (productStockList[state.productListIndex]
-          [state.productStockUpdateIndex]
-              .quantity <
-              double.parse(productStockList[state.productListIndex]
-              [state.productStockUpdateIndex]
-                  .stock.toString())) {
-            if (productStockList[state.productListIndex]
-            [state.productStockUpdateIndex]
-                .productSupplierIds
-                .isEmpty) {
-
-              return;
-            }
-            productStockList[state.productListIndex]
-            [state.productStockUpdateIndex] =
-                productStockList[state.productListIndex]
-                [state.productStockUpdateIndex].copyWith(
-                    quantity: productStockList[state.productListIndex]
-                    [state.productStockUpdateIndex]
-                        .quantity +
-                        1);
-            debugPrint(
-                'product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
-            emit(state.copyWith(productStockList: []));
-            emit(state.copyWith(productStockList: productStockList));
-          } else {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:
-                "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
-                // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
-                type: SnackBarType.FAILURE);
-          }
-        }
-      }*/
-
       else if (event is _IncreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
@@ -674,12 +640,7 @@ class PlanogramProductBloc
             final res = await DioClient(event.context).post(
                 '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
-                options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferencesHelper.getAuthToken()}',
-                  },
-                ));
+               );
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
               add(PlanogramProductEvent.setCartCountEvent());

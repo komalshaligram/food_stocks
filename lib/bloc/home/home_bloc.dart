@@ -147,6 +147,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               //2 related product.
               //3 sales product.
 
+              if(response.product.isNotEmpty){
+
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               int productListIndex  = event.productListIndex;
@@ -155,14 +157,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               int productStockUpdateIndex = 0;
               if(event.isBarcode ){
                 productStockUpdateIndex = 0;
-                debugPrint('responseproductid____${response.product?.first.id}');
+                debugPrint('responseproductid____${response.product.first.id}');
                 productStockList[0][0] =productStockList[0][0].copyWith(
                     quantity: _productQuantity,
-                 //  maxQty: _maxQty,
                     maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity):-1,
-                    productId: response.product?.first.id ?? '' ,
-                    stock: (response.product?.first.supplierSales.first.productStock.toString() ?? "0") ,
-                    totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
+                    productId: response.product.first.id ,
+                    stock: (response.product.first.supplierSales.first.productStock.toString()) ,
+                    totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() )
                 );
               }
               else{
@@ -189,9 +190,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         [state.productStockUpdateIndex].productId
                     ) {
                       _isProductInCart = true;
-                      _cartProductId = cartProduct.cartProductId ?? '';
-                      _productQuantity = cartProduct.totalQuantity ?? 0;
-                      //_maxQty = cartProduct.sale.saleMaxQuantity??0;
+                      _cartProductId = cartProduct.cartProductId ;
+                      _productQuantity = cartProduct.totalQuantity ;
                       return;
                     }
                   });
@@ -337,7 +337,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       supplierSaleIndex: supplierSaleIndex));
                 }
               }
-            } else {
+            }
+            else{
+                emit(state.copyWith(isProductLoading: false));
+              }
+            }
+              else {
+              emit(state.copyWith(isProductLoading: false));
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -348,7 +354,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
           } on ServerException {
             Navigator.pop(event.context);
-            // emit(state.copyWith(isProductLoading: false));
+             emit(state.copyWith(isProductLoading: false));
           }
         }
         else if (event is _GetProductSalesListEvent) {

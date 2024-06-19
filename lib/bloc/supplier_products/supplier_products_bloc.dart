@@ -454,6 +454,7 @@ class SupplierProductsBloc
               }
             }
           } else {
+            emit(state.copyWith(isProductLoading: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,

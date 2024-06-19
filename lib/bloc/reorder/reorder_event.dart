@@ -81,7 +81,9 @@ class ReorderEvent with _$ReorderEvent {
       {required BuildContext context , required String sortField}) = _sortingEvent;
 
   const factory ReorderEvent.selectFilterFieldEvent(
-      {required BuildContext context , required int mainIndex,required int subIndex }) = _selectFilterFieldEvent;
+      {required BuildContext context , required int mainIndex,required int subIndex,
+        required int subCatIndex,
+      }) = _selectFilterFieldEvent;
 
   const factory ReorderEvent.applyFilterEvent(
       {required BuildContext context}) = _applyFilterEvent;
@@ -89,4 +91,11 @@ class ReorderEvent with _$ReorderEvent {
   const factory ReorderEvent.clearFilterEvent(
       {required BuildContext context}) = _clearFilterEvent;
 
+
+  const factory ReorderEvent.expansionChangeEvent({
+    required bool isExpansionChanged,
+    required int mainIndex,
+    required int subIndex,
+}) = _expansionChangeEvent;
 }
+

@@ -152,11 +152,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                       style: AppStyles.rkBoldTextStyle(
                           size: AppConstants.font_12,
                           color: AppColors.orangeColor,
-                          fontWeight: FontWeight.w400)):Text(lowStock,
-                      style: AppStyles.rkBoldTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.whiteColor,
-                          fontWeight: FontWeight.w400)),
+                          fontWeight: FontWeight.w400)):0.width,
                   1.height,
                   Center(child: isPesachLabelShow(isPesach!, context)),
                   isPesach! ? 2.height :0.height,

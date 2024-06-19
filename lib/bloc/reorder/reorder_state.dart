@@ -37,6 +37,8 @@ class ReorderState with _$ReorderState {
     required String sortingField,
     required List<FilterModel> filterList,
     required bool isRefresh,
+    required bool isFilterShimmering,
+    required bool isExpansionChanged,
 
   }) = _ReorderState;
 
@@ -77,6 +79,8 @@ class ReorderState with _$ReorderState {
     ],
     sortingField: 'Lowes price to Highest price',
     filterList: [],
-    isRefresh: false
+    isRefresh: false,
+    isFilterShimmering: false,
+      isExpansionChanged: false
       );
 }

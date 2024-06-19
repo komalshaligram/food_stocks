@@ -51,7 +51,6 @@ class CommonSaleListView extends StatelessWidget {
       onTap: onButtonTap,
       child: Container(
         width: double.maxFinite,
-        //  height: 150,
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius: BorderRadius.all(
@@ -129,24 +128,20 @@ class CommonSaleListView extends StatelessWidget {
                                 maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              (productStock) != '0' && lowStock.isEmpty ||
-                                  isGuestUser ? 0.width :
-                              (productStock) == '0' && lowStock.isNotEmpty
-                                  ? Text(
-                                AppLocalizations.of(context)!
-                                    .out_of_stock1,
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_14,
-                                    color: AppColors.redColor,
-                                    fontWeight: FontWeight.w400),
-                              )
-                                  : Text(
-                                lowStock,
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_14,
-                                    color: AppColors.orangeColor,
-                                    fontWeight: FontWeight.w400),
-                              ),
+                              isGuestUser ? 0.height
+                                  : (productStock) == '0' || productStock =='0.0'?Text(
+                                    AppLocalizations.of(context)!.out_of_stock1,
+                                    textAlign: TextAlign.center,
+                                    style: AppStyles.rkBoldTextStyle(
+                                        size: AppConstants.font_12,
+                                        color: AppColors.redColor,
+                                        fontWeight: FontWeight.w400),
+                                  )
+                                  : lowStock.isNotEmpty?Text(lowStock,
+                                  style: AppStyles.rkBoldTextStyle(
+                                      size: AppConstants.font_12,
+                                      color: AppColors.orangeColor,
+                                      fontWeight: FontWeight.w400)):0.width,
                               isPesach! ? 3.height : 0.height,
                               isPesachLabelShow(isPesach!, context),
                               isPesach! ? 3.height : 0.height,

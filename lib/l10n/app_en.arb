@@ -492,7 +492,10 @@
       "maximum_qty" : "Maximum Quantity",
     "not_add_more_than_max_qty": "You can not add more than maximum quantity",
     "apply": "Apply",
-      "clear": "clear"
+      "clear": "clear",
+    "sorting" : "Sorting",
+    "filtering" : "Filtering"
+
 
 
 }

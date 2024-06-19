@@ -28,7 +28,15 @@ class CommonCheckBox extends StatelessWidget {
         ),
         activeColor: AppColors
             .mainColor,
-        onChanged: onChanged,
+        fillColor: MaterialStateColor.resolveWith(
+        (states) {
+    if (states.contains(MaterialState.selected)) {
+    return AppColors.mainColor;
+    }
+    return AppColors.whiteColor;
+    }
+        ),
+      onChanged: onChanged,
         );
   }
 }

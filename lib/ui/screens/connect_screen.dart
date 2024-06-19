@@ -68,8 +68,10 @@ class ConnectScreenWidget extends StatelessWidget {
                     buttonText: AppLocalizations.of(context)!.register,
                     bGColor: AppColors.mainColor,
                     onPressed: () {
-                      Navigator.pushNamed(context, RouteDefine.loginScreen.name,
-                          arguments: {AppStrings.isRegisterString: true});
+                      Navigator.pushNamed(context, RouteDefine.activityTimeScreen.name,
+                         );
+                      /*Navigator.pushNamed(context, RouteDefine.loginScreen.name,
+                          arguments: {AppStrings.isRegisterString: true});*/
                     },
                   ),
                   20.height,
@@ -91,7 +93,6 @@ class ConnectScreenWidget extends StatelessWidget {
                       child: Text(AppLocalizations.of(context)!.login_as_guest,style: TextStyle(color: AppColors.mainColor,
                       fontSize: AppConstants.mediumFont
                       )
-
                         ,)):0.width
                 ],
               ),

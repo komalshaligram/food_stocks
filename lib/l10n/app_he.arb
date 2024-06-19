@@ -494,5 +494,7 @@
     "maximum_qty" : "מקסימום מארזים להזמנה עבור המבצע",
   "not_add_more_than_max_qty": "לא ניתן להוסיף יותר מהמקסימום עבור המבצע הזה",
   "apply": "Apply",
-  "clear": "clear"
+  "clear": "clear",
+  "sorting" : "Sorting",
+  "filtering" : "Filtering"
 }

@@ -38,7 +38,12 @@ class WalletScreen extends StatelessWidget {
       create: (context) => WalletBloc()
         ..add(WalletEvent.getYearListEvent())
         ..add(WalletEvent.getOrderCountEvent(context: context))
-        ..add(WalletEvent.checkLanguage()),
+        ..add(WalletEvent.checkLanguage())
+        ..add(WalletEvent.getAllWalletTransactionEvent(
+          context: context,
+          endDate:  DateTime.utc(DateTime.now().year, DateTime.now().month + 1).subtract(const Duration(days: 1)),
+          startDate: DateTime.utc(DateTime.now().year, DateTime.now().month, 1),
+        )),
       child: WalletScreenWidget(),
     );
   }

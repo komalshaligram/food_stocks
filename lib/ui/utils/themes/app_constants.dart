@@ -13,7 +13,9 @@ class AppConstants{
   static const double containerSize_50 = 50;
   static const double containerSize_25 = 25;
   static const double containerSize_35 = 32;
-
+  static const double searchPesachHeight = 140;
+  static const double containerHeight_130 = 130;
+  static const double containerHeight_100 = 100;
   static const double relatedProductItemWidth = 140;
 
   //padding
