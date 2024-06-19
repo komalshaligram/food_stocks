@@ -31,6 +31,7 @@ import '../widget/common_sale_listview.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
+import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 import '../widget/search_item_widget.dart';
@@ -777,38 +778,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                        child: state.isProductLoading
                            ? ProductDetailsShimmerWidget()
                            : state.productDetails.isEmpty
-                           ? Padding(
-                         padding: const EdgeInsets.all(8.0),
-                         child: Column(
-                           children: [
-                             Align(
-                               alignment: Alignment.topRight,
-                               child: GestureDetector(
-                                 onTap: () {
-                                   Navigator.pop(context);
-                                 },
-                                 child: Icon(
-                                   Icons.close,
-                                   size: 36,
-                                   color: AppColors.blackColor,
-                                 ),
-                               ),
-                             ),
-                             Container(
-                               height: getScreenHeight(context) * 0.7,
-                               child: Center(
-                                 child: Text(
-                                     AppLocalizations.of(context)!.no_product,
-                                     style: AppStyles.rkRegularTextStyle(
-                                       size: AppConstants.normalFont,
-                                       color: AppColors.redColor,
-                                       fontWeight: FontWeight.w500,
-                                     )),
-                               ),
-                             ),
-                           ],
-                         ),
-                       )
+                           ? NoDataBottomSheet(dialogContext: context)
                            : SingleChildScrollView(
                          controller:  ModalScrollController.of(context),
                          child: Column(

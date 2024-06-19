@@ -578,9 +578,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               }
             }
             else{
-              Navigator.pop(event.context);
+             emit(state.copyWith(isProductLoading: false));
             }
           } else {
+
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,

@@ -31,6 +31,7 @@ import '../widget/common_product_sale_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/confetti.dart';
+import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/search_item_widget.dart';
 
@@ -632,15 +633,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                       child: state.isProductLoading
                           ? ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
-                          ? Center(
-                        child: Text(
-                            AppLocalizations.of(context)!.no_product,
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.normalFont,
-                              color: AppColors.redColor,
-                              fontWeight: FontWeight.w500,
-                            )),
-                      )
+                          ? NoDataBottomSheet(dialogContext: context)
                           : SingleChildScrollView(
                         controller:  ModalScrollController.of(context),
                         child: Column(

@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/req_model/update_cart/update_cart_req_model.dart';
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
@@ -968,9 +969,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   ),
                 );
               }
-
               preferences.setEmailId(userEmailId: response.data?.clients?.first
                   .email ?? '');
+              String? phoneNumber = await Smartlook.instance.user.properties.getString("User phone number");
+              if(phoneNumber == '' || phoneNumber == null) {
+                Smartlook.instance.user.setIdentifier(preferences.getUserId());
+                Smartlook.instance.user.setEmail(preferences.getEmailId());
+                Smartlook.instance.user.setName(preferences.getUserName());
+                Smartlook.instance.user.properties.putString('User business name' ,value:preferences.getBusinessName());
+                Smartlook.instance.user.properties.putString('User phone number' ,value:preferences.getPhoneNumber());
+              }
 
             } else {
 
