@@ -40,6 +40,7 @@ class ReorderState with _$ReorderState {
     required bool isFilterShimmering,
     required bool isExpansionChanged,
 
+
   }) = _ReorderState;
 
   factory ReorderState.initial() => ReorderState(
@@ -81,6 +82,7 @@ class ReorderState with _$ReorderState {
     filterList: [],
     isRefresh: false,
     isFilterShimmering: false,
-      isExpansionChanged: false
+      isExpansionChanged: false,
+    
       );
 }

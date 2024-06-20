@@ -28,6 +28,7 @@ import 'package:photo_view/photo_view.dart';
 import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_product_sale_item_widget.dart';
 import '../widget/custom_dialog.dart';
+import '../widget/no_data_bottom_sheet_widget.dart';
 
 
 class BasketRoute {
@@ -80,6 +81,7 @@ class BasketScreenWidget extends StatelessWidget {
             context.read<BasketBloc>().add(BasketEvent.refreshEvent());
           });
         }
+
       },
       child: BlocBuilder<BasketBloc, BasketState>(
         builder: (context, state) {
@@ -89,6 +91,7 @@ class BasketScreenWidget extends StatelessWidget {
               onFocusGained: () {
                 bloc.add(BasketEvent.getPermissionList(context: context));
                 bloc.add(BasketEvent.getAllCartEvent(context: context));
+                bloc.add(BasketEvent.userApproveEvent(context: context));
               },
               child: SafeArea(
                 child: Padding(
@@ -811,38 +814,7 @@ class BasketScreenWidget extends StatelessWidget {
                       child: state.isProductLoading
                           ? ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
-                          ? Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Icon(
-                                  Icons.close,
-                                  size: 36,
-                                  color: AppColors.blackColor,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: getScreenHeight(context) * 0.7,
-                              child: Center(
-                                child: Text(
-                                    AppLocalizations.of(context)!.no_product,
-                                    style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.normalFont,
-                                      color: AppColors.redColor,
-                                      fontWeight: FontWeight.w500,
-                                    )),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
+                          ? NoDataBottomSheet(dialogContext: context)
                           : SingleChildScrollView(
                         controller:  ModalScrollController.of(context),
                         child: Column(

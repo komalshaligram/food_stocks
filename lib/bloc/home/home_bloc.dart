@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/req_model/update_cart/update_cart_req_model.dart';
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
@@ -38,11 +39,13 @@ import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/model/res_model/wallet_record_res/wallet_record_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
@@ -966,9 +969,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   ),
                 );
               }
-
               preferences.setEmailId(userEmailId: response.data?.clients?.first
                   .email ?? '');
+              String? phoneNumber = await Smartlook.instance.user.properties.getString("User phone number");
+              if(phoneNumber == '' || phoneNumber == null) {
+                Smartlook.instance.user.setIdentifier(preferences.getUserId());
+                Smartlook.instance.user.setEmail(preferences.getEmailId());
+                Smartlook.instance.user.setName(preferences.getUserName());
+                Smartlook.instance.user.properties.putString('User business name' ,value:preferences.getBusinessName());
+                Smartlook.instance.user.properties.putString('User phone number' ,value:preferences.getPhoneNumber());
+              }
 
             } else {
 
@@ -1384,6 +1394,32 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         }
 
+
+        }
+
+        else if(event is _userApproveEvent){
+          try {
+            debugPrint('clientId_____${AppStrings.clientIdString}');
+            final res = await DioClient(event.context).post(
+              '${AppUrls.verifyClientUrl}',
+                data: {AppStrings.clientIdString:preferences.getUserId()}
+            );
+            VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+            debugPrint('verifyClient res_____$response');
+            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+            if (response.status == 200) {
+              if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
+                Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+              }
+              else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
+                Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
+              }
+
+            }
+          } on ServerException {}
+          catch (e) {
+            debugPrint('catch____$e');
+          }
 
         }
       }

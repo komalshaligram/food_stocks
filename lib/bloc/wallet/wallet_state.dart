@@ -29,6 +29,7 @@ class WalletState with _$WalletState {
     required String userEmail,
     required DateTime firstDateOfMonth,
     required bool isAccountPermissionShimmering,
+    
   }) = _WalletState;
 
   factory WalletState.initial() => WalletState(
@@ -57,8 +58,8 @@ class WalletState with _$WalletState {
     isExportComplete: false,
     userEmail: '',
     isAccountPermissionShimmering : false,
-    firstDateOfMonth: DateTime.utc(DateTime.now().year, DateTime.now().month, 1)
-
+    firstDateOfMonth: DateTime.utc(DateTime.now().year, DateTime.now().month, 1),
+    
       );
 }
 

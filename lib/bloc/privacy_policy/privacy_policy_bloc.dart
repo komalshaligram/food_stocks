@@ -106,6 +106,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
               Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
             }
             else{
+              emit(state.copyWith(isShimmering: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
@@ -115,6 +116,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
                   type: SnackBarType.FAILURE);
             }
           } on ServerException {
+            emit(state.copyWith(isShimmering: false));
           }
           catch(e){
             emit(state.copyWith(isShimmering: false));

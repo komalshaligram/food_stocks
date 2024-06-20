@@ -109,4 +109,7 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.getPermissionList(
       {required BuildContext context }) = _getPermissionList;
 
+  const factory HomeEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
+
 }

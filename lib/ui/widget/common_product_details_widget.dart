@@ -99,6 +99,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
 
     debugPrint('productDetails123: $productDetails');
+    debugPrint('qrcode_____ ${productDetails.first.qrcode}');
 
     return Container(
       decoration: BoxDecoration(

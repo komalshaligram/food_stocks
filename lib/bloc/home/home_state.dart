@@ -48,7 +48,6 @@ class HomeState with _$HomeState {
     required bool isSubUserAddToBasket,
     required bool isSubUserSeeWallet,
     required bool isAccountPermissionShimmering,
-    
 
   }) = _HomeState;
 
@@ -102,9 +101,6 @@ class HomeState with _$HomeState {
       pesachBannerShimmering: false,
       isSubUserAddToBasket: false,
       isSubUserSeeWallet: false,
-    isAccountPermissionShimmering: false,
-    
-
-
+      isAccountPermissionShimmering: false,
   );
 }

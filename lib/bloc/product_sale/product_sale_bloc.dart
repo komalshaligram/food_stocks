@@ -23,9 +23,11 @@ import '../../data/model/res_model/product_details_res_model/product_details_res
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
@@ -815,6 +817,32 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
       }
       else if(event is _RemoveRelatedProductEvent){
         emit(state.copyWith(relatedProductList: []));
+      }
+
+      else if(event is _userApproveEvent){
+        try {
+          debugPrint('clientId_____${AppStrings.clientIdString}');
+          final res = await DioClient(event.context).post(
+              '${AppUrls.verifyClientUrl}',
+              data: {AppStrings.clientIdString:preferences.getUserId()}
+          );
+          VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+          debugPrint('verifyClient res_____$response');
+          debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+          if (response.status == 200) {
+            if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
+              Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+            }
+            else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
+              Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
+            }
+
+          }
+        } on ServerException {}
+        catch (e) {
+          debugPrint('catch____$e');
+        }
+
       }
 
     });

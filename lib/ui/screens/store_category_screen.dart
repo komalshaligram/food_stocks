@@ -32,6 +32,7 @@ import '../widget/common_product_details_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
+import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 import '../widget/search_item_widget.dart';
@@ -78,7 +79,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
-    return BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
+    return BlocListener<StoreCategoryBloc, StoreCategoryState>(
+  listener: (context, state) {
+
+  },
+  child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
       builder: (context, state) {
         return WillPopScope(
           onWillPop: () {
@@ -93,9 +98,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   isSubCategory: true, context: context));
               return Future.value(false);
             }
+           
           },
           child: FocusDetector(
             onFocusGained: (){
+              bloc.add(StoreCategoryEvent.userApproveEvent(context: context));
               bloc.add(StoreCategoryEvent.getPermissionList(context: context));
             },
             child: Scaffold(
@@ -859,7 +866,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           ),
         );
       },
-    );
+    ),
+);
   }
 
 
@@ -1153,16 +1161,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       child: state.isProductLoading
                           ? ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
-                          ? Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                            AppLocalizations.of(context)!.no_product,
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.normalFont,
-                              color: AppColors.redColor,
-                              fontWeight: FontWeight.w500,
-                            )),
-                      )
+                          ? NoDataBottomSheet(dialogContext: context)
                           : SingleChildScrollView(
                         controller:  ModalScrollController.of(context),
                         child: Column(

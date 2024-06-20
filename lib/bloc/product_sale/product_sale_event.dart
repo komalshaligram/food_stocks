@@ -55,5 +55,8 @@ class ProductSaleEvent with _$ProductSaleEvent {
   const factory ProductSaleEvent.getGridListView(
       ) = _getGridListView;
 
+  const factory ProductSaleEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
+
 
 }

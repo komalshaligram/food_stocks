@@ -99,14 +99,14 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   UserWalletId: response.data?.wallet ?? '');
               preferencesHelper.setIsSubUser(
                   isSubUser: (response.data?.adminType == AppStrings.subuserString) ? true : false);
-
+              preferencesHelper.setEmailId(userEmailId: response.data?.user?.email ?? '');
 
               String? businessName = await Smartlook.instance.user.properties.getString("User business name");
               String? phoneNumber = await Smartlook.instance.user.properties.getString("User phone number");
               if(businessName != '' || businessName != null  ){
                 Smartlook.instance.user.properties.removeString('User business name');
               }
-              if(phoneNumber != ''|| phoneNumber != null ){
+              if(phoneNumber != '' || businessName != null ){
                 Smartlook.instance.user.properties.removeString('User phone number');
               }
               debugPrint('businessName___${businessName}');

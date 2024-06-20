@@ -81,4 +81,7 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.getPermissionList(
       {required BuildContext context}) = _getPermissionList;
+
+  const factory StoreEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
 }

@@ -36,6 +36,7 @@ import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/filter_bottom_sheet_shimmer_widget.dart';
+import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/search_item_widget.dart';
 import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
@@ -54,7 +55,9 @@ class ReorderScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
       ReorderBloc()
-        ..add(ReorderEvent.getPreviousOrderProductsEvent(context: context)),
+        ..add(ReorderEvent.getPreviousOrderProductsEvent(context: context))
+        ..add(ReorderEvent.userApproveEvent(context: context))
+    ,
       child: ReorderScreenWidget(),
     );
   }
@@ -66,7 +69,11 @@ class ReorderScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ReorderBloc bloc = context.read<ReorderBloc>();
-    return BlocBuilder<ReorderBloc, ReorderState>(
+    return BlocListener<ReorderBloc, ReorderState>(
+  listener: (context, state) {
+
+  },
+  child: BlocBuilder<ReorderBloc, ReorderState>(
       builder: (context, state) {
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation
@@ -161,12 +168,12 @@ class ReorderScreenWidget extends StatelessWidget {
               },
               trailingWidget: Row(
                 children: [
-                  GestureDetector(
+                 /* GestureDetector(
                       onTap: () {
                         bloc.add(ReorderEvent.filterEvent(context: context));
                         filterBottomSheet(context: context);
                       },
-                      child: Icon(Icons.filter_alt)),
+                      child: Icon(Icons.filter_alt)),*/
                   5.width,
                   GestureDetector(
                       onTap: () {
@@ -662,7 +669,8 @@ class ReorderScreenWidget extends StatelessWidget {
           ),
         );
       },
-    );
+    ),
+);
   }
 
   Widget buildPreviousOrderProductItem({
@@ -829,38 +837,7 @@ class ReorderScreenWidget extends StatelessWidget {
                       child: state.isProductLoading
                           ? ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
-                          ? Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Icon(
-                                  Icons.close,
-                                  size: 36,
-                                  color: AppColors.blackColor,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: getScreenHeight(context) * 0.7,
-                              child: Center(
-                                child: Text(
-                                    AppLocalizations.of(context)!.no_product,
-                                    style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.normalFont,
-                                      color: AppColors.redColor,
-                                      fontWeight: FontWeight.w500,
-                                    )),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
+                          ? NoDataBottomSheet(dialogContext: context)
                           : SingleChildScrollView(
                         controller: ModalScrollController.of(context),
                         child: Column(

@@ -97,5 +97,9 @@ class ReorderEvent with _$ReorderEvent {
     required int mainIndex,
     required int subIndex,
 }) = _expansionChangeEvent;
+
+
+  const factory ReorderEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
 }
 

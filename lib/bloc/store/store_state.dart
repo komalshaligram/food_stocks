@@ -38,7 +38,6 @@ class StoreState with _$StoreState {
     required bool isSubUserAddToBasket,
     required bool isAccountPermissionShimmering,
     required bool pesachBannerShimmering,
-
   }) = _StoreState;
 
   factory StoreState.initial() => StoreState(
@@ -76,7 +75,8 @@ class StoreState with _$StoreState {
       bottlePrice:0.0,
     isSubUserAddToBasket: false,
       isAccountPermissionShimmering : false,
-    pesachBannerShimmering: false
+    pesachBannerShimmering: false,
+    
     
       );
 }

@@ -42,7 +42,8 @@ class ProductSaleScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => ProductSaleBloc()
         ..add(ProductSaleEvent.setSearchEvent(search: args?[AppStrings.searchString] ?? ''))
-        ..add(ProductSaleEvent.getProductSalesListEvent(context: context)),
+        ..add(ProductSaleEvent.getProductSalesListEvent(context: context))
+      ..add(ProductSaleEvent.userApproveEvent(context: context)),
       child: ProductSaleScreenWidget(saleProductId: args?[AppStrings.companyIdString] ?? ''),
     );
   }

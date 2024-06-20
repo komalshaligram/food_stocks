@@ -31,11 +31,13 @@ import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.d
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_strings.dart';
 
 part 'supplier_products_event.dart';
@@ -252,15 +254,14 @@ class SupplierProductsBloc
 
           ProductDetailsResModel response =
           ProductDetailsResModel.fromJson(res);
-
           debugPrint('GetProductDetails_____${response}');
-          if (response.status == 200) {
+          if (response.status == 200 ) {
 
             //new chanegs
             //0 for barcode and search
             //1 for recommendation product.
             //2 related product.
-
+            if(response.product.isNotEmpty){
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             int productListIndex  = event.productListIndex;
@@ -452,6 +453,9 @@ class SupplierProductsBloc
                     context: event.context,
                     supplierSaleIndex: supplierSaleIndex));
               }
+            }}
+            else{
+              emit(state.copyWith(isProductLoading: false));
             }
           } else {
             emit(state.copyWith(isProductLoading: false));
@@ -600,7 +604,7 @@ class SupplierProductsBloc
           state.productStockList.toList(growable: false);
           productStockList[state.productListIndex][state.productStockUpdateIndex] =
               productStockList[state.productListIndex][state.productStockUpdateIndex]
-                  .copyWith(note: /*event.newNote*/ state.noteController.text);
+                  .copyWith(note: state.noteController.text);
           emit(state.copyWith(productStockList: productStockList));
         }
       }
@@ -1084,9 +1088,8 @@ class SupplierProductsBloc
         emit(state.copyWith(relatedProductList: []));
       }
       else  if(event is _getPermissionList){
-        if(preferences.getSubUser()){
+        if(preferences.getSubUser() ){
           try {
-
             final res = await DioClient(event.context).get(
                 path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
@@ -1131,6 +1134,38 @@ class SupplierProductsBloc
         }
 
 
+      }
+
+      else if(event is _userApproveEvent){
+        if(!preferences.getGuestUser()) {
+          try {
+            debugPrint('clientId_____${AppStrings.clientIdString}');
+            final res = await DioClient(event.context).post(
+                '${AppUrls.verifyClientUrl}',
+                data: {AppStrings.clientIdString: preferences.getUserId()}
+            );
+            VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+            debugPrint('verifyClient res_____$response');
+            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls
+                .verifyClientUrl}');
+            if (response.status == 200) {
+              if (!(response.data?.isFilledForms ?? false) || !(response.data
+                  ?.isRegisterForm ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.formDataScreen.name);
+              }
+              else if (!(response.data?.isUploadedFiles ?? false) &&
+                  (response.data?.isRegisterForm ?? false) && (response.data
+                  ?.isFilledForms ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.fileUploadScreen.name);
+              }
+            }
+          } on ServerException {}
+          catch (e) {
+            debugPrint('catch____$e');
+          }
+        }
       }
     });
   }

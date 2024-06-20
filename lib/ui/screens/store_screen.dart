@@ -31,6 +31,7 @@ import '../utils/themes/app_strings.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_product_details_widget.dart';
+import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/pesach_banner_shimmer.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/search_item_widget.dart';
@@ -78,11 +79,13 @@ class StoreScreenWidget extends StatelessWidget {
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
+
       },
       child: BlocBuilder<StoreBloc, StoreState>(
         builder: (context, state) {
           return FocusDetector(
             onFocusGained: (){
+           bloc.add(StoreEvent.userApproveEvent(context: context));
               bloc.add(StoreEvent.getPermissionList(context: context));
             },
             child: Scaffold(
@@ -1527,15 +1530,7 @@ class StoreScreenWidget extends StatelessWidget {
                       child: state.isProductLoading
                           ? ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
-                          ? Center(
-                        child: Text(
-                            AppLocalizations.of(context)!.no_product,
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.normalFont,
-                              color: AppColors.redColor,
-                              fontWeight: FontWeight.w500,
-                            )),
-                      )
+                          ? NoDataBottomSheet(dialogContext: context)
                           : SingleChildScrollView(
                         controller:  ModalScrollController.of(context),
                         child: Column(

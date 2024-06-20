@@ -78,6 +78,7 @@ class CompanyProductsState with _$CompanyProductsState {
     productListIndex: -1,
     bottleDeposit: 0.0,
     isSubUserAddToBasket: false,
+    
 
       );
 }

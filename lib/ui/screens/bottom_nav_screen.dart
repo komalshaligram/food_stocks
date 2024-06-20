@@ -182,6 +182,7 @@ final String basketScreen;
               ),
               body: FocusDetector(
                 onFocusGained: () {
+
                   bloc.add(BottomNavEvent.updateCartCountEvent(context:context));
                   bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
                 },

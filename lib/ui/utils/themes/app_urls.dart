@@ -94,4 +94,5 @@ static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///dev
   static const String getAllSubUserUrl = '/v1/subuser/getAllSubusers';
   static const String deleteClientSubUserUrl = '/v1/subuser/deleteClientSubuser';
   static const String updateSubUserUrl = '/v1/subuser/updateSubuser';
+  static const String verifyClientUrl = '/v1/clients/verifyClient';
 }

@@ -31,6 +31,7 @@ import '../widget/common_sale_listview.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
+import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 import '../widget/search_item_widget.dart';
@@ -57,7 +58,8 @@ class CompanyProductsScreen extends StatelessWidget {
         ..add(CompanyProductsEvent.getCompanyProductsIdEvent(
             companyId: args?[AppStrings.companyIdString]))
         ..add(CompanyProductsEvent.getCompanyProductsListEvent(context: context))
-        ..add(CompanyProductsEvent.getPermissionList(context: context)),
+        ..add(CompanyProductsEvent.getPermissionList(context: context))
+      ..add(CompanyProductsEvent.userApproveEvent(context: context)),
       child: CompanyProductsScreenWidget(companyName:companyName,companyLogo:companyLogo),
     );
   }
@@ -71,7 +73,11 @@ class CompanyProductsScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CompanyProductsBloc bloc = context.read<CompanyProductsBloc>();
-    return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
+    return BlocListener<CompanyProductsBloc, CompanyProductsState>(
+  listener: (context, state) {
+
+  },
+  child: BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
       builder: (context, state) {
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
@@ -604,7 +610,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
           ),),
         );
       },
-    );
+    ),
+);
   }
 
   Widget buildCompanyProducts(
@@ -771,38 +778,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                        child: state.isProductLoading
                            ? ProductDetailsShimmerWidget()
                            : state.productDetails.isEmpty
-                           ? Padding(
-                         padding: const EdgeInsets.all(8.0),
-                         child: Column(
-                           children: [
-                             Align(
-                               alignment: Alignment.topRight,
-                               child: GestureDetector(
-                                 onTap: () {
-                                   Navigator.pop(context);
-                                 },
-                                 child: Icon(
-                                   Icons.close,
-                                   size: 36,
-                                   color: AppColors.blackColor,
-                                 ),
-                               ),
-                             ),
-                             Container(
-                               height: getScreenHeight(context) * 0.7,
-                               child: Center(
-                                 child: Text(
-                                     AppLocalizations.of(context)!.no_product,
-                                     style: AppStyles.rkRegularTextStyle(
-                                       size: AppConstants.normalFont,
-                                       color: AppColors.redColor,
-                                       fontWeight: FontWeight.w500,
-                                     )),
-                               ),
-                             ),
-                           ],
-                         ),
-                       )
+                           ? NoDataBottomSheet(dialogContext: context)
                            : SingleChildScrollView(
                          controller:  ModalScrollController.of(context),
                          child: Column(

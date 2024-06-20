@@ -60,9 +60,7 @@ class SubUserScreenWidget extends StatelessWidget {
                 radius: 5,
                 fontSize: AppConstants.font_13,
                 onPressed: () {
-                  bloc.add(SubUsersEvent.popEvent(context: context));
-                  Navigator.pushNamed(
-                      context, RouteDefine.subUsersProfileScreen.name);
+               bloc.add(SubUsersEvent.userApproveEvent(context: context));
                 },
               ) : 0.width,
             ),

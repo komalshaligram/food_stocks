@@ -26,6 +26,7 @@ import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model
 import '../../data/model/res_model/order_send_res_model/order_send_res_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
@@ -1102,8 +1103,29 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
             }
           }
-
-
+        }
+        else if(event is _userApproveEvent){
+          try {
+            debugPrint('clientId_____${AppStrings.clientIdString}');
+            final res = await DioClient(event.context).post(
+                '${AppUrls.verifyClientUrl}',
+                data: {AppStrings.clientIdString:preferencesHelper.getUserId()}
+            );
+            VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+            debugPrint('verifyClient res_____$response');
+            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+            if (response.status == 200) {
+              if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
+                Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+              }
+              else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
+                Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
+              }
+            }
+          } on ServerException {}
+          catch (e) {
+            debugPrint('catch____$e');
+          }
         }
       }
     });
