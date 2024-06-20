@@ -18,7 +18,7 @@ import '../utils/themes/app_styles.dart';
 import '../widget/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:html/parser.dart';
 import '../widget/custom_button_widget.dart';
 
 class MessageContentRoute {

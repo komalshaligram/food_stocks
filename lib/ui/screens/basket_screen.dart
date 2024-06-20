@@ -838,7 +838,7 @@ class BasketScreenWidget extends StatelessWidget {
                               // lowStock: state.productDetails.first.supplierSales.first.lowStock.toString() ,
                               // qrCode:state.productDetails.first.qrcode,
                               addToOrderTap: () {
-                                FocusManager.instance.primaryFocus?.unfocus();
+                             FocusManager.instance.primaryFocus?.unfocus();
                                 context.read<BasketBloc>().add(
                                     BasketEvent.addToCartProductEvent(
                                         context: context1,
