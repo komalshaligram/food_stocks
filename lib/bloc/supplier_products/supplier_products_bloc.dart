@@ -604,7 +604,7 @@ class SupplierProductsBloc
           state.productStockList.toList(growable: false);
           productStockList[state.productListIndex][state.productStockUpdateIndex] =
               productStockList[state.productListIndex][state.productStockUpdateIndex]
-                  .copyWith(note: /*event.newNote*/ state.noteController.text);
+                  .copyWith(note: state.noteController.text);
           emit(state.copyWith(productStockList: productStockList));
         }
       }
@@ -1088,9 +1088,8 @@ class SupplierProductsBloc
         emit(state.copyWith(relatedProductList: []));
       }
       else  if(event is _getPermissionList){
-        if(preferences.getSubUser()){
+        if(preferences.getSubUser() ){
           try {
-
             final res = await DioClient(event.context).get(
                 path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
@@ -1138,29 +1137,35 @@ class SupplierProductsBloc
       }
 
       else if(event is _userApproveEvent){
-        try {
-          debugPrint('clientId_____${AppStrings.clientIdString}');
-          final res = await DioClient(event.context).post(
-              '${AppUrls.verifyClientUrl}',
-              data: {AppStrings.clientIdString:preferences.getUserId()}
-          );
-          VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-          debugPrint('verifyClient res_____$response');
-          debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
-          if (response.status == 200) {
-            if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
-              Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+        if(!preferences.getGuestUser()) {
+          try {
+            debugPrint('clientId_____${AppStrings.clientIdString}');
+            final res = await DioClient(event.context).post(
+                '${AppUrls.verifyClientUrl}',
+                data: {AppStrings.clientIdString: preferences.getUserId()}
+            );
+            VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+            debugPrint('verifyClient res_____$response');
+            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls
+                .verifyClientUrl}');
+            if (response.status == 200) {
+              if (!(response.data?.isFilledForms ?? false) || !(response.data
+                  ?.isRegisterForm ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.formDataScreen.name);
+              }
+              else if (!(response.data?.isUploadedFiles ?? false) &&
+                  (response.data?.isRegisterForm ?? false) && (response.data
+                  ?.isFilledForms ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.fileUploadScreen.name);
+              }
             }
-            else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
-              Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
-            }
-
+          } on ServerException {}
+          catch (e) {
+            debugPrint('catch____$e');
           }
-        } on ServerException {}
-        catch (e) {
-          debugPrint('catch____$e');
         }
-
       }
     });
   }

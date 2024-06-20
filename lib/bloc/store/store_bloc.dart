@@ -1286,80 +1286,102 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       }
 
       else  if(event is _getPermissionList){
-        if(preferencesHelper.getSubUser()){
-          try {
-
-            final res = await DioClient(event.context).get(
-                path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
-            AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-            debugPrint('AccountPermission response store= ${response.data.toString()}');
-            debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
-            if (response.status == 200) {
-              var res = response.data?.permissions;
-              if(preferencesHelper.getAppLanguage() == AppStrings.englishString && preferencesHelper.getCanSeeWallet() != res?.canSeeWallet){
-                event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(
-                    index: 1,context: event.context));
+          if (preferencesHelper.getSubUser()) {
+            try {
+              final res = await DioClient(event.context).get(
+                  path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper
+                      .getSubUserId()}');
+              AccountPermissionResModel response = AccountPermissionResModel
+                  .fromJson(res);
+              debugPrint('AccountPermission response store= ${response.data
+                  .toString()}');
+              debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls
+                  .getAccountPermissionUrl}${preferencesHelper
+                  .getSubUserId()}');
+              if (response.status == 200) {
+                var res = response.data?.permissions;
+                if (preferencesHelper.getAppLanguage() ==
+                    AppStrings.englishString &&
+                    preferencesHelper.getCanSeeWallet() != res?.canSeeWallet) {
+                  event.context.read<BottomNavBloc>().add(
+                      BottomNavEvent.changePage(
+                          index: 1, context: event.context));
+                }
+                preferencesHelper.setCanSeeWallet(
+                    isSeeWallet: res?.canSeeWallet ?? false);
+                emit(state.copyWith(isAccountPermissionShimmering: true));
+                preferencesHelper.setCanAddBasket(
+                    isAddBasket: res?.canAddToCart ?? false);
+                preferencesHelper.setCanCreateOrder(
+                    isCreateOrder: res?.canCreateOrder ?? false);
+                preferencesHelper.setCanSeeOrder(
+                    isSeeOrder: res?.canSeeOrders ?? false);
+                preferencesHelper.setCanDuplicateOrder(
+                    isDuplicateOrder: res?.canDuplicateOrders ?? false);
+                preferencesHelper.setCanUpdateBusinessInfo(
+                    isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ??
+                        false);
+                preferencesHelper.setCanUpdateAdditionalInfo(
+                    isUpdateAdditionalInfo: res
+                        ?.canSeeAndUpdateAdditionalInfo ?? false);
+                preferencesHelper.setCanUpdateTimeInfo(
+                    isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
+                preferencesHelper.setCanSeeFormsFiles(
+                    isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
+                preferencesHelper.setManageSubUser(
+                    isManageSubUser: res?.canManageSubUsers ?? false);
+                emit(state.copyWith(isAccountPermissionShimmering: false,
+                    isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()
+                ));
+              } else {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: AppStrings.getLocalizedStrings(
+                        response.message?.toLocalization() ??
+                            response.message!,
+                        event.context),
+                    type: SnackBarType.FAILURE);
               }
-              preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
-              emit(state.copyWith(isAccountPermissionShimmering: true));
-              preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
-              preferencesHelper.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
-              preferencesHelper.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
-              preferencesHelper.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
-              preferencesHelper.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
-              preferencesHelper.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
-              preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
-              preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
-              preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
-              emit(state.copyWith(isAccountPermissionShimmering:false,
-                  isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()
-              ));
-            } else {
+            } on ServerException {} catch (e) {
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          response.message!,
-                      event.context),
+                  title: e.toString(),
                   type: SnackBarType.FAILURE);
-
             }
-          } on ServerException {
-          } catch (e) {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: e.toString(),
-                type: SnackBarType.FAILURE);
           }
-        }
-
 
       }
 
       else if(event is _userApproveEvent){
-        try {
-          debugPrint('clientId_____${AppStrings.clientIdString}');
-          final res = await DioClient(event.context).post(
-              '${AppUrls.verifyClientUrl}',
-              data: {AppStrings.clientIdString:preferencesHelper.getUserId()}
-          );
-          VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-          debugPrint('verifyClient res_____$response');
-          debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
-          if (response.status == 200) {
-            if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
-              Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+        if(!preferencesHelper.getGuestUser()) {
+          try {
+            debugPrint('clientId_____${AppStrings.clientIdString}');
+            final res = await DioClient(event.context).post(
+                '${AppUrls.verifyClientUrl}',
+                data: {AppStrings.clientIdString: preferencesHelper.getUserId()}
+            );
+            VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+            debugPrint('verifyClient res_____$response');
+            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls
+                .verifyClientUrl}');
+            if (response.status == 200) {
+              if (!(response.data?.isFilledForms ?? false) ||
+                  !(response.data?.isRegisterForm ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.formDataScreen.name);
+              }
+              else if (!(response.data?.isUploadedFiles ?? false) &&
+                  (response.data?.isRegisterForm ?? false) &&
+                  (response.data?.isFilledForms ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.fileUploadScreen.name);
+              }
             }
-            else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
-              Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
-            }
-
+          } on ServerException {}
+          catch (e) {
+            debugPrint('catch____$e');
           }
-        } on ServerException {}
-        catch (e) {
-          debugPrint('catch____$e');
         }
-
       }
 
     });

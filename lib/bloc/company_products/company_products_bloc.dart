@@ -1118,29 +1118,35 @@ class CompanyProductsBloc
 
       }
       else if(event is _userApproveEvent){
-        try {
-          debugPrint('clientId_____${AppStrings.clientIdString}');
-          final res = await DioClient(event.context).post(
-              '${AppUrls.verifyClientUrl}',
-              data: {AppStrings.clientIdString: preferences.getUserId()}
-          );
-          VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-          debugPrint('verifyClient res_____$response');
-          debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
-          if (response.status == 200) {
-            if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
-              Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+        if(!preferences.getGuestUser()) {
+          try {
+            debugPrint('clientId_____${AppStrings.clientIdString}');
+            final res = await DioClient(event.context).post(
+                '${AppUrls.verifyClientUrl}',
+                data: {AppStrings.clientIdString: preferences.getUserId()}
+            );
+            VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+            debugPrint('verifyClient res_____$response');
+            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls
+                .verifyClientUrl}');
+            if (response.status == 200) {
+              if (!(response.data?.isFilledForms ?? false) ||
+                  !(response.data?.isRegisterForm ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.formDataScreen.name);
+              }
+              else if (!(response.data?.isUploadedFiles ?? false) &&
+                  (response.data?.isRegisterForm ?? false) &&
+                  (response.data?.isFilledForms ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.fileUploadScreen.name);
+              }
             }
-            else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
-              Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
-            }
-
+          } on ServerException {}
+          catch (e) {
+            debugPrint('catch____$e');
           }
-        } on ServerException {}
-        catch (e) {
-          debugPrint('catch____$e');
         }
-
       }
 
 
