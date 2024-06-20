@@ -7,7 +7,9 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/message_content/message_content_bloc.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../../main.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
@@ -280,7 +282,6 @@ class MessageContentScreenWidget extends StatelessWidget {
                                           color: AppColors.blackColor),
                                     ),
                                     10.height,
-
                                   ],
                                 ),
                               ),
@@ -292,10 +293,20 @@ class MessageContentScreenWidget extends StatelessWidget {
                                     .toUpperCase(),
                                 bGColor: AppColors.mainColor,
                                 width: getScreenWidth(context) - 100,
-                                onPressed: (){
-                                  navigationToScreen(id: state.message.message?.navigationId.toString() ?? '',
-                                      mainPage: state.message.message?.mainPage.toString() ?? '',
-                                      subPage: state.message.message?.subPage.toString() ?? '');
+                                onPressed: () async {
+                                  SharedPreferencesHelper preferences = SharedPreferencesHelper(
+                                      prefs: await SharedPreferences.getInstance());
+                                  if(preferences.getSubUser()){
+                                    navigationToScreen(id: state.message.message?.subUserId.toString() ?? '',
+                                        mainPage: state.message.message?.subUserMainPage.toString() ?? '',
+                                        subPage: state.message.message?.subUserSubPage.toString() ?? '');
+                                  }
+                                  else{
+                                    navigationToScreen(id: state.message.message?.navigationId.toString() ?? '',
+                                        mainPage: state.message.message?.mainPage.toString() ?? '',
+                                        subPage: state.message.message?.subPage.toString() ?? '');
+                                  }
+
                                 },
                                 fontColors: AppColors.whiteColor,
                               ) : SizedBox(),
@@ -365,6 +376,11 @@ class MessageContentScreenWidget extends StatelessWidget {
                 AppStrings.companyIdString: id,
                 AppStrings.isSubCategory : 'false',
               });
+        }
+        else if (subPage == 'saleProductScreen') {
+          Navigator.pushNamed(navigatorKey.currentState!.context,
+              RouteDefine.productSaleScreen.name,
+              arguments: {AppStrings.companyIdString: id});
         }
 
       }

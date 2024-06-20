@@ -25,7 +25,7 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     await Firebase.initializeApp();
     debugPrint("Handling in main${message.toString()}");
     debugPrint("Handling a background message:${message.messageId}");
-    debugPrint("Handling a background message:${message.data.toString()}");
+    debugPrint("Handling a background message:${message.notification.toString()}");
     var data = json.decode(message.data['data'].toString());
 
     FlutterAppBadger.updateBadgeCount(PushNotificationService().notificationCount+1);
