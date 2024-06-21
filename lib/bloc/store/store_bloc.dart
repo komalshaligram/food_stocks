@@ -1355,7 +1355,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       else if(event is _userApproveEvent){
         if(!preferencesHelper.getGuestUser()) {
           try {
-            debugPrint('clientId_____${AppStrings.clientIdString}');
+            debugPrint('clientId_____${preferencesHelper.getUserId()}');
             final res = await DioClient(event.context).post(
                 '${AppUrls.verifyClientUrl}',
                 data: {AppStrings.clientIdString: preferencesHelper.getUserId()}

@@ -980,8 +980,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 Smartlook.instance.user.properties.putString('User phone number' ,value:preferences.getPhoneNumber());
               }
 
-            } else {
-
             }
           } on ServerException {
           } catch (e) {
@@ -1393,13 +1391,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
           }
         }
-
-
         }
 
         else if(event is _userApproveEvent){
           try {
-            debugPrint('clientId_____${AppStrings.clientIdString}');
+            debugPrint('clientId_____${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
               '${AppUrls.verifyClientUrl}',
                 data: {AppStrings.clientIdString:preferences.getUserId()}
@@ -1420,7 +1416,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           catch (e) {
             debugPrint('catch____$e');
           }
-
         }
       }
     });

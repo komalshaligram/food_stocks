@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 
 #version: 1.0.18+2
-version: 1.0.28+1
+version: 1.0.30+1
 
 
 environment:
@@ -91,6 +91,8 @@ dependencies:
   modal_bottom_sheet: ^3.0.0-pre
   eraser: ^2.0.2
   flutter_smartlook: ^4.1.18
+  flutter_html: any
+
 
 dependency_overrides:
   intl: ^0.18.0

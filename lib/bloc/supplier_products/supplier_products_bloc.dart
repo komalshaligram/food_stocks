@@ -463,8 +463,7 @@ class SupplierProductsBloc
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
+                    response.message.toLocalization() ,
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -1139,7 +1138,7 @@ class SupplierProductsBloc
       else if(event is _userApproveEvent){
         if(!preferences.getGuestUser()) {
           try {
-            debugPrint('clientId_____${AppStrings.clientIdString}');
+            debugPrint('clientId_____${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
                 '${AppUrls.verifyClientUrl}',
                 data: {AppStrings.clientIdString: preferences.getUserId()}

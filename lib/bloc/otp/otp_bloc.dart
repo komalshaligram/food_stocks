@@ -18,7 +18,7 @@ import '../../repository/dio_client.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../ui/utils/themes/app_strings.dart';
-
+import 'dart:io';
 part 'otp_event.dart';
 
 part 'otp_state.dart';
@@ -103,20 +103,32 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
               String? businessName = await Smartlook.instance.user.properties.getString("User business name");
               String? phoneNumber = await Smartlook.instance.user.properties.getString("User phone number");
-              if(businessName != '' || businessName != null  ){
-                Smartlook.instance.user.properties.removeString('User business name');
+              if(Platform.isAndroid){
+                if(businessName != '' || businessName != null  ){
+                  Smartlook.instance.user.properties.removeString('User business name');
+                }
+                if(phoneNumber != '' || phoneNumber != null ){
+                  Smartlook.instance.user.properties.removeString('User phone number');
+                }
+                Smartlook.instance.user.properties.putString('User phone number' ,value:response.data?.user?.phoneNumber);
+                Smartlook.instance.user.properties.putString('User business name' ,value:response.data?.user?.clientDetail?.bussinessName ?? '');
               }
-              if(phoneNumber != '' || businessName != null ){
-                Smartlook.instance.user.properties.removeString('User phone number');
+
+              else{
+                if(businessName == '' || businessName == null  ){
+                  Smartlook.instance.user.properties.putString('User business name' ,value:response.data?.user?.clientDetail?.bussinessName ?? '');
+                }
+                else if(phoneNumber == '' || phoneNumber == null ){
+                  Smartlook.instance.user.properties.putString('User phone number' ,value:response.data?.user?.phoneNumber);
+                }
               }
-              debugPrint('businessName___${businessName}');
-              debugPrint('phoneNumber___${phoneNumber}');
+
+
 
               Smartlook.instance.user.setIdentifier((response.data?.adminType == AppStrings.subuserString) ? response.data?.user?.createdBy ?? '' :  response.data?.user?.id ?? '');
               Smartlook.instance.user.setEmail(response.data?.user?.email ?? '');
               Smartlook.instance.user.setName(response.data?.user?.clientDetail?.ownerName ?? '');
-              Smartlook.instance.user.properties.putString('User business name' ,value:response.data?.user?.clientDetail?.bussinessName ?? '');
-              Smartlook.instance.user.properties.putString('User phone number' ,value:response.data?.user?.phoneNumber);
+
 
               if(response.data?.adminType == AppStrings.subuserString){
                 var res = response.data?.subUserPermissions;

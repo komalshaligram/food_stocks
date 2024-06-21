@@ -1120,7 +1120,7 @@ class CompanyProductsBloc
       else if(event is _userApproveEvent){
         if(!preferences.getGuestUser()) {
           try {
-            debugPrint('clientId_____${AppStrings.clientIdString}');
+            debugPrint('clientId_____${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
                 '${AppUrls.verifyClientUrl}',
                 data: {AppStrings.clientIdString: preferences.getUserId()}

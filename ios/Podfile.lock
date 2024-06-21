@@ -10,7 +10,6 @@ PODS:
   - connectivity_plus (0.0.1):
     - Flutter
     - ReachabilitySwift
-  - CTNotificationService (0.1.7)
   - device_info_plus (0.0.1):
     - Flutter
   - DKImagePickerController/Core (4.3.9):
@@ -194,11 +193,9 @@ DEPENDENCIES:
   - appsflyer_sdk (from `.symlinks/plugins/appsflyer_sdk/ios`)
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
-  - CTNotificationService
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - eraser (from `.symlinks/plugins/eraser/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
-  - Firebase/Messaging
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -224,7 +221,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AppsFlyerFramework
-    - CTNotificationService
     - DKImagePickerController
     - DKPhotoGallery
     - Firebase
@@ -306,7 +302,6 @@ SPEC CHECKSUMS:
   AppsFlyerFramework: 0a68f5b72bbbadfa71d4ae3eaf040e82d62e8518
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   connectivity_plus: 07c49e96d7fc92bc9920617b83238c4d178b446a
-  CTNotificationService: 3eceea27cf0e28a2e14267bb706013363eb620c6
   device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
@@ -351,6 +346,6 @@ SPEC CHECKSUMS:
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
   vibration: 7d883d141656a1c1a6d8d238616b2042a51a1241
 
-PODFILE CHECKSUM: f36489fbc6b22d980d7d93b121d8fa89792c8f60
+PODFILE CHECKSUM: e59c2e772270ccb02a616116fd3d73adf738794f
 
 COCOAPODS: 1.15.2

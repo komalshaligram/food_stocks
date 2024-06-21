@@ -49,7 +49,6 @@ class PushNotificationService {
             debugPrint('_____Here at onMessageOpenedApp....$message');
             var data = json.decode(message!.data['data'].toString());
             debugPrint('_____onMessage_______${data.toString()}');
-            debugPrint('_____onMessage_______${message.notification!.apple!.imageUrl!.toString()}');
             debugPrint('_____onMessage Noti_______${message.notification.toString()}');
       },
     );
@@ -151,6 +150,7 @@ class PushNotificationService {
       onDidReceiveNotificationResponse: (NotificationResponse details) {
         debugPrint("__________details______:${details}");
 
+
       },
     );
 // onMessage is called when the app is in foreground and a notific
@@ -161,10 +161,10 @@ class PushNotificationService {
 
       debugPrint('_____onMessage_______${data.toString()}');
       //debugPrint('_____onMessage_______${data['data']['image'].toString()}');
-    //  debugPrint('_____onMessage Noti_______${message.notification.toString()}');
-  //    if(Platform.isAndroid){
-        showNotification(imageUrl: data['data']['image'], notiId: 0, title: message.notification!.title??'', body: message.notification!.body??'');
-   //   }
+     // debugPrint('_____onMessage Noti_______${message.notification!.apple!.imageUrl!}');
+     if(Platform.isAndroid){
+        showNotification(imageUrl:data['data']['image'], notiId: 0, title: message.notification!.title??'', body: message.notification!.body??'');
+   }
     });
   }
 
