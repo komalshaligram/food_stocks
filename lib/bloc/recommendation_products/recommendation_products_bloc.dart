@@ -89,10 +89,10 @@ class RecommendationProductsBloc
             List<List<ProductStockModel>> productStockList =
                 state.productStockList.toList(growable: true);
             List<ProductStockModel> stockList = [];
-            stockList.addAll(response.data.map(
+            stockList.addAll(response.data?.map(
                     (recommendationProduct) => ProductStockModel(
                         productId: recommendationProduct.id ?? '',
-                        maxQty: recommendationProduct.sale.isSale ? int.parse(recommendationProduct.sale.saleMaxQuantity) : -1,
+                        maxQty: (recommendationProduct.sale?.isSale ?? false) ? int.parse(recommendationProduct.sale?.saleMaxQuantity ?? '0') : -1,
                         stock: recommendationProduct.productStock.toString())) ??
                 []);
             debugPrint(
@@ -109,7 +109,7 @@ class RecommendationProductsBloc
                 isLoadMore: false));
             emit(state.copyWith(
                 isBottomOfProducts: state.recommendationProductsList.length ==
-                        (response.metaData.totalFilteredCount ?? 0)
+                        (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
           } else {
@@ -117,7 +117,7 @@ class RecommendationProductsBloc
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message.toLocalization(),
+                    response.message?.toLocalization() ?? '',
                     event.context),
                 type: SnackBarType.FAILURE);
           }

@@ -20,6 +20,7 @@ import '../widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:html/parser.dart';
 import '../widget/custom_button_widget.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class MessageContentRoute {
   static Widget get route => MessageContentScreen();
@@ -56,6 +57,12 @@ class MessageContentScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<MessageContentBloc, MessageContentState>(
         builder: (context, state) {
+          print('testmessage__1__${(state.message.message?.body ?? '')
+             }');
+          print('testmessage____${parse(state.message.message?.body ?? '')
+              .body
+              ?.text ??
+              ''}');
           return WillPopScope(
             onWillPop: () {
               Navigator.pop(context, {
@@ -248,38 +255,42 @@ class MessageContentScreenWidget extends StatelessWidget {
                                       ),
                                     ),
                                     5.height,
-                                    Text(
-                                      state.message.message?.title ?? '',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.blackColor,
+                                    Row(
+                                      children: [
+                                        Text(
+                                          state.message.message?.title ?? '',
+                                          style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.smallFont,
+                                              color: AppColors.blackColor,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        5.width,
+                                        Text(
+                                          (state.message.createdAt ?? '').split(" ").first.toString(),
+                                          style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.font_12,
+                                              color: AppColors.blackColor,
                                           fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
                                     ),
+
                                     5.height,
-                                    Text(
-                                      state.message.createdAt ?? '',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_12,
-                                          color: AppColors.textColor),
+                                    Html(
+                                      data: state.message.message?.body ?? '',
+                                      shrinkWrap: true,
                                     ),
-                                    5.height,
-                                    Text(
-                                      parse(state.message.message?.body ?? '')
-                                              .body
-                                              ?.text ??
-                                          '',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_14,
-                                          color: AppColors.blackColor),
-                                    ),
-                                    Text(
-                                      parse(state.message.message?.summary ?? '')
-                                              .body
-                                              ?.text ??
-                                          '',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_14,
-                                          color: AppColors.blackColor),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 6),
+                                      child: Text(
+                                        parse(state.message.message?.summary ?? '')
+                                                .body
+                                                ?.text ??
+                                            '',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.font_14,
+                                            color: AppColors.blackColor),
+                                      ),
                                     ),
                                     10.height,
                                   ],

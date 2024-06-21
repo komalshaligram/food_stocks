@@ -67,7 +67,7 @@ class FileUploadScreenWidget extends StatelessWidget {
             onWillPop: () async {
               SharedPreferencesHelper preferencesHelper =
               SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-              if(!preferencesHelper.getUserLoggedIn()){
+              if(!preferencesHelper.getUserLoggedIn() || state.isUpdate){
                 return Future.value(true);
               }else{
                 return Future.value(false);
@@ -93,7 +93,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                     onTap: () async {
                       SharedPreferencesHelper preferencesHelper =
                       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                      if(!preferencesHelper.getUserLoggedIn()){
+                      if(!preferencesHelper.getUserLoggedIn() || state.isUpdate){
                         Navigator.pop(context);
                       }
                     },

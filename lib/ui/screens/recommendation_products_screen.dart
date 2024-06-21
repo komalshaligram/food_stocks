@@ -236,29 +236,28 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                       childAspectRatio: getChildAspectRatio(context)),
                                   itemBuilder: (context, index) {
                                     return CommonProductSaleItemWidget(
-                                        isSale: state.recommendationProductsList[index].sale.isSale,
+                                        isSale: state.recommendationProductsList[index].sale?.isSale,
                                         height: AppConstants.salesProductItemHeight,
                                         width: 140,
-                                        productName: state.recommendationProductsList[index].productName,
+                                        productName: state.recommendationProductsList[index].productName ?? '',
                                         saleImage: state
                                             .recommendationProductsList[
                                         index]
-                                            .mainImage,
+                                            .mainImage ?? '',
                                         title: state
                                             .recommendationProductsList[
                                         index]
                                             .name ,
                                         description: parse(state
                                             .recommendationProductsList[
-                                        index].sale
-                                            .saleDescription)
+                                        index].sale?.saleDescription ?? '')
                                             .body
                                             ?.text ??
                                             '',
                                         discountedPrice:
                                         double.parse(state
                                             .recommendationProductsList[
-                                        index].sale.salePrice),
+                                        index].sale?.salePrice ?? ''),
 
                                         originalPrice:state
                                             .recommendationProductsList[
@@ -270,7 +269,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                         lowStock: state
                                             .recommendationProductsList[
                                         index]
-                                            .lowStock,
+                                            .lowStock ?? '',
                                         isPesach: state
                                             .recommendationProductsList[
                                         index]
@@ -283,7 +282,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                               productId: state
                                                   .recommendationProductsList[
                                               index]
-                                                  .id ,
+                                                  .id ?? '' ,
                                               productStock:  state
                                                   .recommendationProductsList[
                                               index]
@@ -304,22 +303,22 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                 itemBuilder: (context, index) =>
                                     CommonSaleListView(
                                         context: context,
-                                        discountedPrice: double.parse(state.recommendationProductsList[index].sale.salePrice),
-                                        isFromSale: state.recommendationProductsList[index].sale.isSale,
-                                        salesDesc: state.recommendationProductsList[index].sale.saleDescription,
+                                        discountedPrice: double.parse(state.recommendationProductsList[index].sale?.salePrice ?? ''),
+                                        isFromSale: state.recommendationProductsList[index].sale?.isSale ?? false,
+                                        salesDesc: state.recommendationProductsList[index].sale?.saleDescription ?? '',
                                         isPesach: state.recommendationProductsList[index].isPesach,
                                         numberOfUnits: state.recommendationProductsList[index].numberOfUnit.toString(),
                                         lowStock: state.recommendationProductsList[index].lowStock.toString(),
                                         productStock:  state.recommendationProductsList[index].productStock.toString(),
-                                        productImage: state.recommendationProductsList[index].mainImage ,
-                                        productName: state.recommendationProductsList[index].productName ,
+                                        productImage: state.recommendationProductsList[index].mainImage ?? '',
+                                        productName: state.recommendationProductsList[index].productName ?? '',
                                         price: double.parse(state.recommendationProductsList[index].productPrice.toString()),
                                         onButtonTap: () {
                                           showProductDetails(
                                               context: context,
                                               productId: state
                                                   .recommendationProductsList[index]
-                                                  .id ,
+                                                  .id ??'',
                                               productStock: state.recommendationProductsList[index].productStock.toString(),
                                               productListIndex: 1
 

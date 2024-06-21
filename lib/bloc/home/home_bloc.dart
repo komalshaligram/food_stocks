@@ -68,6 +68,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (preferences.getGuestUser()) {}
       else {
+        debugPrint('id_______${preferences.getUserId()}');
         if (event is _getPreferencesDataEvent) {
           debugPrint(
               'getUserImageUrl ${preferences.getUserImageUrl()}');
@@ -88,6 +89,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           ));
         }
         else if (event is _GetCartCountEvent) {
+          debugPrint('id_______${preferences.getUserId()}');
           try {
             final res = await DioClient(event.context).post(
                 '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
@@ -372,26 +374,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             debugPrint('sale response____${response}');
 
             if (response.status == 200) {
-              List<ProductSale> saleProductsList =
-                  response.data.toList(growable: true);
-              debugPrint('sale Products = ${saleProductsList.length}');
-              debugPrint('sale Products = ${response.data.length}');
+              List<ProductSale>? saleProductsList =
+                  response.data?.toList(growable: true);
+              //debugPrint('sale Products = ${saleProductsList?.length}');
+              debugPrint('sale Products = ${response.data?.length}');
              List< List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               List<ProductStockModel>stockList = [];
               /*ProductStockModel barcodeStock = productStockList.removeLast();*/
-              stockList.addAll(response.data.map(
+              stockList.addAll(response.data?.map(
                       (saleProduct) =>
                       ProductStockModel(
-                          maxQty: saleProduct.sale.isSale ? int.parse(saleProduct.sale.saleMaxQuantity) : -1,
-                          productId: saleProduct.id ,
+                          maxQty: (saleProduct.sale?.isSale ?? false) ? int.parse(saleProduct.sale?.saleMaxQuantity ?? '0') : -1,
+                          productId: saleProduct.id ?? '',
                         stock: (saleProduct.productStock.toString())
                       )) ??
                   []);
               productStockList[3].addAll(stockList);
 
               emit(state.copyWith(
-                  productSalesList: response.data ,
+                  productSalesList: response.data ?? [] ,
                   productStockList: productStockList,
                   isShimmering: false));
             } else {
@@ -1008,7 +1010,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               stockList.addAll(response.data?.map(
                       (recommendationProduct) =>
                       ProductStockModel(
-                        maxQty: recommendationProduct.sale.isSale ? int.parse(recommendationProduct.sale.saleMaxQuantity) : -1,
+                        maxQty: (recommendationProduct.sale?.isSale?? false) ? int.parse(recommendationProduct.sale?.saleMaxQuantity ?? '0') : -1,
                         productId: recommendationProduct.id ?? '',
                           stock: recommendationProduct.productStock.toString(),
                       )) ??

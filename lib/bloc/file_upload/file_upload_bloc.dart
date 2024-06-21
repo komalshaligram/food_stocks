@@ -41,6 +41,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           prefs: await SharedPreferences.getInstance());
 
       if (event is _getFormsListEvent) {
+        debugPrint('id___${preferencesHelper.getUserId()}');
         emit(state.copyWith(
             isLoading: true, isShimmering: true, isUpdate: event.isUpdate , language: preferencesHelper.getAppLanguage()));
         debugPrint('update___${state.isUpdate}');
@@ -154,6 +155,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                           type: SnackBarType.FAILURE);
                     }
                   } on ServerException {
+                    emit(state.copyWith(isShimmering: false));
                   }
                 }
               } else {

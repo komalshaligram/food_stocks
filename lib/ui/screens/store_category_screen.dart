@@ -506,7 +506,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context)),
                                                 itemBuilder: (context, index) =>
                                                     CommonProductSaleItemWidget(
-                                                        isSale: state.planogramProductList[index].product.sale.isSale,
+                                                        isSale: state.planogramProductList[index].product.sale?.isSale,
                                                         isGuestUser: state.isGuestUser,
                                                         height: AppConstants.salesProductItemHeight,
                                                         width: 140,
@@ -518,13 +518,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                             .name ??
                                                             '',
                                                         description: parse(state.planogramProductList[index].product.sale
-                                                            .saleDescription ??
+                                                            ?.saleDescription ??
                                                             '')
                                                             .body
                                                             ?.text ??
                                                             '',
                                                         discountedPrice:
-                                                        double.parse(state.planogramProductList[index].product.sale.salePrice),
+                                                        double.parse(state.planogramProductList[index].product.sale?.salePrice.toString() ?? '0'),
 
                                                         originalPrice:state.planogramProductList[index].product
                                                             .productPrice ??
@@ -575,9 +575,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                   price: state.planogramProductList[index].product?.productPrice ??
                                                       0.0,
                                                   context: context,
-                                                  discountedPrice: double.parse(state.planogramProductList[index].product.sale.salePrice),
-                                                  isFromSale: state.planogramProductList[index].product.sale.isSale,
-                                                  salesDesc: state.planogramProductList[index].product.sale.saleDescription,
+                                                  discountedPrice: double.parse(state.planogramProductList[index].product.sale?.salePrice.toString() ?? '0'),
+                                                  isFromSale: state.planogramProductList[index].product.sale?.isSale,
+                                                  salesDesc: state.planogramProductList[index].product.sale?.saleDescription,
                                                   onButtonTap: () {
                                                     if (!state.isGuestUser) {
                                                       showProductDetails(
