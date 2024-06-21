@@ -9,13 +9,13 @@ part 'recommendation_products_res_model.g.dart';
 class RecommendationProductsResModel with _$RecommendationProductsResModel {
   const factory RecommendationProductsResModel({
     @JsonKey(name: "status")
-    required int status,
+    int? status,
     @JsonKey(name: "message")
-    required String message,
+    String? message,
     @JsonKey(name: "data")
-    required List<RecommendationData> data,
+    List<RecommendationData>? data,
     @JsonKey(name: "metaData")
-    required MetaData metaData,
+    MetaData? metaData,
   }) = _RecommendationProductsResModel;
 
   factory RecommendationProductsResModel.fromJson(Map<String, dynamic> json) => _$RecommendationProductsResModelFromJson(json);
@@ -25,29 +25,29 @@ class RecommendationProductsResModel with _$RecommendationProductsResModel {
 class RecommendationData with _$RecommendationData {
   const factory RecommendationData({
     @JsonKey(name: "_id")
-    required String id,
+    String? id,
     @JsonKey(name: "productStock")
-    required double productStock,
+    double? productStock,
     @JsonKey(name: "totalSale")
-    required int totalSale,
+    int? totalSale,
     @JsonKey(name: "productPrice")
-    required double productPrice,
+    double? productPrice,
     @JsonKey(name: "boxes")
-    required double boxes,
+    double? boxes,
     @JsonKey(name: "lowStock")
-    required String lowStock,
+    String? lowStock,
     @JsonKey(name: "mainImage")
-    required String mainImage,
+    String? mainImage,
     @JsonKey(name: "isPesach")
-    required bool isPesach,
+    bool? isPesach,
     @JsonKey(name: "nmMashlim")
-    required String nmMashlim,
+    String? nmMashlim,
     @JsonKey(name: "productName")
-    required String productName,
+    String? productName,
     @JsonKey(name: "numberOfUnit")
-    required int numberOfUnit,
+    int? numberOfUnit,
     @JsonKey(name: "sale")
-    required Sale sale,
+    Sale? sale,
   }) = _RecommendationData;
 
   factory RecommendationData.fromJson(Map<String, dynamic> json) => _$RecommendationDataFromJson(json);
@@ -57,17 +57,17 @@ class RecommendationData with _$RecommendationData {
 class Sale with _$Sale {
   const factory Sale({
     @JsonKey(name: "isSale")
-    required bool isSale,
+    bool? isSale,
     @JsonKey(name: "salePrice")
-    required String salePrice,
+    String? salePrice,
     @JsonKey(name: "saleFromDate")
-    required String saleFromDate,
+    String? saleFromDate,
     @JsonKey(name: "saleUntilDate")
-    required String saleUntilDate,
+    String? saleUntilDate,
     @JsonKey(name: "saleMaxQuantity")
-    required String saleMaxQuantity,
+    String? saleMaxQuantity,
     @JsonKey(name: "saleDescription")
-    required String saleDescription,
+    String? saleDescription,
   }) = _Sale;
 
   factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
@@ -77,11 +77,11 @@ class Sale with _$Sale {
 class MetaData with _$MetaData {
   const factory MetaData({
     @JsonKey(name: "currentPage")
-    required int currentPage,
+    int? currentPage,
     @JsonKey(name: "totalFilteredCount")
-    required int totalFilteredCount,
+    int? totalFilteredCount,
     @JsonKey(name: "totalFilteredPage")
-    required int totalFilteredPage,
+    int? totalFilteredPage,
   }) = _MetaData;
 
   factory MetaData.fromJson(Map<String, dynamic> json) => _$MetaDataFromJson(json);

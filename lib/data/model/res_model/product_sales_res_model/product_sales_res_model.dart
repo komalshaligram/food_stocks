@@ -13,13 +13,13 @@ String productSalesResModelToJson(ProductSalesResModel data) => json.encode(data
 class ProductSalesResModel with _$ProductSalesResModel {
   const factory ProductSalesResModel({
     @JsonKey(name: "status")
-    required int status,
+    int? status,
     @JsonKey(name: "data")
-    required List<ProductSale> data,
+    List<ProductSale>? data,
     @JsonKey(name: "metaData")
-    required MetaData metaData,
+    MetaData? metaData,
     @JsonKey(name: "message")
-    required String message,
+    String? message,
   }) = _ProductSalesResModel;
 
   factory ProductSalesResModel.fromJson(Map<String, dynamic> json) => _$ProductSalesResModelFromJson(json);
@@ -29,83 +29,83 @@ class ProductSalesResModel with _$ProductSalesResModel {
 class ProductSale with _$ProductSale{
   const factory ProductSale({
     @JsonKey(name: "createdAt")
-    required String createdAt,
+    String? createdAt,
     @JsonKey(name: "isBottle")
-    required bool isBottle,
+    bool? isBottle,
     @JsonKey(name: "itemsWeight")
-    required String itemsWeight,
+    String? itemsWeight,
     @JsonKey(name: "numberOfUnit")
-    required String numberOfUnit,
-    @JsonKey(name: "totalWeightCardboard")
-    required String totalWeightCardboard,
-    @JsonKey(name: "totalWeightSurface")
-    required String totalWeightSurface,
-    @JsonKey(name: "updatedAt")
-    required String updatedAt,
+    String? numberOfUnit,
     @JsonKey(name: "totalWeight")
-    required String totalWeight,
+    String? totalWeight,
+    @JsonKey(name: "totalWeightCardboard")
+    String? totalWeightCardboard,
+    @JsonKey(name: "totalWeightSurface")
+    String? totalWeightSurface,
+    @JsonKey(name: "updatedAt")
+    String? updatedAt,
     @JsonKey(name: "productStock")
-    required double productStock,
+    double? productStock,
     @JsonKey(name: "sale")
-    required Sale sale,
+    Sale? sale,
     @JsonKey(name: "_id")
-    required String id,
+    String? id,
     @JsonKey(name: "productName")
-    required String productName,
+    String? productName,
     @JsonKey(name: "brandId")
-    required String brandId,
+    String? brandId,
     @JsonKey(name: "brandLogo")
-    required String brandLogo,
+    String? brandLogo,
     @JsonKey(name: "manufactureName")
-    required String manufactureName,
+    String? manufactureName,
     @JsonKey(name: "healthAndLifestye")
-    required String healthAndLifestye,
+    String? healthAndLifestye,
     @JsonKey(name: "productDescription")
-    required String productDescription,
+    String? productDescription,
     @JsonKey(name: "component")
-    required String component,
+    String? component,
     @JsonKey(name: "nutritionalValue")
-    required String nutritionalValue,
+    String? nutritionalValue,
     @JsonKey(name: "mainImage")
-    required String mainImage,
+    String? mainImage,
     @JsonKey(name: "images")
-    required List<dynamic> images,
+    List<dynamic>? images,
     @JsonKey(name: "qrcode")
-    required String qrcode,
+    String? qrcode,
     @JsonKey(name: "sku")
-    required String sku,
+    String? sku,
     @JsonKey(name: "isPesach")
-    required bool isPesach,
+    bool? isPesach,
     @JsonKey(name: "nmMashlim")
-    required String nmMashlim,
+    String? nmMashlim,
     @JsonKey(name: "createdBy")
-    required String createdBy,
+    String? createdBy,
     @JsonKey(name: "updatedBy")
-    required String updatedBy,
+    String? updatedBy,
     @JsonKey(name: "categories")
-    required String categories,
+    String? categories,
     @JsonKey(name: "subcategories")
-    required String subcategories,
+    String? subcategories,
     @JsonKey(name: "subCategoryPseachOrder")
-    required int subCategoryPseachOrder,
+    int? subCategoryPseachOrder,
     @JsonKey(name: "manufacturingCountry")
-    required String manufacturingCountry,
+    String? manufacturingCountry,
     @JsonKey(name: "caseType")
-    required String caseType,
+    String? caseType,
     @JsonKey(name: "scale")
-    required String scale,
+    String? scale,
     @JsonKey(name: "status")
-    required String status,
+    String? status,
     @JsonKey(name: "productNumber")
-    required String productNumber,
+    String? productNumber,
     @JsonKey(name: "boxes")
-    required double boxes,
+    double? boxes,
     @JsonKey(name: "productPrice")
-    required double productPrice,
+    double? productPrice,
     @JsonKey(name: "totalSale")
-    required int totalSale,
+    int? totalSale,
     @JsonKey(name: "lowStock")
-    required String lowStock,
+    String? lowStock,
   }) = _ProductSale;
 
   factory ProductSale.fromJson(Map<String, dynamic> json) => _$ProductSaleFromJson(json);
@@ -115,17 +115,17 @@ class ProductSale with _$ProductSale{
 class Sale with _$Sale {
   const factory Sale({
     @JsonKey(name: "isSale")
-    required bool isSale,
+    bool? isSale,
     @JsonKey(name: "salePrice")
-    required String salePrice,
+    String? salePrice,
     @JsonKey(name: "saleFromDate")
-    required String saleFromDate,
+    String? saleFromDate,
     @JsonKey(name: "saleUntilDate")
-    required String saleUntilDate,
+    String? saleUntilDate,
     @JsonKey(name: "saleMaxQuantity")
-    required String saleMaxQuantity,
+    String? saleMaxQuantity,
     @JsonKey(name: "saleDescription")
-    required String saleDescription,
+    String? saleDescription,
   }) = _Sale;
 
   factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
@@ -135,11 +135,11 @@ class Sale with _$Sale {
 class MetaData with _$MetaData {
   const factory MetaData({
     @JsonKey(name: "currentPage")
-    required int currentPage,
+    int? currentPage,
     @JsonKey(name: "totalFilteredCount")
-    required int totalFilteredCount,
+    int? totalFilteredCount,
     @JsonKey(name: "totalFilteredPage")
-    required int totalFilteredPage,
+    int? totalFilteredPage,
   }) = _MetaData;
 
   factory MetaData.fromJson(Map<String, dynamic> json) => _$MetaDataFromJson(json);

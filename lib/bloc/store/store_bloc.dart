@@ -151,20 +151,20 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
           if (response.status == 200) {
             List<ProductSale> saleProductsList =
-                response.data.toList(growable: true) ?? [];
+                response.data?.toList(growable: true) ?? [];
             debugPrint('sale Products = ${saleProductsList.length}');
-            debugPrint('sale Products = ${response.data.length}');
+            debugPrint('sale Products = ${response.data?.length}');
             List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
             ProductStockModel barcodeStock = productStockList.removeLast();
-            productStockList.addAll(response.data.map((saleProduct) =>
+            productStockList.addAll(response.data?.map((saleProduct) =>
                     ProductStockModel(
-                      maxQty: int.parse(saleProduct.sale.saleMaxQuantity),
-                        productId: saleProduct.id,
-                        stock: (saleProduct.productStock.toString()))) );
+                      maxQty: int.parse(saleProduct.sale?.saleMaxQuantity ?? '0'),
+                        productId: saleProduct.id ?? '',
+                        stock: (saleProduct.productStock.toString()))) ?? []);
             productStockList.add(barcodeStock);
             emit(state.copyWith(
-                productSalesList: response.data ,
+                productSalesList: response.data ?? [] ,
                 productStockList: productStockList,
                 isShimmering: false));
           } else {
@@ -203,14 +203,14 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: true);
               ProductStockModel barcodeStock = productStockList.removeLast();
-              productStockList.addAll(response.data.map(
+              productStockList.addAll(response.data?.map(
                       (recommendationProduct) => ProductStockModel(
-                        maxQty: recommendationProduct.sale.isSale ? int.parse(recommendationProduct.sale.saleMaxQuantity) : -1,
-                      productId: recommendationProduct.id,
-                      stock: recommendationProduct.productStock.toString())) );
+                        maxQty: (recommendationProduct.sale?.isSale ?? false) ? int.parse(recommendationProduct.sale?.saleMaxQuantity ?? '') : -1,
+                      productId: recommendationProduct.id ?? '',
+                      stock: recommendationProduct.productStock.toString())) ?? []);
               productStockList.add(barcodeStock);
               emit(state.copyWith(
-                  recommendedProductsList: response.data ,
+                  recommendedProductsList: response.data ?? [],
                   productStockList: productStockList,
                   isShimmering: false));
             } else {
@@ -218,7 +218,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message.toLocalization(),
+                    response.message?.toLocalization() ?? '',
                     event.context),
                 type: SnackBarType.FAILURE,
               );

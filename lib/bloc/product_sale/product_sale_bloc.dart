@@ -72,23 +72,23 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == 200) {
             List<ProductSale> saleProductsList =
-                response.data.toList(growable: true) ?? [];
+                response.data?.toList(growable: true) ?? [];
        /*     saleProductsList
                 .forEach((sale) => debugPrint('p = ${sale.endDate}'));*/
             // saleProductsList.removeWhere(
             //     (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
             debugPrint('sale Products = ${saleProductsList.length}');
-            debugPrint('sale Products = ${response.data.length}');
+            debugPrint('sale Products = ${response.data?.length}');
             List<ProductSale> productSaleList =
                 state.productSalesList.toList(growable: true);
             productSaleList.addAll(response.data ?? []);
             List<ProductStockModel>stockList= [];
             List <List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
-            stockList.addAll(response.data.map((saleProduct) =>
+            stockList.addAll(response.data?.map((saleProduct) =>
                     ProductStockModel(
                         productId: saleProduct.id ?? '',
-                        maxQty: int.parse(saleProduct.sale.saleMaxQuantity) ?? 0,
+                        maxQty: int.parse(saleProduct.sale?.saleMaxQuantity ?? '0') ?? 0,
                         stock:(saleProduct.productStock.toString()   ?? '0'))) ??
                 []);
             productStockList[1].addAll(stockList);
@@ -104,7 +104,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 isShimmering: false));
             emit(state.copyWith(
                 isBottomOfProducts: productSaleList.length ==
-                    (response.metaData.totalFilteredCount ?? 0)
+                    (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
           } else {
@@ -112,7 +112,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message.toLocalization(),
+                    response.message?.toLocalization() ?? '',
                     event.context),
                 type: SnackBarType.FAILURE);
           }

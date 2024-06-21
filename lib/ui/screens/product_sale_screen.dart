@@ -133,23 +133,23 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         itemBuilder: (context, index) {
                                           return buildProductSaleListItem(
                                             productStock: state.productSalesList[index].productStock.toString(),
-                                            isPesach: state.productSalesList[index].isPesach,
-                                            lowStock: state.productSalesList[index].lowStock,
-                                            originalPrice:state.productSalesList[index].productPrice,
+                                            isPesach: state.productSalesList[index].isPesach ?? false,
+                                            lowStock: state.productSalesList[index].lowStock ?? '',
+                                            originalPrice:state.productSalesList[index].productPrice ?? 0.0,
                                             isGuestUser: state.isGuestUser,
                                             index: index,
                                             context: context,
-                                            saleImage: state.productSalesList[index].mainImage,
+                                            saleImage: state.productSalesList[index].mainImage ?? '',
                                             title: state.productSalesList[index].name,
-                                            productName: state.productSalesList[index].productName,
-                                            description: parse(state.productSalesList[index].sale.saleDescription ?? '').body?.text ?? '',
+                                            productName: state.productSalesList[index].productName ?? '',
+                                            description: parse(state.productSalesList[index].sale?.saleDescription ?? '').body?.text ?? '',
 
-                                            discountedPrice: double.parse(state.productSalesList[index].sale.salePrice),
+                                            discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ''),
                                             onButtonTap: () {
                                               if (!state.isGuestUser) {
                                                 showProductDetails(
                                                   context: context,
-                                                  productId: state.productSalesList[index].id,
+                                                  productId: state.productSalesList[index].id ?? '',
                                                    productStock: state.productSalesList[index].toString(),
                                                   productListIndex: 1
                                                 );
@@ -167,21 +167,21 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                         itemBuilder: (context, index) => CommonSaleListView(
                                             context: context,
-                                            discountedPrice: double.parse(state.productSalesList[index].sale.salePrice),
-                                            isFromSale: state.productSalesList[index].sale.isSale,
-                                            salesDesc: state.productSalesList[index].sale.saleDescription,
+                                            discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ''),
+                                            isFromSale: state.productSalesList[index].sale?.isSale?? false,
+                                            salesDesc: state.productSalesList[index].sale?.saleDescription ?? '',
                                             isGuestUser: state.isGuestUser,
                                             isPesach: state.productSalesList[index].isPesach,
                                             numberOfUnits: state.productSalesList[index].numberOfUnit.toString(),
                                             lowStock: state.productSalesList[index].lowStock.toString(),
                                             productStock: state.productSalesList[index].productStock.toString(),
-                                            productImage: state.productSalesList[index].mainImage ,
-                                            productName: state.productSalesList[index].productName ,
+                                            productImage: state.productSalesList[index].mainImage ?? '' ,
+                                            productName: state.productSalesList[index].productName ?? '' ,
                                             price: double.parse(state.productSalesList[index].productPrice.toString()),
                                             onButtonTap: () {
                                               showProductDetails(
                                                 context: context,
-                                                productId: state.productSalesList[index].id,
+                                                productId: state.productSalesList[index].id ??'',
                                                 productStock: state.productSalesList[index].toString(),
                                                 productListIndex: 1
                                               );

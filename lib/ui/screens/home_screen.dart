@@ -49,7 +49,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc()
-          ..add(HomeEvent.userApproveEvent(context: context))
+       ..add(HomeEvent.userApproveEvent(context: context))
         ..add(HomeEvent.generalSettings(context: context))
         ..add(HomeEvent.getPreferencesDataEvent())
         ..add(HomeEvent.getCartCountEvent(context: context))
@@ -474,30 +474,26 @@ class HomeScreenWidget extends StatelessWidget {
                                             itemBuilder:
                                                 (context, index) {
                                               return CommonProductSaleItemWidget(
-                                                  isSale: state.productSalesList[index].sale.isSale,
+                                                  isSale: state.productSalesList[index].sale?.isSale,
                                                   isGuestUser: state.isGuestUser,
                                                   height: AppConstants.salesProductItemHeight,
                                                   width: 140,
-                                                  productName: state.productSalesList[index].productName,
-                                                  saleImage: state
-                                                      .productSalesList[
-                                                  index]
-                                                      .mainImage,
+                                                  productName: state.productSalesList[index].productName ?? '',
+                                                  saleImage: state.productSalesList[index].mainImage ?? '',
                                                   title: state
                                                       .productSalesList[
                                                   index]
                                                       .name ,
                                                   description: parse(state
                                                       .productSalesList[
-                                                  index].sale
-                                                      .saleDescription )
+                                                  index].sale?.saleDescription )
                                                       .body
                                                       ?.text ??
                                                       '',
                                                   discountedPrice:
                                                   double.parse(state
                                                       .productSalesList[
-                                                  index].sale.salePrice),
+                                                  index].sale?.salePrice ?? ""),
 
                                                   originalPrice:state
                                                       .productSalesList[
@@ -509,7 +505,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                   lowStock: state
                                                       .productSalesList[
                                                   index]
-                                                      .lowStock,
+                                                      .lowStock ?? '',
                                                   isPesach: state
                                                       .productSalesList[
                                                   index]
@@ -521,10 +517,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                       showProductDetails(
                                                           productListIndex: 3,
                                                           context: context,
-                                                          productId: state
-                                                              .productSalesList[
-                                                          index]
-                                                              .id,
+                                                          productId: state.productSalesList[index].id ?? '',
                                                           productStock: state.productSalesList[index].productStock.toString()
                                                       );
                                                     }
@@ -575,30 +568,27 @@ class HomeScreenWidget extends StatelessWidget {
                                                   AppConstants.padding_5),
                                               itemBuilder: (context, index) =>
                                                CommonProductSaleItemWidget(
-                                             isSale: state.recommendedProductsList[index].sale.isSale,
+                                             isSale: state.recommendedProductsList[index].sale?.isSale,
                                               isGuestUser: state.isGuestUser,
                                               height: AppConstants.salesProductItemHeight,
                                               width: 140,
                                               productName: state.recommendedProductsList[index].productName??'',
                                               saleImage: state
-                                                  .recommendedProductsList[
-                                              index]
-                                                  .mainImage ,
+                                                  .recommendedProductsList[index].mainImage ?? '',
                                               title: state
                                                   .recommendedProductsList[
                                               index]
                                                   .name ,
                                               description: parse(state
                                                   .recommendedProductsList[
-                                              index].sale
-                                                  .saleDescription )
+                                              index].sale?.saleDescription )
                                                   .body
                                                   ?.text ??
                                                   '',
                                               discountedPrice:
                                               double.parse(state
                                                   .recommendedProductsList[
-                                              index].sale.salePrice),
+                                              index].sale?.salePrice ?? '0'),
 
                                               originalPrice:state
                                                   .recommendedProductsList[
@@ -610,7 +600,7 @@ class HomeScreenWidget extends StatelessWidget {
                                               lowStock: state
                                                   .recommendedProductsList[
                                               index]
-                                                  .lowStock,
+                                                  .lowStock ?? '',
                                               isPesach: state
                                                   .recommendedProductsList[
                                               index]
@@ -621,10 +611,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 if(!state.isGuestUser){
                                                   showProductDetails(
                                                     context: context,
-                                                    productId: state
-                                                        .recommendedProductsList[
-                                                    index]
-                                                        .id ,
+                                                    productId: state.recommendedProductsList[index].id ?? '',
                                                     productStock:(state
                                                         .recommendedProductsList[
                                                     index]

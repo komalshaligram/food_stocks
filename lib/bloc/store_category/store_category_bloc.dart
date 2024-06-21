@@ -1267,8 +1267,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
           debugPrint('getAllProduct_____$res');
           GetPlanogramProductModel response = GetPlanogramProductModel.fromJson(res);
-          debugPrint('getSubCategoriesProduct response_____${response}');
-          debugPrint('getSubCategoriesProduct response count_____${response.metaData?.totalFilteredCount}');
+         // debugPrint('getSubCategoriesProduct response_____${response}');
+         // debugPrint('getSubCategoriesProduct response count_____${response.metaData?.totalFilteredCount}');
 
           if(response.status == 200){
             List<List<ProductStockModel>> productStockList =
