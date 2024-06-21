@@ -91,7 +91,6 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
               onGenerateRoute: AppRouting.generateRoute,
             ),
         );
-
       },
     );
   }
