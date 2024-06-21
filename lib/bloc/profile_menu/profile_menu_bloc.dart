@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart';
 import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/services/locale_provider.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/utils/app_utils.dart';
@@ -214,6 +215,32 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             }
           }
 
+
+        }
+
+        else if(event is _userApproveEvent){
+          try {
+            debugPrint('clientId_____${preferences.getUserId()}');
+            final res = await DioClient(event.context).post(
+                '${AppUrls.verifyClientUrl}',
+                data: {AppStrings.clientIdString:preferences.getUserId()}
+            );
+            VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+            debugPrint('verifyClient res_____$response');
+            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+            if (response.status == 200) {
+              if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
+                Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+              }
+              else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
+                Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
+              }
+
+            }
+          } on ServerException {}
+          catch (e) {
+            debugPrint('catch____$e');
+          }
 
         }
       }

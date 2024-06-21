@@ -20,5 +20,8 @@ class ProfileMenuEvent with _$ProfileMenuEvent {
   const factory ProfileMenuEvent.getPermissionList(
       {required BuildContext context}) = _getPermissionList;
 
+  const factory ProfileMenuEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
+
 
 }

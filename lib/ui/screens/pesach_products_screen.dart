@@ -13,7 +13,6 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_products_screen_shimmer_widget.dart';
@@ -21,7 +20,6 @@ import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -29,13 +27,15 @@ import '../utils/themes/app_styles.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
-import '../widget/common_product_list_widget.dart';
 import '../widget/common_product_sale_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
+import '../widget/common_sale_listview.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/confetti.dart';
+import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
+import '../widget/search_item_widget.dart';
 import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
 
 class PesachProductsRoute {
@@ -53,7 +53,8 @@ class PesachProductsScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => PesachProductsBloc()
         ..add(PesachProductsEvent.getSupplierProductsListEvent(
-            context: context, searchType: args?[AppStrings.searchType] ?? '')),
+            context: context, searchType: args?[AppStrings.searchType] ?? ''))
+        ..add(PesachProductsEvent.userApproveEvent(context: context)),
       child: PesachProductsScreenWidget(),
     );
   }
@@ -66,7 +67,9 @@ class PesachProductsScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     PesachProductsBloc bloc = context.read<PesachProductsBloc>();
     return BlocListener<PesachProductsBloc, PesachProductsState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+
+      },
       child: BlocBuilder<PesachProductsBloc, PesachProductsState>(
         builder: (context, state) {
           return Scaffold(
@@ -310,60 +313,6 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                               }
 
                                             });
-                                    /*    return CommonProductItemWidget(
-                                          isPesach: state.productList[index].isPesach,
-                                            lowStock: state
-                                                .productList[index]
-                                                .lowStock
-                                                .toString(),
-                                            imageHeight:
-                                            getScreenHeight(context) >= 1000
-                                                ? getScreenHeight(context) *
-                                                0.17
-                                                : 70,
-                                            imageWidth:
-                                            getScreenWidth(context) >= 700
-                                                ? getScreenWidth(context) *
-                                                100
-                                                : 70,
-                                            isGuestUser: state
-                                                .isGuestUser,
-                                            productStock: state
-                                                .productList[
-                                            index]
-                                                .productStock.toString(),
-                                            productImage:
-                                            state.productList[index].mainImage ??
-                                                '',
-                                            productName:
-                                            state.productList[index].productName ??
-                                                '',
-                                            totalSaleCount: 0,
-                                            price: double.parse(state
-                                                .productList[index]
-                                                .productPrice
-                                                .toString()),
-                                            onButtonTap: () {
-                                              if (!state
-                                                  .isGuestUser) {
-                                                showProductDetails(
-                                                  productListIndex: 1,
-                                                  context:
-                                                  context,
-                                                  productId: state.productList[index].id?? '',
-                                                  productStock: state
-                                                      .productList[
-                                                  index]
-                                                      .productStock.toString(),
-                                                );
-                                              } else {
-                                                Navigator.pushNamed(
-                                                    context,
-                                                    RouteDefine
-                                                        .connectScreen
-                                                        .name);
-                                              }
-                                            });*/
                                       })
                                       : ListView.builder(
                                     itemCount:
@@ -375,8 +324,13 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                         horizontal:
                                         AppConstants.padding_5),
                                     itemBuilder: (context, index) =>
-                                        CommonProductListWidget(
-                                          isPesach: state.productList[index].isPesach,
+                                        CommonSaleListView(
+                                          isFromSale: state.productList[index]
+                                              .sale?.isSale,
+                                          salesDesc: state.productList[index]
+                                              .sale?.saleDescription,
+                                          isPesach: state.productList[index]
+                                              .isPesach,
                                           lowStock: state
                                               .productList[index]
                                               .lowStock
@@ -408,7 +362,9 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                               showProductDetails(
                                                 productListIndex: 1,
                                                 context: context,
-                                                productId: state.productList[index].id?? '',
+                                                productId: state
+                                                    .productList[index].id ??
+                                                    '',
                                                 productStock: state
                                                     .productList[index]
                                                     .productStock
@@ -422,7 +378,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                       .name);
                                             }
                                           },
-                                          totalSaleCount: 0,
+                                          discountedPrice:  double.parse(state.productList[index]
+                                              .sale?.salePrice ?? '0' ), context: context,
                                         ),
                                   ),
                                 ],
@@ -488,7 +445,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                         itemCount: state.searchList.length,
                         shrinkWrap: true,
                         itemBuilder: (listViewContext, index) {
-                          return _buildSearchItem(
+                          return SearchItemWidget(
                               salePrice: state.searchList[index].salePrice,
                               saleDesc: state.searchList[index].salesDesc,
                             isPesach: state.searchList[index].isPesach,
@@ -856,10 +813,10 @@ class PesachProductsScreenWidget extends StatelessWidget {
             maxChildSize: 1 -
                 (MediaQuery.of(context).viewPadding.top /
                     getScreenHeight(context)*0.2),
-            minChildSize:  productStock == '0' ? 0.9 :  1 -
+            minChildSize:  productStock == '0' || productStock == '0.0'? 0.9 :  1 -
                 (MediaQuery.of(context).viewPadding.top /
                     getScreenHeight(context)*0.2),
-            initialChildSize:  productStock == '0' ? 0.9 :  1 -
+            initialChildSize:  productStock == '0'|| productStock == '0.0' ? 0.9 :  1 -
                 (MediaQuery.of(context).viewPadding.top /
                     getScreenHeight(context)*0.2),
             builder: (BuildContext context1, ScrollController scrollController) {
@@ -879,25 +836,18 @@ class PesachProductsScreenWidget extends StatelessWidget {
                       child: state.isProductLoading
                           ? ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
-                          ? Center(
-                        child: Text(
-                            AppLocalizations.of(context)!.no_product,
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.normalFont,
-                              color: AppColors.redColor,
-                              fontWeight: FontWeight.w500,
-                            )),
-                      )
+                          ? NoDataBottomSheet(dialogContext: context)
                           : SingleChildScrollView(
                         controller:  ModalScrollController.of(context),
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
-                              salePrice: double.parse(state.productDetails.first.sale.salePrice),
+                              productDetails: state.productDetails,
+                             /* salePrice: double.parse(state.productDetails.first.sale.salePrice),
                               maxQty: state.productDetails.first.sale.saleMaxQuantity,
                               endDate: state.productDetails.first.sale.saleUntilDate,
                               startDate: state.productDetails.first.sale.saleFromDate,
-                              isSaleOn: state.productDetails.first.sale.isSale,
+                              isSaleOn: state.productDetails.first.sale.isSale,*/
                               isSubUserAddToBasket: state.isSubUserAddToBasket,
                               totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
                                   .productStockList[state.productListIndex][
@@ -905,13 +855,13 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                   .quantity),
                               bottleTax: state.bottleDeposit,
                               isBottle:state.productDetails.first.isBottle??false,
-                              nmMashlim: state.productDetails.first.nmMashlim??'',
+                            /*  nmMashlim: state.productDetails.first.nmMashlim??'',
                               isPesach: state.productDetails.first.isPesach??false,
                               lowStock: state.productDetails.first
                                   .supplierSales.first.lowStock
                                   .toString(),
                               qrCode:
-                              state.productDetails.first.qrcode ,
+                              state.productDetails.first.qrcode ,*/
                               addToOrderTap: () {
                                 context
                                     .read<PesachProductsBloc>()
@@ -998,9 +948,11 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                 image.imageUrl ?? '') ??
                                     []
                               ],
-                              productPerUnit: state.productDetails
-                                  .first.numberOfUnit,
+
                               productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
+                               /*  productPerUnit: state.productDetails
+                                  .first.numberOfUnit,
+
                               productName: state.productDetails.first
                                   .productName,
 
@@ -1010,7 +962,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                   .sale.saleDescription)
                                   .body
                                   ?.text ??
-                                  '',
+                                  '',*/
                               productPrice: state
                                   .productStockList[state.productListIndex][state
                                   .productStockUpdateIndex]
@@ -1022,18 +974,18 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                   (state.productDetails.first
                                       .numberOfUnit),
 
-                              productWeight: state.productDetails
+                             /* productWeight: state.productDetails
                                   .first.itemsWeight
-                                  .toDouble(),
+                                  .toDouble(),*/
                               productStock: (state
                                   .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .stock.toString()),
                               isRTL: context.rtl,
-                              isSupplierAvailable:
+                            /*  isSupplierAvailable:
                               state.productSupplierList.isEmpty
                                   ? false
-                                  : true,
+                                  : true,*/
                               scrollController: scrollController,
                               productQuantity: state
                                   .productStockList[state.productListIndex][
@@ -1178,276 +1130,5 @@ class PesachProductsScreenWidget extends StatelessWidget {
               Navigator.pop(context);
             },
             buttonTitle: "${AppLocalizations.of(context)!.ok}"));
-  }
-
-  Widget _buildSearchItem({
-    required String lowStock,
-    required BuildContext context,
-    required String searchName,
-    required String searchImage,
-    required SearchTypes searchType,
-    required bool isShowSearchLabel,
-    required bool isMoreResults,
-    required void Function() onTap,
-    required void Function() onSeeAllTap,
-    bool? isLastItem,
-    required String productStock,
-    bool isGuestUser = false,
-    required int numberOfUnits,
-    required double priceOfBox,
-    required bool isPesach,
-    required double salePrice,
-    required String saleDesc
-  }) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        isShowSearchLabel
-            ? Padding(
-          padding: const EdgeInsets.only(
-              left: AppConstants.padding_20,
-              right: AppConstants.padding_20,
-              top: AppConstants.padding_15,
-              bottom: AppConstants.padding_5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                searchType == SearchTypes.category
-                    ? AppLocalizations.of(context)!.categories
-                    : searchType == SearchTypes.subCategory
-                    ? AppLocalizations.of(context)!.sub_categories
-                    : searchType == SearchTypes.company
-                    ? AppLocalizations.of(context)!.companies
-                    : searchType == SearchTypes.sale
-                    ? AppLocalizations.of(context)!.sales
-                    : searchType == SearchTypes.supplier
-                    ? AppLocalizations.of(context)!
-                    .suppliers
-                    : AppLocalizations.of(context)!
-                    .products,
-                style: AppStyles.rkBoldTextStyle(
-                    size: AppConstants.smallFont,
-                    color: AppColors.blackColor,
-                    fontWeight: FontWeight.w500),
-              ),
-
-              isMoreResults
-                  ? GestureDetector(
-                onTap: onSeeAllTap,
-                child: Text(
-                  AppLocalizations.of(context)!.see_all,
-                  style: AppStyles.rkBoldTextStyle(
-                      size: AppConstants.font_14,
-                      color: AppColors.mainColor),
-                ),
-              )
-                  : 0.width,
-            ],
-          ),
-        )
-            : 0.width,
-        InkWell(
-          onTap: onTap,
-          child: Container(
-            height: (productStock) != '0' || lowStock.isEmpty ? isPesach?130: 110 : isPesach?130: 110,
-            decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                border: Border(
-                    bottom: (isLastItem ?? false)
-                        ? BorderSide.none
-                        : BorderSide(
-                        color: AppColors.borderColor.withOpacity(0.5),
-                        width: 1))),
-            padding: EdgeInsets.only(
-                top: AppConstants.padding_5,
-                left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
-                right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
-                bottom: AppConstants.padding_5),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  height: 70,
-                  width: 50,
-                  child: Image.network(
-                    '${AppUrls.baseFileUrl}$searchImage',
-                    fit: BoxFit.scaleDown,
-                    height: 60,
-                    width: 50,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return Container(
-                            height: 60,
-                            width: 50,
-                            child: CupertinoActivityIndicator())
-                        ;
-                      }
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return searchType == SearchTypes.subCategory
-                          ? Image.asset(AppImagePath.imageNotAvailable5,
-                          height: 60, width: 50, fit: BoxFit.cover)
-                          : SvgPicture.asset(
-                        AppImagePath.splashLogo,
-                        fit: BoxFit.scaleDown,
-                        width: 60,
-                        height: 50,
-                      );
-                    },
-                  ),
-                ),
-                10.width,
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: getScreenWidth(context) /1.5,
-                      child: Text(
-                        searchName,
-                        style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.blackColor,
-                        ),
-                        maxLines: 3,
-                        overflow: TextOverflow.visible,
-                      ),
-                    ),
-                    Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 200,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
-                                AppLocalizations.of(context)!
-                                    .out_of_stock1,
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.redColor,
-                                    fontWeight: FontWeight.w400),
-                              ) : Text(lowStock,
-                                  style: AppStyles.rkBoldTextStyle(
-                                      size: AppConstants.font_12,
-                                      color: AppColors.orangeColor,
-                                      fontWeight: FontWeight.w400)
-                              ),
-                              numberOfUnits != 0 ? Text(
-                                '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.blackColor,
-                                    fontWeight: FontWeight.w400),
-                              ) : 0.width,
-                              numberOfUnits != 0 && priceOfBox != 0.0 ?
-                              salePrice!=0.0 ?   Text.rich(TextSpan(
-                                text: '${AppLocalizations
-                                    .of(context)
-                                    ?.price_par_box} ',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.blackColor),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: '${AppLocalizations
-                                        .of(context)
-                                        ?.currency}${(priceOfBox *
-                                        (numberOfUnits)).toStringAsFixed(
-                                        2)} ',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.font_12,
-                                        color: AppColors.blackColor).copyWith(
-                                        decoration: TextDecoration.lineThrough),
-                                  ),
-                                  TextSpan(
-                                    text: ' ${AppLocalizations
-                                        .of(context)
-                                        ?.currency}${(salePrice *
-                                        (numberOfUnits)).toStringAsFixed(
-                                        2)}',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.font_12,
-                                        color: AppColors.redColor),
-                                  ),
-                                ],
-                              ),) :Text(
-                                '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.blueColor,
-                                    fontWeight: FontWeight.w400),): 0.width
-                            ],
-                          ),
-                        ),
-                        salePrice!=0.0? Container(
-                          child: Column(
-                            children: [
-                              Text(
-                                '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.blueColor,
-                                    fontWeight: FontWeight.w400).copyWith(decoration: TextDecoration.lineThrough),
-                              ),
-                              Text(
-                                '${AppLocalizations.of(context)!.currency}${salePrice.toString()}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.redColor,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ],
-                          ),
-                        ):
-                        priceOfBox != 0.0 ? Container(
-                          width: 60,
-                          child: Text(
-                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
-                            style: AppStyles.rkBoldTextStyle(
-                                size: AppConstants.font_12,
-                                color: AppColors.blueColor,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ) : 0.width,
-                      ],
-                    ),
-                    3.height,
-                    isPesach?
-                    isPesachLabelShow(isPesach,context)
-                        :0.height,
-                    saleDesc.isNotEmpty?
-                    Container(
-                      width:getScreenWidth(context)/1.5,
-                      padding: EdgeInsets.all(3),
-                      margin: EdgeInsets.only(top:5),
-                      decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
-                      child: Center(
-                        child: Text(
-                          "${parse(saleDesc).body?.text}",
-                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor,),
-                          maxLines: 3,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    )
-                        :0.height
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }

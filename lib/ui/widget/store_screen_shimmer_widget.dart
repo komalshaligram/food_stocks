@@ -25,54 +25,12 @@ class StoreScreenShimmerWidget extends StatelessWidget {
             5.height,
             PesachBannerShimmerWidget(),
             5.height,
-            // SizedBox(
-            //   width: getScreenWidth(context),
-            //   height: 110,
-            //   child: ListView.builder(
-            //     itemCount: 10,
-            //     shrinkWrap: true,
-            //     scrollDirection: Axis.horizontal,
-            //     padding:
-            //         EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-            //     itemBuilder: (context, index) {
-            //       return buildCategoryListItem();
-            //     },
-            //   ),
-            // ),
             buildListTitles(),
             buildListItems(context),
             buildListTitles(),
             buildListItems(context, height: 120),
-            // SizedBox(
-            //   width: getScreenWidth(context),
-            //   height: 190,
-            //   child: ListView.builder(
-            //     itemCount: 6,
-            //     shrinkWrap: true,
-            //     scrollDirection: Axis.horizontal,
-            //     padding:
-            //         EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-            //     itemBuilder: (context, index) {
-            //       return buildProductSaleListItem();
-            //     },
-            //   ),
-            // ),
             buildListTitles(),
             buildListItems(context, height: 120),
-            // SizedBox(
-            //   width: getScreenWidth(context),
-            //   height: 190,
-            //   child: ListView.builder(
-            //     itemCount: 6,
-            //     shrinkWrap: true,
-            //     scrollDirection: Axis.horizontal,
-            //     padding:
-            //         EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-            //     itemBuilder: (context, index) {
-            //       return buildProductSaleListItem();
-            //     },
-            //   ),
-            // ),
             90.height,
           ],
         ),
@@ -92,16 +50,6 @@ class StoreScreenShimmerWidget extends StatelessWidget {
           ),
           color: AppColors.whiteColor,
         ),
-        // child: ListView.builder(
-        //   itemCount: 6,
-        //   shrinkWrap: true,
-        //   scrollDirection: Axis.horizontal,
-        //   padding:
-        //       EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-        //   itemBuilder: (context, index) {
-        //     return buildCategoryListItem();
-        //   },
-        // ),
       ),
     );
   }

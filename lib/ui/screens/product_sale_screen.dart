@@ -42,7 +42,8 @@ class ProductSaleScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => ProductSaleBloc()
         ..add(ProductSaleEvent.setSearchEvent(search: args?[AppStrings.searchString] ?? ''))
-        ..add(ProductSaleEvent.getProductSalesListEvent(context: context)),
+        ..add(ProductSaleEvent.getProductSalesListEvent(context: context))
+      ..add(ProductSaleEvent.userApproveEvent(context: context)),
       child: ProductSaleScreenWidget(saleProductId: args?[AppStrings.companyIdString] ?? ''),
     );
   }
@@ -132,23 +133,23 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         itemBuilder: (context, index) {
                                           return buildProductSaleListItem(
                                             productStock: state.productSalesList[index].productStock.toString(),
-                                            isPesach: state.productSalesList[index].isPesach,
-                                            lowStock: state.productSalesList[index].lowStock,
-                                            originalPrice:state.productSalesList[index].productPrice,
+                                            isPesach: state.productSalesList[index].isPesach ?? false,
+                                            lowStock: state.productSalesList[index].lowStock ?? '',
+                                            originalPrice:state.productSalesList[index].productPrice ?? 0.0,
                                             isGuestUser: state.isGuestUser,
                                             index: index,
                                             context: context,
-                                            saleImage: state.productSalesList[index].mainImage,
+                                            saleImage: state.productSalesList[index].mainImage ?? '',
                                             title: state.productSalesList[index].name,
-                                            productName: state.productSalesList[index].productName,
-                                            description: parse(state.productSalesList[index].sale.saleDescription ?? '').body?.text ?? '',
+                                            productName: state.productSalesList[index].productName ?? '',
+                                            description: parse(state.productSalesList[index].sale?.saleDescription ?? '').body?.text ?? '',
 
-                                            discountedPrice: double.parse(state.productSalesList[index].sale.salePrice),
+                                            discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ''),
                                             onButtonTap: () {
                                               if (!state.isGuestUser) {
                                                 showProductDetails(
                                                   context: context,
-                                                  productId: state.productSalesList[index].id,
+                                                  productId: state.productSalesList[index].id ?? '',
                                                    productStock: state.productSalesList[index].toString(),
                                                   productListIndex: 1
                                                 );
@@ -166,21 +167,21 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                         itemBuilder: (context, index) => CommonSaleListView(
                                             context: context,
-                                            discountedPrice: double.parse(state.productSalesList[index].sale.salePrice),
-                                            isFromSale: state.productSalesList[index].sale.isSale,
-                                            salesDesc: state.productSalesList[index].sale.saleDescription,
+                                            discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ''),
+                                            isFromSale: state.productSalesList[index].sale?.isSale?? false,
+                                            salesDesc: state.productSalesList[index].sale?.saleDescription ?? '',
                                             isGuestUser: state.isGuestUser,
                                             isPesach: state.productSalesList[index].isPesach,
                                             numberOfUnits: state.productSalesList[index].numberOfUnit.toString(),
                                             lowStock: state.productSalesList[index].lowStock.toString(),
                                             productStock: state.productSalesList[index].productStock.toString(),
-                                            productImage: state.productSalesList[index].mainImage ,
-                                            productName: state.productSalesList[index].productName ,
+                                            productImage: state.productSalesList[index].mainImage ?? '' ,
+                                            productName: state.productSalesList[index].productName ?? '' ,
                                             price: double.parse(state.productSalesList[index].productPrice.toString()),
                                             onButtonTap: () {
                                               showProductDetails(
                                                 context: context,
-                                                productId: state.productSalesList[index].id,
+                                                productId: state.productSalesList[index].id ??'',
                                                 productStock: state.productSalesList[index].toString(),
                                                 productListIndex: 1
                                               );
@@ -260,8 +261,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 child: DraggableScrollableSheet(
                   expand: true,
                   maxChildSize: 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
-                  minChildSize: productStock == '0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
-                  initialChildSize: productStock == '0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
+                  minChildSize: productStock == '0' ||productStock == '0.0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
+                  initialChildSize: productStock == '0'||productStock == '0.0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
                   builder: (BuildContext context1, ScrollController scrollController) {
                     return Container(
                       decoration: BoxDecoration(
@@ -279,19 +280,20 @@ class ProductSaleScreenWidget extends StatelessWidget {
                               child: Column(
                                 children: [
                                   CommonProductDetailsWidget(
-                                    salePrice: double.parse(state.productDetails.first.sale.salePrice),
+                                    productDetails: state.productDetails,
+                              /*      salePrice: double.parse(state.productDetails.first.sale.salePrice),
                                     maxQty: state.productDetails.first.sale.saleMaxQuantity,
                                     endDate: state.productDetails.first.sale.saleUntilDate,
                                     startDate: state.productDetails.first.sale.saleFromDate,
-                                    isSaleOn: state.productDetails.first.sale.isSale,
+                                    isSaleOn: state.productDetails.first.sale.isSale,*/
                                     isSubUserAddToBasket: state.isSubUserAddToBasket,
                                     bottleTax: state.bottleDeposit,
                                     totalBottleDeposit: (state.bottleDeposit * state.productDetails.first.numberOfUnit!.toDouble() * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
                                     isBottle: state.productDetails.first.isBottle ,
-                                    nmMashlim: state.productDetails.first.nmMashlim ,
+                                    /*nmMashlim: state.productDetails.first.nmMashlim ,
                                     isPesach: state.productDetails.first.isPesach ,
                                     lowStock: state.productDetails.first.supplierSales.first.lowStock.toString() ?? '',
-                                    qrCode: state.productDetails.first.qrcode ,
+                                    qrCode: state.productDetails.first.qrcode ,*/
                                     isLoading: state.isLoading,
 
                                     addToOrderTap: () {
@@ -349,9 +351,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     onPageChanged: (index, p1) {
                                       context.read<ProductSaleBloc>().add(ProductSaleEvent.updateImageIndexEvent(index: index));
                                     },
-                                    productImages: [state.productDetails.first.mainImage , ...state.productDetails.first.images.map((image) => image.imageUrl ?? '') ?? []],
-                                    productPerUnit: state.productDetails.first.numberOfUnit ,
                                     productUnitPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
+
+                                    productImages: [state.productDetails.first.mainImage , ...state.productDetails.first.images.map((image) => image.imageUrl ?? '') ?? []],
+                                   /* productPerUnit: state.productDetails.first.numberOfUnit ,
                                     productName: state.productDetails.first.productName,
                                     productSaleDescription: parse(state
                                         .productDetails
@@ -360,15 +363,15 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         '')
                                         .body
                                         ?.text ??
-                                        '',
+                                        '',*/
                                     productPrice:state.productDetails.first.sale.isSale?
                                     double.parse(state.productDetails.first.sale.salePrice) * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit)
                                         :
                                     state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 0),
-                                    productWeight: state.productDetails.first.itemsWeight.toDouble() ?? 0.0,
+                                  //  productWeight: state.productDetails.first.itemsWeight.toDouble() ?? 0.0,
                                     productStock: state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString(),
                                     isRTL: context.rtl,
-                                    isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
+                                  //  isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                                     scrollController: scrollController,
                                     productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                     onQuantityChanged: (quantity) {

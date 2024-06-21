@@ -35,10 +35,13 @@ import '../../data/model/res_model/product_categories_res_model/product_categori
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../routes/app_routes.dart';
 
 part 'store_category_event.dart';
 
@@ -50,7 +53,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-  int _maxQty = -1;
   String isSubCategoryString = '';
   String categoryId = '';
   String parentCategoryId = '';
@@ -385,7 +387,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-        _maxQty = -1;
+
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -407,6 +409,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             ///1 for planogram above sub cat.
             ///2 for planogram above grid/list products.
             ///3 for grid/list products.
+            if(response.product.isNotEmpty){
+
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             int planoGramIndex  = event.planoGramIndex;
@@ -454,7 +458,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     _isProductInCart = true;
                     _cartProductId = cartProduct.cartProductId ?? '';
                     _productQuantity = cartProduct.totalQuantity ?? 0;
-                    _maxQty = cartProduct.sale.saleMaxQuantity;
                     return;
                   }
                 });
@@ -576,14 +579,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 int supplierSaleIndex = -1;
                 double cheapestPrice = supplierList.first.basePrice;
                 supplierList.forEach(
-                        (supplier) => supplier.supplierSales.forEach((sale) {
-                      if (sale.salePrice < cheapestPrice) {
-                        cheapestPrice = sale.salePrice;
-                        supplierIndex = supplierList.indexOf(supplier);
-                        supplierSaleIndex =
-                            supplier.supplierSales.indexOf(sale);
-                      }
-                    }));
+                        (supplier) =>
+                        supplier.supplierSales.forEach((sale) {
+                          if (sale.salePrice < cheapestPrice) {
+                            cheapestPrice = sale.salePrice;
+                            supplierIndex = supplierList.indexOf(supplier);
+                            supplierSaleIndex =
+                                supplier.supplierSales.indexOf(sale);
+                          }
+                        }));
                 debugPrint('cheapest = $cheapestPrice');
                 supplierList.forEach((supplier) {
                   if (supplier.basePrice < cheapestPrice) {
@@ -603,7 +607,13 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     supplierSaleIndex: supplierSaleIndex));
               }
             }
+
+            }
+            else{
+              emit(state.copyWith(isProductLoading: false));
+            }
           } else {
+            emit(state.copyWith(isProductLoading: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -1257,8 +1267,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
           debugPrint('getAllProduct_____$res');
           GetPlanogramProductModel response = GetPlanogramProductModel.fromJson(res);
-          debugPrint('getSubCategoriesProduct response_____${response}');
-          debugPrint('getSubCategoriesProduct response count_____${response.metaData?.totalFilteredCount}');
+         // debugPrint('getSubCategoriesProduct response_____${response}');
+         // debugPrint('getSubCategoriesProduct response count_____${response.metaData?.totalFilteredCount}');
 
           if(response.status == 200){
             List<List<ProductStockModel>> productStockList =
@@ -1363,7 +1373,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         emit(state.copyWith(relatedProductList: []));
       }
       else  if(event is _getPermissionList){
-        if(preferences.getSubUser()){
+        if(preferences.getSubUser() ){
           try {
             final res = await DioClient(event.context).get(
                 path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
@@ -1408,6 +1418,38 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
 
 
+      }
+
+      else if(event is _userApproveEvent){
+        if(!preferences.getGuestUser()) {
+          try {
+            debugPrint('clientId_____${preferences.getUserId()}');
+            final res = await DioClient(event.context).post(
+                '${AppUrls.verifyClientUrl}',
+                data: {AppStrings.clientIdString: preferences.getUserId()}
+            );
+            VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+            debugPrint('verifyClient res_____$response');
+            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls
+                .verifyClientUrl}');
+            if (response.status == 200) {
+              if (!(response.data?.isFilledForms ?? false) ||
+                  !(response.data?.isRegisterForm ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.formDataScreen.name);
+              }
+              else if (!(response.data?.isUploadedFiles ?? false) &&
+                  (response.data?.isRegisterForm ?? false) &&
+                  (response.data?.isFilledForms ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.fileUploadScreen.name);
+              }
+            }
+          } on ServerException {}
+          catch (e) {
+            debugPrint('catch____$e');
+          }
+        }
       }
 
     });

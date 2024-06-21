@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/req_model/update_cart/update_cart_req_model.dart';
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
@@ -38,11 +39,13 @@ import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/model/res_model/wallet_record_res/wallet_record_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
@@ -65,6 +68,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (preferences.getGuestUser()) {}
       else {
+        debugPrint('id_______${preferences.getUserId()}');
         if (event is _getPreferencesDataEvent) {
           debugPrint(
               'getUserImageUrl ${preferences.getUserImageUrl()}');
@@ -85,6 +89,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           ));
         }
         else if (event is _GetCartCountEvent) {
+          debugPrint('id_______${preferences.getUserId()}');
           try {
             final res = await DioClient(event.context).post(
                 '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
@@ -147,6 +152,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               //2 related product.
               //3 sales product.
 
+              if(response.product.isNotEmpty){
+
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               int productListIndex  = event.productListIndex;
@@ -155,14 +162,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               int productStockUpdateIndex = 0;
               if(event.isBarcode ){
                 productStockUpdateIndex = 0;
-                debugPrint('responseproductid____${response.product?.first.id}');
+                debugPrint('responseproductid____${response.product.first.id}');
                 productStockList[0][0] =productStockList[0][0].copyWith(
                     quantity: _productQuantity,
-                 //  maxQty: _maxQty,
                     maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity):-1,
-                    productId: response.product?.first.id ?? '' ,
-                    stock: (response.product?.first.supplierSales.first.productStock.toString() ?? "0") ,
-                    totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
+                    productId: response.product.first.id ,
+                    stock: (response.product.first.supplierSales.first.productStock.toString()) ,
+                    totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() )
                 );
               }
               else{
@@ -189,9 +195,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         [state.productStockUpdateIndex].productId
                     ) {
                       _isProductInCart = true;
-                      _cartProductId = cartProduct.cartProductId ?? '';
-                      _productQuantity = cartProduct.totalQuantity ?? 0;
-                      //_maxQty = cartProduct.sale.saleMaxQuantity??0;
+                      _cartProductId = cartProduct.cartProductId ;
+                      _productQuantity = cartProduct.totalQuantity ;
                       return;
                     }
                   });
@@ -337,7 +342,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       supplierSaleIndex: supplierSaleIndex));
                 }
               }
-            } else {
+            }
+            else{
+                emit(state.copyWith(isProductLoading: false));
+              }
+            }
+              else {
+              emit(state.copyWith(isProductLoading: false));
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -348,7 +359,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
           } on ServerException {
             Navigator.pop(event.context);
-            // emit(state.copyWith(isProductLoading: false));
+             emit(state.copyWith(isProductLoading: false));
           }
         }
         else if (event is _GetProductSalesListEvent) {
@@ -363,26 +374,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             debugPrint('sale response____${response}');
 
             if (response.status == 200) {
-              List<ProductSale> saleProductsList =
-                  response.data.toList(growable: true);
-              debugPrint('sale Products = ${saleProductsList.length}');
-              debugPrint('sale Products = ${response.data.length}');
+              List<ProductSale>? saleProductsList =
+                  response.data?.toList(growable: true);
+              //debugPrint('sale Products = ${saleProductsList?.length}');
+              debugPrint('sale Products = ${response.data?.length}');
              List< List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               List<ProductStockModel>stockList = [];
               /*ProductStockModel barcodeStock = productStockList.removeLast();*/
-              stockList.addAll(response.data.map(
+              stockList.addAll(response.data?.map(
                       (saleProduct) =>
                       ProductStockModel(
-                          maxQty: saleProduct.sale.isSale ? int.parse(saleProduct.sale.saleMaxQuantity) : -1,
-                          productId: saleProduct.id ,
+                          maxQty: (saleProduct.sale?.isSale ?? false) ? int.parse(saleProduct.sale?.saleMaxQuantity ?? '0') : -1,
+                          productId: saleProduct.id ?? '',
                         stock: (saleProduct.productStock.toString())
                       )) ??
                   []);
               productStockList[3].addAll(stockList);
 
               emit(state.copyWith(
-                  productSalesList: response.data ,
+                  productSalesList: response.data ?? [] ,
                   productStockList: productStockList,
                   isShimmering: false));
             } else {
@@ -960,9 +971,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   ),
                 );
               }
-
               preferences.setEmailId(userEmailId: response.data?.clients?.first
                   .email ?? '');
+              String? phoneNumber = await Smartlook.instance.user.properties.getString("User phone number");
+              if(phoneNumber == '' || phoneNumber == null) {
+                Smartlook.instance.user.setIdentifier(preferences.getUserId());
+                Smartlook.instance.user.setEmail(preferences.getEmailId());
+                Smartlook.instance.user.setName(preferences.getUserName());
+                Smartlook.instance.user.properties.putString('User business name' ,value:preferences.getBusinessName());
+                Smartlook.instance.user.properties.putString('User phone number' ,value:preferences.getPhoneNumber());
+              }
 
             } else {
 
@@ -992,7 +1010,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               stockList.addAll(response.data?.map(
                       (recommendationProduct) =>
                       ProductStockModel(
-                        maxQty: recommendationProduct.sale.isSale ? int.parse(recommendationProduct.sale.saleMaxQuantity) : -1,
+                        maxQty: (recommendationProduct.sale?.isSale?? false) ? int.parse(recommendationProduct.sale?.saleMaxQuantity ?? '0') : -1,
                         productId: recommendationProduct.id ?? '',
                           stock: recommendationProduct.productStock.toString(),
                       )) ??
@@ -1378,6 +1396,32 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         }
 
+
+        }
+
+        else if(event is _userApproveEvent){
+          try {
+            debugPrint('clientId_____${preferences.getUserId()}');
+            final res = await DioClient(event.context).post(
+              '${AppUrls.verifyClientUrl}',
+                data: {AppStrings.clientIdString:preferences.getUserId()}
+            );
+            VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+            debugPrint('verifyClient res_____$response');
+            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+            if (response.status == 200) {
+              if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
+                Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+              }
+              else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
+                Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
+              }
+
+            }
+          } on ServerException {}
+          catch (e) {
+            debugPrint('catch____$e');
+          }
 
         }
       }

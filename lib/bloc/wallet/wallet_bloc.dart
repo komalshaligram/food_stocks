@@ -23,9 +23,11 @@ import '../../data/model/res_model/export_wallet_res/export_wallet_transactions_
 import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
 import '../../data/model/res_model/total_expense_res/total_expense_res_model.dart'
     as expense;
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/model/res_model/wallet_record_res/wallet_record_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import '../bottom_nav/bottom_nav_bloc.dart';
@@ -421,6 +423,30 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             }
           }
 
+
+        }
+        else if(event is _userApproveEvent){
+          try {
+            debugPrint('clientId_____${preferencesHelper.getUserId()}');
+            final res = await DioClient(event.context).post(
+                '${AppUrls.verifyClientUrl}',
+                data: {AppStrings.clientIdString:preferencesHelper.getUserId()}
+            );
+            VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+            debugPrint('verifyClient res_____$response');
+            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+            if (response.status == 200) {
+              if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
+                Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+              }
+              else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
+                Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
+              }
+            }
+          } on ServerException {}
+          catch (e) {
+            debugPrint('catch____$e');
+          }
 
         }
       }

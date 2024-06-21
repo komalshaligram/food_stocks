@@ -67,9 +67,7 @@ class BasketState with _$BasketState {
      isSubUserAddToBasket: false,
      isSubUserCanCreateOrder: false,
      isAccountPermissionShimmering: false,
-
-
-
+     
 );
 }
 

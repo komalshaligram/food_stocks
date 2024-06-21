@@ -12,7 +12,9 @@ import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/file_upload_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/file_upload/file_upload_bloc.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
@@ -62,12 +64,14 @@ class FileUploadScreenWidget extends StatelessWidget {
         builder: (context, state) {
           debugPrint('formsAndFilesList___${state.formsAndFilesList}');
           return WillPopScope(
-            onWillPop: () {
-              // if (state.isDownloading) {
-              //   return Future.value(false);
-              // } else {
-              return Future.value(true);
-              // }
+            onWillPop: () async {
+              SharedPreferencesHelper preferencesHelper =
+              SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+              if(!preferencesHelper.getUserLoggedIn() || state.isUpdate){
+                return Future.value(true);
+              }else{
+                return Future.value(false);
+              }
             },
             child: Scaffold(
               backgroundColor: AppColors.whiteColor,
@@ -86,8 +90,12 @@ class FileUploadScreenWidget extends StatelessWidget {
                           color: AppColors.blackColor)),
                 ),
                 leading: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
+                    onTap: () async {
+                      SharedPreferencesHelper preferencesHelper =
+                      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+                      if(!preferencesHelper.getUserLoggedIn() || state.isUpdate){
+                        Navigator.pop(context);
+                      }
                     },
                     child: Icon(
                       Icons.arrow_back_ios,

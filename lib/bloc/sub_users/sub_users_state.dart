@@ -12,6 +12,7 @@ class SubUsersState with _$SubUsersState{
     required bool isPop,
 
 
+
   }) = _SubUsersState;
 
   factory SubUsersState.initial() => SubUsersState(
@@ -22,6 +23,7 @@ class SubUsersState with _$SubUsersState{
     subUserList: [],
     refreshController: RefreshController(),
     isPop: false,
+    
 
   );
 }

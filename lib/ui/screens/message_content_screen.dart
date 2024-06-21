@@ -7,7 +7,9 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/message_content/message_content_bloc.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../../main.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
@@ -16,8 +18,9 @@ import '../utils/themes/app_styles.dart';
 import '../widget/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:html/parser.dart';
 import '../widget/custom_button_widget.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class MessageContentRoute {
   static Widget get route => MessageContentScreen();
@@ -54,6 +57,12 @@ class MessageContentScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<MessageContentBloc, MessageContentState>(
         builder: (context, state) {
+          print('testmessage__1__${(state.message.message?.body ?? '')
+             }');
+          print('testmessage____${parse(state.message.message?.body ?? '')
+              .body
+              ?.text ??
+              ''}');
           return WillPopScope(
             onWillPop: () {
               Navigator.pop(context, {
@@ -246,41 +255,44 @@ class MessageContentScreenWidget extends StatelessWidget {
                                       ),
                                     ),
                                     5.height,
-                                    Text(
-                                      state.message.message?.title ?? '',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.blackColor,
+                                    Row(
+                                      children: [
+                                        Text(
+                                          state.message.message?.title ?? '',
+                                          style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.smallFont,
+                                              color: AppColors.blackColor,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        5.width,
+                                        Text(
+                                          (state.message.createdAt ?? '').split(" ").first.toString(),
+                                          style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.font_12,
+                                              color: AppColors.blackColor,
                                           fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
                                     ),
+
                                     5.height,
-                                    Text(
-                                      state.message.createdAt ?? '',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_12,
-                                          color: AppColors.textColor),
+                                    Html(
+                                      data: state.message.message?.body ?? '',
+                                      shrinkWrap: true,
                                     ),
-                                    5.height,
-                                    Text(
-                                      parse(state.message.message?.body ?? '')
-                                              .body
-                                              ?.text ??
-                                          '',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_14,
-                                          color: AppColors.blackColor),
-                                    ),
-                                    Text(
-                                      parse(state.message.message?.summary ?? '')
-                                              .body
-                                              ?.text ??
-                                          '',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_14,
-                                          color: AppColors.blackColor),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 6),
+                                      child: Text(
+                                        parse(state.message.message?.summary ?? '')
+                                                .body
+                                                ?.text ??
+                                            '',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.font_14,
+                                            color: AppColors.blackColor),
+                                      ),
                                     ),
                                     10.height,
-
                                   ],
                                 ),
                               ),
@@ -292,10 +304,20 @@ class MessageContentScreenWidget extends StatelessWidget {
                                     .toUpperCase(),
                                 bGColor: AppColors.mainColor,
                                 width: getScreenWidth(context) - 100,
-                                onPressed: (){
-                                  navigationToScreen(id: state.message.message?.navigationId.toString() ?? '',
-                                      mainPage: state.message.message?.mainPage.toString() ?? '',
-                                      subPage: state.message.message?.subPage.toString() ?? '');
+                                onPressed: () async {
+                                  SharedPreferencesHelper preferences = SharedPreferencesHelper(
+                                      prefs: await SharedPreferences.getInstance());
+                                  if(preferences.getSubUser()){
+                                    navigationToScreen(id: state.message.message?.subUserId.toString() ?? '',
+                                        mainPage: state.message.message?.subUserMainPage.toString() ?? '',
+                                        subPage: state.message.message?.subUserSubPage.toString() ?? '');
+                                  }
+                                  else{
+                                    navigationToScreen(id: state.message.message?.navigationId.toString() ?? '',
+                                        mainPage: state.message.message?.mainPage.toString() ?? '',
+                                        subPage: state.message.message?.subPage.toString() ?? '');
+                                  }
+
                                 },
                                 fontColors: AppColors.whiteColor,
                               ) : SizedBox(),
@@ -365,6 +387,11 @@ class MessageContentScreenWidget extends StatelessWidget {
                 AppStrings.companyIdString: id,
                 AppStrings.isSubCategory : 'false',
               });
+        }
+        else if (subPage == 'saleProductScreen') {
+          Navigator.pushNamed(navigatorKey.currentState!.context,
+              RouteDefine.productSaleScreen.name,
+              arguments: {AppStrings.companyIdString: id});
         }
 
       }

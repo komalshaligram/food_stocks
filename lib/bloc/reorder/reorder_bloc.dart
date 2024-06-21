@@ -11,6 +11,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import '../../data/error/exceptions.dart';
+import '../../data/model/filter_model/filter_model.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/req_model/global_search_req_model/global_search_req_model.dart';
@@ -26,10 +27,12 @@ import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.d
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
@@ -164,6 +167,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             //0 for barcode and search
             //1 for company product.
             //2 related product.
+            if(response.product.isNotEmpty){
 
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
@@ -183,9 +187,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               productStockList[0][0] =productStockList[0][0].copyWith(
                   quantity: _productQuantity,
                   maxQty: response.product.first.sale.isSale ?  int.parse(response.product.first.sale.saleMaxQuantity) : -1,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
-                  totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
+                  productId: response.product.first.id ?? '' ,
+                  stock: (response.product.first.supplierSales.first.productStock.toString() ?? "0") ,
+                  totalPrice: double.parse(response.product.first.supplierSales?.first.productPrice.toString() ?? '0')
               );
             }
             else{
@@ -361,25 +365,29 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                     supplierIndex: supplierIndex,
                     context: event.context,
                     supplierSaleIndex: supplierSaleIndex));
-              }
+              }}
+
+            }
+            else{
+              emit(state.copyWith(isProductLoading: false));
             }
           } else {
+            emit(state.copyWith(isProductLoading: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message.toLocalization() ??
-                        response.message!,
+                    response.message.toLocalization(),
                     event.context),
                 type: SnackBarType.FAILURE);
           }
         } on ServerException {
           Navigator.pop(event.context);
           // emit(state.copyWith(isProductLoading: false));
-        } /*catch (e) {
+        } catch (e) {
           debugPrint('bs error = $e');
           // Navigator.pop(event.context);
-        }*/
+        }
       }
 
       else if (event is _IncreaseQuantityOfProduct) {
@@ -601,7 +609,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   : state.productStockList[state.productListIndex][state.productStockUpdateIndex]
                   .productSaleId,
               quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex]
-                  .quantity /*+ _productQuantity*/,
+                  .quantity,
               cartProductId: _cartProductId,
             );
             SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -878,11 +886,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   image: supplier.logo ?? '',
 
                   isPesach: supplier.isPesach??false,
-             /*     salePrice: double.parse(response.data..sale.salePrice.toString()),
-                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
-                      .body
-                      ?.text ??
-                      '',*/
                 ))
                 .toList() ??
                 []);
@@ -908,18 +911,18 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             searchList.addAll(response.data?.supplierProductData
                 ?.map((supplier) =>
                 SearchModel(
-                    searchId: supplier.productId ?? '',
-                    name: supplier.productName ?? '',
+                    searchId: supplier.productId ,
+                    name: supplier.productName ,
                     searchType: SearchTypes.product,
-                    image: supplier.mainImage ?? '',
+                    image: supplier.mainImage ,
                     productStock:
                         supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
                   priceOfBox: double.parse(supplier.productPrice.toString()),
                     lowStock: supplier.lowStock.toString(),
-                  isPesach: supplier.isPesach??false,
+                  isPesach: supplier.isPesach,
                   salePrice: double.parse(supplier.sale.salePrice.toString()),
-                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                  salesDesc:  parse(supplier.sale.saleDescription)
                       .body
                       ?.text ??
                       '',
@@ -1091,6 +1094,172 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           }
         }
 
+
+      }
+      else if (event is _sortingEvent){
+        emit(state.copyWith(sortingField: event.sortField));
+      }
+      else if (event is _filterEvent){
+     emit(state.copyWith(isFilterShimmering: true));
+        List<String>sortingList = state.sortingList.toList(growable: true);
+        sortingList = ['Lowes price to Highest price','Highest price to Lowes price',
+          'A - Z','Z-A'];
+
+        List<FilterModel>filterList = state.filterList.toList(growable: true);
+        filterList = [
+          FilterModel(brandModel: BrandModel (
+              FilterFieldProductList: [
+                FilterProductModel(name: 'מיה' ),
+                FilterProductModel(name: '6fgd' ),
+                FilterProductModel(name: '5fgdf' ),
+                FilterProductModel(name: '9dfgd' ),
+                FilterProductModel(name: '8dfg' ),
+                FilterProductModel(name: '9dfgf' ),
+                FilterProductModel(name: '2eewe' ),
+                FilterProductModel(name: '1gg0' ),
+              ],  filterFieldName: 'brand'),
+          ),
+          FilterModel(brandModel: BrandModel (
+              FilterFieldProductList: [
+                FilterProductModel(name: 'sd',
+                    subCategoriesList: [
+                      SubcategoriesFilterModel( name: 'a'),
+                      SubcategoriesFilterModel( name: 'b'),
+                      SubcategoriesFilterModel( name: 'e'),
+                      SubcategoriesFilterModel( name: 'o'),
+                    ] ),
+                FilterProductModel(name: 'fv' ,
+                    subCategoriesList: [
+                      SubcategoriesFilterModel( name: 'i'),
+                      SubcategoriesFilterModel( name: 'q'),
+                      SubcategoriesFilterModel( name: 'ht'),
+                      SubcategoriesFilterModel( name: 'd'),
+                      SubcategoriesFilterModel( name: 'ere'),
+                      SubcategoriesFilterModel( name: 'ty'),
+                      SubcategoriesFilterModel( name: 'asa'),
+                      SubcategoriesFilterModel( name: 'oyr'),
+                      SubcategoriesFilterModel( name: 'yte'),
+                      SubcategoriesFilterModel( name: 'qwe'),
+                      SubcategoriesFilterModel( name: 'pi'),
+                    ]
+                ),
+                FilterProductModel(name: 'sd',
+                    subCategoriesList: [
+                      SubcategoriesFilterModel( name: 'ou'),
+                      SubcategoriesFilterModel( name: 'edf'),
+                      SubcategoriesFilterModel( name: 'qq'),
+                    ]
+                ),
+                FilterProductModel(name: 'dsf',
+                    subCategoriesList: [
+                      SubcategoriesFilterModel( name: 'dr'),
+                      SubcategoriesFilterModel( name: 'as'),
+                    ]
+                ),
+                FilterProductModel(name: 'retg' ),
+                FilterProductModel(name: 'sdf' ),
+                FilterProductModel(name: 'ktr' ),
+                FilterProductModel(name: 'awrwe' ),
+                FilterProductModel(name: 'cfhyu' ),
+              ],  filterFieldName: 'categories'),
+          ),
+          FilterModel(brandModel: BrandModel (
+              FilterFieldProductList: [
+                FilterProductModel(name: 'sale' ),
+                FilterProductModel(name: 'noSale' ),
+              ],  filterFieldName: 'sale'),
+          ),
+          FilterModel(brandModel: BrandModel (
+              FilterFieldProductList: [
+                FilterProductModel(name: 'pesach' ),
+              ],  filterFieldName: 'pesach'),),
+          FilterModel(brandModel: BrandModel (
+              FilterFieldProductList: [
+                FilterProductModel(name: 'Has stock ' ),
+                FilterProductModel(name: 'Low stock' ),
+                FilterProductModel(name: 'Not in stock' ),
+              ],  filterFieldName: 'stock'),
+          ),
+        ];
+        emit(state.copyWith(filterList: filterList,sortingList: sortingList,sortingField:sortingList.first,isFilterShimmering : false));
+      }
+      else if(event is _selectFilterFieldEvent){
+        List<FilterModel>filterList = state.filterList.toList(growable: true);
+        if(event.subCatIndex != -1){
+          bool? isSelected =  filterList[event.mainIndex].brandModel?.FilterFieldProductList[event.subIndex].subCategoriesList[event.subCatIndex].isSelected;
+          filterList[event.mainIndex].brandModel?.FilterFieldProductList[event.subIndex].subCategoriesList[event.subCatIndex].isSelected = !isSelected!;
+
+        }
+        else{
+          bool? isSelected =  filterList[event.mainIndex].brandModel?.FilterFieldProductList[event.subIndex].isSelected;
+          filterList[event.mainIndex].brandModel?.FilterFieldProductList[event.subIndex].isSelected = !isSelected!;
+        }
+
+        emit(state.copyWith(filterList: filterList,isRefresh: !state.isRefresh));
+      }
+
+      else if(event is _applyFilterEvent){
+        List<FilterModel>filterList = state.filterList.toList(growable: true);
+        filterList.forEach((element) {
+          element.brandModel?.FilterFieldProductList.forEach((element) {
+            if(element.isSelected){
+              print('element____${element.name}');
+            }
+            element.subCategoriesList.forEach((element) {
+              if(element.isSelected){
+                print('element____${element.name}');
+              }
+            });
+          });
+        });
+      }
+
+      else if(event is _clearFilterEvent){
+        List<FilterModel>filterList = state.filterList.toList(growable: true);
+        filterList.forEach((element) {
+          element.brandModel?.FilterFieldProductList.forEach((element) {
+            if(element.isSelected){
+             element.isSelected = false;
+            }
+            element.subCategoriesList.forEach((element) {
+              if(element.isSelected){
+                element.isSelected = false;
+              }
+            });
+          });
+        });
+        emit(state.copyWith(filterList: filterList,isRefresh: !state.isRefresh));
+      }
+
+      else if(event is _expansionChangeEvent){
+        List<FilterModel>filterList = state.filterList.toList(growable: true);
+        bool? isExpansion = filterList[event.mainIndex].brandModel?.FilterFieldProductList[event.subIndex].isExpansion;
+        filterList[event.mainIndex].brandModel?.FilterFieldProductList[event.subIndex].isExpansion = !isExpansion!;
+       emit(state.copyWith(filterList : filterList , isRefresh: !state.isRefresh));
+      }
+      else if(event is _userApproveEvent){
+        try {
+          debugPrint('clientId_____${preferences.getUserId()}');
+          final res = await DioClient(event.context).post(
+              '${AppUrls.verifyClientUrl}',
+              data: {AppStrings.clientIdString:preferences.getUserId()}
+          );
+          VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+          debugPrint('verifyClient res_____$response');
+          debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+          if (response.status == 200) {
+            if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
+              Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+            }
+            else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
+              Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
+            }
+
+          }
+        } on ServerException {}
+        catch (e) {
+          debugPrint('catch____$e');
+        }
 
       }
 

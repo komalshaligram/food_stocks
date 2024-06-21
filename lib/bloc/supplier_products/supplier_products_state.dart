@@ -35,6 +35,7 @@ class SupplierProductsState with _$SupplierProductsState {
     required String searchArg,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
+
     
   }) = _SupplierProductsState;
 
@@ -75,6 +76,7 @@ class SupplierProductsState with _$SupplierProductsState {
       searchArg: '',
       bottleDeposit: 0,
     isSubUserAddToBasket: false,
+    
     
 
   );

@@ -10,6 +10,7 @@ import '../../data/model/res_model/terms_condition_res/terms_condition_res_model
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
+import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
@@ -110,7 +111,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
               },
             ),
           );
-          debugPrint('fileUpload url = ${AppUrls.baseUrl}${AppUrls.termsConditionUrl}');
+          debugPrint('termCondition url = ${AppUrls.baseUrl}${AppUrls.termsConditionUrl}');
           debugPrint('termCondition response ____${res}');
 
           TermsConditionResModel response =
@@ -125,7 +126,16 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
                 }
             );
           }
-        } on ServerException {}
+        } on ServerException {
+          emit(state.copyWith(isApiShimmering: false,));
+        }
+        catch(e){
+          CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: e.toString(),
+              type: SnackBarType.FAILURE);
+          emit(state.copyWith(isApiShimmering: false,));
+        }
       }
     }
     );

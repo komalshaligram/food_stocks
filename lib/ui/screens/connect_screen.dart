@@ -91,7 +91,6 @@ class ConnectScreenWidget extends StatelessWidget {
                       child: Text(AppLocalizations.of(context)!.login_as_guest,style: TextStyle(color: AppColors.mainColor,
                       fontSize: AppConstants.mediumFont
                       )
-
                         ,)):0.width
                 ],
               ),

@@ -14,6 +14,7 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/wallet_screen_shimmer_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
+import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -38,7 +39,12 @@ class WalletScreen extends StatelessWidget {
       create: (context) => WalletBloc()
         ..add(WalletEvent.getYearListEvent())
         ..add(WalletEvent.getOrderCountEvent(context: context))
-        ..add(WalletEvent.checkLanguage()),
+        ..add(WalletEvent.checkLanguage())
+        ..add(WalletEvent.getAllWalletTransactionEvent(
+          context: context,
+          endDate:  DateTime.utc(DateTime.now().year, DateTime.now().month + 1).subtract(const Duration(days: 1)),
+          startDate: DateTime.utc(DateTime.now().year, DateTime.now().month, 1),
+        )),
       child: WalletScreenWidget(),
     );
   }
@@ -95,6 +101,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
 
     return BlocListener<WalletBloc, WalletState>(
       listener: (context, state)  {
+
         if(state.isExportComplete){
           showDialog(
             context:context,
@@ -116,6 +123,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
 
+
       },
       child: BlocBuilder<WalletBloc, WalletState>(
         builder: (context, state) {
@@ -124,6 +132,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
+               bloc.add(WalletEvent.userApproveEvent(context: context));
                 if ((state.walletTransactionsList.length) == 0) {
                   bloc.add(WalletEvent.getAllWalletTransactionEvent(
                     context: context,

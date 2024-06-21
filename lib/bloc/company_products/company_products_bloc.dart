@@ -28,6 +28,7 @@ import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.d
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -169,7 +170,7 @@ class CompanyProductsBloc
             //0 for barcode and search
             //1 for company product.
             //2 related product.
-
+            if(response.product.isNotEmpty){
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             int productListIndex  = event.productListIndex;
@@ -184,13 +185,13 @@ class CompanyProductsBloc
 
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
-               debugPrint('responseproductid____${response.product?.first.id}');
+               debugPrint('responseproductid____${response.product.first.id}');
               productStockList[0][0] =productStockList[0][0].copyWith(
                   quantity: _productQuantity,
                   maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
-                  totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
+                  productId: response.product.first.id ,
+                  stock: (response.product.first.supplierSales.first.productStock.toString() ) ,
+                  totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString())
               );
             }
             else{
@@ -228,8 +229,8 @@ class CompanyProductsBloc
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            if(response.product != null){
-              add(CompanyProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+            if(response.product.isNotEmpty){
+              add(CompanyProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product.first.id ));
             }
             if ( (event.isBarcode )) {
 
@@ -237,8 +238,8 @@ class CompanyProductsBloc
                   .copyWith(
                   quantity: _productQuantity,
                   maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
+                  productId: response.product.first.id  ,
+                  stock: (response.product.first.supplierSales.first.productStock.toString() )
               );
 
               emit(state.copyWith(productStockList: productStockList));
@@ -249,14 +250,14 @@ class CompanyProductsBloc
             List<ProductSupplierModel> supplierList = [];
 
             supplierList.addAll(response.product.first.supplierSales
-                ?.map((supplier) => ProductSupplierModel(
-              supplierId: supplier.supplierId ?? '',
-              companyName: supplier.supplierCompanyName ?? '',
+                .map((supplier) => ProductSupplierModel(
+              supplierId: supplier.supplierId ,
+              companyName: supplier.supplierCompanyName ,
               basePrice:
-              double.parse(supplier.productPrice ?? '0.0'),
+              double.parse(supplier.productPrice ),
               quantity: _productQuantity,
               stock: supplier.productStock.toString(),
-              selectedIndex: (supplier.supplierId ?? '') ==
+              selectedIndex: (supplier.supplierId) ==
                   state
                       .productStockList[productListIndex]
                   [productStockUpdateIndex]
@@ -286,8 +287,7 @@ class CompanyProductsBloc
                             .productSaleId,
                     orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                   ) ??
-                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
-                  -1
+                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),)
                   : -1,
               supplierSales: supplier.saleProduct
                   .map((sale) => SupplierSaleModel(
@@ -305,14 +305,11 @@ class CompanyProductsBloc
                       sale.discountPercentage ?? '0.0')))
                   .toList(),
             ))
-                .toList() ??
-                []);
+                .toList());
             supplierList.removeWhere((supplier) => supplier.stock == 0);
             debugPrint(
                 'response list = ${response.product.first.supplierSales.length}');
             debugPrint('supplier list = ${supplierList}');
-            // debugPrint(
-            //     'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
             String note = productStockList.isEmpty
                 ? ''
                 : productStockList.indexOf(state.productStockList.last) ==
@@ -344,14 +341,15 @@ class CompanyProductsBloc
                 int supplierSaleIndex = -1;
                 double cheapestPrice = supplierList.first.basePrice;
                 supplierList.forEach(
-                        (supplier) => supplier.supplierSales.forEach((sale) {
-                      if (sale.salePrice < cheapestPrice) {
-                        cheapestPrice = sale.salePrice;
-                        supplierIndex = supplierList.indexOf(supplier);
-                        supplierSaleIndex =
-                            supplier.supplierSales.indexOf(sale);
-                      }
-                    }));
+                        (supplier) =>
+                        supplier.supplierSales.forEach((sale) {
+                          if (sale.salePrice < cheapestPrice) {
+                            cheapestPrice = sale.salePrice;
+                            supplierIndex = supplierList.indexOf(supplier);
+                            supplierSaleIndex =
+                                supplier.supplierSales.indexOf(sale);
+                          }
+                        }));
                 debugPrint('cheapest = $cheapestPrice');
                 supplierList.forEach((supplier) {
                   if (supplier.basePrice < cheapestPrice) {
@@ -371,13 +369,18 @@ class CompanyProductsBloc
                     supplierSaleIndex: supplierSaleIndex));
               }
             }
+
+            }
+            else{
+              emit(state.copyWith(isProductLoading: false));
+            }
           } else {
+            emit(state.copyWith(isProductLoading: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
+                    response.message.toLocalization(),
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -389,240 +392,7 @@ class CompanyProductsBloc
           // Navigator.pop(event.context);
         }
       }
-      else if (event is _GetProductDetailsEvent) {
-        add(CompanyProductsEvent.RemoveRelatedProductEvent());
-        debugPrint('product details id = ${event.productId}');
-        _isProductInCart = false;
-        _cartProductId = '';
-        _productQuantity = 0;
-        try {
-          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
-          final res = await DioClient(event.context).post(
-              AppUrls.getProductDetailsUrl,
-              data: ProductDetailsReqModel(params: event.productId).toJson());
-
-          ProductDetailsResModel response =
-          ProductDetailsResModel.fromJson(res);
-
-          debugPrint('GetProductDetails_____${response}');
-          if (response.status == 200) {
-            /// 0 planogram
-            ///1 product
-            ///2 barcode
-
-            ///new chanegs
-            ///0 for barcode and search
-            ///1 for planogram above sub cat.
-            ///2 for planogram above grid/list products.
-            ///3 for grid/list products.
-            List<List<ProductStockModel>> productStockList =
-            state.productStockList.toList(growable: true);
-            int productListIndex  = event.productListIndex;
-
-            debugPrint('productStockList___${productStockList[1]}');
-            debugPrint('productStockList___${productStockList[2]}');
-            debugPrint('productStockList___${productStockList[3]}');
-            debugPrint('planoGramIndex___${event.productListIndex}');
-            int productStockUpdateIndex = 0;
-
-            if(event.isBarcode ){
-              productStockUpdateIndex = 0;
-              debugPrint('response productid____${response.product.first.id}');
-              productStockList[0][0] =  productStockList[0][0]
-                  .copyWith(
-                  quantity: _productQuantity,
-                  productId: response.product.first.id ?? '' ,
-                  stock: (response.product.first.supplierSales.first.productStock.toString() ?? "0") ,
-                  totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
-              );
-            }
-            else{
-              productStockUpdateIndex = state.productStockList[productListIndex]
-                  .indexWhere((productStock) =>
-              productStock.productId == event.productId);
-            }
-
-            emit(state.copyWith(productListIndex:productListIndex,productStockUpdateIndex:productStockUpdateIndex));
-            debugPrint('planoGramUpdateIndex___${state.productListIndex}');
-            debugPrint('productStockUpdateIndex___${state.productStockUpdateIndex}');
-            try {
-
-              final res = await DioClient(event.context).post(
-                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferences.getAuthToken()}'
-                  }));
-              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-              if (response.status == 200) {
-                debugPrint('cart before = ${response.data}');
-                response.data?.data?.forEach((cartProduct) {
-                  if (cartProduct.id == event.productId ||
-                      cartProduct.id == state.productStockList[state.productListIndex]
-                      [state.productStockUpdateIndex].productId
-                  ) {
-                    _isProductInCart = true;
-                    _cartProductId = cartProduct.cartProductId ?? '';
-                    _productQuantity = cartProduct.totalQuantity ?? 0;
-                    return;
-                  }
-                });
-                debugPrint(
-                    '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
-              }
-            } on ServerException {}
-            if(response.product.isNotEmpty){
-              add(CompanyProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
-            }
-            if ( (event.isBarcode )) {
-              productStockList[0][0] =  productStockList[0][0]
-                  .copyWith(
-                  quantity: _productQuantity,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
-              );
-              emit(state.copyWith(productStockList: productStockList));
-            }
-
-            List<ProductSupplierModel> supplierList = [];
-            supplierList.addAll(response.product.first.supplierSales.map((supplier) => ProductSupplierModel(
-              maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
-              supplierId: supplier.supplierId ,
-              companyName: supplier.supplierCompanyName ,
-              basePrice:
-              double.parse(supplier.productPrice ),
-              quantity: _productQuantity,
-              stock: supplier.productStock.toString(),
-              selectedIndex: (supplier.supplierId) ==
-                  state
-                      .productStockList[productListIndex]
-                  [productStockUpdateIndex]
-                      .productSupplierIds
-                  ? supplier.saleProduct.indexOf(
-                supplier.saleProduct.firstWhere(
-                      (sale) =>
-                  sale.saleId ==
-                      state
-                          .productStockList[
-                      productListIndex][
-                      productStockUpdateIndex]
-                          .productSaleId,
-                  orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
-                ) ??
-                    SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
-                  -1
-                  ? -2
-                  : supplier.saleProduct.indexOf(
-                supplier.saleProduct.firstWhere(
-                      (sale) =>
-                  sale.saleId ==
-                      state
-                          .productStockList[
-                      productListIndex][
-                      productStockUpdateIndex]
-                          .productSaleId,
-                  orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
-                ) ??
-                    SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
-                  -1
-                  : -1,
-              supplierSales: supplier.saleProduct.map((sale) => SupplierSaleModel(
-                  saleId: sale.saleId ?? '',
-                  saleName: sale.saleName ?? '',
-                  saleDescription:
-                  parse(sale.salesDescription ?? '')
-                      .body
-                      ?.text ??
-                      '',
-                  salePrice: double.parse(
-                      sale.discountedPrice ?? '0.0'),
-                  saleDiscount: double.parse(
-                      sale.discountPercentage ?? '0.0')))
-                  .toList() ??
-                  [],
-            ))
-                .toList() ??
-                []);
-            supplierList.removeWhere((supplier) => supplier.stock == 0);
-            debugPrint(
-                'response list = ${response.product?.first.supplierSales?.length}');
-            debugPrint('supplier list = ${supplierList}');
-
-            String note = productStockList.isEmpty
-                ? ''
-                : productStockList.indexOf(state.productStockList.last) ==
-                productListIndex
-                ? ''
-                : productStockList[productListIndex][0].note;
-            emit(state.copyWith(productStockList: []));
-
-            emit(state.copyWith(
-                bottleDeposit:preferences.getBottleTax(),
-                productDetails: response.product,
-                productStockList: productStockList,
-                productStockUpdateIndex: productStockUpdateIndex,
-                noteController: TextEditingController(text: note),
-                productSupplierList: supplierList,
-                productListIndex: productListIndex,
-                isProductLoading: false));
-            if (supplierList.isNotEmpty) {
-              bool isSupplierSelected = false;
-              supplierList.forEach((supplier) {
-                if (supplier.selectedIndex != -1) {
-                  isSupplierSelected = true;
-                  return;
-                }
-              });
-              debugPrint('isSupplierSelected = $isSupplierSelected');
-              debugPrint('isSupplierSelected = ${state.productListIndex}');
-              if (!isSupplierSelected || state.productListIndex == 0) {
-                int supplierIndex = 0;
-                int supplierSaleIndex = -1;
-                double cheapestPrice = supplierList.first.basePrice;
-                supplierList.forEach(
-                        (supplier) => supplier.supplierSales.forEach((sale) {
-                      if (sale.salePrice < cheapestPrice) {
-                        cheapestPrice = sale.salePrice;
-                        supplierIndex = supplierList.indexOf(supplier);
-                        supplierSaleIndex =
-                            supplier.supplierSales.indexOf(sale);
-                      }
-                    }));
-                debugPrint('cheapest = $cheapestPrice');
-                supplierList.forEach((supplier) {
-                  if (supplier.basePrice < cheapestPrice) {
-                    cheapestPrice = supplier.basePrice;
-                    supplierIndex = supplierList.indexOf(supplier);
-                  }
-                });
-                if (supplierSaleIndex == -1) {
-                  supplierSaleIndex = -2;
-                }
-                debugPrint('cheapest = $cheapestPrice');
-                debugPrint('supplier index = $supplierIndex');
-                debugPrint('supplier sale index = $supplierSaleIndex');
-                add(CompanyProductsEvent.supplierSelectionEvent(
-                    supplierIndex: supplierIndex,
-                    context: event.context,
-                    supplierSaleIndex: supplierSaleIndex));
-              }
-            }
-            }
-           else {
-            Navigator.pop(event.context);
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.FAILURE);
-          }
-        } on ServerException {
-          Navigator.pop(event.context);
-        }
-      }
       else if (event is _IncreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
@@ -679,45 +449,6 @@ class CompanyProductsBloc
           }
         }
       }
-     /* else if (event is _IncreaseQuantityOfProduct) {
-        List<List<ProductStockModel>> productStockList =
-        state.productStockList.toList(growable: false);
-        if (state.productStockUpdateIndex != -1) {
-          if (productStockList[state.productListIndex]
-          [state.productStockUpdateIndex]
-              .quantity <
-              double.parse(productStockList[state.productListIndex]
-              [state.productStockUpdateIndex]
-                  .stock.toString())) {
-            if (productStockList[state.productListIndex]
-            [state.productStockUpdateIndex]
-                .productSupplierIds
-                .isEmpty) {
-
-              return;
-            }
-            productStockList[state.productListIndex]
-            [state.productStockUpdateIndex] =
-                productStockList[state.productListIndex]
-                [state.productStockUpdateIndex].copyWith(
-                    quantity: productStockList[state.productListIndex]
-                    [state.productStockUpdateIndex]
-                        .quantity +
-                        1);
-            debugPrint(
-                'product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
-            emit(state.copyWith(productStockList: []));
-            emit(state.copyWith(productStockList: productStockList));
-          } else {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:
-                "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
-                // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
-                type: SnackBarType.FAILURE);
-          }
-        }
-      }*/
       else if (event is _DecreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
@@ -1197,17 +928,17 @@ class CompanyProductsBloc
             searchList.addAll(response.data?.supplierProductData
                 ?.map((supplier) =>
                 SearchModel(
-                    searchId: supplier.productId ?? '',
-                    name: supplier.productName ?? '',
+                    searchId: supplier.productId ,
+                    name: supplier.productName,
                     searchType: SearchTypes.product,
-                    image: supplier.mainImage ?? '',
+                    image: supplier.mainImage,
                   productStock:  supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
                   lowStock: supplier.lowStock.toString(),
-                  isPesach: supplier.isPesach??false,
+                  isPesach: supplier.isPesach,
                   salePrice: double.parse(supplier.sale.salePrice.toString()),
-                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                  salesDesc:  parse(supplier.sale.saleDescription )
                       .body
                       ?.text ??
                       '',
@@ -1386,7 +1117,37 @@ class CompanyProductsBloc
 
 
       }
-
+      else if(event is _userApproveEvent){
+        if(!preferences.getGuestUser()) {
+          try {
+            debugPrint('clientId_____${preferences.getUserId()}');
+            final res = await DioClient(event.context).post(
+                '${AppUrls.verifyClientUrl}',
+                data: {AppStrings.clientIdString: preferences.getUserId()}
+            );
+            VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+            debugPrint('verifyClient res_____$response');
+            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls
+                .verifyClientUrl}');
+            if (response.status == 200) {
+              if (!(response.data?.isFilledForms ?? false) ||
+                  !(response.data?.isRegisterForm ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.formDataScreen.name);
+              }
+              else if (!(response.data?.isUploadedFiles ?? false) &&
+                  (response.data?.isRegisterForm ?? false) &&
+                  (response.data?.isFilledForms ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.fileUploadScreen.name);
+              }
+            }
+          } on ServerException {}
+          catch (e) {
+            debugPrint('catch____$e');
+          }
+        }
+      }
 
 
     });

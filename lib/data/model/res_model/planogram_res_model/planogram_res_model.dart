@@ -44,7 +44,7 @@ class Planogramproduct with _$Planogramproduct {
     @JsonKey(name: "_id")
     String? id,
     @JsonKey(name: "productStock")
-    int? productStock,
+    double? productStock,
     @JsonKey(name: "totalSale")
     int? totalSale,
     @JsonKey(name: "productPrice")

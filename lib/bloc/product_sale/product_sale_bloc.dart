@@ -23,9 +23,11 @@ import '../../data/model/res_model/product_details_res_model/product_details_res
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
@@ -70,23 +72,23 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == 200) {
             List<ProductSale> saleProductsList =
-                response.data.toList(growable: true) ?? [];
+                response.data?.toList(growable: true) ?? [];
        /*     saleProductsList
                 .forEach((sale) => debugPrint('p = ${sale.endDate}'));*/
             // saleProductsList.removeWhere(
             //     (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
             debugPrint('sale Products = ${saleProductsList.length}');
-            debugPrint('sale Products = ${response.data.length}');
+            debugPrint('sale Products = ${response.data?.length}');
             List<ProductSale> productSaleList =
                 state.productSalesList.toList(growable: true);
             productSaleList.addAll(response.data ?? []);
             List<ProductStockModel>stockList= [];
             List <List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
-            stockList.addAll(response.data.map((saleProduct) =>
+            stockList.addAll(response.data?.map((saleProduct) =>
                     ProductStockModel(
                         productId: saleProduct.id ?? '',
-                        maxQty: int.parse(saleProduct.sale.saleMaxQuantity) ?? 0,
+                        maxQty: int.parse(saleProduct.sale?.saleMaxQuantity ?? '0') ?? 0,
                         stock:(saleProduct.productStock.toString()   ?? '0'))) ??
                 []);
             productStockList[1].addAll(stockList);
@@ -102,7 +104,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 isShimmering: false));
             emit(state.copyWith(
                 isBottomOfProducts: productSaleList.length ==
-                    (response.metaData.totalFilteredCount ?? 0)
+                    (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
           } else {
@@ -110,7 +112,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message.toLocalization(),
+                    response.message?.toLocalization() ?? '',
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -161,6 +163,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             //0 for barcode and search
             //1 for recommendation product.
             //2 related product.
+            if(response.product.isNotEmpty){
 
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
@@ -353,8 +356,14 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                     context: event.context,
                     supplierSaleIndex: supplierSaleIndex));
               }
+            }}
+            else{
+              emit(state.copyWith(isProductLoading: false));
             }
-          } else {
+          }
+
+          else {
+            emit(state.copyWith(isProductLoading: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -366,11 +375,12 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           }
         } on ServerException {
           Navigator.pop(event.context);
-          // emit(state.copyWith(isProductLoading: false));
-        } /*catch (e) {
+           emit(state.copyWith(isProductLoading: false));
+        } catch (e) {
           debugPrint('bs error = $e');
           // Navigator.pop(event.context);
-        }*/
+
+        }
       }
 
       else if (event is _IncreaseQuantityOfProduct) {
@@ -807,6 +817,32 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
       }
       else if(event is _RemoveRelatedProductEvent){
         emit(state.copyWith(relatedProductList: []));
+      }
+
+      else if(event is _userApproveEvent){
+        try {
+          debugPrint('clientId_____${preferences.getUserId()}');
+          final res = await DioClient(event.context).post(
+              '${AppUrls.verifyClientUrl}',
+              data: {AppStrings.clientIdString:preferences.getUserId()}
+          );
+          VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+          debugPrint('verifyClient res_____$response');
+          debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+          if (response.status == 200) {
+            if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
+              Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+            }
+            else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
+              Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
+            }
+
+          }
+        } on ServerException {}
+        catch (e) {
+          debugPrint('catch____$e');
+        }
+
       }
 
     });

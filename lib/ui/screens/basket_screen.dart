@@ -28,6 +28,7 @@ import 'package:photo_view/photo_view.dart';
 import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_product_sale_item_widget.dart';
 import '../widget/custom_dialog.dart';
+import '../widget/no_data_bottom_sheet_widget.dart';
 
 
 class BasketRoute {
@@ -59,12 +60,6 @@ class BasketScreenWidget extends StatelessWidget {
               .add(BottomNavEvent.updateCartCountEvent(context: context));
         }
         if(state.isAccountPermissionShimmering){
-          print('basket_______${state.isAccountPermissionShimmering}');
-
-       /*   if(state.language == AppStrings.englishString){
-            BlocProvider.of<BottomNavBloc>(context)
-                .add(BottomNavEvent.changePage(index: 2,context: context));
-          }*/
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
@@ -86,6 +81,7 @@ class BasketScreenWidget extends StatelessWidget {
             context.read<BasketBloc>().add(BasketEvent.refreshEvent());
           });
         }
+
       },
       child: BlocBuilder<BasketBloc, BasketState>(
         builder: (context, state) {
@@ -95,6 +91,7 @@ class BasketScreenWidget extends StatelessWidget {
               onFocusGained: () {
                 bloc.add(BasketEvent.getPermissionList(context: context));
                 bloc.add(BasketEvent.getAllCartEvent(context: context));
+                bloc.add(BasketEvent.userApproveEvent(context: context));
               },
               child: SafeArea(
                 child: Padding(
@@ -435,7 +432,8 @@ class BasketScreenWidget extends StatelessWidget {
                 showProductDetails(
                     context: context,
                     cartProductId: state.CartItemList.data?.data?[index].id ?? '',
-                  productListIndex: 0
+                  productListIndex: 0,
+                  productStock: state.CartItemList.data?.data?[index].productStock.toString() ?? '0'
                 );
               },
               child: Column(
@@ -759,25 +757,30 @@ class BasketScreenWidget extends StatelessWidget {
           ),
         ));
   }
+
   void showProductDetails({
-  required BuildContext context,
-  required String cartProductId,
+    required BuildContext context,
+    bool isBarcode= false,
+    String productStock = '0',
     int productListIndex = 0,
+    required String cartProductId,
   }) async {
     context.read<BasketBloc>().add(BasketEvent.getProductDetailsEvent(
-      productId: cartProductId,
-      isBarcode: false,
       context: context,
-      productListIndex: productListIndex
+      productId: cartProductId,
+      isBarcode: isBarcode,
+      productListIndex: productListIndex,
+
     ));
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-   //   isScrollControlled: true,
+      expand: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+      ),
       isDismissible: true,
-      clipBehavior: Clip.hardEdge,
-    //  showDragHandle: true,
-     // useSafeArea: true,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       enableDrag: true,
       builder: (context1) {
         return SafeArea(
@@ -800,202 +803,187 @@ class BasketScreenWidget extends StatelessWidget {
                 child: BlocBuilder<BasketBloc, BasketState>(
                   builder: (blocContext, state) {
                     return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(AppConstants.radius_30),
-                            topRight: Radius.circular(AppConstants.radius_30),
-                          ),
-                          color: AppColors.whiteColor,
+                      height: getScreenHeight(context),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(AppConstants.radius_30),
+                          topRight: Radius.circular(AppConstants.radius_30),
                         ),
-                        clipBehavior: Clip.hardEdge,
-
-                        child: state.isProductLoading
-                            ? ProductDetailsShimmerWidget()
-                            : state.productDetails.isEmpty
-                            ? Center(
-                          child: Text(
-                              AppLocalizations.of(context)!.no_product,
-                              style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.normalFont,
-                                color: AppColors.redColor,
-                                fontWeight: FontWeight.w500,
-                              )),
-                        )
-                            : SingleChildScrollView(
-                            controller:  ModalScrollController.of(context),
-                            child: Column(
-                              children: [
-                                CommonProductDetailsWidget(
-                                  salePrice: double.parse(state.productDetails.first.sale.salePrice),
-                                  maxQty: state.productDetails.first.sale.saleMaxQuantity,
-                                  endDate: state.productDetails.first.sale.saleUntilDate,
-                                  startDate: state.productDetails.first.sale.saleFromDate,
-                                  isSaleOn: state.productDetails.first.sale.isSale,
-                                  isSubUserAddToBasket: state.isSubUserAddToBasket,
-                                  totalBottleDeposit: (state.bottleTax* state.productDetails.first.numberOfUnit.toDouble()* state
-                                      .productStockList[state.productListIndex][
-                                  state.productStockUpdateIndex]
-                                      .quantity),
-                                  bottleTax: state.bottleTax,
-                                  isBottle:state.productDetails.first.isBottle,
-                                  nmMashlim: state.productDetails.first.nmMashlim??'',
-                                  isPesach: state.productDetails.first.isPesach,
-                                  lowStock: state.productDetails.first.supplierSales.first.lowStock ?? '',
-                                  qrCode:state.productDetails.first.qrcode ?? '' ,
-                                  addToOrderTap: () {
-                                    context.read<BasketBloc>().add(
-                                        BasketEvent.addToCartProductEvent(
-                                            context: context1,
-                                            productId: cartProductId
-                                        ));
-                                  },
-                                  isLoading: state.isLoading,
-                                  imageOnTap: (){
-                                    showDialog(
-                                      context: context,
-                                      builder: (dialogContext) {
-                                        return SafeArea(
-                                          bottom: false,
-                                          child: Stack(
-                                            children: [
-                                              Container(
-                                                height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
-                                                width: getScreenWidth(context),
-                                                child: GestureDetector(
-                                                  onVerticalDragStart: (dragDetails) {
-                                                    debugPrint('onVerticalDragStart');
-                                                  },
-                                                  onVerticalDragUpdate: (dragDetails) {
-                                                    debugPrint('onVerticalDragUpdate');
-                                                  },
-                                                  onVerticalDragEnd: (endDetails) {
-                                                    debugPrint('onVerticalDragEnd');
-                                                    Navigator.pop(dialogContext);
-                                                  },
-                                                  child: PhotoView(
-                                                    imageProvider: NetworkImage(
-                                                      '${AppUrls.baseFileUrl}${state.productDetails[state.productImageIndex].mainImage}',
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-
-                                              GestureDetector(
-                                                  onTap: (){
-                                                    Navigator.pop(dialogContext);
-                                                  },
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top:10.0),
-                                                    child: Icon(Icons.close,
-                                                      color: Colors.white,
-                                                    ),
-                                                  )),
-                                            ],
-                                          ),
-                                        );
-                                      },);
-                                  },
+                        color: AppColors.whiteColor,
+                      ),
+                      child: state.isProductLoading
+                          ? ProductDetailsShimmerWidget()
+                          : state.productDetails.isEmpty
+                          ? NoDataBottomSheet(dialogContext: context)
+                          : SingleChildScrollView(
+                        controller:  ModalScrollController.of(context),
+                        child: Column(
+                          children: [
+                            CommonProductDetailsWidget(
+                              productDetails: state.productDetails,
+                            /*  salePrice: double.parse(state.productDetails.first.sale.salePrice),
+                              maxQty: state.productDetails.first.sale.saleMaxQuantity,
+                              endDate: state.productDetails.first.sale.saleUntilDate,
+                              startDate: state.productDetails.first.sale.saleFromDate,
+                              isSaleOn: state.productDetails.first.sale.isSale,*/
+                              isSubUserAddToBasket: state.isSubUserAddToBasket,
+                              bottleTax: state.bottleTax,
+                              totalBottleDeposit: (state.bottleTax* state.productDetails.first.numberOfUnit.toDouble()* state
+                                  .productStockList[state.productListIndex][
+                              state.productStockUpdateIndex]
+                                  .quantity),
+                              isBottle:state.productDetails.first.isBottle,
+                              // nmMashlim: state.productDetails.first.nmMashlim,
+                              // isPesach: state.productDetails.first.isPesach,
+                              // lowStock: state.productDetails.first.supplierSales.first.lowStock.toString() ,
+                              // qrCode:state.productDetails.first.qrcode,
+                              addToOrderTap: () {
+                             FocusManager.instance.primaryFocus?.unfocus();
+                                context.read<BasketBloc>().add(
+                                    BasketEvent.addToCartProductEvent(
+                                        context: context1,
+                                        productId: cartProductId,
+                                    ));
+                              },
+                              isLoading: state.isLoading,
+                              imageOnTap: (){
+                                showDialog(
                                   context: context,
-                                  productImageIndex: state.productImageIndex,
-                                  onPageChanged: (index, p1) {
-                                    context.read<BasketBloc>().add(
-                                        BasketEvent.updateImageIndexEvent(
-                                            index: index));
-                                  },
-                                  productImages: [
-                                    state.productDetails.first.mainImage ??
-                                        '',
-                                    ...state.productDetails.first.images
-                                        .map((image) =>
-                                    image.imageUrl ?? '') ??
-                                        []
-                                  ],
-                                  productPerUnit: state.productDetails.first
-                                      .numberOfUnit ?? 0,
-
-                                  productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
-                                  productName: state.productDetails.first
-                                      .productName ??
-                                      '',
-                                  productSaleDescription: parse(state
-                                      .productDetails
-                                      .first
-                                      .sale.saleDescription??
-                                      '')
-                                      .body
-                                      ?.text ??
-                                      '',
-                                  productPrice:state.productDetails.first.sale.isSale?double.parse( state.productDetails.first.sale.salePrice.toString()) *
-                                      state
-                                          .productStockList[state.productListIndex][
-                                      state.productStockUpdateIndex]
-                                          .quantity *
-                                      (state.productDetails.first
-                                          .numberOfUnit):state
-                                      .productStockList[state.productListIndex][
-                                  state.productStockUpdateIndex]
-                                      .totalPrice *
-                                      state
-                                          .productStockList[state.productListIndex][
-                                      state.productStockUpdateIndex]
-                                          .quantity *
-                                      (state.productDetails.first
-                                          .numberOfUnit) ,
-                                  productWeight: state
-                                      .productDetails.first.itemsWeight
-                                      .toDouble(),
-                                  productStock:(state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
-                                  isRTL: context.rtl,
-                                  isSupplierAvailable:
-                                  state.productSupplierList.isEmpty
-                                      ? false
-                                      : true,
-                                  scrollController: scrollController,
-                                  productQuantity:  state
-                                      .productStockList[state.productListIndex][
-                                  state.productStockUpdateIndex]
-                                      .quantity,
-                                  onQuantityChanged: (quantity) {
-                                    context.read<BasketBloc>().add(
-                                        BasketEvent.updateQuantityOfProduct(
-                                            context: context1,
-                                            quantity: quantity));
-                                  },
-                                  onQuantityIncreaseTap: () {
-                                    context.read<BasketBloc>().add(
-                                        BasketEvent.increaseQuantityOfProduct(
-                                            context: context1));
-                                  },
-                                  onQuantityDecreaseTap: () {
-                                    if(state
-                                        .productStockList[state.productListIndex][
-                                    state.productStockUpdateIndex]
-                                        .quantity > 1){
-                                      context.read<BasketBloc>().add(
-                                          BasketEvent.decreaseQuantityOfProduct(
-                                              context: context1));
-                                    }
-                                  },
-                                ),
-                                state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context),
+                                  builder: (dialogContext) {
+                                    return Stack(
+                                      children: [
+                                        Container(
+                                          height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
+                                          width: getScreenWidth(context),
+                                          child: GestureDetector(
+                                            onVerticalDragStart: (dragDetails) {
+                                              debugPrint('onVerticalDragStart');
+                                            },
+                                            onVerticalDragUpdate: (dragDetails) {
+                                              debugPrint('onVerticalDragUpdate');
+                                            },
+                                            onVerticalDragEnd: (endDetails) {
+                                              debugPrint('onVerticalDragEnd');
+                                              Navigator.pop(dialogContext);
+                                            },
+                                            child: PhotoView(
+                                              imageProvider: NetworkImage(
+                                                '${AppUrls.baseFileUrl}${state.productDetails[state.productImageIndex].mainImage}',
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                            onTap: (){
+                                              Navigator.pop(dialogContext);
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top:10.0),
+                                              child: Icon(Icons.close,
+                                                color: Colors.white,
+                                              ),
+                                            )),
+                                      ],
+                                    );
+                                  },);
+                              },
+                              context: context,
+                              productImageIndex: state.productImageIndex,
+                              onPageChanged: (index, p1) {
+                                context.read<BasketBloc>().add(
+                                    BasketEvent.updateImageIndexEvent(
+                                        index: index));
+                              },
+                              productImages: [
+                                state.productDetails.first.mainImage,
+                                ...state.productDetails.first.images.map((image) =>
+                                image.imageUrl ?? '')
                               ],
-                            ))
+                            /*  productPerUnit: state.productDetails.first
+                                  .numberOfUnit ,*/
+                              productUnitPrice: double.parse(state.productDetails.first.supplierSales.first.productPrice.toString()??'0'),
+                            /*  productName: state.productDetails.first
+                                  .productName,
+                              productSaleDescription: parse(state
+                                  .productDetails
+                                  .first
+                                  .sale.saleDescription ??
+                                  '')
+                                  .body
+                                  ?.text ??
+                                  '',*/
+                              productPrice: state.productDetails.first.sale.isSale?
+                              double.parse(state.productDetails.first.sale.salePrice) *
+                                  state.productStockList
+                                  [state.productListIndex][
+                                  state.productStockUpdateIndex]
+                                      .quantity*
+                                  (state.productDetails.first
+                                      .numberOfUnit):state
+                                  .productStockList[state.productListIndex][
+                              state.productStockUpdateIndex]
+                                  .totalPrice *
+                                  state.productStockList
+                                  [state.productListIndex][
+                                  state.productStockUpdateIndex]
+                                      .quantity*
+                                  (state.productDetails.first
+                                      .numberOfUnit) ,
+
+                            /*  productWeight: state
+                                  .productDetails.first.itemsWeight
+                                  .toDouble(),*/
+                              productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
+                              isRTL: context.rtl,
+                              // isSupplierAvailable:
+                              // state.productSupplierList.isEmpty
+                              //     ? false
+                              //     : true,
+                              scrollController: scrollController,
+                              productQuantity:  state
+                                  .productStockList[state.productListIndex][
+                              state.productStockUpdateIndex]
+                                  .quantity,
+                              onQuantityChanged: (quantity) {
+                                context.read<BasketBloc>().add(
+                                    BasketEvent.updateQuantityOfProduct(
+                                        context: context1,
+                                        quantity: quantity));
+                              },
+                              onQuantityIncreaseTap: () {
+                                context.read<BasketBloc>().add(
+                                    BasketEvent.increaseQuantityOfProduct(
+                                        context: context1));
+                              },
+                              onQuantityDecreaseTap: () {
+                                if(state
+                                    .productStockList[state.productListIndex][
+                                state.productStockUpdateIndex]
+                                    .quantity > 1){
+                                  context.read<BasketBloc>().add(
+                                      BasketEvent.decreaseQuantityOfProduct(
+                                          context: context1));
+                                }
+                              },
+                            ),
+                            state.relatedProductList.isEmpty ? 0.height :
+                            relatedProductWidget(context1,state.relatedProductList,context),
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),
               );
             },
-
           ),
         );
       },
     );
   }
 
-  
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context ){
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context,){
     return Column(
-      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -1003,7 +991,7 @@ class BasketScreenWidget extends StatelessWidget {
           alignment:
           context.rtl ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 10),
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: Text(
               AppLocalizations.of(context)!.related_products,
               style: AppStyles.rkRegularTextStyle(
@@ -1016,8 +1004,8 @@ class BasketScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants. salesProductItemHeight,
-          padding: EdgeInsets.only(left: 10,right: 10),
+          height: AppConstants.relatedProductItemHeight,
+          padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -1029,11 +1017,14 @@ class BasketScreenWidget extends StatelessWidget {
                 width: 140,
                 productName: relatedProductList.elementAt(i).productName??'',
                 saleImage: relatedProductList.elementAt(i)
-                    .mainImage,
+                    .mainImage ??
+                    '',
                 title:  relatedProductList.elementAt(i)
-                    .name ,
+                    .name ??
+                    '',
                 description: parse( relatedProductList.elementAt(i).sale
-                    .saleDescription)
+                    .saleDescription ??
+                    '')
                     .body
                     ?.text ??
                     '',
@@ -1041,22 +1032,25 @@ class BasketScreenWidget extends StatelessWidget {
                 double.parse( relatedProductList.elementAt(i).sale.salePrice),
 
                 originalPrice: relatedProductList.elementAt(i)
-                    .productPrice,
+                    .productPrice ??
+                    0 ,
                 productStock: relatedProductList.elementAt(i)
-                    .productStock.toString(),
+                    .productStock.toString()??'0',
                 lowStock: relatedProductList.elementAt(i)
-                    .lowStock,
+                    .lowStock??'',
                 isPesach: relatedProductList.elementAt(i)
                     .isPesach,
+
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
                       context: context,
                       cartProductId: relatedProductList[i].id,
+                      isBarcode: false,
+                      productStock: relatedProductList[i].productStock.toString(),
                       productListIndex: 1
                   );
-                },);
-              },itemCount: relatedProductList.length,),
+                },);},itemCount: relatedProductList.length,),
         )
       ],
     );

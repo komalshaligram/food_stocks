@@ -41,6 +41,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           prefs: await SharedPreferences.getInstance());
 
       if (event is _getFormsListEvent) {
+        debugPrint('id___${preferencesHelper.getUserId()}');
         emit(state.copyWith(
             isLoading: true, isShimmering: true, isUpdate: event.isUpdate , language: preferencesHelper.getAppLanguage()));
         debugPrint('update___${state.isUpdate}');
@@ -154,6 +155,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                           type: SnackBarType.FAILURE);
                     }
                   } on ServerException {
+                    emit(state.copyWith(isShimmering: false));
                   }
                 }
               } else {
@@ -478,15 +480,28 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               }
             } else {
               emit(state.copyWith(isApiLoading: false));
-              Navigator.popUntil(event.context,
+            /*  Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
-                  event.context, RouteDefine.connectScreen.name);
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title:
-                      '${AppLocalizations.of(event.context)!.registered_successfully}',
-                  type: SnackBarType.SUCCESS);
+                  event.context, RouteDefine.connectScreen.name);*/
+              if(preferencesHelper.getUserLoggedIn()){
+                Navigator.popUntil(event.context,
+                        (route) => route.name == RouteDefine.fileUploadScreen.name);
+                Navigator.pushNamed(
+                    event.context, RouteDefine.bottomNavScreen.name);
+              }
+              else{
+                Navigator.popUntil(event.context,
+                        (route) => route.name == RouteDefine.connectScreen.name);
+                Navigator.pushNamed(
+                    event.context, RouteDefine.connectScreen.name);
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title:
+                    '${AppLocalizations.of(event.context)!.registered_successfully}',
+                    type: SnackBarType.SUCCESS);
+              }
+
             }
           } else {
             emit(state.copyWith(isApiLoading: false));

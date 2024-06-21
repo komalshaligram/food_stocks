@@ -43,6 +43,8 @@ import '../../data/model/res_model/recommendation_products_res_model/recommendat
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/suppliers_res_model/suppliers_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -59,7 +61,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-  int _maxQuantity = -1;
+
 
   StoreBloc() : super(StoreState.initial()) {
     on<StoreEvent>((event, emit) async {
@@ -149,21 +151,20 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
           if (response.status == 200) {
             List<ProductSale> saleProductsList =
-                response.data.toList(growable: true) ?? [];
+                response.data?.toList(growable: true) ?? [];
             debugPrint('sale Products = ${saleProductsList.length}');
-            debugPrint('sale Products = ${response.data.length}');
+            debugPrint('sale Products = ${response.data?.length}');
             List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
             ProductStockModel barcodeStock = productStockList.removeLast();
-            productStockList.addAll(response.data.map((saleProduct) =>
+            productStockList.addAll(response.data?.map((saleProduct) =>
                     ProductStockModel(
-                      maxQty: int.parse(saleProduct.sale.saleMaxQuantity),
+                      maxQty: int.parse(saleProduct.sale?.saleMaxQuantity ?? '0'),
                         productId: saleProduct.id ?? '',
-                        stock: (saleProduct.productStock.toString() ?? '0'))) ??
-                []);
+                        stock: (saleProduct.productStock.toString()))) ?? []);
             productStockList.add(barcodeStock);
             emit(state.copyWith(
-                productSalesList: response.data ?? [],
+                productSalesList: response.data ?? [] ,
                 productStockList: productStockList,
                 isShimmering: false));
           } else {
@@ -202,12 +203,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: true);
               ProductStockModel barcodeStock = productStockList.removeLast();
-              productStockList.addAll(response.data.map(
+              productStockList.addAll(response.data?.map(
                       (recommendationProduct) => ProductStockModel(
-                        maxQty: recommendationProduct.sale.isSale ? int.parse(recommendationProduct.sale.saleMaxQuantity) : -1,
+                        maxQty: (recommendationProduct.sale?.isSale ?? false) ? int.parse(recommendationProduct.sale?.saleMaxQuantity ?? '') : -1,
                       productId: recommendationProduct.id ?? '',
-                      stock: recommendationProduct.productStock.toString())) ??
-                  []);
+                      stock: recommendationProduct.productStock.toString())) ?? []);
               productStockList.add(barcodeStock);
               emit(state.copyWith(
                   recommendedProductsList: response.data ?? [],
@@ -218,8 +218,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
+                    response.message?.toLocalization() ?? '',
                     event.context),
                 type: SnackBarType.FAILURE,
               );
@@ -305,7 +304,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-        _maxQuantity =-1;
+
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
           final res = await DioClient(event.context).post(
@@ -314,225 +313,275 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           ProductDetailsResModel response =
               ProductDetailsResModel.fromJson(res);
           if (response.status == 200) {
-            int productStockUpdateIndex = -1;
-
-            if(event.isBarcode ?? false){
-              productStockUpdateIndex = 0;
-            }
-            else{
-              productStockUpdateIndex = state.productStockList.indexWhere(
-                    (productStock) =>
-                productStock.productId == event.productId,);
-            }
-            emit(state.copyWith(productStockUpdateIndex:productStockUpdateIndex));
-            List<ProductStockModel> productStockList =
-            state.productStockList.toList(growable: false);
 
 
-            productStockList[productStockList
-                .indexOf(productStockList.last)] = productStockList[
-            productStockList.indexOf(productStockList.last)]
-                .copyWith(
-              quantity: _productQuantity,
-              maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
-              productId: response.product.first.id ?? '',
-              stock: (response.product.first.supplierSales.first.productStock.toString()),
-              productSaleId: '',
-              productSupplierIds: '',
-                totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
-            );
+            if(response.product.isNotEmpty) {
+              int productStockUpdateIndex = -1;
 
-            emit(state.copyWith(productStockList: productStockList));
-
-
-            try {
-              SharedPreferencesHelper preferences = SharedPreferencesHelper(
-                  prefs: await SharedPreferences.getInstance());
-              final res = await DioClient(event.context).post(
-                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferences.getAuthToken()}'
-                  }));
-              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-              if (response.status == 200) {
-                debugPrint('cart before = ${response.data}');
-                response.data?.data?.forEach((cartProduct) {
-                  if (cartProduct.id ==
-                      state.productStockList[state.productStockUpdateIndex]
-                          .productId ||
-                      cartProduct.id == state.productStockList[state.productStockList.length-1].productId
-                      || cartProduct.id == event.productId) {
-                    _isProductInCart = true;
-                    _cartProductId = cartProduct.cartProductId ?? '';
-                    _productQuantity = cartProduct.totalQuantity ?? 0;
-                    _maxQuantity = cartProduct.sale.saleMaxQuantity;
-                    return;
-                  }
-                });
-                debugPrint(
-                    '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
+              if (event.isBarcode ?? false) {
+                productStockUpdateIndex = 0;
               }
-            } on ServerException {}
-            if(response.product != null){
-              add(StoreEvent.RelatedProductsEvent(context: event.context, productId: response.product.first.id ?? ''));
-            }
-
-            if ( (event.isBarcode ?? false)) {
+              else {
+                productStockUpdateIndex = state.productStockList.indexWhere(
+                      (productStock) =>
+                  productStock.productId == event.productId,);
+              }
+              emit(state.copyWith(
+                  productStockUpdateIndex: productStockUpdateIndex));
               List<ProductStockModel> productStockList =
-                  state.productStockList.toList(growable: false);
+              state.productStockList.toList(growable: false);
+
+
               productStockList[productStockList
                   .indexOf(productStockList.last)] = productStockList[
-                      productStockList.indexOf(productStockList.last)]
+              productStockList.indexOf(productStockList.last)]
                   .copyWith(
-                quantity: _productQuantity,
-                maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity) : -1,
-                productId: response.product.first.id ?? '',
-                stock: (response.product.first.supplierSales.first.productStock.toString() ?? '0'),
-                productSaleId: '',
-                productSupplierIds: '',
-                note: '',
-                isNoteOpen: false,
-
+                  quantity: _productQuantity,
+                  maxQty: response.product.first.sale.isSale ? int.parse(
+                      response.product.first.sale.saleMaxQuantity) : -1,
+                  productId: response.product.first.id ?? '',
+                  stock: (response.product.first.supplierSales.first
+                      .productStock.toString()),
+                  productSaleId: '',
+                  productSupplierIds: '',
+                  totalPrice: double.parse(
+                      response.product.first.supplierSales.first.productPrice
+                          .toString())
               );
 
               emit(state.copyWith(productStockList: productStockList));
-              debugPrint('new index = ${state.productStockList.last}');
-              productStockUpdateIndex =
-                  productStockList.indexOf(productStockList.last);
 
-              debugPrint('barcode stock = ${state.productStockList.last}');
-              debugPrint(
-                  'barcode stock update index = ${state.productStockList.length}');
-              debugPrint(
-                  'barcode stock update index = $productStockUpdateIndex');
-            }
-            debugPrint('product stock update index = $productStockUpdateIndex');
-            debugPrint(
-                'product stock = ${state.productStockList[productStockUpdateIndex].stock}');
-            debugPrint(
-                'supplier list stock = ${response.product.first.supplierSales.map((e) => e.productStock)}');
-            List<ProductSupplierModel> supplierList = [];
-            debugPrint(
-                'supplier id = ${state.productStockList[productStockUpdateIndex].productSupplierIds}');
 
-            supplierList.addAll(response.product.first.supplierSales
-                    .map((supplier) => ProductSupplierModel(
-                          supplierId: supplier.supplierId ?? '',
-                          companyName: supplier.supplierCompanyName ?? '',
-              maxQty:response.product.first.sale.isSale? int.parse(response.product.first.sale.saleMaxQuantity.toString()):-1,
-              basePrice: double.parse(supplier.productPrice ?? '0.0'),
-              stock: supplier.productStock.toString(),
-                          quantity: _productQuantity,
-                          selectedIndex: (supplier.supplierId ?? '') ==
-                                  state
-                                      .productStockList[productStockUpdateIndex]
-                                      .productSupplierIds
-                              ? supplier.saleProduct.indexOf(
-                                          supplier.saleProduct.firstWhere(
-                                                (sale) =>
-                                                    sale.saleId ==
-                                                    state
-                                                        .productStockList[
-                                                            productStockUpdateIndex]
-                                                        .productSaleId,
-                                                orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
-                                              ) ??
-                                              SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
-                                      -1
-                                  ? -2
-                                  : supplier.saleProduct.indexOf(
-                                          supplier.saleProduct.firstWhere(
-                                                (sale) =>
-                                                    sale.saleId ==
-                                                    state
-                                                        .productStockList[
-                                                            productStockUpdateIndex]
-                                                        .productSaleId,
-                                                orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
-                                              ) ??
-                                              SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
-                                      -1
-                              : -1,
-                          supplierSales: supplier.saleProduct
-                                  .map((sale) => SupplierSaleModel(
-                                      saleId: sale.saleId ?? '',
-                                      saleName: sale.saleName ?? '',
-                                      maxQty: sale.saleMaxQuantity,
-                                      saleDescription:
-                                          parse(sale.salesDescription ?? '')
-                                                  .body
-                                                  ?.text ??
-                                              '',
-                                      salePrice: double.parse(
-                                          sale.discountedPrice ?? '0.0'),
-                                      saleDiscount: double.parse(
-                                          sale.discountPercentage ?? '0.0')))
-                                  .toList() ??
-                              [],
-                        ))
-                    .toList() ??
-                []);
-            supplierList.removeWhere((supplier) => supplier.stock == 0);
-            debugPrint(
-                'response list = ${response.product.first.supplierSales.length}');
-            debugPrint('supplier list = ${supplierList.length}');
-            debugPrint(
-                'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
-            String note =
-                state.productStockList.indexOf(state.productStockList.last) ==
-                        productStockUpdateIndex
-                    ? ''
-                    : state.productStockList[productStockUpdateIndex].note;
-            emit(state.copyWith(
-              productStockList: state.productStockList,
-                productDetails: response.product,
-                productStockUpdateIndex: productStockUpdateIndex,
-                noteController: TextEditingController(text: note),
-                productSupplierList: supplierList,
-                isProductLoading: false));
-            if (supplierList.isNotEmpty) {
-              bool isSupplierSelected = false;
-              supplierList.forEach((supplier) {
-                if (supplier.selectedIndex != -1) {
-                  isSupplierSelected = true;
-                  return;
+              try {
+                SharedPreferencesHelper preferences = SharedPreferencesHelper(
+                    prefs: await SharedPreferences.getInstance());
+                final res = await DioClient(event.context).post(
+                    '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+                    options: Options(headers: {
+                      HttpHeaders.authorizationHeader:
+                      'Bearer ${preferences.getAuthToken()}'
+                    }));
+                GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+                if (response.status == 200) {
+                  debugPrint('cart before = ${response.data}');
+                  response.data?.data?.forEach((cartProduct) {
+                    if (cartProduct.id ==
+                        state.productStockList[state.productStockUpdateIndex]
+                            .productId ||
+                        cartProduct.id ==
+                            state.productStockList[state.productStockList
+                                .length - 1].productId
+                        || cartProduct.id == event.productId) {
+                      _isProductInCart = true;
+                      _cartProductId = cartProduct.cartProductId;
+                      _productQuantity = cartProduct.totalQuantity;
+
+                      return;
+                    }
+                  });
+                  debugPrint(
+                      '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
-              });
-              debugPrint('isSupplierSelected = $isSupplierSelected');
-              if (!isSupplierSelected) {
-                int supplierIndex = 0;
-                int supplierSaleIndex = -1;
-                double cheapestPrice = supplierList.first.basePrice;
-                supplierList.forEach(
-                    (supplier) => supplier.supplierSales.forEach((sale) {
-                          if (sale.salePrice < cheapestPrice) {
-                            cheapestPrice = sale.salePrice;
-                            supplierIndex = supplierList.indexOf(supplier);
-                            supplierSaleIndex =
-                                supplier.supplierSales.indexOf(sale);
-                          }
-                        }));
-                debugPrint('cheapest = $cheapestPrice');
+              } on ServerException {}
+              if (response.product.isNotEmpty) {
+                add(StoreEvent.RelatedProductsEvent(context: event.context,
+                    productId: response.product.first.id ?? ''));
+              }
+
+              if ((event.isBarcode ?? false)) {
+                List<ProductStockModel> productStockList =
+                state.productStockList.toList(growable: false);
+                productStockList[productStockList
+                    .indexOf(productStockList.last)] = productStockList[
+                productStockList.indexOf(productStockList.last)]
+                    .copyWith(
+                  quantity: _productQuantity,
+                  maxQty: response.product.first.sale.isSale ? int.parse(
+                      response.product.first.sale.saleMaxQuantity) : -1,
+                  productId: response.product.first.id,
+                  stock: (response.product.first.supplierSales.first
+                      .productStock.toString()),
+                  productSaleId: '',
+                  productSupplierIds: '',
+                  note: '',
+                  isNoteOpen: false,
+
+                );
+
+                emit(state.copyWith(productStockList: productStockList));
+                debugPrint('new index = ${state.productStockList.last}');
+                productStockUpdateIndex =
+                    productStockList.indexOf(productStockList.last);
+
+                debugPrint('barcode stock = ${state.productStockList.last}');
+                debugPrint(
+                    'barcode stock update index = ${state.productStockList
+                        .length}');
+                debugPrint(
+                    'barcode stock update index = $productStockUpdateIndex');
+              }
+              debugPrint(
+                  'product stock update index = $productStockUpdateIndex');
+              debugPrint(
+                  'product stock = ${state
+                      .productStockList[productStockUpdateIndex].stock}');
+              debugPrint(
+                  'supplier list stock = ${response.product.first.supplierSales
+                      .map((e) => e.productStock)}');
+              List<ProductSupplierModel> supplierList = [];
+              debugPrint(
+                  'supplier id = ${state
+                      .productStockList[productStockUpdateIndex]
+                      .productSupplierIds}');
+
+              supplierList.addAll(response.product.first.supplierSales
+                  .map((supplier) =>
+                  ProductSupplierModel(
+                    supplierId: supplier.supplierId,
+                    companyName: supplier.supplierCompanyName ?? '',
+                    maxQty: response.product.first.sale.isSale
+                        ? int.parse(
+                        response.product.first.sale.saleMaxQuantity.toString())
+                        : -1,
+                    basePrice: double.parse(supplier.productPrice),
+                    stock: supplier.productStock.toString(),
+                    quantity: _productQuantity,
+                    selectedIndex: (supplier.supplierId) ==
+                        state
+                            .productStockList[productStockUpdateIndex]
+                            .productSupplierIds
+                        ? supplier.saleProduct.indexOf(
+                      supplier.saleProduct.firstWhere(
+                            (sale) =>
+                        sale.saleId ==
+                            state
+                                .productStockList[
+                            productStockUpdateIndex]
+                                .productSaleId,
+                        orElse: () => SaleProduct(isSale: false,
+                            saleDescription: '',
+                            saleFromDate: '',
+                            saleMaxQuantity: '0',
+                            salePrice: '0',
+                            saleUntilDate: ''),
+                      ) ??
+                          SaleProduct(isSale: false,
+                              saleDescription: '',
+                              saleFromDate: '',
+                              saleMaxQuantity: '0',
+                              salePrice: '0',
+                              saleUntilDate: ''),) ==
+                        -1
+                        ? -2
+                        : supplier.saleProduct.indexOf(
+                      supplier.saleProduct.firstWhere(
+                            (sale) =>
+                        sale.saleId ==
+                            state
+                                .productStockList[
+                            productStockUpdateIndex]
+                                .productSaleId,
+                        orElse: () => SaleProduct(isSale: false,
+                            saleDescription: '',
+                            saleFromDate: '',
+                            saleMaxQuantity: '0',
+                            salePrice: '0',
+                            saleUntilDate: ''),
+                      ) ??
+                          SaleProduct(isSale: false,
+                              saleDescription: '',
+                              saleFromDate: '',
+                              saleMaxQuantity: '0',
+                              salePrice: '0',
+                              saleUntilDate: ''),)
+
+                        : -1,
+                    supplierSales: supplier.saleProduct
+                        .map((sale) =>
+                        SupplierSaleModel(
+                            saleId: sale.saleId ?? '',
+                            saleName: sale.saleName ?? '',
+                            maxQty: sale.saleMaxQuantity,
+                            saleDescription:
+                            parse(sale.salesDescription ?? '')
+                                .body
+                                ?.text ??
+                                '',
+                            salePrice: double.parse(
+                                sale.discountedPrice ?? '0.0'),
+                            saleDiscount: double.parse(
+                                sale.discountPercentage ?? '0.0')))
+                        .toList(),
+                  ))
+                  .toList());
+              supplierList.removeWhere((supplier) => supplier.stock == 0);
+              debugPrint(
+                  'response list = ${response.product.first.supplierSales
+                      .length}');
+              debugPrint('supplier list = ${supplierList.length}');
+              debugPrint(
+                  'supplier select index = ${supplierList.map((e) =>
+                  e.selectedIndex)}');
+              String note =
+              state.productStockList.indexOf(state.productStockList.last) ==
+                  productStockUpdateIndex
+                  ? ''
+                  : state.productStockList[productStockUpdateIndex].note;
+              emit(state.copyWith(
+                  productStockList: state.productStockList,
+                  productDetails: response.product,
+                  productStockUpdateIndex: productStockUpdateIndex,
+                  noteController: TextEditingController(text: note),
+                  productSupplierList: supplierList,
+                  isProductLoading: false));
+              if (supplierList.isNotEmpty) {
+                bool isSupplierSelected = false;
                 supplierList.forEach((supplier) {
-                  if (supplier.basePrice < cheapestPrice) {
-                    cheapestPrice = supplier.basePrice;
-                    supplierIndex = supplierList.indexOf(supplier);
+                  if (supplier.selectedIndex != -1) {
+                    isSupplierSelected = true;
+                    return;
                   }
                 });
-                if (supplierSaleIndex == -1) {
-                  supplierSaleIndex = -2;
+                debugPrint('isSupplierSelected = $isSupplierSelected');
+                if (!isSupplierSelected) {
+                  int supplierIndex = 0;
+                  int supplierSaleIndex = -1;
+                  double cheapestPrice = supplierList.first.basePrice;
+                  supplierList.forEach(
+                          (supplier) =>
+                          supplier.supplierSales.forEach((sale) {
+                            if (sale.salePrice < cheapestPrice) {
+                              cheapestPrice = sale.salePrice;
+                              supplierIndex = supplierList.indexOf(supplier);
+                              supplierSaleIndex =
+                                  supplier.supplierSales.indexOf(sale);
+                            }
+                          }));
+                  debugPrint('cheapest = $cheapestPrice');
+                  supplierList.forEach((supplier) {
+                    if (supplier.basePrice < cheapestPrice) {
+                      cheapestPrice = supplier.basePrice;
+                      supplierIndex = supplierList.indexOf(supplier);
+                    }
+                  });
+                  if (supplierSaleIndex == -1) {
+                    supplierSaleIndex = -2;
+                  }
+                  debugPrint('cheapest = $cheapestPrice');
+                  debugPrint('supplier index = $supplierIndex');
+                  debugPrint('supplier sale index = $supplierSaleIndex');
+                  add(StoreEvent.supplierSelectionEvent(
+                      supplierIndex: supplierIndex,
+                      context: event.context,
+                      supplierSaleIndex: supplierSaleIndex));
                 }
-                debugPrint('cheapest = $cheapestPrice');
-                debugPrint('supplier index = $supplierIndex');
-                debugPrint('supplier sale index = $supplierSaleIndex');
-                add(StoreEvent.supplierSelectionEvent(
-                    supplierIndex: supplierIndex,
-                    context: event.context,
-                    supplierSaleIndex: supplierSaleIndex));
               }
             }
+            else{
+             emit(state.copyWith(isProductLoading: false));
+            }
           } else {
+
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -1024,7 +1073,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               numberOfUnits: int.parse(sale.numberOfUnit.toString()),
                         image: sale.mainImage ?? '',
                 isPesach: sale.isPesach??false,
-          //    salePrice: double.parse(sale.salePrice.toString()),
               salesDesc:  parse(sale.salesDescription ?? '')
                   .body
                   ?.text ??
@@ -1036,17 +1084,17 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             //supplier products result
             searchList.addAll(response.data?.supplierProductData
                     ?.map((supplier) => SearchModel(
-                        searchId: supplier.productId ?? '',
-                        name: supplier.productName ?? '',
+                        searchId: supplier.productId ,
+                        name: supplier.productName ,
                         searchType: SearchTypes.product,
-                        image: supplier.mainImage ?? '',
+                        image: supplier.mainImage ,
               productStock: supplier.productStock.toString(),
               numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
               priceOfBox: double.parse(supplier.productPrice.toString()) ,
                 lowStock: supplier.lowStock.toString(),
-                isPesach: supplier.isPesach??false,
+                isPesach: supplier.isPesach,
               salePrice: double.parse(supplier.sale.salePrice.toString()),
-              salesDesc:  parse(supplier.sale.saleDescription ?? '')
+              salesDesc:  parse(supplier.sale.saleDescription)
                   .body
                   ?.text ??
                   '',
@@ -1218,75 +1266,122 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         emit(state.copyWith(relatedProductList: []));
       }
       else if(event is _GeneralSettings){
-
         try {
-          emit(state.copyWith(isShimmering: true));
+          emit(state.copyWith(pesachBannerShimmering: true));
           final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
           SettingResModel response = SettingResModel.fromJson(res);
 
           debugPrint('general settings = ${response.data.toString()}');
           if (response.status == 200) {
             preferencesHelper.setBottleTax(bottleDeposit: response.data.bottlePrice);
-            emit(state.copyWith(isShimmering:false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner,bottlePrice: response.data.bottlePrice));
+            emit(state.copyWith(pesachBannerShimmering: false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner,bottlePrice: response.data.bottlePrice));
           } else {
-            emit(state.copyWith(isShimmering: false));
+            emit(state.copyWith(pesachBannerShimmering: false));
           }
         } on ServerException {
-          emit(state.copyWith(isShimmering: false));
+          emit(state.copyWith(pesachBannerShimmering: false));
         } catch (exc) {
-          emit(state.copyWith(isShimmering: false));
+          emit(state.copyWith(pesachBannerShimmering: false));
         }
       }
 
       else  if(event is _getPermissionList){
-        if(preferencesHelper.getSubUser()){
-          try {
-
-            final res = await DioClient(event.context).get(
-                path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
-            AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-            debugPrint('AccountPermission response store= ${response.data.toString()}');
-            debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
-            if (response.status == 200) {
-              var res = response.data?.permissions;
-              if(preferencesHelper.getAppLanguage() == AppStrings.englishString && preferencesHelper.getCanSeeWallet() != res?.canSeeWallet){
-                event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(
-                    index: 1,context: event.context));
+          if (preferencesHelper.getSubUser()) {
+            try {
+              final res = await DioClient(event.context).get(
+                  path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper
+                      .getSubUserId()}');
+              AccountPermissionResModel response = AccountPermissionResModel
+                  .fromJson(res);
+              debugPrint('AccountPermission response store= ${response.data
+                  .toString()}');
+              debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls
+                  .getAccountPermissionUrl}${preferencesHelper
+                  .getSubUserId()}');
+              if (response.status == 200) {
+                var res = response.data?.permissions;
+                if (preferencesHelper.getAppLanguage() ==
+                    AppStrings.englishString &&
+                    preferencesHelper.getCanSeeWallet() != res?.canSeeWallet) {
+                  event.context.read<BottomNavBloc>().add(
+                      BottomNavEvent.changePage(
+                          index: 1, context: event.context));
+                }
+                preferencesHelper.setCanSeeWallet(
+                    isSeeWallet: res?.canSeeWallet ?? false);
+                emit(state.copyWith(isAccountPermissionShimmering: true));
+                preferencesHelper.setCanAddBasket(
+                    isAddBasket: res?.canAddToCart ?? false);
+                preferencesHelper.setCanCreateOrder(
+                    isCreateOrder: res?.canCreateOrder ?? false);
+                preferencesHelper.setCanSeeOrder(
+                    isSeeOrder: res?.canSeeOrders ?? false);
+                preferencesHelper.setCanDuplicateOrder(
+                    isDuplicateOrder: res?.canDuplicateOrders ?? false);
+                preferencesHelper.setCanUpdateBusinessInfo(
+                    isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ??
+                        false);
+                preferencesHelper.setCanUpdateAdditionalInfo(
+                    isUpdateAdditionalInfo: res
+                        ?.canSeeAndUpdateAdditionalInfo ?? false);
+                preferencesHelper.setCanUpdateTimeInfo(
+                    isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
+                preferencesHelper.setCanSeeFormsFiles(
+                    isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
+                preferencesHelper.setManageSubUser(
+                    isManageSubUser: res?.canManageSubUsers ?? false);
+                emit(state.copyWith(isAccountPermissionShimmering: false,
+                    isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()
+                ));
+              } else {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: AppStrings.getLocalizedStrings(
+                        response.message?.toLocalization() ??
+                            response.message!,
+                        event.context),
+                    type: SnackBarType.FAILURE);
               }
-              preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
-              emit(state.copyWith(isAccountPermissionShimmering: true));
-              preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
-              preferencesHelper.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
-              preferencesHelper.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
-              preferencesHelper.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
-              preferencesHelper.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
-              preferencesHelper.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
-              preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
-              preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
-              preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
-              emit(state.copyWith(isAccountPermissionShimmering:false,
-                  isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()
-              ));
-            } else {
+            } on ServerException {} catch (e) {
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          response.message!,
-                      event.context),
+                  title: e.toString(),
                   type: SnackBarType.FAILURE);
-
             }
-          } on ServerException {
-          } catch (e) {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: e.toString(),
-                type: SnackBarType.FAILURE);
+          }
+
+      }
+
+      else if(event is _userApproveEvent){
+        if(!preferencesHelper.getGuestUser()) {
+          try {
+            debugPrint('clientId_____${preferencesHelper.getUserId()}');
+            final res = await DioClient(event.context).post(
+                '${AppUrls.verifyClientUrl}',
+                data: {AppStrings.clientIdString: preferencesHelper.getUserId()}
+            );
+            VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+            debugPrint('verifyClient res_____$response');
+            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls
+                .verifyClientUrl}');
+            if (response.status == 200) {
+              if (!(response.data?.isFilledForms ?? false) ||
+                  !(response.data?.isRegisterForm ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.formDataScreen.name);
+              }
+              else if (!(response.data?.isUploadedFiles ?? false) &&
+                  (response.data?.isRegisterForm ?? false) &&
+                  (response.data?.isFilledForms ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.fileUploadScreen.name);
+              }
+            }
+          } on ServerException {}
+          catch (e) {
+            debugPrint('catch____$e');
           }
         }
-
-
       }
 
     });

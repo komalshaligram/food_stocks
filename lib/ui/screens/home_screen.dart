@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:flutter/services.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -35,8 +34,9 @@ import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
-
+import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/pesach_banner_shimmer.dart';
+import '../widget/search_item_widget.dart';
 
 class HomeRoute {
   static Widget get route =>  HomeScreen();
@@ -49,6 +49,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc()
+       ..add(HomeEvent.userApproveEvent(context: context))
         ..add(HomeEvent.generalSettings(context: context))
         ..add(HomeEvent.getPreferencesDataEvent())
         ..add(HomeEvent.getCartCountEvent(context: context))
@@ -82,6 +83,7 @@ class HomeScreenWidget extends StatelessWidget {
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
+
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
@@ -90,6 +92,7 @@ class HomeScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
+              bloc.add(HomeEvent.userApproveEvent(context: context));
                 handleMessageOnBackground();
                 bloc.add(HomeEvent.getPreferencesDataEvent());
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(
@@ -413,7 +416,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   ),
                                 ) : 0.width,
                                 20.height,
-                                 state.pesachBannerShimmering && state.pesachBannerURL.isEmpty  ? PesachBannerShimmerWidget():  state.showPesachBanner ?InkWell(
+                                 state.pesachBannerShimmering && state.pesachBannerURL.isEmpty ? PesachBannerShimmerWidget():  state.showPesachBanner && state.pesachBannerURL.isNotEmpty?InkWell(
                                   onTap: (){
                                     Navigator.pushNamed(context, RouteDefine.pesachScreen.name);
                                   },
@@ -471,46 +474,38 @@ class HomeScreenWidget extends StatelessWidget {
                                             itemBuilder:
                                                 (context, index) {
                                               return CommonProductSaleItemWidget(
-                                                  isSale: state.productSalesList[index].sale.isSale,
+                                                  isSale: state.productSalesList[index].sale?.isSale,
                                                   isGuestUser: state.isGuestUser,
                                                   height: AppConstants.salesProductItemHeight,
                                                   width: 140,
-                                                  productName: state.productSalesList[index].productName??'',
-                                                  saleImage: state
-                                                      .productSalesList[
-                                                  index]
-                                                      .mainImage ??
-                                                      '',
+                                                  productName: state.productSalesList[index].productName ?? '',
+                                                  saleImage: state.productSalesList[index].mainImage ?? '',
                                                   title: state
                                                       .productSalesList[
                                                   index]
-                                                      .name ??
-                                                      '',
+                                                      .name ,
                                                   description: parse(state
                                                       .productSalesList[
-                                                  index].sale
-                                                      .saleDescription ??
-                                                      '')
+                                                  index].sale?.saleDescription )
                                                       .body
                                                       ?.text ??
                                                       '',
                                                   discountedPrice:
                                                   double.parse(state
                                                       .productSalesList[
-                                                  index].sale.salePrice),
+                                                  index].sale?.salePrice ?? ""),
 
                                                   originalPrice:state
                                                       .productSalesList[
                                                   index]
-                                                      .productPrice ??
-                                                      0 ,
+                                                      .productPrice,
                                                   productStock: state.productSalesList[
                                                   index]
-                                                      .productStock.toString()??'0',
+                                                      .productStock.toString(),
                                                   lowStock: state
                                                       .productSalesList[
                                                   index]
-                                                      .lowStock??'',
+                                                      .lowStock ?? '',
                                                   isPesach: state
                                                       .productSalesList[
                                                   index]
@@ -522,11 +517,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                       showProductDetails(
                                                           productListIndex: 3,
                                                           context: context,
-                                                          productId: state
-                                                              .productSalesList[
-                                                          index]
-                                                              .id ??
-                                                              '',
+                                                          productId: state.productSalesList[index].id ?? '',
                                                           productStock: state.productSalesList[index].productStock.toString()
                                                       );
                                                     }
@@ -555,12 +546,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             context: context,
                                             title: AppLocalizations.of(context)!
                                                 .recommended_for_you,
-                                            subTitle: /*state
-                                                  .recommendedProductsList
-                                                  .length <
-                                                  6
-                                                  ? ''
-                                                  : */
+                                            subTitle:
                                             AppLocalizations.of(context)!.more,
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -582,46 +568,39 @@ class HomeScreenWidget extends StatelessWidget {
                                                   AppConstants.padding_5),
                                               itemBuilder: (context, index) =>
                                                CommonProductSaleItemWidget(
-                                             isSale: state.recommendedProductsList[index].sale.isSale,
+                                             isSale: state.recommendedProductsList[index].sale?.isSale,
                                               isGuestUser: state.isGuestUser,
                                               height: AppConstants.salesProductItemHeight,
                                               width: 140,
                                               productName: state.recommendedProductsList[index].productName??'',
                                               saleImage: state
-                                                  .recommendedProductsList[
-                                              index]
-                                                  .mainImage ??
-                                                  '',
+                                                  .recommendedProductsList[index].mainImage ?? '',
                                               title: state
                                                   .recommendedProductsList[
                                               index]
-                                                  .name ??
-                                                  '',
+                                                  .name ,
                                               description: parse(state
                                                   .recommendedProductsList[
-                                              index].sale
-                                                  .saleDescription ??
-                                                  '')
+                                              index].sale?.saleDescription )
                                                   .body
                                                   ?.text ??
                                                   '',
                                               discountedPrice:
                                               double.parse(state
                                                   .recommendedProductsList[
-                                              index].sale.salePrice),
+                                              index].sale?.salePrice ?? '0'),
 
                                               originalPrice:state
                                                   .recommendedProductsList[
                                               index]
-                                                  .productPrice ??
-                                                  0 ,
+                                                  .productPrice ,
                                               productStock: state.recommendedProductsList[
                                               index]
-                                                  .productStock.toString()??'0',
+                                                  .productStock.toString(),
                                               lowStock: state
                                                   .recommendedProductsList[
                                               index]
-                                                  .lowStock??'',
+                                                  .lowStock ?? '',
                                               isPesach: state
                                                   .recommendedProductsList[
                                               index]
@@ -632,11 +611,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 if(!state.isGuestUser){
                                                   showProductDetails(
                                                     context: context,
-                                                    productId: state
-                                                        .recommendedProductsList[
-                                                    index]
-                                                        .id ??
-                                                        '',
+                                                    productId: state.recommendedProductsList[index].id ?? '',
                                                     productStock:(state
                                                         .recommendedProductsList[
                                                     index]
@@ -797,7 +772,6 @@ class HomeScreenWidget extends StatelessWidget {
                             },
                             onSearchSubmit: (String search) {
                               debugPrint('onSearchSubmit');
-                              // bloc.add(HomeEvent.globalSearchEvent(context: context));
                               Navigator.pushNamed(
                                   context,
                                   RouteDefine.supplierProductsScreen.name,
@@ -828,13 +802,14 @@ class HomeScreenWidget extends StatelessWidget {
                               itemCount: state.searchList.length,
                               shrinkWrap: true,
                               itemBuilder: (listViewContext, index) {
-                                return _buildSearchItem(
-                                  salePrice: state.searchList[index].salePrice,
-                                  saleDesc: state.searchList[index].salesDesc,
+                                return SearchItemWidget(
+                                   isGuestUser: state.isGuestUser,
+                                    priceOfBox: state.searchList[index].priceOfBox,
+                                    salePrice: state.searchList[index].salePrice,
+                                    saleDesc: state.searchList[index].salesDesc,
                                     isPesach: state.searchList[index].isPesach,
                                     lowStock: state.searchList[index].lowStock.toString(),
                                     numberOfUnits:state.searchList[index].numberOfUnits,
-                                    priceOfBox: state.searchList[index].priceOfBox,
                                     productStock : state.searchList[index].productStock.toString(),
                                     context: context,
                                     searchName: state.searchList[index].name,
@@ -846,9 +821,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     search.searchType ==
                                         state.searchList[index]
                                             .searchType)
-                                        .toList()
-                                        .length >=
-                                        1,
+                                        .toList().isNotEmpty,
                                     isLastItem:
                                     state.searchList.length - 1 == index,
                                     isShowSearchLabel: index == 0
@@ -958,7 +931,7 @@ class HomeScreenWidget extends StatelessWidget {
                                           SearchTypes.sale ||
                                           state.searchList[index].searchType ==
                                               SearchTypes.product) {
-                                         debugPrint("tap 4");
+                                        debugPrint("tap 4");
                                         showProductDetails(
                                             context: context,
                                             productId: state
@@ -1019,7 +992,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             });
                                       }
                                       bloc.add(
-                                          HomeEvent.changeCategoryExpansion());
+                                          const HomeEvent.changeCategoryExpansion());
                                     });
                               },
                             ),
@@ -1066,7 +1039,7 @@ class HomeScreenWidget extends StatelessWidget {
             if (message.data.isNotEmpty) {
               var data = json.decode(message.data['data'].toString());
               debugPrint('data home:${data.toString()}');
-              if (data != null) {
+           /*   if (data != null) {
                 debugPrint('noti from  home');
                 FlutterAppBadger.removeBadge();
                 PushNotificationService().showNotification(
@@ -1077,7 +1050,7 @@ class HomeScreenWidget extends StatelessWidget {
                     showNotification: false,
                     isAppOpen: true
                 );
-              }
+              }*/
             }
           }
         },
@@ -1210,37 +1183,21 @@ class HomeScreenWidget extends StatelessWidget {
                       ),
                       child: state.isProductLoading
                           ? ProductDetailsShimmerWidget()
-                          : state.productDetails.isEmpty
-                          ? Center(
-                        child: Text(
-                            AppLocalizations.of(context)!.no_product,
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.normalFont,
-                              color: AppColors.redColor,
-                              fontWeight: FontWeight.w500,
-                            )),
-                      )
+                       : state.productDetails.isEmpty
+                          ? NoDataBottomSheet(dialogContext: context)
                           : SingleChildScrollView(
                         controller:  ModalScrollController.of(context),
                             child: Column(
                                 children: [
                                   CommonProductDetailsWidget(
-                                    salePrice: double.parse(state.productDetails.first.sale.salePrice),
-                                    maxQty: state.productDetails.first.sale.saleMaxQuantity,
-                                    endDate: state.productDetails.first.sale.saleUntilDate,
-                                    startDate: state.productDetails.first.sale.saleFromDate,
-                                    isSaleOn: state.productDetails.first.sale.isSale,
-                                    isSubUserAddToBasket: state.isSubUserAddToBasket,
+                                    productDetails: state.productDetails,
                                     bottleTax: state.bottlePrice,
-                                    totalBottleDeposit: (state.bottlePrice* state.productDetails.first.numberOfUnit!.toDouble()* state
+                                    isSubUserAddToBasket: state.isSubUserAddToBasket,
+                                    totalBottleDeposit: (state.bottlePrice* state.productDetails.first.numberOfUnit.toDouble()* state
                                         .productStockList[state.productListIndex][
                                     state.productStockUpdateIndex]
                                         .quantity),
                                     isBottle:state.productDetails.first.isBottle,
-                                    nmMashlim: state.productDetails.first.nmMashlim,
-                                    isPesach: state.productDetails.first.isPesach,
-                                    lowStock: state.productDetails.first.supplierSales.first.lowStock.toString() ,
-                                    qrCode:state.productDetails.first.qrcode,
                                     addToOrderTap: () {
                                       context.read<HomeBloc>().add(
                                           HomeEvent.addToCartProductEvent(
@@ -1302,19 +1259,7 @@ class HomeScreenWidget extends StatelessWidget {
                                       ...state.productDetails.first.images.map((image) =>
                                       image.imageUrl ?? '')
                                     ],
-                                    productPerUnit: state.productDetails.first
-                                        .numberOfUnit ,
                                     productUnitPrice: double.parse(state.productDetails.first.supplierSales.first.productPrice.toString()??'0'),
-                                    productName: state.productDetails.first
-                                        .productName,
-                                    productSaleDescription: parse(state
-                                        .productDetails
-                                        .first
-                                        .sale.saleDescription ??
-                                        '')
-                                        .body
-                                        ?.text ??
-                                        '',
                                     productPrice: state.productDetails.first.sale.isSale?
                                     double.parse(state.productDetails.first.sale.salePrice) *
                                         state.productStockList
@@ -1332,16 +1277,8 @@ class HomeScreenWidget extends StatelessWidget {
                                           .quantity*
                                         (state.productDetails.first
                                             .numberOfUnit) ,
-
-                                    productWeight: state
-                                        .productDetails.first.itemsWeight
-                                        .toDouble(),
                                     productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                     isRTL: context.rtl,
-                                    isSupplierAvailable:
-                                    state.productSupplierList.isEmpty
-                                        ? false
-                                        : true,
                                     scrollController: scrollController,
                                     productQuantity:  state
                                         .productStockList[state.productListIndex][
@@ -1551,273 +1488,4 @@ class HomeScreenWidget extends StatelessWidget {
             buttonTitle: "${AppLocalizations.of(context)!.price}"));
   }
 
-  Widget _buildSearchItem({
-    required String lowStock,
-    required BuildContext context,
-    required String searchName,
-    required String searchImage,
-    required SearchTypes searchType,
-    required bool isShowSearchLabel,
-    required bool isMoreResults,
-    required void Function() onTap,
-    required void Function() onSeeAllTap,
-    bool? isLastItem, required String productStock,
-    required int numberOfUnits,
-    required double priceOfBox,
-    required double salePrice,
-    required bool isPesach,
-    required String saleDesc
-  }) {
-    debugPrint('saleDesc:$saleDesc');
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        isShowSearchLabel
-            ? Padding(
-          padding: const EdgeInsets.only(
-              left: AppConstants.padding_20,
-              right: AppConstants.padding_20,
-              top: AppConstants.padding_15,
-              bottom: AppConstants.padding_5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                searchType == SearchTypes.category
-                    ? AppLocalizations.of(context)!.categories
-                    : searchType == SearchTypes.subCategory
-                    ? AppLocalizations.of(context)!.sub_categories
-                    : searchType == SearchTypes.company
-                    ? AppLocalizations.of(context)!.companies
-                    : searchType == SearchTypes.sale
-                    ? AppLocalizations.of(context)!.sales
-                    : searchType == SearchTypes.supplier
-                    ? AppLocalizations.of(context)!
-                    .suppliers
-                    : AppLocalizations.of(context)!
-                    .products,
-                style: AppStyles.rkBoldTextStyle(
-                    size: AppConstants.smallFont,
-                    color: AppColors.blackColor,
-                    fontWeight: FontWeight.w500),
-              ),
-
-              isMoreResults
-                  ? GestureDetector(
-                onTap: onSeeAllTap,
-                child: Text(
-                  AppLocalizations.of(context)!.see_all,
-                  style: AppStyles.rkBoldTextStyle(
-                      size: AppConstants.font_14,
-                      color: AppColors.mainColor),
-                ),
-              )
-                  : 0.width,
-            ],
-          ),
-        )
-            : 0.width,
-        InkWell(
-          onTap: onTap,
-          child: Container(
-            height: (productStock) != '0' || lowStock.isEmpty ? isPesach ? 130: 110 : isPesach?130: 110,
-            decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                border: Border(
-                    bottom: (isLastItem ?? false)
-                        ? BorderSide.none
-                        : BorderSide(
-                        color: AppColors.borderColor.withOpacity(0.5),
-                        width: 1))),
-            padding: EdgeInsets.only(
-                top: AppConstants.padding_5,
-                left: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
-                right: getScreenHeight(context)>850?AppConstants.padding_20:AppConstants.padding_10,
-                bottom: AppConstants.padding_5),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  height: 70,
-                  width: 50,
-                  child: Image.network(
-                    '${AppUrls.baseFileUrl}$searchImage',
-                    fit: BoxFit.scaleDown,
-                    height: 60,
-                    width: 50,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return Container(
-                            height: 60,
-                            width: 50,
-                            child: CupertinoActivityIndicator())
-                        ;
-                      }
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return searchType == SearchTypes.subCategory
-                          ? Image.asset(AppImagePath.imageNotAvailable5,
-                          height: 60, width: 50, fit: BoxFit.cover)
-                          : SvgPicture.asset(
-                        AppImagePath.splashLogo,
-                        fit: BoxFit.scaleDown,
-                        width: 60,
-                        height: 50,
-                      );
-                    },
-                  ),
-                ),
-                10.width,
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: getScreenWidth(context) /1.5,
-                      child: Text(
-                        searchName,
-                        style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.blackColor,
-                        ),
-                        maxLines: 3,
-                        overflow: TextOverflow.visible,
-                      ),
-                    ),
-                    Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 200,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              double.parse(productStock) > 0  && lowStock.isEmpty ? 0.width : productStock == '0' && lowStock.isNotEmpty ? Text(
-                                AppLocalizations.of(context)!
-                                    .out_of_stock1,
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.redColor,
-                                    fontWeight: FontWeight.w400),
-                              ) : Text(lowStock,
-                                  style: AppStyles.rkBoldTextStyle(
-                                      size: AppConstants.font_12,
-                                      color: AppColors.orangeColor,
-                                      fontWeight: FontWeight.w400)
-                              ),
-                              numberOfUnits != 0 ? Text(
-                                '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.blackColor,
-                                    fontWeight: FontWeight.w400),
-                              ) : 0.width,
-                              numberOfUnits != 0 && priceOfBox != 0.0 ?
-                              salePrice!=0.0 ?   Text.rich(TextSpan(
-                                text: '${AppLocalizations
-                                    .of(context)
-                                    ?.price_par_box} ',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.blackColor),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: '${AppLocalizations
-                                        .of(context)
-                                        ?.currency}${(priceOfBox *
-                                        (numberOfUnits)).toStringAsFixed(
-                                        2)} ',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.font_12,
-                                        color: AppColors.blackColor).copyWith(
-                                        decoration: TextDecoration.lineThrough),
-                                  ),
-                                  TextSpan(
-                                    text: ' ${AppLocalizations
-                                        .of(context)
-                                        ?.currency}${(salePrice *
-                                        (numberOfUnits)).toStringAsFixed(
-                                        2)}',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.font_12,
-                                        color: AppColors.redColor),
-                                  ),
-                                ],
-                              ),) :Text(
-                                '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.blueColor,
-                                    fontWeight: FontWeight.w400),): 0.width
-                            ],
-                          ),
-                        ),
-                        salePrice!=0.0? Container(
-                          child: Column(
-                            children: [
-                              Text(
-                                '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.blueColor,
-                                    fontWeight: FontWeight.w400).copyWith(decoration: TextDecoration.lineThrough),
-                              ),
-                              Text(
-                                '${AppLocalizations.of(context)!.currency}${salePrice.toString()}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_12,
-                                    color: AppColors.redColor,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ],
-                          ),
-                        ):
-                        priceOfBox != 0.0 ? Container(
-                          width: 60,
-                          child: Text(
-                            '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
-                            style: AppStyles.rkBoldTextStyle(
-                                size: AppConstants.font_12,
-                                color: AppColors.blueColor,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ) : 0.width,
-                      ],
-                    ),
-                    3.height,
-                    isPesach?
-                    isPesachLabelShow(isPesach,context)
-                        :0.height,
-                    saleDesc.isNotEmpty?
-                    Container(
-                      width:getScreenWidth(context)/1.5,
-                      padding: EdgeInsets.all(3),
-                      margin: EdgeInsets.only(top:5),
-                      decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
-                      child: Center(
-                        child: Text(
-                          "${parse(saleDesc).body?.text}",
-                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor,),
-                          maxLines: 3,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    )
-                        :0.height
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }

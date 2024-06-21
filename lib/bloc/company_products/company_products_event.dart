@@ -79,4 +79,7 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
   const factory CompanyProductsEvent.getPermissionList(
       {required BuildContext context }) = _getPermissionList;
 
+  const factory CompanyProductsEvent.userApproveEvent(
+      {required BuildContext context}) = _userApproveEvent;
+
 }

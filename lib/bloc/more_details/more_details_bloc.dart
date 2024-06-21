@@ -216,7 +216,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           String version = packageInfo.version;
            debugPrint('version____${version}');
-
           ProfileModel reqMap = ProfileModel(
               profileImage: profileModel.profileImage,
               phoneNumber: profileModel.phoneNumber,
@@ -242,7 +241,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 applicationVersion: version,
                 streetName: state.streetNameController.text.trim(),
                 streetNumber: state.streetNumberController.text.trim(),
-                zip:state.zipController.text.trim()
+                zip:state.zipController.text.trim(),
+                applicationName: AppStrings.appName,
               ));
           debugPrint('token_____${preferencesHelper.getFCMToken()}');
           debugPrint('profile reqMap + $reqMap');
@@ -257,8 +257,14 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             debugPrint('profile response --- ${profileResModel}');
             if (profileResModel.status == 200) {
 
-              Smartlook.instance.user.properties.removeString('User business name');
-              Smartlook.instance.user.properties.removeString('User phone number');
+              String? businessName = await Smartlook.instance.user.properties.getString("User business name");
+              String? phoneNumber = await Smartlook.instance.user.properties.getString("User phone number");
+              if(businessName != '' || businessName != null  ){
+                Smartlook.instance.user.properties.removeString('User business name');
+              }
+              if(phoneNumber != '' || businessName != null ){
+                Smartlook.instance.user.properties.removeString('User phone number');
+              }
               Smartlook.instance.user.setIdentifier(profileResModel.data?.client?.clientData?.id ?? '');
               Smartlook.instance.user.setEmail(profileResModel.data?.client?.clientData?.email ?? '');
               Smartlook.instance.user.setName(profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');

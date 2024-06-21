@@ -75,6 +75,9 @@ class Message with _$Message {
     @JsonKey(name: "id")
     String? navigationId,
     String? link,
+  String? subUserMainPage,
+  String? subUserSubPage,
+  String? subUserId,
   }) = _Message;
 
   factory Message.fromJson(Map<String, dynamic> json) => _$MessageFromJson(json);

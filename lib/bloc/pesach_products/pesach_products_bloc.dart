@@ -28,11 +28,13 @@ import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.d
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_strings.dart';
 
 part 'pesach_products_event.dart';
@@ -161,238 +163,6 @@ class PesachProductsBloc
         add(PesachProductsEvent.getSupplierProductsListEvent(
             context: event.context, searchType: state.searchType));
       }
-    /*  else if (event is _GetProductDetailsEvent) {
-        add(PesachProductsEvent.RemoveRelatedProductEvent());
-        debugPrint('product details id = ${event.productId}');
-        debugPrint('productListIndex = ${event.productListIndex}');
-        _isProductInCart = false;
-        _cartProductId = '';
-        _productQuantity = 0;
-        try {
-          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
-
-          final res = await DioClient(event.context).post(
-              AppUrls.getProductDetailsUrl,
-              data: ProductDetailsReqModel(params: event.productId).toJson());
-
-          ProductDetailsResModel response =
-          ProductDetailsResModel.fromJson(res);
-
-          debugPrint('GetProductDetails_____${response}');
-          if (response.status == 200) {
-
-            //new chanegs
-            //0 for barcode and search
-            //1 for recommendation product.
-            //2 pesach product.
-
-            List<List<ProductStockModel>> productStockList =
-            state.productStockList.toList(growable: true);
-            int productListIndex  = event.productListIndex;
-            debugPrint('productStockList___${productStockList[2].length}');
-            debugPrint('productListIndex___${event.productListIndex}');
-            int productStockUpdateIndex = 0;
-            if(event.isBarcode ){
-              productStockUpdateIndex = 0;
-              debugPrint('responseproductid____${response.product?.first.id}');
-              productStockList[0][0] =productStockList[0][0].copyWith(
-                  quantity: _productQuantity,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0") ,
-                  totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0')
-              );
-            }
-            else{
-              productStockUpdateIndex = state.productStockList[productListIndex]
-                  .indexWhere((productStock) =>
-              productStock.productId == event.productId);
-            }
-
-            emit(state.copyWith(productListIndex:productListIndex,productStockUpdateIndex:productStockUpdateIndex));
-            debugPrint('planoGramUpdateIndex___${state.productListIndex}');
-            debugPrint('productStockUpdateIndex___${state.productStockUpdateIndex}');
-            try {
-
-              final res = await DioClient(event.context).post(
-                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
-                  options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferences.getAuthToken()}'
-                  }));
-              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-              if (response.status == 200) {
-                debugPrint('cart before = ${response.data}');
-                response.data?.data?.forEach((cartProduct) {
-                  if (cartProduct.id == event.productId ||
-                      cartProduct.id == state.productStockList[state.productListIndex]
-                      [state.productStockUpdateIndex].productId
-                  ) {
-                    _isProductInCart = true;
-                    _cartProductId = cartProduct.cartProductId ?? '';
-                    _productQuantity = cartProduct.totalQuantity ?? 0;
-                    return;
-                  }
-                });
-                debugPrint(
-                    '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
-              }
-            } on ServerException {}
-            if(response.product != null){
-              add(PesachProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
-            }
-            if ( (event.isBarcode )) {
-
-              productStockList[0][0] =  productStockList[0][0]
-                  .copyWith(
-                  quantity: _productQuantity,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
-              );
-
-              emit(state.copyWith(productStockList: productStockList));
-
-            }
-
-            List<ProductSupplierModel> supplierList = [];
-
-            supplierList.addAll(response.product.first.supplierSales
-                .map((supplier) => ProductSupplierModel(
-              supplierId: supplier.supplierId ,
-              companyName: supplier.supplierCompanyName ,
-              basePrice:
-              double.parse(supplier.productPrice),
-              quantity: _productQuantity,
-              stock: supplier.productStock.toString(),
-              selectedIndex: (supplier.supplierId ?? '') ==
-                  state
-                      .productStockList[productListIndex]
-                  [productStockUpdateIndex]
-                      .productSupplierIds
-                  ? supplier.saleProduct.indexOf(
-                  supplier.saleProduct.firstWhere(
-                        (sale) =>
-                    sale.saleId ==
-                        state
-                            .productStockList[
-                        productListIndex][
-                        productStockUpdateIndex]
-                            .productSaleId,
-                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
-                  ) ??
-                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
-                  -1
-                  ? -2
-                  : supplier.saleProduct.indexOf(
-                  supplier.saleProduct.firstWhere(
-                        (sale) =>
-                    sale.saleId ==
-                        state
-                            .productStockList[
-                        productListIndex][
-                        productStockUpdateIndex]
-                            .productSaleId,
-                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
-                  ) ??
-                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
-                  -1
-                  : -1,
-              supplierSales: supplier.saleProduct.map((sale) => SupplierSaleModel(
-                  saleId: sale.saleId ?? '',
-                  saleName: sale.saleName ?? '',
-                  saleDescription:
-                  parse(sale.salesDescription ?? '')
-                      .body
-                      ?.text ??
-                      '',
-                  salePrice: double.parse(
-                      sale.discountedPrice ?? '0.0'),
-                  saleDiscount: double.parse(
-                      sale.discountPercentage ?? '0.0')))
-                  .toList(),
-            ))
-                .toList());
-            supplierList.removeWhere((supplier) => supplier.stock == 0);
-            debugPrint(
-                'response list = ${response.product.first.supplierSales.length}');
-            debugPrint('supplier list = ${supplierList}');
-            // debugPrint(
-            //     'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
-            String note = productStockList.isEmpty
-                ? ''
-                : productStockList.indexOf(state.productStockList.last) ==
-                productListIndex
-                ? ''
-                : productStockList[productListIndex][0].note;
-            emit(state.copyWith(productStockList: []));
-
-            emit(state.copyWith(
-                productDetails: response.product,
-                productStockList: productStockList,
-                productStockUpdateIndex: productStockUpdateIndex,
-                noteController: TextEditingController(text: note),
-                productSupplierList: supplierList,
-                productListIndex: productListIndex,
-                isProductLoading: false));
-            if (supplierList.isNotEmpty) {
-              bool isSupplierSelected = false;
-              supplierList.forEach((supplier) {
-                if (supplier.selectedIndex != -1) {
-                  isSupplierSelected = true;
-                  return;
-                }
-              });
-              debugPrint('isSupplierSelected = $isSupplierSelected');
-              debugPrint('isSupplierSelected = ${state.productListIndex}');
-              if (!isSupplierSelected || state.productListIndex == 0) {
-                int supplierIndex = 0;
-                int supplierSaleIndex = -1;
-                double cheapestPrice = supplierList.first.basePrice;
-                supplierList.forEach(
-                        (supplier) => supplier.supplierSales.forEach((sale) {
-                      if (sale.salePrice < cheapestPrice) {
-                        cheapestPrice = sale.salePrice;
-                        supplierIndex = supplierList.indexOf(supplier);
-                        supplierSaleIndex =
-                            supplier.supplierSales.indexOf(sale);
-                      }
-                    }));
-                debugPrint('cheapest = $cheapestPrice');
-                supplierList.forEach((supplier) {
-                  if (supplier.basePrice < cheapestPrice) {
-                    cheapestPrice = supplier.basePrice;
-                    supplierIndex = supplierList.indexOf(supplier);
-                  }
-                });
-                if (supplierSaleIndex == -1) {
-                  supplierSaleIndex = -2;
-                }
-                debugPrint('cheapest = $cheapestPrice');
-                debugPrint('supplier index = $supplierIndex');
-                debugPrint('supplier sale index = $supplierSaleIndex');
-                add(PesachProductsEvent.supplierSelectionEvent(
-                    supplierIndex: supplierIndex,
-                    context: event.context,
-                    supplierSaleIndex: supplierSaleIndex));
-              }
-            }
-          } else {
-            Navigator.pop(event.context);
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.FAILURE);
-          }
-        } on ServerException {
-          Navigator.pop(event.context);
-          // emit(state.copyWith(isProductLoading: false));
-        } *//*catch (e) {
-          debugPrint('bs error = $e');
-          // Navigator.pop(event.context);
-        }*//*
-      }*/
       else if (event is _GetProductDetailsEvent) {
         add(PesachProductsEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
@@ -417,6 +187,7 @@ class PesachProductsBloc
             //0 for barcode and search
             //1 for recommendation product.
             //2 related product.
+            if(response.product.isNotEmpty){
 
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
@@ -462,7 +233,7 @@ class PesachProductsBloc
               }
             } on ServerException {}
             if(response.product != null){
-              add(PesachProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product.first.id ?? ''));
+              add(PesachProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product.first.id ));
             }
             if (event.isBarcode) {
               productStockList[0][0] =  productStockList[0][0]
@@ -606,10 +377,15 @@ class PesachProductsBloc
                     supplierIndex: supplierIndex,
                     context: event.context,
                     supplierSaleIndex: supplierSaleIndex));
-              }
+              }}
+
+            }
+            else{
+              emit(state.copyWith(isProductLoading: false));
             }
           } else {
             Navigator.pop(event.context);
+            emit(state.copyWith(isProductLoading: false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -620,7 +396,7 @@ class PesachProductsBloc
           }
         } on ServerException {
           Navigator.pop(event.context);
-          // emit(state.copyWith(isProductLoading: false));
+          emit(state.copyWith(isProductLoading: false));
         }
       }
       else if (event is _IncreaseQuantityOfProduct) {
@@ -1132,17 +908,17 @@ class PesachProductsBloc
             searchList.addAll(response.data?.supplierProductData
                 ?.map((supplier) =>
                 SearchModel(
-                  searchId: supplier.productId ?? '',
-                  name: supplier.productName ?? '',
+                  searchId: supplier.productId ,
+                  name: supplier.productName ,
                   searchType: SearchTypes.product,
-                  image: supplier.mainImage ?? '',
+                  image: supplier.mainImage ,
                   productStock: supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
                   lowStock: supplier.lowStock.toString(),
-                  isPesach: supplier.isPesach??false,
+                  isPesach: supplier.isPesach,
                   salePrice: double.parse(supplier.sale.salePrice.toString()),
-                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                  salesDesc:  parse(supplier.sale.saleDescription )
                       .body
                       ?.text ??
                       '',
@@ -1155,12 +931,9 @@ class PesachProductsBloc
                 search: state.searchController.text,
                 isSearching: false));
           } else {
-            // emit(state.copyWith(searchList: []));
+
             emit(state.copyWith(isSearching: false));
-            // CustomSnackBar.showSnackBar(
-            //     context: event.context,
-            //     title: response.message ?? AppStrings.somethingWrongString,
-            //     type: SnackBarType.SUCCESS);
+
           }
         } on ServerException {
           CustomSnackBar.showSnackBar(
@@ -1281,7 +1054,37 @@ class PesachProductsBloc
 
 
       }
-
+      else if(event is _userApproveEvent) {
+        if (!preferences.getGuestUser() ) {
+          try {
+            debugPrint('clientId_____${preferences.getUserId()}');
+            final res = await DioClient(event.context).post(
+                '${AppUrls.verifyClientUrl}',
+                data: {AppStrings.clientIdString: preferences.getUserId()}
+            );
+            VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+            debugPrint('verifyClient res_____$response');
+            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls
+                .verifyClientUrl}');
+            if (response.status == 200) {
+              if (!(response.data?.isFilledForms ?? false) || !(response.data
+                  ?.isRegisterForm ?? false)) {
+                Navigator.pushNamed(event.context,
+                    RouteDefine.formDataScreen.name);
+              }
+              else if (!(response.data?.isUploadedFiles ?? false) && (response
+                  .data?.isRegisterForm ?? false) && (response.data
+                  ?.isFilledForms ?? false)) {
+                Navigator.pushNamed(
+                    event.context, RouteDefine.fileUploadScreen.name);
+              }
+            }
+          } on ServerException {}
+          catch (e) {
+            debugPrint('catch____$e');
+          }
+        }
+      }
     });
   }
 }

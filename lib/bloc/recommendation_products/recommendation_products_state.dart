@@ -33,6 +33,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
     required int productListIndex,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
+
     
   }) = _RecommendationProductsState;
 
@@ -71,6 +72,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
       productListIndex: -1,
       bottleDeposit: 0,
     isSubUserAddToBasket: false,
+    
     
 
   );

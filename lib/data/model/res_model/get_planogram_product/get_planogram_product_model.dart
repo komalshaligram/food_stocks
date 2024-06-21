@@ -2,8 +2,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'get_planogram_product_model.freezed.dart';
 part 'get_planogram_product_model.g.dart';
 
-
-
 @freezed
 class GetPlanogramProductModel with _$GetPlanogramProductModel {
   const factory GetPlanogramProductModel({
@@ -24,27 +22,27 @@ class GetPlanogramProductModel with _$GetPlanogramProductModel {
 class PlanogramAllProduct with _$PlanogramAllProduct {
   const factory PlanogramAllProduct({
     @JsonKey(name: "_id")
-    required String id,
-    @JsonKey(name: "subCategoryId")
-    required String subCategoryId,
+    String? id,
     @JsonKey(name: "productId")
-    required String productId,
+    String? productId,
+    @JsonKey(name: "subCategoryId")
+    String? subCategoryId,
     @JsonKey(name: "__v")
-    required int v,
+    int? v,
     @JsonKey(name: "createdAt")
-    required DateTime createdAt,
+    String? createdAt,
     @JsonKey(name: "isDeleted")
-    required bool isDeleted,
+    bool? isDeleted,
     @JsonKey(name: "isHomePreference")
-    required bool isHomePreference,
+    bool? isHomePreference,
     @JsonKey(name: "order")
-    required int order,
+    int? order,
     @JsonKey(name: "updatedAt")
-    required DateTime updatedAt,
+    String? updatedAt,
     @JsonKey(name: "product")
     required PlanoProduct product,
     @JsonKey(name: "sortField")
-    required double sortField,
+    double? sortField,
   }) = _PlanogramAllProduct;
 
   factory PlanogramAllProduct.fromJson(Map<String, dynamic> json) => _$PlanogramAllProductFromJson(json);
@@ -53,86 +51,86 @@ class PlanogramAllProduct with _$PlanogramAllProduct {
 @freezed
 class PlanoProduct with _$PlanoProduct {
   const factory PlanoProduct({
-    @JsonKey(name: "numberOfUnit")
-    required String numberOfUnit,
-    @JsonKey(name: "itemsWeight")
-    required String itemsWeight,
-    @JsonKey(name: "totalWeightCardboard")
-    required String totalWeightCardboard,
-    @JsonKey(name: "totalWeightSurface")
-    required String totalWeightSurface,
     @JsonKey(name: "createdAt")
-    required String createdAt,
-    @JsonKey(name: "updatedAt")
-    required String updatedAt,
+    String? createdAt,
     @JsonKey(name: "isBottle")
-    required bool isBottle,
-    @JsonKey(name: "filterProductId")
-    required String filterProductId,
-    @JsonKey(name: "filterBrandId")
-    required String filterBrandId,
-    @JsonKey(name: "filterCategoryId")
-    required String filterCategoryId,
+    bool? isBottle,
+    @JsonKey(name: "itemsWeight")
+    String? itemsWeight,
+    @JsonKey(name: "numberOfUnit")
+    String? numberOfUnit,
     @JsonKey(name: "totalWeight")
-    required String totalWeight,
+    String? totalWeight,
+    @JsonKey(name: "totalWeightCardboard")
+    String? totalWeightCardboard,
+    @JsonKey(name: "totalWeightSurface")
+    String? totalWeightSurface,
+    @JsonKey(name: "updatedAt")
+    String? updatedAt,
+    @JsonKey(name: "filterProductId")
+    String? filterProductId,
+    @JsonKey(name: "filterBrandId")
+    String? filterBrandId,
+    @JsonKey(name: "filterCategoryId")
+    String? filterCategoryId,
     @JsonKey(name: "sale")
-    required Sale sale,
+    Sale? sale,
     @JsonKey(name: "_id")
-    required String id,
+    String? id,
     @JsonKey(name: "productName")
-    required String productName,
+    String? productName,
     @JsonKey(name: "brandId")
-    required String brandId,
+    String? brandId,
     @JsonKey(name: "brandLogo")
-    required String brandLogo,
+    String? brandLogo,
     @JsonKey(name: "manufactureName")
-    required String manufactureName,
+    String? manufactureName,
     @JsonKey(name: "healthAndLifestye")
-    required String healthAndLifestye,
+    String? healthAndLifestye,
     @JsonKey(name: "productDescription")
-    required String productDescription,
+    String? productDescription,
     @JsonKey(name: "component")
-    required String component,
+    String? component,
     @JsonKey(name: "nutritionalValue")
-    required String nutritionalValue,
+    String? nutritionalValue,
     @JsonKey(name: "mainImage")
-    required String mainImage,
+    String? mainImage,
     @JsonKey(name: "images")
-    required List<dynamic> images,
+    List<dynamic>? images,
     @JsonKey(name: "qrcode")
-    required String qrcode,
+    String? qrcode,
     @JsonKey(name: "sku")
-    required String sku,
+    String? sku,
     @JsonKey(name: "isPesach")
-    required bool isPesach,
+    bool? isPesach,
     @JsonKey(name: "nmMashlim")
-    required String nmMashlim,
+    String? nmMashlim,
     @JsonKey(name: "createdBy")
-    required String createdBy,
+    String? createdBy,
     @JsonKey(name: "updatedBy")
-    required String updatedBy,
+    String? updatedBy,
     @JsonKey(name: "categories")
-    required String categories,
+    String? categories,
     @JsonKey(name: "subcategories")
-    required String subcategories,
+    String? subcategories,
     @JsonKey(name: "manufacturingCountry")
-    required String manufacturingCountry,
+    String? manufacturingCountry,
     @JsonKey(name: "caseType")
-    required String caseType,
+    String? caseType,
     @JsonKey(name: "scale")
-    required String scale,
+    String? scale,
     @JsonKey(name: "status")
-    required String status,
+    String? status,
     @JsonKey(name: "productNumber")
-    required String productNumber,
+    String? productNumber,
     @JsonKey(name: "productStock")
-    required String productStock,
+    String? productStock,
     @JsonKey(name: "productPrice")
-    required double productPrice,
+    double? productPrice,
     @JsonKey(name: "totalSale")
-    required int totalSale,
+    int? totalSale,
     @JsonKey(name: "lowStock")
-    required String lowStock,
+    String? lowStock,
   }) = _PlanoProduct;
 
   factory PlanoProduct.fromJson(Map<String, dynamic> json) => _$PlanoProductFromJson(json);
@@ -141,17 +139,17 @@ class PlanoProduct with _$PlanoProduct {
 class Sale with _$Sale {
   const factory Sale({
     @JsonKey(name: "isSale")
-    required bool isSale,
+    bool? isSale,
     @JsonKey(name: "salePrice")
-    required String salePrice,
+    String? salePrice,
     @JsonKey(name: "saleFromDate")
-    required String saleFromDate,
+    String? saleFromDate,
     @JsonKey(name: "saleUntilDate")
-    required String saleUntilDate,
+    String? saleUntilDate,
     @JsonKey(name: "saleMaxQuantity")
-    required String saleMaxQuantity,
+    String? saleMaxQuantity,
     @JsonKey(name: "saleDescription")
-    required String saleDescription,
+    String? saleDescription,
   }) = _Sale;
 
   factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);

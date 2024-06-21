@@ -25,10 +25,12 @@ import '../../data/model/res_model/product_details_res_model/product_details_res
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
@@ -87,10 +89,10 @@ class RecommendationProductsBloc
             List<List<ProductStockModel>> productStockList =
                 state.productStockList.toList(growable: true);
             List<ProductStockModel> stockList = [];
-            stockList.addAll(response.data.map(
+            stockList.addAll(response.data?.map(
                     (recommendationProduct) => ProductStockModel(
                         productId: recommendationProduct.id ?? '',
-                        maxQty: recommendationProduct.sale.isSale ? int.parse(recommendationProduct.sale.saleMaxQuantity) : -1,
+                        maxQty: (recommendationProduct.sale?.isSale ?? false) ? int.parse(recommendationProduct.sale?.saleMaxQuantity ?? '0') : -1,
                         stock: recommendationProduct.productStock.toString())) ??
                 []);
             debugPrint(
@@ -107,7 +109,7 @@ class RecommendationProductsBloc
                 isLoadMore: false));
             emit(state.copyWith(
                 isBottomOfProducts: state.recommendationProductsList.length ==
-                        (response.metaData.totalFilteredCount ?? 0)
+                        (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
           } else {
@@ -115,7 +117,7 @@ class RecommendationProductsBloc
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message.toLocalization(),
+                    response.message?.toLocalization() ?? '',
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -165,6 +167,7 @@ class RecommendationProductsBloc
             //0 for barcode and search
             //1 for recommendation product.
             //2 related product.
+            if(response.product.isNotEmpty){
 
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
@@ -361,7 +364,16 @@ class RecommendationProductsBloc
                     supplierSaleIndex: supplierSaleIndex));
               }
             }
+            else{
+              emit(state.copyWith(isProductLoading: false));
+            }
+            }
+            else{
+              emit(state.copyWith(isProductLoading: false));
+            }
+
           } else {
+            emit(state.copyWith(isProductLoading: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -1100,6 +1112,32 @@ class RecommendationProductsBloc
           }
         }
 
+
+      }
+
+      else if(event is _userApproveEvent){
+        try {
+          debugPrint('clientId_____${preferences.getUserId()}');
+          final res = await DioClient(event.context).post(
+              '${AppUrls.verifyClientUrl}',
+              data: {AppStrings.clientIdString:preferences.getUserId()}
+          );
+          VerifyClientResModel response = VerifyClientResModel.fromJson(res);
+          debugPrint('verifyClient res_____$response');
+          debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+          if (response.status == 200) {
+            if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
+              Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
+            }
+            else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
+              Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
+            }
+
+          }
+        } on ServerException {}
+        catch (e) {
+          debugPrint('catch____$e');
+        }
 
       }
 

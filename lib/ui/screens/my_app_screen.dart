@@ -44,9 +44,9 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
     WidgetsBinding.instance.addObserver(this);
-     smartLook.start();
+   smartLook.start();
      debugPrint('key____${dotenv.env['SMART_LOOK_KEY']}');
-    smartLook.preferences.setProjectKey(dotenv.env['SMART_LOOK_KEY']!);
+   smartLook.preferences.setProjectKey(dotenv.env['SMART_LOOK_KEY']!);
     super.initState();
   }
 
