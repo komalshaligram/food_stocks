@@ -135,7 +135,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           _cartProductId = '';
           _productQuantity = 0;
           try {
-            emit( state.copyWith(isProductLoading: true, isSelectSupplier: false));
+            emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
             final res = await DioClient(event.context).post(
                 AppUrls.getProductDetailsUrl,
@@ -154,7 +154,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               //3 sales product.
               print('product___${response.product}');
 
-              if(response.product!.isNotEmpty){
+
+              if(response.product?.isNotEmpty ?? false){
 
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
@@ -350,7 +351,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
             }
             else{
-                emit(state.copyWith(isProductLoading: false));
+
+                emit(state.copyWith(isProductLoading: false,
+                  productDetails: []
+                ));
               }
             }
               else {

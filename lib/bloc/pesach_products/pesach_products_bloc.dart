@@ -383,11 +383,11 @@ class PesachProductsBloc
 
             }
             else{
-              emit(state.copyWith(isProductLoading: false));
+              emit(state.copyWith(isProductLoading: false,productDetails: []));
             }
           } else {
             Navigator.pop(event.context);
-            emit(state.copyWith(isProductLoading: false));
+            emit(state.copyWith(isProductLoading: false,productDetails: []));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(

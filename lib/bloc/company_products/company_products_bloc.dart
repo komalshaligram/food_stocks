@@ -380,10 +380,12 @@ class CompanyProductsBloc
 
             }
             else{
-              emit(state.copyWith(isProductLoading: false));
+              emit(state.copyWith(isProductLoading: false,
+                  productDetails: []
+              ));
             }
           } else {
-            emit(state.copyWith(isProductLoading: false));
+            emit(state.copyWith(isProductLoading: false,productDetails: []));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -394,7 +396,7 @@ class CompanyProductsBloc
           }
         } on ServerException {
           Navigator.pop(event.context);
-          // emit(state.copyWith(isProductLoading: false));
+         //  emit(state.copyWith(isProductLoading: false));
         } catch (e) {
           debugPrint('bs error = $e');
           // Navigator.pop(event.context);

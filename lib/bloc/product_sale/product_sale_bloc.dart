@@ -365,12 +365,12 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               }
             }}
             else{
-              emit(state.copyWith(isProductLoading: false));
+              emit(state.copyWith(isProductLoading: false,productDetails: []));
             }
           }
 
           else {
-            emit(state.copyWith(isProductLoading: false));
+            emit(state.copyWith(isProductLoading: false,productDetails: []));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
