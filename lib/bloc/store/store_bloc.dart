@@ -317,7 +317,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           if (response.status == 200) {
 
 
-            if(response.product != []) {
+            if(response.product!.isNotEmpty) {
               int productStockUpdateIndex = -1;
 
               if (event.isBarcode ?? false) {
@@ -385,7 +385,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-              if (response.product != []) {
+              if (response.product!.isNotEmpty) {
                 add(StoreEvent.RelatedProductsEvent(context: event.context,
                     productId: response.product?.first.id ?? ''));
               }

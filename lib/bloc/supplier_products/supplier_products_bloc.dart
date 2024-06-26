@@ -268,7 +268,7 @@ class SupplierProductsBloc
             //0 for barcode and search
             //1 for recommendation product.
             //2 related product.
-            if(response.product != []){
+            if(response.product!.isNotEmpty){
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             int productListIndex  = event.productListIndex;
@@ -321,7 +321,7 @@ class SupplierProductsBloc
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            if(response.product != null){
+            if(response.product!.isNotEmpty){
               add(SupplierProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if ( (event.isBarcode )) {

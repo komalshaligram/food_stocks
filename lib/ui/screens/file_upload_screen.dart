@@ -112,7 +112,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   height: getScreenHeight(context),
                                   child: Center(
                                     child: CupertinoActivityIndicator(
-                                      color: AppColors.blackColor,
+                                      color: AppColors.mainColor,
                                     ),
                                   ),
                                 )
