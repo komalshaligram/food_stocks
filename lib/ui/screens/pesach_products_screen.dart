@@ -303,6 +303,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                       .productList[
                                                   index]
                                                       .productStock.toString(),
+                                                    isSaleOn: state.isSaleOn
+
                                                 );
                                               } else {
                                                 Navigator.pushNamed(
@@ -369,6 +371,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                     .productList[index]
                                                     .productStock
                                                     .toString(),
+                                                isSaleOn: state.isSaleOn
                                               );
                                             } else {
                                               Navigator.pushNamed(
@@ -588,7 +591,10 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                             .toString(),
                                         productId: state
                                             .searchList[index].searchId,
-                                        isBarcode: true);
+                                        isBarcode: true,
+                                      isSaleOn: state.isSaleOn
+
+                                    );
                                   } else {
                                     Navigator.pushNamed(context,
                                         RouteDefine.connectScreen.name);
@@ -662,7 +668,9 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                 productListIndex: 0,
                                 productId: scanResult,
                                 isBarcode: true,
-                                productStock: '1');
+                                productStock: '1',
+                              isSaleOn: state.isSaleOn
+                            );
                           } else {
                             Navigator.pushNamed(
                                 context, RouteDefine.connectScreen.name);
@@ -789,7 +797,9 @@ class PesachProductsScreenWidget extends StatelessWidget {
         required int productListIndex,
         int maxQty = 0,
         bool? isBarcode,
-        String productStock = '0'}) async {
+        String productStock = '0',
+        required bool isSaleOn
+      }) async {
     context.read<PesachProductsBloc>().add(
         PesachProductsEvent.getProductDetailsEvent(
             context: context,
@@ -1025,7 +1035,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                 : relatedProductWidget(
                                 context1,
                                 state.relatedProductList,
-                                context),
+                                context,isSaleOn),
                             10.height
                           ],
                         ),
@@ -1042,7 +1052,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
   }
 
   Widget relatedProductWidget(BuildContext prevContext,
-      List<RelatedProductDatum> relatedProductList, BuildContext context) {
+      List<RelatedProductDatum> relatedProductList, BuildContext context, bool isSaleOn) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -1062,7 +1072,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.salesProductItemHeight,
+          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
           padding: EdgeInsets.only(left: 10, right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1094,6 +1104,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
+                    isSaleOn: isSaleOn,
                       context: context,
                       productId: relatedProductList[i].id  ?? '',
                       isBarcode: false,

@@ -516,6 +516,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                     debugPrint("tap 1");
                                                     if(!state.isGuestUser){
                                                       showProductDetails(
+                                                          isSaleOn: state.isSaleOn,
                                                           productListIndex: 3,
                                                           context: context,
                                                           productId: state.productSalesList[index].id ?? '',
@@ -611,6 +612,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 debugPrint("tap 1");
                                                 if(!state.isGuestUser){
                                                   showProductDetails(
+                                                    isSaleOn: state.isSaleOn,
                                                     context: context,
                                                     productId: state.recommendedProductsList[index].id ?? '',
                                                     productStock:(state
@@ -940,6 +942,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 .searchList[index].searchId,
                                             isBarcode:  true,
                                             productListIndex: 0,
+                                            isSaleOn: state.isSaleOn,
 
                                             productStock: (state.searchList[index].productStock.toString())
                                         );
@@ -1012,7 +1015,8 @@ class HomeScreenWidget extends StatelessWidget {
                                   productId: scanResult,
                                   isBarcode: true,
                                   productStock: '1',
-                                  productListIndex: 0
+                                  productListIndex: 0,
+                                  isSaleOn: state.isSaleOn
 
                                 );
                               }
@@ -1139,6 +1143,7 @@ class HomeScreenWidget extends StatelessWidget {
     bool isBarcode= false,
     String productStock  = '0',
     int productListIndex = 0,
+    required bool isSaleOn
   }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
       context: context,
@@ -1311,7 +1316,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     },
                                   ),
                                 state.relatedProductList.isEmpty ? 0.height :
-                                relatedProductWidget(context1,state.relatedProductList,context,scrollController),
+                                relatedProductWidget(context1,state.relatedProductList,context,scrollController ,isSaleOn),
                               ],
                               ),
                           ),
@@ -1327,7 +1332,9 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context , ScrollController scrollController){
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context , ScrollController scrollController,
+      bool isSaleOn
+      ){
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1350,7 +1357,7 @@ class HomeScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.salesProductItemHeight,
+          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
           padding: EdgeInsets.only(left: 10,right: 10,bottom: 5),
           child: ListView.builder(
             controller: ScrollController(),
@@ -1383,6 +1390,7 @@ class HomeScreenWidget extends StatelessWidget {
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
+                    isSaleOn: isSaleOn,
                       context: context,
                       productId: relatedProductList[i].id ?? '',
                       isBarcode: false,
