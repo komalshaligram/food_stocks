@@ -206,7 +206,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-              if(response.product != null){
+              if(response.product!.isNotEmpty){
                 add(HomeEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
               if (event.isBarcode) {
