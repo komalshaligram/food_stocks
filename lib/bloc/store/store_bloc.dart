@@ -309,7 +309,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         _productQuantity = 0;
 
         try {
-          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false,isSaleOn: preferencesHelper.getShowSale()));
+          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false,));
           final res = await DioClient(event.context).post(
               AppUrls.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
@@ -1268,7 +1268,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       }
 
       else  if(event is _getPermissionList){
-        emit(state.copyWith(isSaleOn: preferencesHelper.getShowSale(),isIncludedVat: preferencesHelper.getIsIncludedVat()));
+        emit(state.copyWith(isIncludedVat: preferencesHelper.getIsIncludedVat()));
           if (preferencesHelper.getSubUser()) {
             try {
               final res = await DioClient(event.context).get(
