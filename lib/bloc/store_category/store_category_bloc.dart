@@ -65,7 +65,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
          debugPrint('isSubCategory_____${event.isSubCategory}');
         emit(state.copyWith(isSubCategory: event.isSubCategory ,isGridView: preferences.getIsGridView(),
             isGuestUser: preferences.getGuestUser(),bottleDeposit: preferences.getBottleTax(),
-          isSubUserAddToBasket: preferences.getCanAddToBasket(),
+          isSubUserAddToBasket: preferences.getCanAddToBasket(), isIncludedVat: preferences.getIsIncludedVat(),
+          isSaleOn: preferences.getShowSale(),
         ));
       }
       if (event is _ChangeCategoryExpansionEvent) {
@@ -409,7 +410,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             ///1 for planogram above sub cat.
             ///2 for planogram above grid/list products.
             ///3 for grid/list products.
-            if(response.product.isNotEmpty){
+            if(response.product != []){
 
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
@@ -423,14 +424,13 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
-               debugPrint('responseproductid____${response.product.first.id}');
+              debugPrint('responseproductid____${response.product?.first.id}');
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
-                  quantity: _productQuantity,
-                  maxQty: response.product.first.sale.isSale ?  int.parse(response.product.first.sale.saleMaxQuantity) : -1,
-                  productId: response.product.first.id ?? '' ,
-                  stock: (response.product.first.supplierSales.first.productStock.toString() ?? "0") ,
-                  totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() ?? '0')
+                quantity: _productQuantity,
+                productId: response.product?.first.id ?? '',
+                stock: (response.product?.first.supplierSales?.first.productStock.toString()  ?? '0'),
+                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
               );
             }
             else{
@@ -469,13 +469,14 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               add(StoreCategoryEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if ( (event.isBarcode )) {
+
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
-                  quantity: _productQuantity,
-                  maxQty: response.product.first.sale.isSale ?  int.parse(response.product.first.sale.saleMaxQuantity) : -1,
-                  productId: response.product?.first.id ?? '' ,
-                  stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
-              );
+                quantity: _productQuantity,
+                productId: response.product?.first.id ?? '',
+                stock: (response.product?.first.supplierSales?.first.productStock.toString()  ?? '0'),
+                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
+              );;
 
               emit(state.copyWith(productStockList: productStockList));
 
@@ -489,15 +490,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               basePrice:
               double.parse(supplier.productPrice ?? '0.0'),
               quantity: _productQuantity,
-              maxQty: response.product.first.sale.isSale ?  int.parse(response.product.first.sale.saleMaxQuantity) : -1,
+              maxQty: (response.product?.first.sale?.isSale ?? false) ?  int.parse(response.product?.first.sale?.saleMaxQuantity ?? '') : -1,
               stock: supplier.productStock.toString(),
               selectedIndex: (supplier.supplierId ?? '') ==
                   state
                       .productStockList[planoGramIndex]
                   [productStockUpdateIndex]
                       .productSupplierIds
-                  ? supplier.saleProduct.indexOf(
-                  supplier.saleProduct.firstWhere(
+                  ? supplier.saleProduct?.indexOf(
+                  supplier.saleProduct?.firstWhere(
                         (sale) =>
                     sale.saleId ==
                         state
@@ -510,8 +511,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
                   -1
                   ? -2
-                  : supplier.saleProduct.indexOf(
-                  supplier.saleProduct.firstWhere(
+                  : supplier.saleProduct?.indexOf(
+                  supplier.saleProduct?.firstWhere(
                         (sale) =>
                     sale.saleId ==
                         state
@@ -524,7 +525,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                   -1
                   : -1,
-              supplierSales: supplier.saleProduct.map((sale) => SupplierSaleModel(
+              supplierSales: supplier.saleProduct?.map((sale) => SupplierSaleModel(
                   saleId: sale.saleId ?? '',
                   saleName: sale.saleName ?? '',
                   maxQty: sale.saleMaxQuantity??'',
@@ -1339,31 +1340,31 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             data: {'mainProductId':event.productId});
         RelatedProductResModel response =
         RelatedProductResModel.fromJson(res);
-        debugPrint('product categories = ${response.data.length
+        debugPrint('product categories = ${response.data?.length
             .toString()}');
         if (response.status == 200) {
           List<List<ProductStockModel>> productStockList =
           state.productStockList.toList(growable: true);
           List<ProductStockModel> stockList = [];
-          debugPrint('RelatedProducts response_____${response.data.length}');
-          stockList.addAll(response.data.map(
+          debugPrint('RelatedProducts response_____${response.data?.length}');
+          stockList.addAll(response.data?.map(
                   (product) {
                 return ProductStockModel(
-                    productId: product.id ,
+                    productId: product.id ?? '' ,
                     stock:(product.productStock.toString()));
-              }) );
+              }) ?? [] );
            debugPrint('productStockList____${productStockList[3].length}');
           productStockList[3].addAll(stockList);
 
           emit(state.copyWith(
-              relatedProductList:response.data ,
+              relatedProductList:response.data  ?? [],
               isRelatedShimmering: false,productStockList: productStockList));
         } else {
           emit(state.copyWith(isRelatedShimmering: false));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(
-                response.message.toLocalization(),
+                response.message?.toLocalization() ?? '',
                 event.context),
             type: SnackBarType.FAILURE,
           );

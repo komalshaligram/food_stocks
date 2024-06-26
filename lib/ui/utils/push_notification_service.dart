@@ -23,6 +23,9 @@ class PushNotificationService {
   late AndroidNotificationChannel channel;
   String id = '';
   int notificationCount = 0;
+  String mainPage = '';
+  String subPage = '';
+
 
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
@@ -48,9 +51,29 @@ class PushNotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen(
           (RemoteMessage message) async {
         debugPrint('_____Here at onMessageOpenedApp....$message');
-        var data = json.decode(message!.data['data'].toString());
+        var data = json.decode(message.data['data'].toString());
         debugPrint('_____onMessage_______${data.toString()}');
         debugPrint('_____onMessage Noti_______${message.notification.toString()}');
+        debugPrint('main_page_____$mainPage');
+        debugPrint('sub_page_____$subPage');
+        debugPrint('id_____$id');
+        String? imageUrl;
+        SharedPreferencesHelper preferences =
+        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+        if(preferences.getSubUser()){
+          mainPage = data['notification']['message']['subUserMainPage'] ?? '';
+          subPage = data['notification']['message']['subUserSubPage'] ?? '';
+          id = data['notification']['message']['subUserId'] ?? '';
+          imageUrl = data['notification']['message']['imageUrl'] ?? '';
+        }
+        else{
+          mainPage = data['notification']['message']['mainPage'] ?? '';
+          subPage = data['notification']['message']['subPage'] ?? '';
+          id = data['notification']['message']['id'] ?? '';
+          imageUrl = data['notification']['message']['imageUrl'] ?? '';
+        }
+       showNotification(title: data['message']['title'],body: data['message']['body'],data: data,imageUrl: data['image'] ?? '',notiId: 0);
+
       },
     );
 
@@ -58,8 +81,12 @@ class PushNotificationService {
     await registerNotificationListeners();
   }
 
-  Future<void> handleMessage(String mainPage,String subPage, String id)  async {
+   handleMessage(String mainPage,String subPage, String id)  async {
     debugPrint('_______handleMessage...');
+    debugPrint('main_page_____$mainPage');
+    debugPrint('sub_page_____$subPage');
+    debugPrint('id_____$id');
+
     if (subPage == '') {
       debugPrint('_______handleMessage1...');
       if (mainPage == 'companyScreen') {
@@ -150,6 +177,13 @@ class PushNotificationService {
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
         debugPrint("__________details______:${details}");
+        debugPrint('main_page_____$mainPage');
+        debugPrint('sub_page_____$subPage');
+        debugPrint('id_____$id');
+
+
+
+        handleMessage(mainPage, subPage, id);
 
       },
     );
@@ -162,8 +196,11 @@ class PushNotificationService {
       debugPrint('_____onMessage_______${data.toString()}');
       //debugPrint('_____onMessage_______${data['data']['image'].toString()}');
       //debugPrint('_____onMessage Noti_______${message.notification!.apple!.imageUrl!}');
+     var messageData =  json.decode(message.data['data'].toString() ?? '');
       if(Platform.isAndroid){
-      showNotification(imageUrl:data['data']['image'], notiId: 0, title: message.notification!.title??'', body: message.notification!.body??'');
+      showNotification(imageUrl:data['data']['image'], notiId: 0, title: message.notification!.title??'', body: message.notification!.body??'',
+      data: data
+      );
      }
     });
   }
@@ -173,9 +210,29 @@ class PushNotificationService {
     required int notiId,
     required String title,
     required String body,
+    var data,
+
   }) async {
     debugPrint('____notification_____');
+    debugPrint('main_page_____$mainPage');
+    debugPrint('sub_page_____$subPage');
+    debugPrint('id_____$id');
+    debugPrint('data_____${data}');
     channel = androidNotificationChannel();
+    SharedPreferencesHelper preferences =
+    SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    if(preferences.getSubUser()){
+      mainPage = data['notification']['message']['subUserMainPage'] ?? '';
+      subPage = data['notification']['message']['subUserSubPage'] ?? '';
+      id = data['notification']['message']['subUserId'] ?? '';
+      imageUrl = data['notification']['message']['imageUrl'] ?? '';
+    }
+    else{
+      mainPage = data['notification']['message']['mainPage'] ?? '';
+      subPage = data['notification']['message']['subPage'] ?? '';
+      id = data['notification']['message']['id'] ?? '';
+      imageUrl = data['notification']['message']['imageUrl'] ?? '';
+    }
 /*
 
     if (imageUrl.isNotEmpty) {
@@ -237,9 +294,10 @@ class PushNotificationService {
                 importance: Importance.high,
                 priority: Priority.max,
                 channelShowBadge: true),
-            iOS: DarwinNotificationDetails(presentBanner: true,attachments: [DarwinNotificationAttachment(fileName!)]
+            iOS: DarwinNotificationDetails(presentBanner: true,attachments: [DarwinNotificationAttachment(fileName ?? '')]
             ))
     );
+    handleMessage(mainPage, subPage, id);
   }
   Future<File> writeToFile(ByteData data) async {
     final buffer = data.buffer;
@@ -292,28 +350,10 @@ class PushNotificationService {
 
 
 
-/*
-import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/services.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:food_stock/main.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart'
-    as flutter_local_notifications;
-import 'package:food_stock/data/storage/shared_preferences_helper.dart';
-import 'package:intl/intl.dart';
 
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class PushNotificationService {
+
+/*class PushNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -327,8 +367,8 @@ class PushNotificationService {
 
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
-  */
-/*_handleMessage(RemoteMessage message,bool showNoti) {
+
+_handleMessage(RemoteMessage message,bool showNoti) {
     var data = json.decode(message.data['data'].toString());
     final RemoteNotification? notification = message.notification;
     final String? messageId = message.messageId;
@@ -348,7 +388,7 @@ class PushNotificationService {
           isAppOpen: false);
     }
     FlutterAppBadger.updateBadgeCount(notificationCount);
-  }*//*
+  }
 
 
   Future<void> setupInteractedMessage() async {
@@ -427,8 +467,6 @@ class PushNotificationService {
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
       debugPrint('_____onMessage_______');
 
-
-
       showNotification(
         imageUrl:(message?.data['image']?? '') ,
           notiId: message.hashCode,
@@ -437,8 +475,8 @@ class PushNotificationService {
           isNavigate: false,
           showNotification: true,
           isAppOpen: true);
-  */
-/*    var data = json.decode(message!.data['data'].toString());
+
+    var data = json.decode(message!.data['data'].toString());
 
       final RemoteNotification? notification = message.notification;
       if (notification != null) {
@@ -448,21 +486,19 @@ class PushNotificationService {
         debugPrint('data:${data.toString()}');
 
      //   if (data != null) {
-       *//*
-*/
-/*     showNotification(
+
+   showNotification(
               notiId: message.notification.hashCode,
               androidIcon: android?.smallIcon ?? '',
               data: data,
               isNavigate: false,
               showNotification: true,
-              isAppOpen: true);*//*
-*/
-/*
+              isAppOpen: true);
+
      //   }
 
         FlutterAppBadger.removeBadge();
-      }*//*
+      }
 
     });
   }
@@ -487,8 +523,7 @@ class PushNotificationService {
         prefs: await SharedPreferences.getInstance());
 
     print('preference____${preferences.getSubUser()}');
- */
-/*   if(preferences.getSubUser()){
+   if(preferences.getSubUser()){
       mainPage = data['message']['subUserMainPage'] ?? '';
       subPage = data['message']['subUserSubPage'] ?? '';
       id = data['message']['subUserId'] ?? '';
@@ -499,7 +534,7 @@ class PushNotificationService {
       subPage = data['message']['subPage'] ?? '';
       id = data['message']['id'] ?? '';
       imageUrl = data['message']['imageUrl'] ?? '';
-    }*//*
+    }
 
 
 
@@ -564,8 +599,7 @@ class PushNotificationService {
         // payload: message.data.toString(),
       );
     }
-    if (isNavigate */
-/*&& showNotification*//*
+    if (isNavigate && showNotification
 ) {
       print('___________navigation');
       manageNavigation(isAppOpen: isAppOpen, mainPage: mainPage, subPage: subPage, id: id);

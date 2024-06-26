@@ -180,7 +180,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
-                                childAspectRatio:getChildAspectRatio(context)
+                                childAspectRatio:getChildAspectRatio(context,state.isSaleOn)
                             ),
                             itemBuilder: (context, index) => buildPlanoGramProductItem(
                                 originalPrice: state.planogramProductList[index].productPrice ?? 0.0,
@@ -639,6 +639,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              isIncludedVat: state.isIncludedVat,
                               productDetails: state.productDetails,
                             /*  salePrice: double.parse(state.productDetails.first.sale.salePrice),
                               maxQty: state.productDetails.first.sale.saleMaxQuantity,
@@ -646,12 +647,12 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                               startDate: state.productDetails.first.sale.saleFromDate,
                               isSaleOn: state.productDetails.first.sale.isSale,*/
                               isSubUserAddToBasket: state.isSubUserAddToBasket,
-                              totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
+                              totalBottleDeposit: (state.bottleDeposit* (state.productDetails.first.numberOfUnit ?? 1).toDouble() * state
                                   .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .quantity),
                               bottleTax: state.bottleDeposit,
-                              isBottle:state.productDetails.first.isBottle,
+                              isBottle:(state.productDetails.first.isBottle ?? false),
                             /*  nmMashlim: state.productDetails.first.nmMashlim,
                               isPesach: state.productDetails.first.isPesach,
                               lowStock: state.productDetails.first.supplierSales.first.lowStock.toString() ?? '',
@@ -719,12 +720,12 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                               productImages: [
                                 state.productDetails.first.mainImage ??
                                     '',
-                                ...state.productDetails.first.images.map((image) =>
+                                ...?state.productDetails.first.images?.map((image) =>
                                 image.imageUrl ?? '')
                               ],
 
 
-                              productUnitPrice: double.parse(state.productDetails.first.supplierSales.first.productPrice.toString()??'0'),
+                              productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
                               /*        productPerUnit: state.productDetails.first
                                   .numberOfUnit ,
 
@@ -833,39 +834,32 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductSaleItemWidget(
-                isSale:  relatedProductList.elementAt(i).sale.isSale,
+                isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: AppConstants.salesProductItemHeight,
                 width: 140,
-                productName: relatedProductList.elementAt(i).productName??'',
-                saleImage: relatedProductList.elementAt(i)
-                    .mainImage ??
-                    '',
-                title:  relatedProductList.elementAt(i)
-                    .name ??
-                    '',
-                description: parse( relatedProductList.elementAt(i).sale
-                    .saleDescription ??
-                    '')
+                productName: relatedProductList.elementAt(i).productName ?? '' ,
+                saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
+                title: relatedProductList.elementAt(i).name ,
+                description: parse(relatedProductList
+                    .elementAt(i)
+                    .sale?.saleDescription )
                     .body
                     ?.text ??
                     '',
-                discountedPrice:
-                double.parse( relatedProductList.elementAt(i).sale.salePrice),
-                originalPrice: relatedProductList.elementAt(i)
-                    .productPrice ??
-                    0 ,
-                productStock: relatedProductList.elementAt(i)
-                    .productStock.toString()??'0',
-                lowStock: relatedProductList.elementAt(i)
-                    .lowStock??'',
-                isPesach: relatedProductList.elementAt(i)
-                    .isPesach,
+                discountedPrice: double.parse(
+                    relatedProductList.elementAt(i).sale?.salePrice ?? '0'),
+                originalPrice:
+                relatedProductList.elementAt(i).productPrice ,
+                productStock:
+                relatedProductList.elementAt(i).productStock.toString(),
+                lowStock: relatedProductList.elementAt(i).lowStock ?? '',
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
                       context: context,
-                      productId: relatedProductList[i].id,
+                      productId: relatedProductList[i].id  ?? '',
                       isBarcode: false,
                       productListIndex: 2,
                       productStock: (relatedProductList[i].productStock.toString())

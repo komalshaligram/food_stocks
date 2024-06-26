@@ -1,4 +1,4 @@
-import 'package:meta/meta.dart';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 
@@ -39,15 +39,15 @@ class Data with _$Data {
 class Cart with _$Cart {
   const factory Cart({
     @JsonKey(name: "_id")
-    required String id,
+    String? id,
     @JsonKey(name: "totalAmount")
-    required double totalAmount,
+    double? totalAmount,
     @JsonKey(name: "suppliers")
-    required int suppliers,
+    int? suppliers,
     @JsonKey(name: "isBottles")
-    required bool isBottles,
+    bool? isBottles,
     @JsonKey(name: "bottleQuantities")
-    required int bottleQuantities,
+    int? bottleQuantities,
   }) = _Cart;
 
   factory Cart.fromJson(Map<String, dynamic> json) => _$CartFromJson(json);
@@ -57,29 +57,29 @@ class Cart with _$Cart {
 class Datum with _$Datum {
   const factory Datum({
     @JsonKey(name: "_id")
-    required String id,
+    String? id,
     @JsonKey(name: "productDetails")
-    required ProductDetails productDetails,
+    ProductDetails? productDetails,
     @JsonKey(name: "cartProductId")
-    required String cartProductId,
+    String? cartProductId,
     @JsonKey(name: "suppliers")
-    required List<Supplier> suppliers,
+    List<Supplier>? suppliers,
     @JsonKey(name: "productStock")
-    required double productStock,
+    double? productStock,
     @JsonKey(name: "lowStockBox")
-    required int lowStockBox,
+    int? lowStockBox,
     @JsonKey(name: "sale")
-    required Sale sale,
+    Sale? sale,
     @JsonKey(name: "productPrice")
-    required double productPrice,
+    double? productPrice,
     @JsonKey(name: "totalQuantity")
-    required int totalQuantity,
+    int? totalQuantity,
     @JsonKey(name: "totalAmount")
-    required double totalAmount,
+    double? totalAmount,
     @JsonKey(name: "note")
-    required String note,
+    String? note,
     @JsonKey(name: "lowStock")
-    required String lowStock,
+    String? lowStock,
   }) = _Datum;
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
@@ -89,23 +89,23 @@ class Datum with _$Datum {
 class ProductDetails with _$ProductDetails {
   const factory ProductDetails({
     @JsonKey(name: "_id")
-    required String id,
+    String? id,
     @JsonKey(name: "productName")
-    required String productName,
+    String? productName,
     @JsonKey(name: "mainImage")
-    required String mainImage,
+    String? mainImage,
     @JsonKey(name: "numberOfUnit")
-    required int numberOfUnit,
+    int? numberOfUnit,
     @JsonKey(name: "itemsWeight")
-    required int itemsWeight,
+    int? itemsWeight,
     @JsonKey(name: "images")
-    required List<dynamic> images,
+    List<dynamic>? images,
     @JsonKey(name: "scales")
-    required String scales,
+    String? scales,
     @JsonKey(name: "isPesach")
-    required bool isPesach,
+    bool? isPesach,
     @JsonKey(name: "nmMashlim")
-    required String nmMashlim,
+    String? nmMashlim,
   }) = _ProductDetails;
 
   factory ProductDetails.fromJson(Map<String, dynamic> json) => _$ProductDetailsFromJson(json);
@@ -115,17 +115,17 @@ class ProductDetails with _$ProductDetails {
 class Sale with _$Sale {
   const factory Sale({
     @JsonKey(name: "isSale")
-    required bool isSale,
+    bool? isSale,
     @JsonKey(name: "salePrice")
-    required String salePrice,
+    String? salePrice,
     @JsonKey(name: "saleFromDate")
-    required String saleFromDate,
+    String? saleFromDate,
     @JsonKey(name: "saleUntilDate")
-    required String saleUntilDate,
+    String? saleUntilDate,
     @JsonKey(name: "saleMaxQuantity")
-    required int saleMaxQuantity,
+    int? saleMaxQuantity,
     @JsonKey(name: "saleDescription")
-    required String saleDescription,
+    String? saleDescription,
   }) = _Sale;
 
   factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
@@ -135,9 +135,9 @@ class Sale with _$Sale {
 class Supplier with _$Supplier {
   const factory Supplier({
     @JsonKey(name: "_id")
-    required String id,
+    String? id,
     @JsonKey(name: "contactName")
-    required String contactName,
+    String? contactName,
   }) = _Supplier;
 
   factory Supplier.fromJson(Map<String, dynamic> json) => _$SupplierFromJson(json);

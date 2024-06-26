@@ -50,8 +50,8 @@ Future<String> getBottleTax() async {
    return Future.value(value.toString());
 }
 
- double getChildAspectRatio(BuildContext context){
-  return Platform.isAndroid? getScreenHeight(context) > 900
+ double getChildAspectRatio(BuildContext context , bool isSaleOn){
+  return !isSaleOn ? AppConstants.productGridAspectRatio8 : Platform.isAndroid? getScreenHeight(context) > 900
        ? AppConstants.productGridAspectRatio9 :getScreenHeight(context) >  820
       && getScreenHeight(context) <  900? AppConstants.productGridAspectRatio51
        : AppConstants.productGridAspectRatio51: getScreenHeight(context) > 820

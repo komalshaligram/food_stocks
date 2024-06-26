@@ -40,7 +40,9 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
         debugPrint('token___${preferencesHelper.getAuthToken()}');
         debugPrint('orderid___${event.orderId}');
         emit(state.copyWith(isShimmering: true, isLoading: true , language:preferencesHelper.getAppLanguage(),
-        isSubUserCreateDuplicateOrder: preferencesHelper.getCanDuplicateOrder()));
+        isSubUserCreateDuplicateOrder: preferencesHelper.getCanDuplicateOrder(),
+          isIncludedVat: preferencesHelper.getIsIncludedVat()
+        ));
         try {
           final res = await DioClient(event.context).get(
             path: '${AppUrls.getOrderById}${preferencesHelper.getOrderId()}',

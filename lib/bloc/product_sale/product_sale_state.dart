@@ -26,6 +26,8 @@ class ProductSaleState with _$ProductSaleState {
     required bool isSubUserAddToBasket,
     required bool isGridView,
     required int productListIndex,
+    required bool isIncludedVat,
+    required bool isSaleOn,
 
    
   }) = _ProductSaleState;
@@ -58,6 +60,8 @@ class ProductSaleState with _$ProductSaleState {
     isSubUserAddToBasket: false,
       isGridView : true,
     productListIndex: -1,
+      isIncludedVat : false,
+      isSaleOn : false
     
       );
 }

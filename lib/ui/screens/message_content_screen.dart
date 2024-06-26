@@ -97,6 +97,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                               showDialog(
                                 context: context,
                                 builder: (context1) => CommonAlertDialog(
+                                  isLogOutProcess: state.isLoading,
                                   directionality: state.language,
                                   title:
                                       '${AppLocalizations.of(context)!.delete}',
@@ -281,7 +282,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                                       shrinkWrap: true,
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 6),
+                                      padding: const EdgeInsets.only(left: 6 ,right: 6),
                                       child: Text(
                                         parse(state.message.message?.summary ?? '')
                                                 .body

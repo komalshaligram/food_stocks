@@ -496,5 +496,8 @@
   "apply": "Apply",
   "clear": "clear",
   "sorting" : "Sorting",
-  "filtering" : "Filtering"
+  "filtering" : "Filtering",
+  "product_no_longer_in_stock" : "המוצר כבר לא במלאי",
+   "total_price_with_vat": "סה'כ לתשלום כולל מע'מ",
+     "price_includes_vat": "מחיר כולל מע”מ"
 }

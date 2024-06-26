@@ -33,6 +33,8 @@ class SharedPreferencesHelper {
   static const String reorderProductGrid = 'isReorderProductGrid';
   static const String subUser = 'isSubUser';
   static const String companyName = 'companyName';
+  static const String includedVat = 'showSale';
+  static const String saleOn = 'showVat';
 
   static const String accountAdmin = 'accountAdmin';
   static const String seeWallet = 'seeWallet';
@@ -77,6 +79,8 @@ class SharedPreferencesHelper {
       await prefs.remove(subUser);
       await prefs.remove(companyName);
       await prefs.remove(emailId);
+      await prefs.remove(saleOn);
+      await prefs.remove(includedVat);
 
 
       await prefs.remove(accountAdmin);
@@ -213,6 +217,14 @@ class SharedPreferencesHelper {
 
   Future<void> setBusinessName({required String businessName}) async {
     await prefs.setString(companyName, businessName);
+  }
+
+  Future<void> setIsIncludedVat({required bool isIncludedVat}) async {
+    await prefs.setBool(includedVat, isIncludedVat);
+  }
+
+  Future<void> setIsSaleOn({required bool isSaleOn}) async {
+    await prefs.setBool(saleOn, isSaleOn);
   }
 
   //permission
@@ -383,6 +395,14 @@ class SharedPreferencesHelper {
 
   String getBusinessName() {
     return prefs.getString(companyName) ?? '';
+  }
+
+  bool getShowSale() {
+    return prefs.getBool(includedVat) ?? false;
+  }
+
+  bool getIsIncludedVat() {
+    return prefs.getBool(saleOn) ?? false;
   }
 
 

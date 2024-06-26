@@ -53,6 +53,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final bool isLoading;
   final double bottleTax;
   final bool isBottle;
+  final bool isIncludedVat;
   const CommonProductDetailsWidget(
       {super.key,
       required this.context,
@@ -60,6 +61,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
         required this.onPageChanged,
         required this.productImages,
         required this.productStock,
+
 
      /*
       required this.productName,
@@ -92,6 +94,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
         required this.productQuantity,
         required this.isSubUserAddToBasket,
         required this.totalBottleDeposit,
+        required this.isIncludedVat,
 
       });
 
@@ -128,7 +131,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     Expanded(
                       flex: 4,
                       child: Text(
-                        productDetails.first.productName,
+                        productDetails.first.productName ?? '',
                         style: AppStyles.rkBoldTextStyle(
                           size: AppConstants.normalFont,
                           color: AppColors.blackColor,
@@ -155,7 +158,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                 ),
                 5.height,
                 Text(
-                  '${productDetails.first.supplierSales.first.productPrice.toString()} ${AppLocalizations.of(context)!.unit_in_box} ',
+                  '${productDetails.first.supplierSales?.first.productPrice.toString()} ${AppLocalizations.of(context)!.unit_in_box} ',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont, color: AppColors.blackColor),
                 ),
@@ -163,38 +166,40 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    productDetails.first.sale.isSale?
-                    Text.rich(TextSpan(
-                      text: '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}: ',
-                      children: <TextSpan>[
-                         TextSpan(
-                          text: '${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)} ',
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.font_14, color: AppColors.blackColor).copyWith(decoration: TextDecoration.lineThrough),
-                        ),
-                         TextSpan(
-                          text: ' ${AppLocalizations.of(context)?.currency}${double.parse(productDetails.first.sale.salePrice).toStringAsFixed(2)}',
-                           style: AppStyles.rkRegularTextStyle(
-                               size: AppConstants.font_14, color: AppColors.redColor),
-                        ),
-                      ],
-                    ),
-                    )
-                   :Text(
+                   ( productDetails.first.sale?.isSale ?? false)?
+                   Text.rich(TextSpan(
+                     text: isIncludedVat? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} (${AppLocalizations.of(context)?.price_includes_vat}):':
+                     '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}: ',
+                     children: <TextSpan>[
+                       TextSpan(
+                         text: '${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)} ',
+                         style: AppStyles.rkRegularTextStyle(
+                             size: AppConstants.font_14, color: AppColors.blackColor).copyWith(decoration: TextDecoration.lineThrough),
+                       ),
+                       TextSpan(
+                         text: ' ${AppLocalizations.of(context)?.currency}${double.parse(productDetails.first.sale?.salePrice ?? '').toStringAsFixed(2)}',
+                         style: AppStyles.rkRegularTextStyle(
+                             size: AppConstants.font_14, color: AppColors.redColor),
+                       ),
+                     ],
+                   ),
+                   )
+                   : Text(
+                      isIncludedVat ? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)} (${AppLocalizations.of(context)?.price_includes_vat})' :
                       '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.font_14, color: AppColors.blackColor),
                     ),
                   ],
                 ),
-                productDetails.first.sale.saleDescription.isNotEmpty ? 8.height:0.height ,
-                productDetails.first.sale.saleDescription.isNotEmpty ? Container(
+                productDetails.first.sale?.saleDescription != '' ? 8.height:0.height ,
+                productDetails.first.sale?.saleDescription != '' ? Container(
                   width: getScreenWidth(context) - 50,
                   padding: EdgeInsets.all(3),
                   margin: EdgeInsets.zero,
                   decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
                   child: Text(
-                    "${parse(productDetails.first.sale.saleDescription).body?.text}",
+                    "${parse(productDetails.first.sale?.saleDescription).body?.text}",
                     style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor,fontWeight: FontWeight.w500),
                     maxLines: 3,
                     textAlign: TextAlign.center,
@@ -207,17 +212,17 @@ class CommonProductDetailsWidget extends StatelessWidget {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              productDetails.first.isPesach? 5.height:0.height,
-              productDetails.first.isPesach ? Container(
+              (productDetails.first.isPesach ??false)? 5.height:0.height,
+              (productDetails.first.isPesach ?? false) ? Container(
                   padding: EdgeInsets.only(left:3.0,right: 3.0),
                   decoration: BoxDecoration(
                       color: AppColors.pesachBGColor,
                       border: Border.all(color: AppColors.pesachBGColor),
                       borderRadius: BorderRadius.all(Radius.circular(10))
                   ),
-                  child:productDetails.first.nmMashlim.isNotEmpty?Text('${AppLocalizations.of(context)!.pesach}, ${productDetails.first.nmMashlim}'):Text(AppLocalizations.of(context)!.pesach,style: TextStyle(fontSize: 12),)
+                  child:productDetails.first.nmMashlim != ''?Text('${AppLocalizations.of(context)!.pesach}, ${productDetails.first.nmMashlim}'):Text(AppLocalizations.of(context)!.pesach,style: TextStyle(fontSize: 12),)
               ):0.height,
-              productDetails.first.isPesach?5.height:0.height,
+              (productDetails.first.isPesach ?? false)?5.height:0.height,
               Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -296,7 +301,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    productDetails.first.qrcode,
+                    productDetails.first.qrcode ?? '',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont, color: AppColors.blackColor),
                   ),
@@ -352,9 +357,16 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                         color: AppColors.blackColor,
                                         fontWeight: FontWeight.w700),
                                   ),
-                                  productDetails.first.isBottle?Container(
+                                  !isIncludedVat ?  (productDetails.first.isBottle ?? false)?Container(
                                       padding: EdgeInsets.only(top:3),
-                                      child: Text('${AppLocalizations.of(context)?.bottle_deposit}:${AppLocalizations.of(context)!.currency}${totalBottleDeposit.toStringAsFixed(AppConstants.amountFrLength)}')):0.height,
+                                      child: Text('${AppLocalizations.of(context)?.bottle_deposit}:${AppLocalizations.of(context)!.currency}${totalBottleDeposit.toStringAsFixed(AppConstants.amountFrLength)}')):0.height : 0.width,
+                                  isIncludedVat? Text(
+                                    '(${AppLocalizations.of(context)!.price_includes_vat})',
+                                    style: AppStyles.rkBoldTextStyle(
+                                        size: AppConstants.smallFont,
+                                        color: AppColors.blackColor,
+                                        fontWeight: FontWeight.w400),
+                                  ) : 0.width,
 
                                 ],
                               ),
@@ -507,19 +519,19 @@ class CommonProductDetailsWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                        productDetails.first.sale.isSale? Container(
+                        (productDetails.first.sale?.isSale ?? false) ? Container(
                           alignment: Alignment.centerRight,
                           margin: EdgeInsets.only(top: 3),
                           child: Text(
-                            '${AppLocalizations.of(context)!.maximum_qty} : ${productDetails.first.sale.saleMaxQuantity}',
+                            '${AppLocalizations.of(context)!.maximum_qty} : ${productDetails.first.sale?.saleMaxQuantity}',
                             style: AppStyles.rkBoldTextStyle(
                                 size: AppConstants.font_14,
                                 color: AppColors.blackColor,
                                 fontWeight: FontWeight.w400),
                           ),
                         ):0.height,
-                        productDetails.first.supplierSales.first.lowStock.isNotEmpty && (productStock != '0' || productStock != '0.0' )? Text(
-                          productDetails.first.supplierSales.first.lowStock.toString(),
+                       ( productDetails.first.supplierSales?.first.lowStock != '') && (productStock != '0' || productStock != '0.0' )? Text(
+                         ( productDetails.first.supplierSales?.first.lowStock.toString() ?? ''),
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont, color: AppColors.orangeColor),
                         ) : 0.height,

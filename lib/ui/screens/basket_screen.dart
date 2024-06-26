@@ -262,44 +262,85 @@ class BasketScreenWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            state.bottleQty! >0?basketRow(state.language == AppStrings.englishString ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.bottleQty.toString()}' : '${AppLocalizations.of(context)!.bottle_deposit}${state.bottleQty.toString()}${'X'}', '${(formatNumber(value:bottleDepositCalculation(deposit:state.bottleTax,qty: state.bottleQty?.toDouble()??0).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'):Container(),
-            state.bottleQty! >0?Divider():Container(),
-            basketRow('${AppLocalizations.of(context)!.sub_total}', '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
-            Divider(),
-            basketRow('${AppLocalizations.of(context)!.vat}', '${(formatNumber(value: totalVatAmountCalculation(price: state.totalPayment, vat:state.vatPercentage,qty: state.bottleQty?.toDouble() ?? 0, deposit: state.bottleTax).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
-            Divider(),
-            basketRow('${AppLocalizations.of(context)!.total}', '${(formatNumber(value: vatCalculation(price: state.totalPayment, vat:state.vatPercentage,qty: state.bottleQty?.toDouble() ?? 0, deposit: state.bottleTax).toStringAsFixed(2), local: AppStrings.hebrewLocal))}',isTitle: true),
-            Divider(),
-            Text('${AppLocalizations.of(context)!.note} : ${AppLocalizations.of(context)!.not_include_surfaces_price}',
+            !state.isIncludedVat ?  state.bottleQty! > 0
+                ? basketRow(
+                state.language == AppStrings.englishString
+                    ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.bottleQty.toString()}'
+                    : '${AppLocalizations.of(context)!.bottle_deposit}${state.bottleQty.toString()}${'X'}',
+                (formatNumber(
+                    value: bottleDepositCalculation(
+                        deposit: state.bottleTax,
+                        qty: state.bottleQty?.toDouble() ?? 0)
+                        .toStringAsFixed(2),
+                    local: AppStrings.hebrewLocal)))
+                : Container() : 0.width,
+            state.bottleQty! > 0 ? const Divider() : Container(),
+            state.isIncludedVat ?  const SizedBox() : basketRow(
+                AppLocalizations.of(context)!.sub_total,
+                (formatNumber(
+                    value: (state.totalPayment.toStringAsFixed(2)),
+                    local: AppStrings.hebrewLocal))),
+            const Divider(),
+            state.isIncludedVat ? SizedBox() : basketRow(
+                AppLocalizations.of(context)!.vat,
+                (formatNumber(
+                    value: totalVatAmountCalculation(
+                        price: state.totalPayment,
+                        vat: state.vatPercentage,
+                        qty: state.bottleQty?.toDouble() ?? 0,
+                        deposit: state.bottleTax)
+                        .toStringAsFixed(2),
+                    local: AppStrings.hebrewLocal))),
+            state.isIncludedVat ? const SizedBox() :  const Divider(),
+            state.isIncludedVat ?  basketRow(
+                AppLocalizations.of(context)!.total_price_with_vat,
+                (formatNumber(
+                    value: state.totalPayment
+                        .toStringAsFixed(2),
+                    local: AppStrings.hebrewLocal)),
+                isTitle: true) : basketRow(
+                AppLocalizations.of(context)!.total,
+                (formatNumber(
+                    value: vatCalculation(
+                        price: state.totalPayment,
+                        vat: state.vatPercentage,
+                        qty: state.bottleQty?.toDouble() ?? 0,
+                        deposit: state.bottleTax)
+                        .toStringAsFixed(2),
+                    local: AppStrings.hebrewLocal)),
+                isTitle: true),
+            const Divider(),
+            Text(
+              '${AppLocalizations.of(context)!.note} : ${AppLocalizations.of(context)!.not_include_surfaces_price}',
               style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.font_14,
-                  color: AppColors
-                      .redColor),
+                  size: AppConstants.font_14, color: AppColors.redColor),
             ),
-
             5.height,
-           state.isSubUserCanCreateOrder ?  CustomButtonWidget(
+            state.isSubUserCanCreateOrder
+                ? CustomButtonWidget(
               buttonText: AppLocalizations.of(context)!.submit,
               bGColor: AppColors.mainColor,
               isLoading: state.isLoading,
               onPressed: () {
-                if(!state.isRemoveProcess && !state.isLoading && !state.isShimmering){
-                  if(state.supplierCount == 1){
-                    bloc.add(BasketEvent.orderSendEvent(context: context));
-                  }
-                  else{
+                if (!state.isRemoveProcess &&
+                    !state.isLoading &&
+                    !state.isShimmering) {
+                  if (state.supplierCount == 1) {
+                    bloc.add(
+                        BasketEvent.orderSendEvent(context: context));
+                  } else {
                     Navigator.pushNamed(
-                        context,
-                        RouteDefine
-                            .orderSummaryScreen.name,
+                        context, RouteDefine.orderSummaryScreen.name,
                         arguments: {
-                          AppStrings.getCartListString: state.CartItemList,
+                          AppStrings.getCartListString:
+                          state.CartItemList,
                         });
                   }
                 }
               },
               fontColors: AppColors.whiteColor,
-            ) : 0.width,
+            )
+                : 0.width,
             10.height
           ],
         ));
@@ -509,13 +550,18 @@ class BasketScreenWidget extends StatelessWidget {
                                   ),
                                 ),
                                 5.height,
-                                lowStock.isNotEmpty ? Text(
-                                 lowStock,
-                                  style: TextStyle(
-                                      color: AppColors.orangeColor,
-                                      fontSize: AppConstants.smallFont,
-                                      ),
-                                ) : 0.width,
+                                productStock == 0 || productStock == 0.0 ? Text(
+                                  AppLocalizations.of(context)!.product_no_longer_in_stock,
+                                  style: AppStyles.rkBoldTextStyle(
+                                      size: AppConstants.font_12,
+                                      color: AppColors.redColor,
+                                      fontWeight: FontWeight.w400),
+                                ): (lowStock.isNotEmpty) && double.parse(productStock.toString()) > 0 ? Text(lowStock,
+                                    style: AppStyles.rkBoldTextStyle(
+                                        size: AppConstants.font_12,
+                                        color: AppColors.orangeColor,
+                                        fontWeight: FontWeight.w400)):0.width,
+
                                 lowStock.isNotEmpty?5.height:0.height,
                                 state.basketProductList[index].isSale ?Container(
                                   width: MediaQuery.of(context).size.width,
@@ -820,23 +866,15 @@ class BasketScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              isIncludedVat: state.isIncludedVat,
                               productDetails: state.productDetails,
-                            /*  salePrice: double.parse(state.productDetails.first.sale.salePrice),
-                              maxQty: state.productDetails.first.sale.saleMaxQuantity,
-                              endDate: state.productDetails.first.sale.saleUntilDate,
-                              startDate: state.productDetails.first.sale.saleFromDate,
-                              isSaleOn: state.productDetails.first.sale.isSale,*/
                               isSubUserAddToBasket: state.isSubUserAddToBasket,
                               bottleTax: state.bottleTax,
-                              totalBottleDeposit: (state.bottleTax* state.productDetails.first.numberOfUnit.toDouble()* state
+                              totalBottleDeposit: (state.bottleTax* (state.productDetails.first.numberOfUnit ?? 1).toDouble() * state
                                   .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .quantity),
-                              isBottle:state.productDetails.first.isBottle,
-                              // nmMashlim: state.productDetails.first.nmMashlim,
-                              // isPesach: state.productDetails.first.isPesach,
-                              // lowStock: state.productDetails.first.supplierSales.first.lowStock.toString() ,
-                              // qrCode:state.productDetails.first.qrcode,
+                              isBottle:(state.productDetails.first.isBottle ?? false),
                               addToOrderTap: () {
                              FocusManager.instance.primaryFocus?.unfocus();
                                 context.read<BasketBloc>().add(
@@ -895,13 +933,13 @@ class BasketScreenWidget extends StatelessWidget {
                                         index: index));
                               },
                               productImages: [
-                                state.productDetails.first.mainImage,
-                                ...state.productDetails.first.images.map((image) =>
+                                state.productDetails.first.mainImage ?? '',
+                                ...?state.productDetails.first.images?.map((image) =>
                                 image.imageUrl ?? '')
                               ],
                             /*  productPerUnit: state.productDetails.first
                                   .numberOfUnit ,*/
-                              productUnitPrice: double.parse(state.productDetails.first.supplierSales.first.productPrice.toString()??'0'),
+                              productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
                             /*  productName: state.productDetails.first
                                   .productName,
                               productSaleDescription: parse(state
@@ -912,14 +950,13 @@ class BasketScreenWidget extends StatelessWidget {
                                   .body
                                   ?.text ??
                                   '',*/
-                              productPrice: state.productDetails.first.sale.isSale?
-                              double.parse(state.productDetails.first.sale.salePrice) *
+                              productPrice: (state.productDetails.first.sale?.isSale ?? false)?
+                              double.parse(state.productDetails.first.sale?.salePrice ?? '') *
                                   state.productStockList
                                   [state.productListIndex][
                                   state.productStockUpdateIndex]
                                       .quantity*
-                                  (state.productDetails.first
-                                      .numberOfUnit):state
+                                  (state.productDetails.first.numberOfUnit ?? 1):state
                                   .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .totalPrice *
@@ -927,8 +964,7 @@ class BasketScreenWidget extends StatelessWidget {
                                   [state.productListIndex][
                                   state.productStockUpdateIndex]
                                       .quantity*
-                                  (state.productDetails.first
-                                      .numberOfUnit) ,
+                                  (state.productDetails.first.numberOfUnit ?? 1) ,
 
                             /*  productWeight: state
                                   .productDetails.first.itemsWeight
@@ -1011,41 +1047,32 @@ class BasketScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductSaleItemWidget(
-                isSale:  relatedProductList.elementAt(i).sale.isSale,
+                isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: AppConstants.salesProductItemHeight,
                 width: 140,
-                productName: relatedProductList.elementAt(i).productName??'',
-                saleImage: relatedProductList.elementAt(i)
-                    .mainImage ??
-                    '',
-                title:  relatedProductList.elementAt(i)
-                    .name ??
-                    '',
-                description: parse( relatedProductList.elementAt(i).sale
-                    .saleDescription ??
-                    '')
+                productName: relatedProductList.elementAt(i).productName ?? '' ,
+                saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
+                title: relatedProductList.elementAt(i).name ,
+                description: parse(relatedProductList
+                    .elementAt(i)
+                    .sale?.saleDescription )
                     .body
                     ?.text ??
                     '',
-                discountedPrice:
-                double.parse( relatedProductList.elementAt(i).sale.salePrice),
-
-                originalPrice: relatedProductList.elementAt(i)
-                    .productPrice ??
-                    0 ,
-                productStock: relatedProductList.elementAt(i)
-                    .productStock.toString()??'0',
-                lowStock: relatedProductList.elementAt(i)
-                    .lowStock??'',
-                isPesach: relatedProductList.elementAt(i)
-                    .isPesach,
-
+                discountedPrice: double.parse(
+                    relatedProductList.elementAt(i).sale?.salePrice ?? '0'),
+                originalPrice:
+                relatedProductList.elementAt(i).productPrice ,
+                productStock:
+                relatedProductList.elementAt(i).productStock.toString(),
+                lowStock: relatedProductList.elementAt(i).lowStock ?? '',
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
                       context: context,
-                      cartProductId: relatedProductList[i].id,
+                      cartProductId: relatedProductList[i].id ?? '',
                       isBarcode: false,
                       productStock: relatedProductList[i].productStock.toString(),
                       productListIndex: 1

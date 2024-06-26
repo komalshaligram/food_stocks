@@ -280,6 +280,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                               child: Column(
                                 children: [
                                   CommonProductDetailsWidget(
+                                    isIncludedVat: state.isIncludedVat,
                                     productDetails: state.productDetails,
                               /*      salePrice: double.parse(state.productDetails.first.sale.salePrice),
                                     maxQty: state.productDetails.first.sale.saleMaxQuantity,
@@ -288,8 +289,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     isSaleOn: state.productDetails.first.sale.isSale,*/
                                     isSubUserAddToBasket: state.isSubUserAddToBasket,
                                     bottleTax: state.bottleDeposit,
-                                    totalBottleDeposit: (state.bottleDeposit * state.productDetails.first.numberOfUnit!.toDouble() * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
-                                    isBottle: state.productDetails.first.isBottle ,
+                                    totalBottleDeposit: (state.bottleDeposit * (state.productDetails.first.numberOfUnit  ?? 1).toDouble()* state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
+                                    isBottle:(state.productDetails.first.isBottle ?? false),
                                     /*nmMashlim: state.productDetails.first.nmMashlim ,
                                     isPesach: state.productDetails.first.isPesach ,
                                     lowStock: state.productDetails.first.supplierSales.first.lowStock.toString() ?? '',
@@ -353,7 +354,9 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     },
                                     productUnitPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
 
-                                    productImages: [state.productDetails.first.mainImage , ...state.productDetails.first.images.map((image) => image.imageUrl ?? '') ?? []],
+                                    productImages: [state.productDetails.first.mainImage ?? '' ,
+
+                                      ...state.productDetails.first.images?.map((image) => image.imageUrl ?? '') ?? []],
                                    /* productPerUnit: state.productDetails.first.numberOfUnit ,
                                     productName: state.productDetails.first.productName,
                                     productSaleDescription: parse(state
@@ -364,8 +367,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         .body
                                         ?.text ??
                                         '',*/
-                                    productPrice:state.productDetails.first.sale.isSale?
-                                    double.parse(state.productDetails.first.sale.salePrice) * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit)
+                                    productPrice:(state.productDetails.first.sale?.isSale ?? false) ?
+                                    double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1)
                                         :
                                     state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 0),
                                   //  productWeight: state.productDetails.first.itemsWeight.toDouble() ?? 0.0,
@@ -428,39 +431,30 @@ class ProductSaleScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2, i) {
               return CommonProductSaleItemWidget(
-                isSale:  relatedProductList.elementAt(i).sale.isSale,
+                isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: AppConstants.salesProductItemHeight,
                 width: 140,
-                productName: relatedProductList.elementAt(i).productName??'',
-                saleImage: relatedProductList.elementAt(i)
-                    .mainImage ??
-                    '',
-                title:  relatedProductList.elementAt(i)
-                    .name ??
-                    '',
-                description: parse( relatedProductList.elementAt(i).sale
-                    .saleDescription ??
-                    '')
+                productName: relatedProductList.elementAt(i).productName ?? '' ,
+                saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
+                title: relatedProductList.elementAt(i).name ,
+                description: parse(relatedProductList
+                    .elementAt(i)
+                    .sale?.saleDescription )
                     .body
                     ?.text ??
                     '',
-                discountedPrice:
-                double.parse( relatedProductList.elementAt(i).sale.salePrice),
-
-                originalPrice: relatedProductList.elementAt(i)
-                    .productPrice ??
-                    0 ,
-                productStock: relatedProductList.elementAt(i)
-                    .productStock.toString()??'0',
-                lowStock: relatedProductList.elementAt(i)
-                    .lowStock??'',
-                isPesach: relatedProductList.elementAt(i)
-                    .isPesach,
-
+                discountedPrice: double.parse(
+                    relatedProductList.elementAt(i).sale?.salePrice ?? '0'),
+                originalPrice:
+                relatedProductList.elementAt(i).productPrice ,
+                productStock:
+                relatedProductList.elementAt(i).productStock.toString(),
+                lowStock: relatedProductList.elementAt(i).lowStock ?? '',
+                isPesach: relatedProductList.elementAt(i).isPesach,
                 onButtonTap: () {
                   Navigator.of(prevContext).pop();
-                  showProductDetails(context: context, productId: relatedProductList[i].id,
+                  showProductDetails(context: context, productId: relatedProductList[i].id ?? '',
                   productStock:  relatedProductList.elementAt(i)
                       .productStock.toString(),
                     productListIndex: 2

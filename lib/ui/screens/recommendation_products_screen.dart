@@ -233,7 +233,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 3,
-                                      childAspectRatio: getChildAspectRatio(context)),
+                                      childAspectRatio: getChildAspectRatio(context,state.isSaleOn)),
                                   itemBuilder: (context, index) {
                                     return CommonProductSaleItemWidget(
                                         isSale: state.recommendationProductsList[index].sale?.isSale,
@@ -672,6 +672,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              isIncludedVat: state.isIncludedVat,
                               productDetails: state.productDetails,
                              /* salePrice: double.parse(state.productDetails.first.sale.salePrice),
                               maxQty: state.productDetails.first.sale.saleMaxQuantity,
@@ -680,11 +681,11 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               isSaleOn: state.productDetails.first.sale.isSale,*/
                               isSubUserAddToBasket: state.isSubUserAddToBasket,
                               bottleTax: state.bottleDeposit,
-                              totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit.toDouble()* state
+                              totalBottleDeposit: (state.bottleDeposit* (state.productDetails.first.numberOfUnit ?? 1) * state
                                   .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .quantity),
-                              isBottle:state.productDetails.first.isBottle,
+                              isBottle:(state.productDetails.first.isBottle ?? false),
                               /*nmMashlim: state.productDetails.first.nmMashlim,
                               isPesach: state.productDetails.first.isPesach,
                               lowStock: state.productDetails.first.supplierSales.first.lowStock.toString(),
@@ -749,12 +750,12 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                         index: index));
                               },
                               productImages: [
-                                state.productDetails.first.mainImage ,
-                                ...state.productDetails.first.images
-                                    .map((image) =>
+                                state.productDetails.first.mainImage ?? '' ,
+                                ...?state.productDetails.first.images
+                                    ?.map((image) =>
                                 image.imageUrl ?? '')
                               ],
-                              productUnitPrice: double.parse(state.productDetails.first.supplierSales.first.productPrice.toString()),
+                              productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? ''),
                        /*       productPerUnit: state.productDetails.first
                                   .numberOfUnit,
 
@@ -776,7 +777,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   state.productStockUpdateIndex]
                                       .quantity *
                                   (state.productDetails.first
-                                      .numberOfUnit) ,
+                                      .numberOfUnit ?? 1) ,
 
                              /* productWeight: state
                                   .productDetails.first.itemsWeight.toDouble(),*/
@@ -858,37 +859,33 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductSaleItemWidget(
-                isSale:  relatedProductList.elementAt(i).sale.isSale,
+                isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: AppConstants.salesProductItemHeight,
                 width: 140,
-                productName: relatedProductList.elementAt(i).productName,
-                saleImage: relatedProductList.elementAt(i)
-                    .mainImage,
-                title:  relatedProductList.elementAt(i)
-                    .name ,
-                description: parse( relatedProductList.elementAt(i).sale
-                    .saleDescription )
+                productName: relatedProductList.elementAt(i).productName ?? '' ,
+                saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
+                title: relatedProductList.elementAt(i).name ,
+                description: parse(relatedProductList
+                    .elementAt(i)
+                    .sale?.saleDescription )
                     .body
                     ?.text ??
                     '',
-                discountedPrice:
-                double.parse( relatedProductList.elementAt(i).sale.salePrice),
-
-                originalPrice: relatedProductList.elementAt(i)
-                    .productPrice,
-                productStock: relatedProductList.elementAt(i)
-                    .productStock.toString(),
-                lowStock: relatedProductList.elementAt(i)
-                    .lowStock,
-                isPesach: relatedProductList.elementAt(i)
-                    .isPesach,
+                discountedPrice: double.parse(
+                    relatedProductList.elementAt(i).sale?.salePrice ?? '0'),
+                originalPrice:
+                relatedProductList.elementAt(i).productPrice ,
+                productStock:
+                relatedProductList.elementAt(i).productStock.toString(),
+                lowStock: relatedProductList.elementAt(i).lowStock ?? '',
+                isPesach: relatedProductList.elementAt(i).isPesach,
 
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
                       context: context,
-                      productId: relatedProductList[i].id,
+                      productId: relatedProductList[i].id ?? '',
                       isBarcode: false,
                       productListIndex: 2,
                       productStock: (relatedProductList[i].productStock.toString())

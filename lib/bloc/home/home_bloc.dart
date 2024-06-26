@@ -68,7 +68,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (preferences.getGuestUser()) {}
       else {
-        debugPrint('id_______${preferences.getUserId()}');
+
         if (event is _getPreferencesDataEvent) {
           debugPrint(
               'getUserImageUrl ${preferences.getUserImageUrl()}');
@@ -79,6 +79,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           debugPrint('can add basket ${preferences.getCanAddToBasket()}');
           debugPrint('can see wallet ${preferences.getCanSeeWallet()}');
           emit(state.copyWith(
+              isIncludedVat: preferences.getIsIncludedVat(),
+              isSaleOn: preferences.getShowSale(),
             isSubUserSeeWallet: preferences.getCanSeeWallet(),
               isSubUserAddToBasket :preferences.getCanAddToBasket(),
             UserImageUrl: preferences.getUserImageUrl(),
@@ -132,7 +134,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           _isProductInCart = false;
           _cartProductId = '';
           _productQuantity = 0;
-         // _maxQty = -1;
           try {
             emit( state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -151,8 +152,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               //1 for recommendation product.
               //2 related product.
               //3 sales product.
+              print('product___${response.product}');
 
-              if(response.product.isNotEmpty){
+              if(response.product!.isNotEmpty){
 
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
@@ -162,13 +164,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               int productStockUpdateIndex = 0;
               if(event.isBarcode ){
                 productStockUpdateIndex = 0;
-                debugPrint('responseproductid____${response.product.first.id}');
-                productStockList[0][0] =productStockList[0][0].copyWith(
-                    quantity: _productQuantity,
-                    maxQty: response.product.first.sale.isSale ? int.parse(response.product.first.sale.saleMaxQuantity):-1,
-                    productId: response.product.first.id ,
-                    stock: (response.product.first.supplierSales.first.productStock.toString()) ,
-                    totalPrice: double.parse(response.product.first.supplierSales.first.productPrice.toString() )
+                debugPrint('responseproductid____${response.product?.first.id}');
+                productStockList[0][0] =  productStockList[0][0]
+                    .copyWith(
+                  quantity: _productQuantity,
+                  productId: response.product?.first.id ?? '',
+                  stock: (response.product?.first.supplierSales?.first.productStock.toString()  ?? '0'),
+                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
                 );
               }
               else{
@@ -195,8 +197,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         [state.productStockUpdateIndex].productId
                     ) {
                       _isProductInCart = true;
-                      _cartProductId = cartProduct.cartProductId ;
-                      _productQuantity = cartProduct.totalQuantity ;
+                      _cartProductId = cartProduct.cartProductId ?? '';
+                      _productQuantity = cartProduct.totalQuantity  ?? 0;
                       return;
                     }
                   });
@@ -209,12 +211,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
               if (event.isBarcode) {
 
+                debugPrint('responseproductid____${response.product?.first.id}');
                 productStockList[0][0] =  productStockList[0][0]
                     .copyWith(
-                    quantity: _productQuantity,
-                    productId: response.product?.first.id ?? '' ,
-                    maxQty: response.product.first.sale.isSale?int.parse(response.product.first.sale.saleMaxQuantity):-1,
-                    stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? "0")
+                  quantity: _productQuantity,
+                  productId: response.product?.first.id ?? '',
+                  stock: (response.product?.first.supplierSales?.first.productStock.toString()  ?? '0'),
+                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
                 );
 
                 emit(state.copyWith(productStockList: productStockList));
@@ -224,35 +227,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
               List<ProductSupplierModel> supplierList = [];
 
-              supplierList.addAll(response.product.first.supplierSales.map((supplier) => ProductSupplierModel(
-                supplierId: supplier.supplierId ,
-                companyName: supplier.supplierCompanyName ,
-                basePrice:
-                double.parse(supplier.productPrice ),
-                quantity: _productQuantity,
-                maxQty:response.product.first.sale.isSale? int.parse(response.product.first.sale.saleMaxQuantity.toString()):-1,
-                stock: supplier.productStock.toString(),
-
-                selectedIndex: (supplier.supplierId ) ==
-                    state
-                        .productStockList[productListIndex]
-                    [productStockUpdateIndex]
-                        .productSupplierIds
-                    ? supplier.saleProduct.indexOf(
-                    supplier.saleProduct.firstWhere(
-                          (sale) =>
-                      sale.saleId ==
-                          state
-                              .productStockList[productListIndex][
-                          productStockUpdateIndex]
-                              .productSaleId,
-                      orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate:  '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate: '' ),
-                    ) ??
-                        SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate: '' ),) ==
-                    -1
-                    ? -2
-                    : supplier.saleProduct.indexOf(
-                    supplier.saleProduct.firstWhere(
+              supplierList.addAll(response.product?.first.supplierSales?.map((supplier) {
+                return ProductSupplierModel(
+                  supplierId: supplier.supplierId ?? '',
+                  companyName: supplier.supplierCompanyName ?? '',
+                  basePrice:
+                  double.parse(supplier.productPrice ?? ''),
+                  quantity: _productQuantity,
+                  stock: supplier.productStock.toString(),
+                  maxQty:(response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? ''):-1,
+                  selectedIndex: (supplier.supplierId ) ==
+                      state
+                          .productStockList[productListIndex]
+                      [productStockUpdateIndex]
+                          .productSupplierIds
+                      ? supplier.saleProduct?.indexOf(
+                    supplier.saleProduct?.firstWhere(
                           (sale) =>
                       sale.saleId ==
                           state
@@ -260,33 +250,49 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                           productListIndex][
                           productStockUpdateIndex]
                               .productSaleId,
-                      orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate:  '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:''),
+                      orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                     ) ??
-                        SaleProduct(isSale: false,saleDescription: '',saleFromDate:  '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate: ''),) ??
-                    -1
-                    : -1,
-                supplierSales: supplier.saleProduct.map((sale) => SupplierSaleModel(
-                    saleId: sale.saleId ?? '',
-                    saleName: sale.saleName ?? '',
-                    quantity: _productQuantity,
+                        SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
+                      -1
+                      ? -2
+                      : supplier.saleProduct?.indexOf(
+                    supplier.saleProduct?.firstWhere(
+                          (sale) =>
+                      sale.saleId ==
+                          state.productStockList[
+                          productListIndex][
+                          productStockUpdateIndex]
+                              .productSaleId,
+                      orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
+                    ) ??
+                        SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
+                      -1
+                      : -1,
+                  supplierSales: supplier.saleProduct?.map((sale) => SupplierSaleModel(
+                      productStock: sale.productStock??0,
+                      quantity: _productQuantity,
+                      saleId: sale.saleId ?? '',
+                      saleName: sale.saleName ?? '',
                       maxQty: sale.saleMaxQuantity,
-                    saleDescription:
-                    parse(sale.salesDescription ?? '')
-                        .body
-                        ?.text ??
-                        '',
-                    salePrice: double.parse(
-                        sale.discountedPrice ?? '0.0'),
-                    saleDiscount: double.parse(
-                        sale.discountPercentage ?? '0.0')))
-                    .toList() ??
-                    [],
-              ))
+                      saleDescription:
+                      parse(sale.salesDescription ?? '')
+                          .body
+                          ?.text ??
+                          '',
+                      salePrice: double.parse(
+                          sale.discountedPrice ?? '0.0'),
+                      saleDiscount: double.parse(
+                          sale.discountPercentage ?? '0.0')))
+                      .toList() ??
+                      [],
+                );
+              })
                   .toList() ??
                   []);
               supplierList.removeWhere((supplier) => supplier.stock == 0);
               debugPrint(
-                  'response list = ${response.product.first.supplierSales.length}');
+                  'response list = ${response.product?.first.supplierSales?.length}');
+              debugPrint('supplier list = ${supplierList}');
               debugPrint('productStockUpdateIndex$productStockUpdateIndex');
               // debugPrint(
               //     'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
@@ -353,7 +359,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message.toLocalization(),
+                      response.message?.toLocalization() ?? '',
                       event.context),
                   type: SnackBarType.FAILURE);
             }
@@ -1289,22 +1295,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
           RelatedProductResModel response =
           RelatedProductResModel.fromJson(res);
-          debugPrint('product categories = ${response.data.length
+          debugPrint('product categories = ${response.data?.length
               .toString()}');
           if (response.status == 200) {
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             List<ProductStockModel>stockList = [];
-            stockList.addAll(response.data.map(
+            stockList.addAll(response.data?.map(
                     (Product) =>
                     ProductStockModel(
-                      productId: Product.id,
+                      productId: Product.id ?? '',
                       stock: (Product.productStock.toString()),
-                    )));
+                    )) ?? []);
             productStockList[2].addAll(stockList);
 
             emit(state.copyWith(
-                relatedProductList:response.data,
+                relatedProductList:response.data ?? [],
                 isRelatedShimmering: false,productStockList: productStockList));
           } else {
 
@@ -1312,7 +1318,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.getLocalizedStrings(
-                  response.message.toLocalization() ,
+                  response.message?.toLocalization() ?? '' ,
                   event.context),
               type: SnackBarType.SUCCESS,
             );
@@ -1333,9 +1339,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
             debugPrint('general settings = ${response.data.toString()}');
             if (response.status == 200) {
-
-              preferences.setBottleTax(bottleDeposit: response.data.bottlePrice);
-              emit(state.copyWith(pesachBannerShimmering:false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner,bottlePrice:response.data.bottlePrice));
+              preferences.setIsSaleOn(isSaleOn:  response.data?.isSaleOn ?? true);
+              preferences.setIsIncludedVat(isIncludedVat:
+            (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false
+              );
+              preferences.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
+              emit(state.copyWith(pesachBannerShimmering:false,pesachBannerURL:response.data?.pesachBanner ?? '',showPesachBanner: response.data?.isShowPesachBanner ?? false,bottlePrice:response.data?.bottlePrice ?? 0.0));
             } else {
 
               emit(state.copyWith(pesachBannerShimmering: false));

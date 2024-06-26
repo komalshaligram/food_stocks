@@ -32,6 +32,8 @@ class PlanogramProductState with _$PlanogramProductState {
     required int productListIndex,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
+    required bool isIncludedVat,
+    required bool isSaleOn,
 
 
   }) = _PlanogramProductState;
@@ -66,6 +68,8 @@ class PlanogramProductState with _$PlanogramProductState {
     productListIndex: -1,
     bottleDeposit: 0.0,
     isSubUserAddToBasket: false,
+      isIncludedVat : false,
+      isSaleOn : false
 
       );
 }

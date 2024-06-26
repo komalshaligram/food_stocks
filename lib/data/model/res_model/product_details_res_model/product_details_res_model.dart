@@ -1,6 +1,4 @@
 
-
-import 'package:meta/meta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -17,11 +15,11 @@ class ProductDetailsResModel with _$ProductDetailsResModel
   @JsonSerializable(includeIfNull: false)
   const factory ProductDetailsResModel({
 
-    required int status,
+    int? status,
     @JsonKey(name: "data")
-    required List<Product> product,
+     List<Product>? product,
 
-    required String message,
+     String? message,
   }) = _ProductDetailsResModel;
 
   factory ProductDetailsResModel.fromJson(Map<String, dynamic> json) => _$ProductDetailsResModelFromJson(json);
@@ -32,61 +30,61 @@ class Product with _$Product {
   @JsonSerializable(includeIfNull: true)
   const factory Product({
     @JsonKey(name: "_id")
-    required String id,
+     String? id,
 
-    required String productName,
+     String? productName,
 
-    required String brandId,
+    String? brandId,
 
-    required String mainImage,
+    String? mainImage,
 
-    required String qrcode,
+    String? qrcode,
 
-    required String sku,
+    String? sku,
 
-    required int numberOfUnit,
+     int? numberOfUnit,
 
-    required int itemsWeight,
+    int? itemsWeight,
 
-    required int totalWeightCardboard,
+    int? totalWeightCardboard,
 
-    required int totalWeightSurface,
+    int? totalWeightSurface,
 
-    required int totalWeight,
+    int? totalWeight,
 
-    required bool kosharMilk,
+     bool? kosharMilk,
 
-    required String dairyMeatyAndFur,
+     String? dairyMeatyAndFur,
     @JsonKey(name: "categoryId",includeIfNull: false)
-    required String categoryId,
+    String? categoryId,
     @JsonKey(name: "subCategoryId",includeIfNull: false)
-    required String subCategoryId,
+     String? subCategoryId,
     @JsonKey(name: "caseTypeId")
-    required String caseTypeId,
+    String? caseTypeId,
     @JsonKey(name: "scaleId")
-    required String scaleId,
+     String? scaleId,
     @JsonKey(name: "status")
-    required String status,
+    String? status,
     @JsonKey(name: "isDeleted")
-    required bool isDeleted,
+     bool? isDeleted,
     @JsonKey(name: "productNumber")
-    required int productNumber,
+     int? productNumber,
     @JsonKey(name: "images")
-    required List<dynamic> images,
+     List<dynamic>? images,
     @JsonKey(name: "isBottle")
-    required bool isBottle,
-    @JsonKey(name: "nmMashlim")
-    required String nmMashlim,
+     bool? isBottle,
+
+     String? nmMashlim,
     @JsonKey(name: "isPesach",includeIfNull: false)
-    required bool isPesach,
-    @JsonKey(name: "statusId")
-    required String statusId,
-    @JsonKey(name: "sale")
-    required SaleProduct sale,
-    @JsonKey(name: "scales")
-    required Scales scales,
+     bool? isPesach,
+
+    String? statusId,
+
+     SaleProduct? sale,
+
+     Scales? scales,
     @JsonKey(name: "supplierSales")
-    required List<SupplierSale> supplierSales,
+     List<SupplierSale>? supplierSales,
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
@@ -96,18 +94,17 @@ class Product with _$Product {
 class SaleProduct with _$SaleProduct {
   @JsonSerializable(includeIfNull: false)
   const factory SaleProduct({
-    @JsonKey(name: "isSale")
-    required bool isSale,
-    @JsonKey(name: "salePrice")
-    required String salePrice,
-    @JsonKey(name: "saleFromDate")
-    required String saleFromDate,
-    @JsonKey(name: "saleUntilDate")
-    required String saleUntilDate,
-    @JsonKey(name: "saleMaxQuantity")
-    required String saleMaxQuantity,
-    @JsonKey(name: "saleDescription")
-    required String saleDescription,
+
+     bool? isSale,
+
+     String? salePrice,
+
+     String? saleFromDate,
+    String? saleUntilDate,
+
+    String? saleMaxQuantity,
+
+    String? saleDescription,
   }) = _SaleProduct;
 
   factory SaleProduct.fromJson(Map<String, dynamic> json) => _$SaleProductFromJson(json);
@@ -118,19 +115,16 @@ class Scales with _$Scales {
   @JsonSerializable(includeIfNull: false)
   const factory Scales({
     @JsonKey(name: "_id")
-    required String id,
-    @JsonKey(name: "scaleType")
-    required String scaleType,
-    @JsonKey(name: "createdAt")
-    required DateTime createdAt,
-    @JsonKey(name: "updatedAt")
-    required DateTime updatedAt,
+     String? id,
+
+    String? scaleType,
+
     @JsonKey(name: "__v")
-    required int v,
-    @JsonKey(name: "isDeleted")
-    required bool isDeleted,
-    @JsonKey(name: "scaleNumber")
-    required int scaleNumber,
+     int? v,
+
+     bool? isDeleted,
+
+     int? scaleNumber,
   }) = _Scales;
 
   factory Scales.fromJson(Map<String, dynamic> json) => _$ScalesFromJson(json);
@@ -141,21 +135,21 @@ class SupplierSale with _$SupplierSale {
   @JsonSerializable(includeIfNull: false)
   const factory SupplierSale({
     @JsonKey(name: "_id")
-    required Id id,
-    @JsonKey(name: "supplierId")
-    required String supplierId,
-    @JsonKey(name: "supplierName")
-    required String supplierName,
-    @JsonKey(name: "supplierCompanyName")
-    required String supplierCompanyName,
-    @JsonKey(name: "productPrice")
-    required String productPrice,
-    @JsonKey(name: "productStock")
-    required String productStock,
-    @JsonKey(name: "saleProduct")
-    required List<dynamic> saleProduct,
-    @JsonKey(name: "lowStock")
-    required String lowStock,
+     Id? id,
+
+     String? supplierId,
+
+    String? supplierName,
+
+    String? supplierCompanyName,
+
+    String? productPrice,
+
+    String? productStock,
+
+     List<dynamic>? saleProduct,
+
+     String? lowStock,
   }) = _SupplierSale;
 
   factory SupplierSale.fromJson(Map<String, dynamic> json) => _$SupplierSaleFromJson(json);
@@ -164,10 +158,10 @@ class SupplierSale with _$SupplierSale {
 @freezed
 class Id with _$Id {
   const factory Id({
-    @JsonKey(name: "supplierId")
-    required String supplierId,
-    @JsonKey(name: "productId")
-    required String productId,
+
+     String? supplierId,
+
+     String? productId,
   }) = _Id;
 
   factory Id.fromJson(Map<String, dynamic> json) => _$IdFromJson(json);

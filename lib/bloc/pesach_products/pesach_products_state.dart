@@ -36,6 +36,8 @@ class PesachProductsState with _$PesachProductsState {
     required int productListIndex,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
+    required bool isIncludedVat,
+    required bool isSaleOn,
 
 
   }) = _PesachProductsState;
@@ -74,6 +76,8 @@ class PesachProductsState with _$PesachProductsState {
     cartCount: 0,
     productListIndex: 0,
     isSubUserAddToBasket: false,
+      isIncludedVat : false,
+      isSaleOn : false
     
     
 

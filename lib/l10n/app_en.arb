@@ -494,7 +494,10 @@
     "apply": "Apply",
       "clear": "clear",
     "sorting" : "Sorting",
-    "filtering" : "Filtering"
+    "filtering" : "Filtering",
+    "product_no_longer_in_stock" : "Out of stock",
+     "total_price_with_vat": "Total price with VAT",
+        "price_includes_vat": "Price includes VAT"
 
 
 
