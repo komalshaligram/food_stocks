@@ -301,6 +301,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         }
       }
       else if (event is _GetProductDetailsEvent) {
+
         add(StoreEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
@@ -308,15 +309,13 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         _productQuantity = 0;
 
         try {
-          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
+          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false,isSaleOn: preferencesHelper.getShowSale()));
           final res = await DioClient(event.context).post(
               AppUrls.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response =
               ProductDetailsResModel.fromJson(res);
           if (response.status == 200) {
-
-
             if(response.product!.isNotEmpty) {
               int productStockUpdateIndex = -1;
 
@@ -1269,6 +1268,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       }
 
       else  if(event is _getPermissionList){
+        emit(state.copyWith(isSaleOn: preferencesHelper.getShowSale(),isIncludedVat: preferencesHelper.getIsIncludedVat()));
           if (preferencesHelper.getSubUser()) {
             try {
               final res = await DioClient(event.context).get(

@@ -202,7 +202,9 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                       context: context,
                                       productId: state.planogramProductList[index].id ?? '',
                                       productStock: state.planogramProductList[index].productStock.toString(),
-                                    productListIndex: 1
+                                    productListIndex: 1,
+                                      isSaleOn: state.isSaleOn
+
                                   );
                                 }
                                 else{
@@ -242,7 +244,10 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                 .id ??
                                                 '',
                                             productStock: state.planogramProductList[index].productStock.toString(),
-                                            productListIndex: 1
+                                            productListIndex: 1,
+                                            isSaleOn: state.isSaleOn
+
+
                                         );
                                       }
                                       else{
@@ -449,7 +454,9 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                       productId: state
                                           .searchList[index].searchId,
                                       isBarcode: true,
-                                    productListIndex: 0
+                                    productListIndex: 0,
+                                      isSaleOn: state.isSaleOn
+
                                   );
                                 } else if (state
                                     .searchList[index].searchType ==
@@ -524,7 +531,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                 productId: scanResult,
                                 isBarcode: true,
                                 productStock: '1',
-                              productListIndex: 0
+                              productListIndex: 0,
+                              isSaleOn: state.isSaleOn
                             );
                           }
                           else{
@@ -583,6 +591,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
     String productStock  = '0',
     bool isRelated = false,
     int productListIndex = -1,
+    required bool isSaleOn
 
   }) async {
     context.read<PlanogramProductBloc>().add(PlanogramProductEvent.getProductDetailsEvent(
@@ -788,7 +797,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                 }
                               },
                             ),
-                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context)
+                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context,isSaleOn)
                           ],
                         ),
                       ),
@@ -805,7 +814,9 @@ class PlanogramProductScreenWidget extends StatelessWidget {
   }
 
 
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context){
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context,
+      bool isSaleOn
+      ){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -827,7 +838,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.salesProductItemHeight,
+          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
           padding: EdgeInsets.only(left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -858,6 +869,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
+                      isSaleOn: isSaleOn,
                       context: context,
                       productId: relatedProductList[i].id  ?? '',
                       isBarcode: false,

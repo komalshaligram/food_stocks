@@ -288,6 +288,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                               index]
                                                   .productStock.toString(),
                                               productListIndex: 1,
+                                              isSaleOn: state.isSaleOn
+
                                           );
 
 
@@ -320,7 +322,9 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                   .recommendationProductsList[index]
                                                   .id ??'',
                                               productStock: state.recommendationProductsList[index].productStock.toString(),
-                                              productListIndex: 1
+                                              productListIndex: 1,
+                                              isSaleOn: state.isSaleOn
+
 
                                           );
                                         }, isGuestUser: false,),
@@ -527,7 +531,9 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                     productId: state
                                         .searchList[index].searchId,
                                     isBarcode: true,
-                                    productListIndex: 0
+                                    productListIndex: 0,
+                                    isSaleOn: state.isSaleOn
+
                                 );
                               } else if (state
                                   .searchList[index].searchType ==
@@ -599,7 +605,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                             productId: scanResult,
                             isBarcode: true,
                             productStock: '1',
-                            productListIndex: 0
+                            productListIndex: 0,
+                          isSaleOn: state.isSaleOn
                         );
                       }
                     },
@@ -618,7 +625,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
   void showProductDetails({
     required BuildContext context, required String productId,
     bool? isBarcode , String productStock = '0',
-    int productListIndex = -1
+    int productListIndex = -1,
+    required bool isSaleOn
   }) async {
     context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.getProductDetailsEvent(
         context: context, productId: productId,
@@ -814,7 +822,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                 }
                               },
                             ),
-                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context)
+                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1,state.relatedProductList,context,isSaleOn)
                           ],
                         ),
                       ),
@@ -830,7 +838,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context){
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context,bool isSaleOn){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -861,7 +869,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
               return CommonProductSaleItemWidget(
                 isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
-                height: AppConstants.salesProductItemHeight,
+                height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
                 width: 140,
                 productName: relatedProductList.elementAt(i).productName ?? '' ,
                 saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
@@ -884,6 +892,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
+                    isSaleOn: isSaleOn,
                       context: context,
                       productId: relatedProductList[i].id ?? '',
                       isBarcode: false,

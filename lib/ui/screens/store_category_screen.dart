@@ -538,6 +538,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                         onButtonTap: () {
                                                           if (!state.isGuestUser) {
                                                             showProductDetails(
+                                                                isSaleOn: state.isSaleOn,
                                                                 context: context,
                                                                 productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
                                                                 productId: state.planogramProductList[index].productId ?? '',
@@ -581,6 +582,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                   onButtonTap: () {
                                                     if (!state.isGuestUser) {
                                                       showProductDetails(
+                                                          isSaleOn: state.isSaleOn,
                                                           context: context,
                                                           productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
                                                           productId: state.planogramProductList[index].productId ?? '',
@@ -767,6 +769,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   debugPrint("tap 4");
                                   if(!state.isGuestUser){
                                     showProductDetails(
+                                        isSaleOn: state.isSaleOn,
+
                                         context: context,
                                         productStock: state.searchList[index].productStock.toString(),
                                         productId: state
@@ -846,6 +850,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           debugPrint('result = $result');
                           if (!state.isGuestUser) {
                             showProductDetails(
+                              isSaleOn: state.isSaleOn,
+
                               context: context,
                               productId: result,
                               planoGramIndex: 0,
@@ -953,6 +959,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               onTap: () {
                 if (!isGuestUser) {
                   showProductDetails(
+                    isSaleOn: state.isSaleOn,
                     context: context,
                     productStock: list[index].planogramproducts?[subIndex].productStock.toString()??'0',
                     productId:
@@ -1081,6 +1088,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       title: isSale!?"${AppLocalizations.of(context)!.currency}${double.parse(discountPrice).toStringAsFixed(2)}":"${AppLocalizations.of(context)!.currency}${list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(AppConstants.amountFrLength)}",
                       onPressed: () {
                         showProductDetails(
+                            isSaleOn: state.isSaleOn,
+
                             productStock: list[index].planogramproducts?[subIndex].productStock.toString() ?? '0',
                             context: context,
                             productId: list[index]
@@ -1112,7 +1121,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     required String productId,
     required int planoGramIndex,
     String productStock  = '0',
-    bool isBarcode = false
+    bool isBarcode = false,
+    required  bool isSaleOn ,
+
+
   }) async {
     context.read<StoreCategoryBloc>().add(
         StoreCategoryEvent.getProductDetailsEvent(
@@ -1325,7 +1337,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               },
                             ),
                             0.height,
-                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context)
+                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context,isSaleOn)
                           ],
                         ),
                       ),
@@ -1341,7 +1353,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context){
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context,bool isSaleOn){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -1372,7 +1384,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               return CommonProductSaleItemWidget(
                 isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
-                height: AppConstants.salesProductItemHeight,
+                height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
                 width: 140,
                 productName: relatedProductList.elementAt(i).productName ?? '' ,
                 saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
@@ -1395,6 +1407,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
+                    isSaleOn: isSaleOn,
                       planoGramIndex: 3,
                       context: context,
                       productId:relatedProductList[i].id ?? '',
