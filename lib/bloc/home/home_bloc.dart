@@ -350,7 +350,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
             }
             else{
-                emit(state.copyWith(isProductLoading: false));
+                emit(state.copyWith(isProductLoading: false,productDetails:[]));
               }
             }
               else {
