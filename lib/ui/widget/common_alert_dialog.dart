@@ -61,7 +61,7 @@ class CommonAlertDialog extends StatelessWidget {
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
                     width:80,
-                    child: isLogOutProcess?CupertinoActivityIndicator(
+                    child: isLogOutProcess ? CupertinoActivityIndicator(
                       color: AppColors.mainColor,
                     ):Text(
                       positiveTitle ?? '',

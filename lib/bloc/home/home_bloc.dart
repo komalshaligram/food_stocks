@@ -206,7 +206,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-              if(response.product!.isNotEmpty){
+              if(response.product?.isNotEmpty??false){
                 add(HomeEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
               if (event.isBarcode) {
@@ -350,7 +350,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
             }
             else{
-                emit(state.copyWith(isProductLoading: false,productDetails:[]));
+                emit(state.copyWith(isProductLoading: false,productDetails: []));
               }
             }
               else {

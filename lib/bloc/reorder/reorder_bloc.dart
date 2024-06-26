@@ -322,7 +322,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 productListIndex
                 ? ''
                 : productStockList[productListIndex][0].note;
-            emit(state.copyWith(productStockList: []));
+            emit(state.copyWith(productStockList: [],));
 
             emit(state.copyWith(
                 productDetails: response.product ?? [],
@@ -376,10 +376,10 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
 
             }
             else{
-              emit(state.copyWith(isProductLoading: false));
+              emit(state.copyWith(isProductLoading: false,productDetails: []));
             }
           } else {
-            emit(state.copyWith(isProductLoading: false));
+            emit(state.copyWith(isProductLoading: false,productDetails: []));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
