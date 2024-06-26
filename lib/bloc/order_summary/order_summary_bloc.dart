@@ -62,8 +62,8 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
 
         state.CartItemList.data?.data?.forEach((element) {
           ProductReqMap.add(Product(
-            supplierId: element.suppliers.first.id ?? '',
-            productId: element.productDetails.id ?? '',
+            supplierId: element.suppliers?.first.id ?? '',
+            productId: element.productDetails?.id ?? '',
             quantity: element.totalQuantity,
           saleId: element.id
           ));

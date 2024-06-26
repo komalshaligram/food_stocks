@@ -88,7 +88,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       else if (event is _GetProductCategoriesListEvent) {
          debugPrint('getGuestUser_____${preferencesHelper.getGuestUser()}');
         emit(state.copyWith(isGuestUser: preferencesHelper.getGuestUser(),
-        isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()
+        isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(),
+          isIncludedVat: preferencesHelper.getIsIncludedVat(),
+          isSaleOn: preferencesHelper.getShowSale(),
         ));
         try {
           emit(state.copyWith(isShimmering: true));
@@ -315,7 +317,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           if (response.status == 200) {
 
 
-            if(response.product.isNotEmpty) {
+            if(response.product != []) {
               int productStockUpdateIndex = -1;
 
               if (event.isBarcode ?? false) {
@@ -337,16 +339,16 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               productStockList.indexOf(productStockList.last)]
                   .copyWith(
                   quantity: _productQuantity,
-                  maxQty: response.product.first.sale.isSale ? int.parse(
-                      response.product.first.sale.saleMaxQuantity) : -1,
-                  productId: response.product.first.id ?? '',
-                  stock: (response.product.first.supplierSales.first
-                      .productStock.toString()),
+                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(
+                      response.product?.first.sale?.saleMaxQuantity ?? '-1') : -1,
+                  productId: response.product?.first.id ?? '',
+                  stock: (response.product?.first.supplierSales?.first
+                      .productStock.toString() ?? ''),
                   productSaleId: '',
                   productSupplierIds: '',
                   totalPrice: double.parse(
-                      response.product.first.supplierSales.first.productPrice
-                          .toString())
+                      response.product?.first.supplierSales?.first.productPrice
+                          .toString() ?? '')
               );
 
               emit(state.copyWith(productStockList: productStockList));
@@ -373,8 +375,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                                 .length - 1].productId
                         || cartProduct.id == event.productId) {
                       _isProductInCart = true;
-                      _cartProductId = cartProduct.cartProductId;
-                      _productQuantity = cartProduct.totalQuantity;
+                      _cartProductId = cartProduct.cartProductId ?? '';
+                      _productQuantity = cartProduct.totalQuantity  ?? 0;
 
                       return;
                     }
@@ -383,9 +385,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-              if (response.product.isNotEmpty) {
+              if (response.product != []) {
                 add(StoreEvent.RelatedProductsEvent(context: event.context,
-                    productId: response.product.first.id ?? ''));
+                    productId: response.product?.first.id ?? ''));
               }
 
               if ((event.isBarcode ?? false)) {
@@ -396,11 +398,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 productStockList.indexOf(productStockList.last)]
                     .copyWith(
                   quantity: _productQuantity,
-                  maxQty: response.product.first.sale.isSale ? int.parse(
-                      response.product.first.sale.saleMaxQuantity) : -1,
-                  productId: response.product.first.id,
-                  stock: (response.product.first.supplierSales.first
-                      .productStock.toString()),
+                  maxQty: (response.product?.first.sale?.isSale ?? false)? int.parse(
+                     ( response.product?.first.sale?.saleMaxQuantity ?? '')) : -1,
+                  productId: response.product?.first.id ?? '',
+                  stock: (response.product?.first.supplierSales?.first
+                      .productStock.toString() ?? '0'),
                   productSaleId: '',
                   productSupplierIds: '',
                   note: '',
@@ -425,33 +427,30 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               debugPrint(
                   'product stock = ${state
                       .productStockList[productStockUpdateIndex].stock}');
-              debugPrint(
-                  'supplier list stock = ${response.product.first.supplierSales
-                      .map((e) => e.productStock)}');
+
               List<ProductSupplierModel> supplierList = [];
               debugPrint(
                   'supplier id = ${state
                       .productStockList[productStockUpdateIndex]
                       .productSupplierIds}');
 
-              supplierList.addAll(response.product.first.supplierSales
-                  .map((supplier) =>
+              supplierList.addAll(response.product?.first.supplierSales?.map((supplier) =>
                   ProductSupplierModel(
-                    supplierId: supplier.supplierId,
+                    supplierId: supplier.supplierId ?? '',
                     companyName: supplier.supplierCompanyName ?? '',
-                    maxQty: response.product.first.sale.isSale
+                    maxQty: (response.product?.first.sale?.isSale ?? false)
                         ? int.parse(
-                        response.product.first.sale.saleMaxQuantity.toString())
+                        response.product?.first.sale?.saleMaxQuantity.toString() ?? '')
                         : -1,
-                    basePrice: double.parse(supplier.productPrice),
+                    basePrice: double.parse(supplier.productPrice ?? ''),
                     stock: supplier.productStock.toString(),
                     quantity: _productQuantity,
                     selectedIndex: (supplier.supplierId) ==
                         state
                             .productStockList[productStockUpdateIndex]
                             .productSupplierIds
-                        ? supplier.saleProduct.indexOf(
-                      supplier.saleProduct.firstWhere(
+                        ? supplier.saleProduct?.indexOf(
+                      supplier.saleProduct?.firstWhere(
                             (sale) =>
                         sale.saleId ==
                             state
@@ -470,34 +469,19 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                               saleFromDate: '',
                               saleMaxQuantity: '0',
                               salePrice: '0',
-                              saleUntilDate: ''),) ==
+                              saleUntilDate: ''),) == -1
+                        ? -2 : supplier.saleProduct?.indexOf(
+                      supplier.saleProduct?.firstWhere(
+                            (sale) =>
+                        sale.saleId ==
+                            state.productStockList[productStockUpdateIndex]
+                                .productSaleId,
+                        orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
+                      ) ??
+                          SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                         -1
-                        ? -2
-                        : supplier.saleProduct.indexOf(
-                      supplier.saleProduct.firstWhere(
-                            (sale) =>
-                        sale.saleId ==
-                            state
-                                .productStockList[
-                            productStockUpdateIndex]
-                                .productSaleId,
-                        orElse: () => SaleProduct(isSale: false,
-                            saleDescription: '',
-                            saleFromDate: '',
-                            saleMaxQuantity: '0',
-                            salePrice: '0',
-                            saleUntilDate: ''),
-                      ) ??
-                          SaleProduct(isSale: false,
-                              saleDescription: '',
-                              saleFromDate: '',
-                              saleMaxQuantity: '0',
-                              salePrice: '0',
-                              saleUntilDate: ''),)
-
                         : -1,
-                    supplierSales: supplier.saleProduct
-                        .map((sale) =>
+                    supplierSales: supplier.saleProduct?.map((sale) =>
                         SupplierSaleModel(
                             saleId: sale.saleId ?? '',
                             saleName: sale.saleName ?? '',
@@ -511,13 +495,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                                 sale.discountedPrice ?? '0.0'),
                             saleDiscount: double.parse(
                                 sale.discountPercentage ?? '0.0')))
-                        .toList(),
+                        .toList() ?? [],
                   ))
-                  .toList());
+                  .toList() ?? []) ;
+
               supplierList.removeWhere((supplier) => supplier.stock == 0);
-              debugPrint(
-                  'response list = ${response.product.first.supplierSales
-                      .length}');
+
               debugPrint('supplier list = ${supplierList.length}');
               debugPrint(
                   'supplier select index = ${supplierList.map((e) =>
@@ -529,7 +512,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   : state.productStockList[productStockUpdateIndex].note;
               emit(state.copyWith(
                   productStockList: state.productStockList,
-                  productDetails: response.product,
+                  productDetails: response.product ?? [],
                   productStockUpdateIndex: productStockUpdateIndex,
                   noteController: TextEditingController(text: note),
                   productSupplierList: supplierList,
@@ -1235,27 +1218,27 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               data: {'mainProductId':event.productId});
           RelatedProductResModel response =
           RelatedProductResModel.fromJson(res);
-          debugPrint('product categories = ${response.data.length
+          debugPrint('product categories = ${response.data?.length
               .toString()}');
           if (response.status == 200) {
             List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: true);
-            productStockList.addAll(response.data.map(
+            productStockList.addAll(response.data?.map(
                     (Product) =>
                     ProductStockModel(
-                      productId: Product.id ,
+                      productId: Product.id ?? '' ,
                       stock: (Product.productStock.toString()),
-                    )) );
+                    )) ?? []);
 
             emit(state.copyWith(
-                relatedProductList:response.data ,
+                relatedProductList:response.data ?? [],
                 isRelatedShimmering: false,productStockList: productStockList));
           } else {
             emit(state.copyWith(isRelatedShimmering: false));
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.getLocalizedStrings(
-                  response.message.toLocalization(),
+                  response.message?.toLocalization() ?? '',
                   event.context),
               type: SnackBarType.SUCCESS,
             );
@@ -1273,8 +1256,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
           debugPrint('general settings = ${response.data.toString()}');
           if (response.status == 200) {
-            preferencesHelper.setBottleTax(bottleDeposit: response.data.bottlePrice);
-            emit(state.copyWith(pesachBannerShimmering: false,pesachBannerURL:response.data.pesachBanner,showPesachBanner: response.data.isShowPesachBanner,bottlePrice: response.data.bottlePrice));
+            preferencesHelper.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
+            emit(state.copyWith(pesachBannerShimmering: false,pesachBannerURL:response.data?.pesachBanner ?? '',showPesachBanner: response.data?.isShowPesachBanner ?? false,bottlePrice: response.data?.bottlePrice ?? 0.0 ));
           } else {
             emit(state.copyWith(pesachBannerShimmering: false));
           }

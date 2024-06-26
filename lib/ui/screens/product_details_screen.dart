@@ -305,18 +305,18 @@ class _ProductDetailsScreenWidgetState
                                           ],
                                         ),
                                         15.height,
-                                        state.orderData.bottleQuantities != 0
+                                        !state.isIncludedVat ? state.orderData.bottleQuantities != 0
                                             ? basketRow(
                                                 state.language ==
                                                         AppStrings.englishString
                                                     ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.orderData.bottleQuantities}'
                                                     : '${AppLocalizations.of(context)!.bottle_deposit}${state.orderData.bottleQuantities}${'X'}',
                                                 '${AppLocalizations.of(context)!.currency}${state.orderData.bottlePrice}')
-                                            : 0.width,
+                                            : 0.width : 0.width,
                                         3.height,
-                                        basketRow(
+                                        !state.isIncludedVat ? basketRow(
                                             '${AppLocalizations.of(context)!.vat}',
-                                            '${AppLocalizations.of(context)!.currency}${state.orderData.vatAmount}'),
+                                            '${AppLocalizations.of(context)!.currency}${state.orderData.vatAmount}') : 0.width,
                                         5.height,
                                         state.orderData.totalRefundAmount != 0.0
                                             ? basketRow(

@@ -39,6 +39,8 @@ class ReorderState with _$ReorderState {
     required bool isRefresh,
     required bool isFilterShimmering,
     required bool isExpansionChanged,
+    required bool isIncludedVat,
+    required bool isSaleOn,
 
 
   }) = _ReorderState;
@@ -83,6 +85,8 @@ class ReorderState with _$ReorderState {
     isRefresh: false,
     isFilterShimmering: false,
       isExpansionChanged: false,
+      isIncludedVat : false,
+      isSaleOn : false
     
       );
 }

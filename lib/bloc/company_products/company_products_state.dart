@@ -38,8 +38,8 @@ class CompanyProductsState with _$CompanyProductsState {
     required int productListIndex,
     required double bottleDeposit,
     required bool isSubUserAddToBasket,
-
-
+    required bool isIncludedVat,
+    required bool isSaleOn,
   }) = _CompanyProductsState;
 
   factory CompanyProductsState.initial() => CompanyProductsState(
@@ -78,6 +78,8 @@ class CompanyProductsState with _$CompanyProductsState {
     productListIndex: -1,
     bottleDeposit: 0.0,
     isSubUserAddToBasket: false,
+      isIncludedVat : false,
+      isSaleOn : false
     
 
       );

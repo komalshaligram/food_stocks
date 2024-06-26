@@ -503,7 +503,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 shrinkWrap: true,
                                                 physics: NeverScrollableScrollPhysics(),
                                                 padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context)),
+                                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context,state.isSaleOn)),
                                                 itemBuilder: (context, index) =>
                                                     CommonProductSaleItemWidget(
                                                         isSale: state.planogramProductList[index].product.sale?.isSale,
@@ -1167,6 +1167,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             CommonProductDetailsWidget(
+                              isIncludedVat: state.isIncludedVat,
                               productDetails: state.productDetails,
                               /*salePrice: double.parse(state.productDetails.first.sale.salePrice),
                               maxQty: state.productDetails.first.sale.saleMaxQuantity,
@@ -1179,7 +1180,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               [state.productStockUpdateIndex]
                                   .quantity),
                               bottleTax: state.bottleDeposit,
-                              isBottle:state.productDetails.first.isBottle,
+                              isBottle:(state.productDetails.first.isBottle ?? false),
                              /* nmMashlim: state.productDetails.first.nmMashlim,
                               isPesach: state.productDetails.first.isPesach,
                               lowStock: state.productDetails.first.supplierSales.first.lowStock.toString(),
@@ -1249,7 +1250,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               productImages: [
                                 state.productDetails.first.mainImage ??
                                     '',
-                                ...state.productDetails.first.images.map(
+                                ...state.productDetails.first.images?.map(
                                         (image) =>
                                     image.imageUrl ?? '') ??
                                     []
@@ -1271,7 +1272,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   [state.productStockUpdateIndex]
                                       .quantity *
                                   (state.productDetails.first
-                                      .numberOfUnit),
+                                      .numberOfUnit ?? 1),
                               // productWeight: state
                               //     .productDetails.first.itemsWeight.toDouble(),
                               productStock: (state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock.toString()),
@@ -1284,7 +1285,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   .productStockList[
                               state.planoGramUpdateIndex]
                               [state.productStockUpdateIndex]
-                                  .totalPrice:  double.parse(state.productDetails.first.supplierSales.first.productPrice.toString()??'0'),
+                                  .totalPrice:  double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
                               isRTL: context.rtl,
                               // isSupplierAvailable:
                               // state.productSupplierList.isEmpty
@@ -1369,42 +1370,34 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context2,i){
               return CommonProductSaleItemWidget(
-                isSale:  relatedProductList.elementAt(i).sale.isSale,
+                isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: AppConstants.salesProductItemHeight,
                 width: 140,
-                productName: relatedProductList.elementAt(i).productName??'',
-                saleImage: relatedProductList.elementAt(i)
-                    .mainImage ??
-                    '',
-                title:  relatedProductList.elementAt(i)
-                    .name ??
-                    '',
-                description: parse( relatedProductList.elementAt(i).sale
-                    .saleDescription ??
-                    '')
+                productName: relatedProductList.elementAt(i).productName ?? '' ,
+                saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
+                title: relatedProductList.elementAt(i).name ,
+                description: parse(relatedProductList
+                    .elementAt(i)
+                    .sale?.saleDescription )
                     .body
                     ?.text ??
                     '',
-                discountedPrice:
-                double.parse( relatedProductList.elementAt(i).sale.salePrice),
-
-                originalPrice: relatedProductList.elementAt(i)
-                    .productPrice ??
-                    0 ,
-                productStock: relatedProductList.elementAt(i)
-                    .productStock.toString()??'0',
-                lowStock: relatedProductList.elementAt(i)
-                    .lowStock??'',
-                isPesach: relatedProductList.elementAt(i)
-                    .isPesach,
+                discountedPrice: double.parse(
+                    relatedProductList.elementAt(i).sale?.salePrice ?? '0'),
+                originalPrice:
+                relatedProductList.elementAt(i).productPrice ,
+                productStock:
+                relatedProductList.elementAt(i).productStock.toString(),
+                lowStock: relatedProductList.elementAt(i).lowStock ?? '',
+                isPesach: relatedProductList.elementAt(i).isPesach,
 
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
                       planoGramIndex: 3,
                       context: context,
-                      productId:relatedProductList[i].id,
+                      productId:relatedProductList[i].id ?? '',
                       isBarcode: false,
                       productStock: (relatedProductList[i].productStock.toString() )
                   );
@@ -1560,11 +1553,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         : ''),
                 5.height,
                 SizedBox(
-                  height: getScreenHeight(context) * 0.3,
+                height:  state.isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
                   child: list.isEmpty
                       ? Center(
                     child: Text(
-                      '${AppLocalizations.of(context)!.out_of_stock}',
+                      '${AppLocalizations.of(context)!.no_data}',
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
                           color: AppColors.textColor),

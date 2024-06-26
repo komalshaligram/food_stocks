@@ -8,9 +8,9 @@ part 'setting_res_model.g.dart';
 @freezed
 class SettingResModel with _$SettingResModel {
   const factory SettingResModel({
-    required Data data,
-    required int status,
-    required String message,
+     Data? data,
+     int? status,
+     String? message,
   }) = _SettingResModel;
 
   factory SettingResModel.fromJson(Map<String, dynamic> json) => _$SettingResModelFromJson(json);
@@ -19,10 +19,12 @@ class SettingResModel with _$SettingResModel {
 @freezed
 class Data with _$Data {
   const factory Data({
-    required String pesachBanner,
-    required bool isShowPesachBanner,
-    required bool isShowPesachBadge,
-    required double bottlePrice,
+     String? pesachBanner,
+     bool? isShowPesachBanner,
+     bool? isShowPesachBadge,
+     double? bottlePrice,
+    bool? isSaleOn,
+    List<String>? showVatApplication,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

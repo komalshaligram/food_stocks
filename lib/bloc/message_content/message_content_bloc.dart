@@ -31,6 +31,7 @@ class MessageContentBloc
         emit(state.copyWith(
             message: event.messageData, isReadMore: event.isReadMore,language: preferences.getAppLanguage()));
       } else if (event is _MessageDeleteEvent) {
+        emit(state.copyWith(isLoading : true));
         try {
           DeleteMessageReq reqMap = DeleteMessageReq(
             notificationIds: [
@@ -49,6 +50,7 @@ class MessageContentBloc
           debugPrint('DeleteMessage response  = ${response}');
 
           if (response[AppStrings.statusString] == 200) {
+            emit(state.copyWith(isLoading : false));
             Navigator.pop(event.dialogContext);
             Navigator.pop(event.context, {
               AppStrings.messageIdString: event.messageId,
@@ -56,12 +58,18 @@ class MessageContentBloc
               AppStrings.messageDeleteString: true,
             });
           } else {
+            emit(state.copyWith(isLoading : false));
+
             /* CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: response[AppStrings.messageString],
                 type: SnackBarType.SUCCESS);*/
           }
-        } on ServerException {}
+
+        } on ServerException {
+          emit(state.copyWith(isLoading : false));
+        }
+
       } else if (event is _MessageUpdateEvent) {
         try {
           DeleteMessageReq reqMap = DeleteMessageReq(

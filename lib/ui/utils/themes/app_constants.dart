@@ -17,6 +17,7 @@ class AppConstants{
   static const double containerHeight_130 = 130;
   static const double containerHeight_100 = 100;
   static const double relatedProductItemWidth = 140;
+  static const double withoutSaleItemHeight = 210;
 
   //padding
   static const double padding_5 = 5;
@@ -86,7 +87,7 @@ class AppConstants{
   static const double productGridAspectRatio51 = 0.51;
   static const double productGridAspectRatio9 = 9.5 / 13;
   static const double productGridAspectRatio7 = 7.5 / 13;
-  static const double productGridAspectRatio8 = 0.51;
+  static const double productGridAspectRatio8 =0.63;
 
   //bottom nav space
   static const double bottomNavSpace = 30;

@@ -54,7 +54,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       else {
         if (event is _getAllCartEvent) {
           emit(state.copyWith(isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(),
-          isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()));
+          isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(),  isIncludedVat: preferencesHelper.getIsIncludedVat(),));
           debugPrint('cartId____${preferencesHelper.getCartId()}');
 
           emit(state.copyWith(
@@ -81,9 +81,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               stockList.addAll(response.data?.data?.map(
                       (product) =>
                       ProductStockModel(
-                        maxQty: product.sale.isSale ? int.parse(product.sale.saleMaxQuantity.toString()) : -1,
-                        quantity: product.totalQuantity,
-                          productId: product.id,
+                        maxQty: (product.sale?.isSale ?? false) ? int.parse(product.sale?.saleMaxQuantity.toString() ?? '-1') : -1,
+                        quantity: product.totalQuantity ?? 0,
+                          productId: product.id ?? '',
                           stock: product.productStock.toString(),
                           lowStock: product.lowStock.toString(),
                       )) ??
@@ -91,20 +91,21 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               productStockList[0].addAll(stockList);
               response.data?.data?.forEach((element) {
                 temp.add(ProductDetailsModel(
-                  saleDesc: element.sale.saleDescription,
-                  isSale: element.sale.isSale,
-                  discountPrice: element.sale.isSale?double.parse(element.sale.salePrice.toString()):0.0,
-                  isPesach: element.productDetails.isPesach ,
+                  saleDesc: element.sale?.saleDescription ?? '',
+                  isSale: element.sale?.isSale ?? false,
+                  discountPrice: element.sale?.isSale ??false
+                      ? double.parse(element.sale?.salePrice.toString() ?? '0.0')
+                      : 0.0,
+                  isPesach: element.productDetails?.isPesach ?? false,
                   totalQuantity: element.totalQuantity,
-                  productName: element.productDetails.productName,
-                  mainImage: element.productDetails.mainImage ,
-                  totalPayment:
-                  double.parse(element.totalAmount.toString()),
-                  cartProductId: element.cartProductId ,
-                  scales: element.productDetails.scales,
-                  weight:element.productDetails.itemsWeight.toDouble(),
-                  lowStock: element.lowStock ,
-                  productStock: element.productStock.toDouble() ,
+                  productName: element.productDetails?.productName ?? '',
+                  mainImage: element.productDetails?.mainImage,
+                  totalPayment: double.parse(element.totalAmount.toString()),
+                  cartProductId: element.cartProductId ?? '',
+                  scales: element.productDetails?.scales ?? '',
+                  weight: element.productDetails?.itemsWeight?.toDouble() ?? 0,
+                  lowStock: element.lowStock,
+                  productStock: element.productStock?.toDouble(),
                 ));
               });
 
@@ -503,7 +504,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
               //0 for basket product.
               //1 related product.
-              if(response.product.isNotEmpty) {
+              if(response.product != []) {
                 List<List<ProductStockModel>> productStockList =
                 state.productStockList.toList(growable: true);
                 int productListIndex = event.productListIndex;
@@ -538,8 +539,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                               [state.productStockUpdateIndex].productId
                       ) {
                         _isProductInCart = true;
-                        _cartProductId = cartProduct.cartProductId;
-                        _productQuantity = cartProduct.totalQuantity;
+                        _cartProductId = cartProduct.cartProductId ?? '';
+                        _productQuantity = cartProduct.totalQuantity  ?? 0;
 
                         return;
                       }
@@ -548,19 +549,19 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                   }
                 } on ServerException {}
-                if (response.product.isNotEmpty) {
+                if (response.product != []) {
                   add(BasketEvent.RelatedProductsEvent(context: event.context,
-                      productId: response.product.first.id));
+                      productId: response.product?.first.id ?? ''));
                 }
                 if ((event.isBarcode)) {
                   productStockList[0][0] = productStockList[0][0]
                       .copyWith(
                       quantity: _productQuantity,
-                      maxQty: response.product.first.sale.isSale ? int.parse(
-                          response.product.first.sale.saleMaxQuantity) : -1,
-                      productId: response.product.first.id,
-                      stock: (response.product.first.supplierSales.first
-                          .productStock.toString())
+                      maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(
+                          response.product?.first.sale?.saleMaxQuantity ?? '') : -1,
+                      productId: response.product?.first.id ?? '',
+                      stock: (response.product?.first.supplierSales?.first
+                          .productStock.toString() ?? '')
                   );
 
                   emit(state.copyWith(productStockList: productStockList));
@@ -569,101 +570,78 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
                 List<ProductSupplierModel> supplierList = [];
 
-                supplierList.addAll(
-                    response.product.first.supplierSales.map((supplier) =>
-                        ProductSupplierModel(
-                          supplierId: supplier.supplierId,
-                          companyName: supplier.supplierCompanyName,
-                          basePrice:
-                          double.parse(supplier.productPrice),
-                          quantity: _productQuantity,
-                          maxQty: response.product.first.sale.isSale ? int
-                              .parse(response.product.first.sale.saleMaxQuantity
-                              .toString()) : -1,
-                          stock: supplier.productStock.toString(),
-                          selectedIndex: (supplier.supplierId) ==
-                              state
-                                  .productStockList[productListIndex]
-                              [productStockUpdateIndex]
-                                  .productSupplierIds
-                              ? supplier.saleProduct.indexOf(
-                            supplier.saleProduct.firstWhere(
-                                  (sale) =>
-                              sale.saleId ==
-                                  state
-                                      .productStockList[
-                                  productListIndex][
-                                  productStockUpdateIndex]
-                                      .productSaleId,
-                              orElse: () =>
-                                  SaleProduct(isSale: false,
-                                      saleDescription: '',
-                                      saleFromDate: '',
-                                      saleMaxQuantity: '0',
-                                      salePrice: '0',
-                                      saleUntilDate: ''),
-                            ) ??
-                                SaleProduct(isSale: false,
-                                    saleDescription: '',
-                                    saleFromDate: '',
-                                    saleMaxQuantity: '0',
-                                    salePrice: '0',
-                                    saleUntilDate: ''),) ==
-                              -1
-                              ? -2
-                              : supplier.saleProduct.indexOf(
-                            supplier.saleProduct.firstWhere(
-                                  (sale) =>
-                              sale.saleId ==
-                                  state
-                                      .productStockList[
-                                  productListIndex][
-                                  productStockUpdateIndex]
-                                      .productSaleId,
-                              orElse: () =>
-                                  SaleProduct(isSale: false,
-                                      saleDescription: '',
-                                      saleFromDate: '',
-                                      saleMaxQuantity: '0',
-                                      salePrice: '0',
-                                      saleUntilDate: ''),
-                            ) ??
-                                SaleProduct(isSale: false,
-                                    saleDescription: '',
-                                    saleFromDate: '',
-                                    saleMaxQuantity: '0',
-                                    salePrice: '0',
-                                    saleUntilDate: ''),)
-                              : -1,
-                          supplierSales: supplier.saleProduct
-                              .map((sale) =>
-                              SupplierSaleModel(
-                                  saleId: sale.saleId ?? '',
-                                  maxQty: sale.saleMaxQuantity ?? '',
-                                  saleName: sale.saleName ?? '',
-                                  saleDescription:
-                                  parse(sale.salesDescription ?? '')
-                                      .body
-                                      ?.text ??
-                                      '',
-                                  salePrice: double.parse(
-                                      sale.discountedPrice ?? '0.0'),
-                                  saleDiscount: double.parse(
-                                      sale.discountPercentage ?? '0.0')))
-                              .toList(),
-                        ))
-                        .toList());
+                supplierList.addAll(response.product?.first.supplierSales?.map((supplier) {
+                  return ProductSupplierModel(
+                    supplierId: supplier.supplierId ?? '',
+                    companyName: supplier.supplierCompanyName ?? '',
+                    basePrice:
+                    double.parse(supplier.productPrice ?? ''),
+                    quantity: _productQuantity,
+                    stock: supplier.productStock.toString(),
+                    maxQty:(response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? ''):-1,
+                    selectedIndex: (supplier.supplierId ) ==
+                        state
+                            .productStockList[productListIndex]
+                        [productStockUpdateIndex]
+                            .productSupplierIds
+                        ? supplier.saleProduct?.indexOf(
+                      supplier.saleProduct?.firstWhere(
+                            (sale) =>
+                        sale.saleId ==
+                            state
+                                .productStockList[
+                            productListIndex][
+                            productStockUpdateIndex]
+                                .productSaleId,
+                        orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
+                      ) ??
+                          SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
+                        -1
+                        ? -2
+                        : supplier.saleProduct?.indexOf(
+                      supplier.saleProduct?.firstWhere(
+                            (sale) =>
+                        sale.saleId ==
+                            state.productStockList[
+                            productListIndex][
+                            productStockUpdateIndex]
+                                .productSaleId,
+                        orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
+                      ) ??
+                          SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
+                        -1
+                        : -1,
+                    supplierSales: supplier.saleProduct?.map((sale) => SupplierSaleModel(
+                        productStock: sale.productStock??0,
+                        quantity: _productQuantity,
+                        saleId: sale.saleId ?? '',
+                        saleName: sale.saleName ?? '',
+                        maxQty: sale.saleMaxQuantity,
+                        saleDescription:
+                        parse(sale.salesDescription ?? '')
+                            .body
+                            ?.text ??
+                            '',
+                        salePrice: double.parse(
+                            sale.discountedPrice ?? '0.0'),
+                        saleDiscount: double.parse(
+                            sale.discountPercentage ?? '0.0')))
+                        .toList() ??
+                        [],
+                  );
+                })
+                    .toList() ??
+                    []);
                 supplierList.removeWhere((supplier) => supplier.stock == 0);
                 debugPrint(
-                    'response list = ${response.product.first.supplierSales
-                        .length}');
+                    'response list = ${response.product?.first.supplierSales?.length}');
                 debugPrint('supplier list = ${supplierList}');
 
 
                 emit(state.copyWith(productStockList: []));
 
                 emit(state.copyWith(
-                    productDetails: response.product,
+                    productDetails: response.product ?? [],
                     productStockList: productStockList,
                     productStockUpdateIndex: productStockUpdateIndex,
                     productSupplierList: supplierList,
@@ -722,7 +700,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message.toLocalization() ,
+                      response.message?.toLocalization() ?? '' ,
                       event.context),
                   type: SnackBarType.FAILURE);
             }
@@ -948,8 +926,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
           state.CartItemList.data?.data?.forEach((element) {
             ProductReqMap.add(OrderSendModel.Product(
-              supplierId: element.suppliers.first.id ,
-              productId: element.productDetails.id,
+              supplierId: element.suppliers?.first.id ,
+              productId: element.productDetails?.id,
               quantity: element.totalQuantity,
               saleId: element.id
             ));
@@ -1015,22 +993,22 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               data: {'mainProductId': event.productId});
           RelatedProductResModel response =
           RelatedProductResModel.fromJson(res);
-          debugPrint('product categories = ${response.data.length
+          debugPrint('product categories = ${response.data?.length
               .toString()}');
           if (response.status == 200) {
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             List<ProductStockModel>stockList = [];
-            stockList.addAll(response.data.map(
+            stockList.addAll(response.data?.map(
                     (Product) =>
                     ProductStockModel(
-                      productId: Product.id,
+                      productId: Product.id ?? '',
                       stock: (Product.productStock.toString()),
-                    )));
+                    )) ?? []);
             productStockList[1].addAll(stockList);
 
             emit(state.copyWith(
-                relatedProductList: response.data,
+                relatedProductList: response.data ?? [],
                 isRelatedShimmering: false,
                 productStockList: productStockList));
           } else {
@@ -1038,7 +1016,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.getLocalizedStrings(
-                  response.message.toLocalization(),
+                  response.message?.toLocalization() ?? '',
                   event.context),
               type: SnackBarType.SUCCESS,
             );

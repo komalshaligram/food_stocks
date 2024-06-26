@@ -26,6 +26,7 @@ class ProductDetailsState with _$ProductDetailsState {
     required bool isDuplicateOrderProcess,
     required bool isCartCount,
     required bool isSubUserCreateDuplicateOrder,
+    required bool isIncludedVat,
   }) = _ProductDetailsState;
 
   factory ProductDetailsState.initial()=>  ProductDetailsState(
@@ -51,6 +52,7 @@ class ProductDetailsState with _$ProductDetailsState {
     productStockUpdateIndex: 0,
     isDuplicateOrderProcess: false,
     isCartCount: false,
-    isSubUserCreateDuplicateOrder: false
+    isSubUserCreateDuplicateOrder: false,
+    isIncludedVat: false
   );
 }
