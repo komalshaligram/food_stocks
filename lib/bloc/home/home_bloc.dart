@@ -988,8 +988,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 Smartlook.instance.user.properties.putString('User phone number' ,value:preferences.getPhoneNumber());
               }
 
-            } else {
-
             }
           } on ServerException {
           } catch (e) {
@@ -1404,8 +1402,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
           }
         }
-
-
         }
 
         else if(event is _userApproveEvent){
@@ -1431,7 +1427,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           catch (e) {
             debugPrint('catch____$e');
           }
-
         }
       }
     });

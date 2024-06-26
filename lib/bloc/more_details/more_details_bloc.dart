@@ -259,17 +259,31 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 
               String? businessName = await Smartlook.instance.user.properties.getString("User business name");
               String? phoneNumber = await Smartlook.instance.user.properties.getString("User phone number");
-              if(businessName != '' || businessName != null  ){
-                Smartlook.instance.user.properties.removeString('User business name');
+
+              if(Platform.isAndroid){
+                if(businessName != '' || businessName != null  ){
+                  Smartlook.instance.user.properties.removeString('User business name');
+                }
+                if(phoneNumber != '' || phoneNumber != null ){
+                  Smartlook.instance.user.properties.removeString('User phone number');
+                }
+                Smartlook.instance.user.properties.putString('User phone number' ,value:response.data?.user?.phoneNumber);
+                Smartlook.instance.user.properties.putString('User business name' ,value:response.data?.user?.clientDetail?.bussinessName ?? '');
               }
-              if(phoneNumber != '' || businessName != null ){
-                Smartlook.instance.user.properties.removeString('User phone number');
+
+              else{
+                if(businessName == '' || businessName == null  ){
+                  Smartlook.instance.user.properties.putString('User business name' ,value:response.data?.user?.clientDetail?.bussinessName ?? '');
+                }
+                else if(phoneNumber == '' || phoneNumber == null ){
+                  Smartlook.instance.user.properties.putString('User phone number' ,value:response.data?.user?.phoneNumber);
+                }
               }
+
               Smartlook.instance.user.setIdentifier(profileResModel.data?.client?.clientData?.id ?? '');
               Smartlook.instance.user.setEmail(profileResModel.data?.client?.clientData?.email ?? '');
               Smartlook.instance.user.setName(profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');
-              Smartlook.instance.user.properties.putString('User business name' ,value:profileResModel.data?.client?.clientData?.clientDetail?.bussinessName ?? '');
-              Smartlook.instance.user.properties.putString('User phone number' ,value:profileResModel.data?.client?.clientData?.phoneNumber ?? '');
+
 
               preferencesHelper.setCartId(
                   cartId: profileResModel.data?.client?.cartId ?? '');

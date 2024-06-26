@@ -170,21 +170,7 @@ class CommonSaleListView extends StatelessWidget {
                                   decoration: TextDecoration.lineThrough,
                                   decorationColor: AppColors.redColor),) : 0
                                 .height,
-                            2.height,
-                            CommonProductButtonWidget(
-                              title: isFromSale! ? "${AppLocalizations.of(
-                                  context)!.currency}${discountedPrice
-                                  .toStringAsFixed(2)}" : "${AppLocalizations
-                                  .of(context)!.currency}${price
-                                  ?.toStringAsFixed(2)}",
-                              onPressed: onButtonTap,
-                              textColor: AppColors.whiteColor,
-                              bgColor: AppColors.mainColor,
-                              borderRadius: AppConstants.radius_3,
-                              textSize: AppConstants.font_14,
-                              height: 32,
-                              width: 80,
-                            ),
+
                           ],
                         ) : 0.width,
                       ],
