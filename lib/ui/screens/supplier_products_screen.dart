@@ -154,7 +154,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                               width: getScreenWidth(context),
                                               alignment: Alignment.center,
                                               child: Text(
-                                                '${AppLocalizations.of(context)!.currently_this_Supplier_has_no_products}',
+                                                '${AppLocalizations.of(context)!.no_data}',
                                                 style:
                                                     AppStyles.rkRegularTextStyle(
                                                         size: AppConstants
