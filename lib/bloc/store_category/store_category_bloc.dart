@@ -1374,7 +1374,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         emit(state.copyWith(relatedProductList: []));
       }
       else  if(event is _getPermissionList){
-        emit(state.copyWith(isSaleOn: preferences.getShowSale(),isIncludedVat: preferences.getIsIncludedVat()));
         if(preferences.getSubUser() ){
           try {
             final res = await DioClient(event.context).get(

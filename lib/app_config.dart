@@ -16,7 +16,7 @@ class AppConfig {
   factory AppConfig.dev() {
     return AppConfig(
         flavor: 'dev',
-        appName: 'Tavili Dev',
+        appName: 'Tavili-Dev',
         appBaseUrl: 'https://devapi.foodstock.shtibel.com/api',
         primaryColor: Colors.blue);
   }
