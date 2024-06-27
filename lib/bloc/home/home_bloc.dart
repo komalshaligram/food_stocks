@@ -984,6 +984,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               preferences.setEmailId(userEmailId: response.data?.clients?.first
                   .email ?? '');
               String? phoneNumber = await Smartlook.instance.user.properties.getString("User phone number");
+
               if(phoneNumber == '' || phoneNumber == null) {
                 Smartlook.instance.user.setIdentifier(preferences.getUserId());
                 Smartlook.instance.user.setEmail(preferences.getEmailId());
