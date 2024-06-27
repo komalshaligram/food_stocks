@@ -301,6 +301,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         }
       }
       else if (event is _GetProductDetailsEvent) {
+
         add(StoreEvent.RemoveRelatedProductEvent());
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
@@ -308,16 +309,14 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         _productQuantity = 0;
 
         try {
-          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
+          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false,));
           final res = await DioClient(event.context).post(
               AppUrls.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response =
               ProductDetailsResModel.fromJson(res);
           if (response.status == 200) {
-
-
-            if(response.product != []) {
+            if(response.product!.isNotEmpty) {
               int productStockUpdateIndex = -1;
 
               if (event.isBarcode ?? false) {
@@ -385,7 +384,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-              if (response.product != []) {
+              if (response.product!.isNotEmpty) {
                 add(StoreEvent.RelatedProductsEvent(context: event.context,
                     productId: response.product?.first.id ?? ''));
               }
@@ -561,10 +560,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               }
             }
             else{
-             emit(state.copyWith(isProductLoading: false));
+             emit(state.copyWith(isProductLoading: false,productDetails: []));
             }
           } else {
-
+            emit(state.copyWith(isProductLoading: false,productDetails: []));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -1269,6 +1268,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       }
 
       else  if(event is _getPermissionList){
+        emit(state.copyWith(isIncludedVat: preferencesHelper.getIsIncludedVat()));
           if (preferencesHelper.getSubUser()) {
             try {
               final res = await DioClient(event.context).get(

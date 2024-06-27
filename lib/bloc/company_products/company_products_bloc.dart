@@ -173,7 +173,7 @@ class CompanyProductsBloc
             //0 for barcode and search
             //1 for company product.
             //2 related product.
-            if(response.product != []){
+            if(response.product!.isNotEmpty){
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             int productListIndex  = event.productListIndex;
@@ -232,7 +232,7 @@ class CompanyProductsBloc
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
-            if(response.product != []){
+            if(response.product!.isNotEmpty){
               add(CompanyProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if  (event.isBarcode ) {
@@ -380,10 +380,12 @@ class CompanyProductsBloc
 
             }
             else{
-              emit(state.copyWith(isProductLoading: false));
+              emit(state.copyWith(isProductLoading: false,
+                  productDetails: []
+              ));
             }
           } else {
-            emit(state.copyWith(isProductLoading: false));
+            emit(state.copyWith(isProductLoading: false,productDetails: []));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -394,7 +396,7 @@ class CompanyProductsBloc
           }
         } on ServerException {
           Navigator.pop(event.context);
-          // emit(state.copyWith(isProductLoading: false));
+         //  emit(state.copyWith(isProductLoading: false));
         } catch (e) {
           debugPrint('bs error = $e');
           // Navigator.pop(event.context);

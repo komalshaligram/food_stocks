@@ -292,7 +292,9 @@ class ReorderScreenWidget extends StatelessWidget {
                                                 .previousOrderProductsList[
                                             index]
                                                 .productStock
-                                                .toString());
+                                                .toString(),
+                                          isSaleOn: state.isSaleOn,
+                                        );
                                       })
                           ) :
                           ListView.builder(
@@ -325,6 +327,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                           index]
                                               .productStock
                                               .toString(),
+                                          isSaleOn: state.isSaleOn,
                                         );
                                       })
 
@@ -535,7 +538,10 @@ class ReorderScreenWidget extends StatelessWidget {
                                     productId: state
                                         .searchList[index].searchId,
                                     isBarcode: true,
-                                    productListIndex: 0
+                                    productListIndex: 0,
+                                    isSaleOn: state.isSaleOn,
+
+
                                 );
                               } else if (state
                                   .searchList[index].searchType ==
@@ -606,7 +612,8 @@ class ReorderScreenWidget extends StatelessWidget {
                             productId: scanResult,
                             isBarcode: true,
                             productStock: '1',
-                            productListIndex: 0
+                            productListIndex: 0,
+                          isSaleOn: state.isSaleOn
                         );
                       }
                     },
@@ -731,7 +738,8 @@ class ReorderScreenWidget extends StatelessWidget {
   void showProductDetails({
     required BuildContext context, required String productId,
     bool? isBarcode, String productStock = '0',
-    required int productListIndex
+    required int productListIndex,
+    required bool isSaleOn
 
   }) async {
     context.read<ReorderBloc>().add(ReorderEvent.getProductDetailsEvent(
@@ -957,7 +965,7 @@ class ReorderScreenWidget extends StatelessWidget {
                             state.relatedProductList.isEmpty
                                 ? 0.width
                                 : relatedProductWidget(
-                                context1, state.relatedProductList, context)
+                                context1, state.relatedProductList, context,isSaleOn)
                           ],
                         ),
                       ),
@@ -973,7 +981,7 @@ class ReorderScreenWidget extends StatelessWidget {
   }
 
   Widget relatedProductWidget(BuildContext prevContext,
-      List<RelatedProductDatum> relatedProductList, BuildContext context) {
+      List<RelatedProductDatum> relatedProductList, BuildContext context,isSaleOn) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -995,7 +1003,7 @@ class ReorderScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.salesProductItemHeight,
+          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
           padding: EdgeInsets.only(left: 10, right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1027,6 +1035,7 @@ class ReorderScreenWidget extends StatelessWidget {
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
+                    isSaleOn: isSaleOn,
                       productListIndex: 2,
                       context: context,
                       productId:

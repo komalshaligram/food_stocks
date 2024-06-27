@@ -264,7 +264,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                           .productList[index]
                                                           .productId ?? '',
                                                       productStock: (state.productList[index].product?.productStock.toString() ?? '0'),
-                                                      productListIndex: 1
+                                                      productListIndex: 1,
+                                                    isSaleOn: state.isSaleOn
+
 
                                                   );
                                                 }
@@ -307,7 +309,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                       .productId ??
                                                       '',
                                                   productStock: (state.productList[index].product?.productStock.toString() ?? '0'),
-                                                  productListIndex: 1
+                                                  productListIndex: 1,
+                                                  isSaleOn: state.isSaleOn
 
                                               );
                                             }
@@ -517,7 +520,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                           productId: state
                                               .searchList[index].searchId,
                                           isBarcode: true,
-                                          productListIndex: 0
+                                          productListIndex: 0,
+                                          isSaleOn: state.isSaleOn
                                       );
                                     }
                                     else{
@@ -596,6 +600,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                   isBarcode: true,
                                   productStock: '1',
                                   productListIndex: 0,
+                                isSaleOn: state.isSaleOn
                               );
                             }
                             else{
@@ -727,6 +732,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
      String productStock  = '0',
      bool isRelated = false,
      int productListIndex = -1,
+     required bool isSaleOn,
 
    }) async {
      context.read<CompanyProductsBloc>().add(CompanyProductsEvent.getProductDetailsEvent(
@@ -923,7 +929,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                  }
                                },
                              ),
-                             state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context)
+                             state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context,isSaleOn)
                            ],
                          ),
                        ),
@@ -939,7 +945,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
      );
    }
 
-   Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context,){
+   Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context,bool isSaleOn){
      return Column(
        crossAxisAlignment: CrossAxisAlignment.start,
        mainAxisAlignment: MainAxisAlignment.start,
@@ -961,7 +967,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
            ),
          ),
          Container(
-           height: AppConstants.relatedProductItemHeight,
+           height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
            padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
            child: ListView.builder(
              scrollDirection: Axis.horizontal,
@@ -992,6 +998,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                  onButtonTap: () {
                    Navigator.pop(prevContext);
                    showProductDetails(
+                     isSaleOn: isSaleOn,
                        context: context,
                        productId: relatedProductList[i].id ?? '',
                        isBarcode: false,

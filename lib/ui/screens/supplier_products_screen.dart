@@ -154,7 +154,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                               width: getScreenWidth(context),
                                               alignment: Alignment.center,
                                               child: Text(
-                                                '${AppLocalizations.of(context)!.currently_this_Supplier_has_no_products}',
+                                                '${AppLocalizations.of(context)!.no_data}',
                                                 style:
                                                     AppStyles.rkRegularTextStyle(
                                                         size: AppConstants
@@ -221,6 +221,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                           if (!state
                                                               .isGuestUser) {
                                                             showProductDetails(
+                                                              isSaleOn: state.isSaleOn,
+
                                                               productListIndex: 1,
                                                               context:
                                                               context,
@@ -289,6 +291,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                                   .productList[index]
                                                                   .productStock
                                                                   .toString(),
+                                                                isSaleOn: state.isSaleOn
+
                                                             );
                                                           } else {
                                                             Navigator.pushNamed(
@@ -505,7 +509,11 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   .toString(),
                                               productId: state
                                                   .searchList[index].searchId,
-                                              isBarcode: true);
+                                              isBarcode: true,
+                                            isSaleOn: state.isSaleOn
+
+
+                                          );
                                         } else {
                                           Navigator.pushNamed(context,
                                               RouteDefine.connectScreen.name);
@@ -580,7 +588,9 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                 // productStock: '1',
                                 productId: scanResult,
                                 isBarcode: true,
-                                productStock: '1');
+                                productStock: '1',
+                              isSaleOn: state.isSaleOn
+                            );
                           } else {
                             Navigator.pushNamed(
                                 context, RouteDefine.connectScreen.name);
@@ -703,6 +713,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
       {required BuildContext context,
       required String productId,
         required int productListIndex,
+        required bool isSaleOn,
       bool? isBarcode,
       String productStock = '0'}) async {
     context.read<SupplierProductsBloc>().add(
@@ -945,7 +956,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                           : relatedProductWidget(
                                               context1,
                                               state.relatedProductList,
-                                              context),
+                                              context,isSaleOn),
                                       10.height
                                     ],
                                   ),
@@ -962,7 +973,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
   }
 
   Widget relatedProductWidget(BuildContext prevContext,
-      List<RelatedProductDatum> relatedProductList, BuildContext context) {
+      List<RelatedProductDatum> relatedProductList, BuildContext context,bool isSaleOn) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -982,7 +993,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.salesProductItemHeight,
+          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
           padding: EdgeInsets.only(left: 10, right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1013,6 +1024,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
+                    isSaleOn: isSaleOn,
                       context: context,
                       productListIndex: 2,
                       productId: relatedProductList[i].id ?? '',

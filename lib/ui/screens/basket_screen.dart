@@ -471,6 +471,7 @@ class BasketScreenWidget extends StatelessWidget {
             child: GestureDetector(
               onTap: (){
                 showProductDetails(
+                    isSaleOn : state.isSaleOn,
                     context: context,
                     cartProductId: state.CartItemList.data?.data?[index].id ?? '',
                   productListIndex: 0,
@@ -809,6 +810,7 @@ class BasketScreenWidget extends StatelessWidget {
     bool isBarcode= false,
     String productStock = '0',
     int productListIndex = 0,
+    required bool isSaleOn,
     required String cartProductId,
   }) async {
     context.read<BasketBloc>().add(BasketEvent.getProductDetailsEvent(
@@ -1003,7 +1005,7 @@ class BasketScreenWidget extends StatelessWidget {
                               },
                             ),
                             state.relatedProductList.isEmpty ? 0.height :
-                            relatedProductWidget(context1,state.relatedProductList,context),
+                            relatedProductWidget(context1,state.relatedProductList,context, isSaleOn),
                           ],
                         ),
                       ),
@@ -1018,7 +1020,7 @@ class BasketScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context,){
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context,bool isSaleOn){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -1040,7 +1042,7 @@ class BasketScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.relatedProductItemHeight,
+          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
           padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1071,6 +1073,7 @@ class BasketScreenWidget extends StatelessWidget {
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
+                    isSaleOn: isSaleOn,
                       context: context,
                       cartProductId: relatedProductList[i].id ?? '',
                       isBarcode: false,
