@@ -86,27 +86,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                         trailingWidget: Center(
                           child: GestureDetector(
                             onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context1) => CommonAlertDialog(
-                                  isLogOutProcess: state.isLoading,
-                                  directionality: state.language,
-                                  title: '${AppLocalizations.of(context)!.delete}',
-                                  subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
-                                  positiveTitle: '${AppLocalizations.of(context)!.yes}',
-                                  negativeTitle: '${AppLocalizations.of(context)!.no}',
-                                  negativeOnTap: () {
-                                    Navigator.pop(context1);
-                                  },
-                                  positiveOnTap: () async {
-                                    bloc.add(MessageContentEvent.MessageDeleteEvent(
-                                      messageId: state.message.id ?? '',
-                                      context: context,
-                                      dialogContext: context1,
-                                    ));
-                                  },
-                                ),
-                              );
+                              deleteMessageDialog(context: context,messageId: state.message.id ?? '');
                             },
                             child: Text(
                               AppLocalizations.of(context)!.delete,
@@ -303,5 +283,41 @@ class MessageContentScreenWidget extends StatelessWidget {
         Navigator.pushNamed(navigatorKey.currentState!.context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.companyIdString: id});
       }
     }
+  }
+
+  void deleteMessageDialog({
+ required BuildContext context,
+    required String messageId
+}) {
+     showDialog(
+      context: context,
+      builder: (context1) => BlocProvider.value(
+        value:  context.read<MessageContentBloc>(),
+        child: BlocBuilder<MessageContentBloc, MessageContentState>(
+  builder: (context, state) {
+    MessageContentBloc bloc = context.read<MessageContentBloc>();
+    return CommonAlertDialog(
+          isLogOutProcess: state.isLoading,
+          directionality: state.language,
+          title: '${AppLocalizations.of(context)!.delete}',
+          subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
+          positiveTitle: '${AppLocalizations.of(context)!.yes}',
+          negativeTitle: '${AppLocalizations.of(context)!.no}',
+          negativeOnTap: () {
+            Navigator.pop(context1);
+          },
+          positiveOnTap: () async {
+            bloc.add(MessageContentEvent.MessageDeleteEvent(
+              messageId: state.message.id ?? '',
+              context: context,
+              dialogContext: context1,
+            ));
+          },
+        );
+  },
+),
+      ),
+    );
+
   }
 }

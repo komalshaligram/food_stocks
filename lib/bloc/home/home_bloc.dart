@@ -861,6 +861,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             GetMessagesResModel response = GetMessagesResModel.fromJson(res);
             debugPrint('getMessage response  = ${response}');
             if (response.status == 200) {
+              emit(state.copyWith(messageList: []));
               List<MessageData> messageList =
               state.messageList.toList(growable: true);
               if(response.data?.isNotEmpty  ?? false){

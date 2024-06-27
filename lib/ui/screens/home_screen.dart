@@ -677,7 +677,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         }),
                                     10.height,
                                     ListView.builder(
-                                      itemCount: 2,
+                                      itemCount: state.messageList.length > 1 ? 2 : 1,
                                       physics: NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemBuilder: (context, index) =>
