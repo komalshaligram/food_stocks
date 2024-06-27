@@ -69,6 +69,7 @@ class StoreScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     StoreBloc bloc = context.read<StoreBloc>();
+
     return BlocListener<StoreBloc, StoreState>(
       listener: (context, state) async {
         if(state.isCartCountChange){
@@ -538,6 +539,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                         debugPrint("tap 1");
                                                         if(!state.isGuestUser){
                                                           showProductDetails(
+                                                            isSaleOn: state.isSaleOn,
                                                             context: context,
                                                             productStock:state
                                                                 .productSalesList[
@@ -635,6 +637,8 @@ class StoreScreenWidget extends StatelessWidget {
                                                 debugPrint("tap 2");
                                                 if(!state.isGuestUser){
                                                   showProductDetails(
+                                                      isSaleOn: state.isSaleOn,
+
                                                       context:
                                                       context,
                                                       productId: state
@@ -738,6 +742,8 @@ class StoreScreenWidget extends StatelessWidget {
                                                         debugPrint("tap 1");
                                                         if(!state.isGuestUser){
                                                           showProductDetails(
+                                                              isSaleOn: state.isSaleOn,
+
                                                               context:
                                                               context,
                                                               productId: state
@@ -966,6 +972,8 @@ class StoreScreenWidget extends StatelessWidget {
                                      debugPrint("tap 4");
                                     if(!state.isGuestUser){
                                       showProductDetails(
+                                          isSaleOn: state.isSaleOn,
+
                                           context: context,
                                           productId: state
                                               .searchList[index].searchId,
@@ -1047,6 +1055,7 @@ class StoreScreenWidget extends StatelessWidget {
                            debugPrint("tap 5");
                           if(!state.isGuestUser){
                             showProductDetails(
+                              isSaleOn: state.isSaleOn,
                                 context: context,
                                 productId: scanResult,
                                 isBarcode: true,
@@ -1477,6 +1486,7 @@ class StoreScreenWidget extends StatelessWidget {
     String productStock  = '0',
     bool isRelated = false,
     int planoGramIndex = 0,
+    required bool isSaleOn
   }) async {
     context.read<StoreBloc>().add(StoreEvent.getProductDetailsEvent(
       context: context,
@@ -1676,7 +1686,7 @@ class StoreScreenWidget extends StatelessWidget {
                               },
                             ),
                             10.height,
-                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context)
+                            state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context,isSaleOn)
                           ],
                         ),
                       ),
@@ -1692,7 +1702,7 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context){
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context,bool isSaleOn){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -1714,7 +1724,7 @@ class StoreScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.salesProductItemHeight,
+          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
           padding: EdgeInsets.only(left: 10,right: 10,top: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1724,7 +1734,7 @@ class StoreScreenWidget extends StatelessWidget {
               return CommonProductSaleItemWidget(
                 isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
-                height: AppConstants.salesProductItemHeight,
+                height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
                 width: 140,
                 productName: relatedProductList.elementAt(i).productName ?? '' ,
                 saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
@@ -1746,6 +1756,7 @@ class StoreScreenWidget extends StatelessWidget {
                 onButtonTap: () {
                   Navigator.pop(prevContext);
                   showProductDetails(
+                    isSaleOn: isSaleOn,
                       context: context,
                       productId: relatedProductList[i].id ?? '',
                       isBarcode: false,

@@ -86,8 +86,7 @@ class ShipmentVerificationBloc
                 Navigator.pushNamedAndRemoveUntil(
                     event.context,
                     RouteDefine.orderScreen.name,
-                    (Route route) =>
-                        route.settings.name == RouteDefine.menuScreen.name);
+                    (Route<dynamic>route) =>route.isFirst);
 
                 CustomSnackBar.showSnackBar(
                     context: event.context,

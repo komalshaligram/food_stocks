@@ -135,7 +135,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           _cartProductId = '';
           _productQuantity = 0;
           try {
-            emit( state.copyWith(isProductLoading: true, isSelectSupplier: false));
+            emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
             final res = await DioClient(event.context).post(
                 AppUrls.getProductDetailsUrl,
@@ -154,7 +154,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               //3 sales product.
               print('product___${response.product}');
 
-              if(response.product!.isNotEmpty){
+
+              if(response.product?.isNotEmpty ?? false){
 
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
@@ -206,7 +207,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-              if(response.product != null){
+              if(response.product!.isNotEmpty){
                 add(HomeEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
               if (event.isBarcode) {
@@ -350,7 +351,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
             }
             else{
-                emit(state.copyWith(isProductLoading: false));
+                emit(state.copyWith(isProductLoading: false,
+                  productDetails: []
+                ));
               }
             }
               else {
@@ -859,6 +862,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             GetMessagesResModel response = GetMessagesResModel.fromJson(res);
             debugPrint('getMessage response  = ${response}');
             if (response.status == 200) {
+              emit(state.copyWith(messageList: []));
               List<MessageData> messageList =
               state.messageList.toList(growable: true);
               if(response.data?.isNotEmpty  ?? false){
