@@ -158,7 +158,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                 ),
                 5.height,
                 Text(
-                  '${productDetails.first.supplierSales?.first.productPrice.toString()} ${AppLocalizations.of(context)!.unit_in_box} ',
+                  '${productDetails.first.numberOfUnit.toString()} ${AppLocalizations.of(context)!.unit_in_box} ',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont, color: AppColors.blackColor),
                 ),
