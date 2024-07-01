@@ -163,9 +163,11 @@ class PushNotificationService {
       requestBadgePermission: true,
       requestAlertPermission: true,
     );
+    await Future.delayed(Duration(seconds: 1));
+
     String? fcmToken = '';
 
-    fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getToken();
+    fcmToken = await FirebaseMessaging.instance.getToken();
 
     SharedPreferencesHelper preferences =
     SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -180,11 +182,7 @@ class PushNotificationService {
         debugPrint('main_page_____$mainPage');
         debugPrint('sub_page_____$subPage');
         debugPrint('id_____$id');
-
-
-
         handleMessage(mainPage, subPage, id);
-
       },
     );
 // onMessage is called when the app is in foreground and a notific

@@ -154,7 +154,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               //3 sales product.
               print('product___${response.product}');
 
-
               if(response.product?.isNotEmpty ?? false){
 
               List<List<ProductStockModel>> productStockList =

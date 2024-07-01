@@ -61,7 +61,7 @@ class ShipmentVerificationBloc
             debugPrint('img url = ${signModel.filepath}');
             if (signModel.filepath != '') {
               signUrl = signModel.filepath ?? '';
-              debugPrint("image = ${signUrl}");
+              debugPrint("image = $signUrl");
             }
           } on ServerException {}
 
