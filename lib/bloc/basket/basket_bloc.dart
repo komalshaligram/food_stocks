@@ -923,15 +923,21 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         }
         else if (event is _orderSendEvent) {
           List<OrderSendModel.Product> ProductReqMap = [];
-          emit(state.copyWith(isLoading: true));
+          emit(state.copyWith(isLoading: true,isRemoveProcess : true));
 
-          state.CartItemList.data?.data?.forEach((element) {
-            ProductReqMap.add(OrderSendModel.Product(
-              supplierId: element.suppliers?.first.id ,
-              productId: element.productDetails?.id,
-              quantity: element.totalQuantity,
-              saleId: element.id
-            ));
+         state.CartItemList.data?.data?.forEach((element) {
+            debugPrint('productstock___${element.productStock}');
+            if(element.productStock != 0 || element.productStock != 0.0 ){
+              ProductReqMap.add(OrderSendModel.Product(
+                  supplierId: element.suppliers?.first.id,
+                  productId: element.productDetails?.id,
+                  quantity: element.totalQuantity,
+                  saleId: element.id
+              ));
+            }
+            else{
+              emit(state.copyWith(isLoading: false));
+            }
           });
 
           try {
@@ -969,21 +975,22 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     event.context),
                 type: SnackBarType.FAILURE,
               );
-              emit(state.copyWith(isLoading: false));
+              emit(state.copyWith(isLoading: false,));
             } else if (response.status == 405) {
               emit(state.copyWith(isLoading: false, isOrderPending: true));
             }
             else {
+
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ?? response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
-              emit(state.copyWith(isLoading: false));
+              emit(state.copyWith(isLoading: false,isRemoveProcess: false));
             }
           } on ServerException {
-            emit(state.copyWith(isLoading: false));
+            emit(state.copyWith(isLoading: false,isRemoveProcess: false));
           }
         }
         else if (event is _RelatedProductsEvent) {
