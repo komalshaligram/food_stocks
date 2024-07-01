@@ -1,6 +1,6 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=C:\Users\sit107.SIT\flutter"
+export "FLUTTER_ROOT=C:\Users\sit107.SIT\Downloads\flutter"
 export "FLUTTER_APPLICATION_PATH=C:\Users\sit107.SIT\AndroidStudioProjects\food_stocks"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"

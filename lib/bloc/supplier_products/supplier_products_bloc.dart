@@ -86,7 +86,7 @@ class SupplierProductsBloc
               pageLimit: AppConstants.supplierProductPageLimit,
               pageNum: state.pageNum + 1,
               onlySearch: false,
-              search: event.searchType.isNotEmpty ? event.searchType : '',
+              search: state.searchArg.isNotEmpty ? state.searchArg : '',
             sortOrder: AppStrings.sortOrderString,
             sortField: AppStrings.sortFieldString
           );
@@ -1011,8 +1011,8 @@ class SupplierProductsBloc
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
                   lowStock: supplier.lowStock.toString(),
                     isPesach: supplier.isPesach??false,
-                  salePrice: double.parse(supplier.sale.salePrice.toString()),
-                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                  salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
+                  salesDesc:  parse(supplier.sale?.saleDescription ?? '')
                       .body
                       ?.text ??
                       '',

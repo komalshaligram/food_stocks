@@ -288,90 +288,89 @@ class Field with _$Field {
 class SupplierProductDatum with _$SupplierProductDatum {
   const factory SupplierProductDatum({
     @JsonKey(name: "createdAt")
-    required String createdAt,
+     String? createdAt,
     @JsonKey(name: "isBottle")
-    required bool isBottle,
+     bool?  isBottle,
     @JsonKey(name: "itemsWeight")
-    required String itemsWeight,
+     String?  itemsWeight,
     @JsonKey(name: "numberOfUnit")
-    required String numberOfUnit,
+     String?  numberOfUnit,
     @JsonKey(name: "totalWeightCardboard")
-    required String totalWeightCardboard,
+     String?  totalWeightCardboard,
     @JsonKey(name: "totalWeightSurface")
-    required String totalWeightSurface,
+     String?  totalWeightSurface,
     @JsonKey(name: "updatedAt")
-    required String updatedAt,
+     String?  updatedAt,
     @JsonKey(name: "totalWeight")
-    required String totalWeight,
+     String?  totalWeight,
     @JsonKey(name: "productStock")
-    required String productStock,
+     String?  productStock,
     @JsonKey(name: "sale")
-    required Sale sale,
+     Sale? sale,
     @JsonKey(name: "_id")
-    required String id,
+     String?  id,
     @JsonKey(name: "productName")
-    required String productName,
+     String?  productName,
     @JsonKey(name: "brandId")
-    required String brandId,
+     String?  brandId,
     @JsonKey(name: "brandLogo")
-    required String brandLogo,
+     String?  brandLogo,
     @JsonKey(name: "manufactureName")
-    required String manufactureName,
+     String?  manufactureName,
     @JsonKey(name: "healthAndLifestye")
-    required String healthAndLifestye,
+     String?  healthAndLifestye,
     @JsonKey(name: "productDescription")
-    required String productDescription,
+     String?  productDescription,
     @JsonKey(name: "component")
-    required String component,
+     String?  component,
     @JsonKey(name: "nutritionalValue")
-    required String nutritionalValue,
+     String?  nutritionalValue,
     @JsonKey(name: "mainImage")
-    required String mainImage,
+     String?  mainImage,
     @JsonKey(name: "images")
-    required List<dynamic> images,
+     List<dynamic>?  images,
     @JsonKey(name: "qrcode")
-    required String qrcode,
+     String?  qrcode,
     @JsonKey(name: "sku")
-    required String sku,
+     String?  sku,
     @JsonKey(name: "isPesach")
-    required bool isPesach,
+     bool?  isPesach,
     @JsonKey(name: "nmMashlim")
-    required String nmMashlim,
+     String?  nmMashlim,
     @JsonKey(name: "createdBy")
-    required String createdBy,
+     String?  createdBy,
     @JsonKey(name: "updatedBy")
-    required String updatedBy,
+     String?  updatedBy,
     @JsonKey(name: "categories")
-    required String categories,
+     String?  categories,
     @JsonKey(name: "subcategories")
-    required String subcategories,
+     String?  subcategories,
     @JsonKey(name: "subCategoryPseachOrder")
-    required int subCategoryPseachOrder,
+     int?  subCategoryPseachOrder,
     @JsonKey(name: "manufacturingCountry")
-    required String manufacturingCountry,
+     String?  manufacturingCountry,
     @JsonKey(name: "caseType")
-    required String caseType,
+     String?  caseType,
     @JsonKey(name: "scale")
-    required String scale,
+     String?  scale,
     @JsonKey(name: "status")
-    required String status,
+     String?  status,
     @JsonKey(name: "productNumber")
-    required String productNumber,
-
+     String?  productNumber,
     @JsonKey(name: "productPrice")
-    required String productPrice,
+     String?  productPrice,
     @JsonKey(name: "totalSale")
-    required int totalSale,
+     int?  totalSale,
     @JsonKey(name: "lowStock")
-    required String lowStock,
+     String?  lowStock,
     @JsonKey(name: "category")
-    required String category,
+     String?  category,
     @JsonKey(name: "casetypes")
-    required String casetypes,
+     String?  casetypes,
     @JsonKey(name: "brandName")
-    required String brandName,
+     String?  brandName,
     @JsonKey(name: "productId")
-    required String productId,
+     String?  productId,
   }) = _SupplierProductDatum;
 
   factory SupplierProductDatum.fromJson(Map<String, dynamic> json) => _$SupplierProductDatumFromJson(json);
@@ -381,17 +380,17 @@ class SupplierProductDatum with _$SupplierProductDatum {
 class Sale with _$Sale {
   const factory Sale({
     @JsonKey(name: "isSale")
-    required bool isSale,
+     bool? isSale,
     @JsonKey(name: "salePrice")
-    required String salePrice,
+     String? salePrice,
     @JsonKey(name: "saleFromDate")
-    required String saleFromDate,
+     String? saleFromDate,
     @JsonKey(name: "saleUntilDate")
-    required String saleUntilDate,
+     String? saleUntilDate,
     @JsonKey(name: "saleMaxQuantity")
-    required String saleMaxQuantity,
+     String? saleMaxQuantity,
     @JsonKey(name: "saleDescription")
-    required String saleDescription,
+     String? saleDescription,
   }) = _Sale;
 
   factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);

@@ -84,4 +84,7 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.userApproveEvent(
       {required BuildContext context}) = _userApproveEvent;
+
+
+
 }

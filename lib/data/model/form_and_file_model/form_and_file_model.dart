@@ -19,20 +19,3 @@ class FormAndFileModel with _$FormAndFileModel {
   factory FormAndFileModel.fromJson(Map<String, dynamic> json) =>
       _$FormAndFileModelFromJson(json);
 }
-// class FormAndFileModel {
-//   String? id;
-//   String? name;
-//   String? url;
-//   String? localUrl;
-//   bool? isForm;
-//   bool? isDownloadable;
-//
-//   FormAndFileModel({
-//     this.id,
-//     this.name,
-//     this.url = '',
-//     this.localUrl = '',
-//     this.isForm = false,
-//     this.isDownloadable = false,
-//   });
-// }

@@ -53,8 +53,6 @@ class BankInfoWidget extends StatelessWidget {
             leading: GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
-         /*         Navigator.pushNamed(
-                      context, RouteDefine.activityTimeScreen.name);*/
                 },
                 child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
             title: Align(

@@ -68,4 +68,7 @@ class BasketEvent with _$BasketEvent {
   const factory BasketEvent.userApproveEvent(
       {required BuildContext context}) = _userApproveEvent;
 
+  const factory BasketEvent.generalSettings({required BuildContext context})=_GeneralSettings;
+
+
 }

@@ -25,6 +25,7 @@ import '../../data/model/res_model/account_permission/account_permission_res_mod
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/order_send_res_model/order_send_res_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -54,7 +55,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       else {
         if (event is _getAllCartEvent) {
           emit(state.copyWith(isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(),
-          isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(),  isIncludedVat: preferencesHelper.getIsIncludedVat(),));
+          isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(),));
           debugPrint('cartId____${preferencesHelper.getCartId()}');
 
           emit(state.copyWith(
@@ -1103,6 +1104,32 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           } on ServerException {}
           catch (e) {
             debugPrint('catch____$e');
+          }
+        }
+
+        else if(event is _GeneralSettings){
+          try {
+
+            final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
+            SettingResModel response = SettingResModel.fromJson(res);
+            debugPrint('general settings = ${response.data.toString()}');
+            if (response.status == 200) {
+              preferencesHelper.setIsSaleOn(isSaleOn:  response.data?.isSaleOn ?? false);
+              preferencesHelper.setIsIncludedVat(isIncludedVat:
+              (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false
+              );
+              preferencesHelper.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
+             emit(state.copyWith(isIncludedVat: preferencesHelper.getIsIncludedVat(),isSaleOn: preferencesHelper.getShowSale()));
+            } else {
+
+            }
+          } on ServerException {
+
+          } catch (e) {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: e.toString(),
+                type: SnackBarType.FAILURE);
           }
         }
       }

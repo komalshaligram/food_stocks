@@ -56,7 +56,7 @@ class SupplierProductsScreen extends StatelessWidget {
             supplierId: args?[AppStrings.supplierIdString] ?? '',
             search: args?[AppStrings.searchString] ?? ''))
         ..add(SupplierProductsEvent.getSupplierProductsListEvent(
-            context: context, searchType: args?[AppStrings.searchString] ?? '',
+            context: context, searchType: args?[AppStrings.searchType] ?? '',
         ))
         ..add(SupplierProductsEvent.userApproveEvent(context: context)),
       child: SupplierProductsScreenWidget(),

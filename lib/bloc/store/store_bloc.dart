@@ -89,7 +89,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
          debugPrint('getGuestUser_____${preferencesHelper.getGuestUser()}');
         emit(state.copyWith(isGuestUser: preferencesHelper.getGuestUser(),
         isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(),
-          isIncludedVat: preferencesHelper.getIsIncludedVat(),
           isSaleOn: preferencesHelper.getShowSale(),
         ));
         try {
@@ -1066,17 +1065,17 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             //supplier products result
             searchList.addAll(response.data?.supplierProductData
                     ?.map((supplier) => SearchModel(
-                        searchId: supplier.productId ,
-                        name: supplier.productName ,
-                        searchType: SearchTypes.product,
-                        image: supplier.mainImage ,
+              searchId: supplier.productId ?? '',
+              name: supplier.productName ?? '',
+              searchType: SearchTypes.product,
+              image: supplier.mainImage ?? '',
               productStock: supplier.productStock.toString(),
               numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
               priceOfBox: double.parse(supplier.productPrice.toString()) ,
-                lowStock: supplier.lowStock.toString(),
-                isPesach: supplier.isPesach,
-              salePrice: double.parse(supplier.sale.salePrice.toString()),
-              salesDesc:  parse(supplier.sale.saleDescription)
+              lowStock: supplier.lowStock.toString(),
+              isPesach: supplier.isPesach??false,
+              salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
+              salesDesc:  parse(supplier.sale?.saleDescription ?? '')
                   .body
                   ?.text ??
                   '',
@@ -1255,20 +1254,27 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
           debugPrint('general settings = ${response.data.toString()}');
           if (response.status == 200) {
+            preferencesHelper.setIsSaleOn(isSaleOn:  response.data?.isSaleOn ?? false);
+            preferencesHelper.setIsIncludedVat(isIncludedVat:
+            (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false
+            );
             preferencesHelper.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
-            emit(state.copyWith(pesachBannerShimmering: false,pesachBannerURL:response.data?.pesachBanner ?? '',showPesachBanner: response.data?.isShowPesachBanner ?? false,bottlePrice: response.data?.bottlePrice ?? 0.0 ));
+            emit(state.copyWith(isIncludedVat: preferencesHelper.getIsIncludedVat(),isSaleOn: preferencesHelper.getShowSale(),));
           } else {
-            emit(state.copyWith(pesachBannerShimmering: false));
+
           }
         } on ServerException {
-          emit(state.copyWith(pesachBannerShimmering: false));
-        } catch (exc) {
-          emit(state.copyWith(pesachBannerShimmering: false));
+
+        } catch (e) {
+          CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: e.toString(),
+              type: SnackBarType.FAILURE);
         }
       }
 
       else  if(event is _getPermissionList){
-        emit(state.copyWith(isIncludedVat: preferencesHelper.getIsIncludedVat()));
+
           if (preferencesHelper.getSubUser()) {
             try {
               final res = await DioClient(event.context).get(

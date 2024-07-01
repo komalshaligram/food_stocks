@@ -27,6 +27,7 @@ import '../ui/screens/categories_permission_screen.dart';
 import '../ui/screens/company_product_screen.dart';
 import '../ui/screens/company_screen.dart';
 import '../ui/screens/connect_screen.dart';
+import '../ui/screens/credit_card_details_screen.dart';
 import '../ui/screens/form_data_screen.dart';
 import '../ui/screens/invoice_pdf_screen.dart';
 import '../ui/screens/invoice_screen.dart';
@@ -46,6 +47,7 @@ import '../ui/screens/sub_users_screen.dart';
 import '../ui/screens/supplier_permission_screen.dart';
 import '../ui/screens/supplier_screen.dart';
 import '../ui/screens/wallet_screen.dart';
+import '../ui/screens/way_of_payment_screen.dart';
 
 enum RouteDefine {
   ///ADD NAME OF ROUTE SCREEN
@@ -98,6 +100,8 @@ enum RouteDefine {
   categoriesPermissionScreen,
   brandPermissionScreen,
   supplierPermissionScreen,
+  wayOfPaymentScreen,
+  creditCardDetailsScreen
 
 }
 
@@ -158,6 +162,8 @@ class AppRouting {
       RouteDefine.categoriesPermissionScreen.name: (_) => CategoriesPermissionRoute.route,
       RouteDefine.brandPermissionScreen.name: (_) => BrandsPermissionRoute.route,
       RouteDefine.supplierPermissionScreen.name: (_) => SupplierPermissionRoute.route,
+      RouteDefine.wayOfPaymentScreen.name: (_) => WayOfPaymentRoute.route,
+      RouteDefine.creditCardDetailsScreen.name: (_) => CreditCardDetailsRoute.route,
 
     };
 

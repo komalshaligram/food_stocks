@@ -91,7 +91,8 @@ class BasketScreenWidget extends StatelessWidget {
               onFocusGained: () {
                 bloc.add(BasketEvent.getPermissionList(context: context));
                 bloc.add(BasketEvent.getAllCartEvent(context: context));
-                bloc.add(BasketEvent.userApproveEvent(context: context));
+             //   bloc.add(BasketEvent.userApproveEvent(context: context));
+                bloc.add(BasketEvent.generalSettings(context: context));
               },
               child: SafeArea(
                 child: Padding(
@@ -280,7 +281,7 @@ class BasketScreenWidget extends StatelessWidget {
                 (formatNumber(
                     value: (state.totalPayment.toStringAsFixed(2)),
                     local: AppStrings.hebrewLocal))),
-            const Divider(),
+            state.isIncludedVat ? const SizedBox() :  const Divider(),
             state.isIncludedVat ? SizedBox() : basketRow(
                 AppLocalizations.of(context)!.vat,
                 (formatNumber(
