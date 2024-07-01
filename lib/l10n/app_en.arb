@@ -497,7 +497,16 @@
     "filtering" : "Filtering",
     "product_no_longer_in_stock" : "Out of stock",
      "total_price_with_vat": "Total price with VAT",
-        "price_includes_vat": "Price includes VAT"
+    "price_includes_vat": "Price includes VAT",
+    "way_of_payment": "Way of payment",
+    "collection_from_bank_account": "Collection from bank account",
+  "credit_card": "CreditCard",
+  "credit_card_details": "Credit card details",
+    "credit_card_number": "Credit card number",
+    "validity": "Validity"
+
+
+
 
 
 

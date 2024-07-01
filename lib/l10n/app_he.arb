@@ -498,6 +498,13 @@
   "sorting" : "Sorting",
   "filtering" : "Filtering",
   "product_no_longer_in_stock" : "המוצר כבר לא במלאי",
-   "total_price_with_vat": "סה'כ לתשלום כולל מע'מ",
-     "price_includes_vat": "מחיר כולל מע”מ"
+  "total_price_with_vat": "סה'כ לתשלום כולל מע'מ",
+  "price_includes_vat": "מחיר כולל מע”מ",
+  "way_of_payment": "אופן התשלום",
+  "collection_from_bank_account": "גבייה מחשבון בנק לפי תנאי התשלום שנקבעו",
+  "credit_card": "גבייה בכרטיס אשראי",
+  "credit_card_details": "פרטי כרטיס אשראי",
+  "credit_card_number": "מספר כרטיס",
+  "validity": "תוקף"
+
 }

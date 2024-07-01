@@ -398,11 +398,11 @@ class SharedPreferencesHelper {
   }
 
   bool getShowSale() {
-    return prefs.getBool(includedVat) ?? false;
+    return prefs.getBool(saleOn) ?? false;
   }
 
   bool getIsIncludedVat() {
-    return prefs.getBool(saleOn) ?? false;
+    return prefs.getBool(includedVat) ?? false;
   }
 
 

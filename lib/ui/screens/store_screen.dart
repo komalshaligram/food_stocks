@@ -86,8 +86,9 @@ class StoreScreenWidget extends StatelessWidget {
         builder: (context, state) {
           return FocusDetector(
             onFocusGained: (){
-           bloc.add(StoreEvent.userApproveEvent(context: context));
+          // bloc.add(StoreEvent.userApproveEvent(context: context));
               bloc.add(StoreEvent.getPermissionList(context: context));
+              bloc.add(StoreEvent.generalSettings(context: context));
             },
             child: Scaffold(
               backgroundColor: AppColors.pageColor,

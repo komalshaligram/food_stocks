@@ -852,18 +852,17 @@ class PlanogramProductBloc
             searchList.addAll(response.data?.supplierProductData
                 ?.map((supplier) =>
                 SearchModel(
-                    searchId: supplier.productId ?? '',
-                    name: supplier.productName ?? '',
-                    searchType: SearchTypes.product,
-                    image: supplier.mainImage ?? '',
-                    productStock:
-                        supplier.productStock.toString(),
+                  searchId: supplier.productId ?? '',
+                  name: supplier.productName ?? '',
+                  searchType: SearchTypes.product,
+                  image: supplier.mainImage ?? '',
+                  productStock: supplier.productStock.toString(),
                   numberOfUnits: int.parse(supplier.numberOfUnit.toString()) ,
                   priceOfBox: double.parse(supplier.productPrice.toString()) ,
                   lowStock: supplier.lowStock.toString(),
                   isPesach: supplier.isPesach??false,
-                  salePrice: double.parse(supplier.sale.salePrice.toString()),
-                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
+                  salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
+                  salesDesc:  parse(supplier.sale?.saleDescription ?? '')
                       .body
                       ?.text ??
                       '',
