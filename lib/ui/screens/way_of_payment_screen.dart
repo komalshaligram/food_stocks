@@ -4,8 +4,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/way_of_payment/way_of_payment_bloc.dart';
+import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
+import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/custom_button_widget.dart';
 
@@ -19,8 +21,14 @@ class WayOfPaymentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+    ModalRoute.of(context)?.settings.arguments as Map?;
+    debugPrint(
+        "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}}");
     return BlocProvider(
-      create: (context) => WayOfPaymentBloc(),
+      create: (context) => WayOfPaymentBloc()..add(WayOfPaymentEvent.getArgumentEvent(
+        isUpdate: args?[AppStrings.isUpdateParamString] ?? false
+           )),
       child: WayOfPaymentScreenWidget(),
     );
   }
@@ -35,8 +43,9 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
       builder: (context, state) {
         WayOfPaymentBloc bloc = context.read<WayOfPaymentBloc>();
         return Scaffold(
+          backgroundColor: AppColors.pageColor,
           appBar: AppBar(
-            surfaceTintColor: AppColors.whiteColor,
+            surfaceTintColor: AppColors.pageColor,
             leading: GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
@@ -53,16 +62,17 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                 ),
               ),
             ),
-            backgroundColor: AppColors.whiteColor,
+            backgroundColor: AppColors.pageColor,
             titleSpacing: 0,
             elevation: 0,
           ),
           body: SafeArea(
             child: Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: getScreenWidth(context) * 0.1),
+                  horizontal: 20),
               child: Column(
                 children: [
+                  20.height,
                   RadioButtonWidget(context: context,
                       paymentMethod: AppLocalizations.of(context)!
                           .collection_from_bank_account,
@@ -72,21 +82,36 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                       paymentMethod: AppLocalizations.of(context)!
                           .credit_card,
                       radioValue: 1),
+                  10.height,
+                  state.isUpdate ?
+                  RadioButtonWidget(context: context,
+                      paymentMethod: 'bank transfer',
+                      radioValue: 2)
+                      : 0.width,
                 ],
               ),
             ),
           ),
           bottomSheet: Container(
-            color: AppColors.whiteColor,
+            color: AppColors.pageColor,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
               child: CustomButtonWidget(
                 isLoading: false,
-                buttonText: AppLocalizations.of(context)!
-                    .next
-                    .toUpperCase(),
+                buttonText: state.isUpdate ? AppLocalizations.of(context)!.save.toUpperCase():
+                AppLocalizations.of(context)!.next.toUpperCase(),
                 bGColor: AppColors.mainColor,
-                onPressed: () {},
+                onPressed: () {
+                  if(state.isUpdate){
+                    Navigator.pop(context);
+                  }
+                  else{
+                    Navigator.pushNamed(context,
+                      RouteDefine.creditCardDetailsScreen.name,
+                    );
+                  }
+
+                },
                 fontColors: AppColors.whiteColor,
               ),
             ),
@@ -103,28 +128,41 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
       value: context.read<WayOfPaymentBloc>(),
       child: BlocBuilder<WayOfPaymentBloc, WayOfPaymentState>(
         builder: (context, state) {
-          return Row(
-            children: [
-              Radio(
-                value: radioValue,
-                fillColor: MaterialStateColor.resolveWith(
-                      (states) => AppColors.greyColor,
+          return Container(
+            decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+             borderRadius: BorderRadius.circular(5),
+             boxShadow: [BoxShadow(
+                 color: AppColors.shadowColor
+                     .withOpacity(0.10),
+                 blurRadius: 5)],
+            ),
+            child: Row(
+              children: [
+                Transform.scale(
+                  scale: 1.3,
+                  child: Radio(
+                    value: radioValue,
+                    fillColor: MaterialStateColor.resolveWith(
+                          (states) => AppColors.greyColor,
+                    ),
+                    groupValue: state.selectRadioTile,
+                    onChanged: (val) {
+                      debugPrint('value___$val');
+                      bloc.add(WayOfPaymentEvent.radioButtonEvent(
+                          selectRadioTile: val!));
+                    },
+                  ),
                 ),
-                groupValue: state.selectRadioTile,
-                onChanged: (val) {
-                  debugPrint('value___$val');
-                  bloc.add(WayOfPaymentEvent.radioButtonEvent(
-                      selectRadioTile: val!));
-                },
-              ),
-              Text(
-                paymentMethod,
-                style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.font_14,
-                  color: AppColors.blackColor,
+                Text(
+                  paymentMethod,
+                  style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_14,
+                    color: AppColors.blackColor,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),

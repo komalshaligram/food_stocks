@@ -64,6 +64,12 @@ class AuthFormValidation {
       case AppStrings.subUserValString:
         return formFieldValidation.subUserNameField(value,context);
 
+      case AppStrings.creditCardNumberString:
+        return formFieldValidation.creditCardNumberField(value,context);
+
+      case AppStrings.creditCardValidityString:
+        return formFieldValidation.creditCardValidityField(value,context);
+
     }
     return null;
   }

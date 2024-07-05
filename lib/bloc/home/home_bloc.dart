@@ -967,21 +967,21 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             ProfileDetailsResModel response =
             ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
-              debugPrint(
-                  'image = ${response.data?.clients?.first.profileImage}');
-              preferences.setBusinessName(businessName: response.data?.clients?.first.clientDetail?.bussinessName ?? '');
 
+              preferences.setBusinessName(businessName: response.data?.clients?.first.clientDetail?.bussinessName ?? '');
+              preferences.setEmailId(userEmailId: response.data?.clients?.first
+                  .email ?? '');
               if(!preferences.getSubUser()){
                 preferences.setUserImageUrl(imageUrl: response.data?.clients
                     ?.first.profileImage ?? '');
+
                 emit(
                   state.copyWith(
                     UserImageUrl: response.data?.clients?.first.profileImage ?? '',
                   ),
                 );
               }
-              preferences.setEmailId(userEmailId: response.data?.clients?.first
-                  .email ?? '');
+
               String? phoneNumber = await Smartlook.instance.user.properties.getString("User phone number");
 
               if(phoneNumber == '' || phoneNumber == null) {
@@ -1341,7 +1341,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false
               );
               preferences.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
-              emit(state.copyWith(pesachBannerShimmering:false,pesachBannerURL:response.data?.pesachBanner ?? '',showPesachBanner: response.data?.isShowPesachBanner ?? false,bottlePrice:response.data?.bottlePrice ?? 0.0));
+              emit(state.copyWith(
+                  pesachBannerShimmering:false,
+                  pesachBannerURL:response.data?.pesachBanner ?? '',
+                  showPesachBanner: response.data?.isShowPesachBanner ?? false,
+                  bottlePrice:response.data?.bottlePrice ?? 0.0,
+                isIncludedVat: preferences.getIsIncludedVat(),
+                isSaleOn: preferences.getShowSale()
+
+              ));
             } else {
               emit(state.copyWith(pesachBannerShimmering: false));
             }

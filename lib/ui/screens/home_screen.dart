@@ -87,6 +87,8 @@ class HomeScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
+          debugPrint('profileImage____${state.UserImageUrl}');
+          debugPrint('companyLogoUrl____${state.UserCompanyLogoUrl}');
           return Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,
@@ -94,12 +96,12 @@ class HomeScreenWidget extends StatelessWidget {
               onFocusGained: () {
               bloc.add(HomeEvent.userApproveEvent(context: context));
                 handleMessageOnBackground();
+              bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
                 bloc.add(HomeEvent.getPreferencesDataEvent());
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(
                     context: context));
                 bloc.add(HomeEvent.getWalletRecordEvent(context: context));
                 bloc.add(HomeEvent.getMessageListEvent(context: context));
-                bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
                 bloc.add(HomeEvent.getCartCountEvent(context: context));
                 bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
                 bloc.add(HomeEvent.generalSettings(context: context));

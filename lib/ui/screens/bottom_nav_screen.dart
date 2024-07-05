@@ -94,7 +94,7 @@ final String basketScreen;
                   height: 65.0,
                 cartCount: state.cartCount,
                 isRTL: context.rtl,
-                  items: state.isSubUserSeeWallet ?
+                  items:  state.isSubUserSeeWallet ?
                   [
                     navItem(
                       pos: 0,
@@ -127,7 +127,8 @@ final String basketScreen;
                       isRTL: context.rtl,
                       state: state,
                     ),
-                  ]: [
+                  ]:
+                  [
                     navItem(
                       pos: 0,
                       img: AppImagePath.home,
@@ -182,7 +183,6 @@ final String basketScreen;
               ),
               body: FocusDetector(
                 onFocusGained: () {
-
                   bloc.add(BottomNavEvent.updateCartCountEvent(context:context));
                   bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
                 },

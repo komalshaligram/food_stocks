@@ -201,4 +201,20 @@ class FormFieldValidation {
     return null;
   }
 
+  String? creditCardNumberField(String value,BuildContext context) {
+
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.enter_credit_card_number}';
+    }
+    return null;
+  }
+
+  String? creditCardValidityField(String value,BuildContext context) {
+
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.enter_credit_card_validity}';
+    }
+    return null;
+  }
+
 }

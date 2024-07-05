@@ -94,8 +94,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          response.message!,
+                      response[AppStrings.messageString].toString().toLocalization(),
                       event.context),
                   type: SnackBarType.SUCCESS);
               emit(state.copyWith(isLogOutProcess: false));
@@ -128,8 +127,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             ProfileDetailsResModel response =
             ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
-              debugPrint(
-                  'image = ${response.data?.clients?.first.profileImage}');
               if(!preferences.getSubUser()){
                 preferences.setUserImageUrl(imageUrl: response.data?.clients?.first.profileImage ?? '');
                 emit(

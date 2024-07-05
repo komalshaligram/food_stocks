@@ -33,7 +33,8 @@ samples, guidance on mobile development, and a full API reference.
 - date_rang_picker color change ,dialog.dart , data_range_picker.dart
 - CurvedNavigationBar add cart in package
 - smartLook : sensitivity.dart & wireframe_manager.dart  - hide sensitivity for android
-
+- intl package
+- pdf_page_view : comment KeyboardListener
 - Reference the following commands to get started:
   📦 To create a new release use: "shorebird release".
   🚀 To push an update use: "shorebird patch".

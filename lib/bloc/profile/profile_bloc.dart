@@ -134,8 +134,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          response.message!,
+                      response[AppStrings.messageString].toString().toLocalization(),
                       event.context),
                   type: SnackBarType.SUCCESS);
               emit(state.copyWith());
@@ -217,8 +216,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               Smartlook.instance.user.setName(response.data?.clients?.first.clientDetail?.ownerName ?? '');
 
 
-              debugPrint(
-                  'image = ${response.data?.clients?.first.profileImage}');
+              debugPrint('image = ${response.data?.clients?.first.profileImage}');
               emit(
                 state.copyWith(
                   userId: response.data?.clients?.first.id ?? '',
@@ -306,12 +304,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           final res = await DioClient(event.context).post(
               AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
               data:req,
-              options: Options(
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                      'Bearer ${preferences.getAuthToken()}',
-                },
-              ));
+            );
 
           reqUpdate.ProfileDetailsUpdateResModel response =
               reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
@@ -327,8 +320,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               emit(state.copyWith(UserImageUrl: response.data?.client?.profileImage.toString() ?? ''));
             }
 
-
-
             emit(state.copyWith(isLoading: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
@@ -337,16 +328,25 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   '${AppLocalizations.of(event.context)!.updated_successfully}',
               type: SnackBarType.SUCCESS,
             );
-          } else {
+          }
+          else {
             emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(
-                  response.message?.toLocalization() ??
-                      response.message!,
-                  event.context),
-              type: SnackBarType.FAILURE,
-            );
+            if(response.message == AppStrings.rivchitclienterrorString){
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppLocalizations.of(event.context)!.israel_id_or_business_id_number_error,
+                  type: SnackBarType.FAILURE);
+            }
+            else{
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
+                type: SnackBarType.FAILURE,
+              );
+            }
           }
         } on ServerException {
           emit(state.copyWith(isLoading: false));

@@ -25,7 +25,7 @@ class BottomNavState with _$BottomNavState {
       isStoreScreen: '',
       isGuestUser: false,
       arg: '',
-      isSubUserSeeWallet: false,
+      isSubUserSeeWallet: true,
     isRefreshing: false,
     navList: []
 
