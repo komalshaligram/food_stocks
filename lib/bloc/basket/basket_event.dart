@@ -71,9 +71,6 @@ class BasketEvent with _$BasketEvent {
 
   const factory BasketEvent.generalSettings({required BuildContext context})=_GeneralSettings;
 
-  const factory BasketEvent.removeOutOfStockProductEvent({
-    required BuildContext context,
-    required int listIndex,
-  })=_removeOutOfStockProductEvent;
+
 
 }

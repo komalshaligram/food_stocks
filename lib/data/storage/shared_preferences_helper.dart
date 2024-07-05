@@ -35,6 +35,12 @@ class SharedPreferencesHelper {
   static const String companyName = 'companyName';
   static const String includedVat = 'showSale';
   static const String saleOn = 'showVat';
+  static const String userCity = 'userCity';
+  static const String userStreetName = 'userStreetName';
+  static const String userStreetNumber = 'userStreetNumber';
+  static const String fax = 'fax';
+  static const String zip = 'zip';
+  static const String logo = 'logo';
 
   static const String accountAdmin = 'accountAdmin';
   static const String seeWallet = 'seeWallet';
@@ -81,6 +87,12 @@ class SharedPreferencesHelper {
       await prefs.remove(emailId);
       await prefs.remove(saleOn);
       await prefs.remove(includedVat);
+      await prefs.remove(userCity);
+      await prefs.remove(userStreetName);
+      await prefs.remove(userStreetNumber);
+      await prefs.remove(fax);
+      await prefs.remove(zip);
+      await prefs.remove(logo);
 
 
       await prefs.remove(accountAdmin);
@@ -225,6 +237,24 @@ class SharedPreferencesHelper {
 
   Future<void> setIsSaleOn({required bool isSaleOn}) async {
     await prefs.setBool(saleOn, isSaleOn);
+  }
+  Future<void> setCity({required String city}) async {
+    await prefs.setString(userCity, city);
+  }
+  Future<void> setStreetName({required String streetName}) async {
+    await prefs.setString(userStreetName, streetName);
+  }
+  Future<void> setStreetNumber({required String streetNumber}) async {
+    await prefs.setString(userStreetNumber, streetNumber);
+  }
+  Future<void> setFaxNumber({required String faxNumber}) async {
+    await prefs.setString(fax, faxNumber);
+  }
+  Future<void> setZipCode({required String zipCode}) async {
+    await prefs.setString(zip, zipCode);
+  }
+  Future<void> setUserLogo({required String logoImage}) async {
+    await prefs.setString(logo, logoImage);
   }
 
   //permission
@@ -405,6 +435,24 @@ class SharedPreferencesHelper {
     return prefs.getBool(includedVat) ?? false;
   }
 
+  String getCity() {
+    return prefs.getString(userCity) ?? '';
+  }
+  String getStreetName() {
+    return prefs.getString(userStreetName) ?? '';
+  }
+  String getStreetNumber() {
+    return prefs.getString(userStreetNumber) ?? '';
+  }
+  String getFax() {
+    return prefs.getString(fax) ?? '';
+  }
+  String getZip() {
+    return prefs.getString(zip) ?? '';
+  }
+  String getLogo() {
+    return prefs.getString(logo) ?? '';
+  }
 
   //permission
 

@@ -859,7 +859,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               AppUrls.removeCartProductUrl,
               data: {AppStrings.cartProductIdString: event.cartProductId},
             );
-            if (response['status'] == 200) {
+            if (response[AppStrings.statusString] == 200) {
               add(BasketEvent.getAllCartEvent(context: event.context));
               Navigator.pop(event.dialogContext);
               player.play(AssetSource('audio/delete_sound.mp3'));
@@ -877,6 +877,14 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               emit(state.copyWith(
                 isRemoveProcess: false,
               ));
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response[AppStrings.messageString].toString().toLocalization(),
+                    event.context),
+                type: SnackBarType.FAILURE,
+              );
+
             }
           } on ServerException {
             emit(state.copyWith(
@@ -891,7 +899,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             final res = await DioClient(event.context)
                 .post(
                 '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}');
-            if (res["status"] == 201) {
+            if (res[AppStrings.statusString] == 201) {
               add(BasketEvent.setCartCountEvent(isClearCart: true));
               List<ProductDetailsModel> list = [];
               list = [...state.basketProductList];
@@ -956,17 +964,18 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             debugPrint('OrderSendResModel  = $response');
 
             if (response.status == 201) {
-              try {
+              preferencesHelper.setCartCount(count: 0);
+              Navigator.pushNamed(
+                  event.context, RouteDefine.orderSuccessfulScreen.name);
+             /* try {
                 final res = await DioClient(event.context).post(
                   '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}',
                 );
                 debugPrint('clear cart response_______${res}');
                 if (res["status"] == 201) {
-                  preferencesHelper.setCartCount(count: 0);
-                  Navigator.pushNamed(
-                      event.context, RouteDefine.orderSuccessfulScreen.name);
+
                 }
-              } on ServerException {}
+              } on ServerException {}*/
             } else if (response.status == 403) {
               CustomSnackBar.showSnackBar(
                 context: event.context,

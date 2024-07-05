@@ -103,11 +103,11 @@ class SupplierProductsBloc
           if (event.searchType == SearchTypes.product.toString()) {
             emit(state.copyWith(searchType: event.searchType.toString()));
             final res = await DioClient(event.context)
-                .post(AppUrls.getPlanogramAllProductUrl, data: req);
+                .post(AppUrls.getPlanogramAllProductForSearchUrl, data: req);
             response =
                 SupplierProductsResModel.fromJson(res);
 
-            debugPrint('search url = ${AppUrls.baseUrl}${AppUrls.getPlanogramAllProductUrl}');
+            debugPrint('search url = ${AppUrls.baseUrl}${AppUrls.getPlanogramAllProductForSearchUrl}');
           } else {
             final res = await DioClient(event.context)
                 .post(AppUrls.getSupplierProductsUrl, data: req);
@@ -807,7 +807,7 @@ class SupplierProductsBloc
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
-            //  add(SupplierProductsEvent.setCartCountEvent());
+            add(SupplierProductsEvent.setCartCountEvent());
               Vibration.vibrate();
               Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =

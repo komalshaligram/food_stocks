@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/container_widget.dart';
@@ -30,8 +31,8 @@ class CreditCardDetailsScreen extends StatelessWidget {
 }
 
 class CreditCardDetailsScreenWidget extends StatelessWidget {
-  const CreditCardDetailsScreenWidget({super.key});
-
+   CreditCardDetailsScreenWidget({super.key});
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CreditCardDetailsBloc, CreditCardDetailsState>(
@@ -43,7 +44,6 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
             leading: GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
-
                 },
                 child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
             title: Align(
@@ -65,47 +65,58 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: getScreenWidth(context) * 0.1),
-              child: Column(
-                children: [
-                  ContainerWidget(
-                    name:  AppLocalizations.of(context)!.credit_card_number,
-                  ),
-                  CustomFormField(
-                    context: context,
-                    controller: state.creditCardNumberController,
-                    keyboardType: TextInputType.number,
-                    hint: "",
-                    fillColor: Colors.transparent,
-                    textInputAction: TextInputAction.next,
-                    validator: AppStrings.idValString,
-                  ),
-                  7.height,
-                  ContainerWidget(
-                    name:  AppLocalizations.of(context)!.validity,
-                  ),
-                  CustomFormField(
-                    context: context,
-                    controller: state.validityController,
-                    keyboardType: TextInputType.number,
-                    hint: "",
-                    fillColor: Colors.transparent,
-                    textInputAction: TextInputAction.done,
-                    validator: AppStrings.idValString,
-                  ),
-
-                ],
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    ContainerWidget(
+                      name:  AppLocalizations.of(context)!.credit_card_number,
+                    ),
+                    CustomFormField(
+                      context: context,
+                      controller: state.creditCardNumberController,
+                      keyboardType: TextInputType.number,
+                      hint: "",
+                      fillColor: Colors.transparent,
+                      textInputAction: TextInputAction.next,
+                      validator: AppStrings.creditCardNumberString,
+                    ),
+                    7.height,
+                    ContainerWidget(
+                      name:  AppLocalizations.of(context)!.validity,
+                    ),
+                    CustomFormField(
+                      context: context,
+                      controller: state.validityController,
+                      keyboardType: TextInputType.datetime,
+                      hint: "",
+                      fillColor: Colors.transparent,
+                      textInputAction: TextInputAction.done,
+                      validator: AppStrings.creditCardValidityString,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-          bottomSheet:  CustomButtonWidget(
-            buttonText: AppLocalizations.of(context)!
-                .next
-                .toUpperCase(),
-            bGColor: AppColors.mainColor,
-            onPressed:  () {
-
-            },
-            fontColors: AppColors.whiteColor,
+          bottomSheet:  Container(
+            color: AppColors.whiteColor,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
+              child: CustomButtonWidget(
+                buttonText: AppLocalizations.of(context)!
+                    .next
+                    .toUpperCase(),
+                bGColor: AppColors.mainColor,
+                isLoading: state.isLoading,
+                onPressed:  () {
+                  if(_formKey.currentState?.validate() ?? false){
+                   // Navigator.pushNamed(context,RouteDefine.privacyPolicyScreen.name);
+                  }
+                },
+                fontColors: AppColors.whiteColor,
+              ),
+            ),
           ),
         );
       },

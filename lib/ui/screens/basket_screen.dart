@@ -90,7 +90,7 @@ class BasketScreenWidget extends StatelessWidget {
               onFocusGained: () {
                 bloc.add(BasketEvent.getPermissionList(context: context));
                 bloc.add(BasketEvent.getAllCartEvent(context: context));
-                //   bloc.add(BasketEvent.userApproveEvent(context: context));
+                bloc.add(BasketEvent.userApproveEvent(context: context));
                 bloc.add(BasketEvent.generalSettings(context: context));
               },
               child: SafeArea(

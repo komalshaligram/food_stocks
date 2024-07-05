@@ -101,8 +101,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             ),
             body: FocusDetector(
               onFocusGained: (){
-                bloc.add(SupplierProductsEvent.setCartCountEvent());
-
                   bloc.add(SupplierProductsEvent.getPermissionList(context: context));
 
               },
