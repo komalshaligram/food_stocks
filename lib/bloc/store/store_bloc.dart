@@ -1259,13 +1259,21 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false
             );
             preferencesHelper.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
-            emit(state.copyWith(isIncludedVat: preferencesHelper.getIsIncludedVat(),isSaleOn: preferencesHelper.getShowSale(),));
-          } else {
+            emit(state.copyWith(isIncludedVat: preferencesHelper.getIsIncludedVat(),
+              isSaleOn: preferencesHelper.getShowSale(),
+              pesachBannerURL: response.data?.pesachBanner ?? '',
+              showPesachBanner: response.data?.isShowPesachBanner ?? false,
+             bottlePrice: response.data?.bottlePrice ?? 0.0
 
+            ));
+            emit(state.copyWith(pesachBannerShimmering: false));
+          } else {
+            emit(state.copyWith(pesachBannerShimmering: false));
           }
         } on ServerException {
-
+          emit(state.copyWith(pesachBannerShimmering: false));
         } catch (e) {
+          emit(state.copyWith(pesachBannerShimmering: false));
           CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),

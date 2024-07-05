@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,17 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getProfileModelEvent) {
+        if(!state.isUpdate){
+          emit(state.copyWith(
+            image : File(preferencesHelper.getLogo()),
+            streetNameController: TextEditingController(text: preferencesHelper.getStreetName()),
+            streetNumberController: TextEditingController(text: preferencesHelper.getStreetNumber()),
+            emailController: TextEditingController(text: preferencesHelper.getEmailId()),
+            faxController: TextEditingController(text: preferencesHelper.getFax()),
+            zipController: TextEditingController(text: preferencesHelper.getZip()),
+            selectCity:  preferencesHelper.getCity(),
+          ));
+        }
         profileModel = event.profileModel;
         try {
           emit(state.copyWith(isShimmering: true ,language: preferencesHelper.getAppLanguage()));
@@ -59,6 +71,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             cityListResModel.data?.cities?.forEach((element) {
               temp.add(element.cityName.toString());
             });
+            debugPrint('city_____${preferencesHelper.getCity()}');
             emit(state.copyWith(
                 isShimmering: false,
                 cityList: temp,
@@ -136,6 +149,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
     //  }
       else if (event is _registrationApiEvent) {
         if (state.isUpdate) {
+
           ProfileModel updatedProfileModel = ProfileModel(
             logo: (state.image.path != '') ? imgUrl : state.companyLogo,
             cityId: state.cityListResModel?.data?.cities
@@ -178,7 +192,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             reqUpdate.ProfileDetailsUpdateResModel response =
                 reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
             if (response.status == 200) {
-              emit(state.copyWith(isLoading: false,companyLogo: preferencesHelper.getUserCompanyLogoUrl()));
+              emit(state.copyWith(isLoading: false,companyLogo:response.data?.client?.logo ?? ''));
               Smartlook.instance.user.setEmail(response.data?.client?.email ?? '');
               preferencesHelper.setEmailId(
                   userEmailId: response.data?.client?.email ?? '');
@@ -216,10 +230,12 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           String version = packageInfo.version;
            debugPrint('version____${version}');
+           debugPrint('imgUrl____${preferencesHelper.getUserCompanyLogoUrl()}');
+           debugPrint('imgUrl 1____${imgUrl}');
           ProfileModel reqMap = ProfileModel(
               profileImage: profileModel.profileImage,
               phoneNumber: profileModel.phoneNumber,
-              logo: imgUrl,
+              logo: imgUrl.isEmpty ? preferencesHelper.getUserCompanyLogoUrl(): imgUrl,
               cityId: state.cityListResModel?.data?.cities
                   ?.firstWhere(
                       (element) => element.cityName == state.selectCity)
@@ -256,7 +272,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 
             debugPrint('profile response --- ${profileResModel}');
             if (profileResModel.status == 200) {
-
+              print('logo___${profileResModel.data?.client?.clientData?.logo ?? ''}');
               String? businessName = await Smartlook.instance.user.properties.getString("User business name");
               String? phoneNumber = await Smartlook.instance.user.properties.getString("User phone number");
 
@@ -319,15 +335,38 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 event.context,
                 RouteDefine.activityTimeScreen.name,
               );
-            } else {
+            }
+            else {
               emit(state.copyWith(isLoading: false));
-              CustomSnackBar.showSnackBar(
+              debugPrint('imageurl_____${imgUrl}');
+              if(profileResModel.message == AppStrings.rivchitclienterrorString){
+                preferencesHelper.setEmailId(userEmailId: state.emailController.text);
+                preferencesHelper.setStreetName(streetName: state.streetNameController.text);
+                preferencesHelper.setStreetNumber(streetNumber: state.streetNumberController.text);
+                preferencesHelper.setFaxNumber(faxNumber: state.faxController.text);
+                preferencesHelper.setZipCode(zipCode: state.zipController.text);
+                preferencesHelper.setUserLogo(logoImage: state.image.path);
+                preferencesHelper.setCity(city: state.selectCity);
+                if(imgUrl != ''){
+                preferencesHelper.setUserCompanyLogoUrl(logoUrl: imgUrl);
+                }
+
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: AppLocalizations.of(event.context)!.israel_id_or_business_id_number_error,
+                    type: SnackBarType.FAILURE);
+                Navigator.pop(event.context);
+              }
+              else{
+                CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      profileResModel.message?.toLocalization() ??
+                      response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.FAILURE,
+                );
+              }
             }
           } catch (e) {
             debugPrint("data2 = ${e.toString()}");
@@ -367,7 +406,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
              debugPrint('ProfileDetails Response     =   ${response}');
+
+
             if (response.status == 200) {
+              debugPrint('logo     =   ${response.data?.clients?.first.logo ?? ''}');
               debugPrint(
                   'update city : ${response.data?.clients?.first.city?.cityName}');
               emit(state.copyWith(
@@ -386,6 +428,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                           text: response.data?.clients?.first.clientDetail?.zip)
                   ));
             } else {
+
               emit(state.copyWith(isUpdating: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,

@@ -13,6 +13,9 @@ class WayOfPaymentBloc extends Bloc<WayOfPaymentEvent, WayOfPaymentState> {
       if(event is _radioButtonEvent){
         emit(state.copyWith(selectRadioTile: event.selectRadioTile));
       }
+      else if(event is _getArgumentEvent){
+        emit(state.copyWith(isUpdate: event.isUpdate));
+      }
 
     });
   }

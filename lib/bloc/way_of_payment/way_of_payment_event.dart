@@ -5,4 +5,9 @@ class WayOfPaymentEvent with _$WayOfPaymentEvent {
   const factory WayOfPaymentEvent.radioButtonEvent({
     required int selectRadioTile,
   }) = _radioButtonEvent;
+
+  const factory WayOfPaymentEvent.getArgumentEvent({
+    required bool isUpdate,
+  }) = _getArgumentEvent;
+
 }

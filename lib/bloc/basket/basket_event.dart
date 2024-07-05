@@ -19,6 +19,7 @@ class BasketEvent with _$BasketEvent {
     required BuildContext context,
     required String cartProductId,
     required double totalAmount,
+    required bool isFromDelete,
   }) = _removeCartProductEvent;
 
   const factory BasketEvent.getAllCartEvent({required BuildContext context}) =
@@ -69,6 +70,7 @@ class BasketEvent with _$BasketEvent {
       {required BuildContext context}) = _userApproveEvent;
 
   const factory BasketEvent.generalSettings({required BuildContext context})=_GeneralSettings;
+
 
 
 }

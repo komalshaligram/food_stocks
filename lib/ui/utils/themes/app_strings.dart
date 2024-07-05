@@ -23,6 +23,7 @@ class AppStrings {
   static const navigateToStore = 'true';
   static const orderStatusNo = 'orderStatusNo';
   static const subuserString = 'subuser';
+  static const rivchitclienterrorString = 'MESSAGE.RIVCHITCLIENTERROR';
 
 
   //language Strings
@@ -117,6 +118,8 @@ class AppStrings {
   static const surfaceValString = 'surfacesVal';
   static const subUserValString = 'subUserNameVal';
   static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
+  static const creditCardNumberString = 'creditCardNumber';
+  static const creditCardValidityString = 'creditCardValidity';
 
   //page parameters strings
   static const mobileParamString = 'mobileParam';
@@ -424,6 +427,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.phone_number_of_other_subuser;
       case 'salemaxquantity':
         return AppLocalizations.of(context)!.not_add_more_than_max_qty;
+      case 'rivchitclienterror':
+        return AppLocalizations.of(context)!.rivchitclienterror;
     }
     return key;
   }
