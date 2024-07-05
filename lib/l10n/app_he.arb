@@ -505,6 +505,9 @@
   "credit_card": "גבייה בכרטיס אשראי",
   "credit_card_details": "פרטי כרטיס אשראי",
   "credit_card_number": "מספר כרטיס",
-  "validity": "תוקף"
+  "validity": "תוקף",
+    "some_products_out_of_stock_Do_you_want_submit_order" :"נמצאו מספר מוצרים שאינם במלאי. האם אתה רוצה לשלוח את ההזמנה ללא המוצרים שאינם במלאי ?"
+
+
 
 }

@@ -503,7 +503,9 @@
   "credit_card": "CreditCard",
   "credit_card_details": "Credit card details",
     "credit_card_number": "Credit card number",
-    "validity": "Validity"
+    "validity": "Validity",
+    "some_products_out_of_stock_Do_you_want_submit_order" :"There are some products that are out of stock.Do you want to submit the order without products that are out of stock ?"
+
 
 
 

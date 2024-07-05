@@ -1260,12 +1260,14 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             );
             preferencesHelper.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
             emit(state.copyWith(isIncludedVat: preferencesHelper.getIsIncludedVat(),isSaleOn: preferencesHelper.getShowSale(),));
+            emit(state.copyWith(pesachBannerShimmering: false));
           } else {
-
+            emit(state.copyWith(pesachBannerShimmering: false));
           }
         } on ServerException {
-
+          emit(state.copyWith(pesachBannerShimmering: false));
         } catch (e) {
+          emit(state.copyWith(pesachBannerShimmering: false));
           CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),
