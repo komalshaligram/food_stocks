@@ -84,7 +84,6 @@ class HomeScreenWidget extends StatelessWidget {
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
-
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
