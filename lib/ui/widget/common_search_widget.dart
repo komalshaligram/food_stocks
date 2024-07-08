@@ -175,7 +175,7 @@ class CommonSearchWidget extends StatelessWidget {
                             ) : SizedBox(),
                           ),
                           onTapOutside: (event) =>
-                              FocusScope.of(context).unfocus(),
+                              FocusManager.instance.primaryFocus?.unfocus(),
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.search,
                           onTap: onSearchTap,

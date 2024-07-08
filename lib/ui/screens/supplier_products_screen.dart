@@ -220,7 +220,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                               .isGuestUser) {
                                                             showProductDetails(
                                                               isSaleOn: state.isSaleOn,
-
                                                               productListIndex: 1,
                                                               context:
                                                               context,

@@ -339,15 +339,6 @@ double totalVatAmountCalculation(
   return result;
 }
 
-/*double bottleDepositCalculation(
-    {required double qty, required double deposit}) {
-  double result = qty * deposit;
-  debugPrint('qty$qty');
-  debugPrint('bottle deposit$deposit');
-  debugPrint('bottle tax$result');
-  return result;
-}*/
-
 double bottleDepositCalculation(
     { double units =1, required double deposit,required double qty}) {
   double result = qty * deposit * units;
@@ -356,6 +347,18 @@ double bottleDepositCalculation(
   debugPrint('bottle tax$result');
   return result;
 }
+
+double bottleDepositCalculationWithVat(
+    {  required double deposit,required double qty, double vatPercentage = 1}) {
+  double result = (qty * deposit) + ((qty * deposit * vatPercentage)/100) ;
+  debugPrint('qty$qty');
+  debugPrint('bottle deposit $deposit');
+  debugPrint('bottle tax $result');
+  debugPrint('result $result');
+  return result;
+}
+
+
 
 double saleCalculation({required double price, required double salePer}) {
   double result = price - (price * (salePer / 100));

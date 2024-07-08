@@ -271,20 +271,26 @@ class BasketScreenWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            !state.isIncludedVat ? state.bottleQty! > 0
+            state.bottleQty! > 0
                 ? basketRow(
                 state.language == AppStrings.englishString
                     ? '${AppLocalizations.of(context)!
                     .bottle_deposit}${'X'}${state.bottleQty.toString()}'
                     : '${AppLocalizations.of(context)!.bottle_deposit}${state
                     .bottleQty.toString()}${'X'}',
-                (formatNumber(
+                state.isIncludedVat ? (formatNumber(
+                    value: bottleDepositCalculationWithVat(
+                        deposit: state.bottleTax,
+                        vatPercentage: state.vatPercentage,
+                        qty: state.bottleQty?.toDouble() ?? 0)
+                        .toStringAsFixed(2),
+                    local: AppStrings.hebrewLocal)) :(formatNumber(
                     value: bottleDepositCalculation(
                         deposit: state.bottleTax,
                         qty: state.bottleQty?.toDouble() ?? 0)
                         .toStringAsFixed(2),
                     local: AppStrings.hebrewLocal)))
-                : Container() : 0.width,
+                : Container(),
             state.bottleQty! > 0 ? const Divider() : Container(),
             state.isIncludedVat ? const SizedBox() : basketRow(
                 AppLocalizations.of(context)!.sub_total,
@@ -306,8 +312,7 @@ class BasketScreenWidget extends StatelessWidget {
             state.isIncludedVat ? basketRow(
                 AppLocalizations.of(context)!.total_price_with_vat,
                 (formatNumber(
-                    value: state.totalPayment
-                        .toStringAsFixed(2),
+                    value: (state.totalPayment + (bottleDepositCalculationWithVat(deposit: state.bottleTax, qty: state.bottleQty?.toDouble() ?? 0,vatPercentage: state.vatPercentage))).toString(),
                     local: AppStrings.hebrewLocal)),
                 isTitle: true) : basketRow(
                 AppLocalizations.of(context)!.total,
