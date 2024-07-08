@@ -311,8 +311,14 @@ class _ProductDetailsScreenWidgetState
                                                         AppStrings.englishString
                                                     ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.orderData.bottleQuantities}'
                                                     : '${AppLocalizations.of(context)!.bottle_deposit}${state.orderData.bottleQuantities}${'X'}',
-                                                '${AppLocalizations.of(context)!.currency}${state.orderData.bottlePrice}')
-                                            : 0.width ,
+                                            state.isIncludedVat ? (formatNumber(
+                                                value: bottleDepositCalculationWithVat(
+                                                    deposit: state.orderData.bottleTax ?? 1,
+                                                    vatPercentage: state.orderData.vatPercentage ?? 1,
+                                                    qty: double.parse(state.orderData.bottleQuantities.toString()))
+                                                    .toStringAsFixed(2),
+                                                local: AppStrings.hebrewLocal))  :'${AppLocalizations.of(context)!.currency}${state.orderData.bottlePrice}')
+                                            : 0.width,
                                         3.height,
                                         !state.isIncludedVat ? basketRow(
                                             '${AppLocalizations.of(context)!.vat}',
