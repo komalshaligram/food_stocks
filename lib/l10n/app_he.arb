@@ -429,7 +429,7 @@
   "branch_number":"מספר סניף",
   "account_number":"מספר חשבון",
   "please_enter_guarantee1_name":"1 אנא הזן שם של ערב",
-  "please_select_agent":"Please select agent",
+  "please_select_agent":"אנא הסוכן שלי",
    "please_enter_branch_number":"אנא הזן מספר סניף",
     "please_enter_account_number":"אנא הזן מספר חשבון",
   "privacy_policy":"הסכם שימוש בשירות - TAVILI",
@@ -507,11 +507,14 @@
   "credit_card_number": "מספר כרטיס",
   "validity": "תוקף",
   "some_products_out_of_stock_Do_you_want_submit_order" :"נמצאו מספר מוצרים שאינם במלאי. האם אתה רוצה לשלוח את ההזמנה ללא המוצרים שאינם במלאי ?",
-  "enter_credit_card_number" :"Please enter credit card number",
-  "enter_credit_card_validity" :"Please enter credit card validity",
+  "enter_credit_card_number" :"אנא הזן מספר כרטיס",
+  "enter_credit_card_validity" :"אנא הזן תוקף כרטיס",
   "manage_credit_card" :"Manage credit card",
   "israel_id_or_business_id_number_error":"נתגלתה שגיאה במספר ת.ז. או במספק עוסק מורשה",
   "rivchitclienterror":"rivchitclienterror"
+
+
+
 
 
 

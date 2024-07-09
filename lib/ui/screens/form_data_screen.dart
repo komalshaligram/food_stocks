@@ -100,8 +100,7 @@ class FormDataScreenWidget extends StatelessWidget {
                       children: [
                         10.height,
                         CustomContainerWidget(
-                          name: AppLocalizations.of(context)!
-                              .select_agent,
+                          name: AppLocalizations.of(context)!.select_agent,
                         ),
                         CommonDropDownButton(
                             onChanged: (newAgent) {
@@ -119,8 +118,7 @@ class FormDataScreenWidget extends StatelessWidget {
 
                         7.height,
                         CustomContainerWidget(
-                          name: AppLocalizations.of(context)!
-                              .type_of_business,
+                          name: AppLocalizations.of(context)!.type_of_business,
                         ),
                         CommonDropDownButton(
                           items: state.businessTypeList.map((business) {
@@ -206,7 +204,6 @@ class FormDataScreenWidget extends StatelessWidget {
                         7.height,
                         CustomContainerWidget(
                           name: AppLocalizations.of(context)!.guarantee_1_phone_number,
-                          star: '*',
                         ),
                         CustomFormField(
                           context: context,
@@ -315,11 +312,21 @@ class FormDataScreenWidget extends StatelessWidget {
                               .toUpperCase(),
                           bGColor: AppColors.mainColor,
                           onPressed:  () {
-                            if (state.agent.isNotEmpty) {
-                              if (_formKey.currentState
-                                  ?.validate() ??
-                                  false) {
-                                bloc.add(FormDataEvent.navigateToNextScreenEvent(context: context));
+                            if (state.agent != AppLocalizations.of(context)!.select_agent) {
+                              if(state.business != AppLocalizations.of(context)!.type_of_business){
+                                if (_formKey.currentState
+                                    ?.validate() ??
+                                    false) {
+                                  bloc.add(FormDataEvent.navigateToNextScreenEvent(context: context));
+                                }
+                              }
+                              else{
+                                CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    title: AppLocalizations.of(
+                                        context)!
+                                        .select_business_type,
+                                    type: SnackBarType.FAILURE);
                               }
                             }
                             else{

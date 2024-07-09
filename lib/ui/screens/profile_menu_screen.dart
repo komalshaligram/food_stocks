@@ -229,15 +229,15 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                           RouteDefine.subUsersScreen.name,
                                         );
                                     }) : 0.width,
-                              /*  state.isSubUserCanManageSubUser ? profileMenuTiles(
+                              /*state.isSubUserCanManageSubUser ? profileMenuTiles(
                                     title:
                                     AppLocalizations.of(context)!.manage_credit_card,
                                     onTap: () {
                                       Navigator.pushNamed(context,
-                                        RouteDefine.wayOfPaymentScreen.name,
-                                          arguments: {
+                                        RouteDefine.formDataScreen.name,
+                                         *//* arguments: {
                                             AppStrings.isUpdateParamString: false
-                                          }
+                                          }*//*
                                       );
                                     }) : 0.width,*/
                                 profileMenuTiles(
