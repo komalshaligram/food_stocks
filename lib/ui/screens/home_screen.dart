@@ -84,12 +84,9 @@ class HomeScreenWidget extends StatelessWidget {
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
-
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          debugPrint('profileImage____${state.UserImageUrl}');
-          debugPrint('companyLogoUrl____${state.UserCompanyLogoUrl}');
           return Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,
@@ -436,7 +433,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         );
                                       },
                                     ),
-                                )):Container(),
+                                )):0.width,
                                 10.height,
                                 AnimatedCrossFade(
                                     firstChild:
@@ -1225,7 +1222,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         builder: (dialogContext) {
                                           return Stack(
                                             children: [
-                                              Container(
+                                              SizedBox(
                                                 height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
                                                 width: getScreenWidth(context),
                                                 child: GestureDetector(

@@ -11,7 +11,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 as flutter_local_notifications;
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';

@@ -409,7 +409,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 
 
             if (response.status == 200) {
-              debugPrint('logo     =   ${response.data?.clients?.first.logo ?? ''}');
+
               debugPrint(
                   'update city : ${response.data?.clients?.first.city?.cityName}');
               emit(state.copyWith(
@@ -451,29 +451,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           }
         }
       }
-      else if (event is _SetFAXFormatEvent) {
-        RegExp regEx = RegExp(r'(\d)');
-        String newFaxNumber = '';
-        List<RegExpMatch> matches = regEx.allMatches(event.FAX).toList();
-        debugPrint('FAX = ${event.FAX}');
-        debugPrint('FAX len = ${matches.length}');
-        for (int i = 0; i < matches.length; i++) {
-          if (i == 0) {
-            newFaxNumber = '(${matches[i][0]}';
-          } else if (i == 2) {
-            newFaxNumber += '${matches[i][0]})-';
-          } else if (i == 5) {
-            newFaxNumber += '${matches[i][0]}-';
-          } else {
-            newFaxNumber += '${matches[i][0]}';
-          }
-        }
-        debugPrint('FAX = $newFaxNumber');
-        emit(state.copyWith(
-            faxController: TextEditingController(text: newFaxNumber)
-              ..selection = TextSelection.fromPosition(
-                  TextPosition(offset: newFaxNumber.length))));
-      }
+
       else if (event is _deleteFileEvent) {
         try {
           if (state.companyLogo.isEmpty) {

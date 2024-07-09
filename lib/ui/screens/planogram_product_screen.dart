@@ -17,7 +17,6 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
-import '../../data/model/res_model/get_planogram_product/get_planogram_product_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
@@ -211,7 +210,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                 }
                                 },
-                                productStock :double.parse(state.planogramProductList[index].productStock.toString()) ?? 0.0,
+                                productStock :double.parse(state.planogramProductList[index].productStock.toString()),
                                 context: context,
                                 index: index,
                                 isRTL: context.rtl),

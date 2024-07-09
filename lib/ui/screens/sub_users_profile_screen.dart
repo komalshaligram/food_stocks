@@ -1,29 +1,22 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/ui/widget/profile_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/sub_users_profile/sub_users_profile_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
-import '../utils/themes/app_urls.dart';
 import '../widget/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
-import '../widget/file_selection_option_widget.dart';
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
+
 
 class SubUsersProfileRoute {
   static Widget get route => SubUserProfileScreen();

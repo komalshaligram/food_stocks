@@ -1,6 +1,4 @@
-// To parse this JSON data, do
-//
-//     final suppliersResModel = suppliersResModelFromJson(jsonString);
+
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';

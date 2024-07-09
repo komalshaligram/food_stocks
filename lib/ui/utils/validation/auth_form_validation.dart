@@ -34,9 +34,6 @@ class AuthFormValidation {
       case AppStrings.addressValString:
         return formFieldValidation.addressNameField(value,context);
 
-      case AppStrings.emailValString:
-        return formFieldValidation.emailField(value ,context);
-
       case AppStrings.faxValString:
         return formFieldValidation.faxField(value,context);
 

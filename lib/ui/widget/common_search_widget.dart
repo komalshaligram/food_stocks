@@ -90,8 +90,6 @@ class CommonSearchWidget extends StatelessWidget {
                   height: 60,
                   padding:
                       EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                  // margin: EdgeInsets.symmetric(
-                  //     horizontal: AppConstants.padding_10),
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(
@@ -175,7 +173,7 @@ class CommonSearchWidget extends StatelessWidget {
                             ) : SizedBox(),
                           ),
                           onTapOutside: (event) =>
-                              FocusScope.of(context).unfocus(),
+                              FocusManager.instance.primaryFocus?.unfocus(),
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.search,
                           onTap: onSearchTap,
@@ -204,29 +202,24 @@ class CommonSearchWidget extends StatelessWidget {
                 Expanded(
                   child: !isCategoryExpand
                       ? 0.height
-                      : Container(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              isSearching
-                                  ? LinearProgressIndicator(
-                                color: AppColors.mainColor,
-                                minHeight: 3,
-                          /*      borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                        AppConstants.radius_5)),*/
-                                backgroundColor:
-                                AppColors.mainColor.withOpacity(0.5),
-                              )
-                                  : 3.height,
-                              Expanded(
-                                child: searchResultWidget,
-                              ),
-                              10.height,
-                            ],
+                      : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          isSearching
+                              ? LinearProgressIndicator(
+                            color: AppColors.mainColor,
+                            minHeight: 3,
+                            backgroundColor:
+                            AppColors.mainColor.withOpacity(0.5),
+                          )
+                              : 3.height,
+                          Expanded(
+                            child: searchResultWidget,
                           ),
-                        ),
+                          10.height,
+                        ],
+                      ),
                 ),
               ],
             ),

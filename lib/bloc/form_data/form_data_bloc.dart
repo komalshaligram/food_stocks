@@ -13,6 +13,7 @@ import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'form_data_event.dart';
 part 'form_data_state.dart';
@@ -42,9 +43,13 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           AgentModel response = AgentModel.fromJson(res);
           debugPrint('Business type response = ${response.data.toString()}');
           debugPrint('Business url = ${AppUrls.baseUrl}${AppUrls.getAgentUrl}');
-
+          List<Agent> agentList = [];
+          agentList.add(Agent(agentName: AppLocalizations.of(event.context)!.select_agent));
+          agentList.addAll(response.data?.agent ?? []);
           if (response.status == 200) {
-            emit(state.copyWith(isAgentListShimmering:false,agentList: response.data?.agent ?? [],agent: response.data?.agent?.first.agentName ?? '',
+            emit(state.copyWith(isAgentListShimmering:false,
+              agentList: agentList,
+              agent: agentList.first.agentName.toString()
             ));
           } else {
             emit(state.copyWith(isAgentListShimmering: false));
@@ -62,8 +67,11 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           BusinessNameModel response = BusinessNameModel.fromJson(res);
           debugPrint('agent response = ${response.data.toString()}');
           debugPrint('Business url = ${AppUrls.baseUrl}${AppUrls.getBusinessTypeUrl}');
+          List<BusinessType> businessTypeList = [];
+          businessTypeList.add(BusinessType(businessTypeName: AppLocalizations.of(event.context)!.type_of_business));
+          businessTypeList.addAll(response.data?.businessType ?? []);
           if (response.status == 200) {
-            emit(state.copyWith(isShimmering:false,businessTypeList: response.data?.businessType ?? [],business: response.data?.businessType?.first.businessTypeName ?? '',
+            emit(state.copyWith(isShimmering:false,businessTypeList: businessTypeList,business: businessTypeList.first.businessTypeName.toString(),
               haveMultiple: response.data?.businessType?.first.haveMultiple ?? false
             ));
           } else {
@@ -77,7 +85,8 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
       }
 
       else if(event is _navigateToNextScreenEvent){
-
+        debugPrint('agent___${state.agentList.firstWhere((element)=>element.agentName == state.agent).agentName}');
+        debugPrint('business___${state.businessTypeList.firstWhere((element)=>element.businessTypeName == state.business).businessTypeName}');
         termsConditionReqModel = TermsConditionReqModel(
             agentId: state.agentList.firstWhere((element)=>element.agentName == state.agent).id,
             businessTypeId: state.businessTypeList.firstWhere((element)=>element.businessTypeName == state.business).id,

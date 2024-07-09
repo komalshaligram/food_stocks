@@ -39,6 +39,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
   String owner2Signature = '';
   String guarantee1Signature = '';
   String guarantee2Signature = '';
+  bool isSign = false;
 
   TermsConditionReqModel termsConditionReqModel = TermsConditionReqModel();
   PrivacyPolicyBloc() : super(PrivacyPolicyState.initial()) {
@@ -46,7 +47,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     on<PrivacyPolicyEvent>((event, emit)   async {
        if(event is _getPdfDataEvent){
         termsConditionReqModel = event.termsConditionReqModel;
-         emit(state.copyWith(isOwner2Available: (termsConditionReqModel.owner2FullName!.isNotEmpty) ? true : false));
+         emit(state.copyWith(isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false));
         emit(state.copyWith(pdfPath: base64Decode(event.pdfData)));
 
       }
@@ -159,11 +160,16 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
             ),
             child: SfSignaturePad(
               key: _signaturePadKey,
+              onDrawStart: () {
+                isSign = true;
+                return false;
+              },
             ),
           ),
           actions: [
             TextButton(
               onPressed: () {
+                isSign = false;
                 _signaturePadKey.currentState!.clear();
               },
               child: Text('${AppLocalizations.of(context)!.remove}',
@@ -175,7 +181,10 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
-                 saveSignature(context , fieldName);
+                if(isSign){
+                  saveSignature(context , fieldName);
+                  isSign = false;
+                }
               },
               child: Text('${AppLocalizations.of(context)!.save}',
                 style: AppStyles.rkRegularTextStyle(
@@ -196,13 +205,14 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     ui.Image tempImage =
     await _signaturePadKey.currentState!.toImage();
 
+
     var data = await tempImage.toByteData(
         format: ui.ImageByteFormat.png);
+
     final imageInUnit8List = (data!.buffer.asUint8List());
      directory = (await getApplicationDocumentsDirectory()).path; // to get path of the file
     var path = '${directory}/${fieldName}.png';
     imagePath = await File(path).writeAsBytes(imageInUnit8List);
-
 
      if(fieldName == AppStrings.owner1SignatureString){
       owner1Signature = imagePath.path;
@@ -223,12 +233,18 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     debugPrint('owner2Signature ____${owner2Signature}');
 
     if(state.isOwner2Available ){
+      debugPrint('owner1Signature___${owner1Signature}');
+      debugPrint('guarantee1Signature___${guarantee1Signature}');
+      debugPrint('guarantee2Signature___${guarantee2Signature}');
+      debugPrint('owner2Signature ____${owner2Signature}');
       if(owner1Signature != '' &&  owner2Signature != ''
           && guarantee1Signature != '' && guarantee2Signature !=''){
         emit(state.copyWith(isNextEnable: true));
       }
     }
     else if(owner1Signature != '' && guarantee1Signature != '' ){
+      debugPrint('owner1Signature___${owner1Signature}');
+      debugPrint('guarantee1Signature___${guarantee1Signature}');
       emit(state.copyWith(isNextEnable: true));
     }
 

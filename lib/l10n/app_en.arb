@@ -9,7 +9,7 @@
   "institutional": "Institutional",
   "business_name": "Business Name",
   "address": "Address",
-  "name_of_owner": " Owner Name",
+  "name_of_owner": "Owner Name",
   "next": "NEXT",
   "more_details": "More Info",
   "full_address": "Full Address",
@@ -510,6 +510,7 @@
     "manage_credit_card" :"Manage credit card",
     "israel_id_or_business_id_number_error":"There is an error on Israel ID number or Business ID number",
     "rivchitclienterror":"rivchitclienterror"
+
 
 
 }

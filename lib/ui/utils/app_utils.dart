@@ -248,45 +248,7 @@ extension RTLExtension on BuildContext {
       [Locale('he')].contains(Localizations.localeOf(this)) ? true : false;
 }
 
-String formatter(String currentBalance) {
-  double value = double.parse(currentBalance);
-  if (value < 1000) {
-    return (splitNumber(value.toStringAsFixed(2)));
-  } else if (value < 10000 && value >= 1000) {
-    double result = (value / 1000);
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return ((result1.toString() + "K" + " "));
-  } else if (value < 100000 && value >= 10000) {
-    double result = value / 1000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return ((result1.toString() + "K" + " "));
-  } else if (value < 1000000 && value >= 100000) {
-    double result = value / 100000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "L" + "");
-  } else if (value < 10000000 && value >= 1000000) {
-    // less than 100 million
-    double result = value / 1000000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "M" + " ");
-  } else if (value < 100000000 && value >= 10000000) {
-    // less than 100 million
-    double result = value / 1000000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "M" + " ");
-  } else if (value < 1000000000 && value >= 100000000) {
-    // less than 100 million
-    double result = value / 1000000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "M" + " ");
-  } else if (value >= 1000000000) {
-    // less than 100 million
-    double result = value / 1000000;
-    String result1 = splitNumber(result.toStringAsFixed(2));
-    return (result1.toString() + "M" + " ");
-  }
-  return '';
-}
+
 
 String splitNumber(String price) {
   var splitPrice = price.split(".");
@@ -339,15 +301,6 @@ double totalVatAmountCalculation(
   return result;
 }
 
-/*double bottleDepositCalculation(
-    {required double qty, required double deposit}) {
-  double result = qty * deposit;
-  debugPrint('qty$qty');
-  debugPrint('bottle deposit$deposit');
-  debugPrint('bottle tax$result');
-  return result;
-}*/
-
 double bottleDepositCalculation(
     { double units =1, required double deposit,required double qty}) {
   double result = qty * deposit * units;
@@ -356,6 +309,18 @@ double bottleDepositCalculation(
   debugPrint('bottle tax$result');
   return result;
 }
+
+double bottleDepositCalculationWithVat(
+    {  required double deposit,required double qty, double vatPercentage = 1}) {
+  double result = (qty * deposit) + ((qty * deposit * vatPercentage)/100) ;
+  debugPrint('qty$qty');
+  debugPrint('bottle deposit $deposit');
+  debugPrint('bottle tax $result');
+  debugPrint('result $result');
+  return result;
+}
+
+
 
 double saleCalculation({required double price, required double salePer}) {
   double result = price - (price * (salePer / 100));

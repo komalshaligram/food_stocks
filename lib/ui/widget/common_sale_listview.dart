@@ -10,7 +10,7 @@ import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'common_product_button_widget.dart';
+
 
 class CommonSaleListView extends StatelessWidget {
   final double? height;

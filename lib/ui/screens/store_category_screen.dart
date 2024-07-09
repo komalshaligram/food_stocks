@@ -1,5 +1,5 @@
 
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -515,8 +515,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                             .mainImage ??
                                                             '',
                                                         title: state.planogramProductList[index].product
-                                                            .name ??
-                                                            '',
+                                                            .name ,
                                                         description: parse(state.planogramProductList[index].product.sale
                                                             ?.saleDescription ??
                                                             '')
@@ -530,7 +529,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                             .productPrice ??
                                                             0 ,
                                                         productStock:state.planogramProductList[index].product
-                                                            .productStock.toString()??'0',
+                                                            .productStock.toString(),
                                                         lowStock:state.planogramProductList[index].product
                                                             .lowStock??'',
                                                         isPesach: state.planogramProductList[index].product
@@ -540,7 +539,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                             showProductDetails(
                                                                 isSaleOn: state.isSaleOn,
                                                                 context: context,
-                                                                productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
+                                                                productStock: state.planogramProductList[index].product.productStock.toString(),
                                                                 productId: state.planogramProductList[index].productId ?? '',
                                                                 planoGramIndex: 3,
                                                                 isBarcode: false);
@@ -562,18 +561,18 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                   (context,
                                                   index) {
                                                   return  CommonSaleListView(
-                                                  isPesach: state.planogramProductList[index].product?.isPesach??false,
-                                                  lowStock: state.planogramProductList[index].product?.lowStock.toString() ?? '',
-                                                  numberOfUnits:state.planogramProductList[index].product?.numberOfUnit ??
+                                                  isPesach: state.planogramProductList[index].product.isPesach??false,
+                                                  lowStock: state.planogramProductList[index].product.lowStock.toString() ,
+                                                  numberOfUnits:state.planogramProductList[index].product.numberOfUnit ??
                                                       '0',
                                                   isGuestUser: state
                                                       .isGuestUser,
-                                                  productStock: (state.planogramProductList[index].product?.productStock.toString() ?? '0'),
-                                                  productImage: state.planogramProductList[index].product?.mainImage ??
+                                                  productStock: (state.planogramProductList[index].product.productStock.toString() ),
+                                                  productImage: state.planogramProductList[index].product.mainImage ??
                                                       '',
-                                                  productName: state.planogramProductList[index].product?.productName ??
+                                                  productName: state.planogramProductList[index].product.productName ??
                                                       '',
-                                                  price: state.planogramProductList[index].product?.productPrice ??
+                                                  price: state.planogramProductList[index].product.productPrice ??
                                                       0.0,
                                                   context: context,
                                                   discountedPrice: double.parse(state.planogramProductList[index].product.sale?.salePrice.toString() ?? '0'),
@@ -584,7 +583,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                       showProductDetails(
                                                           isSaleOn: state.isSaleOn,
                                                           context: context,
-                                                          productStock: state.planogramProductList[index].product?.productStock.toString() ?? '0',
+                                                          productStock: state.planogramProductList[index].product.productStock.toString(),
                                                           productId: state.planogramProductList[index].productId ?? '',
                                                           planoGramIndex: 3,
                                                           isBarcode: false);
@@ -1027,7 +1026,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   4.height,
                   isSale?Center(
                     child: Container(
-                      width: width!-10,
+                      width: width-10,
                       padding: EdgeInsets.all(3),
                       decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
                       child: Text(
@@ -1085,7 +1084,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   !isGuestUser
                       ? Center(
                     child: CommonProductButtonWidget(
-                      title: isSale!?"${AppLocalizations.of(context)!.currency}${double.parse(discountPrice).toStringAsFixed(2)}":"${AppLocalizations.of(context)!.currency}${list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(AppConstants.amountFrLength)}",
+                      title: isSale?"${AppLocalizations.of(context)!.currency}${double.parse(discountPrice).toStringAsFixed(2)}":"${AppLocalizations.of(context)!.currency}${list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(AppConstants.amountFrLength)}",
                       onPressed: () {
                         showProductDetails(
                             isSaleOn: state.isSaleOn,
@@ -1135,11 +1134,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      //  isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      // showDragHandle: true,
-      //  useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
         return SafeArea(
@@ -1181,11 +1177,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             CommonProductDetailsWidget(
                               isIncludedVat: state.isIncludedVat,
                               productDetails: state.productDetails,
-                              /*salePrice: double.parse(state.productDetails.first.sale.salePrice),
-                              maxQty: state.productDetails.first.sale.saleMaxQuantity,
-                              endDate: state.productDetails.first.sale.saleUntilDate,
-                              startDate: state.productDetails.first.sale.saleFromDate,
-                              isSaleOn: state.productDetails.first.sale.isSale,*/
+
                               isSubUserAddToBasket: state.isSubUserAddToBasket,
                               totalBottleDeposit: (state.bottleDeposit* state.productDetails.first.numberOfUnit!.toDouble()* state
                                   .productStockList[state.planoGramUpdateIndex]
@@ -1193,10 +1185,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   .quantity),
                               bottleTax: state.bottleDeposit,
                               isBottle:(state.productDetails.first.isBottle ?? false),
-                             /* nmMashlim: state.productDetails.first.nmMashlim,
-                              isPesach: state.productDetails.first.isPesach,
-                              lowStock: state.productDetails.first.supplierSales.first.lowStock.toString(),
-                              qrCode:state.productDetails.first.qrcode ,*/
+
                               isLoading: state.isLoading,
                               addToOrderTap: state.isLoading
                                   ? (){}
@@ -1267,12 +1256,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     image.imageUrl ?? '') ??
                                     []
                               ],
-                          /*    productPerUnit: state.productDetails.first
-                                  .numberOfUnit,
-                              productName: state
-                                  .productDetails.first.productName,
-                              productSaleDescription: state.productDetails
-                                  .first.sale.saleDescription,*/
+
                               productPrice: state
                                   .productStockList[
                               state.planoGramUpdateIndex]
@@ -1285,8 +1269,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       .quantity *
                                   (state.productDetails.first
                                       .numberOfUnit ?? 1),
-                              // productWeight: state
-                              //     .productDetails.first.itemsWeight.toDouble(),
+
                               productStock: (state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock.toString()),
                               productUnitPrice:
                               state

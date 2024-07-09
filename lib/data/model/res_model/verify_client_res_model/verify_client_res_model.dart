@@ -1,9 +1,7 @@
-// To parse this JSON data, do
-//
-//     final verifyClientResModel = verifyClientResModelFromMap(jsonString);
+
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
+
 
 part 'verify_client_res_model.freezed.dart';
 part 'verify_client_res_model.g.dart';
