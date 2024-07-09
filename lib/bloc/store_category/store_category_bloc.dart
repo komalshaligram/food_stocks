@@ -1,5 +1,4 @@
-import 'dart:io';
-import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/error/exceptions.dart';
@@ -1283,8 +1282,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       //debugPrint('product.product?.productStock  :${product.productStock }');
                       return ProductStockModel(
                     productId: product.productId ?? '',
-                    maxQty: (product.product?.sale?.isSale ?? false) ? int.parse(product.product?.sale?.saleMaxQuantity.toString() ?? '0') : -1 ,
-                    stock:(product.product?.productStock.toString()??'0'));
+                    maxQty: (product.product.sale?.isSale ?? false) ? int.parse(product.product.sale?.saleMaxQuantity.toString() ?? '0') : -1 ,
+                    stock:(product.product.productStock.toString()));
                     }) ?? []);
             productStockList[3].addAll(stockList);
 

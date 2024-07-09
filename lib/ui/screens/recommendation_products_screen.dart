@@ -1,5 +1,4 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -714,7 +713,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                       bottom: false,
                                       child: Stack(
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
                                             width: getScreenWidth(context),
                                             child: GestureDetector(

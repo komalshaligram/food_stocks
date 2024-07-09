@@ -14,7 +14,6 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/wallet_screen_shimmer_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
-import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -667,7 +666,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                 );
                                               },
                                             )
-                                          : Container(
+                                          : SizedBox(
                                               height: getScreenHeight(
                                                           context) >=
                                                       725

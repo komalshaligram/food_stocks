@@ -99,7 +99,6 @@ class BankInfoWidget extends StatelessWidget {
                       CustomContainerWidget(
                         name: AppLocalizations.of(context)!.branch_number,
                       ),
-
                       CustomFormField(
                         context: context,
                         controller: state.branchController,

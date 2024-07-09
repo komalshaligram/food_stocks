@@ -1,7 +1,6 @@
 
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -133,7 +132,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             } else {
               emit(state.copyWith(isShimmering: false));
             }
-          } on ServerException {}
+          } on ServerException { emit(state.copyWith(isShimmering: false));}
         }
         else if (event is _productUpdateEvent) {
           List<ProductDetailsModel> list = [];
@@ -141,7 +140,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           list[event.listIndex].isProcess = true;
 
           emit(state.copyWith(
-              isLoading: true, basketProductList: list, isQtyUpdated: false));
+              isLoading: true, basketProductList: list, isQtyUpdated: false,));
 
           try {
             UpdateCartReqModel reqMap = UpdateCartReqModel();
@@ -760,7 +759,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               emit(state.copyWith(productStockList: []));
               emit(state.copyWith(productStockList: productStockList));
             } else {
-
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
@@ -934,7 +932,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           emit(state.copyWith(isLoading: true,isRemoveProcess : true));
 
          state.CartItemList.data?.data?.forEach((element) {
-            debugPrint('productstock___${element.productStock}');
+            debugPrint('product stock___${element.productStock}');
             if(element.productStock != 0 || element.productStock != 0.0 ){
               ProductReqMap.add(OrderSendModel.Product(
                   supplierId: element.suppliers?.first.id,
@@ -967,15 +965,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               preferencesHelper.setCartCount(count: 0);
               Navigator.pushNamed(
                   event.context, RouteDefine.orderSuccessfulScreen.name);
-             /* try {
-                final res = await DioClient(event.context).post(
-                  '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}',
-                );
-                debugPrint('clear cart response_______${res}');
-                if (res["status"] == 201) {
-
-                }
-              } on ServerException {}*/
+              emit(state.copyWith(isLoading: false,isRemoveProcess: false));
             } else if (response.status == 403) {
               CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -984,9 +974,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     event.context),
                 type: SnackBarType.FAILURE,
               );
-              emit(state.copyWith(isLoading: false,));
+              emit(state.copyWith(isLoading: false,isRemoveProcess: false));
             } else if (response.status == 405) {
-              emit(state.copyWith(isLoading: false, isOrderPending: true));
+              emit(state.copyWith(isLoading: false, isOrderPending: true,isRemoveProcess: false));
             }
             else {
 

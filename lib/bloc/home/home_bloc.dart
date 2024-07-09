@@ -382,14 +382,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             debugPrint('sale response____${response}');
 
             if (response.status == 200) {
-              List<ProductSale>? saleProductsList =
-                  response.data?.toList(growable: true);
-              //debugPrint('sale Products = ${saleProductsList?.length}');
+
               debugPrint('sale Products = ${response.data?.length}');
              List< List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               List<ProductStockModel>stockList = [];
-              /*ProductStockModel barcodeStock = productStockList.removeLast();*/
+
               stockList.addAll(response.data?.map(
                       (saleProduct) =>
                       ProductStockModel(

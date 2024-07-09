@@ -1,5 +1,4 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -660,20 +659,16 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                     },
                     errorBuilder: (context, error, stackTrace) {
                       // debugPrint('sale list image error : $error');
-                      return Container(
-                        child: Image.asset(AppImagePath.imageNotAvailable5,
-                            height: 70,
-                            width: double.maxFinite,
-                            fit: BoxFit.cover),
-                      );
+                      return Image.asset(AppImagePath.imageNotAvailable5,
+                          height: 70,
+                          width: double.maxFinite,
+                          fit: BoxFit.cover);
                     },
                   )
-                : Container(
-                    child: Image.asset(AppImagePath.imageNotAvailable5,
-                        height: 70,
-                        width: double.maxFinite,
-                        fit: BoxFit.cover),
-                  ),
+                : Image.asset(AppImagePath.imageNotAvailable5,
+                    height: 70,
+                    width: double.maxFinite,
+                    fit: BoxFit.cover),
           ),
           5.height,
           Text(
@@ -722,11 +717,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-    //  isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-     // showDragHandle: true,
-     // useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
         return SafeArea(
@@ -767,11 +759,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                       CommonProductDetailsWidget(
                                         isIncludedVat: state.isIncludedVat,
                                         productDetails: state.productDetails,
-                                       /* salePrice: double.parse(state.productDetails.first.sale.salePrice),
-                                        maxQty: state.productDetails.first.sale.saleMaxQuantity,
-                                        endDate: state.productDetails.first.sale.saleUntilDate,
-                                        startDate: state.productDetails.first.sale.saleFromDate,
-                                        isSaleOn: state.productDetails.first.sale.isSale,*/
                                         isSubUserAddToBasket: state.isSubUserAddToBasket,
                                         bottleTax: state.bottleDeposit,
                                         totalBottleDeposit: (state.bottleDeposit*( state.productDetails.first.numberOfUnit ?? 1).toDouble()* state
@@ -779,13 +766,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                         state.productStockUpdateIndex]
                                             .quantity),
                                         isBottle:(state.productDetails.first.isBottle ?? false),
-                                       /* nmMashlim: state.productDetails.first.nmMashlim,
-                                        isPesach: state.productDetails.first.isPesach,
-                                        lowStock: state.productDetails.first
-                                                .supplierSales.first.lowStock
-                                                .toString(),
-                                        qrCode:
-                                            state.productDetails.first.qrcode ,*/
                                         addToOrderTap: () {
                                           context
                                               .read<SupplierProductsBloc>()
@@ -803,7 +783,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 bottom: false,
                                                 child: Stack(
                                                   children: [
-                                                    Container(
+                                                    SizedBox(
                                                       height: getScreenHeight(
                                                               context) -
                                                           MediaQuery.of(context)
@@ -871,19 +851,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   ?.map((image) =>
                                                       image.imageUrl ?? '')
                                         ],
-                                        /*productPerUnit: state.productDetails
-                                                .first.numberOfUnit ,*/
                                         productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? ''),
-                                      /*  productName: state.productDetails.first
-                                                .productName,
-
-                                        productSaleDescription: parse(state
-                                                        .productDetails
-                                                        .first
-                                                        .sale.saleDescription)
-                                                .body
-                                                ?.text ??
-                                            '',*/
                                         productPrice: (state.productDetails.first.sale?.isSale ?? false)?
                                         double.parse(state.productDetails.first.sale?.salePrice ?? '') *
                                             state
@@ -903,17 +871,12 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                             (state.productDetails.first
                                                     .numberOfUnit ?? 1),
 
-                                 /*       productWeight: state.productDetails
-                                                .first.itemsWeight.toDouble(),*/
                                         productStock: (state
                                             .productStockList[state.productListIndex][
                                                 state.productStockUpdateIndex]
                                             .stock.toString()),
                                         isRTL: context.rtl,
-                                        // isSupplierAvailable:
-                                        //     state.productSupplierList.isEmpty
-                                        //         ? false
-                                        //         : true,
+
                                         scrollController: scrollController,
                                         productQuantity: state
                                             .productStockList[state.productListIndex][

@@ -15,15 +15,6 @@ class FormFieldValidation {
     }
   }
 
-  // phoneNumField(String value) {
-  //   RegExp regex = RegExp(r'^(?:[+0]9)?[0-9]{10}$');
-  //   if (value.length < 10 || !regex.hasMatch(value)) {
-  //     return false;
-  //   } else {
-  //     return true;
-  //   }
-  // }
-
   String? mobileField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[a-zA-Z.!#$%&'*+-/=?^_`{|}~]).*$");
     if (value.trim().isEmpty) {

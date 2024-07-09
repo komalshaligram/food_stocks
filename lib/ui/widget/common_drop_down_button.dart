@@ -55,6 +55,7 @@ class CommonDropDownButton extends StatelessWidget {
       value: value,
       items: items,
       onChanged: onChanged,
+      dropdownColor: AppColors.pageColor,
     );
   }
 }

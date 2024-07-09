@@ -29,8 +29,7 @@ class MoreDetailsEvent with _$MoreDetailsEvent {
       {required BuildContext context,
       required bool isUpdate}) = _getProfileMoreDetailsEvent;
 
-  factory MoreDetailsEvent.setFAXFormatEvent({required String FAX}) =
-      _SetFAXFormatEvent;
+
 
   factory MoreDetailsEvent.deleteFileEvent({
     required BuildContext context,

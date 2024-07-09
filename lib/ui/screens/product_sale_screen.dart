@@ -245,11 +245,9 @@ class ProductSaleScreenWidget extends StatelessWidget {
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      // isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      //  showDragHandle: true,
-      //  useSafeArea: true,
+
       enableDrag: true,
       builder: (context1) {
         return BlocProvider.value(
@@ -282,19 +280,12 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                   CommonProductDetailsWidget(
                                     isIncludedVat: state.isIncludedVat,
                                     productDetails: state.productDetails,
-                              /*      salePrice: double.parse(state.productDetails.first.sale.salePrice),
-                                    maxQty: state.productDetails.first.sale.saleMaxQuantity,
-                                    endDate: state.productDetails.first.sale.saleUntilDate,
-                                    startDate: state.productDetails.first.sale.saleFromDate,
-                                    isSaleOn: state.productDetails.first.sale.isSale,*/
+
                                     isSubUserAddToBasket: state.isSubUserAddToBasket,
                                     bottleTax: state.bottleDeposit,
                                     totalBottleDeposit: (state.bottleDeposit * (state.productDetails.first.numberOfUnit  ?? 1).toDouble()* state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
                                     isBottle:(state.productDetails.first.isBottle ?? false),
-                                    /*nmMashlim: state.productDetails.first.nmMashlim ,
-                                    isPesach: state.productDetails.first.isPesach ,
-                                    lowStock: state.productDetails.first.supplierSales.first.lowStock.toString() ?? '',
-                                    qrCode: state.productDetails.first.qrcode ,*/
+
                                     isLoading: state.isLoading,
 
                                     addToOrderTap: () {
@@ -357,21 +348,12 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     productImages: [state.productDetails.first.mainImage ?? '' ,
 
                                       ...state.productDetails.first.images?.map((image) => image.imageUrl ?? '') ?? []],
-                                   /* productPerUnit: state.productDetails.first.numberOfUnit ,
-                                    productName: state.productDetails.first.productName,
-                                    productSaleDescription: parse(state
-                                        .productDetails
-                                        .first
-                                        .sale.saleDescription ??
-                                        '')
-                                        .body
-                                        ?.text ??
-                                        '',*/
+
                                     productPrice:(state.productDetails.first.sale?.isSale ?? false) ?
                                     double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1)
                                         :
                                     state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 0),
-                                  //  productWeight: state.productDetails.first.itemsWeight.toDouble() ?? 0.0,
+
                                     productStock: state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString(),
                                     isRTL: context.rtl,
                                   //  isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
