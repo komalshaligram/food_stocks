@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -802,15 +802,6 @@ class ReorderScreenWidget extends StatelessWidget {
                             CommonProductDetailsWidget(
                               isIncludedVat: state.isIncludedVat,
                               productDetails: state.productDetails,
-                            /*  salePrice: double.parse(
-                                  state.productDetails.first.sale.salePrice),
-                              maxQty: state.productDetails.first.sale
-                                  .saleMaxQuantity,
-                              endDate: state.productDetails.first.sale
-                                  .saleUntilDate,
-                              startDate: state.productDetails.first.sale
-                                  .saleFromDate,
-                              isSaleOn: state.productDetails.first.sale.isSale,*/
                               isSubUserAddToBasket: state.isSubUserAddToBasket,
                               bottleTax: state.bottleDeposit,
                               totalBottleDeposit: (state.bottleDeposit *
@@ -819,11 +810,7 @@ class ReorderScreenWidget extends StatelessWidget {
                               state.productStockUpdateIndex]
                                   .quantity),
                               isBottle:(state.productDetails.first.isBottle ?? false),
-                            /*  nmMashlim: state.productDetails.first.nmMashlim,
-                              isPesach: state.productDetails.first.isPesach,
-                              lowStock: state.productDetails.first.supplierSales
-                                  .first.lowStock.toString() ?? '',
-                              qrCode: state.productDetails.first.qrcode ?? '',*/
+
                               addToOrderTap: () {
                                 context.read<ReorderBloc>().add(
                                     ReorderEvent.addToCartProductEvent(
@@ -899,20 +886,7 @@ class ReorderScreenWidget extends StatelessWidget {
                               ],
                             productUnitPrice: double.parse(
                                 state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
-                          /*    productPerUnit: state.productDetails.first
-                                  .numberOfUnit,
-                             ,
-                              productName: state.productDetails.first
-                                  .productName,
 
-                              productSaleDescription: parse(state
-                                  .productDetails
-                                  .first
-                                  .sale.saleDescription ??
-                                  '')
-                                  .body
-                                  ?.text ??
-                                  '',*/
                               productPrice: state
                                   .productStockList[state
                                   .productListIndex][state
@@ -925,8 +899,6 @@ class ReorderScreenWidget extends StatelessWidget {
                                   (state.productDetails.first
                                       .numberOfUnit ?? 1),
 
-                              /*productWeight: state
-                                  .productDetails.first.itemsWeight.toDouble(),*/
                               productStock: (state.productStockList[state
                                   .productListIndex][state
                                   .productStockUpdateIndex].stock.toString()),

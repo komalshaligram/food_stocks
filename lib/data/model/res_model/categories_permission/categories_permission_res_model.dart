@@ -1,9 +1,7 @@
-// To parse this JSON data, do
-//
-//     final categoriesPermissionResModel = categoriesPermissionResModelFromJson(jsonString);
+
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
+
 
 part 'categories_permission_res_model.freezed.dart';
 part 'categories_permission_res_model.g.dart';

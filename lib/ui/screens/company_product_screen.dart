@@ -88,7 +88,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                 Container(
                   height: 50,
                   width: 50,
-                  // margin: EdgeInsets.only(bottom: 10),
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
                       border: Border.all(
@@ -745,11 +744,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
      showMaterialModalBottomSheet(
        context: context,
        backgroundColor: Colors.transparent,
-     //  isScrollControlled: true,
+
        isDismissible: true,
        clipBehavior: Clip.hardEdge,
-      // showDragHandle: true,
-     //  useSafeArea: true,
+
        enableDrag: true,
        builder: (context1) {
 
@@ -804,10 +802,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                    .quantity),
                                bottleTax: state.bottleDeposit,
                                isBottle:state.productDetails.first.isBottle??false,
-                               // nmMashlim: state.productDetails.first.nmMashlim??'',
-                               // isPesach: state.productDetails.first.isPesach??false,
-                               // lowStock: state.productDetails.first.supplierSales?.first.lowStock.toString() ?? '',
-                               // qrCode:state.productDetails.first.qrcode ?? '' ,
                                addToOrderTap: () {
                                  context.read<CompanyProductsBloc>().add(
                                      CompanyProductsEvent.addToCartProductEvent(
@@ -876,33 +870,16 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                  image.imageUrl ?? '') ??
                                      []
                                ],
-                           /*    productPerUnit: state.productDetails.first
-                                   .numberOfUnit,*/
+
                                productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
-                               // productName: state.productDetails.first
-                               //     .productName,
-                               //
-                               // productSaleDescription: parse(state
-                               //     .productDetails
-                               //     .first
-                               //     .sale.saleDescription ??
-                               //     '')
-                               //     .body
-                               //     ?.text ??
-                               //     '',
                                productPrice: state
                                    .productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][
                                    state.productStockUpdateIndex].quantity *
                                    (state.productDetails.first.numberOfUnit ?? 1) ,
 
-                               /*productWeight: state
-                                   .productDetails.first.itemsWeight.toDouble(),*/
                                productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                isRTL: context.rtl,
-                             /*  isSupplierAvailable:
-                               state.productSupplierList.isEmpty
-                                   ? false
-                                   : true,*/
+
                                scrollController: scrollController,
                                productQuantity: state
                                    .productStockList[

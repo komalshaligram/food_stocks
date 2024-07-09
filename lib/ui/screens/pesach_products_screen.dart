@@ -260,8 +260,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                             title: state
                                                 .productList[
                                             index]
-                                                .name ??
-                                                '',
+                                                .name ,
                                             description: parse(state
                                                 .productList[
                                             index].sale
@@ -280,7 +279,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                 0 ,
                                             productStock: state.productList[
                                             index]
-                                                .productStock.toString()??'0',
+                                                .productStock.toString(),
                                             lowStock: state
                                                 .productList[
                                             index]
@@ -809,11 +808,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-     // isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-    //  showDragHandle: true,
-    //  useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
         return SafeArea(
@@ -854,11 +850,6 @@ class PesachProductsScreenWidget extends StatelessWidget {
                             CommonProductDetailsWidget(
                               isIncludedVat: state.isIncludedVat,
                               productDetails: state.productDetails,
-                             /* salePrice: double.parse(state.productDetails.first.sale.salePrice),
-                              maxQty: state.productDetails.first.sale.saleMaxQuantity,
-                              endDate: state.productDetails.first.sale.saleUntilDate,
-                              startDate: state.productDetails.first.sale.saleFromDate,
-                              isSaleOn: state.productDetails.first.sale.isSale,*/
                               isSubUserAddToBasket: state.isSubUserAddToBasket,
                               totalBottleDeposit: (state.bottleDeposit* (state.productDetails.first.numberOfUnit ?? 1) * state
                                   .productStockList[state.productListIndex][
@@ -866,13 +857,6 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                   .quantity),
                               bottleTax: state.bottleDeposit,
                               isBottle:state.productDetails.first.isBottle??false,
-                            /*  nmMashlim: state.productDetails.first.nmMashlim??'',
-                              isPesach: state.productDetails.first.isPesach??false,
-                              lowStock: state.productDetails.first
-                                  .supplierSales.first.lowStock
-                                  .toString(),
-                              qrCode:
-                              state.productDetails.first.qrcode ,*/
                               addToOrderTap: () {
                                 context
                                     .read<PesachProductsBloc>()
@@ -960,19 +944,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                               ],
 
                               productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
-                               /*  productPerUnit: state.productDetails
-                                  .first.numberOfUnit,
 
-                              productName: state.productDetails.first
-                                  .productName,
-
-                              productSaleDescription: parse(state
-                                  .productDetails
-                                  .first
-                                  .sale.saleDescription)
-                                  .body
-                                  ?.text ??
-                                  '',*/
                               productPrice: state
                                   .productStockList[state.productListIndex][state
                                   .productStockUpdateIndex]
@@ -984,9 +956,6 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                   (state.productDetails.first
                                       .numberOfUnit ?? 1),
 
-                             /* productWeight: state.productDetails
-                                  .first.itemsWeight
-                                  .toDouble(),*/
                               productStock: (state
                                   .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]

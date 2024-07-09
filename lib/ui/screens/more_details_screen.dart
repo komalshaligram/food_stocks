@@ -131,7 +131,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                 return Padding(
                                                   padding: const EdgeInsets.all(
                                                       15.0),
-                                                  child: Container(
+                                                  child: SizedBox(
                                                     height: getScreenHeight(
                                                             context) *
                                                         0.9,
@@ -149,17 +149,15 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                               MainAxisAlignment
                                                                   .spaceBetween,
                                                           children: [
-                                                            Container(
-                                                              child: Text(
-                                                                  AppLocalizations.of(
-                                                                          context)!
-                                                                      .city,
-                                                                  style: AppStyles.rkRegularTextStyle(
-                                                                      size: AppConstants
-                                                                          .mediumFont,
-                                                                      color: AppColors
-                                                                          .blackColor)),
-                                                            ),
+                                                            Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .city,
+                                                                style: AppStyles.rkRegularTextStyle(
+                                                                    size: AppConstants
+                                                                        .mediumFont,
+                                                                    color: AppColors
+                                                                        .blackColor)),
                                                             GestureDetector(
                                                                 onTap: () {
                                                                   Navigator.pop(
@@ -625,7 +623,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                 CrossAxisAlignment.center,
                                             children: [
                                               state.isUploadProcess
-                                                  ? Container(
+                                                  ? SizedBox(
                                                       width: getScreenWidth(
                                                           context),
                                                       child:

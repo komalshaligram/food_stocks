@@ -5,7 +5,6 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/data/model/search_model/search_model.dart';
@@ -1498,11 +1497,8 @@ class StoreScreenWidget extends StatelessWidget {
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-    //  isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      //showDragHandle: true,
-     // useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
         return SafeArea(
@@ -1545,11 +1541,6 @@ class StoreScreenWidget extends StatelessWidget {
                               isIncludedVat: state.isIncludedVat,
                               productDetails: state.productDetails,
 
-                             /* salePrice: double.parse(state.productDetails.first.sale.salePrice),
-                              maxQty: state.productDetails.first.sale.saleMaxQuantity,
-                              endDate: state.productDetails.first.sale.saleUntilDate,
-                              startDate: state.productDetails.first.sale.saleFromDate,
-                              isSaleOn: state.productDetails.first.sale.isSale,*/
                               isSubUserAddToBasket: state.isSubUserAddToBasket,
                               bottleTax: state.bottlePrice,
                               totalBottleDeposit: (state.bottlePrice* (state.productDetails.first.numberOfUnit ?? 1).toDouble()* state
@@ -1557,10 +1548,7 @@ class StoreScreenWidget extends StatelessWidget {
                               state.productStockUpdateIndex]
                                   .quantity),
                               isBottle:(state.productDetails.first.isBottle ?? false),
-                              /*nmMashlim: state.productDetails.first.nmMashlim,
-                              isPesach: state.productDetails.first.isPesach,
-                              lowStock: state.productDetails.first.supplierSales.first.lowStock.toString() ,
-                              qrCode:state.productDetails.first.qrcode ,*/
+
                               addToOrderTap: () {
                                 context.read<StoreBloc>().add(
                                     StoreEvent.addToCartProductEvent(
@@ -1622,19 +1610,9 @@ class StoreScreenWidget extends StatelessWidget {
                                 ...?state.productDetails.first.images?.map((image) =>
                                 image.imageUrl ?? '')
                               ],
-                              // productPerUnit: state.productDetails.first
-                              //     .numberOfUnit ,
-                              productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? ''),
-                             /* productName: state.productDetails.first
-                                  .productName,
 
-                              productSaleDescription: parse(state
-                                  .productDetails
-                                  .first
-                                  .sale.saleDescription)
-                                  .body
-                                  ?.text ??
-                                  '',*/
+                              productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? ''),
+
                               productPrice: (state.productDetails.first.sale?.isSale ?? false) ?double.parse(state.productDetails.first.sale?.salePrice ?? '') * state
                                   .productStockList[
                               state.productStockUpdateIndex]
