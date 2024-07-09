@@ -13,7 +13,7 @@ class CustomContainerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-     height: getScreenHeight(context) >= 1000 ? AppConstants.containerSize_50 :AppConstants.containerHeight,
+    // height: getScreenHeight(context) >= 1000 ? AppConstants.containerSize_50 :AppConstants.containerHeight,
      // width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.only(
