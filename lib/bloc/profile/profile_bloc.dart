@@ -153,12 +153,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               .get(path: AppUrls.businessTypesUrl);
           debugPrint('business type list res = $res');
           BusinessTypeModel response = BusinessTypeModel.fromJson(res);
+        List<ClientType> list = [];
+        list.add(ClientType(businessType: AppLocalizations.of(event.context)!.type_of_business));
+        list.addAll(response.data?.clientTypes??[]);
           if (response.status == 200) {
             emit(state.copyWith(
                 isShimmering: false,
-                businessTypeList: response,
+                businessTypeList: list,
                 selectedBusinessType:
-                    response.data?.clientTypes?[0].businessType ?? ''));
+                list.elementAt(0).businessType??''));
           } else {
             debugPrint('business types not found.\n${response.message}');
           }
@@ -175,8 +178,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             bussinessId: int.tryParse(state.businessIdController.text) ?? 0,
             bussinessName: state.businessNameController.text.trim(),
             ownerName: state.ownerNameController.text.trim(),
-            clientTypeId: state.businessTypeList.data?.clientTypes
-                ?.firstWhere((businessType) =>
+            clientTypeId: state.businessTypeList.firstWhere((businessType) =>
                     businessType.businessType == state.selectedBusinessType)
                 .id,
             // applicationVersion: '1.0.0',
@@ -223,8 +225,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   isUpdating: false,
                   UserImageUrl:
                       response.data?.clients?.first.profileImage ?? '',
-                  selectedBusinessType: state.businessTypeList.data?.clientTypes
-                          ?.firstWhere((businessType) =>
+                  selectedBusinessType: state.businessTypeList
+                          .firstWhere((businessType) =>
                               businessType.id ==
                               response.data?.clients?.first.clientDetail
                                   ?.clientTypeId)
@@ -271,8 +273,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           profileImage: state.image.path != '' ? imgUrl : state.UserImageUrl,
           contactName: state.contactController.text,
           clientDetail: ClientDetail(
-            clientTypeId: state.businessTypeList.data?.clientTypes
-                ?.firstWhere((businessType) =>
+            clientTypeId: state.businessTypeList
+                .firstWhere((businessType) =>
                     businessType.businessType == state.selectedBusinessType)
                 .id,
             bussinessId: int.tryParse(state.businessIdController.text) ?? 0,

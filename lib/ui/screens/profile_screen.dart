@@ -514,22 +514,24 @@ class ProfileScreenWidget extends StatelessWidget {
 
                                   CommonDropDownButton(
                                     items: state
-                                        .businessTypeList.data?.clientTypes
-                                        ?.map((businessType) {
+                                        .businessTypeList
+                                        .map((businessType) {
                                       return DropdownMenuItem<String>(
                                         value: businessType.businessType,
                                         child: Text(
-                                            "${businessType.businessType}"),
+                                            businessType.businessType??''),
                                       );
                                     }).toList(),
                                     onChanged: (newBusinessType) {
                                       bloc.add(ProfileEvent
                                           .changeBusinessTypeEvent(
                                           newBusinessType:
-                                          newBusinessType!));
+                                          newBusinessType??''));
                                     },
                                     value: state.selectedBusinessType,
                                   ),
+
+
                                   7.height,
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!
@@ -542,7 +544,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                     hint: "",
                                     fillColor: Colors.transparent,
                                     textInputAction: TextInputAction.next,
-                                    validator: '',
+                                    validator: AppStrings.businessNameValString,
                                   ),
                                   7.height,
                                   CustomContainerWidget(
@@ -628,10 +630,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                     onPressed: state.isLoading
                                         ? null
                                         : () {
-                                            if (state.selectedBusinessType
-                                                    .isEmpty ||
-                                                state.selectedBusinessType !=
-                                                    '') {
+                                            if (state.selectedBusinessType!= AppLocalizations.of(context)?.type_of_business) {
                                               if (_formKey.currentState
                                                       ?.validate() ??
                                                   false) {
