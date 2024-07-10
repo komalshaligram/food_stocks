@@ -103,7 +103,7 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           guarantee2Address:state.guarantee2addressController.text.trim() ,
           guarantee2PhoneNumber: state.guarantee2PhoneController.text.trim(),
         );
-        Navigator.pushNamed(event.context, RouteDefine.bankInfoScreen.name,
+        Navigator.pushNamed(event.context, RouteDefine.wayOfPaymentScreen.name,
         arguments: {
           AppStrings.termsConditionParamString :termsConditionReqModel
         }

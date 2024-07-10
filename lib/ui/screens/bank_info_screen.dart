@@ -29,10 +29,13 @@ class BankInfoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
     ModalRoute.of(context)?.settings.arguments as Map?;
+    debugPrint(
+        "isPaymentFail : ${args?.containsKey(AppStrings.isPaymentFail)}}");
     return BlocProvider(
       create: (context) => BankInfoBloc()..add(BankInfoEvent.getBankNameEvent(context: context))
       ..add(BankInfoEvent.getTermsConditionModelEvent(context: context,
-          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? TermsConditionReqModel())),
+          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? TermsConditionReqModel()))
+        ..add(BankInfoEvent.getArgumentEvent(isPaymentFail: args?[AppStrings.isPaymentFail] ?? false)),
       child: BankInfoWidget(),
     );
   }
@@ -142,7 +145,12 @@ class BankInfoWidget extends StatelessWidget {
                   if (_formKey.currentState
                       ?.validate() ??
                       false) {
-                    bloc.add(BankInfoEvent.termsConditionApiEvent(context: context));
+                    if(state.isPaymentFail){
+                      Navigator.pop(context);
+                    }
+                    else{
+                      bloc.add(BankInfoEvent.termsConditionApiEvent(context: context));
+                    }
                   }
                 },
                 fontColors: AppColors.whiteColor,

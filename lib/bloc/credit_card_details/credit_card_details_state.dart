@@ -7,13 +7,15 @@ class CreditCardDetailsState with _$CreditCardDetailsState{
     required TextEditingController creditCardNumberController,
     required TextEditingController validityController,
     required bool isLoading,
+    required bool isPaymentFail,
 
   }) = _CreditCardDetailsState;
 
   factory CreditCardDetailsState.initial()=>  CreditCardDetailsState(
    creditCardNumberController: TextEditingController(),
     validityController: TextEditingController(),
-    isLoading: false
+    isLoading: false,
+    isPaymentFail: false
   );
 
 }

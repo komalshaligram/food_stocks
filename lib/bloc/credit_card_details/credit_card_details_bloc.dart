@@ -10,7 +10,9 @@ part 'credit_card_details_bloc.freezed.dart';
 class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetailsState> {
   CreditCardDetailsBloc() : super(CreditCardDetailsState.initial()) {
     on<CreditCardDetailsEvent>((event, emit) async {
-
+  if(event is _getArgumentEvent){
+    emit(state.copyWith(isPaymentFail: event.isPaymentFail));
+  }
     });
   }
 }

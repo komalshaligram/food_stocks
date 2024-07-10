@@ -34,6 +34,7 @@ import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../ui/widget/common_dialog_with_one_button.dart';
 import '../bottom_nav/bottom_nav_bloc.dart';
 part 'basket_event.dart';
 part 'basket_state.dart';
@@ -928,7 +929,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           emit(state.copyWith(productImageIndex: event.index));
         }
         else if (event is _orderSendEvent) {
-          List<OrderSendModel.Product> ProductReqMap = [];
+          emit(state.copyWith(isPaymentFail: true));
+
+   /*       List<OrderSendModel.Product> ProductReqMap = [];
           emit(state.copyWith(isLoading: true,isRemoveProcess : true));
 
          state.CartItemList.data?.data?.forEach((element) {
@@ -963,9 +966,11 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
             if (response.status == 201) {
               preferencesHelper.setCartCount(count: 0);
-              Navigator.pushNamed(
+          Navigator.pushNamed(
                   event.context, RouteDefine.orderSuccessfulScreen.name);
               emit(state.copyWith(isLoading: false,isRemoveProcess: false));
+
+
             } else if (response.status == 403) {
               CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -990,7 +995,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             }
           } on ServerException {
             emit(state.copyWith(isLoading: false,isRemoveProcess: false));
-          }
+          }*/
         }
         else if (event is _RelatedProductsEvent) {
           emit(state.copyWith(isRelatedShimmering: true));
@@ -1033,7 +1038,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           emit(state.copyWith(relatedProductList: []));
         }
         else if (event is _refreshEvent) {
-          emit(state.copyWith(isOrderPending: false));
+          emit(state.copyWith(isOrderPending: false,isPaymentFail: false));
         }
         else  if(event is _getPermissionList){
           if(preferencesHelper.getSubUser()){

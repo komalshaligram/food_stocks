@@ -100,7 +100,6 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
 
     return BlocListener<WalletBloc, WalletState>(
       listener: (context, state)  {
-
         if(state.isExportComplete){
           showDialog(
             context:context,
@@ -117,7 +116,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
             context.read<WalletBloc>().add(WalletEvent.checkLanguage());
           });
         }
-        else if(state.isAccountPermissionShimmering ){
+        else if(state.isAccountPermissionShimmering){
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }

@@ -12,4 +12,6 @@ class BankInfoEvent with _$BankInfoEvent {
   _getTermsConditionModelEvent;
   factory BankInfoEvent.termsConditionApiEvent({required BuildContext context}) =
   _termsConditionApiEvent;
+  factory BankInfoEvent.getArgumentEvent({required bool isPaymentFail}) =
+  _getArgumentEvent;
 }

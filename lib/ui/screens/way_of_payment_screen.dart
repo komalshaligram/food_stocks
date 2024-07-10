@@ -73,21 +73,16 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
               child: Column(
                 children: [
                   20.height,
-                  RadioButtonWidget(context: context,
+                !state.isUpdate ?  RadioButtonWidget(context: context,
                       paymentMethod: AppLocalizations.of(context)!
                           .collection_from_bank_account,
-                      radioValue: 0),
+                      radioValue: 0) : 0.width,
                   10.height,
                   RadioButtonWidget(context: context,
                       paymentMethod: AppLocalizations.of(context)!
                           .credit_card,
                       radioValue: 1),
                   10.height,
-                  state.isUpdate ?
-                  RadioButtonWidget(context: context,
-                      paymentMethod: 'bank transfer',
-                      radioValue: 2)
-                      : 0.width,
                 ],
               ),
             ),
@@ -106,11 +101,17 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                     Navigator.pop(context);
                   }
                   else{
-                    Navigator.pushNamed(context,
-                      RouteDefine.creditCardDetailsScreen.name,
-                    );
+                    if(state.selectRadioTile == 1){
+                      Navigator.pushNamed(context,
+                        RouteDefine.bankInfoScreen.name,
+                      );
+                    }
+                    else if(state.selectRadioTile == 2){
+                      Navigator.pushNamed(context,
+                        RouteDefine.creditCardDetailsScreen.name,
+                      );
+                    }
                   }
-
                 },
                 fontColors: AppColors.whiteColor,
               ),

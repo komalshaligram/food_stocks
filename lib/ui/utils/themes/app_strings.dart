@@ -149,6 +149,7 @@ class AppStrings {
   static const subUserEmailString = 'subUserEmail';
   static const subUserIsraelIdString = 'subUserIsraelId';
   static const isPopString = 'isPop';
+  static const isPaymentFail = 'true';
 
   //hint strings
   static const hintNumberString = '1234567890';

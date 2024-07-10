@@ -509,7 +509,12 @@
     "enter_credit_card_validity" :"Please enter credit card validity",
     "manage_credit_card" :"Manage credit card",
     "israel_id_or_business_id_number_error":"There is an error on Israel ID number or Business ID number",
-    "rivchitclienterror":"rivchitclienterror"
+    "rivchitclienterror":"rivchitclienterror",
+    "change_credit_card":"Change credit card",
+      "change_to_wallet_payment":"Change to wallet payment",
+      "pay_with_bank_transfer":"Pay with bank transfer",
+      "pay_with_credit_card":"Pay with credit card",
+      "pay_with_wallet":"pay with wallet"
 
 
 

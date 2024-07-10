@@ -137,6 +137,9 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           emit(state.copyWith(isApiShimmering: false,));
         }
       }
+      if(event is _getArgumentEvent){
+        emit(state.copyWith(isPaymentFail: event.isPaymentFail));
+      }
     }
     );
   }

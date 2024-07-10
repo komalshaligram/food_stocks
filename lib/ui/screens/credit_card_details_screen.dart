@@ -23,8 +23,12 @@ class CreditCardDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+    ModalRoute.of(context)?.settings.arguments as Map?;
+    debugPrint(
+        "isPaymentFail : ${args?.containsKey(AppStrings.isPaymentFail)}}");
     return BlocProvider(
-      create: (context) => CreditCardDetailsBloc(),
+      create: (context) => CreditCardDetailsBloc()..add(CreditCardDetailsEvent.getArgumentEvent(isPaymentFail: args?[AppStrings.isPaymentFail] ?? false)),
       child: CreditCardDetailsScreenWidget(),
     );
   }
@@ -111,7 +115,12 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
                 isLoading: state.isLoading,
                 onPressed:  () {
                   if(_formKey.currentState?.validate() ?? false){
-                   // Navigator.pushNamed(context,RouteDefine.privacyPolicyScreen.name);
+                    if(state.isPaymentFail){
+                     Navigator.pop(context);
+                    }
+                    else{
+                      Navigator.pushNamed(context,RouteDefine.privacyPolicyScreen.name);
+                    }
                   }
                 },
                 fontColors: AppColors.whiteColor,

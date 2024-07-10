@@ -511,7 +511,12 @@
   "enter_credit_card_validity" :"אנא הזן תוקף כרטיס",
   "manage_credit_card" :"Manage credit card",
   "israel_id_or_business_id_number_error":"נתגלתה שגיאה במספר ת.ז. או במספק עוסק מורשה",
-  "rivchitclienterror":"rivchitclienterror"
+  "rivchitclienterror":"rivchitclienterror",
+  "change_credit_card":"change credit card",
+  "change_to_wallet_payment":"change to wallet payment",
+  "pay_with_bank_transfer":"pay with bank transfer",
+  "pay_with_credit_card":"pay with credit card",
+  "pay_with_wallet":"pay with wallet"
 
 
 

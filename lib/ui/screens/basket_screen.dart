@@ -58,12 +58,12 @@ class BasketScreenWidget extends StatelessWidget {
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.updateCartCountEvent(context: context));
         }
-        if (state.isAccountPermissionShimmering) {
+      else  if (state.isAccountPermissionShimmering) {
           BlocProvider.of<BottomNavBloc>(context)
               .add(
               BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
-        if (state.isOrderPending) {
+     else  if (state.isOrderPending) {
           showDialog(
             context: context,
             builder: (context1) {
@@ -81,6 +81,42 @@ class BasketScreenWidget extends StatelessWidget {
             context.read<BasketBloc>().add(BasketEvent.refreshEvent());
           });
         }
+     else if(state.isPaymentFail){
+          showDialog(
+            context: context,
+            builder: (context1) {
+              return CustomOneButtonDialog(
+                title: 'title',
+                directionality: state.language,
+                positiveTitle: AppLocalizations.of(context)!.change_credit_card,
+                positiveOnTap:(){
+                  Navigator.pop(context1);
+                  Navigator.pushNamed(context, RouteDefine.creditCardDetailsScreen.name,
+                      arguments: {
+                        AppStrings.isPaymentFail: true
+                      }
+                  );
+                },
+                positiveOnTap1: (){
+                  Navigator.pop(context1);
+                  Navigator.pushNamed(context, RouteDefine.bankInfoScreen.name,
+                      arguments: {
+                        AppStrings.isPaymentFail: true
+                      }
+                  );
+                },
+                positiveOnTap2: (){
+                  Navigator.pop(context1);
+                   bankTransferDialog(context: context,language: state.language);
+                },
+                positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
+                positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
+              );
+            },).then((value) {
+            context.read<BasketBloc>().add(BasketEvent.refreshEvent());
+          });
+        }
+
       },
       child: BlocBuilder<BasketBloc, BasketState>(
         builder: (context, state) {
@@ -1249,5 +1285,20 @@ class BasketScreenWidget extends StatelessWidget {
         )
       ],
     );
+  }
+
+  void bankTransferDialog({required BuildContext context,
+    required String language
+  }) {
+    showDialog(
+      context: context,
+      builder: (context1) {
+        return CustomOneButtonDialog(
+          title: 'title',
+          directionality: language,
+          positiveTitle: AppLocalizations.of(context)!.pay_with_bank_transfer,
+          positiveOnTap:()=>Navigator.pop(context1),
+        );
+      },);
   }
 }
