@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -43,56 +42,57 @@ bool isTablet(BuildContext context) {
 }
 
 Future<String> getBottleTax() async {
-  SharedPreferencesHelper preferencesHelper =
-  SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+  SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
   debugPrint('___bottleTax_____ :${preferencesHelper.getBottleTax().toString()}');
-  var value =  preferencesHelper.getBottleTax().toString();
-   return Future.value(value.toString());
+  var value = preferencesHelper.getBottleTax().toString();
+  return Future.value(value.toString());
 }
 
- double getChildAspectRatio(BuildContext context , bool isSaleOn){
-  return !isSaleOn ? AppConstants.productGridAspectRatio8 : Platform.isAndroid? getScreenHeight(context) > 900
-       ? AppConstants.productGridAspectRatio9 :getScreenHeight(context) >  820
-      && getScreenHeight(context) <  900? AppConstants.productGridAspectRatio51
-       : AppConstants.productGridAspectRatio51: getScreenHeight(context) > 820
-       ? AppConstants.productGridAspectRatio51:AppConstants.productGridAspectRatio51;
- }
-
-Widget isPesachLabelShow(bool isPesach,BuildContext context,){
- if(isPesach){
-   return Container(
-       padding: EdgeInsets.only(left: 5,right: 5),
-       decoration: BoxDecoration(
-           color: AppColors.pesachBGColor,
-           border: Border.all(color: AppColors.pesachBGColor),
-           borderRadius: BorderRadius.all(Radius.circular(10))
-       ),
-       child: Text(AppLocalizations.of(context)!.pesach,
-         style: AppStyles.rkRegularTextStyle(
-             size: AppConstants.font_13,
-             ),
-       ));
- }else{
-   return 0.height;
- }
+double getChildAspectRatio(BuildContext context, bool isSaleOn) {
+  return !isSaleOn
+      ? AppConstants.productGridAspectRatio8
+      : Platform.isAndroid
+          ? getScreenHeight(context) > 900
+              ? AppConstants.productGridAspectRatio9
+              : getScreenHeight(context) > 820 && getScreenHeight(context) < 900
+                  ? AppConstants.productGridAspectRatio51
+                  : AppConstants.productGridAspectRatio51
+          : getScreenHeight(context) > 820
+              ? AppConstants.productGridAspectRatio51
+              : AppConstants.productGridAspectRatio51;
 }
 
-Widget saleDescWidget(BuildContext context,String salesDesc){
-
+Widget isPesachLabelShow(
+  bool isPesach,
+  BuildContext context,
+) {
+  if (isPesach) {
     return Container(
-        padding: EdgeInsets.only(left: 5,right: 5),
-        decoration: BoxDecoration(
-            color: AppColors.redColor,
-            border: Border.all(color: AppColors.redColor),
-            borderRadius: BorderRadius.all(Radius.circular(10))
-        ),
-        child: Text(salesDesc,
+        padding: EdgeInsets.only(left: 5, right: 5),
+        decoration: BoxDecoration(color: AppColors.pesachBGColor, border: Border.all(color: AppColors.pesachBGColor), borderRadius: BorderRadius.all(Radius.circular(10))),
+        child: Text(
+          AppLocalizations.of(context)!.pesach,
           style: AppStyles.rkRegularTextStyle(
             size: AppConstants.font_13,
           ),
         ));
-
+  } else {
+    return 0.height;
+  }
 }
+
+Widget saleDescWidget(BuildContext context, String salesDesc) {
+  return Container(
+      padding: EdgeInsets.only(left: 5, right: 5),
+      decoration: BoxDecoration(color: AppColors.redColor, border: Border.all(color: AppColors.redColor), borderRadius: BorderRadius.all(Radius.circular(10))),
+      child: Text(
+        salesDesc,
+        style: AppStyles.rkRegularTextStyle(
+          size: AppConstants.font_13,
+        ),
+      ));
+}
+
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
   static void showSnackBar({
@@ -104,21 +104,15 @@ class CustomSnackBar {
       trailing: Container(),
       title,
       context,
-      backgroundColor: type == SnackBarType.SUCCESS
-          ? AppColors.mainColor.withOpacity(0.85)
-          : AppColors.redColor.withOpacity(0.85),
+      backgroundColor: type == SnackBarType.SUCCESS ? AppColors.mainColor.withOpacity(0.85) : AppColors.redColor.withOpacity(0.85),
       toastBorderRadius: 8.0,
       toastPosition: GFToastPosition.TOP,
-      textStyle: AppStyles.rkRegularTextStyle(
-          size: AppConstants.smallFont,
-          color: AppColors.whiteColor,
-          fontWeight: FontWeight.w400),
+      textStyle: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400),
     );
   }
 }
 
-customShowUpdateDialog(
-    BuildContext context, String directionality, String storeUrl) {
+customShowUpdateDialog(BuildContext context, String directionality, String storeUrl) {
   return showDialog(
     barrierDismissible: false,
     context: context,
@@ -126,9 +120,7 @@ customShowUpdateDialog(
       return PopScope(
         canPop: false,
         child: AlertDialog(
-          title: Text(AppLocalizations.of(context)!.new_version_app_update,
-              style: AppStyles.rkRegularTextStyle(
-                  color: AppColors.blackColor, size: AppConstants.mediumFont)),
+          title: Text(AppLocalizations.of(context)!.new_version_app_update, style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.mediumFont)),
           actions: [
             Align(
               alignment: Alignment.center,
@@ -141,13 +133,10 @@ customShowUpdateDialog(
                   padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                   alignment: Alignment.center,
                   width: AppConstants.containerHeight_80,
-                  decoration: BoxDecoration(
-                      gradient: AppColors.appMainGradientColor,
-                      borderRadius: BorderRadius.circular(8.0)),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(8.0)),
                   child: Text(
                     AppLocalizations.of(context)!.update,
-                    style: AppStyles.rkRegularTextStyle(
-                        color: AppColors.whiteColor, size: AppConstants.font_14),
+                    style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.font_14),
                   ),
                 ),
               ),
@@ -162,40 +151,25 @@ customShowUpdateDialog(
 Future<void> _launchUrl(String storeUrl) async {
   Uri _url = Uri.parse(storeUrl);
 
-    try {
-      launchUrl(_url);
-    } on PlatformException catch (e) {
-      debugPrint(e.toString());
-    } finally {
-      launchUrl(_url);
-    }
-    /*  if (!await launchUrl(_url)) {
+  try {
+    launchUrl(_url);
+  } on PlatformException catch (e) {
+    debugPrint(e.toString());
+  } finally {
+    launchUrl(_url);
+  }
+  /*  if (!await launchUrl(_url)) {
         throw Exception('Could not launch $_url');
       }*/
 }
 
-Future<CroppedFile?> cropImage(
-    {required String path,
-    CropStyle shape = CropStyle.rectangle,
-    int quality = 100,
-    bool? isLogoCrop = false}) async {
+Future<CroppedFile?> cropImage({required String path, CropStyle shape = CropStyle.rectangle, int quality = 100, bool? isLogoCrop = false}) async {
   return await ImageCropper().cropImage(
     sourcePath: path,
     cropStyle: shape,
     compressQuality: quality,
     uiSettings: [
-      AndroidUiSettings(
-          activeControlsWidgetColor: AppColors.mainColor,
-          cropFrameColor: AppColors.greyColor,
-          initAspectRatio: isLogoCrop ?? false
-              ? CropAspectRatioPreset.ratio16x9
-              : CropAspectRatioPreset.square,
-          hideBottomControls: true,
-          showCropGrid: false,
-          lockAspectRatio: false,
-          toolbarColor: AppColors.blackColor,
-          toolbarTitle: AppStrings.cropImageString,
-          toolbarWidgetColor: AppColors.whiteColor),
+      AndroidUiSettings(activeControlsWidgetColor: AppColors.mainColor, cropFrameColor: AppColors.greyColor, initAspectRatio: isLogoCrop ?? false ? CropAspectRatioPreset.ratio16x9 : CropAspectRatioPreset.square, hideBottomControls: true, showCropGrid: false, lockAspectRatio: false, toolbarColor: AppColors.blackColor, toolbarTitle: AppStrings.cropImageString, toolbarWidgetColor: AppColors.whiteColor),
       IOSUiSettings(
         title: AppStrings.cropImageString,
         aspectRatioLockEnabled: true,
@@ -221,15 +195,11 @@ String getFileSizeString({required int bytes, int decimals = 0}) {
   return ((bytes / pow(1024, i)).toStringAsFixed(decimals)) + suffixList[i];
 }
 
-Future<String> scanBarcodeOrQRCode(
-    {required BuildContext context,
-    required String cancelText,
-    required ScanMode scanMode}) async {
+Future<String> scanBarcodeOrQRCode({required BuildContext context, required String cancelText, required ScanMode scanMode}) async {
   String barcodeSOrQRScanRes;
   try {
-    barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode(
-        '#ff20BF6B', cancelText, true, scanMode);
-     debugPrint(barcodeSOrQRScanRes);
+    barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode('#ff20BF6B', cancelText, true, scanMode);
+    debugPrint(barcodeSOrQRScanRes);
   } on PlatformException {
     barcodeSOrQRScanRes = 'Failed to get platform version.';
   }
@@ -244,11 +214,8 @@ bool isRTLContent({required BuildContext context}) {
 }
 
 extension RTLExtension on BuildContext {
-  bool get rtl =>
-      [Locale('he')].contains(Localizations.localeOf(this)) ? true : false;
+  bool get rtl => [Locale('he')].contains(Localizations.localeOf(this)) ? true : false;
 }
-
-
 
 String splitNumber(String price) {
   var splitPrice = price.split(".");
@@ -260,16 +227,11 @@ String splitNumber(String price) {
 }
 
 extension StringCasingExtension on String {
-  String toCapitalized() =>
-      length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
+  String toCapitalized() => length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
 
-  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
-      .split(' ')
-      .map((str) => str.toCapitalized())
-      .join(' ');
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
 
-  String toLocalization() =>
-      this.contains('.') ? this.split('.')[1].toLowerCase() : this;
+  String toLocalization() => this.contains('.') ? this.split('.')[1].toLowerCase() : this;
 }
 
 String formatNumber({required String value, required String local}) {
@@ -280,29 +242,17 @@ String formatNumber({required String value, required String local}) {
   return '${result1}';
 }
 
-double vatCalculation(
-    {required double price,
-    required double vat,
-    double qty = 0,
-    double deposit = 0}) {
-  double result = price +
-      ((price * vat) / 100) +
-      (qty * deposit) +
-      ((qty * deposit * vat) / 100);
+double vatCalculation({required double price, required double vat, double qty = 0, double deposit = 0}) {
+  double result = price + ((price * vat) / 100) + (qty * deposit) + ((qty * deposit * vat) / 100);
   return result;
 }
 
-double totalVatAmountCalculation(
-    {required double price,
-    required double vat,
-    double qty = 0,
-    double deposit = 0}) {
+double totalVatAmountCalculation({required double price, required double vat, double qty = 0, double deposit = 0}) {
   double result = ((price * vat) / 100) + ((qty * deposit * vat) / 100);
   return result;
 }
 
-double bottleDepositCalculation(
-    { double units =1, required double deposit,required double qty}) {
+double bottleDepositCalculation({double units = 1, required double deposit, required double qty}) {
   double result = qty * deposit * units;
   debugPrint('qty$qty');
   debugPrint('bottle deposit$deposit');
@@ -310,17 +260,14 @@ double bottleDepositCalculation(
   return result;
 }
 
-double bottleDepositCalculationWithVat(
-    {  required double deposit,required double qty, double vatPercentage = 1}) {
-  double result = (qty * deposit) + ((qty * deposit * vatPercentage)/100) ;
+double bottleDepositCalculationWithVat({required double deposit, required double qty, double vatPercentage = 1}) {
+  double result = (qty * deposit) + ((qty * deposit * vatPercentage) / 100);
   debugPrint('qty$qty');
   debugPrint('bottle deposit $deposit');
   debugPrint('bottle tax $result');
   debugPrint('result $result');
   return result;
 }
-
-
 
 double saleCalculation({required double price, required double salePer}) {
   double result = price - (price * (salePer / 100));

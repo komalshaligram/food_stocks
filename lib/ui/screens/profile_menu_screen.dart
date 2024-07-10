@@ -234,10 +234,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     AppLocalizations.of(context)!.manage_credit_card,
                                     onTap: () {
                                       Navigator.pushNamed(context,
-                                        RouteDefine.wayOfPaymentScreen.name,
-                                         arguments: {
-                                            AppStrings.isUpdateParamString: false
-                                          }
+                                        RouteDefine.addCreditCardScreen.name,
                                       );
                                     }) : 0.width,
                                 profileMenuTiles(

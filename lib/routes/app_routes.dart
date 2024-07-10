@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/screens/add_credit_card.dart';
 
 import 'package:food_stock/ui/screens/bottom_nav_screen.dart';
 import 'package:food_stock/ui/screens/home_screen.dart';
@@ -101,7 +102,8 @@ enum RouteDefine {
   brandPermissionScreen,
   supplierPermissionScreen,
   wayOfPaymentScreen,
-  creditCardDetailsScreen
+  creditCardDetailsScreen,
+  addCreditCardScreen
 
 }
 
@@ -164,7 +166,7 @@ class AppRouting {
       RouteDefine.supplierPermissionScreen.name: (_) => SupplierPermissionRoute.route,
       RouteDefine.wayOfPaymentScreen.name: (_) => WayOfPaymentRoute.route,
       RouteDefine.creditCardDetailsScreen.name: (_) => CreditCardDetailsRoute.route,
-
+      RouteDefine.addCreditCardScreen.name: (_) => AddCreditCardRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

@@ -125,7 +125,6 @@
 "monthly_expense_graph": "גרף הוצאות חודשיות",
 "history": "תנועות בארנק",
 "export": "יצוא",
-"order": "הזמנה",
 "jan": "ינו",
 "feb": "פבר",
 "mar": "מרץ",
@@ -146,7 +145,6 @@
 "february": "פברואר",
 "march": "מרץ",
 "april": "אַפּרִיל",
-"may": "מאי",
 "june": "יוני",
 "july": "יולי",
 "august": "אוגוסט",
@@ -406,7 +404,6 @@
   "related_products": "מוצרים דומים",
   "search_result" : "תוצאות חיפוש",
   "price_par_box" : "מחיר למארז",
-  "my_invoices": "החשבוניות שלי",
   "invoice_number" : "מס' חשבונית",
   "not_include_surfaces_price":"הסכום אינו כולל עלות משטחים",
   "open":"פתח",
@@ -450,7 +447,7 @@
   "my_invoices" : "החשבוניות שלי",
   "rivchit_invoice_number" : "מס' חשבונית",
   "payment_invoice" : "חשבונית תשלום",
-  "refund_invoice" : "חשבונית זיכוי",
+
   "refund_invoice" : "חשבונית זיכוי",
   "payed" : "שולם",
   "pending" :"ממתין",
@@ -512,11 +509,11 @@
   "manage_credit_card" :"Manage credit card",
   "israel_id_or_business_id_number_error":"נתגלתה שגיאה במספר ת.ז. או במספק עוסק מורשה",
   "rivchitclienterror":"rivchitclienterror",
-  "change_credit_card":"change credit card",
-  "change_to_wallet_payment":"change to wallet payment",
-  "pay_with_bank_transfer":"pay with bank transfer",
-  "pay_with_credit_card":"pay with credit card",
-  "pay_with_wallet":"pay with wallet"
+  "change_credit_card":"Change credit card",
+  "change_to_wallet_payment":"Change to wallet payment",
+  "pay_with_bank_transfer":"Pay with bank transfer",
+  "pay_with_credit_card":"Pay with credit card",
+  "pay_with_wallet":"Pay with wallet"
 
 
 
