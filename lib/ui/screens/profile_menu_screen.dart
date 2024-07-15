@@ -17,6 +17,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/common_alert_dialog.dart';
+import '../widget/common_dialog_with_one_button.dart';
 
 class ProfileMenuRoute {
   static Widget get route => ProfileMenuScreen();
@@ -48,6 +49,12 @@ class ProfileMenuScreenWidget extends StatelessWidget {
           /*BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));*/
         }
+        if(current.isAppOnMaintenance && !current.isDialogOpen){
+          appUnderMaintenanceDialog(context: context, state: current);
+          BlocProvider.of<ProfileMenuBloc>(context)
+              .add(ProfileMenuEvent.updateMaintenanceEvent(context: context));
+          debugPrint('Maintenance is on going...........');
+        }
         if (previous.isHebrewLanguage != current.isHebrewLanguage) {
           return true;
         } else {
@@ -67,6 +74,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
               bloc.add(ProfileMenuEvent.getPermissionList(context: context));
               bloc.add(ProfileMenuEvent.getPreferenceDataEvent());
               bloc.add(ProfileMenuEvent.getAppLanguage());
+              if(!state.isAppOnMaintenance){
+                bloc.add(ProfileMenuEvent.generalSettings(context: context,dialogContext: context));
+              }
               bloc.add(ProfileMenuEvent.getProfileDetailsEvent(context: context));
             },
             child: Scaffold(
@@ -411,4 +421,39 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     );
   }
 
+  appUnderMaintenanceDialog({
+    required BuildContext context,
+    required ProfileMenuState state
+  }) {
+    if (!state.isDialogOpen){
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context1) =>
+            BlocProvider.value(
+              value: context.read<ProfileMenuBloc>(),
+              child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(
+                builder: (context, state) {
+                  ProfileMenuBloc bloc = context.read<ProfileMenuBloc>();
+                  return CustomOneButtonDialog(
+                    directionality: state.language,
+                    title: '${AppLocalizations.of(context)!.under_maintenance}',
+                    positiveTitle: '${AppLocalizations.of(context)!.retry}',
+                    positiveOnTap: () async {
+                      bloc.add(ProfileMenuEvent.updateMaintenanceEvent(context: context));
+                      bloc.add(ProfileMenuEvent.generalSettings(
+                        context: context,
+                        dialogContext: context1,
+                      ));
+                    },
+                  );
+                },
+              ),
+            ),
+      );
+    }
+    else{
+      context.read<ProfileMenuBloc>().add(ProfileMenuEvent.updateMaintenanceEvent(context: context));
+    }
+  }
 }

@@ -1244,6 +1244,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       else if(event is _RemoveRelatedProductEvent){
         emit(state.copyWith(relatedProductList: []));
       }
+      else if(event is _updateMaintenanceEvent){
+        emit(state.copyWith(isDialogOpen: true));
+      }
       else if(event is _GeneralSettings){
         try {
           emit(state.copyWith(pesachBannerShimmering: true));
@@ -1252,19 +1255,39 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
           debugPrint('general settings = ${response.data.toString()}');
           if (response.status == 200) {
+
+            if(preferencesHelper.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
+              Navigator.pop(event.dialogContext);
+              // emit(state.copyWith(isDialogOpen: true));
+              preferencesHelper.setIsAppOnMaintenance(isAppOnMaintenance: false);
+              debugPrint('pop dialog');
+              return;
+
+            }else{
+              if(!state.isDialogOpen && !(response.data?.isAppOnMaintenance??false)  ){
+                debugPrint('here');
+                emit(state.copyWith(isDialogOpen: true));
+              }else{
+                emit(state.copyWith(isDialogOpen: false));
+              }
+
+            }
             preferencesHelper.setIsSaleOn(isSaleOn:  response.data?.isSaleOn ?? false);
             preferencesHelper.setIsIncludedVat(isIncludedVat:
-            (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false
-            );
+            (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false);
             preferencesHelper.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
-            emit(state.copyWith(isIncludedVat: preferencesHelper.getIsIncludedVat(),
-              isSaleOn: preferencesHelper.getShowSale(),
-              pesachBannerURL: response.data?.pesachBanner ?? '',
-              showPesachBanner: response.data?.isShowPesachBanner ?? false,
-             bottlePrice: response.data?.bottlePrice ?? 0.0
+            preferencesHelper.setIsAppOnMaintenance(isAppOnMaintenance: response.data?.isAppOnMaintenance??false);
 
+            emit(state.copyWith(
+                language: preferencesHelper.getAppLanguage(),
+                pesachBannerShimmering:false,
+                pesachBannerURL:response.data?.pesachBanner ?? '',
+                showPesachBanner: response.data?.isShowPesachBanner ?? false,
+                bottlePrice:response.data?.bottlePrice ?? 0.0,
+                isIncludedVat: preferencesHelper.getIsIncludedVat(),
+                isSaleOn: preferencesHelper.getShowSale(),
+                isAppOnMaintenance: preferencesHelper.getAppOnMaintenance()
             ));
-            emit(state.copyWith(pesachBannerShimmering: false));
           } else {
             emit(state.copyWith(pesachBannerShimmering: false));
           }

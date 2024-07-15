@@ -63,6 +63,12 @@ class BasketScreenWidget extends StatelessWidget {
               .add(
               BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
+        if(state.isAppOnMaintenance && !state.isDialogOpen){
+          appUnderMaintenanceDialog(context: context, state: state);
+          BlocProvider.of<BasketBloc>(context)
+              .add(BasketEvent.updateMaintenanceEvent(context: context));
+          debugPrint('Maintenance is on going...........');
+        }
         if (state.isOrderPending) {
           showDialog(
             context: context,
@@ -91,7 +97,9 @@ class BasketScreenWidget extends StatelessWidget {
                 bloc.add(BasketEvent.getPermissionList(context: context));
                 bloc.add(BasketEvent.getAllCartEvent(context: context));
                 bloc.add(BasketEvent.userApproveEvent(context: context));
-                bloc.add(BasketEvent.generalSettings(context: context));
+                if(!state.isAppOnMaintenance){
+                  bloc.add(BasketEvent.generalSettings(context: context,dialogContext: context));
+                }
               },
               child: SafeArea(
                 child: Padding(
@@ -1249,5 +1257,40 @@ class BasketScreenWidget extends StatelessWidget {
         )
       ],
     );
+  }
+  appUnderMaintenanceDialog({
+    required BuildContext context,
+    required BasketState state
+  }) {
+    if (!state.isDialogOpen){
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context1) =>
+            BlocProvider.value(
+              value: context.read<BasketBloc>(),
+              child: BlocBuilder<BasketBloc, BasketState>(
+                builder: (context, state) {
+                  BasketBloc bloc = context.read<BasketBloc>();
+                  return CustomOneButtonDialog(
+                    directionality: state.language,
+                    title: '${AppLocalizations.of(context)!.under_maintenance}',
+                    positiveTitle: '${AppLocalizations.of(context)!.retry}',
+                    positiveOnTap: () async {
+                      bloc.add(BasketEvent.updateMaintenanceEvent(context: context));
+                      bloc.add(BasketEvent.generalSettings(
+                        context: context,
+                        dialogContext: context1,
+                      ));
+                    },
+                  );
+                },
+              ),
+            ),
+      );
+    }
+    else{
+      context.read<BasketBloc>().add(BasketEvent.updateMaintenanceEvent(context: context));
+    }
   }
 }

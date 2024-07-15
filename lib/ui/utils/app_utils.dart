@@ -175,44 +175,22 @@ Future<void> _launchUrl(String storeUrl) async {
 }
 
 bool isValidIsraeliID(String id) {
-  //id = id.trim();
-  if (id.length!=9 || int.tryParse(id) == null){
-    return false;
-  }
+  id = id.trim();
+  if (id.length > 9 || id.length < 5 || int.tryParse(id) == null) return false;
 
   // Pad string with zeros up to 9 digits
   id = id.length < 9 ? id.padLeft(9, '0') : id;
 
-  return id.split('').map((digit) => int.parse(digit)).toList().asMap().entries.fold(
-    0,
-        (counter, entry) {
-      final digit = entry.value;
-      final step = digit * ((entry.key % 2) + 1);
-      return counter + (step > 9 ? step - 9 : step);
-    },
-  ) % 10 == 0;
+  int sum = 0;
+  for (int i = 0; i < id.length; i++) {
+    int digit = int.parse(id[i]);
+    int step = digit * ((i % 2) + 1);
+    sum += (step > 9) ? step - 9 : step;
+  }
+
+  return sum % 10 == 0;
 }
 
-/*bool isValidIsraeliID(String id) {
-  String trimmed = id.trim();
-  bool isNumeric = RegExp(r'^[0-9]+$').hasMatch(trimmed);
-
-  if (trimmed.length < 1 || trimmed.length > 9 || !isNumeric) {
-    return false;
-  }
-
-  int neededZeros = 9 - trimmed.length;
-  String tested = '0' * neededZeros + trimmed;
-
-  int counter = 0;
-  for (int i = 0; i < tested.length; i++) {
-    int digit = int.parse(tested[i]);
-    int step = digit * ((i % 2) + 1);
-    counter += step > 9 ? step - 9 : step;
-  }
-
-  return counter % 10 == 0;
-}*/
 
 Future<CroppedFile?> cropImage(
     {required String path,

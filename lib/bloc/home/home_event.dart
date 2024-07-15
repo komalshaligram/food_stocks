@@ -112,4 +112,6 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.userApproveEvent(
       {required BuildContext context}) = _userApproveEvent;
 
+  const factory HomeEvent.updateMaintenanceEvent(
+      {required BuildContext context}) = _updateMaintenanceEvent;
 }

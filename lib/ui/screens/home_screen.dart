@@ -54,7 +54,6 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeBloc()
        ..add(HomeEvent.userApproveEvent(context: context))
-      //  ..add(HomeEvent.generalSettings(context: context,dialogContext: context))
         ..add(HomeEvent.getPreferencesDataEvent())
         ..add(HomeEvent.getCartCountEvent(context: context))
         ..add(HomeEvent.getOrderCountEvent(context: context))
@@ -70,7 +69,6 @@ class HomeScreen extends StatelessWidget {
 
 class HomeScreenWidget extends StatelessWidget {
   String isNavigation = '';
-  bool isDialogOpen = false;
   HomeScreenWidget({super.key, this.isNavigation = ''});
 
   ScrollController controller = ScrollController();
@@ -92,7 +90,9 @@ class HomeScreenWidget extends StatelessWidget {
        debugPrint('state.isDialogOpen${state.isDialogOpen}');
 
         if(state.isAppOnMaintenance && !state.isDialogOpen){
-          appUnderMaintenanceDialog(context: context);
+          appUnderMaintenanceDialog(context: context, state: state);
+          BlocProvider.of<HomeBloc>(context)
+              .add(HomeEvent.updateMaintenanceEvent(context: context));
           debugPrint('Maintenance is on going...........');
         }
       },
@@ -1491,31 +1491,41 @@ class HomeScreenWidget extends StatelessWidget {
       ),
     );
   }
+
   appUnderMaintenanceDialog({
-    required BuildContext context
-  })  {
-    showDialog(
-      context: context,
-      builder: (context1) => BlocProvider.value(
-        value:  context.read<HomeBloc>(),
-        child: BlocBuilder<HomeBloc, HomeState>(
-          builder: (context, state) {
-            HomeBloc bloc = context.read<HomeBloc>();
-            return CustomOneButtonDialog(
-              directionality: state.language,
-              title: '${AppLocalizations.of(context)!.under_maintenance}',
-              positiveTitle: '${AppLocalizations.of(context)!.retry}',
-              positiveOnTap: () async {
-                bloc.add(HomeEvent.generalSettings(
-                  context: context,
-                  dialogContext: context1,
-                ));
-              },
-            );
-          },
-        ),
-      ),
-    );
+    required BuildContext context,
+    required HomeState state
+  }) {
+    if (!state.isDialogOpen){
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context1) =>
+            BlocProvider.value(
+              value: context.read<HomeBloc>(),
+              child: BlocBuilder<HomeBloc, HomeState>(
+                builder: (context, state) {
+                  HomeBloc bloc = context.read<HomeBloc>();
+                  return CustomOneButtonDialog(
+                    directionality: state.language,
+                    title: '${AppLocalizations.of(context)!.under_maintenance}',
+                    positiveTitle: '${AppLocalizations.of(context)!.retry}',
+                    positiveOnTap: () async {
+                      bloc.add(HomeEvent.updateMaintenanceEvent(context: context));
+                      bloc.add(HomeEvent.generalSettings(
+                        context: context,
+                        dialogContext: context1,
+                      ));
+                    },
+                  );
+                },
+              ),
+            ),
+      );
+  }
+    else{
+      context.read<HomeBloc>().add(HomeEvent.updateMaintenanceEvent(context: context));
+    }
   }
 
 }

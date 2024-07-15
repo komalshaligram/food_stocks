@@ -1328,6 +1328,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         else if(event is _RemoveRelatedProductEvent){
           emit(state.copyWith(relatedProductList: []));
         }
+        else if(event is _updateMaintenanceEvent){
+          emit(state.copyWith(isDialogOpen: true));
+        }
         else if(event is _GeneralSettings){
           try {
             emit(state.copyWith(pesachBannerShimmering: true));
@@ -1339,13 +1342,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
               if(preferences.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
                Navigator.pop(event.dialogContext);
+               preferences.setIsAppOnMaintenance(isAppOnMaintenance: response.data?.isAppOnMaintenance??false);
+
+               // emit(state.copyWith(isDialogOpen: true));
                 debugPrint('pop dialog');
-               emit(state.copyWith(isDialogOpen: false));
+                return;
+
               }else{
-                if(!(preferences.getAppOnMaintenance()) && (response.data?.isAppOnMaintenance??false)  ){
-                  emit(state.copyWith(isDialogOpen: false));
-                }else{
+                if(!state.isDialogOpen && !(response.data?.isAppOnMaintenance??false)  ){
+                  debugPrint('here');
                   emit(state.copyWith(isDialogOpen: true));
+                }else{
+                  emit(state.copyWith(isDialogOpen: false));
                 }
 
               }

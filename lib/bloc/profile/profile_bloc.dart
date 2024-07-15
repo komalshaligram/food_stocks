@@ -311,9 +311,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           reqUpdate.ProfileDetailsUpdateResModel response =
               reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == 200) {
-
-
-
             emit(state.copyWith(UserImageUrl: response.data?.client?.profileImage.toString() ?? ''));
 
             if(!preferences.getSubUser()){

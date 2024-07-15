@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:food_stock/bloc/profile_menu/profile_menu_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -77,6 +78,7 @@ class ProfileScreenWidget extends StatelessWidget {
                   '${AppLocalizations.of(context)!.file_size_must_be_less_then}',
               type: SnackBarType.FAILURE);
         }
+
       },
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
@@ -633,6 +635,7 @@ class ProfileScreenWidget extends StatelessWidget {
 
                                             if (state.selectedBusinessType!= AppLocalizations.of(context)?.type_of_business) {
                                               if(isValidIsraeliID(state.businessIdController.text.toString().trim())) {
+                                                   if(isValidIsraeliID(state.israelIdController.text.toString().trim())) {
                                                 if (_formKey.currentState
                                                     ?.validate() ??
                                                     false) {
@@ -646,6 +649,14 @@ class ProfileScreenWidget extends StatelessWidget {
                                                         context: context1));
                                                   }
                                                 }
+                                                }else{
+                                                     CustomSnackBar.showSnackBar(
+                                                         context: context,
+                                                         title: AppLocalizations.of(
+                                                             context)!
+                                                             .please_enter_valid_israel_id,
+                                                         type: SnackBarType.FAILURE);
+                                                   }
                                               }else{
                                                 CustomSnackBar.showSnackBar(
                                                     context: context,
