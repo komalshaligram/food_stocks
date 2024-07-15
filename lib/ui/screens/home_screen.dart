@@ -20,6 +20,7 @@ import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/ui/widget/common_alert_dialog.dart';
 import 'package:food_stock/ui/widget/common_product_details_widget.dart';
 import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
@@ -31,6 +32,7 @@ import 'package:photo_view/photo_view.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/balance_indicator.dart';
+import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
@@ -45,13 +47,14 @@ class HomeRoute {
 
 class HomeScreen extends StatelessWidget {
   String isSubCategory;
+
   HomeScreen({super.key, this.isSubCategory = ''});
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc()
        ..add(HomeEvent.userApproveEvent(context: context))
-        ..add(HomeEvent.generalSettings(context: context))
+      //  ..add(HomeEvent.generalSettings(context: context,dialogContext: context))
         ..add(HomeEvent.getPreferencesDataEvent())
         ..add(HomeEvent.getCartCountEvent(context: context))
         ..add(HomeEvent.getOrderCountEvent(context: context))
@@ -67,6 +70,7 @@ class HomeScreen extends StatelessWidget {
 
 class HomeScreenWidget extends StatelessWidget {
   String isNavigation = '';
+  bool isDialogOpen = false;
   HomeScreenWidget({super.key, this.isNavigation = ''});
 
   ScrollController controller = ScrollController();
@@ -83,6 +87,13 @@ class HomeScreenWidget extends StatelessWidget {
         if(state.isAccountPermissionShimmering){
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
+        }
+        debugPrint('state.isAppOnMaintenance${state.isAppOnMaintenance}');
+       debugPrint('state.isDialogOpen${state.isDialogOpen}');
+
+        if(state.isAppOnMaintenance && !state.isDialogOpen){
+          appUnderMaintenanceDialog(context: context);
+          debugPrint('Maintenance is on going...........');
         }
       },
       child: BlocBuilder<HomeBloc, HomeState>(
@@ -102,7 +113,9 @@ class HomeScreenWidget extends StatelessWidget {
                 bloc.add(HomeEvent.getMessageListEvent(context: context));
                 bloc.add(HomeEvent.getCartCountEvent(context: context));
                 bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
-                bloc.add(HomeEvent.generalSettings(context: context));
+                if(!state.isAppOnMaintenance){
+                  bloc.add(HomeEvent.generalSettings(context: context,dialogContext: context));
+                }
                 bloc.add(HomeEvent.getPermissionList(context: context));
                 bloc.add(HomeEvent.getProductSalesListEvent(context: context));
               },
@@ -1478,17 +1491,31 @@ class HomeScreenWidget extends StatelessWidget {
       ),
     );
   }
-
-  void showConditionDialog(
-      {required BuildContext context, required String saleCondition}) {
+  appUnderMaintenanceDialog({
+    required BuildContext context
+  })  {
     showDialog(
-        context: context,
-        builder: (context) => CommonSaleDescriptionDialog(
-            title: saleCondition,
-            onTap: () {
-              Navigator.pop(context);
-            },
-            buttonTitle: "${AppLocalizations.of(context)!.price}"));
+      context: context,
+      builder: (context1) => BlocProvider.value(
+        value:  context.read<HomeBloc>(),
+        child: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            HomeBloc bloc = context.read<HomeBloc>();
+            return CustomOneButtonDialog(
+              directionality: state.language,
+              title: '${AppLocalizations.of(context)!.under_maintenance}',
+              positiveTitle: '${AppLocalizations.of(context)!.retry}',
+              positiveOnTap: () async {
+                bloc.add(HomeEvent.generalSettings(
+                  context: context,
+                  dialogContext: context1,
+                ));
+              },
+            );
+          },
+        ),
+      ),
+    );
   }
 
 }

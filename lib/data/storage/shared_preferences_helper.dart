@@ -56,6 +56,7 @@ class SharedPreferencesHelper {
   static const String manageSubUser = 'manageSubUser';
   static const String subUserId = 'subUserId';
   static const String canSeeInvoices = 'canSeeInvoices';
+  static const String appOnMaintenance= 'isAppOnMaintenance';
 
 
   final SharedPreferences prefs;
@@ -109,11 +110,15 @@ class SharedPreferencesHelper {
       await prefs.remove(addBasket);
       await prefs.remove(subUserId);
       await prefs.remove(canSeeInvoices);
+      await prefs.remove(appOnMaintenance);
 
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
   }
 
+  Future<void> removeAppMaintenance() async {
+    await prefs.remove(appOnMaintenance);
+  }
   Future<void> removeProfileImage() async {
     await prefs.remove(userImage);
   }
@@ -188,7 +193,9 @@ class SharedPreferencesHelper {
     await prefs.setString(apiPram, ReqPram);
   }
 
-
+  Future<void> setIsAppOnMaintenance({required bool isAppOnMaintenance}) async {
+    await prefs.setBool(appOnMaintenance, isAppOnMaintenance);
+  }
   Future<void> setOrderId({required String productOrderId}) async {
     await prefs.setString(orderId, productOrderId);
   }
@@ -510,6 +517,9 @@ class SharedPreferencesHelper {
     return prefs.getBool(canSeeInvoices) ?? true;
   }
 
+  bool getAppOnMaintenance() {
+    return prefs.getBool(appOnMaintenance) ?? false;
+  }
 
 
 

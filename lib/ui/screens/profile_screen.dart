@@ -630,19 +630,29 @@ class ProfileScreenWidget extends StatelessWidget {
                                     onPressed: state.isLoading
                                         ? null
                                         : () {
+
                                             if (state.selectedBusinessType!= AppLocalizations.of(context)?.type_of_business) {
-                                              if (_formKey.currentState
-                                                      ?.validate() ??
-                                                  false) {
-                                                if (state.isUpdate) {
-                                                  bloc.add(ProfileEvent
-                                                      .updateProfileDetailsEvent(
-                                                          context: context1));
-                                                } else {
-                                                  bloc.add(ProfileEvent
-                                                      .navigateToMoreDetailsScreenEvent(
-                                                          context: context1));
+                                              if(isValidIsraeliID(state.businessIdController.text.toString().trim())) {
+                                                if (_formKey.currentState
+                                                    ?.validate() ??
+                                                    false) {
+                                                  if (state.isUpdate) {
+                                                    bloc.add(ProfileEvent
+                                                        .updateProfileDetailsEvent(
+                                                        context: context1));
+                                                  } else {
+                                                    bloc.add(ProfileEvent
+                                                        .navigateToMoreDetailsScreenEvent(
+                                                        context: context1));
+                                                  }
                                                 }
+                                              }else{
+                                                CustomSnackBar.showSnackBar(
+                                                    context: context,
+                                                    title: AppLocalizations.of(
+                                                        context)!
+                                                        .please_enter_valid_business_id,
+                                                    type: SnackBarType.FAILURE);
                                               }
                                             } else {
                                               CustomSnackBar.showSnackBar(

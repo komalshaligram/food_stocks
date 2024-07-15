@@ -511,12 +511,8 @@
   "enter_credit_card_validity" :"אנא הזן תוקף כרטיס",
   "manage_credit_card" :"Manage credit card",
   "israel_id_or_business_id_number_error":"נתגלתה שגיאה במספר ת.ז. או במספק עוסק מורשה",
-  "rivchitclienterror":"rivchitclienterror"
-
-
-
-
-
-
+  "rivchitclienterror":"rivchitclienterror",
+  "under_maintenance": "האפליקציה כרגע בתחזוקה, אנא נסה שוב מאוחר יותר",
+  "retry": "נסה שוב"
 
 }

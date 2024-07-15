@@ -52,6 +52,8 @@ import '../../ui/utils/themes/app_urls.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 
+import '../../ui/widget/common_alert_dialog.dart';
+
 part 'home_event.dart';
 part 'home_state.dart';
 part 'home_bloc.freezed.dart';
@@ -1334,19 +1336,34 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
             debugPrint('general settings = ${response.data.toString()}');
             if (response.status == 200) {
+
+              if(preferences.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
+               Navigator.pop(event.dialogContext);
+                debugPrint('pop dialog');
+               emit(state.copyWith(isDialogOpen: false));
+              }else{
+                if(!(preferences.getAppOnMaintenance()) && (response.data?.isAppOnMaintenance??false)  ){
+                  emit(state.copyWith(isDialogOpen: false));
+                }else{
+                  emit(state.copyWith(isDialogOpen: true));
+                }
+
+              }
               preferences.setIsSaleOn(isSaleOn:  response.data?.isSaleOn ?? false);
               preferences.setIsIncludedVat(isIncludedVat:
-            (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false
-              );
+              (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false);
               preferences.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
+              preferences.setIsAppOnMaintenance(isAppOnMaintenance: response.data?.isAppOnMaintenance??false);
+
               emit(state.copyWith(
+                 language: preferences.getAppLanguage(),
                   pesachBannerShimmering:false,
                   pesachBannerURL:response.data?.pesachBanner ?? '',
                   showPesachBanner: response.data?.isShowPesachBanner ?? false,
                   bottlePrice:response.data?.bottlePrice ?? 0.0,
                 isIncludedVat: preferences.getIsIncludedVat(),
-                isSaleOn: preferences.getShowSale()
-
+                isSaleOn: preferences.getShowSale(),
+                isAppOnMaintenance: preferences.getAppOnMaintenance()
               ));
             } else {
               emit(state.copyWith(pesachBannerShimmering: false));
