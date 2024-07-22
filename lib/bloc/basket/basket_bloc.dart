@@ -1118,6 +1118,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         }
         else if(event is _GeneralSettings){
           try {
+          emit(state.copyWith(retryLoading: event.isRetryLoading));
             final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
 
@@ -1125,12 +1126,12 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             if (response.status == 200) {
 
               if(preferencesHelper.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
+                add(BasketEvent.updateMaintenanceEvent(context: event.context));
                 Navigator.pop(event.dialogContext);
-                // emit(state.copyWith(isDialogOpen: true));
                 preferencesHelper.setIsAppOnMaintenance(isAppOnMaintenance: false);
+                emit(state.copyWith(isDialogOpen: false,isAppOnMaintenance: false,retryLoading: false));
                 debugPrint('pop dialog');
                 return;
-
               }else{
                 if(!state.isDialogOpen && !(response.data?.isAppOnMaintenance??false)  ){
                   debugPrint('here');
@@ -1138,7 +1139,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 }else{
                   emit(state.copyWith(isDialogOpen: false));
                 }
-
               }
               preferencesHelper.setIsSaleOn(isSaleOn:  response.data?.isSaleOn ?? false);
               preferencesHelper.setIsIncludedVat(isIncludedVat:
@@ -1150,6 +1150,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   language: preferencesHelper.getAppLanguage(),
                   isIncludedVat: preferencesHelper.getIsIncludedVat(),
                   isSaleOn: preferencesHelper.getShowSale(),
+                  retryLoading: false,
                   isAppOnMaintenance: preferencesHelper.getAppOnMaintenance()
               ));
             } else {

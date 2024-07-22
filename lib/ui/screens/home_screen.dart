@@ -114,7 +114,7 @@ class HomeScreenWidget extends StatelessWidget {
                 bloc.add(HomeEvent.getCartCountEvent(context: context));
                 bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
                 if(!state.isAppOnMaintenance){
-                  bloc.add(HomeEvent.generalSettings(context: context,dialogContext: context));
+                  bloc.add(HomeEvent.generalSettings(context: context,dialogContext: context,isRetryLoading: false));
                 }
                 bloc.add(HomeEvent.getPermissionList(context: context));
                 bloc.add(HomeEvent.getProductSalesListEvent(context: context));
@@ -1507,14 +1507,15 @@ class HomeScreenWidget extends StatelessWidget {
                 builder: (context, state) {
                   HomeBloc bloc = context.read<HomeBloc>();
                   return CustomOneButtonDialog(
+                    isLoading: state.retryLoading,
                     directionality: state.language,
                     title: '${AppLocalizations.of(context)!.under_maintenance}',
                     positiveTitle: '${AppLocalizations.of(context)!.retry}',
                     positiveOnTap: () async {
-                      bloc.add(HomeEvent.updateMaintenanceEvent(context: context));
                       bloc.add(HomeEvent.generalSettings(
                         context: context,
                         dialogContext: context1,
+                        isRetryLoading: true
                       ));
                     },
                   );

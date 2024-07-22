@@ -52,7 +52,8 @@ class HomeState with _$HomeState {
     required bool isSaleOn,
     required bool isAppOnMaintenance,
     required String language,
-    required bool isDialogOpen
+    required bool isDialogOpen,
+    required bool retryLoading
 
   }) = _HomeState;
 
@@ -111,6 +112,7 @@ class HomeState with _$HomeState {
       isSaleOn : false,
       isAppOnMaintenance : false,
       isDialogOpen : false,
-      language : 'he'
+      language : 'he',
+      retryLoading:false
   );
 }

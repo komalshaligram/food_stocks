@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/activity_time/activity_time_model.dart';
 import '../../data/model/req_model/activity_time/activity_time_req_model.dart';
-
 import '../../data/model/req_model/profile_details_update_req_model/profile_details_update_req_model.dart';
 import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart'
     as res;
@@ -26,9 +25,7 @@ import '../../data/model/res_model/profile_details_update_res_model/profile_deta
     as reqUpdate;
 
 part 'activity_time_event.dart';
-
 part 'activity_time_state.dart';
-
 part 'activity_time_bloc.freezed.dart';
 
 class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {

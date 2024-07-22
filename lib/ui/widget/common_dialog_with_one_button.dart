@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -11,9 +12,9 @@ class CustomOneButtonDialog extends StatelessWidget {
   final void Function()? positiveOnTap;
   final String? positiveTitle;
   final String directionality;
-  final bool isProcessing;
   final double width;
   final String Subtitle;
+  final bool isLoading;
 
   CustomOneButtonDialog({
     super.key,
@@ -21,9 +22,10 @@ class CustomOneButtonDialog extends StatelessWidget {
     this.positiveOnTap,
     this.positiveTitle,
     required this.directionality,
-    this.isProcessing = false,
-    this.width = 80,
-    this.Subtitle = '',
+    this.isLoading = false,
+    this.width = 150,
+    this.Subtitle = ''
+
   });
 
   @override
@@ -73,7 +75,9 @@ class CustomOneButtonDialog extends StatelessWidget {
                 decoration: BoxDecoration(
                     gradient: AppColors.appMainGradientColor,
                     borderRadius: BorderRadius.circular(8.0)),
-                child: Text(
+                child: isLoading?  CupertinoActivityIndicator(
+                              color: AppColors.mainColor,
+                            ):Text(
                   positiveTitle ?? '',
                   style: AppStyles.rkRegularTextStyle(
                       color: AppColors.whiteColor,
@@ -83,7 +87,6 @@ class CustomOneButtonDialog extends StatelessWidget {
                           ),
               )
               : Container(),
-
         ],
       ),
     );

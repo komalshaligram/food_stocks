@@ -1333,29 +1333,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
         else if(event is _GeneralSettings){
           try {
-            emit(state.copyWith(pesachBannerShimmering: true));
+            emit(state.copyWith(pesachBannerShimmering: true,retryLoading:event.isRetryLoading));
+
             final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
 
             debugPrint('general settings = ${response.data.toString()}');
             if (response.status == 200) {
-
               if(preferences.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
-               Navigator.pop(event.dialogContext);
-               preferences.setIsAppOnMaintenance(isAppOnMaintenance: response.data?.isAppOnMaintenance??false);
-
-               // emit(state.copyWith(isDialogOpen: true));
+                add(HomeEvent.updateMaintenanceEvent(context: event.context));
+                Navigator.pop(event.dialogContext);
+                preferences.setIsAppOnMaintenance(isAppOnMaintenance: false);
+                emit(state.copyWith(isDialogOpen: false,isAppOnMaintenance: false,retryLoading: false));
                 debugPrint('pop dialog');
                 return;
-
               }else{
                 if(!state.isDialogOpen && !(response.data?.isAppOnMaintenance??false)  ){
                   debugPrint('here');
                   emit(state.copyWith(isDialogOpen: true));
-                }else{
-                  emit(state.copyWith(isDialogOpen: false));
                 }
-
               }
               preferences.setIsSaleOn(isSaleOn:  response.data?.isSaleOn ?? false);
               preferences.setIsIncludedVat(isIncludedVat:
@@ -1371,15 +1367,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   bottlePrice:response.data?.bottlePrice ?? 0.0,
                 isIncludedVat: preferences.getIsIncludedVat(),
                 isSaleOn: preferences.getShowSale(),
+                  retryLoading: false,
                 isAppOnMaintenance: preferences.getAppOnMaintenance()
               ));
             } else {
-              emit(state.copyWith(pesachBannerShimmering: false));
+              emit(state.copyWith(pesachBannerShimmering: false,retryLoading:false));
             }
           } on ServerException {
-            emit(state.copyWith(pesachBannerShimmering: false));
+            emit(state.copyWith(pesachBannerShimmering: false,retryLoading:false));
           } catch (exc) {
-            emit(state.copyWith(pesachBannerShimmering: false));
+            emit(state.copyWith(pesachBannerShimmering: false,retryLoading:false));
           }
         }
         else  if(event is _getPermissionList){

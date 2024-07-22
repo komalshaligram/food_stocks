@@ -25,6 +25,7 @@ class ProfileMenuState with _$ProfileMenuState {
     required bool isIncludedVat,
     required bool isSaleOn,
     required double bottlePrice,
+    required bool retryLoading
 
   }) = _ProfileMenuState;
 
@@ -50,6 +51,7 @@ class ProfileMenuState with _$ProfileMenuState {
       isDialogOpen:false,
     bottlePrice: 0,
     isIncludedVat: false,
-    isSaleOn: false
+    isSaleOn: false,
+    retryLoading: false
       );
 }

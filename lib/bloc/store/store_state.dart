@@ -42,7 +42,8 @@ class StoreState with _$StoreState {
     required bool isSaleOn,
     required bool isAppOnMaintenance,
     required String language,
-    required bool isDialogOpen
+    required bool isDialogOpen,
+    required bool retryLoading
   }) = _StoreState;
 
   factory StoreState.initial() => StoreState(
@@ -85,7 +86,8 @@ class StoreState with _$StoreState {
       isSaleOn : false,
       isAppOnMaintenance  : false,
        language:'he',
-      isDialogOpen:false
+      isDialogOpen:false,
+      retryLoading:false
     
     
       );

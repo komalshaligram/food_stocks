@@ -1249,28 +1249,28 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       }
       else if(event is _GeneralSettings){
         try {
-          emit(state.copyWith(pesachBannerShimmering: true));
+          emit(state.copyWith(pesachBannerShimmering: true,retryLoading: event.isRetryLoading));
+
           final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
           SettingResModel response = SettingResModel.fromJson(res);
 
           debugPrint('general settings = ${response.data.toString()}');
           if (response.status == 200) {
-
             if(preferencesHelper.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
+              add(StoreEvent.updateMaintenanceEvent(context: event.context));
               Navigator.pop(event.dialogContext);
-              // emit(state.copyWith(isDialogOpen: true));
               preferencesHelper.setIsAppOnMaintenance(isAppOnMaintenance: false);
+              emit(state.copyWith(isDialogOpen: false,isAppOnMaintenance: false,retryLoading: false));
               debugPrint('pop dialog');
               return;
-
             }else{
               if(!state.isDialogOpen && !(response.data?.isAppOnMaintenance??false)  ){
                 debugPrint('here');
                 emit(state.copyWith(isDialogOpen: true));
               }else{
                 emit(state.copyWith(isDialogOpen: false));
-              }
 
+              }
             }
             preferencesHelper.setIsSaleOn(isSaleOn:  response.data?.isSaleOn ?? false);
             preferencesHelper.setIsIncludedVat(isIncludedVat:
@@ -1286,15 +1286,16 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 bottlePrice:response.data?.bottlePrice ?? 0.0,
                 isIncludedVat: preferencesHelper.getIsIncludedVat(),
                 isSaleOn: preferencesHelper.getShowSale(),
+                retryLoading: false,
                 isAppOnMaintenance: preferencesHelper.getAppOnMaintenance()
             ));
           } else {
-            emit(state.copyWith(pesachBannerShimmering: false));
+            emit(state.copyWith(pesachBannerShimmering: false, retryLoading:false));
           }
         } on ServerException {
-          emit(state.copyWith(pesachBannerShimmering: false));
+          emit(state.copyWith(pesachBannerShimmering: false,retryLoading:false));
         } catch (e) {
-          emit(state.copyWith(pesachBannerShimmering: false));
+          emit(state.copyWith(pesachBannerShimmering: false,retryLoading:false));
           CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),

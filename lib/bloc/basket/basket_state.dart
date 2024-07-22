@@ -37,7 +37,8 @@ class BasketState with _$BasketState {
     required bool isIncludedVat,
     required bool isSaleOn,
     required bool isAppOnMaintenance,
-    required bool isDialogOpen
+    required bool isDialogOpen,
+    required bool retryLoading,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -74,7 +75,8 @@ class BasketState with _$BasketState {
        isIncludedVat: false,
      isSaleOn: false,
        isAppOnMaintenance  : false,
-       isDialogOpen:false
+       isDialogOpen:false,
+     retryLoading: false
      
 );
 }

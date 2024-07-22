@@ -220,6 +220,8 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         }
         else if(event is _GeneralSettings){
           try {
+            emit(state.copyWith(retryLoading: event.isRetryLoading));
+
             final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
 
@@ -227,20 +229,20 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             if (response.status == 200) {
 
               if(preferences.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
+                add(ProfileMenuEvent.updateMaintenanceEvent(context: event.context));
                 Navigator.pop(event.dialogContext);
-                // emit(state.copyWith(isDialogOpen: true));
                 preferences.setIsAppOnMaintenance(isAppOnMaintenance: false);
+                emit(state.copyWith(isDialogOpen: false,isAppOnMaintenance: false,retryLoading: false));
                 debugPrint('pop dialog');
                 return;
-
               }else{
                 if(!state.isDialogOpen && !(response.data?.isAppOnMaintenance??false)  ){
                   debugPrint('here');
                   emit(state.copyWith(isDialogOpen: true));
                 }else{
                   emit(state.copyWith(isDialogOpen: false));
-                }
 
+                }
               }
               preferences.setIsSaleOn(isSaleOn:  response.data?.isSaleOn ?? false);
               preferences.setIsIncludedVat(isIncludedVat:
@@ -253,6 +255,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                   bottlePrice:response.data?.bottlePrice ?? 0.0,
                   isIncludedVat: preferences.getIsIncludedVat(),
                   isSaleOn: preferences.getShowSale(),
+                  retryLoading: false,
                   isAppOnMaintenance: preferences.getAppOnMaintenance()
               ));
             } else {

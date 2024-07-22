@@ -76,6 +76,7 @@ class StoreScreenWidget extends StatelessWidget {
         if (state.isAccountPermissionShimmering) {
           BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
+        debugPrint('state.isDialogOpen${state.isDialogOpen}');
         if(state.isAppOnMaintenance && !state.isDialogOpen){
           appUnderMaintenanceDialog(context: context, state: state);
           BlocProvider.of<StoreBloc>(context)
@@ -90,7 +91,7 @@ class StoreScreenWidget extends StatelessWidget {
               // bloc.add(StoreEvent.userApproveEvent(context: context));
               bloc.add(StoreEvent.getPermissionList(context: context));
               if (!state.isAppOnMaintenance) {
-                bloc.add(StoreEvent.generalSettings(context: context, dialogContext: context));
+                bloc.add(StoreEvent.generalSettings(context: context, dialogContext: context,isRetryLoading: false));
               }
             },
             child: Scaffold(
@@ -121,7 +122,7 @@ class StoreScreenWidget extends StatelessWidget {
                       ),
                       onRefresh: () {
                         if (!state.isAppOnMaintenance) {
-                          bloc.add(StoreEvent.generalSettings(context: context, dialogContext: context));
+                          bloc.add(StoreEvent.generalSettings(context: context, dialogContext: context,isRetryLoading: false));
                         }
                         bloc.add(StoreEvent.getProductCategoriesListEvent(context: context));
                         bloc.add(StoreEvent.getCompaniesListEvent(context: context));
@@ -150,12 +151,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   ? buildListTitles(
                                                       context: context,
                                                       title: AppLocalizations.of(context)!.categories,
-                                                      subTitle: /*state.productCategoryList
-                                              .length <
-                                              6
-                                              ? ''
-                                              : */
-                                                          AppLocalizations.of(context)!.all_categories,
+                                                      subTitle: AppLocalizations.of(context)!.all_categories,
                                                       onTap: () async {
                                                         dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
                                                         if (searchResult != null) {
@@ -200,11 +196,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   ? buildListTitles(
                                                       context: context,
                                                       title: AppLocalizations.of(context)!.companies,
-                                                      subTitle: /*state
-                                              .companiesList.length <
-                                              6
-                                              ? ''
-                                              : */
+                                                      subTitle:
                                                           AppLocalizations.of(context)!.all_companies,
                                                       onTap: () {
                                                         Navigator.pushNamed(context, RouteDefine.companyScreen.name);
@@ -1143,14 +1135,15 @@ class StoreScreenWidget extends StatelessWidget {
             builder: (context, state) {
               StoreBloc bloc = context.read<StoreBloc>();
               return CustomOneButtonDialog(
+                isLoading: state.retryLoading,
                 directionality: state.language,
                 title: '${AppLocalizations.of(context)!.under_maintenance}',
                 positiveTitle: '${AppLocalizations.of(context)!.retry}',
                 positiveOnTap: () async {
-                  bloc.add(StoreEvent.updateMaintenanceEvent(context: context));
                   bloc.add(StoreEvent.generalSettings(
                     context: context,
                     dialogContext: context1,
+                    isRetryLoading: true
                   ));
                 },
               );

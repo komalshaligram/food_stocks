@@ -74,9 +74,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
               bloc.add(ProfileMenuEvent.getPermissionList(context: context));
               bloc.add(ProfileMenuEvent.getPreferenceDataEvent());
               bloc.add(ProfileMenuEvent.getAppLanguage());
-              if(!state.isAppOnMaintenance){
-                bloc.add(ProfileMenuEvent.generalSettings(context: context,dialogContext: context));
-              }
+                bloc.add(ProfileMenuEvent.generalSettings(context: context,dialogContext: context,isRetryLoading: false));
               bloc.add(ProfileMenuEvent.getProfileDetailsEvent(context: context));
             },
             child: Scaffold(
@@ -436,14 +434,15 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                 builder: (context, state) {
                   ProfileMenuBloc bloc = context.read<ProfileMenuBloc>();
                   return CustomOneButtonDialog(
+                    isLoading: state.retryLoading,
                     directionality: state.language,
                     title: '${AppLocalizations.of(context)!.under_maintenance}',
                     positiveTitle: '${AppLocalizations.of(context)!.retry}',
                     positiveOnTap: () async {
-                      bloc.add(ProfileMenuEvent.updateMaintenanceEvent(context: context));
                       bloc.add(ProfileMenuEvent.generalSettings(
                         context: context,
                         dialogContext: context1,
+                        isRetryLoading: true
                       ));
                     },
                   );

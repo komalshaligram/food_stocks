@@ -83,7 +83,7 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.userApproveEvent(
       {required BuildContext context}) = _userApproveEvent;
-  const factory StoreEvent.generalSettings({required BuildContext context,required BuildContext dialogContext})=_GeneralSettings;
+  const factory StoreEvent.generalSettings({required BuildContext context,required BuildContext dialogContext, required bool isRetryLoading})=_GeneralSettings;
 
   const factory StoreEvent.updateMaintenanceEvent(
       {required BuildContext context}) = _updateMaintenanceEvent;
