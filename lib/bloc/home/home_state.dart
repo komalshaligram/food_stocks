@@ -50,6 +50,10 @@ class HomeState with _$HomeState {
     required bool isAccountPermissionShimmering,
     required bool isIncludedVat,
     required bool isSaleOn,
+    required bool isAppOnMaintenance,
+    required String language,
+    required bool isDialogOpen,
+    required bool retryLoading
 
   }) = _HomeState;
 
@@ -105,6 +109,10 @@ class HomeState with _$HomeState {
       isSubUserSeeWallet: false,
       isAccountPermissionShimmering: false,
       isIncludedVat : false,
-      isSaleOn : false
+      isSaleOn : false,
+      isAppOnMaintenance : false,
+      isDialogOpen : false,
+      language : 'he',
+      retryLoading:false
   );
 }

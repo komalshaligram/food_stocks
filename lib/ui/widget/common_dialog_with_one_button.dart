@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -16,9 +17,9 @@ class CustomOneButtonDialog extends StatelessWidget {
   final String? positiveTitle1;
   final String? positiveTitle2;
   final String directionality;
-  final bool isProcessing;
   final double width;
   final String Subtitle;
+  final bool isLoading;
 
   CustomOneButtonDialog({
     super.key,
@@ -30,9 +31,9 @@ class CustomOneButtonDialog extends StatelessWidget {
     this.positiveTitle1,
     this.positiveTitle2,
     required this.directionality,
-    this.isProcessing = false,
     this.width = double.maxFinite,
     this.Subtitle = '',
+    this.isLoading = false,
   });
 
   @override
@@ -67,6 +68,7 @@ class CustomOneButtonDialog extends StatelessWidget {
             bottom: AppConstants.padding_10,
             left: AppConstants.padding_20),
         actions: [
+
            Column(
              children: [
                positiveTitle != null
@@ -81,7 +83,35 @@ class CustomOneButtonDialog extends StatelessWidget {
                    ? commonButton(positiveTitle:positiveTitle2 ?? '' ,width: width,positiveOnTap: positiveOnTap2)
                    : 0.width,
              ],
-           )
+           ),
+
+          positiveTitle != null
+              ? Align(
+            alignment: Alignment.center,
+                child: InkWell(
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            onTap: positiveOnTap,
+                            child: Container(
+                padding:
+                EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                alignment: Alignment.center,
+                width: width,
+                decoration: BoxDecoration(
+                    gradient: AppColors.appMainGradientColor,
+                    borderRadius: BorderRadius.circular(8.0)),
+                child: isLoading?  CupertinoActivityIndicator(
+                              color: AppColors.mainColor,
+                            ):Text(
+                  positiveTitle ?? '',
+                  style: AppStyles.rkRegularTextStyle(
+                      color: AppColors.whiteColor,
+                      size: AppConstants.smallFont),
+                ),
+                            ),
+                          ),
+              )
+              : Container(),
         ],
       ),
     );

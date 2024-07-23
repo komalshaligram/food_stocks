@@ -63,7 +63,14 @@ class BasketScreenWidget extends StatelessWidget {
               .add(
               BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
-     else  if (state.isOrderPending) {
+
+        if(state.isAppOnMaintenance && !state.isDialogOpen){
+          appUnderMaintenanceDialog(context: context, state: state);
+          BlocProvider.of<BasketBloc>(context)
+              .add(BasketEvent.updateMaintenanceEvent(context: context));
+          debugPrint('Maintenance is on going...........');
+        }
+        if (state.isOrderPending) {
           showDialog(
             context: context,
             builder: (context1) {
@@ -127,7 +134,9 @@ class BasketScreenWidget extends StatelessWidget {
                 bloc.add(BasketEvent.getPermissionList(context: context));
                 bloc.add(BasketEvent.getAllCartEvent(context: context));
                 bloc.add(BasketEvent.userApproveEvent(context: context));
-                bloc.add(BasketEvent.generalSettings(context: context));
+                if(!state.isAppOnMaintenance){
+                  bloc.add(BasketEvent.generalSettings(context: context,dialogContext: context,isRetryLoading: false));
+                }
               },
               child: SafeArea(
                 child: Padding(
@@ -1177,7 +1186,7 @@ class BasketScreenWidget extends StatelessWidget {
                               ),
                               state.relatedProductList.isEmpty ? 0.height :
                               relatedProductWidget(
-                                  context1, state.relatedProductList, context,
+                                  context1, state, context,
                                   isSaleOn),
                             ],
                           ),
@@ -1195,97 +1204,101 @@ class BasketScreenWidget extends StatelessWidget {
   }
 
   Widget relatedProductWidget(BuildContext prevContext,
-      List<RelatedProductDatum> relatedProductList, BuildContext context,
+      BasketState state, BuildContext context,
       bool isSaleOn) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Align(
-          alignment:
-          context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: Text(
-              AppLocalizations.of(context)!.related_products,
-              style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.mediumFont,
-                  color: AppColors.blackColor),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
+    return AbsorbPointer(
+      absorbing: state.isLoading,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Align(
+            alignment:
+            context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+              child: Text(
+                AppLocalizations.of(context)!.related_products,
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.mediumFont,
+                    color: AppColors.blackColor),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
-        ),
-        Container(
-          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants
-              .withoutSaleItemHeight,
-          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemBuilder: (context2, i) {
-              return CommonProductSaleItemWidget(
-                isSale: relatedProductList
-                    .elementAt(i)
-                    .sale
-                    ?.isSale,
-                isGuestUser: false,
-                height: AppConstants.salesProductItemHeight,
-                width: 140,
-                productName: relatedProductList
-                    .elementAt(i)
-                    .productName ?? '',
-                saleImage: relatedProductList
-                    .elementAt(i)
-                    .mainImage ?? '',
-                title: relatedProductList
-                    .elementAt(i)
-                    .name,
-                description: parse(relatedProductList
-                    .elementAt(i)
-                    .sale
-                    ?.saleDescription)
-                    .body
-                    ?.text ??
-                    '',
-                discountedPrice: double.parse(
-                    relatedProductList
-                        .elementAt(i)
-                        .sale
-                        ?.salePrice ?? '0'),
-                originalPrice:
-                relatedProductList
-                    .elementAt(i)
-                    .productPrice,
-                productStock:
-                relatedProductList
-                    .elementAt(i)
-                    .productStock
-                    .toString(),
-                lowStock: relatedProductList
-                    .elementAt(i)
-                    .lowStock ?? '',
-                isPesach: relatedProductList
-                    .elementAt(i)
-                    .isPesach,
-                onButtonTap: () {
-                  Navigator.pop(prevContext);
-                  showProductDetails(
-                      isSaleOn: isSaleOn,
-                      context: context,
-                      cartProductId: relatedProductList[i].id ?? '',
-                      isBarcode: false,
-                      productStock: relatedProductList[i].productStock
-                          .toString(),
-                      productListIndex: 1
-                  );
-                },);
-            }, itemCount: relatedProductList.length,),
-        )
-      ],
+          Container(
+            height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants
+                .withoutSaleItemHeight,
+            padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemBuilder: (context2, i) {
+                return CommonProductSaleItemWidget(
+                  isSale: state.relatedProductList
+                      .elementAt(i)
+                      .sale
+                      ?.isSale,
+                  isGuestUser: false,
+                  height: AppConstants.salesProductItemHeight,
+                  width: 140,
+                  productName: state.relatedProductList
+                      .elementAt(i)
+                      .productName ?? '',
+                  saleImage: state.relatedProductList
+                      .elementAt(i)
+                      .mainImage ?? '',
+                  title: state.relatedProductList
+                      .elementAt(i)
+                      .name,
+                  description: parse(state.relatedProductList
+                      .elementAt(i)
+                      .sale
+                      ?.saleDescription)
+                      .body
+                      ?.text ??
+                      '',
+                  discountedPrice: double.parse(
+                      state.relatedProductList
+                          .elementAt(i)
+                          .sale
+                          ?.salePrice ?? '0'),
+                  originalPrice:
+                  state.relatedProductList
+                      .elementAt(i)
+                      .productPrice,
+                  productStock:
+                  state.relatedProductList
+                      .elementAt(i)
+                      .productStock
+                      .toString(),
+                  lowStock: state.relatedProductList
+                      .elementAt(i)
+                      .lowStock ?? '',
+                  isPesach: state.relatedProductList
+                      .elementAt(i)
+                      .isPesach,
+                  onButtonTap: () {
+                    Navigator.pop(prevContext);
+                    showProductDetails(
+                        isSaleOn: isSaleOn,
+                        context: context,
+                        cartProductId: state.relatedProductList[i].id ?? '',
+                        isBarcode: false,
+                        productStock: state.relatedProductList[i].productStock
+                            .toString(),
+                        productListIndex: 1
+                    );
+                  },);
+              }, itemCount: state.relatedProductList.length,),
+          )
+        ],
+      ),
     );
   }
+
 
   void bankTransferDialog({required BuildContext context,
     required String language
@@ -1297,8 +1310,45 @@ class BasketScreenWidget extends StatelessWidget {
           title: 'title',
           directionality: language,
           positiveTitle: AppLocalizations.of(context)!.pay_with_bank_transfer,
-          positiveOnTap:()=>Navigator.pop(context1),
+          positiveOnTap: () => Navigator.pop(context1),
         );
       },);
+  }
+
+  appUnderMaintenanceDialog({
+    required BuildContext context,
+    required BasketState state
+  }) {
+    if (!state.isDialogOpen){
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context1) =>
+            BlocProvider.value(
+              value: context.read<BasketBloc>(),
+              child: BlocBuilder<BasketBloc, BasketState>(
+                builder: (context, state) {
+                  BasketBloc bloc = context.read<BasketBloc>();
+                  return CustomOneButtonDialog(
+                    isLoading: state.retryLoading,
+                    directionality: state.language,
+                    title: '${AppLocalizations.of(context)!.under_maintenance}',
+                    positiveTitle: '${AppLocalizations.of(context)!.retry}',
+                    positiveOnTap: () async {
+                      bloc.add(BasketEvent.generalSettings(
+                        context: context,
+                        dialogContext: context1,
+                        isRetryLoading: true
+                      ));
+                    },
+                  );
+                },
+              ),
+            ),
+      );
+    }
+    else{
+      context.read<BasketBloc>().add(BasketEvent.updateMaintenanceEvent(context: context));
+    }
   }
 }

@@ -163,7 +163,7 @@
 "please_enter_valid_business_name" : "אנא הזן את שם העסק תקין",
 "please_enter_alphabets_only" : "אנא הזן אותיות בלבד",
 "please_enter_valid_business_id" : "אנא הזן מספר ח.פ. תקין",
-"please_enter_business_id" : "אנא הזן מספר ח.פ.ן",
+"please_enter_business_id" : "אנא הזן מספר ח.פ.",
 "please_enter_owner_name" : "אנא הזן שם בעל העסק",
 "please_enter_israel_id" : "אנא הזן מספר ת.ז.",
 "please_enter_valid_israel_id" : "אנא הזן מספר ת.ז. תקין",
@@ -514,10 +514,9 @@
   "pay_with_bank_transfer":"Pay with bank transfer",
   "pay_with_credit_card":"Pay with credit card",
   "pay_with_wallet":"Pay with wallet",
-  "israel_id_exist" :"מזהה ישראלי כבר קיים"
+  "israel_id_exist" :"מזהה ישראלי כבר קיים",
 
-
-
-
+  "under_maintenance": "האפליקציה כרגע בתחזוקה, אנא נסה שוב מאוחר יותר",
+  "retry": "נסה שוב"
 
 }

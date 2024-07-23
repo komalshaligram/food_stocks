@@ -20,7 +20,12 @@ class ProfileMenuState with _$ProfileMenuState {
     required bool isSubUserSeeOrder,
     required bool isAccountPermissionShimmering,
     required bool isCanSeeInvoices,
-
+    required bool isAppOnMaintenance,
+    required bool isDialogOpen,
+    required bool isIncludedVat,
+    required bool isSaleOn,
+    required double bottlePrice,
+    required bool retryLoading
 
   }) = _ProfileMenuState;
 
@@ -42,6 +47,11 @@ class ProfileMenuState with _$ProfileMenuState {
     isSubUserSeeOrder: false,
       isAccountPermissionShimmering: false,
     isCanSeeInvoices: false,
-    
+      isAppOnMaintenance  : false,
+      isDialogOpen:false,
+    bottlePrice: 0,
+    isIncludedVat: false,
+    isSaleOn: false,
+    retryLoading: false
       );
 }

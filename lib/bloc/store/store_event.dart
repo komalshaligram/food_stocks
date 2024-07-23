@@ -77,14 +77,15 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
   const factory StoreEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
-  const factory StoreEvent.generalSettings({required BuildContext context})=_GeneralSettings;
 
   const factory StoreEvent.getPermissionList(
       {required BuildContext context}) = _getPermissionList;
 
   const factory StoreEvent.userApproveEvent(
       {required BuildContext context}) = _userApproveEvent;
+  const factory StoreEvent.generalSettings({required BuildContext context,required BuildContext dialogContext, required bool isRetryLoading})=_GeneralSettings;
 
-
+  const factory StoreEvent.updateMaintenanceEvent(
+      {required BuildContext context}) = _updateMaintenanceEvent;
 
 }

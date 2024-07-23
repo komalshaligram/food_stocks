@@ -36,7 +36,12 @@ class BasketState with _$BasketState {
     required bool isAccountPermissionShimmering,
     required bool isIncludedVat,
     required bool isSaleOn,
+
     required bool isPaymentFail,
+
+    required bool isAppOnMaintenance,
+    required bool isDialogOpen,
+    required bool retryLoading,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -72,7 +77,11 @@ class BasketState with _$BasketState {
      isAccountPermissionShimmering: false,
        isIncludedVat: false,
      isSaleOn: false,
-     isPaymentFail: false
+       isAppOnMaintenance  : false,
+       isDialogOpen:false,
+     retryLoading: false,
+       isPaymentFail: false
+     
 );
 }
 

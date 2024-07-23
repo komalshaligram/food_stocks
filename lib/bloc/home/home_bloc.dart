@@ -52,6 +52,8 @@ import '../../ui/utils/themes/app_urls.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 
+import '../../ui/widget/common_alert_dialog.dart';
+
 part 'home_event.dart';
 part 'home_state.dart';
 part 'home_bloc.freezed.dart';
@@ -1326,35 +1328,55 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         else if(event is _RemoveRelatedProductEvent){
           emit(state.copyWith(relatedProductList: []));
         }
+        else if(event is _updateMaintenanceEvent){
+          emit(state.copyWith(isDialogOpen: true));
+        }
         else if(event is _GeneralSettings){
           try {
-            emit(state.copyWith(pesachBannerShimmering: true));
+            emit(state.copyWith(pesachBannerShimmering: true,retryLoading:event.isRetryLoading));
+
             final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
 
             debugPrint('general settings = ${response.data.toString()}');
             if (response.status == 200) {
+              if(preferences.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
+                add(HomeEvent.updateMaintenanceEvent(context: event.context));
+                Navigator.pop(event.dialogContext);
+                preferences.setIsAppOnMaintenance(isAppOnMaintenance: false);
+                emit(state.copyWith(isDialogOpen: false,isAppOnMaintenance: false,retryLoading: false));
+                debugPrint('pop dialog');
+                return;
+              }else{
+                if(!state.isDialogOpen && !(response.data?.isAppOnMaintenance??false)  ){
+                  debugPrint('here');
+                  emit(state.copyWith(isDialogOpen: true));
+                }
+              }
               preferences.setIsSaleOn(isSaleOn:  response.data?.isSaleOn ?? false);
               preferences.setIsIncludedVat(isIncludedVat:
-            (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false
-              );
+              (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false);
               preferences.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
+              preferences.setIsAppOnMaintenance(isAppOnMaintenance: response.data?.isAppOnMaintenance??false);
+
               emit(state.copyWith(
+                 language: preferences.getAppLanguage(),
                   pesachBannerShimmering:false,
                   pesachBannerURL:response.data?.pesachBanner ?? '',
                   showPesachBanner: response.data?.isShowPesachBanner ?? false,
                   bottlePrice:response.data?.bottlePrice ?? 0.0,
                 isIncludedVat: preferences.getIsIncludedVat(),
-                isSaleOn: preferences.getShowSale()
-
+                isSaleOn: preferences.getShowSale(),
+                  retryLoading: false,
+                isAppOnMaintenance: preferences.getAppOnMaintenance()
               ));
             } else {
-              emit(state.copyWith(pesachBannerShimmering: false));
+              emit(state.copyWith(pesachBannerShimmering: false,retryLoading:false));
             }
           } on ServerException {
-            emit(state.copyWith(pesachBannerShimmering: false));
+            emit(state.copyWith(pesachBannerShimmering: false,retryLoading:false));
           } catch (exc) {
-            emit(state.copyWith(pesachBannerShimmering: false));
+            emit(state.copyWith(pesachBannerShimmering: false,retryLoading:false));
           }
         }
         else  if(event is _getPermissionList){

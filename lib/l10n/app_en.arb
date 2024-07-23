@@ -513,5 +513,10 @@
   "pay_with_bank_transfer":"Pay with bank transfer",
   "pay_with_credit_card":"Pay with credit card",
   "pay_with_wallet":"Pay with wallet",
-  "israel_id_exist" :"Israel ID already exist."
+  "israel_id_exist" :"Israel ID already exist.",
+  "under_maintenance": "Tavili is under maintenance now, please try again later.",
+  "retry": "Retry"
+
+
+
 }
