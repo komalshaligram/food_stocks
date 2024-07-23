@@ -513,9 +513,8 @@
   "change_to_wallet_payment":"Change to wallet payment",
   "pay_with_bank_transfer":"Pay with bank transfer",
   "pay_with_credit_card":"Pay with credit card",
-  "pay_with_wallet":"Pay with wallet"
-
-
+  "pay_with_wallet":"Pay with wallet",
+  "israel_id_exist" :"מזהה ישראלי כבר קיים"
 
 
 

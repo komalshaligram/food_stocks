@@ -430,6 +430,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.not_add_more_than_max_qty;
       case 'rivchitclienterror':
         return AppLocalizations.of(context)!.rivchitclienterror;
+      case 'israelidalreadyexist':
+        return AppLocalizations.of(context)!.israel_id_exist;
     }
     return key;
   }
