@@ -174,6 +174,24 @@ Future<void> _launchUrl(String storeUrl) async {
       }*/
 }
 
+bool isValidIsraeliID(String id) {
+  id = id.trim();
+  if (id.length > 9 || id.length < 5 || int.tryParse(id) == null) return false;
+
+  // Pad string with zeros up to 9 digits
+  id = id.length < 9 ? id.padLeft(9, '0') : id;
+
+  int sum = 0;
+  for (int i = 0; i < id.length; i++) {
+    int digit = int.parse(id[i]);
+    int step = digit * ((i % 2) + 1);
+    sum += (step > 9) ? step - 9 : step;
+  }
+
+  return sum % 10 == 0;
+}
+
+
 Future<CroppedFile?> cropImage(
     {required String path,
     CropStyle shape = CropStyle.rectangle,

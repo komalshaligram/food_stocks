@@ -24,6 +24,7 @@ class Data with _$Data {
      bool? isShowPesachBadge,
      double? bottlePrice,
     bool? isSaleOn,
+    bool? isAppOnMaintenance,
     List<String>? showVatApplication,
   }) = _Data;
 

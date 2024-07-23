@@ -861,9 +861,8 @@ class SupplierProductsBloc
         }
       }
       else if (event is _SetCartCountEvent) {
-        SharedPreferencesHelper preferences = SharedPreferencesHelper(
-            prefs: await SharedPreferences.getInstance());
-        await preferences.setCartCount(count: preferences.getCartCount() + 1);
+
+        preferences.setCartCount(count: preferences.getCartCount() + 1);
         emit(state.copyWith(isSubUserAddToBasket: preferences.getCanAddToBasket()));
         
         debugPrint('cart count supplier= ${preferences.getCartCount()}');

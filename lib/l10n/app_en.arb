@@ -509,7 +509,9 @@
     "enter_credit_card_validity" :"Please enter credit card validity",
     "manage_credit_card" :"Manage credit card",
     "israel_id_or_business_id_number_error":"There is an error on Israel ID number or Business ID number",
-    "rivchitclienterror":"rivchitclienterror"
+    "rivchitclienterror":"rivchitclienterror",
+  "under_maintenance": "Tavili is under maintenance now, please try again later.",
+  "retry": "Retry"
 
 
 

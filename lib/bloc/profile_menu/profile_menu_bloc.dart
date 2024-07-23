@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart';
 import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
+import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
 import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/services/locale_provider.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -213,6 +214,59 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
           }
 
 
+        }
+        else if(event is _updateMaintenanceEvent){
+          emit(state.copyWith(isDialogOpen: true));
+        }
+        else if(event is _GeneralSettings){
+          try {
+            emit(state.copyWith(retryLoading: event.isRetryLoading));
+
+            final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
+            SettingResModel response = SettingResModel.fromJson(res);
+
+            debugPrint('general settings = ${response.data.toString()}');
+            if (response.status == 200) {
+
+              if(preferences.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
+                add(ProfileMenuEvent.updateMaintenanceEvent(context: event.context));
+                Navigator.pop(event.dialogContext);
+                preferences.setIsAppOnMaintenance(isAppOnMaintenance: false);
+                emit(state.copyWith(isDialogOpen: false,isAppOnMaintenance: false,retryLoading: false));
+                debugPrint('pop dialog');
+                return;
+              }else{
+                if(!state.isDialogOpen && !(response.data?.isAppOnMaintenance??false)  ){
+                  debugPrint('here');
+                  emit(state.copyWith(isDialogOpen: true));
+                }else{
+                  emit(state.copyWith(isDialogOpen: false));
+
+                }
+              }
+              preferences.setIsSaleOn(isSaleOn:  response.data?.isSaleOn ?? false);
+              preferences.setIsIncludedVat(isIncludedVat:
+              (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false);
+              preferences.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
+              preferences.setIsAppOnMaintenance(isAppOnMaintenance: response.data?.isAppOnMaintenance??false);
+
+              emit(state.copyWith(
+                  language: preferences.getAppLanguage(),
+                  bottlePrice:response.data?.bottlePrice ?? 0.0,
+                  isIncludedVat: preferences.getIsIncludedVat(),
+                  isSaleOn: preferences.getShowSale(),
+                  retryLoading: false,
+                  isAppOnMaintenance: preferences.getAppOnMaintenance()
+              ));
+            } else {
+            }
+          } on ServerException {
+          } catch (e) {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: e.toString(),
+                type: SnackBarType.FAILURE);
+          }
         }
 
         else if(event is _userApproveEvent){

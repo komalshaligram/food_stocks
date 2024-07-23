@@ -40,6 +40,10 @@ class StoreState with _$StoreState {
     required bool pesachBannerShimmering,
     required bool isIncludedVat,
     required bool isSaleOn,
+    required bool isAppOnMaintenance,
+    required String language,
+    required bool isDialogOpen,
+    required bool retryLoading
   }) = _StoreState;
 
   factory StoreState.initial() => StoreState(
@@ -79,7 +83,11 @@ class StoreState with _$StoreState {
       isAccountPermissionShimmering : false,
     pesachBannerShimmering: false,
       isIncludedVat : false,
-      isSaleOn : false
+      isSaleOn : false,
+      isAppOnMaintenance  : false,
+       language:'he',
+      isDialogOpen:false,
+      retryLoading:false
     
     
       );

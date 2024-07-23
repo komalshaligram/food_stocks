@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:food_stock/bloc/profile_menu/profile_menu_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -77,6 +78,7 @@ class ProfileScreenWidget extends StatelessWidget {
                   '${AppLocalizations.of(context)!.file_size_must_be_less_then}',
               type: SnackBarType.FAILURE);
         }
+
       },
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
@@ -514,22 +516,24 @@ class ProfileScreenWidget extends StatelessWidget {
 
                                   CommonDropDownButton(
                                     items: state
-                                        .businessTypeList.data?.clientTypes
-                                        ?.map((businessType) {
+                                        .businessTypeList
+                                        .map((businessType) {
                                       return DropdownMenuItem<String>(
                                         value: businessType.businessType,
                                         child: Text(
-                                            "${businessType.businessType}"),
+                                            businessType.businessType??''),
                                       );
                                     }).toList(),
                                     onChanged: (newBusinessType) {
                                       bloc.add(ProfileEvent
                                           .changeBusinessTypeEvent(
                                           newBusinessType:
-                                          newBusinessType!));
+                                          newBusinessType??''));
                                     },
                                     value: state.selectedBusinessType,
                                   ),
+
+
                                   7.height,
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!
@@ -542,7 +546,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                     hint: "",
                                     fillColor: Colors.transparent,
                                     textInputAction: TextInputAction.next,
-                                    validator: '',
+                                    validator: AppStrings.businessNameValString,
                                   ),
                                   7.height,
                                   CustomContainerWidget(
@@ -628,22 +632,38 @@ class ProfileScreenWidget extends StatelessWidget {
                                     onPressed: state.isLoading
                                         ? null
                                         : () {
-                                            if (state.selectedBusinessType
-                                                    .isEmpty ||
-                                                state.selectedBusinessType !=
-                                                    '') {
-                                              if (_formKey.currentState
-                                                      ?.validate() ??
-                                                  false) {
-                                                if (state.isUpdate) {
-                                                  bloc.add(ProfileEvent
-                                                      .updateProfileDetailsEvent(
-                                                          context: context1));
-                                                } else {
-                                                  bloc.add(ProfileEvent
-                                                      .navigateToMoreDetailsScreenEvent(
-                                                          context: context1));
+
+                                            if (state.selectedBusinessType!= AppLocalizations.of(context)?.type_of_business) {
+                                              if(isValidIsraeliID(state.businessIdController.text.toString().trim())) {
+                                                   if(isValidIsraeliID(state.israelIdController.text.toString().trim())) {
+                                                if (_formKey.currentState
+                                                    ?.validate() ??
+                                                    false) {
+                                                  if (state.isUpdate) {
+                                                    bloc.add(ProfileEvent
+                                                        .updateProfileDetailsEvent(
+                                                        context: context1));
+                                                  } else {
+                                                    bloc.add(ProfileEvent
+                                                        .navigateToMoreDetailsScreenEvent(
+                                                        context: context1));
+                                                  }
                                                 }
+                                                }else{
+                                                     CustomSnackBar.showSnackBar(
+                                                         context: context,
+                                                         title: AppLocalizations.of(
+                                                             context)!
+                                                             .please_enter_valid_israel_id,
+                                                         type: SnackBarType.FAILURE);
+                                                   }
+                                              }else{
+                                                CustomSnackBar.showSnackBar(
+                                                    context: context,
+                                                    title: AppLocalizations.of(
+                                                        context)!
+                                                        .please_enter_valid_business_id,
+                                                    type: SnackBarType.FAILURE);
                                               }
                                             } else {
                                               CustomSnackBar.showSnackBar(
