@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/basket/basket_bloc.dart';
 import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
-import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -28,7 +27,6 @@ import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_product_sale_item_widget.dart';
 import '../widget/custom_dialog.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
-
 
 class BasketRoute {
   static Widget get route => const BasketScreen();
@@ -198,7 +196,6 @@ class BasketScreenWidget extends StatelessWidget {
                           ),
                         )
                             : SizedBox(),
-
                         state.isShimmering
                             ? BasketScreenShimmerWidget()
                             : (state.basketProductList.length) != 0

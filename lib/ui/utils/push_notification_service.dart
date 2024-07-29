@@ -55,20 +55,20 @@ class PushNotificationService {
         debugPrint('main_page_____$mainPage');
         debugPrint('sub_page_____$subPage');
         debugPrint('id_____$id');
-        String? imageUrl;
+
         SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         if(preferences.getSubUser()){
           mainPage = data['notification']['message']['subUserMainPage'] ?? '';
           subPage = data['notification']['message']['subUserSubPage'] ?? '';
           id = data['notification']['message']['subUserId'] ?? '';
-          imageUrl = data['notification']['message']['imageUrl'] ?? '';
+
         }
         else{
           mainPage = data['notification']['message']['mainPage'] ?? '';
           subPage = data['notification']['message']['subPage'] ?? '';
           id = data['notification']['message']['id'] ?? '';
-          imageUrl = data['notification']['message']['imageUrl'] ?? '';
+
         }
        showNotification(title: data['message']['title'],body: data['message']['body'],data: data,imageUrl: data['image'] ?? '',notiId: 0);
 
@@ -183,8 +183,7 @@ class PushNotificationService {
         handleMessage(mainPage, subPage, id);
       },
     );
-// onMessage is called when the app is in foreground and a notific
-// ation is received
+// onMessage is called when the app is in foreground and a notification is received
     // app is open
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
       var data = json.decode(message!.data['data'].toString());
@@ -192,7 +191,6 @@ class PushNotificationService {
       debugPrint('_____onMessage_______${data.toString()}');
       //debugPrint('_____onMessage_______${data['data']['image'].toString()}');
       //debugPrint('_____onMessage Noti_______${message.notification!.apple!.imageUrl!}');
-     var messageData =  json.decode(message.data['data'].toString() ?? '');
       if(Platform.isAndroid){
       showNotification(imageUrl:data['data']['image'], notiId: 0, title: message.notification!.title??'', body: message.notification!.body??'',
       data: data

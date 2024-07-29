@@ -1,6 +1,3 @@
-
-
-import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,8 +31,8 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../bottom_nav/bottom_nav_bloc.dart';
+
 part 'basket_event.dart';
 part 'basket_state.dart';
 part 'basket_bloc.freezed.dart';

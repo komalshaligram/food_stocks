@@ -1,14 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../../data/model/res_model/agent_model/agent_model.dart';
 import '../../data/model/res_model/business_name_model/business_name_model.dart';
-import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_strings.dart';
@@ -23,13 +19,8 @@ part 'form_data_bloc.freezed.dart';
 class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
   FormDataBloc() : super(FormDataState.initial()) {
     on<FormDataEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       TermsConditionReqModel termsConditionReqModel = TermsConditionReqModel();
-      /*if(event is _selectAgentEvent){
-        emit(state.copyWith(agent: event.agent));
-      }
-    else*/ if(event is _selectBusinessTypeEvent){
+       if(event is _selectBusinessTypeEvent){
         state.businessTypeList.forEach((element) {
           if(element.businessTypeName == event.business){
             emit(state.copyWith(business: event.business ,haveMultiple: element.haveMultiple ?? false));
@@ -64,6 +55,7 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
         //debugPrint('agent___${state.agentList.firstWhere((element)=>element.agentName == state.agent).agentName}');
         debugPrint('business___${state.businessTypeList.firstWhere((element)=>element.businessTypeName == state.business).businessTypeName}');
         termsConditionReqModel = TermsConditionReqModel(
+          //need to remove below line
             agentId: '662a54b435fa94ed7760cb4e',
             businessTypeId: state.businessTypeList.firstWhere((element)=>element.businessTypeName == state.business).id,
             owner1FullName: state.owner1NameController.text.trim(),

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:ui' as ui;
 import 'dart:io';
@@ -24,6 +23,9 @@ import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_styles.dart';
 import 'package:http_parser/http_parser.dart';
 import '../../ui/utils/themes/app_urls.dart';
+import 'package:bloc/src/bloc.dart';
+
+
 part 'privacy_policy_state.dart';
 part 'privacy_policy_event.dart';
 part 'privacy_policy_bloc.freezed.dart';
@@ -49,9 +51,6 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
         termsConditionReqModel = event.termsConditionReqModel;
          emit(state.copyWith(isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false,pdfPath: base64Decode(event.pdfData),
        isGuarantee1Available: termsConditionReqModel.guarantee1FullName!=''?true:false  ));
-
-
-
       }
       else if(event is _navigationEvent){
           debugPrint('owner1Signature___${owner1Signature}');
@@ -204,7 +203,6 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
       BuildContext context , String fieldName) async {
     ui.Image tempImage =
     await _signaturePadKey.currentState!.toImage();
-
 
     var data = await tempImage.toByteData(
         format: ui.ImageByteFormat.png);

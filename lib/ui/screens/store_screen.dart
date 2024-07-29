@@ -28,7 +28,6 @@ import '../../bloc/store/store_bloc.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_strings.dart';
 import '../widget/common_dialog_with_one_button.dart';
-import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';

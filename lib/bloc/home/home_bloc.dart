@@ -52,7 +52,6 @@ import '../../ui/utils/themes/app_urls.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 
-import '../../ui/widget/common_alert_dialog.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';

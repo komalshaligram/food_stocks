@@ -608,7 +608,7 @@ class _ProductDetailsScreenWidgetState
                                     borderRadius: BorderRadius.circular(
                                         AppConstants.radius_3),
                                   ),
-                                  side: MaterialStateBorderSide.resolveWith(
+                                  side: WidgetStateBorderSide.resolveWith(
                                     (states) => BorderSide(
                                         width: 1.0, color: AppColors.greyColor),
                                   ),
@@ -1274,7 +1274,7 @@ class _ProductDetailsScreenWidgetState
                       children: [
                         Radio(
                           value: value,
-                          fillColor: MaterialStateColor.resolveWith(
+                          fillColor: WidgetStateColor.resolveWith(
                             (states) => AppColors.greyColor,
                           ),
                           groupValue: /* (groupValue != 0)

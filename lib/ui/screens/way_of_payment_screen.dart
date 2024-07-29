@@ -41,7 +41,6 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<WayOfPaymentBloc, WayOfPaymentState>(
       builder: (context, state) {
-        WayOfPaymentBloc bloc = context.read<WayOfPaymentBloc>();
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: AppBar(
@@ -143,7 +142,7 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                   scale: 1.3,
                   child: Radio(
                     value: radioValue,
-                    fillColor: MaterialStateColor.resolveWith(
+                    fillColor: WidgetStateColor.resolveWith(
                           (states) => AppColors.greyColor,
                     ),
                     groupValue: state.selectRadioTile,

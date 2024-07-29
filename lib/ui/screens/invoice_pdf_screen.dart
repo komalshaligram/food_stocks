@@ -48,7 +48,6 @@ class InvoicePdfScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    InvoicePdfBloc bloc = context.read<InvoicePdfBloc>();
     return BlocBuilder<InvoicePdfBloc, InvoicePdfState>(
       builder: (context, state) {
         return Scaffold(

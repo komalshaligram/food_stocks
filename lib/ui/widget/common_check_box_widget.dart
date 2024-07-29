@@ -18,7 +18,7 @@ class CommonCheckBox extends StatelessWidget {
               AppConstants
                   .radius_3),
         ),
-        side: MaterialStateBorderSide
+        side: WidgetStateBorderSide
             .resolveWith(
               (states) =>
               BorderSide(
@@ -28,9 +28,9 @@ class CommonCheckBox extends StatelessWidget {
         ),
         activeColor: AppColors
             .mainColor,
-        fillColor: MaterialStateColor.resolveWith(
+        fillColor: WidgetStateColor.resolveWith(
         (states) {
-    if (states.contains(MaterialState.selected)) {
+    if (states.contains(WidgetState.selected)) {
     return AppColors.mainColor;
     }
     return AppColors.whiteColor;
