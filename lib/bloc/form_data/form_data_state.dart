@@ -5,7 +5,7 @@ class FormDataState with _$FormDataState{
 
   const factory FormDataState({
   required List<Agent> agentList,
-    required String agent,
+
     required List<BusinessType> businessTypeList,
     required String business,
     required TextEditingController owner1NameController,
@@ -20,6 +20,7 @@ class FormDataState with _$FormDataState{
     required TextEditingController guarantee2addressController,
     required TextEditingController guarantee1PhoneController,
     required TextEditingController guarantee2PhoneController,
+    required TextEditingController agentCodeController,
     required bool isShimmering,
     required bool isAgentListShimmering,
     required bool haveMultiple,
@@ -29,7 +30,6 @@ class FormDataState with _$FormDataState{
 
   factory FormDataState.initial()=>  FormDataState(
     agentList: [],
-    agent: '',
     business: '',
     businessTypeList: [],
     guarantee1addressController: TextEditingController(),
@@ -48,7 +48,8 @@ class FormDataState with _$FormDataState{
     haveMultiple: false,
     isAgentListShimmering: false,
     isUpdate: false,
-    language: AppStrings.hebrewString
+    language: AppStrings.hebrewString,
+    agentCodeController: TextEditingController()
   );
 
 }

@@ -40,7 +40,7 @@ class ProfileState with _$ProfileState {
       isFileUploading: false,
       UserImageUrl: '',
       isUploadingProcess: false,
-    language: 'he',
+    language: AppStrings.hebrewString,
     userId : ''
   );
 }

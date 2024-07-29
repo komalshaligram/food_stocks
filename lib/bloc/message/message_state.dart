@@ -24,7 +24,7 @@ class MessageState with _$MessageState {
         isMessageRead: false,
         deletedMessageList: [],
         refreshController: RefreshController(),
-    language: 'he',
+    language: AppStrings.hebrewString,
     isRemoveProcess: false,
   );
 }

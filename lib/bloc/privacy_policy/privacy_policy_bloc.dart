@@ -47,8 +47,10 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     on<PrivacyPolicyEvent>((event, emit)   async {
        if(event is _getPdfDataEvent){
         termsConditionReqModel = event.termsConditionReqModel;
-         emit(state.copyWith(isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false));
-        emit(state.copyWith(pdfPath: base64Decode(event.pdfData)));
+         emit(state.copyWith(isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false,pdfPath: base64Decode(event.pdfData),
+       isGuarantee1Available: termsConditionReqModel.guarantee1FullName!=''?true:false  ));
+
+
 
       }
       else if(event is _navigationEvent){
@@ -126,8 +128,6 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
                 title: e.toString(),
                 type: SnackBarType.FAILURE);
           }
-
-
       }
 
       else if(event is _signatureEvent) {

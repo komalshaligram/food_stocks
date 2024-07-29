@@ -106,7 +106,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 3),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: state.isGuarantee1Available?MainAxisAlignment.spaceBetween:MainAxisAlignment.center,
                       children: [
                         CustomButtonWidget(
                           fontSize:AppConstants.font_13,
@@ -125,7 +125,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                           },
                           fontColors: AppColors.whiteColor,
                         ),
-                        CustomButtonWidget(
+                        state.isGuarantee1Available?CustomButtonWidget(
                     fontSize:AppConstants.font_13,
                           buttonText: AppLocalizations.of(context)!
                               .guarantee1_sign
@@ -140,7 +140,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                             ));
                           },
                           fontColors: AppColors.whiteColor,
-                        ),
+                        ):SizedBox(),
                       ],
                     ),
                   ),

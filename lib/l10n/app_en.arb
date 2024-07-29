@@ -410,7 +410,7 @@
   "not_include_surfaces_price":"This price does not include surfaces price",
   "open":"open",
   "data_for_form":"Data for forms",
-  "select_agent":"Select agent",
+  "my_agent_code":"My Agent Code",
   "owner1_full_name":"Owner 1 full name",
   "owner_1_israel_id":"Owner 1 Israel ID number",
   "owner2_full_name":"Owner 2 full name",
@@ -511,8 +511,14 @@
     "israel_id_or_business_id_number_error":"There is an error on Israel ID number or Business ID number",
     "rivchitclienterror":"rivchitclienterror",
   "under_maintenance": "Tavili is under maintenance now, please try again later.",
-  "retry": "Retry"
-
-
-
+  "retry": "Retry",
+  "invalid_agent_code": "The Agent code is not correct",
+  "agent_block": "You are blocked, please try again in 30 minutes",
+  "warning_agent_code": "you have only 2 times to add a correct Agent code",
+  "please_enter_valid_israel_id_owner1": "Please enter valid israel ID for Owner1",
+  "please_enter_valid_israel_id_owner2": "Please enter valid israel ID for Owner2",
+  "please_enter_valid_israel_id_guarantee1": "Please enter valid israel ID for Guarantee1",
+  "please_enter_valid_israel_id_guarantee2": "Please enter valid israel ID for Guarantee2",
+  "please_enter_valid_guarantee_name1": "Please enter valid Guarantee1 Name",
+  "please_enter_valid_guarantee_name2": "Please enter valid Guarantee2 Name"
 }

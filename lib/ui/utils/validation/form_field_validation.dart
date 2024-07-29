@@ -37,6 +37,11 @@ class FormFieldValidation {
     }
   }
 
+  String? agentCodeField(String agentCode,BuildContext context){
+    if (agentCode.length != 6) {
+      return "${AppLocalizations.of(context)!.invalid_agent_code}";
+    }
+  }
 
   String? businessNameField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*₹+-/=?^_`{|}~]).*$");
@@ -63,7 +68,7 @@ class FormFieldValidation {
 
   String? ownerNameField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
-    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
+    RegExp regex1 = RegExp(r"^([a-zA-Z]+\s+[a-zA-Z]).*$");
     if (value.isEmpty) {
       return '${AppLocalizations.of(context)!.please_enter_owner_name}';
     } else if (regex.hasMatch(value)) {
@@ -110,23 +115,22 @@ class FormFieldValidation {
     return null;
   }
 
-  String? faxField(String value,BuildContext context) {
-    // RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
-    if (value.trim().isEmpty) {
-      return null;
-    } /*else if (value.length < 15 *//*!regex.hasMatch(value)*//*) {
-      return "${AppLocalizations.of(context)!.please_enter_valid_fax_number}";
-    }*/
-   /* else if(value.length > 15){
-      return "${AppLocalizations.of(context)!.please_enter_valid_fax_number}";
-    }*/
-    return null;
-  }
 
-
-  String? guaranteeNameField(String value,BuildContext context) {
+  String?  guaranteeNameField(String value,BuildContext context) {
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
     if (value.isEmpty) {
       return '${AppLocalizations.of(context)!.please_enter_guarantee1_name}';
+    }else if (!regex1.hasMatch(value)) {
+      return '${AppLocalizations.of(context)!.please_enter_valid_guarantee_name}';
+    }
+    return null;
+  }
+  String?  guaranteeName2Field(String value,BuildContext context) {
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.please_enter_guarantee1_name}';
+    }else if (!regex1.hasMatch(value)) {
+      return '${AppLocalizations.of(context)!.please_enter_valid_guarantee_name}';
     }
     return null;
   }

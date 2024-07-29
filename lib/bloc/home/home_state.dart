@@ -112,7 +112,7 @@ class HomeState with _$HomeState {
       isSaleOn : false,
       isAppOnMaintenance : false,
       isDialogOpen : false,
-      language : 'he',
+      language :AppStrings.hebrewString,
       retryLoading:false
   );
 }

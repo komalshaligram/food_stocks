@@ -537,7 +537,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             state.OperationTimeList[6].monday,
           );
 
-
           if (!state.isUpdate) {
             emit(state.copyWith(isLoading: true));
             if (sundayList.first.from != AppStrings.timeString ||
@@ -596,6 +595,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 emit(state.copyWith(isLoading: false));
               }
             } else {
+              emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
@@ -604,7 +604,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             }
           } else {
             emit(state.copyWith(isLoading: true));
-
 
             ProfileDetailsUpdateReqModel reqMap = ProfileDetailsUpdateReqModel(
                 clientDetail: ClientDetail(operationTime: [
@@ -617,7 +616,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               OperationTime(Saturday: saturdayAndHolidaysList),
             ]));
 
-
             Map<String, dynamic> req = reqMap.toJson();
             Map<String, dynamic>? clientDetail = reqMap.clientDetail?.toJson();
             debugPrint("update before Model = ${req}");
@@ -627,8 +625,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               }
               return value == null;
             });
-
-
 
             req[AppStrings.clientDetailString] = clientDetail;
             req.removeWhere((key, value) {

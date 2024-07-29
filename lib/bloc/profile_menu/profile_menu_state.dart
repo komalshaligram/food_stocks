@@ -36,7 +36,7 @@ class ProfileMenuState with _$ProfileMenuState {
         isHebrewLanguage: false,
     isLogOut: false,
     isLogOutProcess: false,
-    language: 'he',
+    language: AppStrings.hebrewString,
       applicationVersion: "1.0.0",
       buildNumber: '1',
     isSubUserSeeFormsFiles: false,

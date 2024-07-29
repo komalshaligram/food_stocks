@@ -26,39 +26,15 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       TermsConditionReqModel termsConditionReqModel = TermsConditionReqModel();
-      if(event is _selectAgentEvent){
+      /*if(event is _selectAgentEvent){
         emit(state.copyWith(agent: event.agent));
       }
-    else if(event is _selectBusinessTypeEvent){
+    else*/ if(event is _selectBusinessTypeEvent){
         state.businessTypeList.forEach((element) {
           if(element.businessTypeName == event.business){
             emit(state.copyWith(business: event.business ,haveMultiple: element.haveMultiple ?? false));
           }
         });
-      }
-   else if(event is _getAgentEvent){
-        try {
-          emit(state.copyWith(isAgentListShimmering: true,language: preferencesHelper.getAppLanguage()));
-          final res = await DioClient(event.context).get(path: AppUrls.getAgentUrl);
-          AgentModel response = AgentModel.fromJson(res);
-          debugPrint('Business type response = ${response.data.toString()}');
-          debugPrint('Business url = ${AppUrls.baseUrl}${AppUrls.getAgentUrl}');
-          List<Agent> agentList = [];
-          agentList.add(Agent(agentName: AppLocalizations.of(event.context)!.select_agent));
-          agentList.addAll(response.data?.agent ?? []);
-          if (response.status == 200) {
-            emit(state.copyWith(isAgentListShimmering:false,
-              agentList: agentList,
-              agent: agentList.first.agentName.toString()
-            ));
-          } else {
-            emit(state.copyWith(isAgentListShimmering: false));
-          }
-        } on ServerException {
-          emit(state.copyWith(isAgentListShimmering: false));
-        } catch (exc) {
-          emit(state.copyWith(isAgentListShimmering: false));
-        }
       }
       else if(event is _getBusinessTypeEvent){
         try {
@@ -85,10 +61,10 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
       }
 
       else if(event is _navigateToNextScreenEvent){
-        debugPrint('agent___${state.agentList.firstWhere((element)=>element.agentName == state.agent).agentName}');
+        //debugPrint('agent___${state.agentList.firstWhere((element)=>element.agentName == state.agent).agentName}');
         debugPrint('business___${state.businessTypeList.firstWhere((element)=>element.businessTypeName == state.business).businessTypeName}');
         termsConditionReqModel = TermsConditionReqModel(
-            agentId: state.agentList.firstWhere((element)=>element.agentName == state.agent).id,
+            agentId: '662a54b435fa94ed7760cb4e',
             businessTypeId: state.businessTypeList.firstWhere((element)=>element.businessTypeName == state.business).id,
             owner1FullName: state.owner1NameController.text.trim(),
             owner1IsraelId: state.owner1israelIdController.text.trim(),

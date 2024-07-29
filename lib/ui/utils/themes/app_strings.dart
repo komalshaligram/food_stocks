@@ -93,6 +93,7 @@ class AppStrings {
   static const guarantee1SignatureString = 'guarantee1Signature';
   static const guarantee2SignatureString = 'guarantee2Signature';
   static const guaranteeNameString = 'guaranteeNameString';
+  static const guaranteeName2String = 'guaranteeName2String';
   static const clientIdString = 'clientId';
 
 
@@ -102,6 +103,7 @@ class AppStrings {
   static const businessNameValString = 'businessNameVal';
   static const hpValString = 'hpVal';
   static const ownerNameValString = 'ownerNameVal';
+  static const ownerName2ValString = 'ownerName2Val';
   static const idValString = 'idVal';
   static const contactNameValString = 'contactNameVal';
   static const addressValString = 'addressVal';
@@ -120,7 +122,7 @@ class AppStrings {
   static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
   static const creditCardNumberString = 'creditCardNumber';
   static const creditCardValidityString = 'creditCardValidity';
-
+  static const agentCodeString = 'agentCodeVal';
   //page parameters strings
   static const mobileParamString = 'mobileParam';
   static const profileParamString = 'profileParam';

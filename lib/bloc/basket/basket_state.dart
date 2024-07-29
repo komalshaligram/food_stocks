@@ -49,7 +49,7 @@ class BasketState with _$BasketState {
      totalPayment: 0,
      isLoading: false,
        productImageIndex: 0,
-     language: 'he',
+     language: AppStrings.hebrewString,
      cartCount: 0,
      isRemoveProcess: false,
      vatPercentage: 0,

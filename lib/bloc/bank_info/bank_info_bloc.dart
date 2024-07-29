@@ -125,6 +125,12 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
                   AppStrings.termsConditionParamString :termsConditionReqModel
                 }
             );
+          }else{
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: response.message.toString(),
+                type: SnackBarType.FAILURE);
+            emit(state.copyWith(isApiShimmering: false,));
           }
         } on ServerException {
           emit(state.copyWith(isApiShimmering: false,));

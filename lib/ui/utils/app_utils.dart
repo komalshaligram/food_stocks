@@ -257,15 +257,14 @@ Future<String> scanBarcodeOrQRCode(
 
 bool isRTLContent({required BuildContext context}) {
   Locale locale = Localizations.localeOf(context);
-  List<Locale> rtlLocales = [Locale('he')];
+  List<Locale> rtlLocales = [Locale(AppStrings.hebrewString)];
   return rtlLocales.contains(locale) ? true : false;
 }
 
 extension RTLExtension on BuildContext {
   bool get rtl =>
-      [Locale('he')].contains(Localizations.localeOf(this)) ? true : false;
+      [Locale(AppStrings.hebrewString)].contains(Localizations.localeOf(this)) ? true : false;
 }
-
 
 
 String splitNumber(String price) {
