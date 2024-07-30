@@ -517,6 +517,7 @@
   "israel_id_exist" :"מזהה ישראלי כבר קיים",
 
   "under_maintenance": "האפליקציה כרגע בתחזוקה, אנא נסה שוב מאוחר יותר",
-  "retry": "נסה שוב"
+  "retry": "נסה שוב",
+  "user_pending_orders": "User Has Pending Orders."
 
 }

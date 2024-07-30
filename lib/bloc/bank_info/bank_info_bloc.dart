@@ -125,6 +125,8 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
                   AppStrings.termsConditionParamString :termsConditionReqModel
                 }
             );
+          }else{
+            emit(state.copyWith(isApiShimmering: false,));
           }
         } on ServerException {
           emit(state.copyWith(isApiShimmering: false,));
@@ -137,6 +139,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           emit(state.copyWith(isApiShimmering: false,));
         }
       }
+
       if(event is _getArgumentEvent){
         emit(state.copyWith(isPaymentFail: event.isPaymentFail));
       }

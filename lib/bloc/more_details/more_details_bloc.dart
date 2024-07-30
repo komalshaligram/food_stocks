@@ -275,7 +275,16 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               print('logo___${profileResModel.data?.client?.clientData?.logo ?? ''}');
               String? businessName = await Smartlook.instance.user.properties.getString("User business name");
               String? phoneNumber = await Smartlook.instance.user.properties.getString("User phone number");
-
+              preferencesHelper.setUserId(
+                  id: profileResModel.data?.client?.clientData?.id ?? '');
+              preferencesHelper.setEmailId(
+                  userEmailId: profileResModel.data?.client?.clientData?.email ?? '');
+              preferencesHelper.setCartId(
+                  cartId: profileResModel.data?.client?.cartId ?? '');
+              preferencesHelper.setAuthToken(
+                  accToken: profileResModel.data?.authToken?.accessToken ?? '');
+              preferencesHelper.setRefreshToken(
+                  refToken: profileResModel.data?.authToken?.refreshToken ?? '');
               if(Platform.isAndroid){
                 print('businessname___${profileResModel.data?.client?.clientData?.clientDetail?.bussinessName ?? ''}');
                 print('phonenumber___${profileResModel.data?.client?.clientData?.phoneNumber ?? ''}');
@@ -304,12 +313,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               Smartlook.instance.user.setName(profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');
 
 
-              preferencesHelper.setCartId(
-                  cartId: profileResModel.data?.client?.cartId ?? '');
-              preferencesHelper.setAuthToken(
-                  accToken: profileResModel.data?.authToken?.accessToken ?? '');
-              preferencesHelper.setRefreshToken(
-                  refToken: profileResModel.data?.authToken?.refreshToken ?? '');
+
 
               if(!preferencesHelper.getSubUser()){
                 preferencesHelper.setUserName(
@@ -326,10 +330,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 }
               }
 
-              preferencesHelper.setUserId(
-                  id: profileResModel.data?.client?.clientData?.id ?? '');
-              preferencesHelper.setEmailId(
-                  userEmailId: profileResModel.data?.client?.clientData?.email ?? '');
+
               emit(state.copyWith(isLoading: false));
               Navigator.pushNamed(
                 event.context,

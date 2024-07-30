@@ -538,7 +538,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                     else{
                                                       Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                     }
-
                                                   });
 
                                             },

@@ -515,7 +515,8 @@
   "pay_with_wallet":"Pay with wallet",
   "israel_id_exist" :"Israel ID already exist.",
   "under_maintenance": "Tavili is under maintenance now, please try again later.",
-  "retry": "Retry"
+  "retry": "Retry",
+  "user_pending_orders": "User Has Pending Orders."
 
 
 

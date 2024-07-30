@@ -28,9 +28,10 @@ class AppStrings {
 
   //language Strings
   static const englishString = 'en';
-  static const hebrewString = 'he';
+  static const hebrewString = 'en';
   static const englishLocal = 'en-US';
-  static const hebrewLocal = 'he-IL';
+  static const hebrewLocal = 'en-US';
+ // static const hebrewLocal = 'he-IL';
 
   //api req param strings
   static const profileImageString = 'profileImg';
@@ -432,6 +433,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.rivchitclienterror;
       case 'israelidalreadyexist':
         return AppLocalizations.of(context)!.israel_id_exist;
+      case 'userpendingorders' :
+        return AppLocalizations.of(context)!.user_pending_orders;
     }
     return key;
   }

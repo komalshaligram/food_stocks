@@ -83,6 +83,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferencesHelper.setRefreshToken(
                   refToken: response.data?.authToken?.refreshToken ?? '');
               preferencesHelper.setUserId(id: (response.data?.adminType == AppStrings.subuserString) ? response.data?.user?.createdBy ?? '' :  response.data?.user?.id ?? '');
+              debugPrint('user id:${preferencesHelper.getUserId()}');
               if(response.data?.adminType == AppStrings.subuserString){
                 preferencesHelper.setUserName(
                     name: response.data?.user?.contactName ?? '');

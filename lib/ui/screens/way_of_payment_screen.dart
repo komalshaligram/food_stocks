@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/way_of_payment/way_of_payment_bloc.dart';
@@ -25,9 +26,12 @@ class WayOfPaymentScreen extends StatelessWidget {
     ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint(
         "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}}");
+    debugPrint(
+        "isUpdate : ${args?.containsKey(AppStrings.termsConditionParamString)}}");
     return BlocProvider(
       create: (context) => WayOfPaymentBloc()..add(WayOfPaymentEvent.getArgumentEvent(
-        isUpdate: args?[AppStrings.isUpdateParamString] ?? false
+      termsReqModel: args?[AppStrings.termsConditionParamString]??TermsConditionReqModel(),
+        isUpdate: args?[AppStrings.isUpdateParamString] ?? false,
            )),
       child: WayOfPaymentScreenWidget(),
     );
@@ -97,18 +101,22 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                 AppLocalizations.of(context)!.next.toUpperCase(),
                 bGColor: AppColors.mainColor,
                 onPressed: () {
+                  debugPrint('state.selectRadioTile:${state.selectRadioTile}');
                   if(state.isUpdate){
                     Navigator.pop(context);
                   }
                   else{
-                    if(state.selectRadioTile == 1){
+                    if(state.selectRadioTile == 0){
                       Navigator.pushNamed(context,
                         RouteDefine.bankInfoScreen.name,
                       );
                     }
-                    else if(state.selectRadioTile == 2){
+                    else if(state.selectRadioTile == 1){
                       Navigator.pushNamed(context,
                         RouteDefine.creditCardDetailsScreen.name,
+                          arguments: {
+                            AppStrings.termsConditionParamString :state.termsReqModel
+                          }
                       );
                     }
                   }
@@ -138,8 +146,24 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                      .withOpacity(0.10),
                  blurRadius: 5)],
             ),
-            child: Row(
+            child:
+            RadioListTile(value: radioValue,
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                activeColor: AppColors.mainColor,
+                selected: true,
+                title: Text(paymentMethod,style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_14,
+                  color: AppColors.blackColor,
+                ),),
+                groupValue: state.selectRadioTile, onChanged: (val){
+              debugPrint('value___$val');
+              bloc.add(WayOfPaymentEvent.radioButtonEvent(
+                  selectRadioTile: val!));
+            }),
+       /*     Row(
               children: [
+
                 Transform.scale(
                   scale: 1.3,
                   child: Radio(
@@ -163,7 +187,7 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
+            ),*/
           );
         },
       ),

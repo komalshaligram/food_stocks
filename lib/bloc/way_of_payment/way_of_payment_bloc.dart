@@ -2,6 +2,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
+
 part 'way_of_payment_state.dart';
 part 'way_of_payment_event.dart';
 part 'way_of_payment_bloc.freezed.dart';
@@ -14,7 +16,7 @@ class WayOfPaymentBloc extends Bloc<WayOfPaymentEvent, WayOfPaymentState> {
         emit(state.copyWith(selectRadioTile: event.selectRadioTile));
       }
       else if(event is _getArgumentEvent){
-        emit(state.copyWith(isUpdate: event.isUpdate));
+        emit(state.copyWith(isUpdate: event.isUpdate,termsReqModel: event.termsReqModel));
       }
 
     });

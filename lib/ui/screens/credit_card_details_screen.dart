@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/container_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/credit_card_details/credit_card_details_bloc.dart';
+import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
@@ -17,7 +17,6 @@ class CreditCardDetailsRoute {
   static Widget get route => CreditCardDetailsScreen();
 }
 
-
 class CreditCardDetailsScreen extends StatelessWidget {
   const CreditCardDetailsScreen({super.key});
 
@@ -28,7 +27,9 @@ class CreditCardDetailsScreen extends StatelessWidget {
     debugPrint(
         "isPaymentFail : ${args?.containsKey(AppStrings.isPaymentFail)}}");
     return BlocProvider(
-      create: (context) => CreditCardDetailsBloc()..add(CreditCardDetailsEvent.getArgumentEvent(isPaymentFail: args?[AppStrings.isPaymentFail] ?? false)),
+      create: (context) => CreditCardDetailsBloc()..add(CreditCardDetailsEvent.getArgumentEvent(
+          termsReqModel: args?[AppStrings.termsConditionParamString]??TermsConditionReqModel(),
+          isPaymentFail: args?[AppStrings.isPaymentFail] ?? false)),
       child: CreditCardDetailsScreenWidget(),
     );
   }
@@ -37,6 +38,7 @@ class CreditCardDetailsScreen extends StatelessWidget {
 class CreditCardDetailsScreenWidget extends StatelessWidget {
    CreditCardDetailsScreenWidget({super.key});
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CreditCardDetailsBloc, CreditCardDetailsState>(
@@ -119,7 +121,8 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
                      Navigator.pop(context);
                     }
                     else{
-                      Navigator.pushNamed(context,RouteDefine.privacyPolicyScreen.name);
+                      context.read<CreditCardDetailsBloc>().add(
+                          CreditCardDetailsEvent.addCreditCardEvent(context: context));
                     }
                   }
                 },

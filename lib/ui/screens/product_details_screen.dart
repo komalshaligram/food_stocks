@@ -722,7 +722,7 @@ class _ProductDetailsScreenWidgetState
                             ],
                           ),
                           Text(
-                            '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice) != 0 ? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0, vat: state.orderData.vatPercentage ?? 0).toStringAsFixed(2)) : (vatCalculation(price: state.orderBySupplierProduct.products![index].totalPayment ?? 0, vat: state.orderData.vatPercentage ?? 0).toStringAsFixed(2)), local: AppStrings.hebrewLocal)}',
+                            '${formatNumber(value:state.orderBySupplierProduct.products![index].discountedPrice!=0?state.orderBySupplierProduct.products![index].discountedPrice.toString():state.orderBySupplierProduct.products![index].totalPayment.toString(), local: AppStrings.hebrewLocal)}',
                             maxLines: 2,
                             overflow: TextOverflow.clip,
                             style: AppStyles.rkRegularTextStyle(

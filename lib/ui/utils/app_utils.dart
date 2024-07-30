@@ -260,7 +260,7 @@ bool isRTLContent({required BuildContext context}) {
 
 extension RTLExtension on BuildContext {
   bool get rtl =>
-      [Locale('he')].contains(Localizations.localeOf(this)) ? true : false;
+      [Locale(AppStrings.hebrewString)].contains(Localizations.localeOf(this)) ? true : false;
 }
 
 
