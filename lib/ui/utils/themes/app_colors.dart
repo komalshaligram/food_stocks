@@ -47,5 +47,4 @@ class AppColors {
       begin: Alignment.centerLeft,
       end: Alignment.centerRight,
       colors: [AppColors.redColor,AppColors.redColor]);
-
 }

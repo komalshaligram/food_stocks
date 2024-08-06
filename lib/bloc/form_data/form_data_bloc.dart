@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,26 +19,22 @@ part 'form_data_event.dart';
 part 'form_data_state.dart';
 part 'form_data_bloc.freezed.dart';
 
-
 class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
   FormDataBloc() : super(FormDataState.initial()) {
     on<FormDataEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       TermsConditionReqModel termsConditionReqModel = TermsConditionReqModel();
-      if(event is _selectAgentEvent){
+      if (event is _selectAgentEvent) {
         emit(state.copyWith(agent: event.agent));
-      }
-    else if(event is _selectBusinessTypeEvent){
+      } else if (event is _selectBusinessTypeEvent) {
         state.businessTypeList.forEach((element) {
-          if(element.businessTypeName == event.business){
-            emit(state.copyWith(business: event.business ,haveMultiple: element.haveMultiple ?? false));
+          if (element.businessTypeName == event.business) {
+            emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false));
           }
         });
-      }
-   else if(event is _getAgentEvent){
+      } else if (event is _getAgentEvent) {
         try {
-          emit(state.copyWith(isAgentListShimmering: true,language: preferencesHelper.getAppLanguage()));
+          emit(state.copyWith(isAgentListShimmering: true, language: preferencesHelper.getAppLanguage()));
           final res = await DioClient(event.context).get(path: AppUrls.getAgentUrl);
           AgentModel response = AgentModel.fromJson(res);
           debugPrint('Business type response = ${response.data.toString()}');
@@ -46,11 +42,8 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           List<Agent> agentList = [];
           agentList.add(Agent(agentName: AppLocalizations.of(event.context)!.select_agent));
           agentList.addAll(response.data?.agent ?? []);
-          if (response.status == 200) {
-            emit(state.copyWith(isAgentListShimmering:false,
-              agentList: agentList,
-              agent: agentList.first.agentName.toString()
-            ));
+          if (response.status == AppConstants.code_200) {
+            emit(state.copyWith(isAgentListShimmering: false, agentList: agentList, agent: agentList.first.agentName.toString()));
           } else {
             emit(state.copyWith(isAgentListShimmering: false));
           }
@@ -59,8 +52,7 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
         } catch (exc) {
           emit(state.copyWith(isAgentListShimmering: false));
         }
-      }
-      else if(event is _getBusinessTypeEvent){
+      } else if (event is _getBusinessTypeEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).get(path: AppUrls.getBusinessTypeUrl);
@@ -70,10 +62,8 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           List<BusinessType> businessTypeList = [];
           businessTypeList.add(BusinessType(businessTypeName: AppLocalizations.of(event.context)!.type_of_business));
           businessTypeList.addAll(response.data?.businessType ?? []);
-          if (response.status == 200) {
-            emit(state.copyWith(isShimmering:false,businessTypeList: businessTypeList,business: businessTypeList.first.businessTypeName.toString(),
-              haveMultiple: response.data?.businessType?.first.haveMultiple ?? false
-            ));
+          if (response.status == AppConstants.code_200) {
+            emit(state.copyWith(isShimmering: false, businessTypeList: businessTypeList, business: businessTypeList.first.businessTypeName.toString(), haveMultiple: response.data?.businessType?.first.haveMultiple ?? false));
           } else {
             emit(state.copyWith(isShimmering: false));
           }
@@ -82,32 +72,27 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
-      }
-
-      else if(event is _navigateToNextScreenEvent){
-        debugPrint('agent___${state.agentList.firstWhere((element)=>element.agentName == state.agent).agentName}');
-        debugPrint('business___${state.businessTypeList.firstWhere((element)=>element.businessTypeName == state.business).businessTypeName}');
+      } else if (event is _navigateToNextScreenEvent) {
+        debugPrint('agent___${state.agentList.firstWhere((element) => element.agentName == state.agent).agentName}');
+        debugPrint('business___${state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).businessTypeName}');
         termsConditionReqModel = TermsConditionReqModel(
-            agentId: state.agentList.firstWhere((element)=>element.agentName == state.agent).id,
-            businessTypeId: state.businessTypeList.firstWhere((element)=>element.businessTypeName == state.business).id,
-            owner1FullName: state.owner1NameController.text.trim(),
-            owner1IsraelId: state.owner1israelIdController.text.trim(),
-            owner2FullName: state.owner2NameController.text.trim(),
-          owner2IsraelId:state.owner2israelIdController.text.trim(),
+          id: preferencesHelper.getUserId(),
+          agentId: state.agentList.firstWhere((element) => element.agentName == state.agent).id,
+          businessTypeId: state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id,
+          owner1FullName: state.owner1NameController.text.trim(),
+          owner1IsraelId: state.owner1israelIdController.text.trim(),
+          owner2FullName: state.owner2NameController.text.trim(),
+          owner2IsraelId: state.owner2israelIdController.text.trim(),
           guarantee1FullName: state.guarantee1NameController.text.trim(),
           guarantee1IsraelId: state.guarantee1idController.text.trim(),
           guarantee1Address: state.guarantee1addressController.text.trim(),
           guarantee1PhoneNumber: state.guarantee1PhoneController.text.trim(),
           guarantee2FullName: state.guarantee2NameController.text.trim(),
-          guarantee2IsraelId: state.guarantee2idController.text.trim() ,
-          guarantee2Address:state.guarantee2addressController.text.trim() ,
+          guarantee2IsraelId: state.guarantee2idController.text.trim(),
+          guarantee2Address: state.guarantee2addressController.text.trim(),
           guarantee2PhoneNumber: state.guarantee2PhoneController.text.trim(),
         );
-        Navigator.pushNamed(event.context, RouteDefine.wayOfPaymentScreen.name,
-        arguments: {
-          AppStrings.termsConditionParamString :termsConditionReqModel
-        }
-        );
+        Navigator.pushNamed(event.context, RouteDefine.wayOfPaymentScreen.name, arguments: {AppStrings.termsConditionParamString: termsConditionReqModel});
       }
     });
   }

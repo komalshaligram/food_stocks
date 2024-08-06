@@ -36,8 +36,7 @@ class FileUploadScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint(
-        "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}");
+
     return BlocProvider(
       create: (context) => FileUploadBloc()
 

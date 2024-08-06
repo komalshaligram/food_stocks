@@ -81,13 +81,11 @@ class CompanyProductsBloc
               sortField: AppStrings.sortFieldString,
               sortOrder: AppStrings.sortOrderString
           );
-          debugPrint('company products req = ${request.toJson()}');
           final res = await DioClient(event.context)
               .post(AppUrls.getCompanyProductsUrl, data: request.toJson());
           CompanyProductsResModel response =
               CompanyProductsResModel.fromJson(res);
-          debugPrint('supplier Products res = ${response.data}');
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
 
             List<CompanyData> productList =
                 state.productList.toList(growable: true);
@@ -152,7 +150,6 @@ class CompanyProductsBloc
       }
       else if (event is _GetProductDetailsEvent) {
         add(CompanyProductsEvent.RemoveRelatedProductEvent());
-        debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
@@ -166,8 +163,7 @@ class CompanyProductsBloc
           ProductDetailsResModel response =
           ProductDetailsResModel.fromJson(res);
 
-           debugPrint('GetProductDetails_____${response}');
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
 
             //new chanegs
             //0 for barcode and search
@@ -177,18 +173,10 @@ class CompanyProductsBloc
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             int productListIndex  = event.productListIndex;
-
-             debugPrint('productStockList___${productStockList[1]}');
-             debugPrint('productStockList___${productStockList[2].length}');
-             debugPrint('productStockList___${productStockList[0]}');
-
-             debugPrint('productListIndex___${event.productListIndex}');
             int productStockUpdateIndex = 0;
-
 
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
-               debugPrint('responseproductid____${response.product?.first.id}');
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                 quantity: _productQuantity,
@@ -202,10 +190,7 @@ class CompanyProductsBloc
                   .indexWhere((productStock) =>
               productStock.productId == event.productId);
             }
-
             emit(state.copyWith(productListIndex:productListIndex,productStockUpdateIndex:productStockUpdateIndex));
-             debugPrint('planoGramUpdateIndex___${state.productListIndex}');
-             debugPrint('productStockUpdateIndex___${state.productStockUpdateIndex}');
             try {
 
               final res = await DioClient(event.context).post(
@@ -215,7 +200,7 @@ class CompanyProductsBloc
                     'Bearer ${preferences.getAuthToken()}'
                   }));
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-              if (response.status == 200) {
+              if (response.status == AppConstants.code_200) {
                 debugPrint('cart before = ${response.data}');
                 response.data?.data?.forEach((cartProduct) {
                   if (cartProduct.id == event.productId ||
@@ -237,7 +222,6 @@ class CompanyProductsBloc
             }
             if  (event.isBarcode ) {
 
-              debugPrint('responseproductid____${response.product?.first.id}');
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                 quantity: _productQuantity,
@@ -247,9 +231,7 @@ class CompanyProductsBloc
               );
 
               emit(state.copyWith(productStockList: productStockList));
-
             }
-
 
             List<ProductSupplierModel> supplierList = [];
 
@@ -316,8 +298,6 @@ class CompanyProductsBloc
                 .toList() ??
                 []);
             supplierList.removeWhere((supplier) => supplier.stock == 0);
-
-            debugPrint('supplier list = ${supplierList}');
             String note = productStockList.isEmpty
                 ? ''
                 : productStockList.indexOf(state.productStockList.last) ==
@@ -342,8 +322,6 @@ class CompanyProductsBloc
                   return;
                 }
               });
-              debugPrint('isSupplierSelected = $isSupplierSelected');
-              debugPrint('isSupplierSelected = ${state.productListIndex}');
               if (!isSupplierSelected || state.productListIndex == 0) {
                 int supplierIndex = 0;
                 int supplierSaleIndex = -1;
@@ -358,7 +336,6 @@ class CompanyProductsBloc
                                 supplier.supplierSales.indexOf(sale);
                           }
                         }));
-                debugPrint('cheapest = $cheapestPrice');
                 supplierList.forEach((supplier) {
                   if (supplier.basePrice < cheapestPrice) {
                     cheapestPrice = supplier.basePrice;
@@ -368,16 +345,12 @@ class CompanyProductsBloc
                 if (supplierSaleIndex == -1) {
                   supplierSaleIndex = -2;
                 }
-                debugPrint('cheapest = $cheapestPrice');
-                debugPrint('supplier index = $supplierIndex');
-                debugPrint('supplier sale index = $supplierSaleIndex');
                 add(CompanyProductsEvent.supplierSelectionEvent(
                     supplierIndex: supplierIndex,
                     context: event.context,
                     supplierSaleIndex: supplierSaleIndex));
               }
             }
-
             }
             else{
               emit(state.copyWith(isProductLoading: false,
@@ -396,10 +369,8 @@ class CompanyProductsBloc
           }
         } on ServerException {
           Navigator.pop(event.context);
-         //  emit(state.copyWith(isProductLoading: false));
         } catch (e) {
           debugPrint('bs error = $e');
-          // Navigator.pop(event.context);
         }
       }
 

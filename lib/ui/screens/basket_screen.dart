@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/basket/basket_bloc.dart';
 import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
-import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -17,6 +16,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/basket_screen_shimmer_widget.dart';
+import 'package:food_stock/ui/widget/common_product_button_widget.dart';
 import 'package:food_stock/ui/widget/common_product_details_widget.dart';
 import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
@@ -93,28 +93,34 @@ class BasketScreenWidget extends StatelessWidget {
             context: context,
             builder: (context1) {
               return CustomOneButtonDialog(
-                title: 'title',
+                width: MediaQuery.of(context).size.width,
+                title: AppLocalizations.of(context)!.payment_dialog_option_title,
                 directionality: state.language,
                 positiveTitle: AppLocalizations.of(context)!.change_credit_card,
                 positiveOnTap:(){
+                  Navigator.pop(context);
                   Navigator.pop(context1);
-                  Navigator.pushNamed(context, RouteDefine.creditCardDetailsScreen.name,
+                  Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name,
                       arguments: {
-                        AppStrings.isPaymentFail: true
+                        AppStrings.isPaymentFail: state.isPaymentFail
                       }
                   );
                 },
                 positiveOnTap1: (){
+                  Navigator.pop(context);
                   Navigator.pop(context1);
-                  Navigator.pushNamed(context, RouteDefine.bankInfoScreen.name,
+                  Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name,
                       arguments: {
-                        AppStrings.isPaymentFail: true
+                        AppStrings.isPaymentFail: state.isPaymentFail
                       }
                   );
                 },
                 positiveOnTap2: (){
+                  Navigator.pop(context);
                   Navigator.pop(context1);
-                   bankTransferDialog(context: context,language: state.language);
+                  bankTransferDialog(context: context1,language: state.language,text: state.bankTransferInfo??'',function:(){
+                    bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
+                  });
                 },
                 positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
                 positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
@@ -123,7 +129,6 @@ class BasketScreenWidget extends StatelessWidget {
             context.read<BasketBloc>().add(BasketEvent.refreshEvent());
           });
         }
-
       },
       child: BlocBuilder<BasketBloc, BasketState>(
         builder: (context, state) {
@@ -235,7 +240,6 @@ class BasketScreenWidget extends StatelessWidget {
                           ),
                         )
                             : SizedBox(),
-
                         state.isShimmering
                             ? BasketScreenShimmerWidget()
                             : (state.basketProductList.length) != 0
@@ -286,8 +290,7 @@ class BasketScreenWidget extends StatelessWidget {
                               )),
                         ) : BasketScreenShimmerWidget(),
                         (state.basketProductList.length) ==
-                            0
-                            ? SizedBox()
+                            0 ? SizedBox()
                             : totalAmountCard(state, context)
                       ],
                     ),
@@ -300,7 +303,6 @@ class BasketScreenWidget extends StatelessWidget {
       ),
     );
   }
-
 
   Widget totalAmountCard(BasketState state, BuildContext context) {
     BasketBloc bloc = context.read<BasketBloc>();
@@ -407,7 +409,7 @@ class BasketScreenWidget extends StatelessWidget {
                       !state.isLoading &&
                       !state.isShimmering) {
                     if (state.supplierCount == 1) {
-                      bloc.add(BasketEvent.orderSendEvent(context: context));
+                      bloc.add(BasketEvent.orderSendEvent(context: context,failPayment: true));
                     } else {
                       Navigator.pushNamed(
                           context, RouteDefine.orderSummaryScreen.name,
@@ -897,7 +899,7 @@ class BasketScreenWidget extends StatelessWidget {
                               !state.isShimmering) {
                             if (state.supplierCount == 1) {
                               bloc.add(
-                                  BasketEvent.orderSendEvent(context: context));
+                                  BasketEvent.orderSendEvent(context: context,failPayment: true));
                             } else {
                               Navigator.pushNamed(
                                   context, RouteDefine.orderSummaryScreen.name,
@@ -996,23 +998,11 @@ class BasketScreenWidget extends StatelessWidget {
           child: DraggableScrollableSheet(
             expand: true,
             maxChildSize: 1 -
-                (MediaQuery
-                    .of(context)
-                    .viewPadding
-                    .top /
-                    getScreenHeight(context)),
+                (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
             minChildSize: 1 -
-                (MediaQuery
-                    .of(context)
-                    .viewPadding
-                    .top /
-                    getScreenHeight(context)),
+                (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
             initialChildSize: 1 -
-                (MediaQuery
-                    .of(context)
-                    .viewPadding
-                    .top /
-                    getScreenHeight(context)),
+                (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(
@@ -1068,10 +1058,7 @@ class BasketScreenWidget extends StatelessWidget {
                                         children: [
                                           SizedBox(
                                             height: getScreenHeight(context) -
-                                                MediaQuery
-                                                    .of(context)
-                                                    .padding
-                                                    .top,
+                                                MediaQuery.of(context).padding.top,
                                             width: getScreenWidth(context),
                                             child: GestureDetector(
                                               onVerticalDragStart: (dragDetails) {
@@ -1301,16 +1288,51 @@ class BasketScreenWidget extends StatelessWidget {
 
 
   void bankTransferDialog({required BuildContext context,
-    required String language
+    required String language, required String text,required Function function
   }) {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context1) {
-        return CustomOneButtonDialog(
-          title: 'title',
-          directionality: language,
-          positiveTitle: AppLocalizations.of(context)!.pay_with_bank_transfer,
-          positiveOnTap: () => Navigator.pop(context1),
+        return  Directionality(
+          textDirection: language == AppStrings.englishString ? TextDirection.ltr : TextDirection.rtl,
+          child: AlertDialog(
+            contentPadding: EdgeInsets.all(20.0),
+            surfaceTintColor: AppColors.whiteColor,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            title:  Text(text,style: AppStyles.rkRegularTextStyle(size: 16),),
+            actionsPadding: EdgeInsets.only(
+                right: AppConstants.padding_20,
+                bottom: AppConstants.padding_10,
+                left: AppConstants.padding_20),
+            actions: [
+              Align(
+                alignment: Alignment.center,
+                child: InkWell(
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  onTap:(){
+                    Navigator.pop(context1);
+                    function();
+                  },
+                  child: Container(
+                    padding:
+                    EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        gradient: AppColors.appMainGradientColor,
+                        borderRadius: BorderRadius.circular(8.0)),
+                    child: Text(
+                     AppLocalizations.of(context)!.understand_submit_order,
+                      style: AppStyles.rkRegularTextStyle(
+                          color: AppColors.whiteColor,
+                          size: AppConstants.smallFont),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         );
       },);
   }
@@ -1330,6 +1352,7 @@ class BasketScreenWidget extends StatelessWidget {
                 builder: (context, state) {
                   BasketBloc bloc = context.read<BasketBloc>();
                   return CustomOneButtonDialog(
+                    width: MediaQuery.of(context).size.width,
                     isLoading: state.retryLoading,
                     directionality: state.language,
                     title: '${AppLocalizations.of(context)!.under_maintenance}',

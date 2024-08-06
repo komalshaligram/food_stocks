@@ -19,7 +19,6 @@ class CreditCardDetailsRoute {
 
 class CreditCardDetailsScreen extends StatelessWidget {
   const CreditCardDetailsScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
@@ -28,6 +27,7 @@ class CreditCardDetailsScreen extends StatelessWidget {
         "isPaymentFail : ${args?.containsKey(AppStrings.isPaymentFail)}}");
     return BlocProvider(
       create: (context) => CreditCardDetailsBloc()..add(CreditCardDetailsEvent.getArgumentEvent(
+        isFromRegFlow: args?[AppStrings.isFromRegFlow] ?? false,
           termsReqModel: args?[AppStrings.termsConditionParamString]??TermsConditionReqModel(),
           isPaymentFail: args?[AppStrings.isPaymentFail] ?? false)),
       child: CreditCardDetailsScreenWidget(),
@@ -121,8 +121,7 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
                      Navigator.pop(context);
                     }
                     else{
-                      context.read<CreditCardDetailsBloc>().add(
-                          CreditCardDetailsEvent.addCreditCardEvent(context: context));
+                      context.read<CreditCardDetailsBloc>().add(CreditCardDetailsEvent.addCreditCardEvent(context: context));
                     }
                   }
                 },

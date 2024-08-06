@@ -56,11 +56,11 @@ class ConnectScreenWidget extends StatelessWidget {
                   SizedBox(
                     height: getScreenHeight(context) * 0.15,
                   ),
-                  SvgPicture.asset(
+                 /* SvgPicture.asset(
                     AppImagePath.splashLogo,
                     height: getScreenHeight(context) * 0.18,
                     width: getScreenWidth(context) * 0.48,
-                  ),
+                  ),*/
                   SizedBox(
                     height: getScreenHeight(context) * 0.01,
                   ),
@@ -91,7 +91,7 @@ class ConnectScreenWidget extends StatelessWidget {
                       child: Text(AppLocalizations.of(context)!.login_as_guest,style: TextStyle(color: AppColors.mainColor,
                       fontSize: AppConstants.mediumFont
                       )
-                        ,)):0.width
+                        ,)):0.width,
                 ],
               ),
             ),

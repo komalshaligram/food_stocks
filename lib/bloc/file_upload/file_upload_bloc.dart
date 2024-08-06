@@ -41,15 +41,13 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           prefs: await SharedPreferences.getInstance());
 
       if (event is _getFormsListEvent) {
-        debugPrint('id___${preferencesHelper.getUserId()}');
         emit(state.copyWith(
             isLoading: true, isShimmering: true, isUpdate: event.isUpdate , language: preferencesHelper.getAppLanguage()));
-        debugPrint('update___${state.isUpdate}');
         try {
           final res =
               await DioClient(event.context).get(path: AppUrls.formsListUrl);
           FormsResModel response = FormsResModel.fromJson(res);
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             List<FormAndFileModel> formsList =
                 state.formsAndFilesList.toList(growable: true);
             int len = response.data?.clientForms?.toList().length ?? 0;
@@ -71,7 +69,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               final res = await DioClient(event.context)
                   .get(path: AppUrls.filesListUrl);
               FilesResModel response = FilesResModel.fromJson(res);
-              if (response.status == 200) {
+              if (response.status == AppConstants.code_200) {
                 List<FormAndFileModel> filesList =
                     state.formsAndFilesList.toList(growable: true);
                 int len = response.data?.clientFiles?.toList().length ?? 0;
@@ -102,15 +100,10 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                          );
                     ProfileDetailsResModel response =
                         ProfileDetailsResModel.fromJson(res);
-                    debugPrint('response = ${response}');
 
                     Map<String, dynamic> newModel = res['data']['clients'][0]['clientDetail'];
-                    debugPrint('data1 = ${newModel}');
 
-                    debugPrint('files = ${newModel[AppStrings.filesString]}');
-                    debugPrint('forms = ${newModel[AppStrings.formsString]}');
-
-                    if (response.status == 200) {
+                    if (response.status == AppConstants.code_200) {
                       if (newModel[AppStrings.formsString] != null ||
                           newModel[AppStrings.filesString] != null ) {
                         List<FormAndFileModel> formsAndFilesList =

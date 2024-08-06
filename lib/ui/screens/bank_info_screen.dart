@@ -30,7 +30,7 @@ class BankInfoScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args =
     ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint(
-        "isPaymentFail : ${args?.containsKey(AppStrings.isPaymentFail)}}");
+        "isPaymentFail : ${args?[AppStrings.termsConditionParamString] }}");
     return BlocProvider(
       create: (context) => BankInfoBloc()..add(BankInfoEvent.getBankNameEvent(context: context))
       ..add(BankInfoEvent.getTermsConditionModelEvent(context: context,

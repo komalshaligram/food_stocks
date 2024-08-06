@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -18,7 +19,6 @@ part 'bank_info_event.dart';
 part 'bank_info_state.dart';
 part 'bank_info_bloc.freezed.dart';
 
-
 class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
   TermsConditionReqModel termsConditionReqModel = TermsConditionReqModel();
   BankInfoBloc() : super(BankInfoState.initial()) {
@@ -35,8 +35,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
               path: AppUrls.getBankDetailUrl);
           BankDetailModel response = BankDetailModel.fromJson(res);
           debugPrint('bank details  response = ${response.data.toString()}');
-          debugPrint('bank details url = ${AppUrls.baseUrl}${AppUrls.getBankDetailUrl}');
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
               isShimmering: false, bankList: response.data?.bankDetail ?? [],
               bankName: response.data?.bankDetail?.first.bankName ?? '',
@@ -54,6 +53,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
         termsConditionReqModel = event.termsConditionReqModel;
       }
       else if (event is _termsConditionApiEvent) {
+        debugPrint('termCondition response1 ____${termsConditionReqModel.toJson().toString()}');
         termsConditionReqModel = TermsConditionReqModel(
             id: preferencesHelper.getUserId(),
             agentId: termsConditionReqModel.agentId,
@@ -74,8 +74,11 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
                 .firstWhere((element) => element.bankName == state.bankName)
                 .id,
             accountNumber: state.accountNumberController.text.trim(),
-            branchNumber: state.branchController.text.trim()
+            branchNumber: state.branchController.text.trim(),
+            paymentType: AppStrings.wallet
+
         );
+        debugPrint('termCondition response2 ____${termsConditionReqModel.toJson().toString()}');
         Map<String, dynamic> req = termsConditionReqModel.toJson();
         req.removeWhere((key, value) {
           if (value != null) {
@@ -108,16 +111,16 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
                 AppStrings.bankIdString : termsConditionReqModel.bankId,
                 AppStrings.branchNumberString : termsConditionReqModel.branchNumber,
                 AppStrings.accountNumberString : termsConditionReqModel.accountNumber,
+                AppStrings.paymentType : termsConditionReqModel.paymentType
               },
             ),
           );
-          debugPrint('termCondition url = ${AppUrls.baseUrl}${AppUrls.termsConditionUrl}');
-          debugPrint('termCondition response ____${res}');
+          debugPrint('termCondition url = ${termsConditionReqModel.bankId}');
+          debugPrint('termCondition response ____${termsConditionReqModel.toJson().toString()}');
 
           TermsConditionResModel response =
           TermsConditionResModel.fromJson(res);
-          if(response.status == 200){
-
+          if(response.status == AppConstants.code_200){
             emit(state.copyWith(isApiShimmering: false,));
             Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name,
                 arguments: {
@@ -139,8 +142,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           emit(state.copyWith(isApiShimmering: false,));
         }
       }
-
-      if(event is _getArgumentEvent){
+     else if(event is _getArgumentEvent){
         emit(state.copyWith(isPaymentFail: event.isPaymentFail));
       }
     }

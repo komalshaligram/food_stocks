@@ -57,6 +57,7 @@ class SharedPreferencesHelper {
   static const String subUserId = 'subUserId';
   static const String canSeeInvoices = 'canSeeInvoices';
   static const String appOnMaintenance= 'isAppOnMaintenance';
+  static const String paymentMethod = 'isPaymentMethod';
 
 
   final SharedPreferences prefs;
@@ -111,9 +112,17 @@ class SharedPreferencesHelper {
       await prefs.remove(subUserId);
       await prefs.remove(canSeeInvoices);
       await prefs.remove(appOnMaintenance);
+      await prefs.remove(paymentMethod);
 
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
+  }
+
+  Future<void> removePaymentMethod() async {
+    await prefs.remove(paymentMethod);
+  }
+  Future<void> setPaymentMethod({required String method}) async {
+    await prefs.setString(paymentMethod, method);
   }
 
   Future<void> removeAppMaintenance() async {
@@ -521,6 +530,8 @@ class SharedPreferencesHelper {
     return prefs.getBool(appOnMaintenance) ?? false;
   }
 
-
+  String getPaymentMethod() {
+    return prefs.getString(paymentMethod) ?? '';
+  }
 
 }

@@ -25,10 +25,8 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
        else if(event is _pdfDownloadEvent){
          try {
            emit(state.copyWith(isDownloading: true));
-
            Directory? dir;
            if (defaultTargetPlatform == TargetPlatform.android) {
-
              dir = Directory('/storage/emulated/0/Documents');
              debugPrint('dir = ${await dir.stat()}');
              // return;

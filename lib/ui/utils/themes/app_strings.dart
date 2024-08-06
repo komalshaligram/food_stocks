@@ -23,19 +23,26 @@ class AppStrings {
   static const navigateToStore = 'true';
   static const orderStatusNo = 'orderStatusNo';
   static const subuserString = 'subuser';
-  static const rivchitclienterrorString = 'MESSAGE.RIVCHITCLIENTERROR';
+  static const rivchitClientErrorString = 'MESSAGE.RIVCHITCLIENTERROR';
 
+  //methods
+  static const post_method = 'POST';
+  static const get_method = 'GET';
+  static const put_method = 'PUT';
+
+  //sound path
+  static const deleteSound = 'audio/delete_sound.mp3';
 
   //language Strings
   static const englishString = 'en';
-  static const hebrewString = 'en';
+  static const hebrewString = 'he';
   static const englishLocal = 'en-US';
-  static const hebrewLocal = 'en-US';
- // static const hebrewLocal = 'he-IL';
+  static const hebrewLocal = 'he-IL';
+  //static const hebrewLocal = 'en-US';
 
   //api req param strings
   static const profileImageString = 'profileImg';
-  static const profileUpdateString =  'profileImage';
+  static const profileUpdateString = 'profileImage';
   static const promissoryNoteString = 'promissoryNote';
   static const personalGuaranteeString = 'personalGuarantee';
   static const israelIdImageString = 'israelIdImage';
@@ -89,15 +96,13 @@ class AppStrings {
   static const guarantee2PhoneNumberString = 'guarantee2PhoneNumber';
   static const branchNumberString = 'branchNumber';
   static const accountNumberString = 'accountNumber';
+  static const paymentType = 'paymentType';
   static const owner1SignatureString = 'owner1Signature';
   static const owner2SignatureString = 'owner2Signature';
   static const guarantee1SignatureString = 'guarantee1Signature';
   static const guarantee2SignatureString = 'guarantee2Signature';
   static const guaranteeNameString = 'guaranteeNameString';
   static const clientIdString = 'clientId';
-
-
-
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -150,7 +155,13 @@ class AppStrings {
   static const subUserEmailString = 'subUserEmail';
   static const subUserIsraelIdString = 'subUserIsraelId';
   static const isPopString = 'isPop';
-  static const isPaymentFail = 'true';
+  static const isPaymentFail = 'isPaymentFail';
+  static const isFromRegFlow = 'isFromRegFlow';
+
+  //payment types
+ static const wallet = 'wallet';
+ static const creditCard = 'creditCard';
+ static const bankTransfer = 'bankTransfer';
 
   //hint strings
   static const hintNumberString = '1234567890';
@@ -174,10 +185,8 @@ class AppStrings {
   static const isReadMoreString = 'isReadMore';
   static const invoiceListString = 'invoiceListString';
 
-
-
-  static String getLocalizedStrings(String key,BuildContext context){
-    switch(key){
+  static String getLocalizedStrings(String key, BuildContext context) {
+    switch (key) {
       case 'errmessage':
         return AppLocalizations.of(context)!.errmessage;
       case 'successmessage':
@@ -273,8 +282,7 @@ class AppStrings {
       case 'productremovalsalefailure':
         return AppLocalizations.of(context)!.productremovalsalefailure;
       case 'insufficientdataforproductremovalfromsale':
-        return AppLocalizations.of(context)!
-            .insufficientdataforproductremovalfromsale;
+        return AppLocalizations.of(context)!.insufficientdataforproductremovalfromsale;
       case 'productnotfound':
         return AppLocalizations.of(context)!.productnotfound;
       case 'failedtoauthenticate':
@@ -415,8 +423,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.comaxinvoicenotfound;
       case 'salenotexistssalenotexists':
         return AppLocalizations.of(context)!.sale_not_exists;
-        case 'comaxordererror':
-      return AppLocalizations.of(context)!.comax_order_error;
+      case 'comaxordererror':
+        return AppLocalizations.of(context)!.comax_order_error;
       case 'comaxclienterror':
         return AppLocalizations.of(context)!.comax_client_error;
       case 'issueremoved':
@@ -433,8 +441,6 @@ class AppStrings {
         return AppLocalizations.of(context)!.rivchitclienterror;
       case 'israelidalreadyexist':
         return AppLocalizations.of(context)!.israel_id_exist;
-      case 'userpendingorders' :
-        return AppLocalizations.of(context)!.user_pending_orders;
     }
     return key;
   }

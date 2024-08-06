@@ -42,6 +42,7 @@ class BasketState with _$BasketState {
     required bool isAppOnMaintenance,
     required bool isDialogOpen,
     required bool retryLoading,
+    required String bankTransferInfo,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -69,6 +70,7 @@ class BasketState with _$BasketState {
      isSelectSupplier: false,
      relatedProductList: [],
      isRelatedShimmering: false,
+       bankTransferInfo:'',
      productListIndex: -1,
      isAnimation: false,
      isOrderPending: false,

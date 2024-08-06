@@ -38,14 +38,11 @@ class ProfileScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
 
-    debugPrint(
-        "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}\nmobileNumber : ${args?.containsKey(AppStrings.contactString)}");
     return BlocProvider(
       create: (context) => ProfileBloc()
         ..add(
           ProfileEvent.getBusinessTypeListEvent(context: context),
-        )
-        ..add(
+        )..add(
           ProfileEvent.getProfileDetailsEvent(
               context: context,
               isUpdate:

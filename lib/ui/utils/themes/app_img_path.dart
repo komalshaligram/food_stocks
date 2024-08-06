@@ -25,4 +25,5 @@ class AppImagePath {
   static const String successIcon = 'assets/images/icon_success.png';
   static const String imageNotAvailable5 =
       'assets/images/image_not_available5.png';
+  static const String chipIcon = 'assets/images/chip.png';
 }

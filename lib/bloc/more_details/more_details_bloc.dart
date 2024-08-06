@@ -340,7 +340,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             else {
               emit(state.copyWith(isLoading: false));
               debugPrint('imageurl_____${imgUrl}');
-              if(profileResModel.message == AppStrings.rivchitclienterrorString){
+              if(profileResModel.message == AppStrings.rivchitClientErrorString){
                 preferencesHelper.setEmailId(userEmailId: state.emailController.text);
                 preferencesHelper.setStreetName(streetName: state.streetNameController.text);
                 preferencesHelper.setStreetNumber(streetNumber: state.streetNumberController.text);

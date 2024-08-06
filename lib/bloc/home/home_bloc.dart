@@ -1406,8 +1406,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 isSubUserAddToBasket :res?.canAddToCart ?? false,
               ));
             } else {
-
-
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
@@ -1424,7 +1422,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 context: event.context,
                 title: e.toString(),
                 type: SnackBarType.FAILURE);
-
           }
         }
         }

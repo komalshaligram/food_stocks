@@ -31,26 +31,8 @@ class Data with _$Data {
   const factory Data({
     @JsonKey(name: "_id")
     required String id,
-    @JsonKey(name: "email")
-    required String email,
-    @JsonKey(name: "phoneNumber")
-    required String phoneNumber,
-    @JsonKey(name: "address")
-    required String address,
-    @JsonKey(name: "cityId")
-    required String cityId,
-    @JsonKey(name: "contactName")
-    required String contactName,
-    @JsonKey(name: "statusId")
-    required String statusId,
-    @JsonKey(name: "adminTypeId")
-    required String adminTypeId,
     @JsonKey(name: "clientDetail")
     required ClientDetail clientDetail,
-    @JsonKey(name: "isDeleted")
-    required bool isDeleted,
-    @JsonKey(name: "__v")
-    required int v,
 
   }) = _Data;
 

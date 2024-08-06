@@ -68,7 +68,6 @@ class CustomOneButtonDialog extends StatelessWidget {
             bottom: AppConstants.padding_10,
             left: AppConstants.padding_20),
         actions: [
-
            Column(
              children: [
                positiveTitle != null
@@ -82,36 +81,9 @@ class CustomOneButtonDialog extends StatelessWidget {
                positiveTitle2 != null
                    ? commonButton(positiveTitle:positiveTitle2 ?? '' ,width: width,positiveOnTap: positiveOnTap2)
                    : 0.width,
+               10.height,
              ],
            ),
-
-          positiveTitle != null
-              ? Align(
-            alignment: Alignment.center,
-                child: InkWell(
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            onTap: positiveOnTap,
-                            child: Container(
-                padding:
-                EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
-                alignment: Alignment.center,
-                width: width,
-                decoration: BoxDecoration(
-                    gradient: AppColors.appMainGradientColor,
-                    borderRadius: BorderRadius.circular(8.0)),
-                child: isLoading?  CupertinoActivityIndicator(
-                              color: AppColors.mainColor,
-                            ):Text(
-                  positiveTitle ?? '',
-                  style: AppStyles.rkRegularTextStyle(
-                      color: AppColors.whiteColor,
-                      size: AppConstants.smallFont),
-                ),
-                            ),
-                          ),
-              )
-              : Container(),
         ],
       ),
     );

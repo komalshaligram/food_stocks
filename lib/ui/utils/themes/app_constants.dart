@@ -18,6 +18,7 @@ class AppConstants{
   static const double containerHeight_100 = 100;
   static const double relatedProductItemWidth = 140;
   static const double withoutSaleItemHeight = 210;
+  static const double animationDuration = 8000;
 
   //padding
   static const double padding_5 = 5;
@@ -114,6 +115,11 @@ class AppConstants{
   static const int appContentPageLimit = 10;
   static const int orderPageLimit = 15;
   static const int walletLimit = 10;
-
+  //status code
+  static const int code_200 = 200;
+  static const int code_401 = 401;
+  static const int code_201 = 201;
+  static const int code_403 = 403;
+  static const int code_405 = 405;
 
 }

@@ -97,6 +97,7 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "clientTypes") List<ClientType>? clientTypes,
     @JsonKey(name: "totalExpense") String? totalExpense,
     @JsonKey(name: "expenseByMonth") String? expenseByMonth,
+    @JsonKey(name: "creditCard") CreditCard? creditCard,
     String? streetName,
     String? streetNumber,
     String? zip,
@@ -122,6 +123,17 @@ class ClientType with _$ClientType {
       _$ClientTypeFromJson(json);
 }
 
+@freezed
+class CreditCard with _$CreditCard {
+  const factory CreditCard({
+    @JsonKey(name: "cardNumber")
+    required String cardNumber,
+    @JsonKey(name: "expireDate")
+    required String expireDate,
+  }) = _CreditCard;
+
+  factory CreditCard.fromJson(Map<String, dynamic> json) => _$CreditCardFromJson(json);
+}
 
 
 @freezed

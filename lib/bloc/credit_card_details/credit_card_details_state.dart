@@ -9,6 +9,7 @@ class CreditCardDetailsState with _$CreditCardDetailsState{
     required bool isLoading,
     required bool isPaymentFail,
     required TermsConditionReqModel termsModel,
+    required bool isFromRegFlow,
 
   }) = _CreditCardDetailsState;
 
@@ -17,7 +18,8 @@ class CreditCardDetailsState with _$CreditCardDetailsState{
     validityController: TextEditingController(),
     isLoading: false,
     isPaymentFail: false,
-    termsModel: TermsConditionReqModel()
+    termsModel: TermsConditionReqModel(),
+      isFromRegFlow: false
   );
 
 }

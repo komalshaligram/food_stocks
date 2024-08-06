@@ -13,6 +13,7 @@ import 'package:food_stock/data/model/res_model/insert_cart_res_model/insert_car
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import 'package:food_stock/data/model/supplier_sale_model/supplier_sale_model.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -70,7 +71,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
             GetAllCartResModel response = GetAllCartResModel.fromJson(res);
 
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
               emit(state.copyWith(CartItemList: response,
                   isShimmering: false,
                   isQtyUpdated: false));
@@ -161,8 +162,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               );
             }
 
-            debugPrint('UpdateCart reqMap    ${reqMap}');
-
             final res = await DioClient(event.context).post(
               '${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}',
               data: reqMap,
@@ -170,7 +169,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
 
-            if (response.status == 201) {
+            if (response.status == AppConstants.code_201) {
               add(BasketEvent.getAllCartEvent(context: event.context));
               List<ProductDetailsModel> list = [];
               list = [...state.basketProductList];
@@ -322,7 +321,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 data: request,
               );
               UpdateCartResModel response = UpdateCartResModel.fromJson(res);
-              if (response.status == 201) {
+              if (response.status == AppConstants.code_201) {
                 Vibration.vibrate();
                 add(BasketEvent.getAllCartEvent(context: event.context));
                 List<List<ProductStockModel>> productStockList =
@@ -421,7 +420,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 data: req,
               );
               InsertCartResModel response = InsertCartResModel.fromJson(res);
-              if (response.status == 201) {
+              if (response.status == AppConstants.code_201) {
                 add(BasketEvent.getAllCartEvent(context: event.context));
                 Vibration.vibrate();
                 Navigator.pop(event.context);
@@ -500,7 +499,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             ProductDetailsResModel.fromJson(res);
 
             debugPrint('GetProductDetails_____${response}');
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
               //new chanegs
 
               //0 for basket product.
@@ -531,7 +530,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   );
                   GetAllCartResModel response = GetAllCartResModel.fromJson(
                       res);
-                  if (response.status == 200) {
+                  if (response.status == AppConstants.code_200) {
                     debugPrint('cart before = ${response.data}');
                     response.data?.data?.forEach((cartProduct) {
                       if (cartProduct.id == event.productId ||
@@ -858,10 +857,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               AppUrls.removeCartProductUrl,
               data: {AppStrings.cartProductIdString: event.cartProductId},
             );
-            if (response[AppStrings.statusString] == 200) {
+            if (response[AppStrings.statusString] == AppConstants.code_200) {
               add(BasketEvent.getAllCartEvent(context: event.context));
               Navigator.pop(event.dialogContext);
-              player.play(AssetSource('audio/delete_sound.mp3'));
+              player.play(AssetSource(AppStrings.deleteSound));
               add(BasketEvent.setCartCountEvent(isClearCart: false));
               List<ProductDetailsModel> list = [];
               list = [...state.basketProductList];
@@ -898,7 +897,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             final res = await DioClient(event.context)
                 .post(
                 '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}');
-            if (res[AppStrings.statusString] == 201) {
+            if (res[AppStrings.statusString] == AppConstants.code_201) {
               add(BasketEvent.setCartCountEvent(isClearCart: true));
               List<ProductDetailsModel> list = [];
               list = [...state.basketProductList];
@@ -908,7 +907,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   basketProductList: list,
                   isRemoveProcess: false,
                   isAnimation: false
-
               ));
             } else {
               Navigator.pop(event.context);
@@ -929,12 +927,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           emit(state.copyWith(productImageIndex: event.index));
         }
         else if (event is _orderSendEvent) {
-          emit(state.copyWith(isPaymentFail: true));
-
-   /*       List<OrderSendModel.Product> ProductReqMap = [];
+          List<OrderSendModel.Product> ProductReqMap = [];
           emit(state.copyWith(isLoading: true,isRemoveProcess : true));
-
-         state.CartItemList.data?.data?.forEach((element) {
+          state.CartItemList.data?.data?.forEach((element) {
             debugPrint('product stock___${element.productStock}');
             if(element.productStock != 0 || element.productStock != 0.0 ){
               ProductReqMap.add(OrderSendModel.Product(
@@ -948,10 +943,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               emit(state.copyWith(isLoading: false));
             }
           });
-
           try {
             OrderSendModel.OrderSendReqModel reqMap = OrderSendModel
-                .OrderSendReqModel(products: ProductReqMap);
+                .OrderSendReqModel(products: ProductReqMap,failPayment: event.failPayment,paymentMethod: preferencesHelper.getPaymentMethod());
             debugPrint('OrderSendReqModel = $reqMap}');
             final res = await DioClient(event.context).post(
               AppUrls.createOrderUrl,
@@ -964,27 +958,28 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             OrderSendResModel response = OrderSendResModel.fromJson(res);
             debugPrint('OrderSendResModel  = $response');
 
-            if (response.status == 201) {
+            if (response.status == AppConstants.code_201) {
               preferencesHelper.setCartCount(count: 0);
-          Navigator.pushNamed(
+              Navigator.pushNamed(
                   event.context, RouteDefine.orderSuccessfulScreen.name);
               emit(state.copyWith(isLoading: false,isRemoveProcess: false));
-
-
-            } else if (response.status == 403) {
-              CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ?? response.message!,
-                    event.context),
-                type: SnackBarType.FAILURE,
-              );
+            } else if (response.status == AppConstants.code_403){
+              if(response.message == 'MESSAGES.CREDITCARDPAYMENTFAILED') {
+                emit(state.copyWith(isPaymentFail: true));
+              }else {
+                CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ?? response.message!,
+                      event.context),
+                  type: SnackBarType.FAILURE,
+                );
+              }
               emit(state.copyWith(isLoading: false,isRemoveProcess: false));
-            } else if (response.status == 405) {
+            } else if (response.status == AppConstants.code_405) {
               emit(state.copyWith(isLoading: false, isOrderPending: true,isRemoveProcess: false));
             }
             else {
-
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
@@ -995,19 +990,17 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             }
           } on ServerException {
             emit(state.copyWith(isLoading: false,isRemoveProcess: false));
-          }*/
+          }
         }
         else if (event is _RelatedProductsEvent) {
           emit(state.copyWith(isRelatedShimmering: true));
-          debugPrint('productId____${event.productId}');
           final res = await DioClient(event.context).post(
               AppUrls.relatedProductsUrl,
               data: {'mainProductId': event.productId});
           RelatedProductResModel response =
           RelatedProductResModel.fromJson(res);
-          debugPrint('product categories = ${response.data?.length
-              .toString()}');
-          if (response.status == 200) {
+
+          if (response.status == AppConstants.code_200) {
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             List<ProductStockModel>stockList = [];
@@ -1049,7 +1042,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
               debugPrint('AccountPermission response basket = ${response.data.toString()}');
               debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
-              if (response.status == 200) {
+              if (response.status == AppConstants.code_200) {
 
                 var res = response.data?.permissions;
                 if(preferencesHelper.getAppLanguage() == AppStrings.englishString && preferencesHelper.getCanSeeWallet() != res?.canSeeWallet){
@@ -1096,15 +1089,12 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         }
         else if(event is _userApproveEvent){
           try {
-            debugPrint('clientId_____${preferencesHelper.getUserId()}');
             final res = await DioClient(event.context).post(
                 '${AppUrls.verifyClientUrl}',
                 data: {AppStrings.clientIdString:preferencesHelper.getUserId()}
             );
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-            debugPrint('verifyClient res_____$response');
-            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
               if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
                 Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
               }
@@ -1121,25 +1111,25 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if(event is _updateMaintenanceEvent){
           emit(state.copyWith(isDialogOpen: true));
         }
+        else if(event is _PayWithBankTransferEvent){
+          add(BasketEvent.orderSendEvent(context: event.context,failPayment: false));
+        }
         else if(event is _GeneralSettings){
           try {
           emit(state.copyWith(retryLoading: event.isRetryLoading));
             final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
 
-            debugPrint('general settings = ${response.data.toString()}');
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
 
               if(preferencesHelper.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
                 add(BasketEvent.updateMaintenanceEvent(context: event.context));
                 Navigator.pop(event.dialogContext);
                 preferencesHelper.setIsAppOnMaintenance(isAppOnMaintenance: false);
                 emit(state.copyWith(isDialogOpen: false,isAppOnMaintenance: false,retryLoading: false));
-                debugPrint('pop dialog');
                 return;
               }else{
                 if(!state.isDialogOpen && !(response.data?.isAppOnMaintenance??false)  ){
-                  debugPrint('here');
                   emit(state.copyWith(isDialogOpen: true));
                 }else{
                   emit(state.copyWith(isDialogOpen: false));
@@ -1150,12 +1140,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false);
               preferencesHelper.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
               preferencesHelper.setIsAppOnMaintenance(isAppOnMaintenance: response.data?.isAppOnMaintenance??false);
-
+debugPrint('response.data?.details?.bankTransferInfoText${response.data?.taviliRivchitDetails?.bankTransferInfoText}');
               emit(state.copyWith(
                   language: preferencesHelper.getAppLanguage(),
                   isIncludedVat: preferencesHelper.getIsIncludedVat(),
                   isSaleOn: preferencesHelper.getShowSale(),
                   retryLoading: false,
+                  bankTransferInfo: response.data?.taviliRivchitDetails?.bankTransferInfoText??'',
                   isAppOnMaintenance: preferencesHelper.getAppOnMaintenance()
               ));
             } else {

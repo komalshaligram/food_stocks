@@ -28,11 +28,12 @@ class BasketEvent with _$BasketEvent {
   const factory BasketEvent.clearCartEvent({required BuildContext context}) =
       _clearCartEvent;
 
-
+  const factory BasketEvent.payWithBankTransferEvent({required BuildContext context}) =_PayWithBankTransferEvent;
   const factory BasketEvent.setCartCountEvent({required bool isClearCart}) =_SetCartCountEvent;
   const factory BasketEvent.updateImageIndexEvent({required int index}) =_updateImageIndexEvent;
   const factory BasketEvent.orderSendEvent({
     required BuildContext context,
+    required bool failPayment
   }) = _orderSendEvent;
   const factory BasketEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;

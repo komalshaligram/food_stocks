@@ -49,7 +49,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             source:
                 event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (pickedFile != null) {
-          debugPrint("compress after size = ${await pickedFile.length()}");
           CroppedFile? croppedImage = await cropImage(
               path: pickedFile.path,
               shape: CropStyle.circle,
@@ -66,7 +65,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
           }
-     //   else {
             try {
               emit(state.copyWith(isFileUploading: true,isUploadingProcess: true));
               debugPrint("image1 = ${croppedImage?.path ?? pickedFile.path}");
@@ -107,22 +105,17 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               emit(state.copyWith(isFileUploading: false,isUploadingProcess: false));
             }
           }
-      //  }
       }
       else if (event is _DeleteAccountEvent) {
         try {
           final res = await DioClient(event.context).post(
               '${AppUrls.deleteAccountUrl}${state.userId}');
-          if(res[AppStrings.statusString]==200){
+          if(res[AppStrings.statusString]==AppConstants.code_200){
             final response = await DioClient(event.context).put(
                 path: AppUrls.logOutUrl,
                 data: {"userId": preferences.getUserId()});
 
-            debugPrint('logOut url  = ${AppUrls.baseUrl}${AppUrls.logOutUrl}');
-
-            debugPrint('logOut response  = ${response}');
-
-            if (response[AppStrings.statusString] == 200) {
+            if (response[AppStrings.statusString] == AppConstants.code_200) {
               SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                   prefs: await SharedPreferences.getInstance());
               await preferencesHelper.setUserLoggedIn();
@@ -151,12 +144,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(state.copyWith(isShimmering: true,language: preferences.getAppLanguage()));
           final res = await DioClient(event.context)
               .get(path: AppUrls.businessTypesUrl);
-          debugPrint('business type list res = $res');
           BusinessTypeModel response = BusinessTypeModel.fromJson(res);
         List<ClientType> list = [];
         list.add(ClientType(businessType: AppLocalizations.of(event.context)!.type_of_business));
         list.addAll(response.data?.clientTypes??[]);
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
                 isShimmering: false,
                 businessTypeList: list,
@@ -181,7 +173,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             clientTypeId: state.businessTypeList.firstWhere((businessType) =>
                     businessType.businessType == state.selectedBusinessType)
                 .id,
-            // applicationVersion: '1.0.0',
             israelId: state.israelIdController.text,
             deviceType: Platform.isAndroid
                 ? AppStrings.androidString
@@ -198,16 +189,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if (state.isUpdate) {
           emit(state.copyWith(isUpdating: true));
           try {
-            debugPrint('req = ${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson(),
               );
-            debugPrint('res = ${res}');
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
 
               String? businessName = await Smartlook.instance.user.properties.getString("User business name");
 
@@ -216,7 +205,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               }
 
               Smartlook.instance.user.setName(response.data?.clients?.first.clientDetail?.ownerName ?? '');
-
 
               debugPrint('image = ${response.data?.clients?.first.profileImage}');
               emit(
@@ -245,7 +233,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                       text: response
                           .data?.clients?.first.clientDetail?.israelId
                           .toString()),
-
                   contactController: TextEditingController(
                       text: response.data?.clients?.first.contactName),
                 ),
@@ -268,7 +255,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       }
       else if (event is _updateProfileDetailsEvent) {
-        debugPrint('imageurl_____$imgUrl');
         ProfileModel updatedProfileModel = ProfileModel(
           profileImage: state.image.path != '' ? imgUrl : state.UserImageUrl,
           contactName: state.contactController.text,
@@ -286,7 +272,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         Map<String, dynamic> req = updatedProfileModel.toJson();
         Map<String, dynamic>? clientDetail =
             updatedProfileModel.clientDetail?.toJson();
-        debugPrint("update before Model = ${req}");
         clientDetail?.removeWhere((key, value) {
           if (value != null) {
             debugPrint("[$key] = $value");
@@ -301,7 +286,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           return value == null;
         });
         try {
-          debugPrint('profile req = ${req}');
           emit(state.copyWith(isLoading: true));
           final res = await DioClient(event.context).post(
               AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
@@ -310,7 +294,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
           reqUpdate.ProfileDetailsUpdateResModel response =
               reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             emit(state.copyWith(UserImageUrl: response.data?.client?.profileImage.toString() ?? ''));
 
             if(!preferences.getSubUser()){
@@ -330,7 +314,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           }
           else {
             emit(state.copyWith(isLoading: false));
-            if(response.message == AppStrings.rivchitclienterrorString){
+            if(response.message == AppStrings.rivchitClientErrorString){
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppLocalizations.of(event.context)!.israel_id_or_business_id_number_error,
@@ -374,7 +358,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail =
           updatedProfileModel.clientDetail?.toJson();
-          debugPrint("update before Model = ${req}");
           clientDetail?.removeWhere((key, value) {
             if (value != null) {
               debugPrint("[$key] = $value");
@@ -388,14 +371,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             }
             return value == null;
           });
-          debugPrint('profile req = ${/*updatedProfileModel.toJson()*/ req}');
           final res = await DioClient(event.context).post(
               AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
               data: req,
           );
           reqUpdate.ProfileDetailsUpdateResModel response =
           reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             await preferences.removeProfileImage();
             emit(state.copyWith(isFileUploading: false));
             emit(state.copyWith(UserImageUrl: '', image: File('')));

@@ -4,7 +4,6 @@ part of 'privacy_policy_bloc.dart';
 class PrivacyPolicyState with _$PrivacyPolicyState{
 
   const factory PrivacyPolicyState({
-
     required String filePath,
     required Uint8List pdfPath,
     required bool isShimmering,
@@ -21,5 +20,4 @@ class PrivacyPolicyState with _$PrivacyPolicyState{
     isNextEnable: false,
     pdfPath: Uint8List(1)
   );
-
 }

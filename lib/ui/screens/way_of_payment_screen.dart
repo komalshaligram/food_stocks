@@ -24,10 +24,7 @@ class WayOfPaymentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
     ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint(
-        "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}}");
-    debugPrint(
-        "isUpdate : ${args?.containsKey(AppStrings.termsConditionParamString)}}");
+
     return BlocProvider(
       create: (context) => WayOfPaymentBloc()..add(WayOfPaymentEvent.getArgumentEvent(
       termsReqModel: args?[AppStrings.termsConditionParamString]??TermsConditionReqModel(),
@@ -109,13 +106,17 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                     if(state.selectRadioTile == 0){
                       Navigator.pushNamed(context,
                         RouteDefine.bankInfoScreen.name,
+                          arguments: {
+                            AppStrings.termsConditionParamString :state.termsReqModel
+                          }
                       );
                     }
                     else if(state.selectRadioTile == 1){
                       Navigator.pushNamed(context,
                         RouteDefine.creditCardDetailsScreen.name,
                           arguments: {
-                            AppStrings.termsConditionParamString :state.termsReqModel
+                            AppStrings.termsConditionParamString :state.termsReqModel,
+                            AppStrings.isFromRegFlow : true
                           }
                       );
                     }

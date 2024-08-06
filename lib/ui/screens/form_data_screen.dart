@@ -190,7 +190,6 @@ class FormDataScreenWidget extends StatelessWidget {
                         7.height,
                         CustomContainerWidget(
                           name: state.language== AppStrings.hebrewString ?'${AppLocalizations.of(context)!.guarantee_1_address}${1}':'${AppLocalizations.of(context)!.guarantee_1_address}',
-
                         ),
                         CustomFormField(
                           context: context,

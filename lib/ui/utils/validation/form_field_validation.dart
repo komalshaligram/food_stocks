@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 class FormFieldValidation {
   String? emailField(String value,BuildContext context) {
     RegExp regex = RegExp(
@@ -204,6 +205,8 @@ class FormFieldValidation {
 
     if (value.isEmpty) {
       return '${AppLocalizations.of(context)!.enter_credit_card_validity}';
+    }else{
+      formatExpiryDate(value);
     }
     return null;
   }

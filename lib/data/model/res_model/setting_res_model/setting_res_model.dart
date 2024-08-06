@@ -25,8 +25,19 @@ class Data with _$Data {
      double? bottlePrice,
     bool? isSaleOn,
     bool? isAppOnMaintenance,
+    TaviliRivchitDetails? taviliRivchitDetails,
     List<String>? showVatApplication,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 }
+
+@freezed
+class TaviliRivchitDetails with _$TaviliRivchitDetails {
+  const factory TaviliRivchitDetails({
+    String? bankTransferInfoText,
+  }) = _TaviliRivchitDetails;
+
+  factory TaviliRivchitDetails.fromJson(Map<String, dynamic> json) => _$TaviliRivchitDetailsFromJson(json);
+}
+
