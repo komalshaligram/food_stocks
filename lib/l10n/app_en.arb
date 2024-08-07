@@ -520,5 +520,6 @@
   "please_enter_valid_israel_id_guarantee1": "Please enter valid israel ID for Guarantee1",
   "please_enter_valid_israel_id_guarantee2": "Please enter valid israel ID for Guarantee2",
   "please_enter_valid_guarantee_name1": "Please enter valid Guarantee1 Name",
-  "please_enter_valid_guarantee_name2": "Please enter valid Guarantee2 Name"
+  "please_enter_valid_guarantee_name2": "Please enter valid Guarantee2 Name",
+  "approve_for_promotional_info": "I approve TAVILI to send me promotional info in Email and SMS."
 }

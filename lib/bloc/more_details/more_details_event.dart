@@ -29,4 +29,6 @@ class MoreDetailsEvent with _$MoreDetailsEvent {
       {required BuildContext context,
       required bool isUpdate}) = _getProfileMoreDetailsEvent;
 
+  factory MoreDetailsEvent.setApprovalSMSSwitchEvent(
+      {required BuildContext context, required bool updatedVal}) = _setApprovalSMSSwitchEvent;
 }

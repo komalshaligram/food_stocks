@@ -17,6 +17,7 @@ class MoreDetailsState with _$MoreDetailsState {
     required bool isShimmering,
     required CityListResModel? cityListResModel,
     required String language,
+    required bool approveForSMS,
   }) = _MoreDetailsState;
 
   factory MoreDetailsState.initial() => MoreDetailsState(
@@ -32,7 +33,8 @@ class MoreDetailsState with _$MoreDetailsState {
         cityController: TextEditingController(),
         filterList: [],
         cityListResModel: CityListResModel(),
-        isShimmering: false,
+        isShimmering:false,
         language: AppStrings.hebrewString,
+        approveForSMS:true
       );
 }

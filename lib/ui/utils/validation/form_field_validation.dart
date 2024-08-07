@@ -121,7 +121,7 @@ class FormFieldValidation {
     if (value.isEmpty) {
       return '${AppLocalizations.of(context)!.please_enter_guarantee1_name}';
     }else if (!regex1.hasMatch(value)) {
-      return '${AppLocalizations.of(context)!.please_enter_valid_guarantee_name}';
+      return '${AppLocalizations.of(context)!.please_enter_valid_guarantee_name1}';
     }
     return null;
   }
@@ -130,7 +130,7 @@ class FormFieldValidation {
     if (value.isEmpty) {
       return '${AppLocalizations.of(context)!.please_enter_guarantee1_name}';
     }else if (!regex1.hasMatch(value)) {
-      return '${AppLocalizations.of(context)!.please_enter_valid_guarantee_name}';
+      return '${AppLocalizations.of(context)!.please_enter_valid_guarantee_name2}';
     }
     return null;
   }

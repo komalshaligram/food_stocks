@@ -30,6 +30,7 @@ class AppStrings {
   static const englishString = 'en';
   static const hebrewString = 'he';
   static const englishLocal = 'en-US';
+  //static const hebrewLocal = 'en-US';
   static const hebrewLocal = 'he-IL';
 
   //api req param strings

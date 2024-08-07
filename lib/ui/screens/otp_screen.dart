@@ -35,7 +35,6 @@ class OTPScreen extends StatelessWidget {
   }
 }
 
-
 class OTPScreenWidget extends StatefulWidget {
   final bool isRegister;
   final String contact;
@@ -48,7 +47,7 @@ class OTPScreenWidget extends StatefulWidget {
 
 class _OTPScreenWidgetState extends State<OTPScreenWidget> {
   String _code="";
-  late FocusNode myFocusNode;
+   late FocusNode myFocusNode;
 
   @override
   void initState() {
@@ -83,7 +82,6 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                 onTap: () {
                   debugPrint('register ${widget.isRegister}');
                   bloc.add(OtpEvent.cancelOtpTimerSubscription());
-
                   Navigator.pop(context);
                 },
               ),
@@ -119,7 +117,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                               strokeColorBuilder: FixedColorBuilder(AppColors.mainColor),
                             ),
                             currentCode: _code,
-                            autoFocus: true,
+                            //autoFocus: true,
                             focusNode:myFocusNode,
                             enableInteractiveSelection:false ,
                             codeLength: 4,
@@ -129,6 +127,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                             },
                             onCodeChanged: (code) {
                               _code= code!;
+                              debugPrint('length:${code.length}');
                               if(code.length==4){
                                 if (widget.isRegister == true) {
                                   bloc.add(OtpEvent.registerApiEvent(
@@ -143,6 +142,8 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                                       isRegister: widget.isRegister,
                                       context: context));
                                 }
+                              }else{
+                                debugPrint('length:${code.length}');
                               }
                             },
                           ),

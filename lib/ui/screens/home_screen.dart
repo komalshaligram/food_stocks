@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -1058,15 +1059,12 @@ class HomeScreenWidget extends StatelessWidget {
                 debugPrint('noti from  home');
                 FlutterAppBadger.removeBadge();
                 PushNotificationService().showNotification(
-                    notiId: message.notification.hashCode,
-                  //  androidIcon:message.notification?.android?.smallIcon,
-                    data: data,
-                  imageUrl: '',
-                  title: '',
-                  body: '',
-                   // isNavigate: true,
-                   // showNotification: false,
-                   // isAppOpen: true
+                  notiId: message.notification.hashCode,
+                  data: data,
+                  imageUrl: Platform.isAndroid?message.notification?.android?.imageUrl??'':message.notification?.apple?.imageUrl??'',
+                  title: message.notification?.title??'',
+                  body:message.notification?.body??'',
+
                 );
               }
             }
@@ -1110,11 +1108,11 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  Padding buildListTitles(
-      {required BuildContext context,
-        required String title,
-        required void Function() onTap,
-        required subTitle}) {
+  Padding buildListTitles({
+    required BuildContext context,
+     required String title,
+     required void Function() onTap,
+     required subTitle}) {
     return Padding(
       padding: const EdgeInsets.only(
         left: AppConstants.padding_10,
@@ -1144,7 +1142,6 @@ class HomeScreenWidget extends StatelessWidget {
       ),
     );
   }
-
 
   void showProductDetails({
     required BuildContext context,
@@ -1342,8 +1339,7 @@ class HomeScreenWidget extends StatelessWidget {
   }
 
   Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList,BuildContext context , ScrollController scrollController,
-      bool isSaleOn
-      ){
+      bool isSaleOn){
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1419,8 +1415,7 @@ class HomeScreenWidget extends StatelessWidget {
     required String title,
     required String content,
     required String dateTime,
-    required void Function() onTap,
-  }) {
+    required void Function() onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -1525,5 +1520,4 @@ class HomeScreenWidget extends StatelessWidget {
       context.read<HomeBloc>().add(HomeEvent.updateMaintenanceEvent(context: context));
     }
   }
-
 }

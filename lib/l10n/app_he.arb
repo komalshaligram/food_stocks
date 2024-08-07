@@ -125,13 +125,11 @@
 "monthly_expense_graph": "גרף הוצאות חודשיות",
 "history": "תנועות בארנק",
 "export": "יצוא",
-"order": "הזמנה",
 "jan": "ינו",
 "feb": "פבר",
 "mar": "מרץ",
 "apr": "אפר",
-"may": "מאי",
-"jun": "יונ",
+  "jun": "יונ",
 "jul": "יול",
 "aug": "אוג",
 "sep": "ספט",
@@ -447,10 +445,8 @@
   "guarantee2_sign" :"חתימה ערב 2",
   "upload_document" :"אנא העלה את המסמך",
   "connection_error" :"בעיית התחברות",
-  "my_invoices" : "החשבוניות שלי",
   "rivchit_invoice_number" : "מס' חשבונית",
   "payment_invoice" : "חשבונית תשלום",
-  "refund_invoice" : "חשבונית זיכוי",
   "refund_invoice" : "חשבונית זיכוי",
   "payed" : "שולם",
   "pending" :"ממתין",
@@ -522,5 +518,6 @@
   "please_enter_valid_israel_id_guarantee1": "הזן ת.ז. תקינה עבור ערב 1",
   "please_enter_valid_israel_id_guarantee2": "הזן ת.ז. תקינה עבור ערב 2",
   "please_enter_valid_guarantee_name1": "הזן שם תקין עבור ערב 1",
-  "please_enter_valid_guarantee_name2": "הזן שם תקין עבור ערב 2"
+  "please_enter_valid_guarantee_name2": "הזן שם תקין עבור ערב 2",
+  "approve_for_promotional_info": "אני מאשר קבלת חומר שיווקי על מבצעים במייל, טלפון, SMS, הודעת PUSH, וכדומה מאפליקציית TAVILI ו/או קבוצת חברות סטוק טק."
 }

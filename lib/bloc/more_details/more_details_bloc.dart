@@ -376,6 +376,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           }
         }
       }
+      else if(event is _setApprovalSMSSwitchEvent){
+        emit(state.copyWith(approveForSMS: event.updatedVal));
+      }
 
     });
   }
