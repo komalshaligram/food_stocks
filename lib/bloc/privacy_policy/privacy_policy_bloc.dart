@@ -23,9 +23,13 @@ import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_styles.dart';
 import 'package:http_parser/http_parser.dart';
 import '../../ui/utils/themes/app_urls.dart';
+import 'package:bloc/src/bloc.dart';
+
+
 part 'privacy_policy_state.dart';
 part 'privacy_policy_event.dart';
 part 'privacy_policy_bloc.freezed.dart';
+
 
 class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
   final GlobalKey<SfSignaturePadState> _signaturePadKey = GlobalKey();
@@ -44,11 +48,11 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     on<PrivacyPolicyEvent>((event, emit) async {
       if (event is _getPdfDataEvent) {
         termsConditionReqModel = event.termsConditionReqModel;
-        emit(state.copyWith(isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false));
+        emit(state.copyWith(isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false,isGuarantee1Available: (termsConditionReqModel.guarantee1FullName!='')?true:false));
         emit(state.copyWith(pdfPath: base64Decode(event.pdfData)));
       } else if (event is _navigationEvent) {
         debugPrint('owner1Signature___${owner1Signature}');
-        debugPrint('ownerSignature___${owner2Signature}');
+        debugPrint('owner2Signature___${owner2Signature}');
         debugPrint('guarantee1Signature___${guarantee1Signature}');
         debugPrint('guarantee2Signature___${guarantee2Signature}');
         debugPrint('id  ____${termsConditionReqModel.id}');
@@ -75,12 +79,13 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
             AppStrings.accountNumberString: termsConditionReqModel.accountNumber,
             AppStrings.owner1SignatureString: await MultipartFile.fromFile(owner1Signature, contentType: MediaType('image', 'png')),
             AppStrings.owner2SignatureString: owner2Signature != '' ? await MultipartFile.fromFile(owner2Signature, contentType: MediaType('image', 'png')) : '',
-            AppStrings.guarantee1SignatureString: await MultipartFile.fromFile(guarantee1Signature, contentType: MediaType('image', 'png')),
+            AppStrings.guarantee1SignatureString: guarantee1Signature!=''?await MultipartFile.fromFile(guarantee1Signature, contentType: MediaType('image', 'png')):'',
             AppStrings.guarantee2SignatureString: guarantee2Signature != '' ? await MultipartFile.fromFile(guarantee2Signature, contentType: MediaType('image', 'png')) : '',
           };
           if(termsConditionReqModel.paymentType!=AppStrings.creditCard){
             reqMap.addAll({AppStrings.bankIdString : termsConditionReqModel.bankId, AppStrings.branchNumberString: termsConditionReqModel.branchNumber,});
           }
+          debugPrint('reqMap:${reqMap.toString()}');
 
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).uploadFileProgressWithFormData(
@@ -94,13 +99,13 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
             Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
           } else {
             emit(state.copyWith(isShimmering: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.FAILURE);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
         } catch (e) {
           emit(state.copyWith(isShimmering: false));
-          CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.FAILURE);
+          CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
         }
       } else if (event is _signatureEvent) {
         showCustomSignaturePadDialog(event.context, event.fieldName, event.fieldNameForSign);
@@ -108,7 +113,8 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     });
   }
 
-  Future<void> showCustomSignaturePadDialog(BuildContext context, String fieldName, String signaturePadName) async {
+  Future<void> showCustomSignaturePadDialog(
+      BuildContext context , String fieldName , String signaturePadName) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -143,24 +149,21 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
                 isSign = false;
                 _signaturePadKey.currentState!.clear();
               },
-              child: Text(
-                '${AppLocalizations.of(context)!.remove}',
+              child: Text('${AppLocalizations.of(context)!.remove}',
                 style: AppStyles.rkRegularTextStyle(
                   size: AppConstants.smallFont,
                   color: AppColors.redColor,
-                ),
-              ),
+                ),),
             ),
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
-                if (isSign) {
-                  saveSignature(context, fieldName);
+                if(isSign){
+                  saveSignature(context , fieldName);
                   isSign = false;
                 }
               },
-              child: Text(
-                '${AppLocalizations.of(context)!.save}',
+              child: Text('${AppLocalizations.of(context)!.save}',
                 style: AppStyles.rkRegularTextStyle(
                   size: AppConstants.smallFont,
                   color: AppColors.mainColor,
@@ -173,23 +176,31 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     );
   }
 
-  void saveSignature(BuildContext context, String fieldName) async {
-    ui.Image tempImage = await _signaturePadKey.currentState!.toImage();
 
-    var data = await tempImage.toByteData(format: ui.ImageByteFormat.png);
+  void saveSignature(
+      BuildContext context , String fieldName) async {
+    ui.Image tempImage =
+    await _signaturePadKey.currentState!.toImage();
+
+
+    var data = await tempImage.toByteData(
+        format: ui.ImageByteFormat.png);
 
     final imageInUnit8List = (data!.buffer.asUint8List());
-    directory = (await getApplicationDocumentsDirectory()).path; // to get path of the file
+     directory = (await getApplicationDocumentsDirectory()).path; // to get path of the file
     var path = '${directory}/${fieldName}.png';
     imagePath = await File(path).writeAsBytes(imageInUnit8List);
 
-    if (fieldName == AppStrings.owner1SignatureString) {
+     if(fieldName == AppStrings.owner1SignatureString){
       owner1Signature = imagePath.path;
-    } else if (fieldName == AppStrings.owner2SignatureString) {
+    }
+    else if(fieldName == AppStrings.owner2SignatureString){
       owner2Signature = imagePath.path;
-    } else if (fieldName == AppStrings.guarantee1SignatureString) {
+    }
+   else if(fieldName == AppStrings.guarantee1SignatureString){
       guarantee1Signature = imagePath.path;
-    } else if (fieldName == AppStrings.guarantee2SignatureString) {
+    }
+   else if(fieldName == AppStrings.guarantee2SignatureString){
       guarantee2Signature = imagePath.path;
     }
 
@@ -198,18 +209,32 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     debugPrint('guarantee2Signature___${guarantee2Signature}');
     debugPrint('owner2Signature ____${owner2Signature}');
 
-    if (state.isOwner2Available) {
+    if(state.isOwner2Available ){
       debugPrint('owner1Signature___${owner1Signature}');
       debugPrint('guarantee1Signature___${guarantee1Signature}');
       debugPrint('guarantee2Signature___${guarantee2Signature}');
       debugPrint('owner2Signature ____${owner2Signature}');
-      if (owner1Signature != '' && owner2Signature != '' && guarantee1Signature != '' && guarantee2Signature != '') {
+      if(owner1Signature != '' &&  owner2Signature != ''
+          && guarantee1Signature != '' && guarantee2Signature !=''){
         emit(state.copyWith(isNextEnable: true));
       }
-    } else if (owner1Signature != '' && guarantee1Signature != '') {
-      debugPrint('owner1Signature___${owner1Signature}');
-      debugPrint('guarantee1Signature___${guarantee1Signature}');
-      emit(state.copyWith(isNextEnable: true));
     }
+    else if(owner1Signature != '' ){
+      if(state.isGuarantee1Available && guarantee1Signature == ''){
+        emit(state.copyWith(isNextEnable: false));
+      }else{
+        debugPrint('owner1Signature___${owner1Signature}');
+        debugPrint('guarantee1Signature___${guarantee1Signature}');
+        emit(state.copyWith(isNextEnable: true));
+      }
+
+    }
+
+
+
+
+
+
   }
+
 }

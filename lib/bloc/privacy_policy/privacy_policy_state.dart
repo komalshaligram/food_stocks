@@ -10,6 +10,7 @@ class PrivacyPolicyState with _$PrivacyPolicyState{
     required bool isUpdate,
     required bool isOwner2Available,
     required bool isNextEnable,
+    required bool isGuarantee1Available
   }) = _PrivacyPolicyState;
 
   factory PrivacyPolicyState.initial()=>  PrivacyPolicyState(
@@ -18,6 +19,7 @@ class PrivacyPolicyState with _$PrivacyPolicyState{
     isUpdate: false,
     isOwner2Available: false,
     isNextEnable: false,
-    pdfPath: Uint8List(1)
+    pdfPath: Uint8List(1),
+    isGuarantee1Available: false
   );
 }

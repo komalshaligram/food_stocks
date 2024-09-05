@@ -82,9 +82,9 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   accToken: response.data?.authToken?.accessToken ?? '');
               preferencesHelper.setRefreshToken(
                   refToken: response.data?.authToken?.refreshToken ?? '');
-              preferencesHelper.setUserId(id: (response.data?.adminType == AppStrings.subuserString) ? response.data?.user?.createdBy ?? '' :  response.data?.user?.id ?? '');
+              preferencesHelper.setUserId(id: (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' :  response.data?.user?.id ?? '');
               debugPrint('user id:${preferencesHelper.getUserId()}');
-              if(response.data?.adminType == AppStrings.subuserString){
+              if(response.data?.adminType == AppStrings.subUserString){
                 preferencesHelper.setUserName(
                     name: response.data?.user?.contactName ?? '');
               }
@@ -99,7 +99,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferencesHelper.setWalletId(
                   UserWalletId: response.data?.wallet ?? '');
               preferencesHelper.setIsSubUser(
-                  isSubUser: (response.data?.adminType == AppStrings.subuserString) ? true : false);
+                  isSubUser: (response.data?.adminType == AppStrings.subUserString) ? true : false);
               preferencesHelper.setEmailId(userEmailId: response.data?.user?.email ?? '');
 
               String? businessName = await Smartlook.instance.user.properties.getString("User business name");
@@ -126,12 +126,12 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
 
 
-              Smartlook.instance.user.setIdentifier((response.data?.adminType == AppStrings.subuserString) ? response.data?.user?.createdBy ?? '' :  response.data?.user?.id ?? '');
+              Smartlook.instance.user.setIdentifier((response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' :  response.data?.user?.id ?? '');
               Smartlook.instance.user.setEmail(response.data?.user?.email ?? '');
               Smartlook.instance.user.setName(response.data?.user?.clientDetail?.ownerName ?? '');
 
 
-              if(response.data?.adminType == AppStrings.subuserString){
+              if(response.data?.adminType == AppStrings.subUserString){
                 var res = response.data?.subUserPermissions;
                 preferencesHelper.setSubUserId(id: response.data?.user?.id ?? '');
                 preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
@@ -161,7 +161,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                  type: SnackBarType.SUCCESS,
+                  type: SnackBarType.success,
 
               );
             }else if(response.status == 400){
@@ -172,7 +172,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
               emit(state.copyWith(
                 isLoading: false,
               ));
@@ -186,7 +186,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } catch (e) {
             debugPrint('err = ${e}');
@@ -196,7 +196,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
           CustomSnackBar.showSnackBar(
               context: event.context,
               title: '${AppLocalizations.of(event.context)!.please_enter_otp}',
-              type: SnackBarType.SUCCESS);
+              type: SnackBarType.success);
         }
       }
       else if (event is _ChangeOtpEvent) {
@@ -246,7 +246,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
               emit(state.copyWith(
                 isLoading: false,
               ));
@@ -259,7 +259,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } catch (e) {
             debugPrint('err = ${e}');
@@ -269,7 +269,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
           CustomSnackBar.showSnackBar(
               context: event.context,
               title: '${AppLocalizations.of(event.context)!.please_enter_otp}',
-              type: SnackBarType.SUCCESS);
+              type: SnackBarType.success);
         }
       }
 
@@ -296,7 +296,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: '${AppLocalizations.of(event.context)!.otp_resend_success}',
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.success);
             preferencesHelper.setUserId(id: response.user?.id ?? '');
             preferencesHelper.setPhoneNumber(
                 userPhoneNumber: event.contactNumber);
@@ -306,7 +306,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: response.message??'',
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
             emit(state.copyWith(
               isLoading: false,
             ));
@@ -318,7 +318,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
             emit(state.copyWith(
               isLoading: false,
             ));

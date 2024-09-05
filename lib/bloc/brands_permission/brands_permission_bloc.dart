@@ -126,8 +126,8 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:  '${AppLocalizations.of(event.context)!.successmessage}',
-                type: SnackBarType.SUCCESS);
+                title:  '${AppLocalizations.of(event.context)!.success_message}',
+                type: SnackBarType.success);
 
           } else {
             emit(state.copyWith(isUpdateProcess: false));

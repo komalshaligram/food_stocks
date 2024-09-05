@@ -62,11 +62,11 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           } else if(response.status == AppConstants.code_403){
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.FAILURE);
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
             emit(state.copyWith(isLoading: false,));
           }
           else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.FAILURE);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
             emit(state.copyWith(isLoading: false,));
           }
         } on ServerException {

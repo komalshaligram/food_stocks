@@ -35,7 +35,6 @@ class OTPScreen extends StatelessWidget {
   }
 }
 
-
 class OTPScreenWidget extends StatefulWidget {
   final bool isRegister;
   final String contact;
@@ -83,7 +82,6 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                 onTap: () {
                   debugPrint('register ${widget.isRegister}');
                   bloc.add(OtpEvent.cancelOtpTimerSubscription());
-
                   Navigator.pop(context);
                 },
               ),
@@ -129,6 +127,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                             },
                             onCodeChanged: (code) {
                               _code= code!;
+                              debugPrint('length:${code.length}');
                               if(code.length==4){
                                 if (widget.isRegister == true) {
                                   bloc.add(OtpEvent.registerApiEvent(
@@ -169,13 +168,13 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                                 context: context,
                                 title:
                                 '${AppLocalizations.of(context)!.please_enter_otp}',
-                                type: SnackBarType.FAILURE);
+                                type: SnackBarType.failure);
                           } else if (_code.length != 4) {
                             CustomSnackBar.showSnackBar(
                                 context: context,
                                 title:
                                 '${AppLocalizations.of(context)!.enter_4digit_otp}',
-                                type: SnackBarType.FAILURE);
+                                type: SnackBarType.failure);
                           } else {
                             if (widget.isRegister == true) {
                               bloc.add(OtpEvent.registerApiEvent(

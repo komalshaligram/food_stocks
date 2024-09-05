@@ -13,6 +13,7 @@ class BankInfoState with _$BankInfoState{
     required bool isApiShimmering,
     required bool isUpdate,
     required bool isPaymentFail,
+    required bool isLoading
 
   }) = _BankInfoState;
 
@@ -24,7 +25,8 @@ class BankInfoState with _$BankInfoState{
     isShimmering: false,
     isApiShimmering: false,
     isUpdate: false,
-    isPaymentFail: false
+    isPaymentFail: false,
+    isLoading:false
    
   );
 

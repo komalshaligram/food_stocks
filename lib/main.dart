@@ -23,16 +23,13 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     debugPrint("Handling in main${message.toString()}");
     debugPrint("Handling a background message:${message.messageId}");
     debugPrint("Handling a background message:${message.data.toString()}");
-
-   /* if(data!=null){
+ /*   if(message.data!=null){
       debugPrint('notifrom main');
       PushNotificationService().showNotification(
           notiId: message.notification.hashCode,
-          androidIcon:message.notification?.android?.smallIcon,
-          data: data,
-          isNavigate: true,
-          showNotification: true,
-          isAppOpen: true
+      imageUrl:Platform.isAndroid? message.notification?.android?.imageUrl??'':message.notification?.apple?.imageUrl??'',
+        title: message.notification?.title??'',
+        body: message.notification?.body??'',data: message.data.toString()
       );
   }*/
 }

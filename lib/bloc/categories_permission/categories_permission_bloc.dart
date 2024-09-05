@@ -140,7 +140,7 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isUpdateProcess: false));
             Navigator.pop(event.context);
-            CustomSnackBar.showSnackBar(context: event.context, title: '${AppLocalizations.of(event.context)!.successmessage}', type: SnackBarType.SUCCESS);
+            CustomSnackBar.showSnackBar(context: event.context, title: '${AppLocalizations.of(event.context)!.success_message}', type: SnackBarType.success);
           } else {
             emit(state.copyWith(isUpdateProcess: false));
           }

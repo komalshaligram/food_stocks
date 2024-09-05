@@ -48,9 +48,9 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
         data: reqMap,
       );
 
-      CreditCardResModel response = CreditCardResModel.fromJson(res);
-      //    debugPrint('login response --- ${response}');
-      if (response.status == AppConstants.code_200) {
+     // CreditCardResModel response = CreditCardResModel.fromJson(res);
+      if (res[AppStrings.statusString] == AppConstants.code_200) {
+        debugPrint('isFromRegFlow:${state.isFromRegFlow}');
         if(state.isFromRegFlow) {
           add(CreditCardDetailsEvent.termsConditionApiEvent(context: event.context));
         }else{
@@ -63,9 +63,9 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
         CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(
-                response.message.toLocalization(),
+                res[AppStrings.messageString].toLocalization(),
                 event.context),
-            type: SnackBarType.FAILURE);
+            type: SnackBarType.failure);
       }
     } on ServerException {
       emit(state.copyWith(
@@ -139,7 +139,6 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
         ),
       );
 
-
       TermsConditionResModel response =
       TermsConditionResModel.fromJson(res);
       if(response.status == AppConstants.code_200){
@@ -160,7 +159,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
       CustomSnackBar.showSnackBar(
           context: event.context,
           title: e.toString(),
-          type: SnackBarType.FAILURE);
+          type: SnackBarType.failure);
       emit(state.copyWith(isLoading: false,));
     }
   }

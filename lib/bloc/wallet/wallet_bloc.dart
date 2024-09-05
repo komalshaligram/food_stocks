@@ -161,7 +161,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE,
+                type: SnackBarType.failure,
               );
             }
 
@@ -321,7 +321,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE,
+                type: SnackBarType.failure,
               );
             }
           } on ServerException {
@@ -331,7 +331,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),
-              type: SnackBarType.FAILURE,
+              type: SnackBarType.failure,
             );
             emit(state.copyWith(isExportShimmering: false));
           }
@@ -408,7 +408,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                         response.message?.toLocalization() ??
                             response.message!,
                         event.context),
-                    type: SnackBarType.FAILURE);
+                    type: SnackBarType.failure);
 
               }
             } on ServerException {
@@ -417,7 +417,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: e.toString(),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
 
             }
           }

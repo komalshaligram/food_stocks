@@ -145,7 +145,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                               response.message?.toLocalization() ??
                                   response.message!,
                               event.context),
-                          type: SnackBarType.FAILURE);
+                          type: SnackBarType.failure);
                     }
                   } on ServerException {
                     emit(state.copyWith(isShimmering: false));
@@ -158,7 +158,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                         response.message?.toLocalization() ??
                             response.message!,
                         event.context),
-                    type: SnackBarType.FAILURE);
+                    type: SnackBarType.failure);
                 emit(state.copyWith(isLoading: false));
               }
             } on ServerException {
@@ -175,7 +175,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
             emit(state.copyWith(isLoading: false));
           }
         } on ServerException {
@@ -184,7 +184,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               context: event.context,
               title:
                   '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              type: SnackBarType.FAILURE);
+              type: SnackBarType.failure);
         }
       }
       else if (event is _getFilesListEvent) {
@@ -214,7 +214,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
             emit(state.copyWith(isLoading: false));
           }
         } on ServerException {
@@ -222,7 +222,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               context: event.context,
               title:
                   '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              type: SnackBarType.FAILURE);
+              type: SnackBarType.failure);
           emit(state.copyWith(isLoading: false));
         }
       }
@@ -271,7 +271,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: '${AppLocalizations.of(event.context)!.select_valid_document_format}',
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
             return;
           }
           String? fileSize;
@@ -385,7 +385,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                             .toString()
                             .toLocalization(),
                         event.context),
-                    type: SnackBarType.FAILURE);
+                    type: SnackBarType.failure);
               }
             } catch (e) {
               emit(state.copyWith(isUploadLoading: false));
@@ -433,7 +433,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   context: event.context,
                   title:
                       '${AppLocalizations.of(event.context)!.registered_successfully}',
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.success);
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
@@ -458,7 +458,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     context: event.context,
                     title:
                         '${AppLocalizations.of(event.context)!.removed_successfully}',
-                    type: SnackBarType.SUCCESS,
+                    type: SnackBarType.success,
                 );
               } else {
                 emit(state.copyWith(isApiLoading: false));
@@ -467,7 +467,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     context: event.context,
                     title:
                         '${AppLocalizations.of(event.context)!.updated_successfully}',
-                    type: SnackBarType.SUCCESS,
+                    type: SnackBarType.success,
 
                 );
               }
@@ -492,7 +492,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     context: event.context,
                     title:
                     '${AppLocalizations.of(event.context)!.registered_successfully}',
-                    type: SnackBarType.SUCCESS);
+                    type: SnackBarType.success);
               }
 
             }
@@ -504,7 +504,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isApiLoading: false));
@@ -525,7 +525,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.removed_successfully}',
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.success);
          //   add(FileUploadEvent.uploadApiEvent(context: event.context, isFromDelete: true));
             return;
           }
@@ -583,7 +583,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         } catch (e) {
           emit(state.copyWith(isRemoveProcess: false));
@@ -591,7 +591,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               context: event.context,
               title:
                   '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              type: SnackBarType.FAILURE);
+              type: SnackBarType.failure);
         }
       }
       else if (event is _downloadFileEvent) {
@@ -626,7 +626,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               context: event.context,
               title:
                   AppLocalizations.of(event.context)!.downloaded_successfully,
-              type: SnackBarType.SUCCESS);
+              type: SnackBarType.success);
           emit(state.copyWith(downloadProgress: 0, isDownloading: false));
 
         } catch (e) {
@@ -634,7 +634,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           CustomSnackBar.showSnackBar(
               context: event.context,
               title: '${AppLocalizations.of(event.context)!.failed_download}',
-              type: SnackBarType.FAILURE);
+              type: SnackBarType.failure);
         }
       }
       else if (event is _getProfileFilesAndFormsEvent) {
@@ -681,14 +681,14 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         }
       }

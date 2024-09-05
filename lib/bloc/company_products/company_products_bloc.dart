@@ -126,7 +126,7 @@ class CompanyProductsBloc
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false,isRefreshingProduct: false));
@@ -365,7 +365,7 @@ class CompanyProductsBloc
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ?? '',
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         } on ServerException {
           Navigator.pop(event.context);
@@ -405,7 +405,7 @@ class CompanyProductsBloc
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
-                    type: SnackBarType.FAILURE);
+                    type: SnackBarType.failure);
                 return;
               }
             }
@@ -426,7 +426,7 @@ class CompanyProductsBloc
                 context: event.context,
                 title:
                 "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         }
       }
@@ -492,7 +492,7 @@ class CompanyProductsBloc
                 context: event.context,
                 title:
                 "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           }
@@ -569,7 +569,7 @@ class CompanyProductsBloc
           CustomSnackBar.showSnackBar(
               context: event.context,
               title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
-              type: SnackBarType.FAILURE);
+              type: SnackBarType.failure);
           return;
         }    if(state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty > 0){
           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity >
@@ -578,7 +578,7 @@ class CompanyProductsBloc
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
             return;
           }
         }
@@ -631,7 +631,7 @@ class CompanyProductsBloc
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ?? response.message!,
                       event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.success);
             } else {
               Navigator.pop(event.context);
               emit(state.copyWith(isLoading: false));
@@ -641,7 +641,7 @@ class CompanyProductsBloc
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             Navigator.pop(event.context);
@@ -726,7 +726,7 @@ class CompanyProductsBloc
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ?? response.message!, event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.success);
             } else if (response.status == 403) {
               Navigator.pop(event.context);
               emit(state.copyWith(isLoading: false));
@@ -736,7 +736,7 @@ class CompanyProductsBloc
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -745,7 +745,7 @@ class CompanyProductsBloc
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             debugPrint('url1 = ');
@@ -940,7 +940,7 @@ class CompanyProductsBloc
             title:
             '${AppLocalizations.of(event.context)!
                 .something_is_wrong_try_again}',
-            type: SnackBarType.FAILURE,
+            type: SnackBarType.failure,
           );
           emit(state.copyWith(isSearching: false));
         } catch (exc) {
@@ -949,7 +949,7 @@ class CompanyProductsBloc
             title:
             '${AppLocalizations.of(event.context)!
                 .something_is_wrong_try_again}',
-            type: SnackBarType.FAILURE,
+            type: SnackBarType.failure,
           );
           emit(state.copyWith(isSearching: false));
         }
@@ -998,7 +998,7 @@ class CompanyProductsBloc
                   response.message?.toLocalization() ??
                       response.message!,
                   event.context),
-              type: SnackBarType.SUCCESS,
+              type: SnackBarType.success,
 
             );
           }
@@ -1040,7 +1040,7 @@ class CompanyProductsBloc
             title: AppStrings.getLocalizedStrings(
                 response.message?.toLocalization() ?? '',
                 event.context),
-            type: SnackBarType.SUCCESS,
+            type: SnackBarType.success,
           );
         }
       }
@@ -1082,7 +1082,7 @@ class CompanyProductsBloc
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
 
             }
           } on ServerException {
@@ -1091,7 +1091,7 @@ class CompanyProductsBloc
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: e.toString(),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
 
           }
         }

@@ -70,7 +70,7 @@ class MessageContentBloc
            CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: e.toString(),
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.success);
         }
 
       } else if (event is _MessageUpdateEvent) {

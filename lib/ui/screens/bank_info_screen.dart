@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/data/model/req_model/terms_condition/terms_condition_req_model.dart';
@@ -21,7 +22,6 @@ class BankInfoRoute {
   static Widget get route => const BankInfoScreen();
 }
 
-
 class BankInfoScreen extends StatelessWidget {
   const BankInfoScreen({super.key});
 
@@ -35,7 +35,7 @@ class BankInfoScreen extends StatelessWidget {
       create: (context) => BankInfoBloc()..add(BankInfoEvent.getBankNameEvent(context: context))
       ..add(BankInfoEvent.getTermsConditionModelEvent(context: context,
           termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? TermsConditionReqModel()))
-        ..add(BankInfoEvent.getArgumentEvent(isPaymentFail: args?[AppStrings.isPaymentFail] ?? false)),
+        ..add(BankInfoEvent.getArgumentEvent(isPaymentFail: args?[AppStrings.isPaymentFail] ?? false,isUpdate: args?[AppStrings.updateString]??false)),
       child: BankInfoWidget(),
     );
   }
@@ -43,7 +43,9 @@ class BankInfoScreen extends StatelessWidget {
 
 class BankInfoWidget extends StatelessWidget {
    BankInfoWidget({super.key});
+
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     BankInfoBloc bloc = context.read<BankInfoBloc>();
@@ -103,6 +105,10 @@ class BankInfoWidget extends StatelessWidget {
                         name: AppLocalizations.of(context)!.branch_number,
                       ),
                       CustomFormField(
+                        inputformet: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(16)
+                        ],
                         context: context,
                         controller: state.branchController,
                         keyboardType: TextInputType.number,
@@ -117,6 +123,10 @@ class BankInfoWidget extends StatelessWidget {
                       ),
                       CustomFormField(
                         context: context,
+                        inputformet: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(16)
+                        ],
                         controller: state.accountNumberController,
                         keyboardType: TextInputType.number,
                         hint: "",
@@ -145,11 +155,11 @@ class BankInfoWidget extends StatelessWidget {
                   if (_formKey.currentState
                       ?.validate() ??
                       false) {
-                    if(state.isPaymentFail){
-                      Navigator.pop(context);
+                    if(!state.isUpdate){
+                      bloc.add(BankInfoEvent.termsConditionApiEvent(context: context));
                     }
                     else{
-                      bloc.add(BankInfoEvent.termsConditionApiEvent(context: context));
+                      bloc.add(BankInfoEvent.addBankInfoEvent(context: context));
                     }
                   }
                 },

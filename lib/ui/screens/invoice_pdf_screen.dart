@@ -48,7 +48,6 @@ class InvoicePdfScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    InvoicePdfBloc bloc = context.read<InvoicePdfBloc>();
     return BlocBuilder<InvoicePdfBloc, InvoicePdfState>(
       builder: (context, state) {
         return Scaffold(
@@ -77,7 +76,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                             context: context,
                             title:
                                 '${AppLocalizations.of(context)!.storage_permission}',
-                            type: SnackBarType.FAILURE);
+                            type: SnackBarType.failure);
                         return;
                       }
                     }

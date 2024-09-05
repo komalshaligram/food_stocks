@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/data/error/exceptions.dart';
 import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/routes/app_routes.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -75,7 +76,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
 
             debugPrint('logOut response  = ${response}');
 
-            if (response[AppStrings.statusString] == 200) {
+            if (response[AppStrings.statusString] == AppConstants.code_200) {
               SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                   prefs: await SharedPreferences.getInstance());
               await preferencesHelper.setUserLoggedIn();
@@ -89,7 +90,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                   context: event.context,
                   title:
                   '${AppLocalizations.of(event.context)!.logged_out_successfully}',
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.success);
               emit(state.copyWith(isLogOutProcess: false));
             } else {
               CustomSnackBar.showSnackBar(
@@ -97,7 +98,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                   title: AppStrings.getLocalizedStrings(
                       response[AppStrings.messageString].toString().toLocalization(),
                       event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.success);
               emit(state.copyWith(isLogOutProcess: false));
             }
           } on ServerException {
@@ -127,7 +128,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             debugPrint('res = ${res}');
             ProfileDetailsResModel response =
             ProfileDetailsResModel.fromJson(res);
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
               if(!preferences.getSubUser()){
                 preferences.setUserImageUrl(imageUrl: response.data?.clients?.first.profileImage ?? '');
                 emit(
@@ -143,7 +144,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } on ServerException {
 
@@ -164,7 +165,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
               debugPrint('AccountPermission response profileMenu= ${response.data.toString()}');
 
-              if (response.status == 200) {
+              if (response.status == AppConstants.code_200) {
                 var res = response.data?.permissions;
 
                 if(/*preferences.getAppLanguage() == AppStrings.englishString &&*/ preferences.getCanSeeWallet() != res?.canSeeWallet){
@@ -193,7 +194,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                     isAccountPermissionShimmering: false,
                     isCanSeeInvoices: preferences.getCanSeeInvoices()
                 ));
-
               } else {
                 CustomSnackBar.showSnackBar(
                     context: event.context,
@@ -201,7 +201,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                         response.message?.toLocalization() ??
                             response.message!,
                         event.context),
-                    type: SnackBarType.FAILURE);
+                    type: SnackBarType.failure);
 
               }
             } on ServerException {
@@ -209,11 +209,9 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: e.toString(),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           }
-
-
         }
         else if(event is _updateMaintenanceEvent){
           emit(state.copyWith(isDialogOpen: true));
@@ -226,7 +224,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             SettingResModel response = SettingResModel.fromJson(res);
 
             debugPrint('general settings = ${response.data.toString()}');
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
 
               if(preferences.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
                 add(ProfileMenuEvent.updateMaintenanceEvent(context: event.context));
@@ -241,7 +239,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                   emit(state.copyWith(isDialogOpen: true));
                 }else{
                   emit(state.copyWith(isDialogOpen: false));
-
                 }
               }
               preferences.setIsSaleOn(isSaleOn:  response.data?.isSaleOn ?? false);
@@ -265,10 +262,9 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: e.toString(),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         }
-
         else if(event is _userApproveEvent){
           try {
             debugPrint('clientId_____${preferences.getUserId()}');
@@ -279,7 +275,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
             debugPrint('verifyClient res_____$response');
             debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
               if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
                 Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
               }
@@ -292,10 +288,8 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
           catch (e) {
             debugPrint('catch____$e');
           }
-
         }
       }
-
     });
   }
 }

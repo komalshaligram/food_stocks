@@ -100,7 +100,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   context: event.context,
                   title:
                       '${AppLocalizations.of(event.context)!.please_enter_email}',
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             } catch (e) {
               emit(state.copyWith(isFileUploading: false,isUploadingProcess: false));
             }
@@ -129,7 +129,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   title: AppStrings.getLocalizedStrings(
                       response[AppStrings.messageString].toString().toLocalization(),
                       event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.success);
               emit(state.copyWith());
             }
           }else{
@@ -207,6 +207,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               Smartlook.instance.user.setName(response.data?.clients?.first.clientDetail?.ownerName ?? '');
 
               debugPrint('image = ${response.data?.clients?.first.profileImage}');
+
+              preferences.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString()??'0');
+              preferences.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
+
               emit(
                 state.copyWith(
                   userId: response.data?.clients?.first.id ?? '',
@@ -245,7 +249,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             emit(state.copyWith(isUpdating: false));
@@ -309,7 +313,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               context: event.context,
               title:
                   '${AppLocalizations.of(event.context)!.updated_successfully}',
-              type: SnackBarType.SUCCESS,
+              type: SnackBarType.success,
             );
           }
           else {
@@ -318,7 +322,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppLocalizations.of(event.context)!.israel_id_or_business_id_number_error,
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
             else{
               CustomSnackBar.showSnackBar(
@@ -327,7 +331,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE,
+                type: SnackBarType.failure,
               );
             }
           }
@@ -347,7 +351,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.removed_successfully}',
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.success);
             return;
           }
           emit(state.copyWith(isFileUploading: true));
@@ -385,7 +389,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.removed_successfully}',
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.success);
           } else {
             emit(state.copyWith(isFileUploading: false));
             CustomSnackBar.showSnackBar(
@@ -394,7 +398,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   response.message?.toLocalization() ??
                       response.message!,
                   event.context),
-              type: SnackBarType.FAILURE,
+              type: SnackBarType.failure,
             );
           }
         } catch (e) {
@@ -403,7 +407,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               context: event.context,
               title:
                   '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              type: SnackBarType.FAILURE);
+              type: SnackBarType.failure);
         }
       }
     });

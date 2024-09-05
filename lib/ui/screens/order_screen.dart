@@ -243,7 +243,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                           ),
                         ),
                         child: Text(
-                            orderDetailsList[index].comaxInvoicePrice != '0' ? '${(formatNumber(value: orderDetailsList[index].comaxInvoicePrice.toString(), local: AppStrings.hebrewLocal))}'  :'${(formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal))}',
+                            orderDetailsList[index].rivchitInvoicePrice != '0' ? '${(formatNumber(value: orderDetailsList[index].rivchitInvoicePrice.toString(), local: AppStrings.hebrewLocal))}'  :'${(formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal))}',
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.font_14,
                               color: AppColors.whiteColor,

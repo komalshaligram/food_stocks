@@ -1,30 +1,27 @@
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:food_stock/bloc/profile_menu/profile_menu_bloc.dart';
+
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
+
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/profile_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
-import '../utils/themes/app_urls.dart';
+
 import '../widget/common_alert_dialog.dart';
 import '../widget/common_drop_down_button.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../widget/file_selection_option_widget.dart';
+
 
 class ProfileRoute {
   static Widget get route => const ProfileScreen();
@@ -73,9 +70,8 @@ class ProfileScreenWidget extends StatelessWidget {
               context: context,
               title:
                   '${AppLocalizations.of(context)!.file_size_must_be_less_then}',
-              type: SnackBarType.FAILURE);
+              type: SnackBarType.failure);
         }
-
       },
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
@@ -125,7 +121,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   10.height,
-                                  Center(
+                                  /*Center(
                                     child: GestureDetector(
                                       onTap: () {
                                         showModalBottomSheet(
@@ -505,7 +501,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                           color: AppColors.textColor),
                                     ),
                                   ),
-                                  7.height,
+                                  7.height,*/
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!
                                         .type_of_business,
@@ -629,7 +625,6 @@ class ProfileScreenWidget extends StatelessWidget {
                                     onPressed: state.isLoading
                                         ? null
                                         : () {
-
                                             if (state.selectedBusinessType!= AppLocalizations.of(context)?.type_of_business) {
                                               if(isValidIsraeliID(state.businessIdController.text.toString().trim())) {
                                                    if(isValidIsraeliID(state.israelIdController.text.toString().trim())) {
@@ -652,7 +647,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                          title: AppLocalizations.of(
                                                              context)!
                                                              .please_enter_valid_israel_id,
-                                                         type: SnackBarType.FAILURE);
+                                                         type: SnackBarType.failure);
                                                    }
                                               }else{
                                                 CustomSnackBar.showSnackBar(
@@ -660,7 +655,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                     title: AppLocalizations.of(
                                                         context)!
                                                         .please_enter_valid_business_id,
-                                                    type: SnackBarType.FAILURE);
+                                                    type: SnackBarType.failure);
                                               }
                                             } else {
                                               CustomSnackBar.showSnackBar(
@@ -668,7 +663,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                   title: AppLocalizations.of(
                                                           context)!
                                                       .select_business_type,
-                                                  type: SnackBarType.FAILURE);
+                                                  type: SnackBarType.failure);
                                             }
                                           },
                                     fontColors: AppColors.whiteColor,

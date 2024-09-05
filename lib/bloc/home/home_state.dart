@@ -53,7 +53,8 @@ class HomeState with _$HomeState {
     required bool isAppOnMaintenance,
     required String language,
     required bool isDialogOpen,
-    required bool retryLoading
+    required bool retryLoading,
+    required RefreshController refreshController,
 
   }) = _HomeState;
 
@@ -112,7 +113,8 @@ class HomeState with _$HomeState {
       isSaleOn : false,
       isAppOnMaintenance : false,
       isDialogOpen : false,
-      language : 'he',
-      retryLoading:false
+      language :AppStrings.hebrewString,
+      retryLoading:false,
+      refreshController: RefreshController()
   );
 }

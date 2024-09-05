@@ -325,7 +325,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                   context: context,
                                   title:
                                   '${AppLocalizations.of(context)!.signature_missing}',
-                                  type: SnackBarType.FAILURE);
+                                  type: SnackBarType.failure);
                             }
                           }
                   

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -79,6 +80,10 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
                       name:  AppLocalizations.of(context)!.credit_card_number,
                     ),
                     CustomFormField(
+                      inputformet: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(16)
+                      ],
                       context: context,
                       controller: state.creditCardNumberController,
                       keyboardType: TextInputType.number,
@@ -92,9 +97,13 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
                       name:  AppLocalizations.of(context)!.validity,
                     ),
                     CustomFormField(
+                      inputformet: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(4)
+                      ],
                       context: context,
                       controller: state.validityController,
-                      keyboardType: TextInputType.datetime,
+                      keyboardType: TextInputType.number,
                       hint: "",
                       fillColor: Colors.transparent,
                       textInputAction: TextInputAction.done,
@@ -117,12 +126,13 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
                 isLoading: state.isLoading,
                 onPressed:  () {
                   if(_formKey.currentState?.validate() ?? false){
-                    if(state.isPaymentFail){
+                    context.read<CreditCardDetailsBloc>().add(CreditCardDetailsEvent.addCreditCardEvent(context: context));
+                   /* if(state.isPaymentFail){
                      Navigator.pop(context);
                     }
                     else{
-                      context.read<CreditCardDetailsBloc>().add(CreditCardDetailsEvent.addCreditCardEvent(context: context));
-                    }
+
+                    }*/
                   }
                 },
                 fontColors: AppColors.whiteColor,

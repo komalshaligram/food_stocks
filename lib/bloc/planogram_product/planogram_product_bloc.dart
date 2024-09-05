@@ -323,7 +323,7 @@ class PlanogramProductBloc
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ?? '',
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isProductLoading: false));
@@ -366,7 +366,7 @@ class PlanogramProductBloc
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
-                    type: SnackBarType.FAILURE);
+                    type: SnackBarType.failure);
                 return;
               }
             }
@@ -387,7 +387,7 @@ class PlanogramProductBloc
                 context: event.context,
                 title:
                 "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         }
       }
@@ -453,7 +453,7 @@ class PlanogramProductBloc
                 context: event.context,
                 title:
                 "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           }
@@ -528,7 +528,7 @@ class PlanogramProductBloc
           CustomSnackBar.showSnackBar(
               context: event.context,
               title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
-              type: SnackBarType.FAILURE);
+              type: SnackBarType.failure);
           return;
         }
         if(state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty > 0){
@@ -538,7 +538,7 @@ class PlanogramProductBloc
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
             return;
           }
         }
@@ -591,7 +591,7 @@ class PlanogramProductBloc
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ?? response.message!,
                       event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.success);
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -600,7 +600,7 @@ class PlanogramProductBloc
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             emit(state.copyWith(isLoading: false));
@@ -678,7 +678,7 @@ class PlanogramProductBloc
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ?? response.message!, event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.success);
             } else if (response.status == 403) {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -687,7 +687,7 @@ class PlanogramProductBloc
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -696,7 +696,7 @@ class PlanogramProductBloc
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             debugPrint('url1 = ');
@@ -888,7 +888,7 @@ class PlanogramProductBloc
             title:
             '${AppLocalizations.of(event.context)!
                 .something_is_wrong_try_again}',
-            type: SnackBarType.FAILURE,
+            type: SnackBarType.failure,
           );
           emit(state.copyWith(isSearching: false));
         } catch (exc) {
@@ -897,7 +897,7 @@ class PlanogramProductBloc
             title:
             '${AppLocalizations.of(event.context)!
                 .something_is_wrong_try_again}',
-            type: SnackBarType.FAILURE,
+            type: SnackBarType.failure,
           );
           emit(state.copyWith(isSearching: false));
         }
@@ -946,7 +946,7 @@ class PlanogramProductBloc
                   response.message?.toLocalization() ??
                       response.message!,
                   event.context),
-              type: SnackBarType.SUCCESS,
+              type: SnackBarType.success,
 
             );
           }
@@ -987,7 +987,7 @@ class PlanogramProductBloc
             title: AppStrings.getLocalizedStrings(
                 response.message?.toLocalization() ?? '' ,
                 event.context),
-            type: SnackBarType.SUCCESS,
+            type: SnackBarType.success,
           );
         }
       }
@@ -1029,7 +1029,7 @@ class PlanogramProductBloc
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
 
             }
           } on ServerException {
@@ -1038,7 +1038,7 @@ class PlanogramProductBloc
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: e.toString(),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
 
           }
         }

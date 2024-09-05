@@ -16,6 +16,10 @@ class AuthFormValidation {
       case AppStrings.mobileValString:
         return formFieldValidation.mobileField(value,context);
 
+      case AppStrings.agentCodeString:
+        return formFieldValidation.agentCodeField(value,context);
+
+
       case AppStrings.businessNameValString:
         return formFieldValidation.businessNameField(value,context);
 
@@ -24,6 +28,9 @@ class AuthFormValidation {
 
       case AppStrings.ownerNameValString:
         return formFieldValidation.ownerNameField(value,context);
+
+      case AppStrings.ownerName2ValString:
+        return formFieldValidation.owner2NameField(value,context);
 
       case AppStrings.idValString:
         return formFieldValidation.idField(value,context);
@@ -34,9 +41,8 @@ class AuthFormValidation {
       case AppStrings.addressValString:
         return formFieldValidation.addressNameField(value,context);
 
-      case AppStrings.faxValString:
-        return formFieldValidation.faxField(value,context);
-
+      case AppStrings.guaranteeName2String:
+        return formFieldValidation.guaranteeName2Field(value,context);
       case AppStrings.guaranteeNameString:
         return formFieldValidation.guaranteeNameField(value,context);
 

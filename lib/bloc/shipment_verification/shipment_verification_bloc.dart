@@ -95,7 +95,7 @@ class ShipmentVerificationBloc
                             .toString()
                             .toLocalization(),
                         event.context),
-                    type: SnackBarType.SUCCESS);
+                    type: SnackBarType.success);
               } else {
                emit(state.copyWith(isLoading: false));
                 CustomSnackBar.showSnackBar(
@@ -105,7 +105,7 @@ class ShipmentVerificationBloc
                             .toString()
                             .toLocalization(),
                         event.context),
-                    type: SnackBarType.FAILURE);
+                    type: SnackBarType.failure);
               }
             } on ServerException { emit(state.copyWith(isLoading: false));}
           } else {
@@ -114,7 +114,7 @@ class ShipmentVerificationBloc
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.signature_missing}',
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         }
       }

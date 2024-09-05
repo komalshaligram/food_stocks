@@ -63,7 +63,7 @@ class QuestionAndAnswerBloc
                 context: event.context,
                 title: response.message ??
                     '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.success);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));

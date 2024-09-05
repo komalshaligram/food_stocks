@@ -492,7 +492,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                   context: context,
                                                   title:
                                                       '${AppLocalizations.of(context)!.storage_permission}',
-                                                  type: SnackBarType.FAILURE);
+                                                  type: SnackBarType.failure);
                                               return;
                                             }
                                           }

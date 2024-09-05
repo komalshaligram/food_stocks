@@ -51,7 +51,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         } on ServerException {}
       }
@@ -101,7 +101,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
                  response.message?.toLocalization() ??
                      response.message!,
                  event.context),
-                type: SnackBarType.FAILURE,
+                type: SnackBarType.failure,
            );
             emit(state.copyWith(isLoading: false));
           } else {
@@ -111,7 +111,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
             emit(state.copyWith(isLoading: false));
           }
         } on ServerException {

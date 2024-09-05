@@ -28,8 +28,8 @@ double getScreenWidth(BuildContext context) {
 }
 
 enum SnackBarType {
-  SUCCESS,
-  FAILURE,
+  success,
+  failure,
 }
 
 bool isTablet(BuildContext context) {
@@ -45,12 +45,11 @@ bool isTablet(BuildContext context) {
 String maskCreditCardNumber(String cardNumber) {
   var firstDigits = cardNumber.substring(0, 4);
   var lastDigits = cardNumber.substring(cardNumber.length - 4, cardNumber.length);
-  var requiredMask = 'X' * (cardNumber.length - firstDigits.length - lastDigits.length);
-  var maskedString = requiredMask + requiredMask + lastDigits;
+  var requiredMask = 'X' * (cardNumber.length - firstDigits.length);
+  var maskedString = requiredMask + lastDigits;
   var maskedCardNumberWithSpaces = maskedString.replaceAllMapped(RegExp(r'.{4}'), (match) => '${match.group(0)}-');
   return maskedCardNumberWithSpaces.toString().substring(0,maskedCardNumberWithSpaces.length-1);
 }
-
 
 String formatExpiryDate(String text) {
   String separator = '/';
@@ -113,7 +112,7 @@ class CustomSnackBar {
       trailing: Container(),
       title,
       context,
-      backgroundColor: type == SnackBarType.SUCCESS
+      backgroundColor: type == SnackBarType.success
           ? AppColors.mainColor.withOpacity(0.85)
           : AppColors.redColor.withOpacity(0.85),
       toastBorderRadius: 8.0,
@@ -170,6 +169,7 @@ customShowUpdateDialog(
 
 Future<void> _launchUrl(String storeUrl) async {
   Uri _url = Uri.parse(storeUrl);
+
     try {
       launchUrl(_url);
     } on PlatformException catch (e) {
@@ -182,16 +182,20 @@ Future<void> _launchUrl(String storeUrl) async {
 bool isValidIsraeliID(String id) {
   id = id.trim();
   if (id.length > 9 || id.length < 5 || int.tryParse(id) == null) return false;
+
   // Pad string with zeros up to 9 digits
   id = id.length < 9 ? id.padLeft(9, '0') : id;
+
   int sum = 0;
   for (int i = 0; i < id.length; i++) {
     int digit = int.parse(id[i]);
     int step = digit * ((i % 2) + 1);
     sum += (step > 9) ? step - 9 : step;
   }
+
   return sum % 10 == 0;
 }
+
 
 Future<CroppedFile?> cropImage(
     {required String path,
@@ -251,6 +255,12 @@ Future<String> scanBarcodeOrQRCode({required BuildContext context, required Stri
   }
   debugPrint('barcode = $barcodeSOrQRScanRes');
   return barcodeSOrQRScanRes;
+}
+
+bool isRTLContent({required BuildContext context}) {
+  Locale locale = Localizations.localeOf(context);
+  List<Locale> rtlLocales = [Locale(AppStrings.hebrewString)];
+  return rtlLocales.contains(locale) ? true : false;
 }
 
 extension RTLExtension on BuildContext {

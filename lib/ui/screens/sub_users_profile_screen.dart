@@ -155,7 +155,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                                           }
                                         }
                                       } else {
-                                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id, type: SnackBarType.FAILURE);
+                                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id, type: SnackBarType.failure);
                                       }
                                     },
                                     fontColors: AppColors.whiteColor,
@@ -239,7 +239,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                           }
                         }
                       }else {
-                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id, type: SnackBarType.FAILURE);
+                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id, type: SnackBarType.failure);
                       }
                     },
                     fontColors: AppColors.whiteColor,

@@ -201,8 +201,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                               onPressed: state.isApiLoading
                                                   ? null
                                                   : () {
-                                                 if(state.formsAndFilesList[0].url != null && state.formsAndFilesList[1].url != null
-                                                 && state.formsAndFilesList[2].url != null
+                                                 if(state.formsAndFilesList[0].url != null
                                                  ){
                                                     bloc.add(FileUploadEvent
                                                         .uploadApiEvent(
@@ -212,7 +211,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                     CustomSnackBar.showSnackBar(
                                                         context:context,
                                                         title: AppLocalizations.of(context)!.upload_document,
-                                                        type: SnackBarType.FAILURE);
+                                                        type: SnackBarType.failure);
                                                   }
                                               },
                                               bGColor: AppColors.mainColor,
@@ -325,7 +324,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     context: context,
                                     title:
                                         '${AppLocalizations.of(context)!.storage_permission}',
-                                    type: SnackBarType.FAILURE);
+                                    type: SnackBarType.failure);
                                 return;
                               }
                             }
@@ -359,7 +358,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                       CustomSnackBar.showSnackBar(
                           context: context,
                           title: '${AppLocalizations.of(context)!.wait_while_uploading}',
-                          type: SnackBarType.FAILURE);
+                          type: SnackBarType.failure);
                       return;
                     }
                     if(isForm){
@@ -417,7 +416,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                               context: context,
                                               title:
                                               '${AppLocalizations.of(context)!.camera_permission}',
-                                              type: SnackBarType.FAILURE);
+                                              type: SnackBarType.failure);
                                           return;
                                         }
                                       } else if (Platform.isIOS) {
@@ -453,7 +452,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 context: context,
                                                 title:
                                                 '${AppLocalizations.of(context)!.storage_permission}',
-                                                type: SnackBarType.FAILURE);
+                                                type: SnackBarType.failure);
                                             return;
                                           }
                                         }
@@ -490,7 +489,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 context: context,
                                                 title:
                                                 '${AppLocalizations.of(context)!.storage_permission}',
-                                                type: SnackBarType.FAILURE);
+                                                type: SnackBarType.failure);
                                             return;
                                           }
                                         }

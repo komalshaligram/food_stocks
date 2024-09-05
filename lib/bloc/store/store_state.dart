@@ -85,7 +85,7 @@ class StoreState with _$StoreState {
       isIncludedVat : false,
       isSaleOn : false,
       isAppOnMaintenance  : false,
-       language:'he',
+       language:AppStrings.hebrewString,
       isDialogOpen:false,
       retryLoading:false
     

@@ -487,7 +487,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                           context: context,
                                           title: AppStrings.getLocalizedStrings(
                                               'Oops! in progress', context),
-                                          type: SnackBarType.SUCCESS,
+                                          type: SnackBarType.success,
                                         );
                                         return;
                                       }

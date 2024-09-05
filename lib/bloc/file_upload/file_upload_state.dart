@@ -30,7 +30,7 @@ class FileUploadState with _$FileUploadState {
         isDownloading: false,
         downloadProgress: 0,
     isRemoveProcess: false,
-    language: 'he',
+    language: AppStrings.hebrewString,
     isPdfPreview: false,
       );
 }

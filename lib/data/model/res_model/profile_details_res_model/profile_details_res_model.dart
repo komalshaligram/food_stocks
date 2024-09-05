@@ -98,9 +98,14 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "totalExpense") String? totalExpense,
     @JsonKey(name: "expenseByMonth") String? expenseByMonth,
     @JsonKey(name: "creditCard") CreditCard? creditCard,
+    @JsonKey(name: "availablePaymentTypes")
+    required List<String> availablePaymentTypes,
+    @JsonKey(name: "paymentType")
+    required String paymentType,
     String? streetName,
     String? streetNumber,
     String? zip,
+    bool? isAvailableAllPayments,
   }) = _ClientDetail;
 
   factory ClientDetail.fromJson(Map<String, dynamic> json) =>
@@ -134,7 +139,6 @@ class CreditCard with _$CreditCard {
 
   factory CreditCard.fromJson(Map<String, dynamic> json) => _$CreditCardFromJson(json);
 }
-
 
 @freezed
 class RoleDetails with _$RoleDetails {

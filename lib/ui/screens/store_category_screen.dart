@@ -757,7 +757,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     context: context,
                                     title: AppStrings.getLocalizedStrings(
                                         'Oops! in progress', context),
-                                    type: SnackBarType.SUCCESS,
+                                    type: SnackBarType.success,
                                   );
                                   return;
                                 }
@@ -874,8 +874,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     ),
 );
   }
-
-
 
   Widget buildPlanoGramTitles(
       {required BuildContext context,
@@ -1113,8 +1111,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     );
   }
 
-
-
   void showProductDetails({
     required BuildContext context,
     required String productId,
@@ -1122,8 +1118,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     String productStock  = '0',
     bool isBarcode = false,
     required  bool isSaleOn ,
-
-
   }) async {
     context.read<StoreCategoryBloc>().add(
         StoreCategoryEvent.getProductDetailsEvent(

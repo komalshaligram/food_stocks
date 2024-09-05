@@ -68,7 +68,7 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.success);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));

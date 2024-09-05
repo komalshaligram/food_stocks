@@ -121,5 +121,5 @@ class AppConstants{
   static const int code_201 = 201;
   static const int code_403 = 403;
   static const int code_405 = 405;
-
+  static const int code_500 = 500;
 }

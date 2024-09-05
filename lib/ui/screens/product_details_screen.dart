@@ -31,11 +31,8 @@ class ProductDetailsRoute {
 class ProductDetailsScreen extends StatelessWidget {
   String orderId;
   String issue;
-
   String orderNumber;
-
   bool isNavigateToProductDetailString;
-
   var productData;
   var orderData;
 
@@ -94,7 +91,6 @@ class _ProductDetailsScreenWidgetState
   @override
   Widget build(BuildContext context) {
     ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
-
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
         builder: (context, state) {
           return FocusDetector(
@@ -120,9 +116,9 @@ class _ProductDetailsScreenWidgetState
                             ? CupertinoActivityIndicator()
                             : CircularButtonWidget(
                                 buttonName: AppLocalizations.of(context)!.total,
-                                buttonValue: state.orderData.comaxInvoicePrice !=
+                                buttonValue: state.orderData.rivchitInvoicePrice !=
                                         0.0
-                                    ? '${formatNumber(value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}'
+                                    ? '${formatNumber(value: (state.orderData.rivchitInvoicePrice?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}'
                                     : '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
                               ),
                       ),
@@ -292,9 +288,9 @@ class _ProductDetailsScreenWidgetState
                                               title: AppLocalizations.of(context)!
                                                   .total_order,
                                               value: state.orderData
-                                                          .comaxInvoicePrice !=
+                                                          .rivchitInvoicePrice !=
                                                       0.0
-                                                  ? '${formatNumber(value: state.orderData.comaxInvoicePrice?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}'
+                                                  ? '${formatNumber(value: state.orderData.rivchitInvoicePrice?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}'
                                                   : '${formatNumber(value: state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}',
                                               titleColor: AppColors.mainColor,
                                               valueColor: AppColors.blackColor,
@@ -608,7 +604,7 @@ class _ProductDetailsScreenWidgetState
                                     borderRadius: BorderRadius.circular(
                                         AppConstants.radius_3),
                                   ),
-                                  side: MaterialStateBorderSide.resolveWith(
+                                  side: WidgetStateBorderSide.resolveWith(
                                     (states) => BorderSide(
                                         width: 1.0, color: AppColors.greyColor),
                                   ),
@@ -722,7 +718,7 @@ class _ProductDetailsScreenWidgetState
                             ],
                           ),
                           Text(
-                            '${formatNumber(value:state.orderBySupplierProduct.products![index].discountedPrice!=0?state.orderBySupplierProduct.products![index].discountedPrice.toString():state.orderBySupplierProduct.products![index].totalPayment.toString(), local: AppStrings.hebrewLocal)}',
+                            '${formatNumber(value:state.orderBySupplierProduct.products![index].discountedPrice!=0?state.orderBySupplierProduct.products![index].discountedPrice!.toString():state.orderBySupplierProduct.products![index].totalPayment.toString(), local: AppStrings.hebrewLocal)}',
                             maxLines: 2,
                             overflow: TextOverflow.clip,
                             style: AppStyles.rkRegularTextStyle(
@@ -1274,7 +1270,7 @@ class _ProductDetailsScreenWidgetState
                       children: [
                         Radio(
                           value: value,
-                          fillColor: MaterialStateColor.resolveWith(
+                          fillColor: WidgetStateColor.resolveWith(
                             (states) => AppColors.greyColor,
                           ),
                           groupValue: /* (groupValue != 0)

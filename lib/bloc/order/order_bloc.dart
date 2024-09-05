@@ -81,7 +81,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         }  on ServerException {
           emit(state.copyWith(isLoadMore: false));

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/manage_credit_card/manage_credit_card_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -8,7 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
@@ -130,6 +128,7 @@ class ManageCreditCardWidget extends StatelessWidget {
                                           name: AppLocalizations.of(context)!.validity,
                                         ),
                                         CustomFormField(
+
                                           context: context,
                                           controller: state.validityController,
                                           keyboardType: TextInputType.datetime,
@@ -169,6 +168,8 @@ class ManageCreditCardWidget extends StatelessWidget {
                                         fontColors: AppColors.redColor,
                                         borderColor: AppColors.redColor,
                                         isFromConnectScreen: true,
+                                        isLoading: state.isDeleteLoading,
+                                        loadingColor: AppColors.redColor,
                                         onPressed: () {
                                           bloc.add(ManageCreditCardEvent.deleteCreditCardEvent(context: context));
                                         },

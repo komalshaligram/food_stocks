@@ -176,7 +176,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
                 title: AppStrings.getLocalizedStrings(
                     response[AppStrings.messageString].toString().toLocalization() ,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         } on ServerException {}
         catch(e){

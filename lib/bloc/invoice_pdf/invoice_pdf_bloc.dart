@@ -51,7 +51,7 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
                context: event.context,
                title:
                AppLocalizations.of(event.context)!.downloaded_successfully,
-               type: SnackBarType.SUCCESS);
+               type: SnackBarType.success);
            emit(state.copyWith(downloadProgress: 0, isDownloading: false));
 
          } catch (e) {
@@ -59,7 +59,7 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
            CustomSnackBar.showSnackBar(
                context: event.context,
                title: '${AppLocalizations.of(event.context)!.failed_download}',
-               type: SnackBarType.FAILURE);
+               type: SnackBarType.failure);
          }
        }
 

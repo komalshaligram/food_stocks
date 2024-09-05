@@ -42,7 +42,6 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<WayOfPaymentBloc, WayOfPaymentState>(
       builder: (context, state) {
-        WayOfPaymentBloc bloc = context.read<WayOfPaymentBloc>();
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: AppBar(
@@ -74,15 +73,24 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
               child: Column(
                 children: [
                   20.height,
-                !state.isUpdate ?  RadioButtonWidget(context: context,
-                      paymentMethod: AppLocalizations.of(context)!
-                          .collection_from_bank_account,
-                      radioValue: 0) : 0.width,
-                  10.height,
+                state.isEnablePayment? Column(
+                  children: [
+                    RadioButtonWidget(context: context,
+                          paymentMethod: AppLocalizations.of(context)!
+                              .collection_from_bank_account,
+                          radioValue: 0),
+                    10.height,
+                    RadioButtonWidget(context: context,
+                        paymentMethod: AppLocalizations.of(context)!
+                            .credit_card,
+                        radioValue: 1),
+
+                  ],
+                ) :
                   RadioButtonWidget(context: context,
                       paymentMethod: AppLocalizations.of(context)!
                           .credit_card,
-                      radioValue: 1),
+                      radioValue: 0),
                   10.height,
                 ],
               ),
@@ -102,24 +110,24 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                   if(state.isUpdate){
                     Navigator.pop(context);
                   }
-                  else{
-                    if(state.selectRadioTile == 0){
-                      Navigator.pushNamed(context,
-                        RouteDefine.bankInfoScreen.name,
-                          arguments: {
-                            AppStrings.termsConditionParamString :state.termsReqModel
-                          }
-                      );
-                    }
-                    else if(state.selectRadioTile == 1){
-                      Navigator.pushNamed(context,
-                        RouteDefine.creditCardDetailsScreen.name,
-                          arguments: {
-                            AppStrings.termsConditionParamString :state.termsReqModel,
-                            AppStrings.isFromRegFlow : true
-                          }
-                      );
-                    }
+                  else {
+                      if (state.selectRadioTile == 0 && state.isEnablePayment) {
+                        Navigator.pushNamed(context,
+                            RouteDefine.bankInfoScreen.name,
+                            arguments: {
+                              AppStrings.termsConditionParamString: state.termsReqModel,
+                            }
+                        );
+                      }
+                      else  {
+                        Navigator.pushNamed(context,
+                            RouteDefine.creditCardDetailsScreen.name,
+                            arguments: {
+                              AppStrings.termsConditionParamString: state.termsReqModel,
+                              AppStrings.isFromRegFlow: true
+                            }
+                        );
+                      }
                   }
                 },
                 fontColors: AppColors.whiteColor,
@@ -157,38 +165,13 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                   size: AppConstants.font_14,
                   color: AppColors.blackColor,
                 ),),
-                groupValue: state.selectRadioTile, onChanged: (val){
+                groupValue: state.selectRadioTile, onChanged: (int? val){
+
               debugPrint('value___$val');
               bloc.add(WayOfPaymentEvent.radioButtonEvent(
                   selectRadioTile: val!));
             }),
-       /*     Row(
-              children: [
 
-                Transform.scale(
-                  scale: 1.3,
-                  child: Radio(
-                    value: radioValue,
-                    fillColor: MaterialStateColor.resolveWith(
-                          (states) => AppColors.greyColor,
-                    ),
-                    groupValue: state.selectRadioTile,
-                    onChanged: (val) {
-                      debugPrint('value___$val');
-                      bloc.add(WayOfPaymentEvent.radioButtonEvent(
-                          selectRadioTile: val!));
-                    },
-                  ),
-                ),
-                Text(
-                  paymentMethod,
-                  style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_14,
-                    color: AppColors.blackColor,
-                  ),
-                ),
-              ],
-            ),*/
           );
         },
       ),

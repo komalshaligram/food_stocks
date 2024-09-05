@@ -29,7 +29,9 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
           ProfileDetailsResModel resModel = ProfileDetailsResModel.fromJson(res);
           debugPrint('credit card res = ${resModel.data?.clients?.elementAt(0).clientDetail?.creditCard}');
           if (resModel.status == AppConstants.code_200) {
-            if (resModel.data?.clients?.elementAt(0).clientDetail?.creditCard?.expireDate != null) {
+            preferencesHelper.setPaymentMethod(method: resModel.data?.clients?.first.clientDetail?.paymentType ?? '');
+            preferencesHelper.setPaymentMethodCount(count: resModel.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
+            if (resModel.data?.clients?.first.clientDetail?.creditCard?.expireDate != null) {
               emit(state.copyWith(isLoading: false, creditCardNumberController: TextEditingController(text: maskCreditCardNumber(resModel.data?.clients?.elementAt(0).clientDetail?.creditCard?.cardNumber ?? '')), validityController: TextEditingController(text: formatExpiryDate(resModel.data?.clients?.elementAt(0).clientDetail?.creditCard?.expireDate ?? '')), isCreditCardExist: true));
             } else {
               emit(state.copyWith(isCreditCardExist: false, isLoading: false));
@@ -40,12 +42,26 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
         } catch (e) {
           emit(state.copyWith(isLoading: false));
         }
-      }
-     else if(event is _addCreditCardEvent){
+      } else if (event is _addCreditCardEvent) {
         Navigator.pushNamed(event.context, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: false, AppStrings.isFromRegFlow: false});
-      }
-     else if(event is _deleteCreditCardEvent){
-       emit(state.copyWith(isCreditCardExist: false));
+      } else if (event is _deleteCreditCardEvent) {
+        try {
+          emit(state.copyWith(isDeleteLoading: true));
+          Map<String, dynamic> reqMap = {"id": preferencesHelper.getUserId()};
+          final res = await DioClient(event.context).delete(path: AppUrls.deleteCreditCardUrl, data: reqMap);
+          if (res[AppStrings.statusString] == AppConstants.code_200) {
+            emit(state.copyWith(isCreditCardExist: false, isDeleteLoading: false));
+          } else {
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(res['message'].toLocalization() ?? res['message'] ?? '', event.context),
+              type: SnackBarType.success,
+            );
+            emit(state.copyWith(isDeleteLoading: false));
+          }
+        } catch (e) {}
+        debugPrint('');
+        emit(state.copyWith(isDeleteLoading: false));
       }
     });
   }

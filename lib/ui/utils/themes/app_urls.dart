@@ -1,11 +1,11 @@
 class AppUrls {
   //static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
- // static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///devUrl
-static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
+ static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///devUrl
+//static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
   static const String baseFileUrl = 'https://foodstock-buckets.s3.il-central-1.amazonaws.com/';
   static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
   static const String loginOTPUrl = '/v1/auth/clientLogin';
-  static const String RegistrationUrl = '/v1/clients/createClient';
+  static const String registrationUrl = '/v1/clients/createClient';
   static const String fileUploadUrl = '/v1/files/upload';
   static const String fileUpdateUrl = '/v1/admin/updateFiles';
   static const String businessTypesUrl = '/v1/settings/ClientTypes';
@@ -57,7 +57,7 @@ static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
   static const String updateMessageUrl = '/v1/notifications/seenNotification';
   static const String getUnreadMessageCountUrl = '/v1/notifications/getNotificationsCount';
   static const String refreshTokenUrl = '/v1/auth/refreshToken';
-  static const String getPlanoramByIdUrl = '/v1/planograms/getPlanogram/';
+  static const String getPlanogramByIdUrl = '/v1/planograms/getPlanogram/';
   static const String otpVerifyUrl = '/v1/auth/otpVerification';
   static const String getPlanogramAllProductUrl = '/v1/store/getAllProducts';
   static const String removeIssueUrl = '/v1/orders/issues/removeIssue';
@@ -83,4 +83,8 @@ static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
   static const String updateSubUserUrl = '/v1/subuser/updateSubuser';
   static const String verifyClientUrl = '/v1/clients/verifyClient';
   static const String updateCreditCardUrl = '/v1/clients/update-credit-card-details/';
+  static const String verifyAgentUrl = '/v1/clients/verifyAgent';
+ static const String addBankInfo = '/v1/clients/bank-information-updation';
+ static const String deleteCreditCardUrl = '/v1/clients/delete-credit-card-details';
+ static const String bdiUrl = '/v1/clients/checkBdi';
 }
