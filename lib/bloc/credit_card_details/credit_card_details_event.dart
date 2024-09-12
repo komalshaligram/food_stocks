@@ -8,5 +8,7 @@ class CreditCardDetailsEvent with _$CreditCardDetailsEvent {
   _addCreditCardEvent;
   factory CreditCardDetailsEvent.termsConditionApiEvent({required BuildContext context}) =
   _termsConditionApiEvent;
+  factory CreditCardDetailsEvent.selectMonthEvent({required String month}) =
+  _selectMonthEvent;
 
 }

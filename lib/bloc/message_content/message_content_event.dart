@@ -7,18 +7,18 @@ class MessageContentEvent with _$MessageContentEvent {
         required bool isReadMore,
       }) = _GetMessageDataEvent;
 
-  const factory MessageContentEvent.MessageDeleteEvent(
+  const factory MessageContentEvent.messageDeleteEvent(
       {required String messageId,
       required BuildContext context,
       required BuildContext dialogContext,
-      }) = _MessageDeleteEvent;
+      }) = _messageDeleteEvent;
 
-  const factory MessageContentEvent.MessageUpdateEvent(
+  const factory MessageContentEvent.messageUpdateEvent(
       {
         required String messageId,
         required BuildContext context
-      }) = _MessageUpdateEvent;
+      }) = _messageUpdateEvent;
 
-  const factory MessageContentEvent.ImagePreviewEvent(
-      ) = _ImagePreviewEvent;
+  const factory MessageContentEvent.imagePreviewEvent(
+      ) = _imagePreviewEvent;
 }

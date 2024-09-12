@@ -19,7 +19,7 @@ import '../utils/themes/app_urls.dart';
 import '../widget/refresh_widget.dart';
 
 class SupplierRoute {
-  static Widget get route => SupplierScreen();
+  static Widget get route => const SupplierScreen();
 }
 
 class SupplierScreen extends StatelessWidget {
@@ -29,13 +29,12 @@ class SupplierScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint('supplier args = $args');
     return BlocProvider(
       create: (context) => SupplierBloc()
         ..add(SupplierEvent.setSearchEvent(
             search: args?[AppStrings.searchString] ?? ''))
         ..add(SupplierEvent.getSuppliersListEvent(context: context)),
-      child: SupplierScreenWidget(),
+      child: const SupplierScreenWidget(),
     );
   }
 }
@@ -50,7 +49,7 @@ class SupplierScreenWidget extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.suppliers,
@@ -61,15 +60,12 @@ class SupplierScreenWidget extends StatelessWidget {
             ),
           ),
           body: SafeArea(
-            child:
-                //   NotificationListener<ScrollNotification>(
-                // child:
-                SmartRefresher(
+            child: SmartRefresher(
               enablePullDown: true,
               controller: state.refreshController,
-              header: RefreshWidget(),
+              header: const RefreshWidget(),
               footer: CustomFooter(
-                builder: (context, mode) => SupplierScreenShimmerWidget(),
+                builder: (context, mode) => const SupplierScreenShimmerWidget(),
               ),
               enablePullUp: !state.isBottomOfSuppliers,
               onRefresh: () {
@@ -86,14 +82,14 @@ class SupplierScreenWidget extends StatelessWidget {
                 child: Column(
                   children: [
                     state.isShimmering
-                        ? SupplierScreenShimmerWidget()
+                        ? const SupplierScreenShimmerWidget()
                         : state.suppliersList.isEmpty
                             ? Container(
                                 height: getScreenHeight(context) - 80,
                                 width: getScreenWidth(context),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  '${AppLocalizations.of(context)!.suppliers_not_available}',
+                                  AppLocalizations.of(context)!.suppliers_not_available,
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
                                       color: AppColors.textColor),
@@ -103,10 +99,10 @@ class SupplierScreenWidget extends StatelessWidget {
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: state.suppliersList.length,
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     horizontal: AppConstants.padding_10),
                                 gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
                                         childAspectRatio: 0.9
                                     ),
@@ -155,12 +151,12 @@ class SupplierScreenWidget extends StatelessWidget {
       height: getScreenHeight(context),
       width: getScreenWidth(context),
       clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_10,
           horizontal: AppConstants.padding_5),
       decoration: BoxDecoration(
         borderRadius:
-            BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+            const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         color: AppColors.whiteColor,
         boxShadow: [
           BoxShadow(
@@ -170,7 +166,7 @@ class SupplierScreenWidget extends StatelessWidget {
       ),
       child: InkWell(
         borderRadius:
-            BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+            const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         onTap: onTap,
         child: Column(
           children: [
@@ -185,7 +181,7 @@ class SupplierScreenWidget extends StatelessWidget {
                     width: getScreenWidth(context),
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(AppConstants.radius_10),
                           topRight: Radius.circular(AppConstants.radius_10)),
                     ),
@@ -212,13 +208,13 @@ class SupplierScreenWidget extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                   vertical: AppConstants.padding_5,
                   horizontal: AppConstants.padding_5),
               decoration: BoxDecoration(
                 gradient: AppColors.appMainGradientColor,
               //  color: AppColors.mainColor,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(AppConstants.radius_10),
                     bottomRight: Radius.circular(AppConstants.radius_10)),
                 // border: Border.all(color: AppColors.whiteColor, width: 1),

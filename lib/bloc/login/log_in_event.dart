@@ -10,7 +10,7 @@ class LogInEvent with _$LogInEvent {
 
   factory LogInEvent.changeAuthEvent({
     required bool isRegister,
-  }) = _ChangeAuthEvent;
+  }) = _changeAuthEvent;
 
   const factory LogInEvent.checkVersionOfAppEvent(
       {required BuildContext context}) = _checkVersionOfAppEvent;

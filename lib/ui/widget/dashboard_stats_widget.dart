@@ -33,7 +33,7 @@ class DashBoardStatsWidget extends StatelessWidget {
           borderRadius:
               const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           color: AppColors.iconBGColor),
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
           horizontal: AppConstants.padding_8,
           vertical: AppConstants.padding_8),
       child: Column(

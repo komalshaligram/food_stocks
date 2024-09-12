@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -31,46 +32,46 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
           AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
           debugPrint('AccountPermission response = ${response.data.toString()}');
           debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}');
-          if (response.status == 200) {
-            List<permissionModel>permissionList = [];
+          if (response.status == AppConstants.code_200) {
+            List<PermissionModel>permissionList = [];
             permissionList = [
-              permissionModel(title: AppLocalizations.of(event.context)!.account_admin,
+              PermissionModel(title: AppLocalizations.of(event.context)!.account_admin,
               isEnable: response.data?.permissions?.accountAdmin ?? false
               ),
-              permissionModel(title: AppLocalizations.of(event.context)!.can_see_wallet,
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_wallet,
                   isEnable: response.data?.permissions?.canSeeWallet ?? false
               ),
-              permissionModel(title: AppLocalizations.of(event.context)!.can_add_basket,
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_add_basket,
                   isEnable: response.data?.permissions?.canAddToCart ?? false
               ),
-              permissionModel(title: AppLocalizations.of(event.context)!.can_create_order,
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_create_order,
                   isEnable: response.data?.permissions?.canCreateOrder ?? false
               ),
-              permissionModel(title: AppLocalizations.of(event.context)!.see_order,
+              PermissionModel(title: AppLocalizations.of(event.context)!.see_order,
                   isEnable: response.data?.permissions?.canSeeOrders ?? false
               ),
-              permissionModel(title: AppLocalizations.of(event.context)!.can_approve_order,
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_approve_order,
                   isEnable: response.data?.permissions?.canApproveOrders ?? false
               ),
-              permissionModel(title: AppLocalizations.of(event.context)!.can_duplicate_order,
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_duplicate_order,
                   isEnable: response.data?.permissions?.canDuplicateOrders ?? false
               ),
-              permissionModel(title: AppLocalizations.of(event.context)!.can_see_update_business_info,
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_update_business_info,
                   isEnable: response.data?.permissions?.canSeeAndUpdateBusinessInfo ?? false
               ),
-              permissionModel(title: AppLocalizations.of(event.context)!.can_see_update_additional_info,
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_update_additional_info,
                   isEnable: response.data?.permissions?.canSeeAndUpdateAdditionalInfo ?? false
               ),
-              permissionModel(title: AppLocalizations.of(event.context)!.can_see_update_times_info,
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_update_times_info,
                   isEnable: response.data?.permissions?.canSeeAndUpdateTimesInfo ?? false
               ),
-              permissionModel(title: AppLocalizations.of(event.context)!.can_see_files_forms,
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_files_forms,
                   isEnable: response.data?.permissions?.canSeeFileAndForms ?? false
               ),
-              permissionModel(title: AppLocalizations.of(event.context)!.can_manage_sub_users,
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_manage_sub_users,
                   isEnable: response.data?.permissions?.canManageSubUsers ?? false
               ),
-              permissionModel(title: AppLocalizations.of(event.context)!.can_see_invoices,
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_invoices,
                   isEnable: response.data?.permissions?.canSeeInvoices ?? false
               ),
 
@@ -87,7 +88,7 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
       }
 
       else if(event is _switchButtonEvent){
-        List<permissionModel>permissionList = state.permissionList.toList(growable: true);
+        List<PermissionModel>permissionList = state.permissionList.toList(growable: true);
         permissionList[event.index].isEnable =  !permissionList[event.index].isEnable;
         emit(state.copyWith(permissionList: permissionList,isRefresh: !state.isRefresh));
       }
@@ -131,8 +132,8 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
               data: updatePermissionReq);
 
           debugPrint('updatePermission url  = ${AppUrls.baseUrl}${AppUrls.updatePermissionUrl}');
-          debugPrint('updatePermission response  = ${response}');
-            if (response[AppStrings.statusString] == 200) {
+          debugPrint('updatePermission response  = $response');
+            if (response[AppStrings.statusString] == AppConstants.code_200) {
               if(preferencesHelper.getSubUser()){
                 preferencesHelper.setAccountAdmin(isAccountAdmin: state.permissionList[0].isEnable);
                 preferencesHelper.setCanSeeWallet(isSeeWallet: state.permissionList[1].isEnable);
@@ -152,7 +153,7 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
               Navigator.pop(event.context);
              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title:  '${AppLocalizations.of(event.context)!.success_message}',
+                  title:  AppLocalizations.of(event.context)!.success_message,
                   type: SnackBarType.success);
             } else {
               emit(state.copyWith(isUpdateProcess: false));

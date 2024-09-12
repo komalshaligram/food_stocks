@@ -18,7 +18,7 @@ import '../widget/refresh_widget.dart';
 
 
 class SubUsersRoute {
-  static Widget get route => SubUserScreen();
+  static Widget get route => const SubUserScreen();
 }
 
 class SubUserScreen extends StatelessWidget {
@@ -28,7 +28,7 @@ class SubUserScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => SubUsersBloc()..add(SubUsersEvent.getSubUserList(context: context)),
-      child: SubUserScreenWidget(),
+      child: const SubUserScreenWidget(),
     );
   }
 }
@@ -45,7 +45,7 @@ class SubUserScreenWidget extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.sub_user,
@@ -73,9 +73,9 @@ class SubUserScreenWidget extends StatelessWidget {
               child: SmartRefresher(
                 enablePullDown: true,
                 controller: state.refreshController,
-                header: RefreshWidget(),
+                header: const RefreshWidget(),
                 footer: CustomFooter(
-                    builder: (context, mode) => OrderSummaryScreenShimmerWidget(
+                    builder: (context, mode) => const OrderSummaryScreenShimmerWidget(
                       containerHeight: 40,itemCount: 10,
                     )),
                 enablePullUp: !state.isBottomOfProducts,
@@ -90,7 +90,7 @@ class SubUserScreenWidget extends StatelessWidget {
                       .add(SubUsersEvent.getSubUserList(context: context));
                 },
                 child: state.isShimmering ?
-                    OrderSummaryScreenShimmerWidget(containerHeight: 40,itemCount: 10,)
+                    const OrderSummaryScreenShimmerWidget(containerHeight: 40,itemCount: 10,)
                     :  state.subUserList.isEmpty ?  SizedBox(
                   height: getScreenHeight(context) * 0.8,
                   child: Center(
@@ -106,7 +106,7 @@ class SubUserScreenWidget extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    return SubUserTiles(
+                    return subUserTiles(
                         title:state.subUserList[index].contactName,
                         phoneNumber: state.subUserList[index].phoneNumber,
                         onTap: () {
@@ -133,20 +133,20 @@ class SubUserScreenWidget extends StatelessWidget {
       },
     );
   }
-  Widget SubUserTiles({required title, required void Function() onTap,
+  Widget subUserTiles({required title, required void Function() onTap,
   required phoneNumber
   }) {
     return Container(
       decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-          BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           boxShadow: [
             BoxShadow(
                 color: AppColors.shadowColor.withOpacity(0.15),
                 blurRadius: AppConstants.blur_10)
           ]),
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
       child: InkWell(

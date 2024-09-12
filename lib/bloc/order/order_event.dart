@@ -6,5 +6,5 @@ class OrderEvent with _$OrderEvent {
       _getAllOrderEvent;
 
   const factory OrderEvent.refreshListEvent({required BuildContext context}) =
-      _RefreshListEvent;
+      _refreshListEvent;
 }

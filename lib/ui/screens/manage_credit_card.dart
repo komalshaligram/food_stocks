@@ -16,7 +16,7 @@ import '../widget/custom_form_field_widget.dart';
 import '../widget/manage_credit_card_shimmer.dart';
 
 class ManageCreditCardRoute {
-  static Widget get route => ManageCreditCard();
+  static Widget get route => const ManageCreditCard();
 }
 
 class ManageCreditCard extends StatelessWidget {
@@ -26,7 +26,7 @@ class ManageCreditCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ManageCreditCardBloc()..add(ManageCreditCardEvent.getCreditCardInfoEvent(context: context)),
-      child: ManageCreditCardWidget(),
+      child: const ManageCreditCardWidget(),
     );
   }
 }
@@ -68,7 +68,7 @@ class ManageCreditCardWidget extends StatelessWidget {
               bloc.add(ManageCreditCardEvent.getCreditCardInfoEvent(context: context));
             },
             child: state.isLoading
-                ? ManageCreditCardShimmer()
+                ? const ManageCreditCardShimmer()
                 : SafeArea(
                     child: state.isCreditCardExist
                         ? Column(
@@ -128,7 +128,6 @@ class ManageCreditCardWidget extends StatelessWidget {
                                           name: AppLocalizations.of(context)!.validity,
                                         ),
                                         CustomFormField(
-
                                           context: context,
                                           controller: state.validityController,
                                           keyboardType: TextInputType.datetime,
@@ -136,7 +135,7 @@ class ManageCreditCardWidget extends StatelessWidget {
                                           isEnabled: false,
                                           fillColor: Colors.transparent,
                                           textInputAction: TextInputAction.done,
-                                          validator: AppStrings.creditCardValidityString,
+                                          validator: formatExpiryDate(state.validityController.text.toString()),
                                         ),
                                       ],
                                     ),

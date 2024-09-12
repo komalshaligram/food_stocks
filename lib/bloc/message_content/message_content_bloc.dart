@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/data/model/res_model/get_messages_res_model/get_messages_res_model.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,7 +32,7 @@ class MessageContentBloc
       if (event is _GetMessageDataEvent) {
         emit(state.copyWith(
             message: event.messageData, isReadMore: event.isReadMore,language: preferences.getAppLanguage()));
-      } else if (event is _MessageDeleteEvent) {
+      } else if (event is _messageDeleteEvent) {
         emit(state.copyWith(isLoading : true));
         try {
           DeleteMessageReq reqMap = DeleteMessageReq(
@@ -39,18 +40,12 @@ class MessageContentBloc
               event.messageId,
             ],
           );
-          debugPrint('DeleteMessage req  = ${reqMap}');
           final response =
               await DioClient(event.context).post(AppUrls.deleteMessageUrl,
                   data: reqMap,
                 );
 
-          debugPrint(
-              'DeleteMessage url  = ${AppUrls.baseUrl}${AppUrls.deleteMessageUrl}');
-
-          debugPrint('DeleteMessage response  = ${response}');
-
-          if (response[AppStrings.statusString] == 200) {
+          if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isLoading : false));
             Navigator.pop(event.dialogContext);
             Navigator.pop(event.context, {
@@ -73,14 +68,13 @@ class MessageContentBloc
                 type: SnackBarType.success);
         }
 
-      } else if (event is _MessageUpdateEvent) {
+      } else if (event is _messageUpdateEvent) {
         try {
           DeleteMessageReq reqMap = DeleteMessageReq(
             notificationIds: [
               event.messageId,
             ],
           );
-          debugPrint('UpdateMessage req  = ${reqMap}');
           final response = await DioClient(event.context).put(
               path: AppUrls.updateMessageUrl,
               data: reqMap.toJson(),
@@ -91,12 +85,8 @@ class MessageContentBloc
                 },
               ));
 
-          debugPrint(
-              'UpdateMessage  url  = ${AppUrls.baseUrl}${AppUrls.updateMessageUrl}');
 
-          debugPrint('UpdateMessage response  = ${response}');
-
-          if (response[AppStrings.statusString] == 200) {
+          if (response[AppStrings.statusString] == AppConstants.code_200) {
           } else {
             /* CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -106,7 +96,7 @@ class MessageContentBloc
         } on ServerException {}
       }
 
-      else if(event is _ImagePreviewEvent){
+      else if(event is _imagePreviewEvent){
         emit(state.copyWith(isPreview: !state.isPreview));
       }
     });

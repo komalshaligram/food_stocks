@@ -14,10 +14,10 @@ class WalletScreenShimmerWidget extends StatelessWidget {
           child: Container(
             height: getScreenHeight(context) * 0.21,
             width: double.maxFinite,
-            margin: EdgeInsets.symmetric(
+            margin: const EdgeInsets.symmetric(
                 vertical: AppConstants.padding_5,
                 horizontal: AppConstants.padding_10),
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
                 vertical: AppConstants.padding_3,
                 horizontal: AppConstants.padding_10),
             decoration: BoxDecoration(
@@ -28,7 +28,7 @@ class WalletScreenShimmerWidget extends StatelessWidget {
                     blurRadius: AppConstants.blur_10),
               ],
               borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
             ),
 
           ),

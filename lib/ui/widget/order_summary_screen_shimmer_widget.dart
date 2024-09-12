@@ -7,7 +7,7 @@ import 'common_shimmer_widget.dart';
 class OrderSummaryScreenShimmerWidget extends StatelessWidget {
   final int itemCount;
   final double containerHeight;
-   OrderSummaryScreenShimmerWidget({super.key , this.itemCount = 5 , this.containerHeight  = 55});
+   const OrderSummaryScreenShimmerWidget({super.key , this.itemCount = 5 , this.containerHeight  = 55});
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +16,12 @@ class OrderSummaryScreenShimmerWidget extends StatelessWidget {
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
       padding:
-      EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+      const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
       itemBuilder: (context, index) {
         return CommonShimmerWidget(
           child: Container(
-            margin: EdgeInsets.all(AppConstants.padding_10),
-            padding: EdgeInsets.symmetric(
+            margin: const EdgeInsets.all(AppConstants.padding_10),
+            padding: const EdgeInsets.symmetric(
                 vertical: AppConstants.padding_10,
                 horizontal: AppConstants.padding_10),
             decoration: BoxDecoration(
@@ -31,7 +31,7 @@ class OrderSummaryScreenShimmerWidget extends StatelessWidget {
                     color: AppColors.shadowColor.withOpacity(0.15),
                     blurRadius: AppConstants.blur_10),
               ],
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                   Radius.circular(AppConstants.radius_5)),
 
             ),

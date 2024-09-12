@@ -23,7 +23,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widget/custom_button_widget.dart';
 
 class MessageContentRoute {
-  static Widget get route => MessageContentScreen();
+  static Widget get route => const MessageContentScreen();
 }
 
 class MessageContentScreen extends StatelessWidget {
@@ -35,7 +35,7 @@ class MessageContentScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => MessageContentBloc()
         ..add(MessageContentEvent.getMessageDataEvent(messageData: args?[AppStrings.messageDataString], isReadMore: args?[AppStrings.isReadMoreString] ?? false))
-        ..add(MessageContentEvent.MessageUpdateEvent(
+        ..add(MessageContentEvent.messageUpdateEvent(
           messageId: args?[AppStrings.messageIdString] ?? '',
           context: context,
         )),
@@ -68,9 +68,9 @@ class MessageContentScreenWidget extends StatelessWidget {
             child: Scaffold(
               backgroundColor: AppColors.pageColor,
               appBar: state.isPreview
-                  ? PreferredSize(preferredSize: Size.fromHeight(0), child: SizedBox())
+                  ? const PreferredSize(preferredSize: Size.fromHeight(0), child: SizedBox())
                   : PreferredSize(
-                      preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+                      preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
                       child: CommonAppBar(
                         bgColor: AppColors.pageColor,
                         title: AppLocalizations.of(context)!.messages,
@@ -125,14 +125,14 @@ class MessageContentScreenWidget extends StatelessWidget {
                                       return Container(decoration: BoxDecoration(color: AppColors.whiteColor, shape: BoxShape.circle), alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
                                     },
                                   )
-                                : SizedBox(),
+                                : const SizedBox(),
                           ),
                           Positioned(
                             right: state.language == AppStrings.englishString ? 20 : getScreenWidth(context) - 50,
                             top: 50,
                             child: GestureDetector(
                               onTap: () {
-                                bloc.add(MessageContentEvent.ImagePreviewEvent());
+                                bloc.add(const MessageContentEvent.imagePreviewEvent());
                               },
                               child: Icon(
                                 Icons.close,
@@ -149,9 +149,9 @@ class MessageContentScreenWidget extends StatelessWidget {
                           children: [
                             Container(
                               width: double.maxFinite,
-                              margin: EdgeInsets.only(left: AppConstants.padding_10, right: AppConstants.padding_10, top: AppConstants.padding_15),
-                              padding: EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_30),
-                              decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_5)), color: AppColors.whiteColor, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)]),
+                              margin: const EdgeInsets.only(left: AppConstants.padding_10, right: AppConstants.padding_10, top: AppConstants.padding_15),
+                              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_30),
+                              decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)), color: AppColors.whiteColor, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)]),
                               child: Container(
                                 color: AppColors.whiteColor,
                                 child: Column(
@@ -159,7 +159,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        bloc.add(MessageContentEvent.ImagePreviewEvent());
+                                        bloc.add(const MessageContentEvent.imagePreviewEvent());
                                       },
                                       child: Container(
                                         alignment: Alignment.center,
@@ -182,7 +182,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                                                   return Container(decoration: BoxDecoration(color: AppColors.whiteColor, shape: BoxShape.circle), alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
                                                 },
                                               )
-                                            : SizedBox(),
+                                            : const SizedBox(),
                                       ),
                                     ),
                                     5.height,
@@ -233,7 +233,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                                     },
                                     fontColors: AppColors.whiteColor,
                                   )
-                                : SizedBox(),
+                                : const SizedBox(),
                           ],
                         ),
                       ),
@@ -250,8 +250,8 @@ class MessageContentScreenWidget extends StatelessWidget {
     required String subPage,
     required String id,
   }) {
-    debugPrint('subPage  = ${subPage}');
-    debugPrint('mainPage  = ${mainPage}');
+    debugPrint('subPage  = $subPage');
+    debugPrint('mainPage  = $mainPage');
     if (subPage == '') {
       if (mainPage == 'companyScreen') {
         debugPrint('companyScreen___');
@@ -298,15 +298,15 @@ class MessageContentScreenWidget extends StatelessWidget {
     return CommonAlertDialog(
           isLogOutProcess: state.isLoading,
           directionality: state.language,
-          title: '${AppLocalizations.of(context)!.delete}',
-          subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
-          positiveTitle: '${AppLocalizations.of(context)!.yes}',
-          negativeTitle: '${AppLocalizations.of(context)!.no}',
+          title: AppLocalizations.of(context)!.delete,
+          subTitle: AppLocalizations.of(context)!.are_you_sure,
+          positiveTitle: AppLocalizations.of(context)!.yes,
+          negativeTitle: AppLocalizations.of(context)!.no,
           negativeOnTap: () {
             Navigator.pop(context1);
           },
           positiveOnTap: () async {
-            bloc.add(MessageContentEvent.MessageDeleteEvent(
+            bloc.add(MessageContentEvent.messageDeleteEvent(
               messageId: state.message.id ?? '',
               context: context,
               dialogContext: context1,

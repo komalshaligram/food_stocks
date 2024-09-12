@@ -20,7 +20,7 @@ import '../widget/common_alert_dialog.dart';
 import '../widget/common_dialog_with_one_button.dart';
 
 class ProfileMenuRoute {
-  static Widget get route => ProfileMenuScreen();
+  static Widget get route => const ProfileMenuScreen();
 }
 
 class ProfileMenuScreen extends StatelessWidget {
@@ -30,9 +30,9 @@ class ProfileMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProfileMenuBloc()
-        ..add(ProfileMenuEvent.getAppLanguage())
-        ..add(ProfileMenuEvent.getPreferenceDataEvent()),
-      child: ProfileMenuScreenWidget(),
+        ..add(const ProfileMenuEvent.getAppLanguage())
+        ..add(const ProfileMenuEvent.getPreferenceDataEvent()),
+      child: const ProfileMenuScreenWidget(),
     );
   }
 }
@@ -46,14 +46,12 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     return BlocListener<ProfileMenuBloc, ProfileMenuState>(
       listenWhen: (previous, current) {
         if (current.isAccountPermissionShimmering){
-          /*BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));*/
+
         }
         if(current.isAppOnMaintenance && !current.isDialogOpen){
           appUnderMaintenanceDialog(context: context, state: current);
           BlocProvider.of<ProfileMenuBloc>(context)
               .add(ProfileMenuEvent.updateMaintenanceEvent(context: context));
-          debugPrint('Maintenance is on going...........');
         }
         if (previous.isHebrewLanguage != current.isHebrewLanguage) {
           return true;
@@ -72,8 +70,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
             onFocusGained: () {
               bloc.add(ProfileMenuEvent.userApproveEvent(context: context));
               bloc.add(ProfileMenuEvent.getPermissionList(context: context));
-              bloc.add(ProfileMenuEvent.getPreferenceDataEvent());
-              bloc.add(ProfileMenuEvent.getAppLanguage());
+              bloc.add(const ProfileMenuEvent.getPreferenceDataEvent());
+              bloc.add(const ProfileMenuEvent.getAppLanguage());
                 bloc.add(ProfileMenuEvent.generalSettings(context: context,dialogContext: context,isRetryLoading: false));
               bloc.add(ProfileMenuEvent.getProfileDetailsEvent(context: context));
             },
@@ -87,7 +85,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                     Container(
                       height: 110,
                       width: double.maxFinite,
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                           horizontal: AppConstants.padding_10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,9 +116,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                           '${AppUrls.baseFileUrl}${state.UserImageUrl}',
                                       fit: BoxFit.fill,
                                       placeholder: (context, url) =>
-                                          CupertinoActivityIndicator(),
+                                          const CupertinoActivityIndicator(),
                                       errorWidget: (context, url, error) {
-                                        debugPrint('profile menu error : $error');
                                         return Container(
                                           color: AppColors.whiteColor,
                                         );
@@ -253,7 +250,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                           ? logOutDialog(
                                               context: context,
                                               directionality: state.language)
-                                          : CupertinoActivityIndicator();
+                                          : const CupertinoActivityIndicator();
                                     }),
                                 menuSwitchTile(
                                     title: AppLocalizations.of(context)!
@@ -296,13 +293,13 @@ class ProfileMenuScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           boxShadow: [
             BoxShadow(
                 color: AppColors.shadowColor.withOpacity(0.15),
                 blurRadius: AppConstants.blur_10)
           ]),
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
       child: InkWell(
@@ -337,13 +334,13 @@ class ProfileMenuScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           boxShadow: [
             BoxShadow(
                 color: AppColors.shadowColor.withOpacity(0.15),
                 blurRadius: AppConstants.blur_10)
           ]),
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
       child: InkWell(
@@ -399,10 +396,10 @@ class ProfileMenuScreenWidget extends StatelessWidget {
             return CommonAlertDialog(
               isLogOutProcess: state.isLogOutProcess,
               directionality: directionality,
-              title: '${AppLocalizations.of(context)!.log_out}',
-              subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
-              positiveTitle: '${AppLocalizations.of(context)!.yes}',
-              negativeTitle: '${AppLocalizations.of(context)!.no}',
+              title: AppLocalizations.of(context)!.log_out,
+              subTitle: AppLocalizations.of(context)!.are_you_sure,
+              positiveTitle: AppLocalizations.of(context)!.yes,
+              negativeTitle: AppLocalizations.of(context)!.no,
               negativeOnTap: () {
                 Navigator.pop(context);
               },
@@ -433,8 +430,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                   return CustomOneButtonDialog(
                     isLoading: state.retryLoading,
                     directionality: state.language,
-                    title: '${AppLocalizations.of(context)!.under_maintenance}',
-                    positiveTitle: '${AppLocalizations.of(context)!.retry}',
+                    title: AppLocalizations.of(context)!.under_maintenance,
+                    positiveTitle: AppLocalizations.of(context)!.retry,
                     positiveOnTap: () async {
                       bloc.add(ProfileMenuEvent.generalSettings(
                         context: context,

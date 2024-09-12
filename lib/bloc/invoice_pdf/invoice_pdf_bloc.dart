@@ -42,7 +42,7 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
            await Dio().download(
                "${AppUrls.baseFileUrl}${state.invoiceDetailsList.link}",
                filePath, onReceiveProgress: (received, total) {
-             debugPrint('rec:${received},total:$total');
+             debugPrint('rec:$received,total:$total');
              int progress = (received * 100) ~/ total;
              emit(state.copyWith(downloadProgress: progress));
              debugPrint('download progress = ${state.downloadProgress}');
@@ -58,7 +58,7 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
            emit(state.copyWith(isDownloading: false));
            CustomSnackBar.showSnackBar(
                context: event.context,
-               title: '${AppLocalizations.of(event.context)!.failed_download}',
+               title: AppLocalizations.of(event.context)!.failed_download,
                type: SnackBarType.failure);
          }
        }

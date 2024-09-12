@@ -14,7 +14,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CommonSaleListView extends StatelessWidget {
   final double? height;
-  double discountedPrice;
+ final double discountedPrice;
   final String productImage;
   final String productName;
 
@@ -29,7 +29,7 @@ class CommonSaleListView extends StatelessWidget {
   final BuildContext context;
   final String? salesDesc;
 
-  CommonSaleListView({
+  CommonSaleListView({super.key,
     this.height,
     required this.discountedPrice,
     required this.productImage,
@@ -53,7 +53,7 @@ class CommonSaleListView extends StatelessWidget {
         width: double.maxFinite,
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius: BorderRadius.all(
+          borderRadius: const BorderRadius.all(
               Radius.circular(AppConstants.radius_10)),
           boxShadow: [
             BoxShadow(
@@ -62,10 +62,10 @@ class CommonSaleListView extends StatelessWidget {
           ],
         ),
         clipBehavior: Clip.hardEdge,
-        margin: EdgeInsets.symmetric(
+        margin: const EdgeInsets.symmetric(
             vertical: AppConstants.padding_10,
             horizontal: AppConstants.padding_5),
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
             vertical: AppConstants.padding_5,
             horizontal: AppConstants.padding_10),
         child: Row(
@@ -83,7 +83,7 @@ class CommonSaleListView extends StatelessWidget {
                     width: 70,
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                           Radius.circular(AppConstants.radius_10)),
                     ),
                   ),
@@ -91,10 +91,8 @@ class CommonSaleListView extends StatelessWidget {
               },
               errorWidget: (context, error, stackTrace) {
                 debugPrint('sale list image error : $error');
-                return Container(
-                  child: Image.asset(AppImagePath.imageNotAvailable5,
-                      height: 70, width: 70, fit: BoxFit.cover),
-                );
+                return Image.asset(AppImagePath.imageNotAvailable5,
+                    height: 70, width: 70, fit: BoxFit.cover);
               },
             ) :
             Image.asset(AppImagePath.imageNotAvailable5, height: 70,
@@ -105,7 +103,7 @@ class CommonSaleListView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +111,7 @@ class CommonSaleListView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Container(
+                        SizedBox(
                           width: getScreenWidth(context) / 2.5,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -180,7 +178,7 @@ class CommonSaleListView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         salesDesc!.isNotEmpty ? Container(
-                          padding: EdgeInsets.all(3),
+                          padding: const EdgeInsets.all(3),
                           margin: EdgeInsets.zero,
                           decoration: BoxDecoration(
                               color: AppColors.saleBGColor,

@@ -17,11 +17,11 @@ import '../widget/custom_form_field_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MoreDetailsRoute {
-  static Widget get route => MoreDetailsScreen();
+  static Widget get route => const MoreDetailsScreen();
 }
 
 class MoreDetailsScreen extends StatelessWidget {
-  MoreDetailsScreen({super.key});
+  const MoreDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class MoreDetailsScreen extends StatelessWidget {
       create: (context) => MoreDetailsBloc()
         ..add(MoreDetailsEvent.getProfileMoreDetailsEvent(context: context, isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false))
         ..add(MoreDetailsEvent.getProfileModelEvent(
-          profileModel: args?[AppStrings.profileParamString] ?? ProfileModel(),
+          profileModel: args?[AppStrings.profileParamString] ?? const ProfileModel(),
           context: context,
         )),
       child: MoreDetailsScreenWidget(),
@@ -77,7 +77,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
               elevation: 0,
             ),
             body: state.isShimmering
-                ? MoreDetailsScreenShimmerWidget()
+                ? const MoreDetailsScreenShimmerWidget()
                 : SingleChildScrollView(
                     child: Column(
                       children: [
@@ -100,7 +100,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                         backgroundColor: Colors.white,
                                         context: context,
                                         isScrollControlled: true,
-                                        shape: OutlineInputBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(AppConstants.radius_20), topLeft: Radius.circular(AppConstants.radius_20)), borderSide: BorderSide.none),
+                                        shape: const OutlineInputBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(AppConstants.radius_20), topLeft: Radius.circular(AppConstants.radius_20)), borderSide: BorderSide.none),
                                         builder: (context1) {
                                           return ValueListenableBuilder(
                                               valueListenable: listNotifier,
@@ -122,7 +122,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                                 onTap: () {
                                                                   Navigator.pop(context1);
                                                                 },
-                                                                child: Icon(Icons.close))
+                                                                child: const Icon(Icons.close))
                                                           ],
                                                         ),
                                                         15.height,
@@ -150,11 +150,11 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                           cursorColor: AppColors.mainColor,
                                                         ),
                                                         7.height,
-                                                        list.length == 0
+                                                        list.isEmpty
                                                             ? Expanded(
                                                                 child: Center(
                                                                   child: Text(
-                                                                    '${AppLocalizations.of(context)!.cities_not_available}',
+                                                                    AppLocalizations.of(context)!.cities_not_available,
                                                                     style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
                                                                   ),
                                                                 ),
@@ -194,9 +194,9 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: AppColors.whiteColor,
                                         border: Border.all(color: AppColors.borderColor),
-                                        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+                                        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
                                       ),
-                                      padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
@@ -216,9 +216,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                   CustomFormField(
                                     context: context,
                                     controller: state.streetNameController,
-                                    inputformet: [
-                                      /*FilteringTextInputFormatter.deny(
-                                  RegExp(r'\s')),*/
+                                    inputFormat: [
                                       LengthLimitingTextInputFormatter(50)
                                     ],
                                     keyboardType: TextInputType.text,
@@ -234,9 +232,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                   CustomFormField(
                                     context: context,
                                     controller: state.streetNumberController,
-                                    inputformet: [
-                                      /*FilteringTextInputFormatter.deny(
-                                  RegExp(r'\s')),*/
+                                    inputFormat: [
                                       LengthLimitingTextInputFormatter(50)
                                     ],
                                     keyboardType: TextInputType.number,
@@ -248,6 +244,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                   7.height,
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!.email,
+                                    star: '',
                                   ),
                                   CustomFormField(
                                     context: context,
@@ -266,7 +263,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                   CustomFormField(
                                     context: context,
                                     controller: state.zipController,
-                                    inputformet: [
+                                    inputFormat: [
                                       FilteringTextInputFormatter.digitsOnly,
                                     ],
                                     textDirection: context.rtl ? TextDirection.ltr : null,
@@ -335,7 +332,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         ),
                         state.isUpdating
                             ? Container(
-                                color: Color.fromARGB(10, 0, 0, 0),
+                                color: const Color.fromARGB(10, 0, 0, 0),
                                 height: getScreenHeight(context),
                                 width: getScreenWidth(context),
                                 alignment: Alignment.center,

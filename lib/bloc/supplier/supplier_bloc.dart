@@ -21,7 +21,7 @@ part 'supplier_bloc.freezed.dart';
 class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
   SupplierBloc() : super(SupplierState.initial()) {
     on<SupplierEvent>((event, emit) async {
-      if (event is _GetSuppliersListEvent) {
+      if (event is _getSuppliersListEvent) {
         if (state.isLoadMore) {
           return;
         }
@@ -70,11 +70,11 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
-      } else if (event is _RefreshListEvent) {
+      } else if (event is _refreshListEvent) {
         emit(state.copyWith(
             pageNum: 0, suppliersList: [], isBottomOfSuppliers: false));
         add(SupplierEvent.getSuppliersListEvent(context: event.context));
-      } else if (event is _SetSearchEvent) {
+      } else if (event is _setSearchEvent) {
         emit(state.copyWith(search: event.search));
       }
     });

@@ -1,11 +1,11 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/komal-sit/.shorebird/bin/cache/flutter/d299d8d026d9b6cc158bb0a3dd9e96073d38c90b"
+export "FLUTTER_ROOT=/Users/komal-sit/Documents/sdk/flutter"
 export "FLUTTER_APPLICATION_PATH=/Users/komal-sit/StudioProjects/food_stocks"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
-export "FLUTTER_BUILD_NAME=1.0.32"
-export "FLUTTER_BUILD_NUMBER=1"
+export "FLUTTER_BUILD_NAME=1.0.33"
+export "FLUTTER_BUILD_NUMBER=3"
 export "DART_OBFUSCATION=false"
 export "TRACK_WIDGET_CREATION=true"
 export "TREE_SHAKE_ICONS=false"

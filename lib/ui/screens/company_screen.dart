@@ -18,7 +18,7 @@ import '../widget/refresh_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CompanyRoute {
-  static Widget get route => CompanyScreen();
+  static Widget get route => const CompanyScreen();
 }
 
 class CompanyScreen extends StatelessWidget {
@@ -28,13 +28,12 @@ class CompanyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint('company args = ${args}');
     return BlocProvider(
       create: (context) => CompanyBloc()
         ..add(CompanyEvent.setSearchEvent(
             search: args?[AppStrings.searchString] ?? ''))
         ..add(CompanyEvent.getCompaniesListEvent(context: context)),
-      child: CompanyScreenWidget(),
+      child: const CompanyScreenWidget(),
     );
   }
 }
@@ -49,7 +48,7 @@ class CompanyScreenWidget extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)?.companies??'',
@@ -64,9 +63,9 @@ class CompanyScreenWidget extends StatelessWidget {
                 SmartRefresher(
               enablePullDown: true,
               controller: state.refreshController,
-              header: RefreshWidget(),
+              header: const RefreshWidget(),
               footer: CustomFooter(
-                builder: (context, mode) => CompanyScreenShimmerWidget(),
+                builder: (context, mode) => const CompanyScreenShimmerWidget(),
               ),
               enablePullUp: !state.isBottomOfCompanies,
               onRefresh: () {
@@ -86,14 +85,14 @@ class CompanyScreenWidget extends StatelessWidget {
                 child: Column(
                   children: [
                     state.isShimmering
-                        ? CompanyScreenShimmerWidget()
+                        ? const CompanyScreenShimmerWidget()
                         : state.companiesList.isEmpty
                             ? Container(
                                 height: getScreenHeight(context) - 80,
                                 width: getScreenWidth(context),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  '${AppLocalizations.of(context)?.companies_not_available??''}',
+                                  AppLocalizations.of(context)?.companies_not_available??'',
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
                                       color: AppColors.textColor),
@@ -103,10 +102,10 @@ class CompanyScreenWidget extends StatelessWidget {
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: state.companiesList.length,
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     horizontal: AppConstants.padding_10),
                                 gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
                                         childAspectRatio: 0.9
                                     ),
@@ -156,12 +155,12 @@ class CompanyScreenWidget extends StatelessWidget {
       height: getScreenHeight(context),
       width: getScreenWidth(context),
       clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_10,
           horizontal: AppConstants.padding_5),
       decoration: BoxDecoration(
         borderRadius:
-            BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+            const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         color: AppColors.whiteColor,
         boxShadow: [
           BoxShadow(
@@ -171,7 +170,7 @@ class CompanyScreenWidget extends StatelessWidget {
       ),
       child: InkWell(
         borderRadius:
-            BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+            const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         onTap: onTap,
         child: Column(
           children: [
@@ -186,7 +185,7 @@ class CompanyScreenWidget extends StatelessWidget {
                     width: getScreenWidth(context),
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                           topLeft:
                           Radius.circular(AppConstants.radius_10),
                           topRight:
@@ -195,7 +194,6 @@ class CompanyScreenWidget extends StatelessWidget {
                   ),
                 ),
                 errorWidget: (context, url, error) {
-                  debugPrint('company screen error : $error');
                   return Container(
                   height: getScreenHeight(context),
                   width: getScreenWidth(context),
@@ -218,13 +216,13 @@ class CompanyScreenWidget extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                   vertical: AppConstants.padding_5,
                   horizontal: AppConstants.padding_5),
               decoration: BoxDecoration(
                 //color: AppColors.mainColor,
                 gradient: AppColors.appMainGradientColor,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(AppConstants.radius_10),
                     bottomRight: Radius.circular(AppConstants.radius_10)),
                 // border: Border.all(color: AppColors.whiteColor, width: 1),

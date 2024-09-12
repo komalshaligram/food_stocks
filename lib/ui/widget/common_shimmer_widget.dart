@@ -21,12 +21,12 @@ class CommonShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      child: child,
       baseColor: baseColor,
       highlightColor: highlightColor,
       direction: context.rtl ? ShimmerDirection.rtl : ShimmerDirection.ltr,
       period: period,
       enabled: true,
+      child: child,
     );
   }
 }

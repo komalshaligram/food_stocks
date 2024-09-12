@@ -17,7 +17,7 @@ import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/req_model/global_search_req_model/global_search_req_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
-as InsertCartModel;
+as insert;
 import '../../data/model/req_model/pesach_product_req_model/pesach_product_req_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
@@ -54,7 +54,7 @@ class PesachProductsBloc
     on<PesachProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
-      if (event is _GetSupplierProductsListEvent) {
+      if (event is _getSupplierProductsListEvent) {
         emit(state.copyWith(
           isIncludedVat: preferences.getIsIncludedVat(),
           isSaleOn: preferences.getShowSale(),
@@ -89,7 +89,6 @@ class PesachProductsBloc
             }
             return value == '';
           });
-          debugPrint('pesach products req = $req');
           PesachProductsResModel response;
           if (event.searchType == SearchTypes.product.toString()) {
             emit(state.copyWith(searchType: event.searchType.toString()));
@@ -98,11 +97,9 @@ class PesachProductsBloc
               .post(AppUrls.getPlanogramAllProductUrl, data: req);
           response =
               PesachProductsResModel.fromJson(res);
-          debugPrint('search url = ${AppUrls.baseUrl}${AppUrls.getPlanogramAllProductUrl}');
           emit(state.copyWith(searchType: event.searchType.toString()));
-          debugPrint('supplier Products res = ${response.data}');
 
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             List<PesachData> productList =
             state.productList.toList(growable: true);
             productList.addAll(response.data ?? []);
@@ -118,11 +115,7 @@ class PesachProductsBloc
 
                 []);
             productStockList[1].addAll(stockList);
-            
-            debugPrint('new product list len = ${productList.length}');
-            debugPrint(
-                'new product stock list len = ${productStockList.length}');
-        
+
             emit(state.copyWith(
                 
                 productList: productList,
@@ -152,7 +145,7 @@ class PesachProductsBloc
         state.refreshController.loadComplete();
       }
 
-      else if (event is _RefreshListEvent) {
+      else if (event is _refreshListEvent) {
         add(PesachProductsEvent.getPermissionList(context: event.context));
         emit(state.copyWith(
             pageNum: 0,
@@ -166,10 +159,8 @@ class PesachProductsBloc
         add(PesachProductsEvent.getSupplierProductsListEvent(
             context: event.context, searchType: state.searchType));
       }
-      else if (event is _GetProductDetailsEvent) {
-        add(PesachProductsEvent.RemoveRelatedProductEvent());
-        debugPrint('product details id = ${event.productId}');
-        debugPrint('productListIndex = ${event.productListIndex}');
+      else if (event is _getProductDetailsEvent) {
+        add(const PesachProductsEvent.removeRelatedProductEvent());
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
@@ -183,25 +174,19 @@ class PesachProductsBloc
           ProductDetailsResModel response =
           ProductDetailsResModel.fromJson(res);
 
-          debugPrint('GetProductDetails_____${response}');
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
 
-            //new chanegs
+            //new changes
             //0 for barcode and search
             //1 for recommendation product.
             //2 related product.
             if(response.product!.isNotEmpty){
-
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             int productListIndex  = event.productListIndex;
-            debugPrint('productStockList___${productStockList[2].length}');
-            debugPrint('productListIndex___${event.productListIndex}');
             int productStockUpdateIndex = -1;
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
-              debugPrint('responseproductid____${response.product?.first.id}');
-
             }
             else{
               productStockUpdateIndex = state.productStockList[productListIndex]
@@ -210,16 +195,13 @@ class PesachProductsBloc
             }
 
             emit(state.copyWith(productListIndex:productListIndex,productStockUpdateIndex:productStockUpdateIndex));
-            debugPrint('planoGramUpdateIndex___${state.productListIndex}');
-            debugPrint('productStockUpdateIndex___${state.productStockUpdateIndex}');
-            try {
 
+            try {
               final res = await DioClient(event.context).post(
                 '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
               );
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-              if (response.status == 200) {
-                debugPrint('cart before = ${response.data}');
+              if (response.status == AppConstants.code_200) {
                 response.data?.data?.forEach((cartProduct) {
                   if (cartProduct.id == event.productId ||
                       cartProduct.id == state.productStockList[state.productListIndex]
@@ -231,12 +213,11 @@ class PesachProductsBloc
                     return;
                   }
                 });
-                debugPrint(
-                    '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
+
               }
             } on ServerException {}
             if(response.product!.isNotEmpty){
-              add(PesachProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+              add(PesachProductsEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if (event.isBarcode) {
               productStockList[0][0] =  productStockList[0][0]
@@ -270,7 +251,7 @@ class PesachProductsBloc
                       .productStockList[productListIndex]
                   [productStockUpdateIndex]
                       .productSupplierIds
-                  ? supplier.saleProduct?.indexOf(
+                  ? !supplier.saleProduct!.contains(
                 supplier.saleProduct?.firstWhere(
                       (sale) =>
                   sale.saleId ==
@@ -279,10 +260,9 @@ class PesachProductsBloc
                       productListIndex][
                       productStockUpdateIndex]
                           .productSaleId,
-                  orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
+                  orElse: () => const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                 ) ??
-                    SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
-                  -1
+                    const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),)
                   ? -2
                    : supplier.saleProduct?.indexOf(
                 supplier.saleProduct?.firstWhere(
@@ -292,9 +272,9 @@ class PesachProductsBloc
                       productListIndex][
                       productStockUpdateIndex]
                           .productSaleId,
-                  orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
+                  orElse: () => const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                 ) ??
-                    SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
+                    const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                   -1
                   : -1,
               supplierSales: supplier.saleProduct?.map((sale) => SupplierSaleModel(
@@ -318,19 +298,7 @@ class PesachProductsBloc
             })
                 .toList() ??
                 []);
-            supplierList.removeWhere((supplier) => supplier.stock == 0);
-            debugPrint(
-                'response list = ${response.product?.first.supplierSales?.length}');
-            debugPrint('supplier list = ${supplierList}');
-            // debugPrint(
-            //     'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
-            /*    String note = productStockList.isEmpty
-                  ? ''
-                  : productStockList.indexOf(state.productStockList.last) ==
-                  productListIndex
-                  ? ''
-                  : productStockList[productListIndex][0].note;*/
-            //emit(state.copyWith(productStockList: []));
+            supplierList.removeWhere((supplier) => supplier.stock == '0');
 
             emit(state.copyWith(
                 productDetails: response.product ?? [],
@@ -341,40 +309,37 @@ class PesachProductsBloc
                 isProductLoading: false));
             if (supplierList.isNotEmpty) {
               bool isSupplierSelected = false;
-              supplierList.forEach((supplier) {
+              for (var supplier in supplierList) {
                 if (supplier.selectedIndex != -1) {
                   isSupplierSelected = true;
-                  return;
+                  continue;
                 }
-              });
-              debugPrint('isSupplierSelected = $isSupplierSelected');
-              debugPrint('isSupplierSelected = ${state.productListIndex}');
+              }
+
               if (!isSupplierSelected || state.productListIndex == 0) {
                 int supplierIndex = 0;
                 int supplierSaleIndex = -1;
                 double cheapestPrice = supplierList.first.basePrice;
-                supplierList.forEach(
-                        (supplier) => supplier.supplierSales.forEach((sale) {
+                for (var supplier in supplierList) {
+                  for (var sale in supplier.supplierSales) {
                       if (sale.salePrice < cheapestPrice) {
                         cheapestPrice = sale.salePrice;
                         supplierIndex = supplierList.indexOf(supplier);
                         supplierSaleIndex =
                             supplier.supplierSales.indexOf(sale);
                       }
-                    }));
-                debugPrint('cheapest = $cheapestPrice');
-                supplierList.forEach((supplier) {
+                    }
+                }
+                for (var supplier in supplierList) {
                   if (supplier.basePrice < cheapestPrice) {
                     cheapestPrice = supplier.basePrice;
                     supplierIndex = supplierList.indexOf(supplier);
                   }
-                });
+                }
                 if (supplierSaleIndex == -1) {
                   supplierSaleIndex = -2;
                 }
-                debugPrint('cheapest = $cheapestPrice');
-                debugPrint('supplier index = $supplierIndex');
-                debugPrint('supplier sale index = $supplierSaleIndex');
+
                 add(PesachProductsEvent.supplierSelectionEvent(
                     supplierIndex: supplierIndex,
                     context: event.context,
@@ -401,13 +366,8 @@ class PesachProductsBloc
           emit(state.copyWith(isProductLoading: false));
         }
       }
-      else if (event is _IncreaseQuantityOfProduct) {
-        debugPrint('maxQty:${ state.productStockList[state.productListIndex]
-        [state.productStockUpdateIndex]
-            .maxQty}');
-        debugPrint('quantity:${ state.productStockList[state.productListIndex]
-        [state.productStockUpdateIndex]
-            .quantity}');
+      else if (event is _increaseQuantityOfProduct) {
+
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -435,12 +395,11 @@ class PesachProductsBloc
                       .maxQty) {
                 CustomSnackBar.showSnackBar(
                     context: event.context,
-                    title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                    title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
                     type: SnackBarType.failure);
                 return;
               }
             }
-            debugPrint('hi');
             productStockList[state.productListIndex]
             [state.productStockUpdateIndex] =
                 productStockList[state.productListIndex]
@@ -449,8 +408,7 @@ class PesachProductsBloc
                     [state.productStockUpdateIndex]
                         .quantity +
                         1);
-            debugPrint(
-                'product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           } else {
@@ -462,7 +420,7 @@ class PesachProductsBloc
           }
         }
       }
-      else if (event is _DecreaseQuantityOfProduct) {
+      else if (event is _decreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -479,14 +437,13 @@ class PesachProductsBloc
                     [state.productStockUpdateIndex]
                         .quantity -
                         1);
-            debugPrint(
-                'product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           } else {}
         }
       }
-      else if (event is _UpdateQuantityOfProduct) {
+      else if (event is _updateQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -495,7 +452,6 @@ class PesachProductsBloc
             quantityString = quantityString.substring(1);
           }
           int newQuantity = int.tryParse(quantityString) ?? 0;
-          debugPrint('new quantity = $newQuantity');
           if (newQuantity <=
               double.parse(productStockList[state.productListIndex]
               [state.productStockUpdateIndex]
@@ -505,8 +461,7 @@ class PesachProductsBloc
                 productStockList[state.productListIndex]
                 [state.productStockUpdateIndex]
                     .copyWith(quantity: newQuantity);
-            debugPrint(
-                'product quantity update = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           } else {
@@ -518,8 +473,7 @@ class PesachProductsBloc
                     quantity: int.tryParse(quantityString.substring(
                         0, quantityString.length - 1)) ??
                         0);
-            debugPrint(
-                'product max quantity update = ${int.tryParse(quantityString.substring(0, quantityString.length - 1)) ?? 0}');
+
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
@@ -530,15 +484,13 @@ class PesachProductsBloc
           }
         }
       }
-      else if (event is _ChangeSupplierSelectionExpansionEvent) {
+      else if (event is _changeSupplierSelectionExpansionEvent) {
         emit(state.copyWith(
             isSelectSupplier:
             event.isSelectSupplier ?? !state.isSelectSupplier));
-        debugPrint('supplier selection : ${state.isSelectSupplier}');
       }
-      else if (event is _SupplierSelectionEvent) {
-        debugPrint(
-            'supplier[${event.supplierIndex}][${event.supplierSaleIndex}]');
+      else if (event is _supplierSelectionEvent) {
+
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList =
           state.productSupplierList.toList(growable: true);
@@ -564,11 +516,9 @@ class PesachProductsBloc
           supplierList = supplierList
               .map((supplier) => supplier.copyWith(selectedIndex: -1))
               .toList();
-          debugPrint('selected supplier = ${supplierList}');
           supplierList[event.supplierIndex] = supplierList[event.supplierIndex]
               .copyWith(selectedIndex: event.supplierSaleIndex);
-          debugPrint(
-              'selected supplier[${event.supplierIndex}] = ${supplierList[event.supplierIndex]}');
+
           emit(state.copyWith(
               productSupplierList: supplierList,
               productStockList: productStockList));
@@ -576,7 +526,7 @@ class PesachProductsBloc
 
         }
       }
-      else if (event is _AddToCartProductEvent) {
+      else if (event is _addToCartProductEvent) {
         if (state.productStockList[state.productListIndex][state.productStockUpdateIndex]
             .productSupplierIds.isEmpty) {
 
@@ -586,7 +536,7 @@ class PesachProductsBloc
             0) {
           CustomSnackBar.showSnackBar(
               context: event.context,
-              title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
+              title: AppLocalizations.of(event.context)!.add_1_quantity,
               type: SnackBarType.failure);
           return;
         }
@@ -596,13 +546,12 @@ class PesachProductsBloc
           ) {
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
+                title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
                 type: SnackBarType.failure);
             return;
           }
         }
         if (_isProductInCart) {
-          debugPrint('update cart');
           try {
             emit(state.copyWith(isLoading: true));
             UpdateCartReqModel request = UpdateCartReqModel(
@@ -626,7 +575,7 @@ class PesachProductsBloc
               data: request,
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
-            if (response.status == 201) {
+            if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
               Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
@@ -669,9 +618,9 @@ class PesachProductsBloc
         } else {
           try {
             emit(state.copyWith(isLoading: true));
-            InsertCartModel.InsertCartReqModel insertCartReqModel =
-            InsertCartModel.InsertCartReqModel(products: [
-              InsertCartModel.Product(
+            insert.InsertCartReqModel insertCartReqModel =
+            insert.InsertCartReqModel(products: [
+              insert.Product(
                   productId: state
                       .productStockList[state.productListIndex][state.productStockUpdateIndex]
                       .productId,
@@ -698,14 +647,9 @@ class PesachProductsBloc
               }
               return value == null;
             });
-            debugPrint('insert cart req = $req');
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                 prefs: await SharedPreferences.getInstance());
 
-            debugPrint(
-                'insert cart url1 = ${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}');
-            debugPrint(
-                'insert cart url1 auth = ${preferencesHelper.getAuthToken()}');
             final res = await DioClient(event.context).post(
                 '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
@@ -716,13 +660,12 @@ class PesachProductsBloc
                   },
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
-            if (response.status == 201) {
-              add(PesachProductsEvent.setCartCountEvent());
+            if (response.status == AppConstants.code_201) {
+              add(const PesachProductsEvent.setCartCountEvent());
               Vibration.vibrate();
               Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
-              debugPrint('quandjfd____${state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
@@ -732,7 +675,7 @@ class PesachProductsBloc
                     totalPrice: 0.0,
                     productSaleId: '',
                   );
-                 add(PesachProductsEvent.getCartCountEvent());
+                 add(const PesachProductsEvent.getCartCountEvent());
               emit(state.copyWith(isLoading: false, productStockList: productStockList,duringCelebration: true));
               await Future.delayed(const Duration(milliseconds: 500));
               emit(state.copyWith(duringCelebration: false));
@@ -741,7 +684,7 @@ class PesachProductsBloc
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ?? response.message!, event.context),
                   type: SnackBarType.success);
-            } else if (response.status == 403) {
+            } else if (response.status == AppConstants.code_403) {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -769,14 +712,12 @@ class PesachProductsBloc
           }
         }
       }
-      else if (event is _SetCartCountEvent) {
+      else if (event is _setCartCountEvent) {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1, );
-        
-        debugPrint('cart count supplier= ${preferences.getCartCount()}');
       }
-      else if (event is _UpdateImageIndexEvent) {
+      else if (event is _updateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
       } 
  
@@ -785,7 +726,7 @@ class PesachProductsBloc
             isSupplierProductGrid: !state.isGridView);
         emit(state.copyWith(isGridView: !state.isGridView));
       }
-      else if (event is _ChangeCategoryExpansion) {
+      else if (event is _changeCategoryExpansion) {
         if (event.isOpened == false) {
           state.searchController.clear();
           emit(state.copyWith(searchController: state.searchController));
@@ -796,7 +737,7 @@ class PesachProductsBloc
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
       }
-      else if (event is _GlobalSearchEvent) {
+      else if (event is _globalSearchEvent) {
         emit(state.copyWith(search: state.searchController.text,bottleDeposit: state.bottleDeposit));
         debugPrint('data1 = ${state.searchController.text}');
         try {
@@ -809,16 +750,9 @@ class PesachProductsBloc
           final res = await DioClient(event.context).post(
               AppUrls.getGlobalSearchResultUrl,
               data: globalSearchReqModel.toJson());
-          debugPrint('data1 = $res');
+
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
-          debugPrint('cat len = ${response.data?.categoryData?.length}');
-          debugPrint(
-              'sub cat len = ${response.data?.subCategoryData?.length}');
-          debugPrint('com len = ${response.data?.companyData?.length}');
-          debugPrint('sale len = ${response.data?.saleData?.length}');
-          debugPrint('sup len = ${response.data?.supplierData?.length}');
-          debugPrint(
-              'sup prod len = ${response.data?.supplierProductData?.length}');
+
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList.addAll(state.productCategoryList.map((category) =>
@@ -830,8 +764,7 @@ class PesachProductsBloc
             emit(state.copyWith(searchList: searchList, isSearching: false));
             return;
           }
-          debugPrint('store search list =${response.status}');
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             //category search result
             searchList.addAll(response.data?.categoryData
@@ -880,11 +813,7 @@ class PesachProductsBloc
                   searchType: SearchTypes.supplier,
                   image: supplier.logo ?? '',
                   isPesach: supplier.isPesach??false,
-               /*   salePrice: double.parse(supplier.sale.salePrice.toString()),
-                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
-                      .body
-                      ?.text ??
-                      '',*/
+
                 ))
                 .toList() ??
                 []);
@@ -927,7 +856,6 @@ class PesachProductsBloc
                 ))
                 .toList() ??
                 []);
-            debugPrint('store search list = ${searchList.length}');
             emit(state.copyWith(
                 searchList: searchList,
                 search: state.searchController.text,
@@ -941,8 +869,8 @@ class PesachProductsBloc
           CustomSnackBar.showSnackBar(
             context: event.context,
             title:
-            '${AppLocalizations.of(event.context)!
-                .something_is_wrong_try_again}',
+            AppLocalizations.of(event.context)!
+                .something_is_wrong_try_again,
             type: SnackBarType.failure,
           );
           emit(state.copyWith(isSearching: false));
@@ -950,37 +878,35 @@ class PesachProductsBloc
           CustomSnackBar.showSnackBar(
             context: event.context,
             title:
-            '${AppLocalizations.of(event.context)!
-                .something_is_wrong_try_again}',
+            AppLocalizations.of(event.context)!
+                .something_is_wrong_try_again,
             type: SnackBarType.failure,
           );
           emit(state.copyWith(isSearching: false));
         }
       }
-      else if (event is _UpdateGlobalSearchEvent) {
+      else if (event is _updateGlobalSearchEvent) {
         emit(state.copyWith(
             searchController: TextEditingController(text: event.search),
             searchList: event.searchList));
       }
-      else if (event is _RelatedProductsEvent) {
-        debugPrint('productId____${event.productId}');
+      else if (event is _relatedProductsEvent) {
         emit(state.copyWith(isRelatedShimmering: true));
         final res = await DioClient(event.context).post(
             AppUrls.relatedProductsUrl,
-            data: {'mainProductId': event.productId});
+            data: {AppStrings.mainProductIdString: event.productId});
         RelatedProductResModel response =
         RelatedProductResModel.fromJson(res);
-        debugPrint('product categories = ${response.data?.length
-            .toString()}');
-        if (response.status == 200) {
+
+        if (response.status == AppConstants.code_200) {
           List<List<ProductStockModel>> productStockList =
           state.productStockList.toList(growable: true);
           List<ProductStockModel>stockList = [];
           stockList.addAll(response.data?.map(
-                  (Product) =>
+                  (product) =>
                   ProductStockModel(
-                    productId: Product.id ?? '' ,
-                    stock: Product.productStock.toString(),
+                    productId: product.id ?? '' ,
+                    stock: product.productStock.toString(),
                   )) ?? [] );
           productStockList[2].addAll(stockList);
           emit(state.copyWith(
@@ -998,7 +924,7 @@ class PesachProductsBloc
         }
 
       }
-      else if (event is _RemoveRelatedProductEvent) {
+      else if (event is _removeRelatedProductEvent) {
         emit(state.copyWith(relatedProductList: []));
       }
       else if (event is _getCartCountEvent) {
@@ -1013,9 +939,8 @@ class PesachProductsBloc
             final res = await DioClient(event.context).get(
                 path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-            debugPrint('AccountPermission response = ${response.data.toString()}');
-            debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
-            if (response.status == 200) {
+
+            if (response.status == AppConstants.code_200) {
               var res = response.data?.permissions;
               preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
               preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
@@ -1060,16 +985,13 @@ class PesachProductsBloc
       else if(event is _userApproveEvent) {
         if (!preferences.getGuestUser() ) {
           try {
-            debugPrint('clientId_____${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
-                '${AppUrls.verifyClientUrl}',
+                AppUrls.verifyClientUrl,
                 data: {AppStrings.clientIdString: preferences.getUserId()}
             );
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-            debugPrint('verifyClient res_____$response');
-            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls
-                .verifyClientUrl}');
-            if (response.status == 200) {
+
+            if (response.status == AppConstants.code_200) {
               if (!(response.data?.isFilledForms ?? false) || !(response.data
                   ?.isRegisterForm ?? false)) {
                 Navigator.pushNamed(event.context,
@@ -1082,7 +1004,7 @@ class PesachProductsBloc
                     event.context, RouteDefine.fileUploadScreen.name);
               }
             }
-          } on ServerException {}
+          }
           catch (e) {
             debugPrint('catch____$e');
           }

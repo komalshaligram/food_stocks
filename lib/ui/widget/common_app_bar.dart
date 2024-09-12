@@ -25,7 +25,7 @@ class CommonAppBar extends StatelessWidget {
         padding: const EdgeInsets.all(AppConstants.padding_10),
         child: InkWell(
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
           onTap: onTap,
           child: Icon(
             iconData,
@@ -35,11 +35,11 @@ class CommonAppBar extends StatelessWidget {
         ),
       ),
       actions: [
-        Container(
+        SizedBox(
             height: height,
             width: width,
-            child: trailingWidget ?? SizedBox()),
-        Padding(padding: EdgeInsets.all(AppConstants.padding_10)),
+            child: trailingWidget ?? const SizedBox()),
+        const Padding(padding: EdgeInsets.all(AppConstants.padding_10)),
       ],
       title: Text(
         title,

@@ -81,7 +81,7 @@ class FormDataScreenWidget extends StatelessWidget {
             body: SafeArea(
               child: SingleChildScrollView(
                 child: state.isShimmering || state.isAgentListShimmering
-                    ? FormDataScreenShimmerWidget()
+                    ? const FormDataScreenShimmerWidget()
                     : Padding(
                   padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
                   child: Form(
@@ -95,7 +95,7 @@ class FormDataScreenWidget extends StatelessWidget {
                           name: AppLocalizations.of(context)!.my_agent_code,
                         ),
                         CustomFormField(
-                          inputformet: [
+                          inputFormat: [
                             FilteringTextInputFormatter.digitsOnly,
                             LengthLimitingTextInputFormatter(6)
                           ],
@@ -199,7 +199,7 @@ class FormDataScreenWidget extends StatelessWidget {
                               name: AppLocalizations.of(context)!.guarantee_1_phone_number,
                             ),
                             CustomFormField(
-                              inputformet: [
+                              inputFormat: [
                                 LengthLimitingTextInputFormatter(10)
                               ],
                               context: context,
@@ -291,7 +291,7 @@ class FormDataScreenWidget extends StatelessWidget {
                               star: '',
                             ),
                             CustomFormField(
-                              inputformet: [
+                              inputFormat: [
                                 LengthLimitingTextInputFormatter(10)
                               ],
                               context: context,
@@ -304,14 +304,12 @@ class FormDataScreenWidget extends StatelessWidget {
                             ),
                           ],
                         )
-                            : SizedBox(),
+                            : const SizedBox(),
                         40.height,
                         CustomButtonWidget(
                           buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
                           bGColor: AppColors.mainColor,
                           onPressed: () {
-                            debugPrint('state.haveMultiple :${state.haveMultiple }');
-
                             if (state.business != AppLocalizations.of(context)!.type_of_business) {
                               if (isValidIsraeliID(state.owner1israelIdController.text.toString().trim())) {
 
@@ -349,7 +347,7 @@ class FormDataScreenWidget extends StatelessWidget {
         if (ownerName.isNotEmpty) {
           if (isValidIsraeliID(state.owner2israelIdController.text.toString().trim())) {
             if(state.guarantee2NameController.text.toString().isNotEmpty)
-            if ( isValidIsraeliID(state.guarantee2idController.text.toString().trim())) {
+            if (isValidIsraeliID(state.guarantee2idController.text.toString().trim())) {
               if(state.guarantee2NameController.text.toString().isNotEmpty){
                 if(state.guarantee2addressController.text.toString().isNotEmpty){
                   if(state.guarantee2PhoneController.text.toString().isNotEmpty){

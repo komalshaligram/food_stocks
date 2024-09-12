@@ -14,7 +14,7 @@ import '../utils/themes/app_strings.dart';
 import '../widget/custom_form_field_widget.dart';
 
 class LogInRoute {
-  static Widget get route => LogInScreen();
+  static Widget get route => const LogInScreen();
 }
 
 class LogInScreen extends StatelessWidget {
@@ -46,7 +46,7 @@ class LogInScreenWidget extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.whiteColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.whiteColor,
               title: state.isRegister
@@ -76,7 +76,7 @@ class LogInScreenWidget extends StatelessWidget {
                               color: Colors.black)),
                       30.height,
                       CustomFormField(
-                        inputformet: [
+                        inputFormat: [
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(10)
                         ],

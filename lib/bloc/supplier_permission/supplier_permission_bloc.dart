@@ -33,7 +33,7 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
           if (response.status == AppConstants.code_200) {
 
             emit(state.copyWith(isShimmering:false));
-            List<permissionModel>supplierPermissionList = [];
+            List<PermissionModel>supplierPermissionList = [];
 
             emit(state.copyWith(isSelectAll: true));
 
@@ -46,7 +46,7 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
 
             response.data?.forEach((element) {
               supplierPermissionList.add(
-                  permissionModel(
+                  PermissionModel(
                     supplierId: element.supplierId,
                       title: element.supplier?.contactName ?? '',
                       isEnable: element.isAllowed ?? false));
@@ -67,7 +67,7 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
 
 
       if(event is _switchButtonEvent){
-        List<permissionModel>supplierPermissionList = state.supplierPermissionList.toList(growable: true);
+        List<PermissionModel>supplierPermissionList = state.supplierPermissionList.toList(growable: true);
         if(event.index == -1){
           bool isEnable = !state.isSelectAll;
           supplierPermissionList.forEach((element) {

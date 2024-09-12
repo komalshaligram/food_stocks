@@ -26,8 +26,8 @@ class OrderSummaryScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args =
     ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => OrderSummaryBloc()..add(OrderSummaryEvent.getDataEvent(context: context,CartItemList: args?[AppStrings.getCartListString])),
-      child: OrderSummaryScreenWidget(),
+      create: (context) => OrderSummaryBloc()..add(OrderSummaryEvent.getDataEvent(context: context,cartItemList: args?[AppStrings.getCartListString])),
+      child: const OrderSummaryScreenWidget(),
     );
   }
 }
@@ -43,7 +43,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.order_summary,
@@ -58,14 +58,14 @@ class OrderSummaryScreenWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 (state.orderSummaryList.data?.data?.length ?? 0) == 0
-                    ? Expanded(child: OrderSummaryScreenShimmerWidget())
+                    ? const Expanded(child: OrderSummaryScreenShimmerWidget())
                     : Expanded(
                         child: AnimationLimiter(
                           child: ListView.builder(
                             itemCount: state.orderSummaryList.data?.data?.length,
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: AppConstants.padding_5),
                             itemBuilder: (context, index) =>
                                 AnimationConfiguration.staggeredList(
@@ -82,7 +82,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     : Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
-                          margin: EdgeInsets.only(
+                          margin: const EdgeInsets.only(
                               left: AppConstants.padding_20,
                               right: AppConstants.padding_20,
                               top: AppConstants.padding_10,
@@ -94,11 +94,11 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                   color: AppColors.shadowColor.withOpacity(0.20),
                                   blurRadius: AppConstants.blur_10),
                             ],
-                            borderRadius: BorderRadius.all(
+                            borderRadius: const BorderRadius.all(
                                 Radius.circular(AppConstants.radius_40)),
                           ),
                           child: Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: AppConstants.padding_5,
                                 horizontal: AppConstants.padding_5),
                             decoration: BoxDecoration(
@@ -114,31 +114,31 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                   child: Container(
                                       height: AppConstants.containerHeight_65,
                                       alignment: Alignment.center,
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           vertical: AppConstants.padding_5,
                                           horizontal: AppConstants.padding_5),
                                       decoration: BoxDecoration(
                                           color: AppColors.mainColor,
                                           borderRadius: BorderRadius.only(
                                               topLeft: context.rtl
-                                                  ? Radius.circular(
+                                                  ? const Radius.circular(
                                                       AppConstants.radius_6)
-                                                  : Radius.circular(
+                                                  : const Radius.circular(
                                                       AppConstants.radius_30),
                                               bottomLeft: context.rtl
-                                                  ? Radius.circular(
+                                                  ? const Radius.circular(
                                                       AppConstants.radius_6)
-                                                  : Radius.circular(
+                                                  : const Radius.circular(
                                                       AppConstants.radius_30),
                                               bottomRight: context.rtl
-                                                  ? Radius.circular(
+                                                  ? const Radius.circular(
                                                       AppConstants.radius_30)
-                                                  : Radius.circular(
+                                                  : const Radius.circular(
                                                       AppConstants.radius_6),
                                               topRight: context.rtl
-                                                  ? Radius.circular(
+                                                  ? const Radius.circular(
                                                       AppConstants.radius_30)
-                                                  : Radius.circular(AppConstants.radius_6))),
+                                                  : const Radius.circular(AppConstants.radius_6))),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
@@ -153,7 +153,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                              '${formatNumber(value:vatCalculation(price: state.orderSummaryList.data?.cart?.first.totalAmount?? 0,vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
+                                              formatNumber(value:vatCalculation(price: state.orderSummaryList.data?.cart?.first.totalAmount?? 0,vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal),
                                               style:
                                                   AppStyles.rkRegularTextStyle(
                                                       color:
@@ -181,34 +181,34 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                     child: Container(
                                       height: AppConstants.containerHeight_65,
                                       alignment: Alignment.center,
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           vertical: AppConstants.padding_5,
                                           horizontal: AppConstants.padding_5),
                                       decoration: BoxDecoration(
                                           color: AppColors.navSelectedColor,
                                           borderRadius: BorderRadius.only(
                                               topLeft: context.rtl
-                                                  ? Radius.circular(
+                                                  ? const Radius.circular(
                                                       AppConstants.radius_30)
-                                                  : Radius.circular(
+                                                  : const Radius.circular(
                                                       AppConstants.radius_6),
                                               bottomLeft: context.rtl
-                                                  ? Radius.circular(
+                                                  ? const Radius.circular(
                                                       AppConstants.radius_30)
-                                                  : Radius.circular(
+                                                  : const Radius.circular(
                                                       AppConstants.radius_6),
                                               bottomRight: context.rtl
-                                                  ? Radius.circular(
+                                                  ? const Radius.circular(
                                                       AppConstants.radius_6)
-                                                  : Radius.circular(
+                                                  : const Radius.circular(
                                                       AppConstants.radius_30),
                                               topRight: context.rtl
-                                                  ? Radius.circular(
+                                                  ? const Radius.circular(
                                                       AppConstants.radius_6)
-                                                  : Radius.circular(
+                                                  : const Radius.circular(
                                                       AppConstants.radius_30))),
                                       child: state.isLoading
-                                          ? CupertinoActivityIndicator()
+                                          ? const CupertinoActivityIndicator()
                                           : Text(
                                               AppLocalizations.of(context)!
                                                   .send_order,
@@ -242,8 +242,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
     return BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
       builder: (context, state) {
         return Container(
-          margin: EdgeInsets.all(AppConstants.padding_10),
-          padding: EdgeInsets.symmetric(
+          margin: const EdgeInsets.all(AppConstants.padding_10),
+          padding: const EdgeInsets.symmetric(
               vertical: AppConstants.padding_10,
               horizontal: AppConstants.padding_10),
           decoration: BoxDecoration(
@@ -254,7 +254,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   blurRadius: AppConstants.blur_10),
             ],
             borderRadius:
-                BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,7 +306,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     flexValue: 7,
                     title: AppLocalizations.of(context)!.total_order,
                     value:
-                    '${formatNumber(value: vatCalculation(price: state.orderSummaryList.data?.data?[index].totalAmount ?? 0,vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
+                    formatNumber(value: vatCalculation(price: state.orderSummaryList.data?.data?[index].totalAmount ?? 0,vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal),
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w500,

@@ -14,7 +14,7 @@ class CommonPaginationEndWidget extends StatelessWidget {
     return Container(
       height: 70,
       width: double.maxFinite,
-      padding: EdgeInsets.only(top: AppConstants.padding_15),
+      padding: const EdgeInsets.only(top: AppConstants.padding_15),
       child: Text(
         pageEndText,
         textAlign: TextAlign.center,

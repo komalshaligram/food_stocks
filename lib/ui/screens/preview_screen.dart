@@ -8,11 +8,11 @@ import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 
 class PreviewScreenRoute {
-  static Widget get route =>  PreviewScreen();
+  static Widget get route =>  const PreviewScreen();
 }
 
 class PreviewScreen extends StatelessWidget {
-   PreviewScreen({super.key});
+   const PreviewScreen({super.key});
 
 
   @override
@@ -28,10 +28,8 @@ class PreviewScreen extends StatelessWidget {
                 fontWeight: FontWeight.w500)
         ),
       ),
-      body: Container(
-        child: SfPdfViewer.network(
-          '${AppUrls.baseFileUrl}${args?[AppStrings.privacyPolicyPdfString]}'
-        ),
+      body: SfPdfViewer.network(
+        '${AppUrls.baseFileUrl}${args?[AppStrings.privacyPolicyPdfString]}'
       ),
     );
   }

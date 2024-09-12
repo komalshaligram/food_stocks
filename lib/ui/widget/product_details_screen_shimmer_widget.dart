@@ -15,8 +15,8 @@ class ProductDetailsScreenShimmerWidget extends StatelessWidget {
           child: Container(
             height: 180,
             width: double.maxFinite,
-            margin: EdgeInsets.all(AppConstants.padding_10),
-            padding: EdgeInsets.symmetric(
+            margin: const EdgeInsets.all(AppConstants.padding_10),
+            padding: const EdgeInsets.symmetric(
                 vertical: AppConstants.padding_10,
                 horizontal: AppConstants.padding_10),
             decoration: BoxDecoration(
@@ -26,7 +26,7 @@ class ProductDetailsScreenShimmerWidget extends StatelessWidget {
                     color: AppColors.shadowColor.withOpacity(0.15),
                     blurRadius: AppConstants.blur_10),
               ],
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                   Radius.circular(AppConstants.radius_5)),
 
             ),
@@ -35,8 +35,8 @@ class ProductDetailsScreenShimmerWidget extends StatelessWidget {
             ),
           ),
         ),
-        CommonShimmerWidget(
-          child: Container(
+        const CommonShimmerWidget(
+          child: SizedBox(
             height: 25,
             width: 100,
           ),
@@ -49,8 +49,8 @@ class ProductDetailsScreenShimmerWidget extends StatelessWidget {
           itemBuilder: (context, index) {
             return CommonShimmerWidget(
               child: Container(
-                margin: EdgeInsets.all(AppConstants.padding_10),
-                padding: EdgeInsets.symmetric(
+                margin: const EdgeInsets.all(AppConstants.padding_10),
+                padding: const EdgeInsets.symmetric(
                     vertical: AppConstants.padding_15,
                     horizontal: AppConstants.padding_10),
                 decoration: BoxDecoration(
@@ -61,7 +61,7 @@ class ProductDetailsScreenShimmerWidget extends StatelessWidget {
                         blurRadius: AppConstants.blur_10),
                   ],
                   borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                  const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                 ),
                 child: Container(
                   height: 40,

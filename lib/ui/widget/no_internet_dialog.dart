@@ -6,7 +6,7 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 
 class NoInternetDialog extends StatelessWidget {
   final void Function()? positiveOnTap;
-  NoInternetDialog({
+  const NoInternetDialog({
     super.key,
     this.positiveOnTap
   });
@@ -16,7 +16,7 @@ class NoInternetDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: AppColors.pageColor,
       surfaceTintColor: AppColors.whiteColor,
-      contentPadding: EdgeInsets.all(20.0),
+      contentPadding: const EdgeInsets.all(20.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       title: Icon(
         Icons.wifi_off,
@@ -26,7 +26,7 @@ class NoInternetDialog extends StatelessWidget {
       content: Padding(
         padding: const EdgeInsets.only(bottom: 5.0),
         child: Text(
-          '${AppLocalizations.of(context)!.no_internet_connection}',
+          AppLocalizations.of(context)!.no_internet_connection,
           textAlign: TextAlign.center,
           style: AppStyles.rkRegularTextStyle(
               color: AppColors.blackColor,
@@ -34,7 +34,7 @@ class NoInternetDialog extends StatelessWidget {
               fontWeight: FontWeight.w500),
         ),
       ),
-      actionsPadding: EdgeInsets.only(
+      actionsPadding: const EdgeInsets.only(
           right: AppConstants.padding_20,
           bottom: AppConstants.padding_20,
           left: AppConstants.padding_20),
@@ -46,14 +46,14 @@ class NoInternetDialog extends StatelessWidget {
           child: Center(
             child: Container(
               padding:
-              EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+              const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
               alignment: Alignment.center,
               width: AppConstants.containerHeight_80,
               decoration: BoxDecoration(
                   color: AppColors.mainColor.withOpacity(0.9),
                   borderRadius: BorderRadius.circular(8.0)),
               child: Text(
-                'OK',
+                AppLocalizations.of(context)!.ok,
                 style: AppStyles.rkRegularTextStyle(
                     color: AppColors.whiteColor,
                     size: AppConstants.smallFont),

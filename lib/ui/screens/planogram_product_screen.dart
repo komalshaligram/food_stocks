@@ -48,9 +48,9 @@ class PlanogramProductScreen extends StatelessWidget {
       create: (context) => PlanogramProductBloc()
         ..add(PlanogramProductEvent.getPlanogramProductsEvent(
             planogram: args?[AppStrings.planogramProductsParamString] ??
-                PlanogramDatum(),context: context))
+                const PlanogramDatum(),context: context))
         ..add(PlanogramProductEvent.userApproveEvent(context: context)),
-      child: PlanogramProductScreenWidget(),
+      child: const PlanogramProductScreenWidget(),
     );
   }
 }
@@ -72,6 +72,11 @@ class PlanogramProductScreenWidget extends StatelessWidget {
           FloatingActionButtonLocation.endContained,
           floatingActionButton:  !state.isGuestUser?FloatingActionButton(
             elevation: 0,
+            backgroundColor: Colors.transparent,
+            onPressed: () {
+              Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
+                  arguments: {AppStrings.isBasketScreenString: 'true'});
+            },
             child: Stack(
               children: [
                 Container(
@@ -128,7 +133,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                     child: IgnorePointer(
                       child: Confetti(
                         isStopped:!state.duringCelebration,
-                        snippingsCount: 10,
+                        snippingCount: 10,
                         snipSize: 3.0,
                         colors:[AppColors.mainColor],
                       ),
@@ -137,15 +142,10 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                 ),
               ],
             ),
-            backgroundColor: Colors.transparent,
-            onPressed: () {
-              Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
-                  arguments: {AppStrings.isBasketScreenString: 'true'});
-            },
           ):0.width,
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
               title:state.planogramName.toCapitalized(),
@@ -155,14 +155,14 @@ class PlanogramProductScreenWidget extends StatelessWidget {
               },
               trailingWidget: GestureDetector(
                   onTap: (){
-                    context.read<PlanogramProductBloc>().add(PlanogramProductEvent.getGridListView());
+                    context.read<PlanogramProductBloc>().add(const PlanogramProductEvent.getGridListView());
                   },
                   child: Icon(state.isGridView ? Icons.list : Icons.grid_view)),
             ),
           ),
           body: FocusDetector(
             onFocusGained: (){
-              bloc.add(PlanogramProductEvent.getCartCountEvent());
+              bloc.add(const PlanogramProductEvent.getCartCountEvent());
               bloc.add(PlanogramProductEvent.getPermissionList(context: context));
             },
             child: SafeArea(
@@ -175,7 +175,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                           child: state.isGridView ? GridView.builder(
                             itemCount: state.planogramProductList.length,
                             shrinkWrap: true,
-                            padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
                                 childAspectRatio:getChildAspectRatio(context,state.isSaleOn)
@@ -217,7 +217,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             itemCount: state.planogramProductList.length,
                             shrinkWrap: true,
                             physics: const AlwaysScrollableScrollPhysics(),
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: AppConstants.padding_5),
                             itemBuilder: (context, index) =>
                                 CommonSaleListView(
@@ -259,22 +259,22 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                     ),
                     CommonSearchWidget(
                       onCloseTap: () {
-                        bloc.add(PlanogramProductEvent.changeCategoryExpansion(isOpened: false));
+                        bloc.add(const PlanogramProductEvent.changeCategoryExpansion(isOpened: false));
                       },
                       isFilterTap: true,
                       isCategoryExpand: state.isCategoryExpand,
                       isSearching: state.isSearching,
                       onFilterTap: () {
-                        bloc.add(PlanogramProductEvent.changeCategoryExpansion());
+                        bloc.add(const PlanogramProductEvent.changeCategoryExpansion());
                       },
                       onSearchTap: () {
                         if(state.searchController.text != ''){
-                          bloc.add(PlanogramProductEvent.changeCategoryExpansion(isOpened: true));
+                          bloc.add(const PlanogramProductEvent.changeCategoryExpansion(isOpened: true));
                         }
                       },
                       onSearch: (String search) {
                         if (search.length > 1) {
-                          bloc.add(PlanogramProductEvent.changeCategoryExpansion(isOpened: true));
+                          bloc.add(const PlanogramProductEvent.changeCategoryExpansion(isOpened: true));
                           bloc.add(
                               PlanogramProductEvent.globalSearchEvent(context: context));
                         }
@@ -290,19 +290,19 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             });
                       },
                       onOutSideTap: () {
-                        bloc.add(PlanogramProductEvent.changeCategoryExpansion(
+                        bloc.add(const PlanogramProductEvent.changeCategoryExpansion(
                             isOpened: false));
                       },
                       onSearchItemTap: () {
-                        bloc.add(PlanogramProductEvent.changeCategoryExpansion());
+                        bloc.add(const PlanogramProductEvent.changeCategoryExpansion());
                       },
                       controller: state.searchController,
                       searchList: state.searchList,
                       searchResultWidget: state.searchList.isEmpty
                           ? Center(
                         child: Text(
-                          '${AppLocalizations.of(context)!
-                              .search_result_not_found}',
+                          AppLocalizations.of(context)!
+                              .search_result_not_found,
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: AppColors.textColor),
@@ -331,9 +331,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                               search.searchType ==
                                   state.searchList[index]
                                       .searchType)
-                                  .toList()
-                                  .length >=
-                                  1,
+                                  .toList().isNotEmpty,
                               isLastItem:
                               state.searchList.length - 1 == index,
                               isShowSearchLabel: index == 0
@@ -444,7 +442,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     SearchTypes.sale ||
                                     state.searchList[index].searchType ==
                                         SearchTypes.product && !state.isGuestUser) {
-                                   debugPrint("tap 4");
                                   showProductDetails(
                                       context: context,
                                       productStock: state.searchList[index]
@@ -507,7 +504,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                       });
                                 }
                                 bloc.add(
-                                    PlanogramProductEvent
+                                    const PlanogramProductEvent
                                         .changeCategoryExpansion());
 
                               });
@@ -597,16 +594,12 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       productId: productId,
       isBarcode: isBarcode ?? false,
       productListIndex: productListIndex
-      //planoGramIndex: planoGramIndex
     ));
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-  //    isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      //showDragHandle: true,
-     // useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
         return SafeArea(
@@ -630,7 +623,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                   builder: (blocContext, state) {
                     return Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(AppConstants.radius_30),
                           topRight: Radius.circular(AppConstants.radius_30),
                         ),
@@ -638,7 +631,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                       ),
                       clipBehavior: Clip.hardEdge,
                       child: state.isProductLoading
-                          ? ProductDetailsShimmerWidget()
+                          ? const ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
                           ? NoDataBottomSheet(dialogContext: context)
                           : SingleChildScrollView(
@@ -648,11 +641,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             CommonProductDetailsWidget(
                               isIncludedVat: state.isIncludedVat,
                               productDetails: state.productDetails,
-                            /*  salePrice: double.parse(state.productDetails.first.sale.salePrice),
-                              maxQty: state.productDetails.first.sale.saleMaxQuantity,
-                              endDate: state.productDetails.first.sale.saleUntilDate,
-                              startDate: state.productDetails.first.sale.saleFromDate,
-                              isSaleOn: state.productDetails.first.sale.isSale,*/
                               isSubUserAddToBasket: state.isSubUserAddToBasket,
                               totalBottleDeposit: (state.bottleDeposit* (state.productDetails.first.numberOfUnit ?? 1).toDouble() * state
                                   .productStockList[state.productListIndex][
@@ -660,10 +648,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   .quantity),
                               bottleTax: state.bottleDeposit,
                               isBottle:(state.productDetails.first.isBottle ?? false),
-                            /*  nmMashlim: state.productDetails.first.nmMashlim,
-                              isPesach: state.productDetails.first.isPesach,
-                              lowStock: state.productDetails.first.supplierSales.first.lowStock.toString() ?? '',
-                              qrCode:state.productDetails.first.qrcode ,*/
                               addToOrderTap: () {
                                 context.read<PlanogramProductBloc>().add(
                                     PlanogramProductEvent.addToCartProductEvent(
@@ -680,7 +664,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                       bottom: false,
                                       child: Stack(
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
                                             width: getScreenWidth(context),
                                             child: GestureDetector(
@@ -706,8 +690,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                               onTap: (){
                                                 Navigator.pop(dialogContext);
                                               },
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top:10.0),
+                                              child: const Padding(
+                                                padding: EdgeInsets.only(top:10.0),
                                                 child: Icon(Icons.close,
                                                   color: Colors.white,
                                                 ),
@@ -731,21 +715,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                 image.imageUrl ?? '')
                               ],
 
-
                               productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
-                              /*        productPerUnit: state.productDetails.first
-                                  .numberOfUnit ,
 
-                              productName: state.productDetails.first
-                                  .productName,
-                              productSaleDescription: parse(state
-                                  .productDetails
-                                  .first
-                                  .sale.saleDescription ??
-                                  '')
-                                  .body
-                                  ?.text ??
-                                  '',*/
                               productPrice: state
                                   .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
@@ -758,16 +729,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                       .numberOfUnit ??
                                       0) ,
 
-                             /* productWeight: state
-                                  .productDetails.first.itemsWeight
-                                  ?.toDouble() ??
-                                  0.0,*/
                               productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
-                              isRTL: context.rtl,
-                              /*isSupplierAvailable:
-                              state.productSupplierList.isEmpty
-                                  ? false
-                                  : true,*/
                               scrollController: scrollController,
                               productQuantity:  state
                                   .productStockList[state.productListIndex][
@@ -837,7 +799,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
         ),
         Container(
           height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
-          padding: EdgeInsets.only(left: 10,right: 10),
+          padding: const EdgeInsets.only(left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -892,6 +854,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
             },
-            buttonTitle: "${AppLocalizations.of(context)!.ok}"));
+            buttonTitle: AppLocalizations.of(context)!.ok));
   }
 }

@@ -14,7 +14,7 @@ import '../widget/custom_button_widget.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
 
 class SupplierPermissionRoute {
-  static Widget get route => SupplierPermissionScreen();
+  static Widget get route => const SupplierPermissionScreen();
 }
 
 
@@ -29,7 +29,7 @@ class SupplierPermissionScreen extends StatelessWidget {
       create: (context) => SupplierPermissionBloc()..add(SupplierPermissionEvent.getPermissionList(context: context,
           subUserId: args?[AppStrings.subUserIdString] ?? ''
       )),
-      child: SupplierPermissionScreenWidget(),
+      child: const SupplierPermissionScreenWidget(),
     );
   }
 }
@@ -46,7 +46,7 @@ class SupplierPermissionScreenWidget extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.pageColor,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+        preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
         child: CommonAppBar(
           bgColor: AppColors.pageColor,
           title: AppLocalizations.of(context)!.supplier_permissions,
@@ -60,13 +60,11 @@ class SupplierPermissionScreenWidget extends StatelessWidget {
         child:  Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
           child: SingleChildScrollView(
-            child: state.isShimmering ?  OrderSummaryScreenShimmerWidget(itemCount: 10,containerHeight: 40,) :
+            child: state.isShimmering ?  const OrderSummaryScreenShimmerWidget(itemCount: 10,containerHeight: 40,) :
             !state.isShimmering && state.supplierPermissionList.isEmpty ?
             SizedBox(
               height: getScreenHeight(context) * 0.8,
               child: Center(
-
-
                   child: Text(
                     AppLocalizations.of(context)!.no_data,
                     style: AppStyles.pVRegularTextStyle(
@@ -99,7 +97,7 @@ class SupplierPermissionScreenWidget extends StatelessWidget {
                 ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: state.supplierPermissionList.length,
                   itemBuilder: (context, index) {
                     return  Padding(
@@ -122,7 +120,7 @@ class SupplierPermissionScreenWidget extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: state.isShimmering || state.supplierPermissionList.isEmpty ? SizedBox():Padding(
+      bottomNavigationBar: state.isShimmering || state.supplierPermissionList.isEmpty ? const SizedBox():Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20,vertical: AppConstants.padding_20 ),
         child: CustomButtonWidget(
           buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
@@ -148,7 +146,7 @@ class SupplierPermissionScreenWidget extends StatelessWidget {
           bottom: BorderSide(
               color: AppColors.greyColor.withOpacity(0.4)),
         ),),
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
       child: InkWell(

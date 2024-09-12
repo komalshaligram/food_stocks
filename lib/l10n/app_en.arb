@@ -540,10 +540,10 @@
   "user_not_updated": "User Not Updated.",
   "status_not_found" : "Status Not Found.",
   "client_details_not_found": "Client Details Not found.",
-  "bdi_error": "Something went wrong in BDI"
-
-
-
-
+  "bdi_error": "Something went wrong in BDI",
+  "year": "Year",
+  "month": "Month",
+  "enter_valid_year": "Please enter valid year",
+  "select_valid_month": "Please select valid month",
 
 }

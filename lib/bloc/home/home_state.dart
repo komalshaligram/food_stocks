@@ -3,8 +3,8 @@ part of 'home_bloc.dart';
 @freezed
 class HomeState with _$HomeState {
   const factory HomeState({
-    required String UserImageUrl,
-    required String UserCompanyLogoUrl,
+    required String userImageUrl,
+    required String userCompanyLogoUrl,
     required int cartCount,
     required int messageCount,
     required List<ProductSale> productSalesList,
@@ -59,8 +59,8 @@ class HomeState with _$HomeState {
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
-      UserImageUrl: '',
-      UserCompanyLogoUrl: '',
+      userImageUrl: '',
+      userCompanyLogoUrl: '',
       cartCount: 0,
       messageCount: 0,
       productSalesList: [],

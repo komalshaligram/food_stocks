@@ -24,7 +24,7 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
     on<CompanyEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      if (event is _GetCompaniesListEvent) {
+      if (event is _getCompaniesListEvent) {
         emit(state.copyWith(language: preferencesHelper.getAppLanguage()));
         if (state.isLoadMore) {
           return;
@@ -75,9 +75,9 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
-      } else if (event is _SetSearchEvent) {
+      } else if (event is _setSearchEvent) {
         emit(state.copyWith(search: event.search));
-      } else if (event is _RefreshListEvent) {
+      } else if (event is _refreshListEvent) {
         emit(state.copyWith(
             pageNum: 0, companiesList: [], isBottomOfCompanies: false));
         add(CompanyEvent.getCompaniesListEvent(context: event.context));

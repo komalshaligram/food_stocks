@@ -46,4 +46,9 @@ class FileUploadEvent with _$FileUploadEvent {
     required BuildContext context,
     required int fileIndex,
   }) = _pdfPreviewEvent;
+
+  factory FileUploadEvent.updateClientCreditEvent({
+    required BuildContext context,
+
+  }) = _updateClientCreditEvent;
 }

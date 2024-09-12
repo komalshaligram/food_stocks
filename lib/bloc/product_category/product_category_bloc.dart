@@ -27,7 +27,7 @@ class ProductCategoryBloc
     on<ProductCategoryEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      if (event is _GetProductCategoriesListEvent) {
+      if (event is _getProductCategoriesListEvent) {
         if (state.isLoadMore) {
           return;
         }
@@ -47,12 +47,10 @@ class ProductCategoryBloc
                   .toJson());
           ProductCategoriesResModel response =
               ProductCategoriesResModel.fromJson(res);
-          debugPrint('product categories = ${response.data?.categories}');
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             List<Category> productCategoryList =
                 state.productCategoryList.toList(growable: true);
             productCategoryList.addAll(response.data?.categories ?? []);
-            debugPrint('new category list = ${productCategoryList.length}');
             emit(state.copyWith(
                 productCategoryList: productCategoryList,
                 pageNum: state.pageNum + 1,
@@ -78,16 +76,16 @@ class ProductCategoryBloc
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
-      } else if (event is _RefreshListEvent) {
+      } else if (event is _refreshListEvent) {
         emit(state.copyWith(
             pageNum: 0, productCategoryList: [], isBottomOfCategories: false));
         add(ProductCategoryEvent.getProductCategoriesListEvent(
             context: event.context));
-      } else if (event is _SetSearchNavEvent) {
+      } else if (event is _setSearchNavEvent) {
         emit(state.copyWith(
             reqSearch: event.reqSearch,
             isFromStoreCategory: event.isFromStoreCategory));
-      } else if (event is _UpdateGlobalSearchEvent) {
+      } else if (event is _updateGlobalSearchEvent) {
         emit(
             state.copyWith(search: event.search, searchList: event.searchList));
       }

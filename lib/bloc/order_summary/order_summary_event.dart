@@ -5,7 +5,7 @@ class OrderSummaryEvent with _$OrderSummaryEvent {
 
   const factory OrderSummaryEvent.getDataEvent({
     required BuildContext context,
-    required GetAllCartResModel CartItemList,
+    required GetAllCartResModel cartItemList,
 }) = _getDataEvent;
   const factory OrderSummaryEvent.orderSendEvent({
     required BuildContext context,

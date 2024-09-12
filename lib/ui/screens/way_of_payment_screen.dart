@@ -13,7 +13,7 @@ import '../utils/themes/app_styles.dart';
 import '../widget/custom_button_widget.dart';
 
 class WayOfPaymentRoute {
-  static Widget get route => WayOfPaymentScreen();
+  static Widget get route => const WayOfPaymentScreen();
 }
 
 
@@ -27,10 +27,10 @@ class WayOfPaymentScreen extends StatelessWidget {
 
     return BlocProvider(
       create: (context) => WayOfPaymentBloc()..add(WayOfPaymentEvent.getArgumentEvent(
-      termsReqModel: args?[AppStrings.termsConditionParamString]??TermsConditionReqModel(),
+      termsReqModel: args?[AppStrings.termsConditionParamString]??const TermsConditionReqModel(),
         isUpdate: args?[AppStrings.isUpdateParamString] ?? false,
            )),
-      child: WayOfPaymentScreenWidget(),
+      child: const WayOfPaymentScreenWidget(),
     );
   }
 }
@@ -68,26 +68,26 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
           ),
           body: SafeArea(
             child: Padding(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                   horizontal: 20),
               child: Column(
                 children: [
                   20.height,
                 state.isEnablePayment? Column(
                   children: [
-                    RadioButtonWidget(context: context,
+                    radioButtonWidget(context: context,
                           paymentMethod: AppLocalizations.of(context)!
                               .collection_from_bank_account,
                           radioValue: 0),
                     10.height,
-                    RadioButtonWidget(context: context,
+                    radioButtonWidget(context: context,
                         paymentMethod: AppLocalizations.of(context)!
                             .credit_card,
                         radioValue: 1),
 
                   ],
                 ) :
-                  RadioButtonWidget(context: context,
+                  radioButtonWidget(context: context,
                       paymentMethod: AppLocalizations.of(context)!
                           .credit_card,
                       radioValue: 0),
@@ -106,7 +106,6 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                 AppLocalizations.of(context)!.next.toUpperCase(),
                 bGColor: AppColors.mainColor,
                 onPressed: () {
-                  debugPrint('state.selectRadioTile:${state.selectRadioTile}');
                   if(state.isUpdate){
                     Navigator.pop(context);
                   }
@@ -139,7 +138,7 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget RadioButtonWidget(
+  Widget radioButtonWidget(
       {required String paymentMethod, required int radioValue, required BuildContext context}) {
     WayOfPaymentBloc bloc = context.read<WayOfPaymentBloc>();
     return BlocProvider.value(
@@ -162,12 +161,10 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                 activeColor: AppColors.mainColor,
                 selected: true,
                 title: Text(paymentMethod,style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.font_14,
+                  size: AppConstants.font_17,
                   color: AppColors.blackColor,
                 ),),
                 groupValue: state.selectRadioTile, onChanged: (int? val){
-
-              debugPrint('value___$val');
               bloc.add(WayOfPaymentEvent.radioButtonEvent(
                   selectRadioTile: val!));
             }),

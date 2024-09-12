@@ -62,7 +62,7 @@ class FormDataScreenShimmerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-          BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
       ),
     );
@@ -73,11 +73,11 @@ class FormDataScreenShimmerWidget extends StatelessWidget {
       child: Container(
         height: AppConstants.shimmerTextHeight,
         width: 140,
-        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-          BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+          const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );

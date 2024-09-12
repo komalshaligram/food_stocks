@@ -25,16 +25,16 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
     on<FormDataEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      TermsConditionReqModel termsConditionReqModel = TermsConditionReqModel();
+      TermsConditionReqModel termsConditionReqModel = const TermsConditionReqModel();
       if(event is _selectAgentEvent){
         emit(state.copyWith(agent: event.agent));
       }
     else if(event is _selectBusinessTypeEvent){
-        state.businessTypeList.forEach((element) {
+        for (var element in state.businessTypeList) {
           if (element.businessTypeName == event.business) {
             emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false));
           }
-        });
+        }
       }
     else if (event is _getBusinessTypeEvent) {
         try {

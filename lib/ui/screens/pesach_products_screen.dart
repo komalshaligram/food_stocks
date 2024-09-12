@@ -37,7 +37,7 @@ import '../widget/search_item_widget.dart';
 import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
 
 class PesachProductsRoute {
-  static Widget get route => PesachProductsScreen();
+  static Widget get route => const PesachProductsScreen();
 }
 
 class PesachProductsScreen extends StatelessWidget {
@@ -47,13 +47,12 @@ class PesachProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
     ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint('pesach_products products args = $args');
     return BlocProvider(
       create: (context) => PesachProductsBloc()
         ..add(PesachProductsEvent.getSupplierProductsListEvent(
             context: context, searchType: args?[AppStrings.searchType] ?? ''))
         ..add(PesachProductsEvent.userApproveEvent(context: context)),
-      child: PesachProductsScreenWidget(),
+      child: const PesachProductsScreenWidget(),
     );
   }
 }
@@ -75,6 +74,11 @@ class PesachProductsScreenWidget extends StatelessWidget {
             FloatingActionButtonLocation.endContained,
             floatingActionButton:  !state.isGuestUser ? FloatingActionButton(
               elevation: 0,
+              backgroundColor: Colors.transparent,
+              onPressed: () {
+                Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
+                    arguments: {AppStrings.isBasketScreenString: 'true'});
+              },
               child: Stack(
                 children: [
                   Container(
@@ -132,7 +136,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                       child: IgnorePointer(
                         child: Confetti(
                           isStopped:!state.duringCelebration,
-                          snippingsCount: 10,
+                          snippingCount: 10,
                           snipSize: 3.0,
                           colors:[AppColors.mainColor],
                         ),
@@ -141,15 +145,10 @@ class PesachProductsScreenWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              backgroundColor: Colors.transparent,
-              onPressed: () {
-                Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
-                    arguments: {AppStrings.isBasketScreenString: 'true'});
-              },
             ):0.width,
             backgroundColor: AppColors.pageColor,
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+              preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 bgColor: AppColors.pageColor,
                 title:  AppLocalizations.of(context)!.pesach_products,
@@ -161,7 +160,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                     onTap: () {
                       context
                           .read<PesachProductsBloc>()
-                          .add(PesachProductsEvent.getGridListView());
+                          .add(const PesachProductsEvent.getGridListView());
                     },
                     child:
                     Icon(state.isGridView ? Icons.list : Icons.grid_view)),
@@ -169,7 +168,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
             ),
             body: FocusDetector(
               onFocusGained: (){
-                bloc.add(PesachProductsEvent.getCartCountEvent());
+                bloc.add(const PesachProductsEvent.getCartCountEvent());
                 bloc.add(PesachProductsEvent.getPermissionList(context: context));
               },
               child: SafeArea(
@@ -182,7 +181,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                           child: SmartRefresher(
                             enablePullDown: true,
                             controller: state.refreshController,
-                            header: RefreshWidget(),
+                            header: const RefreshWidget(),
                             footer: CustomFooter(
                               builder: (context, mode) => state.isGridView
                                   ? SupplierProductsScreenShimmerWidget()
@@ -220,7 +219,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                     width: getScreenWidth(context),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      '${AppLocalizations.of(context)!.no_product}',
+                                      AppLocalizations.of(context)!.no_product,
                                       style:
                                       AppStyles.rkRegularTextStyle(
                                           size: AppConstants
@@ -236,7 +235,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                       shrinkWrap: true,
                                       physics:
                                       const NeverScrollableScrollPhysics(),
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           horizontal:
                                           AppConstants.padding_5),
                                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -319,7 +318,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                     shrinkWrap: true,
                                     physics:
                                     const NeverScrollableScrollPhysics(),
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         horizontal:
                                         AppConstants.padding_5),
                                     itemBuilder: (context, index) =>
@@ -391,24 +390,24 @@ class PesachProductsScreenWidget extends StatelessWidget {
                     ),
                     CommonSearchWidget(
                       onCloseTap: () {
-                        bloc.add(PesachProductsEvent.changeCategoryExpansion(
+                        bloc.add(const PesachProductsEvent.changeCategoryExpansion(
                             isOpened: false));
                       },
                       isFilterTap: true,
                       isCategoryExpand: state.isCategoryExpand,
                       isSearching: state.isSearching,
                       onFilterTap: () {
-                        bloc.add(PesachProductsEvent.changeCategoryExpansion());
+                        bloc.add(const PesachProductsEvent.changeCategoryExpansion());
                       },
                       onSearchTap: () {
                         if (state.searchController.text != '') {
-                          bloc.add(PesachProductsEvent.changeCategoryExpansion(
+                          bloc.add(const PesachProductsEvent.changeCategoryExpansion(
                               isOpened: true));
                         }
                       },
                       onSearch: (String search) {
                         if (search.length > 1) {
-                          bloc.add(PesachProductsEvent.changeCategoryExpansion(
+                          bloc.add(const PesachProductsEvent.changeCategoryExpansion(
                               isOpened: true));
                           bloc.add(PesachProductsEvent.globalSearchEvent(
                               context: context));
@@ -424,18 +423,18 @@ class PesachProductsScreenWidget extends StatelessWidget {
                             });
                       },
                       onOutSideTap: () {
-                        bloc.add(PesachProductsEvent.changeCategoryExpansion(
+                        bloc.add(const PesachProductsEvent.changeCategoryExpansion(
                             isOpened: false));
                       },
                       onSearchItemTap: () {
-                        bloc.add(PesachProductsEvent.changeCategoryExpansion());
+                        bloc.add(const PesachProductsEvent.changeCategoryExpansion());
                       },
                       controller: state.searchController,
                       searchList: state.searchList,
                       searchResultWidget: state.searchList.isEmpty
                           ? Center(
                         child: Text(
-                          '${AppLocalizations.of(context)!.search_result_not_found}',
+                          AppLocalizations.of(context)!.search_result_not_found,
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: AppColors.textColor),
@@ -467,9 +466,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                               search.searchType ==
                                   state
                                       .searchList[index].searchType)
-                                  .toList()
-                                  .length >=
-                                  1,
+                                  .toList().isNotEmpty,
                               isLastItem:
                               state.searchList.length - 1 == index,
                               isShowSearchLabel: index == 0
@@ -645,7 +642,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                             .searchId
                                       });
                                 }
-                                bloc.add(PesachProductsEvent
+                                bloc.add(const PesachProductsEvent
                                     .changeCategoryExpansion());
                               });
                         },
@@ -657,8 +654,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                             scanMode: ScanMode.BARCODE);
                         if (scanResult != '-1') {
                           // -1 result for cancel scanning
-                          debugPrint('result = $scanResult');
-                          debugPrint("tap 5");
+
                           if (!state.isGuestUser) {
                             showProductDetails(
                                 context: context,
@@ -694,12 +690,11 @@ class PesachProductsScreenWidget extends StatelessWidget {
         required void Function() onPressed,
         required bool isRTL}) {
     return Container(
-      // height: 150,
-      // width: 130,
+
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius:
-        BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         boxShadow: [
           BoxShadow(
               color: AppColors.shadowColor.withOpacity(0.15),
@@ -707,10 +702,10 @@ class PesachProductsScreenWidget extends StatelessWidget {
         ],
       ),
       clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_10,
           horizontal: AppConstants.padding_5),
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
       child: Column(
@@ -732,7 +727,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                       width: 70,
                       decoration: BoxDecoration(
                         color: AppColors.whiteColor,
-                        borderRadius: BorderRadius.all(
+                        borderRadius: const BorderRadius.all(
                             Radius.circular(AppConstants.radius_10)),
                       ),
                     ),
@@ -742,20 +737,16 @@ class PesachProductsScreenWidget extends StatelessWidget {
               },
               errorBuilder: (context, error, stackTrace) {
                 // debugPrint('sale list image error : $error');
-                return Container(
-                  child: Image.asset(AppImagePath.imageNotAvailable5,
-                      height: 70,
-                      width: double.maxFinite,
-                      fit: BoxFit.cover),
-                );
+                return Image.asset(AppImagePath.imageNotAvailable5,
+                    height: 70,
+                    width: double.maxFinite,
+                    fit: BoxFit.cover);
               },
             )
-                : Container(
-              child: Image.asset(AppImagePath.imageNotAvailable5,
-                  height: 70,
-                  width: double.maxFinite,
-                  fit: BoxFit.cover),
-            ),
+                : Image.asset(AppImagePath.imageNotAvailable5,
+                    height: 70,
+                    width: double.maxFinite,
+                    fit: BoxFit.cover),
           ),
           5.height,
           Text(
@@ -830,7 +821,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                   builder: (blocContext, state) {
                     return Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(AppConstants.radius_30),
                           topRight: Radius.circular(AppConstants.radius_30),
                         ),
@@ -838,7 +829,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                       ),
                       clipBehavior: Clip.hardEdge,
                       child: state.isProductLoading
-                          ? ProductDetailsShimmerWidget()
+                          ? const ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
                           ? NoDataBottomSheet(dialogContext: context)
                           : SingleChildScrollView(
@@ -872,7 +863,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                       bottom: false,
                                       child: Stack(
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             height: getScreenHeight(
                                                 context) -
                                                 MediaQuery.of(context)
@@ -903,7 +894,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                 NetworkImage(
                                                   '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                 ),
-                                              ) : SizedBox(),
+                                              ) : const SizedBox(),
                                             ),
                                           ),
                                           GestureDetector(
@@ -911,8 +902,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                 Navigator.pop(
                                                     dialogContext);
                                               },
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top:10.0),
+                                              child: const Padding(
+                                                padding: EdgeInsets.only(top:10.0),
                                                 child: Icon(
                                                   Icons.close,
                                                   color: Colors.white,
@@ -958,11 +949,6 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                   .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
                                   .stock.toString()),
-                              isRTL: context.rtl,
-                            /*  isSupplierAvailable:
-                              state.productSupplierList.isEmpty
-                                  ? false
-                                  : true,*/
                               scrollController: scrollController,
                               productQuantity: state
                                   .productStockList[state.productListIndex][
@@ -1040,7 +1026,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
         ),
         Container(
           height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
-          padding: EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -1099,6 +1085,6 @@ class PesachProductsScreenWidget extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
             },
-            buttonTitle: "${AppLocalizations.of(context)!.ok}"));
+            buttonTitle: AppLocalizations.of(context)!.ok));
   }
 }

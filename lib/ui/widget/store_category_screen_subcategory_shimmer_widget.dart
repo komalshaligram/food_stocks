@@ -15,7 +15,7 @@ class StoreCategoryScreenSubcategoryShimmerWidget extends StatelessWidget {
     return ListView.builder(
       itemCount: itemCount,
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return buildSubCategoryItem();
       },
@@ -30,12 +30,12 @@ class StoreCategoryScreenSubcategoryShimmerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
-        margin: EdgeInsets.symmetric(
+        margin: const EdgeInsets.symmetric(
             vertical: AppConstants.padding_5,
             horizontal: AppConstants.padding_10),
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
             horizontal: AppConstants.padding_10,
             vertical: AppConstants.radius_10),
       ),

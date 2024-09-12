@@ -37,7 +37,7 @@ import '../widget/search_item_widget.dart';
 import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
 
 class SupplierProductsRoute {
-  static Widget get route => SupplierProductsScreen();
+  static Widget get route => const SupplierProductsScreen();
 }
 
 class SupplierProductsScreen extends StatelessWidget {
@@ -47,8 +47,6 @@ class SupplierProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint('supplier products args = $args');
-    debugPrint('searchString = ${args?[AppStrings.searchString] ?? ''}');
     return BlocProvider(
       create: (context) => SupplierProductsBloc()
         ..add(SupplierProductsEvent.getSupplierProductsIdEvent(
@@ -58,7 +56,7 @@ class SupplierProductsScreen extends StatelessWidget {
             context: context, searchType: args?[AppStrings.searchType] ?? '',
         ))
         ..add(SupplierProductsEvent.userApproveEvent(context: context)),
-      child: SupplierProductsScreenWidget(),
+      child: const SupplierProductsScreenWidget(),
     );
   }
 }
@@ -78,7 +76,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
           return Scaffold(
             backgroundColor: AppColors.pageColor,
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+              preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 bgColor: AppColors.pageColor,
                 title: state.searchArg.isNotEmpty
@@ -92,7 +90,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                     onTap: () {
                       context
                           .read<SupplierProductsBloc>()
-                          .add(SupplierProductsEvent.getGridListView());
+                          .add(const SupplierProductsEvent.getGridListView());
                     },
                     child:
                         Icon(state.isGridView ? Icons.list : Icons.grid_view)),
@@ -113,7 +111,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           child: SmartRefresher(
                             enablePullDown: true,
                             controller: state.refreshController,
-                            header: RefreshWidget(),
+                            header: const RefreshWidget(),
                             footer: CustomFooter(
                               builder: (context, mode) => state.isGridView
                                   ? SupplierProductsScreenShimmerWidget()
@@ -151,7 +149,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                               width: getScreenWidth(context),
                                               alignment: Alignment.center,
                                               child: Text(
-                                                '${AppLocalizations.of(context)!.no_data}',
+                                                AppLocalizations.of(context)!.no_data,
                                                 style:
                                                     AppStyles.rkRegularTextStyle(
                                                         size: AppConstants
@@ -167,7 +165,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   shrinkWrap: true,
                                                   physics:
                                                       const NeverScrollableScrollPhysics(),
-                                                  padding: EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets.symmetric(
                                                       horizontal:
                                                           AppConstants.padding_5),
                                                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context,state.isSaleOn)),
@@ -252,7 +250,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   shrinkWrap: true,
                                                   physics:
                                                       const NeverScrollableScrollPhysics(),
-                                                  padding: EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets.symmetric(
                                                       horizontal:
                                                           AppConstants.padding_5),
                                                   itemBuilder: (context, index) =>
@@ -308,24 +306,24 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                     ),
                     CommonSearchWidget(
                       onCloseTap: () {
-                        bloc.add(SupplierProductsEvent.changeCategoryExpansion(
+                        bloc.add(const SupplierProductsEvent.changeCategoryExpansion(
                             isOpened: false));
                       },
                       isFilterTap: true,
                       isCategoryExpand: state.isCategoryExpand,
                       isSearching: state.isSearching,
                       onFilterTap: () {
-                        bloc.add(SupplierProductsEvent.changeCategoryExpansion());
+                        bloc.add(const SupplierProductsEvent.changeCategoryExpansion());
                       },
                       onSearchTap: () {
                         if (state.searchController.text != '') {
-                          bloc.add(SupplierProductsEvent.changeCategoryExpansion(
+                          bloc.add(const SupplierProductsEvent.changeCategoryExpansion(
                               isOpened: true));
                         }
                       },
                       onSearch: (String search) {
                         if (search.length > 1) {
-                          bloc.add(SupplierProductsEvent.changeCategoryExpansion(
+                          bloc.add(const SupplierProductsEvent.changeCategoryExpansion(
                               isOpened: true));
                           bloc.add(SupplierProductsEvent.globalSearchEvent(
                               context: context));
@@ -341,18 +339,18 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             });
                       },
                       onOutSideTap: () {
-                        bloc.add(SupplierProductsEvent.changeCategoryExpansion(
+                        bloc.add(const SupplierProductsEvent.changeCategoryExpansion(
                             isOpened: false));
                       },
                       onSearchItemTap: () {
-                        bloc.add(SupplierProductsEvent.changeCategoryExpansion());
+                        bloc.add(const SupplierProductsEvent.changeCategoryExpansion());
                       },
                       controller: state.searchController,
                       searchList: state.searchList,
                       searchResultWidget: state.searchList.isEmpty
                           ? Center(
                               child: Text(
-                                '${AppLocalizations.of(context)!.search_result_not_found}',
+                                AppLocalizations.of(context)!.search_result_not_found,
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.textColor),
@@ -384,9 +382,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 search.searchType ==
                                                 state
                                                     .searchList[index].searchType)
-                                            .toList()
-                                            .length >=
-                                        1,
+                                            .toList().isNotEmpty,
                                     isLastItem:
                                         state.searchList.length - 1 == index,
                                     isShowSearchLabel: index == 0
@@ -563,7 +559,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                             .searchId
                                                   });
                                       }
-                                      bloc.add(SupplierProductsEvent
+                                      bloc.add(const SupplierProductsEvent
                                           .changeCategoryExpansion());
                                     });
                               },
@@ -616,7 +612,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius:
-            BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+            const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         boxShadow: [
           BoxShadow(
               color: AppColors.shadowColor.withOpacity(0.15),
@@ -624,10 +620,10 @@ class SupplierProductsScreenWidget extends StatelessWidget {
         ],
       ),
       clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_10,
           horizontal: AppConstants.padding_5),
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
       child: Column(
@@ -649,7 +645,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             width: 70,
                             decoration: BoxDecoration(
                               color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.all(
+                              borderRadius: const BorderRadius.all(
                                   Radius.circular(AppConstants.radius_10)),
                             ),
                           ),
@@ -741,7 +737,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                   builder: (blocContext, state) {
                     return Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(AppConstants.radius_30),
                           topRight: Radius.circular(AppConstants.radius_30),
                         ),
@@ -749,7 +745,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                       ),
                       clipBehavior: Clip.hardEdge,
                       child: state.isProductLoading
-                          ? ProductDetailsShimmerWidget()
+                          ? const ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
                               ? NoDataBottomSheet(dialogContext: context)
                               : SingleChildScrollView(
@@ -814,7 +810,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                               NetworkImage(
                                                             '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                           ),
-                                                        ) : SizedBox(),
+                                                        ) : const SizedBox(),
                                                       ),
                                                     ),
                                                     GestureDetector (
@@ -822,8 +818,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                           Navigator.pop(
                                                               dialogContext);
                                                         },
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.only(top:10.0),
+                                                        child: const Padding(
+                                                          padding: EdgeInsets.only(top:10.0),
                                                           child: Icon(
                                                             Icons.close,
                                                             color: Colors.white,
@@ -875,7 +871,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                             .productStockList[state.productListIndex][
                                                 state.productStockUpdateIndex]
                                             .stock.toString()),
-                                        isRTL: context.rtl,
 
                                         scrollController: scrollController,
                                         productQuantity: state
@@ -954,7 +949,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
         ),
         Container(
           height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
-          padding: EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -1009,7 +1004,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
             },
-            buttonTitle: "${AppLocalizations.of(context)!.ok}"));
+            buttonTitle: AppLocalizations.of(context)!.ok));
   }
 
 }

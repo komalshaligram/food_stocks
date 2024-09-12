@@ -14,7 +14,7 @@ import '../utils/themes/app_strings.dart';
 import '../widget/common_app_bar.dart';
 
 class OTPRoute {
-  static Widget get route => OTPScreen();
+  static Widget get route => const OTPScreen();
 }
 
 class OTPScreen extends StatelessWidget {
@@ -26,7 +26,7 @@ class OTPScreen extends StatelessWidget {
         <String, dynamic>{}) as Map;
 
     return BlocProvider(
-      create: (context) => OtpBloc()..add(OtpEvent.setOtpTimer()),
+      create: (context) => OtpBloc()..add(const OtpEvent.setOtpTimer()),
       child: OTPScreenWidget(
         isRegister: temp[AppStrings.isRegisterString],
         contact: temp[AppStrings.contactString],
@@ -39,7 +39,7 @@ class OTPScreenWidget extends StatefulWidget {
   final bool isRegister;
   final String contact;
 
-  OTPScreenWidget({required this.isRegister, required this.contact});
+  const OTPScreenWidget({super.key, required this.isRegister, required this.contact});
 
   @override
   State<OTPScreenWidget> createState() => _OTPScreenWidgetState();
@@ -64,7 +64,6 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
     OtpBloc bloc = context.read<OtpBloc>();
     return BlocListener<OtpBloc, OtpState>(
       listener: (context, state) async {
-         debugPrint("state:$state");
         await SmsAutoFill().listenForCode();
       },
       child: BlocBuilder<OtpBloc, OtpState>(
@@ -72,7 +71,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
           return Scaffold(
             backgroundColor: AppColors.whiteColor,
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+              preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 bgColor: AppColors.whiteColor,
                 title: widget.isRegister
@@ -80,8 +79,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                     : AppLocalizations.of(context)!.login,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  debugPrint('register ${widget.isRegister}');
-                  bloc.add(OtpEvent.cancelOtpTimerSubscription());
+                  bloc.add(const OtpEvent.cancelOtpTimerSubscription());
                   Navigator.pop(context);
                 },
               ),
@@ -127,7 +125,6 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                             },
                             onCodeChanged: (code) {
                               _code= code!;
-                              debugPrint('length:${code.length}');
                               if(code.length==4){
                                 if (widget.isRegister == true) {
                                   bloc.add(OtpEvent.registerApiEvent(
@@ -161,19 +158,17 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                             ? null
                             : () {
                           FocusScope.of(context).unfocus();
-                          debugPrint('otp1 = ${state.otp}');
-                          debugPrint('otp1 = ${_code.length}');
                           if (_code.isEmpty) {
                             CustomSnackBar.showSnackBar(
                                 context: context,
                                 title:
-                                '${AppLocalizations.of(context)!.please_enter_otp}',
+                                AppLocalizations.of(context)!.please_enter_otp,
                                 type: SnackBarType.failure);
                           } else if (_code.length != 4) {
                             CustomSnackBar.showSnackBar(
                                 context: context,
                                 title:
-                                '${AppLocalizations.of(context)!.enter_4digit_otp}',
+                                AppLocalizations.of(context)!.enter_4digit_otp,
                                 type: SnackBarType.failure);
                           } else {
                             if (widget.isRegister == true) {
@@ -217,7 +212,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                               : AppColors.whiteColor,
                           border:
                           Border.all(color: AppColors.mainColor, width: 1),
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                               Radius.circular(AppConstants.radius_10)),
                         ),
                         child: MaterialButton(
@@ -228,7 +223,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                               : () {
                             bloc.add(OtpEvent.logInApiDataEvent(
                                 context: context,isRegister: widget.isRegister,contactNumber: widget.contact));
-                            bloc.add(OtpEvent.setOtpTimer());
+                            bloc.add(const OtpEvent.setOtpTimer());
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -241,7 +236,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                                     border: Border.all(
                                         color: AppColors.mainColor, width: 1),
                                     shape: BoxShape.circle),
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     vertical: AppConstants.padding_5,
                                     horizontal: AppConstants.padding_5),
                                 child: Text(

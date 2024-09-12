@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 
 #version: 1.0.20+1
-version: 1.0.33
+version: 1.0.33+4
 
 
 environment:
@@ -91,6 +91,8 @@ dependencies:
   eraser: ^2.0.2
   flutter_smartlook: ^4.1.18
   flutter_html: any
+  http_parser: any
+  device_info_plus: any
 
 
 dependency_overrides:
@@ -158,10 +160,7 @@ flutter:
       fonts:
          - asset: assets/fonts/Preahvihear-Regular.ttf
 
-
-
-
-  #         style: italic
+  #   style: italic
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

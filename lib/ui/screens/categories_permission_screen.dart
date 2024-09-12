@@ -14,7 +14,7 @@ import '../widget/common_app_bar.dart';
 import '../widget/custom_button_widget.dart';
 
 class CategoriesPermissionRoute {
-  static Widget get route => CategoriesPermissionScreen();
+  static Widget get route => const CategoriesPermissionScreen();
 }
 
 class CategoriesPermissionScreen extends StatelessWidget {
@@ -29,7 +29,7 @@ class CategoriesPermissionScreen extends StatelessWidget {
           context: context,
           subUserId: args?[AppStrings.subUserIdString] ?? ''
       )),
-      child: CategoriesPermissionScreenWidget(),
+      child: const CategoriesPermissionScreenWidget(),
     );
   }
 }
@@ -46,7 +46,7 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.categories_permissions,
@@ -60,7 +60,7 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
             child:  Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
               child: SingleChildScrollView(
-                  child:state.isShimmering ?  OrderSummaryScreenShimmerWidget(itemCount: 10,containerHeight: 40) :
+                  child:state.isShimmering ?  const OrderSummaryScreenShimmerWidget(itemCount: 10,containerHeight: 40) :
                   !state.isShimmering && state.categoriesPermissionList.isEmpty ?
                   SizedBox(
                     height: getScreenHeight(context) * 0.8,
@@ -102,7 +102,7 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
                       ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: state.categoriesPermissionList.length,
                         itemBuilder: (context, index) {
                           return  Column(
@@ -128,7 +128,7 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
                                   child: ListView.builder(
                                     shrinkWrap: true,
                                     scrollDirection: Axis.vertical,
-                                    physics: NeverScrollableScrollPhysics(),
+                                    physics: const NeverScrollableScrollPhysics(),
                                     itemCount: state.categoriesPermissionList[index].subCategories?.length,
                                       itemBuilder: (context, index1) {
                                         return menuSwitchTile(
@@ -159,7 +159,7 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
                 ),
             ),
           ),
-          bottomNavigationBar: state.isShimmering || state.categoriesPermissionList.isEmpty ? SizedBox() : Padding(
+          bottomNavigationBar: state.isShimmering || state.categoriesPermissionList.isEmpty ? const SizedBox() : Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20,vertical: AppConstants.padding_20 ),
             child: CustomButtonWidget(
               buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
@@ -193,7 +193,7 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
         ),
 
       ),
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_10,
           horizontal: AppConstants.padding_10),
       child: InkWell(

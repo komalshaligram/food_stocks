@@ -17,7 +17,7 @@ import '../widget/order_summary_screen_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 
 class InvoiceRoute {
-  static Widget get route => InvoiceScreen();
+  static Widget get route => const InvoiceScreen();
 }
 
 class InvoiceScreen extends StatelessWidget {
@@ -27,7 +27,7 @@ class InvoiceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => InvoiceBloc()..add(InvoiceEvent.getInvoicesDataEvent(context: context)),
-      child: InvoiceScreenWidget(),
+      child: const InvoiceScreenWidget(),
     );
   }
 }
@@ -42,7 +42,7 @@ class InvoiceScreenWidget extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.my_invoices,
@@ -58,9 +58,9 @@ class InvoiceScreenWidget extends StatelessWidget {
             child: SmartRefresher(
               enablePullDown: true,
               controller: state.refreshController,
-              header: RefreshWidget(),
+              header: const RefreshWidget(),
               footer: CustomFooter(
-                  builder: (context, mode) => OrderSummaryScreenShimmerWidget(containerHeight: 140,)
+                  builder: (context, mode) => const OrderSummaryScreenShimmerWidget(containerHeight: 140,)
               ),
               enablePullUp: !state.isBottomOfProducts,
               onRefresh: () {
@@ -73,7 +73,7 @@ class InvoiceScreenWidget extends StatelessWidget {
                     InvoiceEvent.getInvoicesDataEvent(
                         context: context));
               },
-              child: state.isShimmering ? OrderSummaryScreenShimmerWidget(containerHeight: 140,) :
+              child: state.isShimmering ? const OrderSummaryScreenShimmerWidget(containerHeight: 140,) :
               !state.isShimmering && state.invoiceDetailsList.isEmpty ?
               SizedBox(
                 height: getScreenHeight(context) * 0.8,
@@ -89,7 +89,7 @@ class InvoiceScreenWidget extends StatelessWidget {
               ListView.builder(
                 itemCount: state.invoiceDetailsList.length,
                 shrinkWrap: true,
-                physics: AlwaysScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 itemBuilder: (context, index) =>
                     invoiceList(
                       index: index,
@@ -134,8 +134,8 @@ class InvoiceScreenWidget extends StatelessWidget {
         {AppStrings.invoiceListString : invoicesList[index] });
       },
       child: Container(
-        margin: EdgeInsets.all(AppConstants.padding_8),
-        padding: EdgeInsets.symmetric(
+        margin: const EdgeInsets.all(AppConstants.padding_8),
+        padding: const EdgeInsets.symmetric(
             vertical: AppConstants.padding_8, horizontal: AppConstants.padding_8),
         decoration: BoxDecoration(
             color: AppColors.whiteColor,
@@ -145,7 +145,7 @@ class InvoiceScreenWidget extends StatelessWidget {
                   blurRadius: AppConstants.blur_10),
             ],
             borderRadius:
-                BorderRadius.all(Radius.circular(AppConstants.radius_5))),
+                const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

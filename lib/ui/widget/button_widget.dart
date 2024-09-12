@@ -14,7 +14,7 @@ class ButtonWidget extends StatelessWidget {
   final Color borderColor;
 
 
-  ButtonWidget(
+  const ButtonWidget(
       {super.key,
       required this.buttonText,
       this.onPressed,

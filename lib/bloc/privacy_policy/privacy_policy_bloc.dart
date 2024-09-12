@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -43,7 +43,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
   String guarantee2Signature = '';
   bool isSign = false;
 
-  TermsConditionReqModel termsConditionReqModel = TermsConditionReqModel();
+  TermsConditionReqModel termsConditionReqModel = const TermsConditionReqModel();
   PrivacyPolicyBloc() : super(PrivacyPolicyState.initial()) {
     on<PrivacyPolicyEvent>((event, emit) async {
       if (event is _getPdfDataEvent) {
@@ -51,11 +51,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
         emit(state.copyWith(isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false,isGuarantee1Available: (termsConditionReqModel.guarantee1FullName!='')?true:false));
         emit(state.copyWith(pdfPath: base64Decode(event.pdfData)));
       } else if (event is _navigationEvent) {
-        debugPrint('owner1Signature___${owner1Signature}');
-        debugPrint('owner2Signature___${owner2Signature}');
-        debugPrint('guarantee1Signature___${guarantee1Signature}');
-        debugPrint('guarantee2Signature___${guarantee2Signature}');
-        debugPrint('id  ____${termsConditionReqModel.id}');
+
         try {
           Map<String, dynamic> reqMap ={};
           reqMap = {
@@ -149,7 +145,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
                 isSign = false;
                 _signaturePadKey.currentState!.clear();
               },
-              child: Text('${AppLocalizations.of(context)!.remove}',
+              child: Text(AppLocalizations.of(context)!.remove,
                 style: AppStyles.rkRegularTextStyle(
                   size: AppConstants.smallFont,
                   color: AppColors.redColor,
@@ -163,7 +159,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
                   isSign = false;
                 }
               },
-              child: Text('${AppLocalizations.of(context)!.save}',
+              child: Text(AppLocalizations.of(context)!.save,
                 style: AppStyles.rkRegularTextStyle(
                   size: AppConstants.smallFont,
                   color: AppColors.mainColor,
@@ -188,7 +184,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
 
     final imageInUnit8List = (data!.buffer.asUint8List());
      directory = (await getApplicationDocumentsDirectory()).path; // to get path of the file
-    var path = '${directory}/${fieldName}.png';
+    var path = '$directory/$fieldName.png';
     imagePath = await File(path).writeAsBytes(imageInUnit8List);
 
      if(fieldName == AppStrings.owner1SignatureString){
@@ -204,16 +200,16 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
       guarantee2Signature = imagePath.path;
     }
 
-    debugPrint('owner1Signature___${owner1Signature}');
-    debugPrint('guarantee1Signature___${guarantee1Signature}');
-    debugPrint('guarantee2Signature___${guarantee2Signature}');
-    debugPrint('owner2Signature ____${owner2Signature}');
+    debugPrint('owner1Signature___$owner1Signature');
+    debugPrint('guarantee1Signature___$guarantee1Signature');
+    debugPrint('guarantee2Signature___$guarantee2Signature');
+    debugPrint('owner2Signature ____$owner2Signature');
 
     if(state.isOwner2Available ){
-      debugPrint('owner1Signature___${owner1Signature}');
-      debugPrint('guarantee1Signature___${guarantee1Signature}');
-      debugPrint('guarantee2Signature___${guarantee2Signature}');
-      debugPrint('owner2Signature ____${owner2Signature}');
+      debugPrint('owner1Signature___$owner1Signature');
+      debugPrint('guarantee1Signature___$guarantee1Signature');
+      debugPrint('guarantee2Signature___$guarantee2Signature');
+      debugPrint('owner2Signature ____$owner2Signature');
       if(owner1Signature != '' &&  owner2Signature != ''
           && guarantee1Signature != '' && guarantee2Signature !=''){
         emit(state.copyWith(isNextEnable: true));
@@ -223,8 +219,8 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
       if(state.isGuarantee1Available && guarantee1Signature == ''){
         emit(state.copyWith(isNextEnable: false));
       }else{
-        debugPrint('owner1Signature___${owner1Signature}');
-        debugPrint('guarantee1Signature___${guarantee1Signature}');
+        debugPrint('owner1Signature___$owner1Signature');
+        debugPrint('guarantee1Signature___$guarantee1Signature');
         emit(state.copyWith(isNextEnable: true));
       }
 

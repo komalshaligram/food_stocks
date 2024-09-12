@@ -54,6 +54,6 @@ void main() async {
         }
       });
     }
-    runApp(MyApp());
+    runApp(const MyApp());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }

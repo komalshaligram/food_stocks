@@ -53,7 +53,7 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeBloc()
        ..add(HomeEvent.userApproveEvent(context: context))
-        ..add(HomeEvent.getPreferencesDataEvent())
+        ..add(const HomeEvent.getPreferencesDataEvent())
         ..add(HomeEvent.getProfileDetailsEvent(context: context))
         ..add(HomeEvent.getCartCountEvent(context: context))
         ..add(HomeEvent.getOrderCountEvent(context: context))
@@ -86,14 +86,11 @@ class HomeScreenWidget extends StatelessWidget {
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
-        debugPrint('state.isAppOnMaintenance${state.isAppOnMaintenance}');
-       debugPrint('state.isDialogOpen${state.isDialogOpen}');
 
         if(state.isAppOnMaintenance && !state.isDialogOpen){
           appUnderMaintenanceDialog(context: context, state: state);
           BlocProvider.of<HomeBloc>(context)
               .add(HomeEvent.updateMaintenanceEvent(context: context));
-          debugPrint('Maintenance is on going...........');
         }
       },
       child: BlocBuilder<HomeBloc, HomeState>(
@@ -141,15 +138,15 @@ class HomeScreenWidget extends StatelessWidget {
                                 shape: BoxShape.circle,
                               ),
                               clipBehavior: Clip.hardEdge,
-                              child: state.UserImageUrl.isNotEmpty
+                              child: state.userImageUrl.isNotEmpty
                                   ? ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: CachedNetworkImage(
-                                  placeholder: (context, url) => Center(
+                                  placeholder: (context, url) => const Center(
                                       child:
-                                      const CupertinoActivityIndicator()),
+                                      CupertinoActivityIndicator()),
                                   imageUrl:
-                                  '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                  '${AppUrls.baseFileUrl}${state.userImageUrl}',
                                   fit: BoxFit.cover,
                                   errorWidget: (context, url, error) {
                                     debugPrint('home error : $error');
@@ -211,14 +208,14 @@ class HomeScreenWidget extends StatelessWidget {
                                             AppConstants.radius_100)),
                                   ),
                                   child: InkWell(
-                                    borderRadius: BorderRadius.all(
+                                    borderRadius: const BorderRadius.all(
                                         Radius.circular(
                                             AppConstants.radius_100)),
                                     onTap: () async {
                                       dynamic messageResult =
                                       await Navigator.pushNamed(context,
                                           RouteDefine.messageScreen.name);
-                                      debugPrint('delete = ${messageResult}');
+                                      debugPrint('delete = $messageResult');
                                       if (messageResult != null) {
                                         debugPrint(
                                             'delete = ${messageResult[AppStrings.messageIdListString]}');
@@ -791,21 +788,21 @@ class HomeScreenWidget extends StatelessWidget {
                             isCategoryExpand: state.isCategoryExpand,
                             isSearching: state.isSearching,
                             onFilterTap: () {
-                              bloc.add(HomeEvent.changeCategoryExpansion());
+                              bloc.add(const HomeEvent.changeCategoryExpansion());
                             },
                             onCloseTap: () {
-                              bloc.add(HomeEvent.changeCategoryExpansion(isOpened: false));
+                              bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: false));
                             },
                             onSearchTap: () {
                               debugPrint('onSearchTap');
                               if(state.searchController.text.isNotEmpty){
-                                bloc.add(HomeEvent.changeCategoryExpansion(isOpened: true));
+                                bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: true));
                               }
                             },
                             onSearch: (String search) {
                               debugPrint('onSearch');
                               if (search.length > 1) {
-                                bloc.add(HomeEvent.changeCategoryExpansion(isOpened: true));
+                                bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: true));
                                 bloc.add(HomeEvent.globalSearchEvent(context: context));
                               }
                             },
@@ -820,18 +817,18 @@ class HomeScreenWidget extends StatelessWidget {
                                   });
                             },
                             onOutSideTap: () {
-                              bloc.add(HomeEvent.changeCategoryExpansion(isOpened: false));
+                              bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: false));
                             },
                             onSearchItemTap: () {
-                              bloc.add(HomeEvent.changeCategoryExpansion());
+                              bloc.add(const HomeEvent.changeCategoryExpansion());
                             },
                             controller: state.searchController,
                             searchList: state.searchList,
                             searchResultWidget: state.searchList.isEmpty
                                 ? Center(
                               child: Text(
-                                '${AppLocalizations.of(context)!
-                                    .search_result_not_found}',
+                                AppLocalizations.of(context)!
+                                    .search_result_not_found,
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.textColor),
@@ -925,7 +922,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                   .searchResultString]));
                                         }
                                       } else {
-                                        print('state.search___${state.search}');
+
                                         state.searchList[index].searchType ==
                                             SearchTypes.company
                                             ? Navigator.pushNamed(
@@ -1072,7 +1069,6 @@ class HomeScreenWidget extends StatelessWidget {
   }
 
   void handleMessageOnBackground() {
-    debugPrint('handleMessageOnBackground home ${isNavigation}');
     if(isNavigation.isNotEmpty){
       PushNotificationService().firebaseMessaging.getInitialMessage().then(
             (message) async {
@@ -1188,7 +1184,7 @@ class HomeScreenWidget extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       expand: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
       ),
       isDismissible: true,
@@ -1217,14 +1213,14 @@ class HomeScreenWidget extends StatelessWidget {
                     return Container(
                       height: getScreenHeight(context),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(AppConstants.radius_30),
                           topRight: Radius.circular(AppConstants.radius_30),
                         ),
                         color: AppColors.whiteColor,
                       ),
                       child: state.isProductLoading
-                          ? ProductDetailsShimmerWidget()
+                          ? const ProductDetailsShimmerWidget()
                        : state.productDetails.isEmpty
                           ? NoDataBottomSheet(dialogContext: context)
                           : SingleChildScrollView(
@@ -1280,8 +1276,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                   onTap: (){
                                                     Navigator.pop(dialogContext);
                                                   },
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top:10.0),
+                                                  child: const Padding(
+                                                    padding: EdgeInsets.only(top:10.0),
                                                     child: Icon(Icons.close,
                                                       color: Colors.white,
                                                     ),
@@ -1319,7 +1315,6 @@ class HomeScreenWidget extends StatelessWidget {
                                           .quantity*
                                         (state.productDetails.first.numberOfUnit ?? 1) ,
                                     productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
-                                    isRTL: context.rtl,
                                     scrollController: scrollController,
                                     productQuantity:  state
                                         .productStockList[state.productListIndex][
@@ -1389,10 +1384,10 @@ class HomeScreenWidget extends StatelessWidget {
         ),
         Container(
           height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
-          padding: EdgeInsets.only(left: 10,right: 10,bottom: 5),
+          padding: const EdgeInsets.only(left: 10,right: 10,bottom: 5),
           child: ListView.builder(
             controller: ScrollController(),
-            physics: ClampingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemBuilder: (context2,i){
@@ -1527,8 +1522,8 @@ class HomeScreenWidget extends StatelessWidget {
                   return CustomOneButtonDialog(
                     isLoading: state.retryLoading,
                     directionality: state.language,
-                    title: '${AppLocalizations.of(context)!.under_maintenance}',
-                    positiveTitle: '${AppLocalizations.of(context)!.retry}',
+                    title: AppLocalizations.of(context)!.under_maintenance,
+                    positiveTitle: AppLocalizations.of(context)!.retry,
                     positiveOnTap: () async {
                       bloc.add(HomeEvent.generalSettings(
                         context: context,

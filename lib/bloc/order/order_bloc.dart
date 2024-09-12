@@ -23,9 +23,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
-      debugPrint('[token]   ${preferencesHelper.getAuthToken()}');
       if(event is _getAllOrderEvent){
-
         if (state.isLoadMore) {
           return;
         }
@@ -43,17 +41,14 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
             pageLimit: AppConstants.orderPageLimit,
             userId: preferencesHelper.getUserId()
           );
-          debugPrint('[getAllOrder req] = $reqMap}');
           final res = await DioClient(event.context).post(
               AppUrls.getAllOrderUrl,
               data: reqMap.toJson(),
           );
 
-          debugPrint('[getAllOrder url]  = ${AppUrls.getAllOrderUrl}');
           GetAllOrderResModel response = GetAllOrderResModel.fromJson(res);
-          debugPrint('[getAllOrder res] = $response');
 
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             List<Datum> orderList = state.orderDetailsList.toList(growable: true);
             if ((response.metaData?.totalFilteredCount ?? 1) >
                 state.orderDetailsList.length) {
@@ -88,12 +83,11 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
-      } else if (event is _RefreshListEvent) {
+      } else if (event is _refreshListEvent) {
         emit(state.copyWith(
             pageNum: 0, orderDetailsList: [], isBottomOfProducts: false));
         add(OrderEvent.getAllOrderEvent(context: event.context));
       }
-
     });
   }
 

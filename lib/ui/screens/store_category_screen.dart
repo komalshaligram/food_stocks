@@ -49,8 +49,6 @@ class StoreCategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
     ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint('store category args = $args');
-    debugPrint('store  = ${args?[AppStrings.isSubCategory]}');
     return BlocProvider(
       create: (context) => StoreCategoryBloc()
         ..add(StoreCategoryEvent.isCategoryEvent(
@@ -73,7 +71,7 @@ class StoreCategoryScreen extends StatelessWidget {
 
 class StoreCategoryScreenWidget extends StatelessWidget {
   final String isSubCategory ;
-  StoreCategoryScreenWidget({super.key,this.isSubCategory = ''
+  const StoreCategoryScreenWidget({super.key,this.isSubCategory = ''
   });
 
   @override
@@ -110,6 +108,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               FloatingActionButtonLocation.endContained,
               floatingActionButton: !state.isGuestUser? FloatingActionButton(
                 elevation: 0,
+                backgroundColor: Colors.transparent,
+                onPressed: () {
+                  Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
+                      arguments: {AppStrings.isBasketScreenString: 'true'});
+                },
                 child: Stack(
                   children: [
                     Container(
@@ -167,7 +170,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         child: IgnorePointer(
                           child: Confetti(
                             isStopped:!state.duringCelebration,
-                            snippingsCount: 10,
+                            snippingCount: 10,
                             snipSize: 3.0,
                             colors:[AppColors.mainColor],
                           ),
@@ -176,11 +179,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                backgroundColor: Colors.transparent,
-                onPressed: () {
-                  Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
-                      arguments: {AppStrings.isBasketScreenString: 'true'});
-                },
               ):0.width,
               backgroundColor: AppColors.pageColor,
               body: SafeArea(
@@ -191,7 +189,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       right: 0,
                       top: 0,
                       bottom: 0,
-                      child: Container(
+                      child: SizedBox(
                           height: getScreenHeight(context),
                           width: getScreenWidth(context),
                           child: Column(
@@ -217,7 +215,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   enablePullDown: true,
                                   controller:
                                   state.subCategoryRefreshController,
-                                  header: RefreshWidget(),
+                                  header: const RefreshWidget(),
                                   footer: CustomFooter(
                                     builder: (context, mode) =>
                                         StoreCategoryScreenSubcategoryShimmerWidget(),
@@ -269,7 +267,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             alignment:
                                             Alignment.center,
                                             child: Text(
-                                              '${AppLocalizations.of(context)!.no_data}',
+                                              AppLocalizations.of(context)!.no_data,
                                               textAlign: TextAlign
                                                   .center,
                                               style: AppStyles.rkRegularTextStyle(
@@ -308,7 +306,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 .length,
                                             shrinkWrap: true,
                                             physics:
-                                            NeverScrollableScrollPhysics(),
+                                            const NeverScrollableScrollPhysics(),
                                             itemBuilder: (context,
                                                 index) =>
                                                 buildSubCategoryListItem(
@@ -343,7 +341,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   controller: state
                                       .planogramRefreshController,
                                   header:
-                                  RefreshWidget(),
+                                  const RefreshWidget(),
                                   footer:
                                   CustomFooter(
                                     builder: (context,
@@ -372,7 +370,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         context));
                                   },
                                   child: ListView(
-                                    physics: AlwaysScrollableScrollPhysics(),
+                                    physics: const AlwaysScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     children: [
                                       state.isPlanogramShimmering &&
@@ -396,7 +394,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         getScreenWidth(context),
                                         alignment: Alignment.center,
                                         child: Text(
-                                          '${AppLocalizations.of(context)!.products_not_available}',
+                                          AppLocalizations.of(context)!.products_not_available,
                                           textAlign:
                                           TextAlign.center,
                                           style: AppStyles
@@ -413,7 +411,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             .length,
                                         shrinkWrap: true,
                                         physics:
-                                        NeverScrollableScrollPhysics(),
+                                        const NeverScrollableScrollPhysics(),
                                         itemBuilder:
                                             (context, index) {
                                           return buildPlanoGramItem(
@@ -445,7 +443,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                   .spaceBetween,
                                               children: [
                                                 Text(
-                                                  '${AppLocalizations.of(context)!.products}',
+                                                  AppLocalizations.of(context)!.products,
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
                                                       size: AppConstants
@@ -458,7 +456,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 ),
                                                 GestureDetector(
                                                   onTap: () {
-                                                    bloc.add(StoreCategoryEvent
+                                                    bloc.add(const StoreCategoryEvent
                                                         .changeGridToListViewEvent(
                                                         isGridView:
                                                         false));
@@ -482,7 +480,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               ],
                                             ),
                                           )
-                                              : SizedBox(),
+                                              : const SizedBox(),
                                           state.isPlanogramProductShimmering &&
                                               state.planogramProductList
                                                   .isEmpty
@@ -493,7 +491,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               itemCount: 10)
                                               : state.planogramProductList
                                               .isEmpty
-                                              ? SizedBox()
+                                              ? const SizedBox()
                                               : Container(
                                             color:
                                             AppColors.pageColor,
@@ -501,8 +499,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 ? GridView.builder(
                                                 itemCount: state.planogramProductList.length,
                                                 shrinkWrap: true,
-                                                physics: NeverScrollableScrollPhysics(),
-                                                padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                physics: const NeverScrollableScrollPhysics(),
+                                                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context,state.isSaleOn)),
                                                 itemBuilder: (context, index) =>
                                                     CommonProductSaleItemWidget(
@@ -556,7 +554,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               shrinkWrap:
                                               true,
                                               physics:
-                                              NeverScrollableScrollPhysics(),
+                                              const NeverScrollableScrollPhysics(),
                                               itemBuilder:
                                                   (context,
                                                   index) {
@@ -606,7 +604,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     ),
                     CommonSearchWidget(
                       onCloseTap: () {
-                        bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(isOpened: false));
+                        bloc.add(const StoreCategoryEvent.changeCategoryExpansionEvent(isOpened: false));
                       },
                       isCategoryExpand: state.isCategoryExpand,
                       isSearching: state.isSearching,
@@ -616,8 +614,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           AppStrings.searchString: state.searchController.text,
                           AppStrings.searchResultString: state.searchList
                         });
-                        // bloc.add(
-                        //     StoreCategoryEvent.changeCategoryExpansionEvent());
+
                       },
                       onSearch: (String search) {
                         if(state.searchController.text != ''){
@@ -627,7 +624,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
 
                       },
                       onSearchSubmit: (String search) {
-                        // bloc.add(StoreCategoryEvent.globalSearchEvent(context: context));
                         Navigator.pushNamed(
                             context,
                             RouteDefine.supplierProductsScreen.name,
@@ -637,24 +633,23 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             });
                       },
                       onSearchTap: () {
-                        debugPrint('search');
-                        bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(
+                        bloc.add(const StoreCategoryEvent.changeCategoryExpansionEvent(
                             isOpened: true));
                       },
                       onOutSideTap: () {
-                        bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(
+                        bloc.add(const StoreCategoryEvent.changeCategoryExpansionEvent(
                             isOpened: false));
                       },
                       onSearchItemTap: () {
                         bloc.add(
-                            StoreCategoryEvent.changeCategoryExpansionEvent());
+                            const StoreCategoryEvent.changeCategoryExpansionEvent());
                       },
                       controller: state.searchController,
                       searchList: state.searchList,
                       searchResultWidget: state.searchList.isEmpty
                           ? Center(
                         child: Text(
-                          '${AppLocalizations.of(context)!.search_result_not_found}',
+                          AppLocalizations.of(context)!.search_result_not_found,
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: AppColors.textColor),
@@ -683,9 +678,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               search.searchType ==
                                   state
                                       .searchList[index].searchType)
-                                  .toList()
-                                  .length >=
-                                  1,
+                                  .toList().isNotEmpty,
                               isLastItem:
                               state.searchList.length - 1 == index,
                               isShowSearchLabel: index == 0
@@ -747,7 +740,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         AppStrings.searchType : SearchTypes.product.toString()
                                       });
                                 }
-                                bloc.add(StoreCategoryEvent
+                                bloc.add(const StoreCategoryEvent
                                     .changeCategoryExpansionEvent());
                               },
                               onTap: () async {
@@ -765,7 +758,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     SearchTypes.sale ||
                                     state.searchList[index].searchType ==
                                         SearchTypes.product) {
-                                  debugPrint("tap 4");
                                   if(!state.isGuestUser){
                                     showProductDetails(
                                         isSaleOn: state.isSaleOn,
@@ -832,25 +824,21 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       });
                                 }
                                 bloc.add(
-                                    StoreCategoryEvent.changeCategoryExpansionEvent());
+                                    const StoreCategoryEvent.changeCategoryExpansionEvent());
                               }
-
                           );
                         },
                       ),
                       onScanTap: () async {
-                        // Navigator.pushNamed(context, RouteDefine.qrScanScreen.name);
                         String result = await scanBarcodeOrQRCode(
                             context: context,
                             cancelText: AppLocalizations.of(context)!.cancel,
                             scanMode: ScanMode.BARCODE);
                         if (result != '-1') {
                           // -1 result for cancel scanning
-                          debugPrint('result = $result');
                           if (!state.isGuestUser) {
                             showProductDetails(
                               isSaleOn: state.isSaleOn,
-
                               context: context,
                               productId: result,
                               planoGramIndex: 0,
@@ -936,7 +924,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
               borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               boxShadow: [
                 BoxShadow(
                     color: AppColors.shadowColor.withOpacity(0.15),
@@ -944,10 +932,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               ],
             ),
             clipBehavior: Clip.hardEdge,
-            margin: EdgeInsets.symmetric(
+            margin: const EdgeInsets.symmetric(
                 vertical: AppConstants.padding_10,
                 horizontal: AppConstants.padding_5),
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
                 vertical: AppConstants.padding_5,
                 horizontal: AppConstants.padding_10),
             child: InkWell(
@@ -985,7 +973,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               width: 70,
                               decoration: BoxDecoration(
                                 color: AppColors.whiteColor,
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                     Radius.circular(
                                         AppConstants.radius_10)),
                               ),
@@ -995,13 +983,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         return child;
                       },
                       errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          child: Image.asset(
-                              AppImagePath.imageNotAvailable5,
-                              height: 70,
-                              width: double.maxFinite,
-                              fit: BoxFit.cover),
-                        );
+                        return Image.asset(
+                            AppImagePath.imageNotAvailable5,
+                            height: 70,
+                            width: double.maxFinite,
+                            fit: BoxFit.cover);
                       },
                     )
                         : Image.asset(
@@ -1025,7 +1011,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   isSale?Center(
                     child: Container(
                       width: width-10,
-                      padding: EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
                       child: Text(
                         "${parse(saleDesc).body?.text}",
@@ -1071,11 +1057,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   5.height,
                   isPesach?
                   Container(
-                      padding: EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
                           color: AppColors.pesachBGColor,
                           border: Border.all(color: AppColors.pesachBGColor),
-                          borderRadius: BorderRadius.all(Radius.circular(10))
+                          borderRadius: const BorderRadius.all(Radius.circular(10))
                       ),
                       child: Text(AppLocalizations.of(context)!.pesach)):0.height,
                   isPesach?5.height:0.height,
@@ -1153,7 +1139,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   builder: (blocContext, state) {
                     return Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(AppConstants.radius_30),
                           topRight: Radius.circular(AppConstants.radius_30),
                         ),
@@ -1161,7 +1147,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       ),
                       clipBehavior: Clip.hardEdge,
                       child: state.isProductLoading
-                          ? ProductDetailsShimmerWidget()
+                          ? const ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
                           ? NoDataBottomSheet(dialogContext: context)
                           : SingleChildScrollView(
@@ -1198,7 +1184,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       bottom: false,
                                       child: Stack(
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
                                             width: getScreenWidth(context),
                                             child: GestureDetector(
@@ -1223,8 +1209,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               onTap: (){
                                                 Navigator.pop(context);
                                               },
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top:10.0),
+                                              child: const Padding(
+                                                padding: EdgeInsets.only(top:10.0),
                                                 child: Icon(Icons.close,
                                                   color: Colors.white,
                                                 ),
@@ -1275,11 +1261,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               state.planoGramUpdateIndex]
                               [state.productStockUpdateIndex]
                                   .totalPrice:  double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
-                              isRTL: context.rtl,
-                              // isSupplierAvailable:
-                              // state.productSupplierList.isEmpty
-                              //     ? false
-                              //     : true,
+
                               scrollController: scrollController,
                               productQuantity: state
                                   .productStockList[
@@ -1353,7 +1335,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         ),
         Container(
           height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
-          padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
+          padding: const EdgeInsets.only(bottom:10,left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -1519,13 +1501,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         builder: (context, state) {
           return Container(
             color: AppColors.whiteColor,
-            margin: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+            margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 list.isEmpty
-                    ? SizedBox()
+                    ? const SizedBox()
                     : buildPlanoGramTitles(
                     context: context,
                     title: list[index].planogramName ?? '',
@@ -1547,7 +1529,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   child: list.isEmpty
                       ? Center(
                     child: Text(
-                      '${AppLocalizations.of(context)!.no_data}',
+                      AppLocalizations.of(context)!.no_data,
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
                           color: AppColors.textColor),
@@ -1558,7 +1540,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     (list[index].planogramproducts?.length ?? 0) < 6
                         ? list[index].planogramproducts?.length
                         : 6,
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                         horizontal: AppConstants.padding_5),
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
@@ -1602,16 +1584,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         decoration: BoxDecoration(
             color: AppColors.whiteColor,
             borderRadius:
-            BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
             boxShadow: [
               BoxShadow(
                   color: AppColors.shadowColor.withOpacity(0.1),
                   blurRadius: AppConstants.blur_10),
             ]),
-        margin: EdgeInsets.symmetric(
+        margin: const EdgeInsets.symmetric(
             vertical: AppConstants.padding_5,
             horizontal: AppConstants.padding_10),
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
             horizontal: AppConstants.padding_15,
             vertical: AppConstants.padding_15),
         child: Row(
@@ -1640,6 +1622,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
             },
-            buttonTitle: "${AppLocalizations.of(context)!.ok}"));
+            buttonTitle: AppLocalizations.of(context)!.ok));
   }
 }

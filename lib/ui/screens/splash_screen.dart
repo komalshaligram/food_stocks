@@ -26,21 +26,19 @@ class SplashScreen extends StatelessWidget {
       create: (context) => SplashBloc()
         ..add(SplashEvent.splashLoaded(
             pushNavigation: args?[AppStrings.pushNavigationString] ?? '')),
-      child: SplashScreenWidget(),
+      child: const SplashScreenWidget(),
     );
   }
 }
 
 class SplashScreenWidget extends StatelessWidget {
-  SplashScreenWidget({Key? key}) : super(key: key);
+  const SplashScreenWidget({Key? key}) : super(key: key);
 
 
   void getVersion(SharedPreferencesHelper preferencesHelper) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    debugPrint("package info : ${packageInfo.toString()}");
     String version = packageInfo.version;
     preferencesHelper.setAppVersion(version: version);
-    debugPrint("splash pref = ${preferencesHelper.getUserLoggedIn()}");
   }
 
 
@@ -73,11 +71,11 @@ class SplashScreenWidget extends StatelessWidget {
                 child: AnimatedOpacity(
                   curve: Curves.decelerate,
                   opacity: state.isAnimate ? 1 : 0,
-                  duration: Duration(milliseconds: 1000),
+                  duration: const Duration(milliseconds: 1000),
                   child: AnimatedScale(
                     curve: Curves.decelerate,
                     scale: state.isAnimate ? 1 : 1.2,
-                    duration: Duration(milliseconds: 600),
+                    duration: const Duration(milliseconds: 600),
                     child: SvgPicture.asset(
                       AppImagePath.splashLogo,
                       height: getScreenHeight(context) * 0.30,

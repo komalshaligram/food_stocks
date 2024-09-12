@@ -18,7 +18,7 @@ class ConnectBloc extends Bloc<ConnectEvent, ConnectState> {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
-    if (event is _LogInAsGuest) {
+    if (event is _logInAsGuest) {
         preferencesHelper.setIsGuestUser(isGuestUser: true);
         Navigator.pushNamed(
             event.context, RouteDefine.bottomNavScreen.name,

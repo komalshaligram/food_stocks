@@ -32,13 +32,14 @@ class AppStrings {
 
   //sound path
   static const deleteSound = 'audio/delete_sound.mp3';
+  static const successSound = 'audio/success_sound.mp3';
 
   //language Strings
   static const englishString = 'en';
-  static const hebrewString = 'en';
+  static const hebrewString = 'he';
   static const englishLocal = 'en-US';
-  static const hebrewLocal = 'en-US';
-  //static const hebrewLocal = 'he-IL';
+  //static const hebrewLocal = 'en-US';
+  static const hebrewLocal = 'he-IL';
 
 
   //api req param strings
@@ -166,6 +167,12 @@ class AppStrings {
  static const creditCard = 'creditCard';
  static const bankTransfer = 'bankTransfer';
 
+ //types
+  static const credit = 'credit';
+  static const debit = 'debit';
+  static const refund = 'refund';
+  static const surfaceAmount = 'surfaceAmount';
+
   //hint strings
   static const hintNumberString = '1234567890';
 
@@ -174,6 +181,7 @@ class AppStrings {
   static const contactString = 'contact';
   static const idString = 'id';
   static const orderIdString = 'orderId';
+  static const mainProductIdString = 'mainProductId';
   static const productDataString = 'productData';
   static const supplierNameString = 'supplierName';
   static const deliveryStatusString = 'deliveryStatus';
@@ -187,6 +195,13 @@ class AppStrings {
   static const messageIdListString = 'messageIdList';
   static const isReadMoreString = 'isReadMore';
   static const invoiceListString = 'invoiceListString';
+
+
+  static const textIdProof = 'צילום תעודת זהות';
+
+  //smartlook keys
+  static const userBusinessName = 'User business name';
+  static const userPhoneNum =  "User phone number";
 
   static String getLocalizedStrings(String key, BuildContext context) {
     debugPrint('Key$key');

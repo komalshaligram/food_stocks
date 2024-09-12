@@ -72,7 +72,7 @@ class DioClient {
           requestOptions.headers = requestOptions.headers ?? {};
 
           var response = await _dio.post(path, data: data, queryParameters: queryParameters, options: requestOptions);
-
+          debugPrint("$path: RES: ${response.toString()}");
           return response.data;
         } on DioException catch (e) {
           if (e.response?.statusCode == AppConstants.code_401 && path != AppUrls.refreshTokenUrl) {
@@ -153,11 +153,11 @@ class DioClient {
       isLogOut = true;
       await preferencesHelper.setUserLoggedIn();
       debugPrint('Token Expired = ${response.data}');
-      await Provider.of<LocaleProvider>(_context, listen: false).setAppLocale(locale: Locale(AppStrings.hebrewString));
+      await Provider.of<LocaleProvider>(_context, listen: false).setAppLocale(locale: const Locale(AppStrings.hebrewString));
       Navigator.popUntil(_context, (route) => route.name == RouteDefine.bottomNavScreen.name);
       Navigator.pushNamed(_context, RouteDefine.connectScreen.name);
       ScaffoldMessenger.of(_context).hideCurrentSnackBar();
-      CustomSnackBar.showSnackBar(context: _context, title: '${AppLocalizations.of(_context)!.logged_out_successfully}', type: SnackBarType.success);
+      CustomSnackBar.showSnackBar(context: _context, title: AppLocalizations.of(_context)!.logged_out_successfully, type: SnackBarType.success);
     }
   }
 
@@ -171,7 +171,7 @@ class DioClient {
         if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi|| connectivityResult == ConnectivityResult.ethernet) {
           try {
             final response = await _dio.get(path, queryParameters: query, options: options ?? Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferencesHelper.getAuthToken()}'}));
-            debugPrint("RES: ${response.toString()}");
+            debugPrint("$path: RES: ${response.toString()}");
             return response.data as Map<String, dynamic>;
           } on DioException catch (e) {
             if (e.response?.statusCode == AppConstants.code_401 && path != AppUrls.refreshTokenUrl) {
@@ -229,6 +229,7 @@ class DioClient {
                         HttpHeaders.authorizationHeader: 'Bearer ${preferencesHelper.getAuthToken()}',
                       },
                     ));
+            debugPrint('$path: res:${response.data.toString()}');
             return response.data;
           } on DioException catch (e) {
             if (e.response?.statusCode == AppConstants.code_401 && path != AppUrls.refreshTokenUrl) {
@@ -317,50 +318,50 @@ class ErrorEntity implements Exception {
 ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
   switch (error.type) {
     case DioExceptionType.connectionTimeout:
-      CustomSnackBar.showSnackBar(context: context!, title: '${AppLocalizations.of(context)!.connection_timed_out}', type: SnackBarType.failure);
-      return ErrorEntity(code: -1, message: '${AppLocalizations.of(context)!.connection_timed_out}');
+      CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.connection_timed_out, type: SnackBarType.failure);
+      return ErrorEntity(code: -1, message: AppLocalizations.of(context)!.connection_timed_out);
 
     case DioExceptionType.sendTimeout:
-      CustomSnackBar.showSnackBar(context: context!, title: '${AppLocalizations.of(context)!.send_timed_out}', type: SnackBarType.failure);
+      CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.send_timed_out, type: SnackBarType.failure);
       return ErrorEntity(
         code: -1,
-        message: '${AppLocalizations.of(context)!.send_timed_out}',
+        message: AppLocalizations.of(context)!.send_timed_out,
       );
 
     case DioExceptionType.receiveTimeout:
-      CustomSnackBar.showSnackBar(context: context!, title: '${AppLocalizations.of(context)!.receive_timed_out}', type: SnackBarType.failure);
-      return ErrorEntity(code: -1, message: '${AppLocalizations.of(context)!.receive_timed_out}');
+      CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.receive_timed_out, type: SnackBarType.failure);
+      return ErrorEntity(code: -1, message: AppLocalizations.of(context)!.receive_timed_out);
 
     case DioExceptionType.badCertificate:
-      CustomSnackBar.showSnackBar(context: context!, title: '${AppLocalizations.of(context)!.bad_ssl_certificates}', type: SnackBarType.failure);
-      return ErrorEntity(code: -1, message: '${AppLocalizations.of(context)!.bad_ssl_certificates}');
+      CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.bad_ssl_certificates, type: SnackBarType.failure);
+      return ErrorEntity(code: -1, message: AppLocalizations.of(context)!.bad_ssl_certificates);
 
     case DioExceptionType.badResponse:
       switch (error.response!.statusCode) {
         case 400:
-          CustomSnackBar.showSnackBar(context: context!, title: '${AppLocalizations.of(context)!.bad_request}', type: SnackBarType.failure);
-          return ErrorEntity(code: 400, message: '${AppLocalizations.of(context)!.bad_request}');
+          CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.bad_request, type: SnackBarType.failure);
+          return ErrorEntity(code: 400, message: AppLocalizations.of(context)!.bad_request);
         case 401:
-          CustomSnackBar.showSnackBar(context: context!, title: '${AppLocalizations.of(context)!.permission_denied}', type: SnackBarType.failure);
-          return ErrorEntity(code: 401, message: '${AppLocalizations.of(context)!.permission_denied}');
+          CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.permission_denied, type: SnackBarType.failure);
+          return ErrorEntity(code: 401, message: AppLocalizations.of(context)!.permission_denied);
         case 500:
-          CustomSnackBar.showSnackBar(context: context!, title: '${AppLocalizations.of(context)!.server_internal_error}', type: SnackBarType.failure);
-          return ErrorEntity(code: 500, message: '${AppLocalizations.of(context)!.server_internal_error}');
+          CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.server_internal_error, type: SnackBarType.failure);
+          return ErrorEntity(code: 500, message: AppLocalizations.of(context)!.server_internal_error);
       }
-      CustomSnackBar.showSnackBar(context: context!, title: '${AppLocalizations.of(context)!.server_bad_response}', type: SnackBarType.failure);
-      return ErrorEntity(code: error.response!.statusCode!, message: '${AppLocalizations.of(context)!.server_bad_response}');
+      CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.server_bad_response, type: SnackBarType.failure);
+      return ErrorEntity(code: error.response!.statusCode!, message: AppLocalizations.of(context)!.server_bad_response);
 
     case DioExceptionType.cancel:
-      CustomSnackBar.showSnackBar(context: context!, title: '${AppLocalizations.of(context)!.server_canceled}', type: SnackBarType.failure);
-      return ErrorEntity(code: -1, message: '${AppLocalizations.of(context)!.server_canceled}');
+      CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.server_canceled, type: SnackBarType.failure);
+      return ErrorEntity(code: -1, message: AppLocalizations.of(context)!.server_canceled);
 
     case DioExceptionType.connectionError:
       CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.connection_error, type: SnackBarType.failure);
       return ErrorEntity(code: -1, message: AppLocalizations.of(context)!.connection_error);
 
     case DioExceptionType.unknown:
-      CustomSnackBar.showSnackBar(context: context!, title: '${AppLocalizations.of(context)!.unknown_error}', type: SnackBarType.failure);
-      return ErrorEntity(code: -1, message: '${AppLocalizations.of(context)!.unknown_error}');
+      CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.unknown_error, type: SnackBarType.failure);
+      return ErrorEntity(code: -1, message: AppLocalizations.of(context)!.unknown_error);
   }
 }
 

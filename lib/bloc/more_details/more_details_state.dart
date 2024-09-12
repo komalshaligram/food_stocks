@@ -32,7 +32,7 @@ class MoreDetailsState with _$MoreDetailsState {
         isUpdating: false,
         cityController: TextEditingController(),
         filterList: [],
-        cityListResModel: CityListResModel(),
+        cityListResModel: const CityListResModel(),
         isShimmering:false,
         language: AppStrings.hebrewString,
         approveForSMS:true

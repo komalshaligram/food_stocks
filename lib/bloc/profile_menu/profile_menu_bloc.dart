@@ -39,9 +39,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         if (event is _getPreferenceDataEvent) {
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           emit(state.copyWith(applicationVersion:packageInfo.version ,buildNumber:packageInfo.buildNumber));
-          debugPrint('[UserImageUrl]  ${preferences.getUserImageUrl()}');
-          debugPrint('[username]   ${preferences.getUserName()}');
-          debugPrint('[logo]  ${preferences.getUserCompanyLogoUrl()}');
 
           emit(state.copyWith(
               UserImageUrl: preferences.getUserImageUrl(),language: preferences.getAppLanguage(),
@@ -57,7 +54,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
           emit(state.copyWith(userName: preferences.getUserName()));
         }
-        else if (event is _GetAppLanguage) {
+        else if (event is _getAppLanguage) {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
           String appLang = preferencesHelper.getAppLanguage();
@@ -72,16 +69,13 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 path: AppUrls.logOutUrl,
                 data: {"userId": preferences.getUserId()});
 
-            debugPrint('logOut url  = ${AppUrls.baseUrl}${AppUrls.logOutUrl}');
-
-            debugPrint('logOut response  = ${response}');
 
             if (response[AppStrings.statusString] == AppConstants.code_200) {
               SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                   prefs: await SharedPreferences.getInstance());
               await preferencesHelper.setUserLoggedIn();
               await Provider.of<LocaleProvider>(event.context, listen: false)
-                  .setAppLocale(locale: Locale(AppStrings.hebrewString));
+                  .setAppLocale(locale:const Locale(AppStrings.hebrewString));
               Navigator.pop(event.context);
               Navigator.popUntil(event.context,
                       (route) => route.name == RouteDefine.bottomNavScreen.name);
@@ -89,7 +83,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
-                  '${AppLocalizations.of(event.context)!.logged_out_successfully}',
+                  AppLocalizations.of(event.context)!.logged_out_successfully,
                   type: SnackBarType.success);
               emit(state.copyWith(isLogOutProcess: false));
             } else {
@@ -105,27 +99,25 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             emit(state.copyWith(isLogOutProcess: false));
           }
         }
-        else if (event is _ChangeAppLanguageEvent) {
+        else if (event is _changeAppLanguageEvent) {
           if (state.isHebrewLanguage) {
             emit(state.copyWith(isHebrewLanguage: false));
             await Provider.of<LocaleProvider>(event.context, listen: false)
-                .setAppLocale(locale: Locale(AppStrings.englishString));
+                .setAppLocale(locale: const Locale(AppStrings.englishString));
           } else {
             emit(state.copyWith(isHebrewLanguage: true));
             await Provider.of<LocaleProvider>(event.context, listen: false)
-                .setAppLocale(locale: Locale(AppStrings.hebrewString));
+                .setAppLocale(locale: const Locale(AppStrings.hebrewString));
           }
         }
         else if (event is _getProfileDetailsEvent) {
 
           try {
-            debugPrint('req = ${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
               AppUrls.getProfileDetailsUrl,
               data: ProfileDetailsReqModel(id: preferences.getUserId())
                   .toJson(),
             );
-            debugPrint('res = ${res}');
             ProfileDetailsResModel response =
             ProfileDetailsResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
@@ -146,10 +138,8 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                       event.context),
                   type: SnackBarType.failure);
             }
-          } on ServerException {
-
           } catch (e) {
-
+debugPrint(e.toString());
           }
 
         }
@@ -159,16 +149,14 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
 
           if(preferences.getSubUser()){
             try {
-              debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
               final res = await DioClient(event.context).get(
                   path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-              debugPrint('AccountPermission response profileMenu= ${response.data.toString()}');
 
               if (response.status == AppConstants.code_200) {
                 var res = response.data?.permissions;
 
-                if(/*preferences.getAppLanguage() == AppStrings.englishString &&*/ preferences.getCanSeeWallet() != res?.canSeeWallet){
+                if( preferences.getCanSeeWallet() != res?.canSeeWallet){
                   event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(
                       index: preferences.getCanSeeWallet() ? 4 : 3,context: event.context));
                 }
@@ -204,7 +192,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                     type: SnackBarType.failure);
 
               }
-            } on ServerException {
             } catch (e) {
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -216,14 +203,13 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         else if(event is _updateMaintenanceEvent){
           emit(state.copyWith(isDialogOpen: true));
         }
-        else if(event is _GeneralSettings){
+        else if(event is _generalSettings){
           try {
             emit(state.copyWith(retryLoading: event.isRetryLoading));
 
             final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
 
-            debugPrint('general settings = ${response.data.toString()}');
             if (response.status == AppConstants.code_200) {
 
               if(preferences.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
@@ -231,11 +217,9 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 Navigator.pop(event.dialogContext);
                 preferences.setIsAppOnMaintenance(isAppOnMaintenance: false);
                 emit(state.copyWith(isDialogOpen: false,isAppOnMaintenance: false,retryLoading: false));
-                debugPrint('pop dialog');
                 return;
               }else{
                 if(!state.isDialogOpen && !(response.data?.isAppOnMaintenance??false)  ){
-                  debugPrint('here');
                   emit(state.copyWith(isDialogOpen: true));
                 }else{
                   emit(state.copyWith(isDialogOpen: false));
@@ -257,7 +241,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               ));
             } else {
             }
-          } on ServerException {
           } catch (e) {
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -267,14 +250,12 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         }
         else if(event is _userApproveEvent){
           try {
-            debugPrint('clientId_____${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
-                '${AppUrls.verifyClientUrl}',
+                AppUrls.verifyClientUrl,
                 data: {AppStrings.clientIdString:preferences.getUserId()}
             );
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-            debugPrint('verifyClient res_____$response');
-            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+
             if (response.status == AppConstants.code_200) {
               if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
                 Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
@@ -284,7 +265,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               }
 
             }
-          } on ServerException {}
+          }
           catch (e) {
             debugPrint('catch____$e');
           }

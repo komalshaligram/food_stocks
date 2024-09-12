@@ -13,7 +13,8 @@ String creditCardReqModelToJson(CreditCardReqModel data) =>
 @freezed
 class CreditCardReqModel with _$CreditCardReqModel {
   const factory CreditCardReqModel({
-    String? expDate_YYMM,
+    String? expDate_YY,
+    String? expDate_MM,
     String? cardNum,
   }) = _CreditCardReqModel;
 

@@ -4,72 +4,72 @@ part of 'pesach_products_bloc.dart';
 class PesachProductsEvent with _$PesachProductsEvent {
   const factory PesachProductsEvent.getSupplierProductsIdEvent(
       {required String supplierId,
-      required String search}) = _GetSupplierProductsIdEvent;
+      required String search}) = _getSupplierProductsIdEvent;
 
   const factory PesachProductsEvent.getSupplierProductsListEvent(
-      {required BuildContext context,required String searchType}) = _GetSupplierProductsListEvent;
+      {required BuildContext context,required String searchType}) = _getSupplierProductsListEvent;
 
   const factory PesachProductsEvent.getProductDetailsEvent(
       {required BuildContext context,
       required String productId,
       required bool isBarcode,
         required int productListIndex
-      }) = _GetProductDetailsEvent;
+      }) = _getProductDetailsEvent;
 
   const factory PesachProductsEvent.increaseQuantityOfProduct(
-      {required BuildContext context}) = _IncreaseQuantityOfProduct;
+      {required BuildContext context}) = _increaseQuantityOfProduct;
 
   const factory PesachProductsEvent.decreaseQuantityOfProduct(
-      {required BuildContext context}) = _DecreaseQuantityOfProduct;
+      {required BuildContext context}) = _decreaseQuantityOfProduct;
 
   const factory PesachProductsEvent.updateQuantityOfProduct(
       {required BuildContext context,
-      required String quantity}) = _UpdateQuantityOfProduct;
+      required String quantity}) = _updateQuantityOfProduct;
 
   const factory PesachProductsEvent.changeNoteOfProduct(
-      {required String newNote}) = _ChangeNoteOfProduct;
+      {required String newNote}) = _changeNoteOfProduct;
 
   const factory PesachProductsEvent.changeSupplierSelectionExpansionEvent(
-      {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
+      {bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
   const factory PesachProductsEvent.supplierSelectionEvent(
       {required int supplierIndex,
       required BuildContext context,
-      required int supplierSaleIndex}) = _SupplierSelectionEvent;
+      required int supplierSaleIndex}) = _supplierSelectionEvent;
 
   const factory PesachProductsEvent.addToCartProductEvent(
       {required BuildContext context,
       required String productId,
-      }) = _AddToCartProductEvent;
+      }) = _addToCartProductEvent;
 
-  const factory PesachProductsEvent.setCartCountEvent() = _SetCartCountEvent;
+  const factory PesachProductsEvent.setCartCountEvent() = _setCartCountEvent;
 
   const factory PesachProductsEvent.updateImageIndexEvent({
     required int index,
-  }) = _UpdateImageIndexEvent;
+  }) = _updateImageIndexEvent;
 
-  const factory PesachProductsEvent.toggleNoteEvent() = _ToggleNoteEvent;
+  const factory PesachProductsEvent.toggleNoteEvent() = _toggleNoteEvent;
 
   const factory PesachProductsEvent.refreshListEvent(
-      {required BuildContext context}) = _RefreshListEvent;
+      {required BuildContext context}) = _refreshListEvent;
 
   const factory PesachProductsEvent.getAllProducts(
-      {required BuildContext context,required String search}) = _GetAllProductsEvent;
+      {required BuildContext context,required String search}) = _getAllProductsEvent;
 
   const factory PesachProductsEvent.getGridListView(
       ) = _getGridListView;
   const factory PesachProductsEvent.changeCategoryExpansion({bool? isOpened}) =
-  _ChangeCategoryExpansion;
+  _changeCategoryExpansion;
 
   const factory PesachProductsEvent.globalSearchEvent({required BuildContext context}) =
-  _GlobalSearchEvent;
+  _globalSearchEvent;
 
   const factory PesachProductsEvent.updateGlobalSearchEvent(
       {required String search,
-        required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+        required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
 
-  const factory PesachProductsEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
-  const factory PesachProductsEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
+  const factory PesachProductsEvent.relatedProductsEvent({required BuildContext context,required String productId}) = _relatedProductsEvent;
+  const factory PesachProductsEvent.removeRelatedProductEvent() = _removeRelatedProductEvent;
   const factory PesachProductsEvent.getCartCountEvent(
       ) = _getCartCountEvent;
 

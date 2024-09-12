@@ -59,14 +59,14 @@ class CommonProductSaleItemWidget extends StatelessWidget {
       width: width,
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
-        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         boxShadow: [
           BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
         ],
       ),
       clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
-      padding: EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
+      margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
+      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
       child: InkWell(
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
@@ -91,15 +91,13 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                             width: 70,
                             decoration: BoxDecoration(
                               color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+                              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
                             ),
                           ),
                         );
                       },
                       errorWidget: (context, error, stackTrace) {
-                        return Container(
-                          child: Image.asset(AppImagePath.imageNotAvailable5, height: imageHeight, width: double.maxFinite, fit: BoxFit.cover),
-                        );
+                        return Image.asset(AppImagePath.imageNotAvailable5, height: imageHeight, width: double.maxFinite, fit: BoxFit.cover);
                       },
                     )
                         : Image.asset(
@@ -124,7 +122,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                   description.isNotEmpty?Center(
                     child: Container(
                       width: width!-10,
-                      padding: EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
                       child: Text(
                         "${parse(description).body?.text}",

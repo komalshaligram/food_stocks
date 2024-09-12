@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -30,19 +31,16 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
 
       if (event is _getDataEvent) {
         emit(state.copyWith(
-            CartItemList: event.CartItemList,
+            CartItemList: event.cartItemList,
             language: preferencesHelper.getAppLanguage()));
         try {
           final res = await DioClient(event.context).post(
             '${AppUrls.listingCartProductsSupplierUrl}${preferencesHelper.getCartId()}',
           );
-          debugPrint(
-              'CartProductsSupplier url   = ${AppUrls.listingCartProductsSupplierUrl}${preferencesHelper.getCartId()}');
           CartProductsSupplierResModel response =
               CartProductsSupplierResModel.fromJson(res);
-          debugPrint('CartProductsSupplierRes  = $response');
 
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             emit(state.copyWith(orderSummaryList: response));
           } else {
             CustomSnackBar.showSnackBar(
@@ -57,11 +55,11 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
       }
 
       if (event is _orderSendEvent) {
-        List<Product> ProductReqMap = [];
+        List<Product> productReqMap = [];
         emit(state.copyWith(isLoading: true));
 
         state.CartItemList.data?.data?.forEach((element) {
-          ProductReqMap.add(Product(
+          productReqMap.add(Product(
             supplierId: element.suppliers?.first.id ?? '',
             productId: element.productDetails?.id ?? '',
             quantity: element.totalQuantity,
@@ -70,31 +68,26 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
         });
 
         try {
-          OrderSendReqModel reqMap = OrderSendReqModel(products: ProductReqMap);
-          debugPrint('OrderSendReqModel = $reqMap}');
+          OrderSendReqModel reqMap = OrderSendReqModel(products: productReqMap);
           final res = await DioClient(event.context).post(
             AppUrls.createOrderUrl,
             data: reqMap,
           );
 
-          debugPrint(
-              'Order create url  = ${AppUrls.baseUrl}${AppUrls.createOrderUrl}');
           OrderSendResModel response = OrderSendResModel.fromJson(res);
-          debugPrint('OrderSendResModel  = $response');
 
-          if (response.status == 201) {
+          if (response.status == AppConstants.code_201) {
             try {
               final res = await DioClient(event.context).post(
                 '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}',
               );
-              debugPrint('clear cart response_______${res}');
-              if (res["status"] == 201) {
+              if (res[AppStrings.statusString] == AppConstants.code_201) {
                 preferencesHelper.setCartCount(count: 0);
                 Navigator.pushNamed(
                     event.context, RouteDefine.orderSuccessfulScreen.name);
               }
             } on ServerException {}
-          } else if (response.status == 403) {
+          } else if (response.status == AppConstants.code_403) {
            CustomSnackBar.showSnackBar(
                 context: event.context,
              title: AppStrings.getLocalizedStrings(

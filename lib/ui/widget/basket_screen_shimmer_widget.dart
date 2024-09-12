@@ -17,10 +17,10 @@ class BasketScreenShimmerWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           return CommonShimmerWidget(
             child: Container(
-              margin: EdgeInsets.symmetric(
+              margin: const EdgeInsets.symmetric(
                   vertical: AppConstants.padding_5,
                   horizontal: AppConstants.padding_10),
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                   vertical: AppConstants.padding_3,
                   horizontal: AppConstants.padding_10),
               decoration: BoxDecoration(
@@ -31,7 +31,7 @@ class BasketScreenShimmerWidget extends StatelessWidget {
                       blurRadius: AppConstants.blur_10),
                 ],
                 borderRadius:
-                    BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                    const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

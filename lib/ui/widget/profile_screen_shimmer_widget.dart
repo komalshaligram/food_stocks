@@ -6,9 +6,9 @@ import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
 
 class ProfileScreenShimmerWidget extends StatelessWidget {
-   bool isProfileImage;
+   final bool isProfileImage;
 
-   ProfileScreenShimmerWidget({super.key,this.isProfileImage = true});
+   const ProfileScreenShimmerWidget({super.key,this.isProfileImage = true});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
       ),
     );
@@ -69,11 +69,11 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
       child: Container(
         height: AppConstants.shimmerTextHeight,
         width: 140,
-        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );

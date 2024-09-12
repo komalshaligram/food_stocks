@@ -1,7 +1,4 @@
-
-
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 
 part 'categories_permission_res_model.freezed.dart';
 part 'categories_permission_res_model.g.dart';
@@ -11,7 +8,7 @@ part 'categories_permission_res_model.g.dart';
 class CategoriesPermissionResModel with _$CategoriesPermissionResModel {
   const factory CategoriesPermissionResModel({
     @JsonKey(name: "data")
-    List<categoriesPermission>? data,
+    List<CategoriesPermission>? data,
     @JsonKey(name: "status")
     int? status,
     @JsonKey(name: "message")
@@ -22,8 +19,8 @@ class CategoriesPermissionResModel with _$CategoriesPermissionResModel {
 }
 
 @Freezed(makeCollectionsUnmodifiable: false)
-class categoriesPermission with _$categoriesPermission {
-  const factory categoriesPermission({
+class CategoriesPermission with _$CategoriesPermission {
+  const factory CategoriesPermission({
     @JsonKey(name: "_id")
     String? id,
     @JsonKey(name: "categoryId")
@@ -34,9 +31,9 @@ class categoriesPermission with _$categoriesPermission {
     List<SubCategory>? subCategories,
     @JsonKey(name: "category")
     Category? category,
-  }) = _categoriesPermission;
+  }) = _CategoriesPermission;
 
-  factory categoriesPermission.fromJson(Map<String, dynamic> json) => _$categoriesPermissionFromJson(json);
+  factory CategoriesPermission.fromJson(Map<String, dynamic> json) => _$CategoriesPermissionFromJson(json);
 }
 
 @freezed

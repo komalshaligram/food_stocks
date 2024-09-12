@@ -28,8 +28,8 @@ class OrderSuccessfulScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => OrderSuccessfulBloc()..add(OrderSuccessfulEvent.getOrderCountEvent(context: context))
-      ..add(OrderSuccessfulEvent.getWalletRecordEvent(context: context))..add(OrderSuccessfulEvent.celebrationEvent()),
-      child: OrderSuccessfulScreenWidget(),
+      ..add(OrderSuccessfulEvent.getWalletRecordEvent(context: context))..add(const OrderSuccessfulEvent.celebrationEvent()),
+      child: const OrderSuccessfulScreenWidget(),
     );
   }
 }
@@ -48,7 +48,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
   @override
   void initState() {
     super.initState();
-    player.play(AssetSource('audio/success_sound.mp3'));
+    player.play(AssetSource(AppStrings.successSound));
   }
 
   @override
@@ -71,7 +71,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                           vertical: AppConstants.padding_50),
                       child: Column(
                         children: [
-                          state.orderThisMonth < 0 ? WalletScreenShimmerWidget() : Container(
+                          state.orderThisMonth < 0 ? const WalletScreenShimmerWidget() : Container(
                             width: double.maxFinite,
                             decoration: BoxDecoration(
                               color: AppColors.whiteColor,
@@ -85,7 +85,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Container(
+                                SizedBox(
                                     height: 180,
                                     width: 180,
                                     child: Image.asset(AppImagePath.successIcon)
@@ -147,7 +147,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                         Directionality(
                                           textDirection: TextDirection.rtl,
                                           child: Text(
-                                            '${formatNumber( value: state.balance.toString(),local: AppStrings.hebrewLocal)}',
+                                            formatNumber( value: state.balance.toString(),local: AppStrings.hebrewLocal),
                                             style: AppStyles.rkRegularTextStyle(
                                                 size: AppConstants.font_14,
                                                 fontWeight: FontWeight.bold,
@@ -172,7 +172,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                                 image: AppImagePath.credits,
                                                 title: AppLocalizations.of(
                                                     context)!.total_credit,
-                                                value: '${formatNumber(value: state.totalCredit.toString() ,local: AppStrings.hebrewLocal) }'),
+                                                value: formatNumber(value: state.totalCredit.toString() ,local: AppStrings.hebrewLocal)),
                                           ),
                                           10.width,
                                           Flexible(
@@ -184,7 +184,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                                     context)!
                                                     .this_months_expenses,
                                                 value:
-                                                '${formatNumber(value: state.thisMonthExpense.toString() ,local: AppStrings.hebrewLocal) }'),
+                                                formatNumber(value: state.thisMonthExpense.toString() ,local: AppStrings.hebrewLocal)),
 
                                           ),
                                         ],
@@ -212,7 +212,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                                     context)!
                                                     .last_months_expenses,
                                                 value:
-                                                '${formatNumber(value: state.lastMonthExpense.toString(),local:AppStrings.hebrewLocal)}'),
+                                                formatNumber(value: state.lastMonthExpense.toString(),local:AppStrings.hebrewLocal)),
                                           ),
                                         ],
                                       ),
@@ -222,7 +222,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                               ],
                             ),
                           ) : 0.width,
-                          Expanded(
+                          const Expanded(
                             flex: 5,
                             child: SizedBox(
                             ),
@@ -232,7 +232,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                 Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
                               },
                               child: Container(
-                                margin: EdgeInsets.only(
+                                margin: const EdgeInsets.only(
                                     left: 50,
                                     right: 50,
                                    ),
@@ -244,10 +244,10 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                         blurRadius: AppConstants.blur_10),
                                   ],
                                   borderRadius:
-                                  BorderRadius.all(Radius.circular(AppConstants.radius_40)),
+                                  const BorderRadius.all(Radius.circular(AppConstants.radius_40)),
                                 ),
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                       vertical: AppConstants.padding_5,
                                       horizontal: AppConstants.padding_5),
                                   decoration: BoxDecoration(
@@ -255,7 +255,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                     color: AppColors.whiteColor,
                                   ),
                                   child: Container(
-                                    padding: EdgeInsets.all(AppConstants.padding_10),
+                                    padding: const EdgeInsets.all(AppConstants.padding_10),
                                     height: AppConstants.containerHeight_60,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
@@ -282,7 +282,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                       child: IgnorePointer(
                         child: Confetti(
                           isStopped:!state.duringCelebration,
-                          snippingsCount: 200,
+                          snippingCount: 200,
                           snipSize: 7.0,
                         ),
                       ),

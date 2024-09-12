@@ -16,13 +16,13 @@ import '../../main.dart';
 
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => MyAppBloc(),
-      child: MyAppWidget(),
+      child: const MyAppWidget(),
     );
   }
 }
@@ -44,7 +44,6 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
     });
     WidgetsBinding.instance.addObserver(this);
    smartLook.start();
-     debugPrint('key____${dotenv.env['SMART_LOOK_KEY']}');
    smartLook.preferences.setProjectKey(dotenv.env['SMART_LOOK_KEY']!);
     super.initState();
   }

@@ -33,7 +33,6 @@ class BottomNavScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint('bottom nav args = $args');
     return BlocProvider(
       create: (context) => BottomNavBloc()
         ..add(BottomNavEvent.getPreferencesDataEvent(context: context,
@@ -160,7 +159,7 @@ final String basketScreen;
                   buttonBackgroundColor: AppColors.whiteColor,
                   backgroundColor: Colors.transparent,
                   animationCurve: Curves.decelerate,
-                  animationDuration: Duration(milliseconds: 600),
+                  animationDuration: const Duration(milliseconds: 600),
                   onTap: (index) async {
                     SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                         prefs: await SharedPreferences.getInstance());
@@ -210,22 +209,22 @@ final String basketScreen;
       {required double screenHeight,
       required double screenWidth,
       required BottomNavState state}) {
-    return Container(
+    return SizedBox(
       height: screenHeight,
       width: screenWidth,
       child: FadeIndexedStack(
         index: state.index,
         children: state.isSubUserSeeWallet ?  [
           HomeScreen(isSubCategory: 'false') ,
-          StoreScreen(),
-          BasketScreen(),
-           WalletScreen(),
-           ProfileMenuScreen(),
+          const StoreScreen(),
+          const BasketScreen(),
+           const WalletScreen(),
+           const ProfileMenuScreen(),
         ] : [
           HomeScreen(isSubCategory: 'false') ,
-          StoreScreen(),
-          BasketScreen(),
-          ProfileMenuScreen()
+          const StoreScreen(),
+          const BasketScreen(),
+          const ProfileMenuScreen()
         ]
       ),
     );
@@ -284,9 +283,6 @@ final String basketScreen;
                                 decoration: BoxDecoration(
                                   gradient: state.index == 2
                                     ? LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]):AppColors.appMainGradientColor,
-                                /*  color: state.index == 2
-                                      ? AppColors.whiteColor
-                                      : AppColors.notificationColor,*/
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(AppConstants.radius_100)),
                                   border: Border.all(
@@ -307,9 +303,8 @@ final String basketScreen;
                             ],
                           ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
           isCart ?  state.isAnimation  && state.index != 2 ? Positioned(
-         //   top: 5,
             right: isRTL ? null : 0,
             left: isRTL ? 0 : null,
             child: SizedBox(
@@ -320,14 +315,14 @@ final String basketScreen;
                 child: IgnorePointer(
                   child: Confetti(
                     isStopped:!state.duringCelebration,
-                    snippingsCount: 10,
+                    snippingCount: 10,
                     snipSize: 3.0,
                     colors:[AppColors.mainColor],
                   ),
                 ),
               ),
             ),
-          ):SizedBox() : SizedBox(),
+          ):const SizedBox() : const SizedBox(),
         ],
       ),
     );

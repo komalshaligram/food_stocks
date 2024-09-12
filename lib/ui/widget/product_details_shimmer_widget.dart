@@ -14,7 +14,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -28,16 +28,14 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                 child: Center(child: buildTextTitle(width: getScreenWidth(context) - 100)),
               ),
               Expanded(
-                child: Container(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.close,
-                      size: 36,
-                      color: AppColors.blackColor,
-                    ),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.close,
+                    size: 36,
+                    color: AppColors.blackColor,
                   ),
                 ),
               ),
@@ -57,7 +55,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                     margin: const EdgeInsets.all(AppConstants.padding_10),
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                           Radius.circular(AppConstants.radius_10)),
                     ),
                   ),
@@ -75,7 +73,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                         color: AppColors.borderColor.withOpacity(0.5)),
                   ),
                 ),
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                     horizontal: AppConstants.padding_15,
                     vertical: AppConstants.padding_20),
                 child: Row(
@@ -125,7 +123,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                             height: 50,
                             decoration: BoxDecoration(
                               color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.all(
+                              borderRadius: const BorderRadius.all(
                                   Radius.circular(AppConstants.radius_5)),
                             ),
                           ),
@@ -164,7 +162,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                 ),
               ),
               Container(
-                  padding: EdgeInsets.only(left:10,right:10),
+                  padding: const EdgeInsets.only(left:10,right:10),
                   alignment: Alignment.center,
                   child: buildTextTitle(width: 80)),
               Padding(
@@ -175,7 +173,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                     height: 50,
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                           Radius.circular(AppConstants.radius_5)),
                     ),
                   ),
@@ -184,10 +182,10 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
             ],
           ),
           Container(
-            padding: EdgeInsets.only(left:10,right:10),
+            padding: const EdgeInsets.only(left:10,right:10),
               alignment: Alignment.centerLeft,
               child: buildTextTitle(width: 80)),
-          RelatedProductShimmerWidget()
+          const RelatedProductShimmerWidget()
         ],
       ),
 
@@ -200,11 +198,11 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
       child: Container(
         height: height ?? AppConstants.shimmerTextHeight,
         width: width,
-        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );

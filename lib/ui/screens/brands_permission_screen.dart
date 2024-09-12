@@ -14,7 +14,7 @@ import '../widget/custom_button_widget.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
 
 class BrandsPermissionRoute {
-  static Widget get route => BrandsPermissionScreen();
+  static Widget get route => const BrandsPermissionScreen();
 }
 
 class BrandsPermissionScreen extends StatelessWidget {
@@ -29,7 +29,7 @@ class BrandsPermissionScreen extends StatelessWidget {
           context: context,
           subUserId: args?[AppStrings.subUserIdString] ?? ''
       )),
-      child: BrandsPermissionScreenWidget(),
+      child: const BrandsPermissionScreenWidget(),
     );
   }
 }
@@ -46,7 +46,7 @@ class BrandsPermissionScreenWidget extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.brand_permissions,
@@ -60,7 +60,7 @@ class BrandsPermissionScreenWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
               child: SingleChildScrollView(
-                child: state.isShimmering ?  OrderSummaryScreenShimmerWidget(itemCount: 20,containerHeight: 40) :
+                child: state.isShimmering ?  const OrderSummaryScreenShimmerWidget(itemCount: 20,containerHeight: 40) :
                 !state.isShimmering && state.brandPermissionList.isEmpty ?
                 SizedBox(
                   height: getScreenHeight(context) * 0.8,
@@ -98,7 +98,7 @@ class BrandsPermissionScreenWidget extends StatelessWidget {
                     ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: state.brandPermissionList.length,
                       itemBuilder: (context, index) {
                         return  Padding(
@@ -121,7 +121,7 @@ class BrandsPermissionScreenWidget extends StatelessWidget {
               ),
             ),
           ),
-          bottomNavigationBar: state.isShimmering || state.brandPermissionList.isEmpty ? SizedBox() :  Padding(
+          bottomNavigationBar: state.isShimmering || state.brandPermissionList.isEmpty ? const SizedBox() :  Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20,vertical: AppConstants.padding_20 ),
             child: CustomButtonWidget(
               buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
@@ -149,7 +149,7 @@ class BrandsPermissionScreenWidget extends StatelessWidget {
           bottom: BorderSide(
               color: AppColors.greyColor.withOpacity(0.4)),
         ),),
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
       child: InkWell(

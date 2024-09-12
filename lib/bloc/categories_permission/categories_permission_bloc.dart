@@ -44,7 +44,7 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
           emit(state.copyWith(isShimmering: false));
         }
       } else if (event is _switchButtonEvent) {
-        List<categoriesPermission> categoriesPermissionList = List.from(state.categoriesPermissionList);
+        List<CategoriesPermission> categoriesPermissionList = List.from(state.categoriesPermissionList);
         if (event.subCategoriesIndex == -2) {
           bool isEnable = !state.isSelectAll;
 

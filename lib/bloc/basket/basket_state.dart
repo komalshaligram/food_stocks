@@ -3,7 +3,7 @@ part of 'basket_bloc.dart';
 @freezed
 class BasketState with _$BasketState {
   const factory BasketState(
-      {required GetAllCartResModel CartItemList,
+      {required GetAllCartResModel cartItemList,
       required bool isShimmering,
       required double productWeight,
       required List<ProductDetailsModel> basketProductList,
@@ -40,11 +40,14 @@ class BasketState with _$BasketState {
       required bool isDialogOpen,
       required bool retryLoading,
       required String bankTransferInfo,
-          required bool isAllPaymentAvailable,
+      required bool isAllPaymentAvailable,
+      required bool isWalletRelatedError,
+          required String errorString,
       required bool updatePaymentMethod}) = _BasketState;
 
-  factory BasketState.initial() => BasketState(
-      CartItemList: GetAllCartResModel(),
+  //don't add const here
+  factory BasketState.initial() =>  BasketState(
+      cartItemList: GetAllCartResModel(),
       isShimmering: false,
       productWeight: 0,
       basketProductList: [],
@@ -66,6 +69,7 @@ class BasketState with _$BasketState {
       isCartCountChange: false,
       productDetails: [],
       isProductLoading: false,
+      isWalletRelatedError: false,
       productSupplierList: [],
       isQtyUpdated: false,
       isSelectSupplier: false,
@@ -83,7 +87,8 @@ class BasketState with _$BasketState {
       isAppOnMaintenance: false,
       isDialogOpen: false,
       retryLoading: false,
-      isPaymentFail: false,
-      isAllPaymentAvailable:false,
+      isPaymentFail: true,
+      isAllPaymentAvailable: false,
+      errorString:'',
       updatePaymentMethod: false);
 }

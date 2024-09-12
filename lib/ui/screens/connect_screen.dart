@@ -34,7 +34,7 @@ class ConnectScreen extends StatelessWidget {
 
 
 class ConnectScreenWidget extends StatelessWidget {
-   ConnectScreenWidget({super.key});
+   const ConnectScreenWidget({super.key});
 
 
   @override

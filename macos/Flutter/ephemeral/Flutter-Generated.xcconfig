@@ -1,10 +1,10 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/Users/komal-sit/.shorebird/bin/cache/flutter/d299d8d026d9b6cc158bb0a3dd9e96073d38c90b
+FLUTTER_ROOT=/Users/komal-sit/Documents/sdk/flutter
 FLUTTER_APPLICATION_PATH=/Users/komal-sit/StudioProjects/food_stocks
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build
-FLUTTER_BUILD_NAME=1.0.32
-FLUTTER_BUILD_NUMBER=1
+FLUTTER_BUILD_NAME=1.0.33
+FLUTTER_BUILD_NUMBER=3
 DART_OBFUSCATION=false
 TRACK_WIDGET_CREATION=true
 TREE_SHAKE_ICONS=false

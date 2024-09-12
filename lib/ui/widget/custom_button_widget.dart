@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
 class CustomButtonWidget extends StatelessWidget {
   final String buttonText;
@@ -23,7 +22,7 @@ class CustomButtonWidget extends StatelessWidget {
 
   final Widget? iconWidget;
 
-  CustomButtonWidget({super.key, required this.buttonText, this.onPressed,
+  const CustomButtonWidget({super.key, required this.buttonText, this.onPressed,
     this.enable = true, this.isLoading = false, this.bGColor = Colors.white,
     this.fontColors = Colors.white, this.isFromConnectScreen = false, this.height,
     this.radius, this.borderColor = Colors.white, this.loadingColor = Colors.white,

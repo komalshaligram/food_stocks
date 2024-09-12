@@ -24,8 +24,6 @@ class PushNotificationService {
   int notificationCount = 0;
   String mainPage = '';
   String subPage = '';
-
-
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   Future<void> setupInteractedMessage() async {
@@ -35,7 +33,6 @@ class PushNotificationService {
         badge: true,
         sound: true,
       );
-      debugPrint('User granted permission: ${settings.authorizationStatus}');
     } else {
       PermissionStatus status = await Permission.notification.request();
       if (status.isGranted) {
@@ -163,7 +160,7 @@ class PushNotificationService {
       requestBadgePermission: true,
       requestAlertPermission: true,
     );
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
 
     String? fcmToken = '';
 
@@ -178,7 +175,7 @@ class PushNotificationService {
     flutterLocalNotificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
-        debugPrint("__________details______:${details}");
+        debugPrint("__________details______:$details");
         debugPrint('main_page_____$mainPage');
         debugPrint('sub_page_____$subPage');
         debugPrint('id_____$id');
@@ -213,7 +210,7 @@ class PushNotificationService {
     debugPrint('main_page_____$mainPage');
     debugPrint('sub_page_____$subPage');
     debugPrint('id_____$id');
-    debugPrint('data_____${data}');
+    debugPrint('data_____$data');
     channel = androidNotificationChannel();
     SharedPreferencesHelper preferences =
     SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -269,7 +266,7 @@ class PushNotificationService {
     }else{
       fileName = null;
     }
-    debugPrint('ide___${id}');
+    debugPrint('ide___$id');
     notificationCount = notificationCount++;
     await flutterLocalNotificationsPlugin.show(
         notiId,
@@ -301,8 +298,8 @@ class PushNotificationService {
     final buffer = data.buffer;
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path;
-    var filePath = tempPath + '/file_01.tmp'; // file_01.tmp is dump file, can be anything
-    return new File(filePath).writeAsBytes(
+    var filePath = '$tempPath/file_01.tmp'; // file_01.tmp is dump file, can be anything
+    return  File(filePath).writeAsBytes(
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 

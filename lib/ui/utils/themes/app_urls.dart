@@ -86,5 +86,6 @@ class AppUrls {
   static const String verifyAgentUrl = '/v1/clients/verifyAgent';
  static const String addBankInfo = '/v1/clients/bank-information-updation';
  static const String deleteCreditCardUrl = '/v1/clients/delete-credit-card-details';
- static const String bdiUrl = '/v1/clients/checkBdi';
+ static const String bdiUrl = '/v1/clients/checkBdi'; //getting payment options
+ static const String updateClientCredits = '/v1/clients/updateClientCredits/'; //navigation after successful registration
 }

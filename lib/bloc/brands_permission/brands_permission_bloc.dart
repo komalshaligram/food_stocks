@@ -31,11 +31,11 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
           if (response.status == AppConstants.code_200) {
 
             emit(state.copyWith(isShimmering:false));
-            List<permissionModel>brandPermissionList = [];
+            List<PermissionModel>brandPermissionList = [];
 
             response.data?.forEach((element) {
               brandPermissionList.add(
-                  permissionModel(
+                  PermissionModel(
                       title: element.brand?.brandName ?? '',
                     isEnable: element.isAllowed ?? false,
                     brandId: element.brand?.id ?? ''
@@ -62,7 +62,7 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
 
 
       if(event is _switchButtonEvent){
-        List<permissionModel>brandPermissionList = state.brandPermissionList.toList(growable: true);
+        List<PermissionModel>brandPermissionList = state.brandPermissionList.toList(growable: true);
         if(event.index == -1){
           bool isEnable = !state.isSelectAll;
           brandPermissionList.forEach((element) {

@@ -29,12 +29,10 @@ class BankInfoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
     ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint(
-        "isPaymentFail : ${args?[AppStrings.termsConditionParamString] }}");
     return BlocProvider(
       create: (context) => BankInfoBloc()..add(BankInfoEvent.getBankNameEvent(context: context))
       ..add(BankInfoEvent.getTermsConditionModelEvent(context: context,
-          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? TermsConditionReqModel()))
+          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel()))
         ..add(BankInfoEvent.getArgumentEvent(isPaymentFail: args?[AppStrings.isPaymentFail] ?? false,isUpdate: args?[AppStrings.updateString]??false)),
       child: BankInfoWidget(),
     );
@@ -77,7 +75,7 @@ class BankInfoWidget extends StatelessWidget {
           ),
           body: SafeArea(
             child: SingleChildScrollView(
-              child: state.isShimmering ? BankInfoScreenShimmerWidget():
+              child: state.isShimmering ? const BankInfoScreenShimmerWidget():
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: getScreenWidth(context) * 0.1),
@@ -105,7 +103,7 @@ class BankInfoWidget extends StatelessWidget {
                         name: AppLocalizations.of(context)!.branch_number,
                       ),
                       CustomFormField(
-                        inputformet: [
+                        inputFormat: [
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(16)
                         ],
@@ -123,7 +121,7 @@ class BankInfoWidget extends StatelessWidget {
                       ),
                       CustomFormField(
                         context: context,
-                        inputformet: [
+                        inputFormat: [
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(16)
                         ],
@@ -166,7 +164,7 @@ class BankInfoWidget extends StatelessWidget {
                 fontColors: AppColors.whiteColor,
               ),
             ),
-          ):SizedBox(),
+          ):const SizedBox(),
         );
       },
     );

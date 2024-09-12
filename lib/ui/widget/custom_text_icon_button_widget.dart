@@ -34,14 +34,11 @@ class CustomTextIconButtonWidget extends StatelessWidget {
         width: width,
         decoration: BoxDecoration(
           gradient: AppColors.appMainGradientColor,
-         // gradient: LinearGradient(colors: [AppColors.mainColor,AppColors.whiteColor],),
             borderRadius: BorderRadius.circular(AppConstants.padding_10)),
         clipBehavior: Clip.hardEdge,
         child: MaterialButton(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           elevation: 0,
-
-          //color: AppColors.mainColor,
           onPressed: onPressed,
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -93,7 +90,7 @@ class CustomTextIconButtonWidget extends StatelessWidget {
                       crossFadeState: cartCount == 0
                           ? CrossFadeState.showFirst
                           : CrossFadeState.showSecond,
-                      duration: Duration(milliseconds: 500)),
+                      duration: const Duration(milliseconds: 500)),
             ],
           ),
         ),

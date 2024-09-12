@@ -1,5 +1,4 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -18,10 +17,10 @@ class CustomOneButtonDialog extends StatelessWidget {
   final String? positiveTitle2;
   final String directionality;
   final double width;
-  final String Subtitle;
+  final String subTitle;
   final bool isLoading;
 
-  CustomOneButtonDialog({
+  const CustomOneButtonDialog({
     super.key,
     required this.title,
     this.positiveOnTap,
@@ -32,7 +31,7 @@ class CustomOneButtonDialog extends StatelessWidget {
     this.positiveTitle2,
     required this.directionality,
     this.width = double.maxFinite,
-    this.Subtitle = '',
+    this.subTitle = '',
     this.isLoading = false,
   });
 
@@ -41,19 +40,19 @@ class CustomOneButtonDialog extends StatelessWidget {
     return Directionality(
       textDirection: directionality == AppStrings.englishString ? TextDirection.ltr : TextDirection.rtl,
       child: AlertDialog(
-        contentPadding: EdgeInsets.all(20.0),
+        contentPadding: const EdgeInsets.all(20.0),
         surfaceTintColor: AppColors.whiteColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
         title: RichText(
           text:  TextSpan(
-            text: Subtitle == '' ? '': '${Subtitle}' ':',
+            text: subTitle == '' ? '': '$subTitle' ':',
             style: AppStyles.rkRegularTextStyle(
               size: AppConstants.font_14,
               color: AppColors.blackColor,),
             children: <TextSpan>[
               TextSpan(
                 text:
-                '${title}',
+                title,
                 style: AppStyles.rkRegularTextStyle(
                     color: AppColors.blackColor, size: AppConstants.smallFont,
                     fontWeight: FontWeight.w600
@@ -63,7 +62,7 @@ class CustomOneButtonDialog extends StatelessWidget {
           ),
         ),
 
-        actionsPadding: EdgeInsets.only(
+        actionsPadding: const EdgeInsets.only(
             right: AppConstants.padding_20,
             bottom: AppConstants.padding_10,
             left: AppConstants.padding_20),
@@ -101,14 +100,14 @@ commonButton({
       onTap: positiveOnTap,
       child: Container(
         padding:
-        EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+        const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
         alignment: Alignment.center,
         width: width,
         decoration: BoxDecoration(
             gradient: AppColors.appMainGradientColor,
             borderRadius: BorderRadius.circular(8.0)),
         child: Text(
-          positiveTitle ?? '',
+          positiveTitle,
           style: AppStyles.rkRegularTextStyle(
               color: AppColors.whiteColor,
               size: AppConstants.smallFont),

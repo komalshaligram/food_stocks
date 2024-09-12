@@ -6,7 +6,7 @@ import '../utils/themes/app_constants.dart';
 class CommonCheckBox extends StatelessWidget {
   final void Function(bool?)? onChanged;
   final bool value;
-   CommonCheckBox({super.key,required this.value, this.onChanged,});
+   const CommonCheckBox({super.key,required this.value, this.onChanged,});
 
   @override
   Widget build(BuildContext context) {

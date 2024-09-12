@@ -15,30 +15,28 @@ import '../widget/custom_button_widget.dart';
 
 
 class PrivacyPolicyRoute {
-  static Widget get route => PrivacyPolicyScreen();
+  static Widget get route => const PrivacyPolicyScreen();
 }
 
 class PrivacyPolicyScreen extends StatelessWidget {
-  PrivacyPolicyScreen({super.key});
+  const PrivacyPolicyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
     ModalRoute.of(context)?.settings.arguments as Map?;
-
-    //print('args____${args?[AppStrings.privacyPolicyPdfString]}');
     return BlocProvider(
       create: (context) => PrivacyPolicyBloc()..add(PrivacyPolicyEvent.getPdfDataEvent(
           context: context, pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '',
-          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? TermsConditionReqModel()
+          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel()
       )),
-      child: PrivacyPolicyWidget(),
+      child:  const PrivacyPolicyWidget(),
     );
   }
 }
 
 class PrivacyPolicyWidget extends StatefulWidget {
-  PrivacyPolicyWidget({super.key});
+  const PrivacyPolicyWidget({super.key});
 
   @override
   State<PrivacyPolicyWidget> createState() => _PrivacyPolicyWidgetState();
@@ -91,17 +89,17 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                   Container(
+                  Container(
                     color: AppColors.whiteColor,
                     height: getScreenHeight(context) - (state.isOwner2Available ?
                     getScreenHeight(context) * 0.35 : getScreenHeight(context) * 0.28
                     ),
-                    child: state.pdfPath != '' ? SfPdfViewer.memory(
-                     state.pdfPath,
+                    child: state.pdfPath.isNotEmpty ? SfPdfViewer.memory(
+                      state.pdfPath,
                       key: _pdfViewerKey,
                       controller: _pdfViewerController,
                       canShowSignaturePadDialog: true,
-                    ) : CupertinoActivityIndicator(),
+                    ) : const CupertinoActivityIndicator(),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 3),
@@ -126,7 +124,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                           fontColors: AppColors.whiteColor,
                         ),
                         state.isGuarantee1Available?CustomButtonWidget(
-                    fontSize:AppConstants.font_13,
+                          fontSize:AppConstants.font_13,
                           buttonText: AppLocalizations.of(context)!
                               .guarantee1_sign
                               .toCapitalized(),
@@ -134,13 +132,13 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                           bGColor: AppColors.whiteColor,
                           width: getScreenWidth(context)/2.2,
                           onPressed: () {
-                         bloc.add(PrivacyPolicyEvent.signatureEvent(context: context,
-                              fieldName: AppStrings.guarantee1SignatureString,
-                              fieldNameForSign: AppLocalizations.of(context)!.guarantee1_sign
+                            bloc.add(PrivacyPolicyEvent.signatureEvent(context: context,
+                                fieldName: AppStrings.guarantee1SignatureString,
+                                fieldNameForSign: AppLocalizations.of(context)!.guarantee1_sign
                             ));
                           },
                           fontColors: AppColors.whiteColor,
-                        ):SizedBox(),
+                        ):const SizedBox(),
                       ],
                     ),
                   ),
@@ -186,8 +184,8 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
 
                       ],
                     ),
-                  ) : SizedBox(),
-                   Padding(
+                  ) : const SizedBox(),
+                  Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: CustomButtonWidget(
                       height: 50,
@@ -198,8 +196,8 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                       enable: state.isNextEnable,
                       isLoading: state.isShimmering,
                       onPressed: () {
-                      bloc.add(PrivacyPolicyEvent.navigationEvent(context: context,
-                      ));
+                        bloc.add(PrivacyPolicyEvent.navigationEvent(context: context,
+                        ));
                       },
                       fontColors: AppColors.whiteColor,
                     ),

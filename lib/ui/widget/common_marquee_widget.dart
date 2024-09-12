@@ -15,10 +15,10 @@ class CommonMarqueeWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _MarqueeWidgetState createState() => _MarqueeWidgetState();
+  MarqueeWidgetState createState() => MarqueeWidgetState();
 }
 
-class _MarqueeWidgetState extends State<CommonMarqueeWidget> {
+class MarqueeWidgetState extends State<CommonMarqueeWidget> {
   late ScrollController scrollController;
 
   @override
@@ -37,10 +37,10 @@ class _MarqueeWidgetState extends State<CommonMarqueeWidget> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      physics: NeverScrollableScrollPhysics(),
-      child: widget.child,
+      physics: const NeverScrollableScrollPhysics(),
       scrollDirection: widget.direction,
       controller: scrollController,
+      child: widget.child,
     );
   }
 
