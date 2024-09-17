@@ -22,6 +22,7 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_product_details_widget.dart';
 import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
+import 'package:food_stock/ui/widget/custom_dialog.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -58,10 +59,10 @@ class HomeScreen extends StatelessWidget {
         ..add(HomeEvent.getCartCountEvent(context: context))
         ..add(HomeEvent.getOrderCountEvent(context: context))
         ..add(HomeEvent.getWalletRecordEvent(context: context))
-        ..add(HomeEvent.getMessageListEvent(context: context))
         ..add(HomeEvent.getProductSalesListEvent(context: context))
         ..add(HomeEvent.getRecommendationProductsListEvent(context: context))
-      ..add(HomeEvent.getPermissionList(context: context)),
+      ..add(HomeEvent.getPermissionList(context: context))
+        ..add(HomeEvent.getMessageListEvent(context: context)),
       child: HomeScreenWidget(isNavigation: isSubCategory),
     );
   }
@@ -639,7 +640,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                             .recommendedProductsList[
                                                         index]
                                                             .isPesach,
-
                                                         onButtonTap: () {
                                                           debugPrint("tap 1");
                                                           if(!state.isGuestUser){
@@ -1238,11 +1238,18 @@ class HomeScreenWidget extends StatelessWidget {
                                         .quantity),
                                     isBottle:(state.productDetails.first.isBottle ?? false),
                                     addToOrderTap: () {
-                                      context.read<HomeBloc>().add(
-                                          HomeEvent.addToCartProductEvent(
-                                              context: context1,
-                                              productId: productId
-                                          ));
+                                      if(int.parse(state.productDetails.first.sale!.saleMinQuantity!)<= state
+                                          .productStockList[state.productListIndex][
+                                      state.productStockUpdateIndex]
+                                          .quantity){
+                                        context.read<HomeBloc>().add(
+                                            HomeEvent.addToCartProductEvent(
+                                                context: context1,
+                                                productId: productId
+                                            ));
+                                      }else{
+                                        showMinQtyConfirmDialog(context,productId,state.productDetails.first.sale!.saleMinQuantity.toString());
+                                      }
                                     },
                                     isLoading: state.isLoading,
                                     imageOnTap: (){
@@ -1540,5 +1547,38 @@ class HomeScreenWidget extends StatelessWidget {
     else{
       context.read<HomeBloc>().add(HomeEvent.updateMaintenanceEvent(context: context));
     }
+  }
+
+  showMinQtyConfirmDialog(BuildContext context,String productId,String minBox){
+    showDialog(
+      context: context,
+      builder: (context1) =>
+          BlocProvider.value(
+            value: context.read<HomeBloc>(),
+            child: BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
+                HomeBloc bloc = context.read<HomeBloc>();
+                return CustomDialog(
+                  directionality: state.language,
+                  title:'${AppLocalizations.of(context)?.minimum_box_title}$minBox${AppLocalizations.of(context)?.confirm_minimum_box}',
+                  positiveTitle: AppLocalizations.of(context)!.yes,
+                  negativeTitle: AppLocalizations.of(context)!.no,
+                  negativeOnTap: ()async{
+                    Navigator.pop(context);
+                  },
+                  positiveOnTap: () async {
+                    Navigator.pop(context);
+                    Navigator.pop(context1);
+                   bloc.add( HomeEvent.addToCartProductEvent(
+                       context: context1,
+                       productId: productId
+                   ));
+                  },
+                );
+
+              },
+            ),
+          ),
+    );
   }
 }

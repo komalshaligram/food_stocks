@@ -19,7 +19,7 @@ class AppConstants{
   static const double relatedProductItemWidth = 140;
   static const double withoutSaleItemHeight = 210;
   static const double animationDuration = 8000;
-
+  static const double timeOutDuration = 16000;
   //padding
   static const double padding_5 = 5;
   static const double padding_10 = 10;
@@ -66,6 +66,12 @@ class AppConstants{
   static const double font_26 = 26;
   static const double font_22 = 22;
   static const double font_17 = 17;
+
+
+ //order status
+  static const int onTheWayStatus = 6;
+  static const int deliveryStatus = 5;
+  static const int cancelStatus = 4;
 
   //blur
   static const double blur_10 = 10;

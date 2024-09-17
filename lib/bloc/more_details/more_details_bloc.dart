@@ -53,7 +53,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             cityListResModel.data?.cities?.forEach((element) {
               temp.add(element.cityName.toString());
             });
-            debugPrint('city_____${preferencesHelper.getCity()}');
             emit(state.copyWith(
               isShimmering: false,
               cityList: temp,
@@ -214,7 +213,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               }
             }
           } catch (e) {
-            debugPrint("data2 = ${e.toString()}");
             emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(
               context: event.context,
@@ -241,7 +239,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             if (response.status == AppConstants.code_200) {
               preferencesHelper.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
               preferencesHelper.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
-
+              preferencesHelper.setPaymentMethodTypes(methods:response.data?.clients?.first.clientDetail?.availablePaymentTypes??[]);
               emit(state.copyWith(isUpdating: false, selectCity: response.data?.clients?.first.city?.cityName ?? '', emailController: TextEditingController(text: response.data?.clients?.first.email), streetNumberController: TextEditingController(text: response.data?.clients?.first.clientDetail?.streetNumber), streetNameController: TextEditingController(text: response.data?.clients?.first.clientDetail?.streetName), zipController: TextEditingController(text: response.data?.clients?.first.clientDetail?.zip)));
             } else {
               emit(state.copyWith(isUpdating: false));

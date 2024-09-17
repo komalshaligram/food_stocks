@@ -253,7 +253,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     hint: "",
                                     fillColor: AppColors.whiteColor,
                                     textInputAction: TextInputAction.next,
-                                    validator: AppStrings.emailValString,
+                                    validator: state.emailController.text.toString().isNotEmpty?AppStrings.emailValString:'',
                                   ),
                                   7.height,
                                   CustomContainerWidget(

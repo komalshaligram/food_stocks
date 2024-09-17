@@ -121,8 +121,19 @@ class FormDataScreenWidget extends StatelessWidget {
                           }).toList(),
                           onChanged: (newBusiness) {
                             bloc.add(FormDataEvent.selectBusinessTypeEvent(business: newBusiness ?? '', haveMultiple: true));
-                            state.guarantee1NameController.clear();
-                            state.guarantee2NameController.clear();
+                            if(!state.haveMultiple){
+                              state.guarantee1NameController.text='';
+                              state.guarantee1addressController.text='';
+                              state.guarantee1idController.text='';
+                              state.guarantee1PhoneController.text='';
+                              state.guarantee2NameController.text='';
+                              state.guarantee2addressController.text='';
+                              state.guarantee2idController.text ='';
+                              state.guarantee2PhoneController.text='';
+                              state.owner2NameController.text='';
+                              state.owner2israelIdController.text='';
+
+                            }
                           },
                           value: state.business,
                         ),
@@ -147,6 +158,9 @@ class FormDataScreenWidget extends StatelessWidget {
                           context: context,
                           controller: state.owner1israelIdController,
                           keyboardType: TextInputType.number,
+                          inputFormat: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           hint: "",
                           fillColor: Colors.transparent,
                           textInputAction: TextInputAction.next,
@@ -175,6 +189,9 @@ class FormDataScreenWidget extends StatelessWidget {
                             CustomFormField(
                               context: context,
                               controller: state.guarantee1idController,
+                              inputFormat: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                               keyboardType: TextInputType.number,
                               hint: "",
                               fillColor: Colors.transparent,
@@ -222,7 +239,7 @@ class FormDataScreenWidget extends StatelessWidget {
                               hint: "",
                               fillColor: Colors.transparent,
                               textInputAction: TextInputAction.next,
-                              validator:ownerName.isNotEmpty? AppStrings.ownerName2ValString:'',
+                              validator: AppStrings.ownerName2ValString,
                               onChangeValue: (t) {
                                 debugPrint('ownerName:$t');
                                 ownerName = t;
@@ -238,6 +255,9 @@ class FormDataScreenWidget extends StatelessWidget {
                               context: context,
                               controller: state.owner2israelIdController,
                               keyboardType: TextInputType.number,
+                              inputFormat: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                               hint: "",
                               fillColor: Colors.transparent,
                               textInputAction: TextInputAction.next,
@@ -266,6 +286,9 @@ class FormDataScreenWidget extends StatelessWidget {
                               context: context,
                               controller: state.guarantee2idController,
                               keyboardType: TextInputType.number,
+                              inputFormat: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                               hint: "",
                               fillColor: Colors.transparent,
                               textInputAction: TextInputAction.next,
@@ -346,7 +369,6 @@ class FormDataScreenWidget extends StatelessWidget {
       if (isValidIsraeliID(state.guarantee1idController.text.toString().trim())) {
         if (ownerName.isNotEmpty) {
           if (isValidIsraeliID(state.owner2israelIdController.text.toString().trim())) {
-            if(state.guarantee2NameController.text.toString().isNotEmpty)
             if (isValidIsraeliID(state.guarantee2idController.text.toString().trim())) {
               if(state.guarantee2NameController.text.toString().isNotEmpty){
                 if(state.guarantee2addressController.text.toString().isNotEmpty){

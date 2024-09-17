@@ -31,6 +31,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final String productStock;
   final bool? isSale;
 
+
   const CommonProductSaleItemWidget({
     super.key,
     this.height,
@@ -49,7 +50,8 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     this.lowStock = '',
     this.isPesach = false,
     required this.isSale,
-    this.productStock = '0'
+    this.productStock = '0',
+
   });
 
   @override

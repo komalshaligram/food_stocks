@@ -60,6 +60,7 @@ class SharedPreferencesHelper {
   static const String paymentMethod = 'selectedPaymentMethod';
   static const String paymentMethodCount = 'paymentMethodCount';
   static const String availableAllPayment = 'availableAllPayment';
+  static const String paymentMethods = 'paymentMethods';
 
 
   final SharedPreferences prefs;
@@ -117,6 +118,7 @@ class SharedPreferencesHelper {
       await prefs.remove(paymentMethod);
       await prefs.remove(paymentMethodCount);
       await prefs.remove(availableAllPayment);
+      await prefs.remove(paymentMethods);
 
 
     }
@@ -330,6 +332,9 @@ class SharedPreferencesHelper {
     await prefs.setBool(canSeeInvoices, isCanSeeInvoices);
   }
 
+  Future<void> setPaymentMethodTypes({required List<String> methods}) async {
+    await prefs.setStringList(paymentMethods, methods);
+  }
 
 
   String getAppLanguage() {
@@ -466,7 +471,9 @@ class SharedPreferencesHelper {
   String getLogo() {
     return prefs.getString(logo) ?? '';
   }
-
+  List<String> getPaymentMethodTypes() {
+    return prefs.getStringList(paymentMethods) ?? [];
+  }
   //permission
 
   bool getCanAccountAdmin() {

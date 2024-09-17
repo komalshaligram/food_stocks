@@ -149,7 +149,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         list.addAll(response.data?.clientTypes??[]);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
-                //isShimmering: false,
+                isShimmering: false,
                 businessTypeList: list,
                 selectedBusinessType:
                 list.elementAt(0).businessType??''));
@@ -206,7 +206,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
               preferences.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString()??'0');
               preferences.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
-
+              preferences.setPaymentMethodTypes(methods:response.data?.clients?.first.clientDetail?.availablePaymentTypes??[]);
               emit(
                 state.copyWith(
                   isShimmering: false,

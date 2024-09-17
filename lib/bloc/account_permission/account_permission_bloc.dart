@@ -30,8 +30,6 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
           final res = await DioClient(event.context).get(
               path: '${AppUrls.getAccountPermissionUrl}${event.subUserId}');
           AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-          debugPrint('AccountPermission response = ${response.data.toString()}');
-          debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}');
           if (response.status == AppConstants.code_200) {
             List<PermissionModel>permissionList = [];
             permissionList = [
@@ -124,15 +122,12 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
             return value == null;
           });
 
-          debugPrint('updatePermission req  = $updatePermissionReq');
 
 
           final response = await DioClient(event.context).put(
               path: '${AppUrls.updatePermissionUrl}${state.subUserId}',
               data: updatePermissionReq);
 
-          debugPrint('updatePermission url  = ${AppUrls.baseUrl}${AppUrls.updatePermissionUrl}');
-          debugPrint('updatePermission response  = $response');
             if (response[AppStrings.statusString] == AppConstants.code_200) {
               if(preferencesHelper.getSubUser()){
                 preferencesHelper.setAccountAdmin(isAccountAdmin: state.permissionList[0].isEnable);

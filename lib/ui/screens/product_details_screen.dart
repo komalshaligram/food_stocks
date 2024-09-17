@@ -84,8 +84,7 @@ class ProductDetailsScreenWidget extends StatefulWidget {
 class _ProductDetailsScreenWidgetState
     extends State<ProductDetailsScreenWidget> {
   TextEditingController addProblemController = TextEditingController();
-  int onTheWayStatus = 6;
-  int deliveryStatus = 5;
+
   String skuNumber = "5321";
 
   @override
@@ -213,15 +212,8 @@ class _ProductDetailsScreenWidgetState
                                           '',
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
-                                          color: state.orderData.orderstatus
-                                              ?.orderStatusNumber ==
-                                              onTheWayStatus
-                                              ? AppColors.blueColor
-                                              : state.orderData.orderstatus
-                                              ?.orderStatusNumber ==
-                                              deliveryStatus
-                                              ? AppColors.mainColor
-                                              : AppColors.orangeColor,
+                                          color: getStatusColor(state.orderData.orderstatus
+                                              ?.orderStatusNumber??0),
                                           fontWeight: FontWeight.w700),
                                     )
                                   ],
@@ -369,7 +361,7 @@ class _ProductDetailsScreenWidgetState
                                 ),
                                 state.orderData.orderstatus
                                     ?.orderStatusNumber ==
-                                    onTheWayStatus
+                                    AppConstants.onTheWayStatus
                                     ? GestureDetector(
                                   onTap: () {
                                     bloc.add(const ProductDetailsEvent
@@ -475,7 +467,7 @@ class _ProductDetailsScreenWidgetState
               ),
             ),
             bottomSheet: state.orderData.orderstatus?.orderStatusNumber ==
-                onTheWayStatus
+                AppConstants.onTheWayStatus
                 ? Container(
               padding: const EdgeInsets.symmetric(
                   vertical: AppConstants.padding_20,
@@ -576,11 +568,11 @@ class _ProductDetailsScreenWidgetState
           child: Padding(
             padding: const EdgeInsets.all(AppConstants.padding_5),
             child: Row(
-              mainAxisAlignment: statusNumber == onTheWayStatus
+              mainAxisAlignment: statusNumber ==    AppConstants.onTheWayStatus
                   ? MainAxisAlignment.spaceBetween
                   : MainAxisAlignment.start,
               children: [
-                statusNumber == onTheWayStatus &&
+                statusNumber ==    AppConstants.onTheWayStatus &&
                     sku != skuNumber &&
                     (!isUpdated ||
                         (isUpdated
@@ -672,7 +664,7 @@ class _ProductDetailsScreenWidgetState
                     ),
                     Row(
                       children: [
-                        statusNumber == onTheWayStatus && isUpdated
+                        statusNumber ==    AppConstants.onTheWayStatus && isUpdated
                             ? Text(
                           '${(updatedUnitQuantity / numberOfUnit).round()}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
                           style: AppStyles.rkRegularTextStyle(
@@ -700,7 +692,7 @@ class _ProductDetailsScreenWidgetState
                           ),
                         ),
                         5.width,
-                        statusNumber == onTheWayStatus && isUpdated
+                        statusNumber ==    AppConstants.onTheWayStatus && isUpdated
                             ? Text(
                           '(${AppLocalizations.of(context)!.original_was}${' '}${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()})',
                           maxLines: 2,
@@ -723,7 +715,7 @@ class _ProductDetailsScreenWidgetState
                           fontWeight: FontWeight.w700),
                     ),
                     3.height,
-                    statusNumber == onTheWayStatus &&
+                    statusNumber ==    AppConstants.onTheWayStatus &&
                         sku != skuNumber &&
                         (!isUpdated ||
                             (isUpdated

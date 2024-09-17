@@ -123,6 +123,8 @@ class Sale with _$Sale {
     String? saleUntilDate,
     @JsonKey(name: "saleMaxQuantity")
     String? saleMaxQuantity,
+    @JsonKey(name: "saleMinQuantity")
+    String? saleMinQuantity,
     @JsonKey(name: "saleDescription")
     String? saleDescription,
   }) = _Sale;

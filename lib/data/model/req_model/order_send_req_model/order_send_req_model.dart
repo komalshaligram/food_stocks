@@ -11,7 +11,6 @@ class OrderSendReqModel with _$OrderSendReqModel {
   const factory OrderSendReqModel({
     @JsonKey(name: "products")
     List<Product>? products,
-    bool? failPayment,
     String? paymentMethod,
   }) = _OrderSendReqModel;
 

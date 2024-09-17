@@ -75,11 +75,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             final res = await DioClient(event.context).post(
               '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
             );
-            GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-            if (response.status == AppConstants.code_200) {
-              emit(state.copyWith(isCartCountChange: true));
-              await preferences.setCartCount(count: response.data?.data?.length ?? preferences.getCartCount());
-              emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
+            if(res!=null){
+              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+              if (response.status == AppConstants.code_200) {
+                emit(state.copyWith(isCartCountChange: true));
+                await preferences.setCartCount(count: response.data?.data?.length ?? preferences.getCartCount());
+                emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
+              }
             }
           } on ServerException {}
           //message count
@@ -544,6 +546,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             if (response.status == AppConstants.code_200) {
               preferences.setAvailableAllPayment(isAvailableAllPayment: response.data?.clients?.first.clientDetail?.isAvailableAllPayments??false);
               preferences.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
+              preferences.setPaymentMethodTypes(methods:response.data?.clients?.first.clientDetail?.availablePaymentTypes??[]);
               preferences.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString()??'0');
               preferences.setBusinessName(businessName: response.data?.clients?.first.clientDetail?.bussinessName ?? '');
               preferences.setEmailId(userEmailId: response.data?.clients?.first.email ?? '');

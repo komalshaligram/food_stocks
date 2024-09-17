@@ -535,6 +535,7 @@
   "issue_with_payment": "There is an issue with the Payment.",
   "how_do_you_want_to_pay": "How do you want to pay?",
   "credit_card_not_found": "Credit Card Not Found.",
+  "credit_card_payment_failed": "Credit Card Payment failed.",
   "bank_not_found": "Bank Not Found.",
   "business_type_not_found": "Business Type Not Found.",
   "user_not_updated": "User Not Updated.",
@@ -545,5 +546,7 @@
   "month": "Month",
   "enter_valid_year": "Please enter valid year",
   "select_valid_month": "Please select valid month",
-
+  "minimum_box": "Minimum box",
+  "minimum_box_title": "The minimum boxes for this sale is: ",
+"confirm_minimum_box": ",are you sure you don’t want to get the sale price?"
 }

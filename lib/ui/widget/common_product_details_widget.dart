@@ -24,12 +24,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final void Function() onQuantityDecreaseTap;
   final void Function() imageOnTap;
   final void Function(String) onQuantityChanged;
-
   final List<String> productImages;
   final String productStock;
   final double productPrice;
   final int productQuantity;
-
   final double productUnitPrice;
  final List<Product> productDetails;
   final Function() addToOrderTap;
@@ -39,6 +37,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final double bottleTax;
   final bool isBottle;
   final bool isIncludedVat;
+
   const CommonProductDetailsWidget(
       {super.key,
       required this.context,
@@ -46,14 +45,12 @@ class CommonProductDetailsWidget extends StatelessWidget {
         required this.onPageChanged,
         required this.productImages,
         required this.productStock,
-
         required this.productUnitPrice,
         required this.bottleTax,
         required this.isBottle,
         this.isLoading = false,
         required this.productDetails,
         required this.imageOnTap,
-       
         required this.scrollController,
         required this.onQuantityIncreaseTap,
         required this.onQuantityDecreaseTap,
@@ -64,12 +61,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
         required this.isSubUserAddToBasket,
         required this.totalBottleDeposit,
         required this.isIncludedVat,
-
       });
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
@@ -130,7 +125,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                   ( productDetails.first.sale?.isSale ?? false)?
+                   (productDetails.first.sale?.isSale ?? false)?
                    Text.rich(TextSpan(
                      text: isIncludedVat? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} (${AppLocalizations.of(context)?.price_includes_vat}):':
                      '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}: ',
@@ -483,6 +478,19 @@ class CommonProductDetailsWidget extends StatelessWidget {
                             ),
                           ],
                         ),
+                        (productDetails.first.sale?.saleMinQuantity!= '0') ?
+                        Container(
+                          alignment: Alignment.centerRight,
+                          margin: const EdgeInsets.only(top: 3),
+                          child: Text(
+                            '${AppLocalizations.of(context)!.minimum_box_title} : ${productDetails.first.sale?.saleMinQuantity}',
+                            style: AppStyles.rkBoldTextStyle(
+                                size: AppConstants.font_14,
+                                color: AppColors.blackColor,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        )
+                            :0.height,
                         (productDetails.first.sale?.isSale ?? false) ? Container(
                           alignment: Alignment.centerRight,
                           margin: const EdgeInsets.only(top: 3),
@@ -513,7 +521,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
               ),
             ],
           )
-
         ],
       ),
     );

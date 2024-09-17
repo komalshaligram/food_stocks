@@ -70,7 +70,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
           termsConditionReqModel = TermsConditionReqModel(
             paymentType: AppStrings.creditCard,
             id: preferencesHelper.getUserId(),
-            accountNumber: preferencesHelper.getUserId(),
+            accountNumber: state.termsModel.accountNumber,
             agentId: state.termsModel.agentId,
             bankId: state.termsModel.bankId,
             branchNumber: state.termsModel.branchNumber,

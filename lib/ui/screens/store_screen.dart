@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/bloc/store_category/store_category_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/data/model/search_model/search_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -30,6 +31,7 @@ import '../utils/themes/app_strings.dart';
 import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_product_details_widget.dart';
+import '../widget/custom_dialog.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/pesach_banner_shimmer.dart';
 import '../widget/product_details_shimmer_widget.dart';
@@ -918,7 +920,14 @@ class StoreScreenWidget extends StatelessWidget {
                                         totalBottleDeposit: (state.bottlePrice * (state.productDetails.first.numberOfUnit ?? 1).toDouble() * state.productStockList[state.productStockUpdateIndex].quantity),
                                         isBottle: (state.productDetails.first.isBottle ?? false),
                                         addToOrderTap: () {
-                                          context.read<StoreBloc>().add(StoreEvent.addToCartProductEvent(context: context1, productId: productId));
+                                          if(int.parse(state.productDetails.first.sale!.saleMinQuantity!)<= state
+                                              .productStockList[state.productStockUpdateIndex]
+                                              .quantity){
+                                            context.read<StoreBloc>().add(StoreEvent.addToCartProductEvent(context: context1, productId: productId));
+                                          }else{
+                                            showMinQtyConfirmDialog(context,productId,state.productDetails.first.sale!.saleMinQuantity.toString());
+                                          }
+
                                         },
                                         isLoading: state.isLoading,
                                         imageOnTap: () {
@@ -1085,5 +1094,38 @@ class StoreScreenWidget extends StatelessWidget {
     } else {
       context.read<StoreBloc>().add(StoreEvent.updateMaintenanceEvent(context: context));
     }
+  }
+
+  showMinQtyConfirmDialog(BuildContext context,String productId,String minBox){
+    showDialog(
+      context: context,
+      builder: (context1) =>
+          BlocProvider.value(
+            value: context.read<StoreBloc>(),
+            child: BlocBuilder<StoreBloc, StoreState>(
+              builder: (context, state) {
+                StoreBloc bloc = context.read<StoreBloc>();
+                return CustomDialog(
+                  directionality: state.language,
+                  title:'${AppLocalizations.of(context)?.minimum_box_title}$minBox${AppLocalizations.of(context)?.confirm_minimum_box}',
+                  positiveTitle: AppLocalizations.of(context)!.yes,
+                  negativeTitle: AppLocalizations.of(context)!.no,
+                  negativeOnTap: ()async{
+                    Navigator.pop(context);
+                  },
+                  positiveOnTap: () async {
+                    Navigator.pop(context);
+                    Navigator.pop(context1);
+                    bloc.add(StoreEvent.addToCartProductEvent(
+                        context: context1,
+                        productId: productId
+                    ));
+                  },
+                );
+
+              },
+            ),
+          ),
+    );
   }
 }

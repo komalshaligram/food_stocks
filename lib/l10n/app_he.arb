@@ -541,6 +541,10 @@
   "year": "שנה",
   "month": "חודש",
   "enter_valid_year": "אנא הזן תוקף שנה תקינה",
-  "select_valid_month": "אנא בחר חודש תקף"
-
+  "select_valid_month": "אנא בחר חודש תקף",
+  "minimum_box": "מינימום מארזים להזמנה עבור המבצע",
+  "minimum_box_title": "מינימום מארזים להזמנה עבור המבצע",
+  "confirm_minimum_box": ", אתה בטוח שאתה לא רוצה את מחיר המבצע ?",
+  "credit_card_payment_failed": "תשלום בכרטיס אשראי נכשל",
+  "my_invoices" : "החשבוניות שלי"
 }

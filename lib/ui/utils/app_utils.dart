@@ -73,6 +73,18 @@ Future<String> getBottleTax() async {
    return Future.value(value.toString());
 }
 
+Color getStatusColor(int statusNum){
+  if(statusNum == AppConstants.onTheWayStatus){
+    return AppColors.blueColor;
+  }else if(statusNum == AppConstants.deliveryStatus){
+    return AppColors.mainColor;
+  }else if(statusNum == AppConstants.cancelStatus){
+    return AppColors.redColor;
+  }else{
+    return AppColors.orangeColor;
+  }
+}
+
  double getChildAspectRatio(BuildContext context , bool isSaleOn){
   return !isSaleOn ? AppConstants.productGridAspectRatio8 : Platform.isAndroid? getScreenHeight(context) > 900
        ? AppConstants.productGridAspectRatio9 :getScreenHeight(context) >  820

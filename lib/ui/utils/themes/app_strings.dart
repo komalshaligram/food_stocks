@@ -478,6 +478,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.client_details_not_found;
       case 'checkbdierror' :
         return AppLocalizations.of(context)!.bdi_error;
+      case 'creditcardpaymentfailed' :
+        return AppLocalizations.of(context)!.credit_card_payment_failed;
     }
     return key;
   }

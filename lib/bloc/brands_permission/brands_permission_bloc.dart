@@ -65,9 +65,9 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
         List<PermissionModel>brandPermissionList = state.brandPermissionList.toList(growable: true);
         if(event.index == -1){
           bool isEnable = !state.isSelectAll;
-          brandPermissionList.forEach((element) {
+          for (var element in brandPermissionList) {
             element.isEnable = isEnable;
-          });
+          }
           emit(state.copyWith(brandPermissionList: brandPermissionList,isSelectAll:isEnable ));
         }
         else {
@@ -95,13 +95,13 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
         try {
           emit(state.copyWith(isUpdateProcess: true));
           List<BrandPermission> updateBrandPermission = [];
-          state.brandPermissionList.forEach((element) {
+          for (var element in state.brandPermissionList) {
             updateBrandPermission.add(
                 BrandPermission(
                   brandId: element.brandId,
                   isAllowed: element.isEnable
             ));
-          });
+          }
 
           UpdatePermissionModel req = UpdatePermissionModel(
             brandPermissions: updateBrandPermission
@@ -126,7 +126,7 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:  '${AppLocalizations.of(event.context)!.success_message}',
+                title:  AppLocalizations.of(event.context)!.success_message,
                 type: SnackBarType.success);
 
           } else {

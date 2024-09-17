@@ -134,12 +134,22 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if (event is _productUpdateEvent) {
           List<ProductDetailsModel> list = [];
           list = [...state.basketProductList];
-          list[event.listIndex].isProcess = true;
-
-          emit(state.copyWith(
-            isLoading: true, basketProductList: list, isQtyUpdated: false,));
 
           try {
+            if(state.productStockList[event.listIndex][state.productStockUpdateIndex].maxQty > 0){
+              if (event.productWeight >
+                  state.productStockList[event.listIndex][state.productStockUpdateIndex].maxQty
+              ) {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
+                    type: SnackBarType.failure);
+                return;
+              }
+            }
+            list[event.listIndex].isProcess = true;
+            emit(state.copyWith(
+              isLoading: true, basketProductList: list, isQtyUpdated: false,));
             UpdateCartReqModel reqMap = const UpdateCartReqModel();
             if (event.saleId != '') {
               reqMap = UpdateCartReqModel(
@@ -604,9 +614,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                                 .productSaleId,
                         orElse: () => const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                       ) ??
-                          const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
-                        -1
-                        : -1,
+                          const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ?? -1 : -1,
                     supplierSales: supplier.saleProduct?.map((sale) => SupplierSaleModel(
                         productStock: sale.productStock??0,
                         quantity: _productQuantity,
@@ -614,15 +622,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         saleName: sale.saleName ?? '',
                         maxQty: sale.saleMaxQuantity,
                         saleDescription:
-                        parse(sale.salesDescription ?? '')
-                            .body
-                            ?.text ??
-                            '',
-                        salePrice: double.parse(
-                            sale.discountedPrice ?? '0.0'),
-                        saleDiscount: double.parse(
-                            sale.discountPercentage ?? '0.0')))
-                        .toList() ??
+                        parse(sale.salesDescription ?? '').body?.text ?? '',
+                        salePrice: double.parse(sale.discountedPrice ?? '0.0'),
+                        saleDiscount: double.parse(sale.discountPercentage ?? '0.0'))).toList() ??
                         [],
                   );
                 })
@@ -632,7 +634,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 debugPrint(
                     'response list = ${response.product?.first.supplierSales?.length}');
                 debugPrint('supplier list = $supplierList');
-
 
                 emit(state.copyWith(productStockList: []));
 
@@ -926,9 +927,12 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           });
           try {
             debugPrint('payment count:${preferencesHelper.getPaymentMethodCount().toString()}');
+            debugPrint('payment list:${preferencesHelper.getPaymentMethodCount().toString()}');
+
+
             debugPrint('payment method:${preferencesHelper.getPaymentMethod()}');
             if(int.parse(preferencesHelper.getPaymentMethodCount())>1 && !event.isFromDialog){
-              emit(state.copyWith(isLoading: false,updatePaymentMethod: true,isRemoveProcess: false));
+              emit(state.copyWith(isLoading: false,updatePaymentMethod: true,isRemoveProcess: false,paymentTypesList: preferencesHelper.getPaymentMethodTypes()));
             }else {
               emit(state.copyWith(updatePaymentMethod: false));
               order.OrderSendReqModel reqMap = order
@@ -1015,7 +1019,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else  if(event is _getPermissionList){
           if(preferencesHelper.getSubUser()){
             try {
-
               final res = await DioClient(event.context).get(
                   path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);

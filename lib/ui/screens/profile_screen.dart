@@ -35,11 +35,14 @@ class ProfileScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
 
+    debugPrint(
+        "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}\nmobileNumber : ${args?.containsKey(AppStrings.contactString)}");
     return BlocProvider(
       create: (context) => ProfileBloc()
         ..add(
           ProfileEvent.getBusinessTypeListEvent(context: context),
-        )..add(
+        )
+        ..add(
           ProfileEvent.getProfileDetailsEvent(
               context: context,
               isUpdate:
@@ -61,8 +64,8 @@ class ProfileScreenWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext buildContext) {
-    ProfileBloc bloc = buildContext.read<ProfileBloc>();
+  Widget build(BuildContext context1) {
+    ProfileBloc bloc = context1.read<ProfileBloc>();
     return BlocListener<ProfileBloc, ProfileState>(
       listener: (context, state) {
         if (state.isFileSizeExceeds) {
@@ -105,15 +108,15 @@ class ProfileScreenWidget extends StatelessWidget {
               elevation: 0,
             ),
             body: state.isShimmering
-                ? ProfileScreenShimmerWidget()
+                ? const ProfileScreenShimmerWidget()
                 : SingleChildScrollView(
                   child: Column(
                       children: [
                         SafeArea(
                           child: Padding(
                             padding: EdgeInsets.only(
-                                left: getScreenWidth(buildContext) * 0.1,
-                                right: getScreenWidth(buildContext) * 0.1),
+                                left: getScreenWidth(context1) * 0.1,
+                                right: getScreenWidth(context1) * 0.1),
                             child: Form(
                               key: _formKey,
                               child: Column(
@@ -251,11 +254,11 @@ class ProfileScreenWidget extends StatelessWidget {
                                                   if (state.isUpdate) {
                                                     bloc.add(ProfileEvent
                                                         .updateProfileDetailsEvent(
-                                                        context: buildContext));
+                                                        context: context1));
                                                   } else {
                                                     bloc.add(ProfileEvent
                                                         .navigateToMoreDetailsScreenEvent(
-                                                        context: buildContext));
+                                                        context: context1));
                                                   }
                                                 }
                                                 }else{

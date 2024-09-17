@@ -48,9 +48,6 @@ class OrderScreenWidget extends StatefulWidget {
 class _OrderScreenWidgetState extends State<OrderScreenWidget> {
 
 
-  int onTheWayStatus = 6;
-  int deliveryStatus = 5;
-  int cancelStatus = 4;
 
   @override
   void initState() {
@@ -155,9 +152,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
             SharedPreferencesHelper preferencesHelper =
             SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
             preferencesHelper.setOrderId(productOrderId:  orderDetailsList[index].id ?? '');
-            if(orderDetailsList[index].status?.orderStatusNo == cancelStatus){
-            }
-           else if ((orderDetailsList[index].suppliers ?? 0) > 1) {
+           if ((orderDetailsList[index].suppliers ?? 0) > 1) {
               Navigator.pushNamed(
                   context, RouteDefine.orderDetailsScreen.name,
                   arguments: {
@@ -306,10 +301,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                               ?.toTitleCase() ??
                           '',
                       titleColor: AppColors.blackColor,
-                      valueColor: orderDetailsList[index].status?.orderStatusNo == onTheWayStatus
-                          ? AppColors.blueColor: orderDetailsList[index].status?.orderStatusNo ==
-                          deliveryStatus
-                          ? AppColors.mainColor : AppColors.orangeColor,
+                      valueColor: getStatusColor(orderDetailsList[index].status?.orderStatusNo??0),
                       valueTextSize: AppConstants.smallFont,
                     ),
                   ],

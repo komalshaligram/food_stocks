@@ -166,11 +166,23 @@ class BasketScreenWidget extends StatelessWidget {
                 positiveTitle: AppLocalizations.of(context)!.pay_with_credit_card,
                 positiveOnTap: () {
                   Navigator.pop(context);
-                  bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.creditCard));
+                  for(int i =0;i<state.paymentTypesList.length;i++){
+                    if(state.paymentTypesList.elementAt(i)==AppStrings.creditCard){
+                      bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.creditCard));
+                    }else{
+                      Navigator.pushNamed(context, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
+                    }
+                  }
                 },
                 positiveOnTap1: () {
                   Navigator.pop(context);
-                  bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.wallet));
+                  for(int i =0;i<state.paymentTypesList.length;i++){
+                    if(state.paymentTypesList.elementAt(i)==AppStrings.wallet){
+                      bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.wallet));
+                    }else{
+                      Navigator.pushNamed(context, RouteDefine.bankInfoScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail, AppStrings.updateString: true});
+                    }
+                  }
                 },
                 positiveOnTap2: () {
                   Navigator.pop(context);

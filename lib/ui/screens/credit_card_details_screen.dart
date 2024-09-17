@@ -143,7 +143,6 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
                         Expanded(
                             flex: 4,
                             child: Container())
-
                       ],
                     ),
                   ],
