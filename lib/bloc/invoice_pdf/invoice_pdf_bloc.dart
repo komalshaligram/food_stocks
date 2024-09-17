@@ -25,10 +25,8 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
        else if(event is _pdfDownloadEvent){
          try {
            emit(state.copyWith(isDownloading: true));
-
            Directory? dir;
            if (defaultTargetPlatform == TargetPlatform.android) {
-
              dir = Directory('/storage/emulated/0/Documents');
              debugPrint('dir = ${await dir.stat()}');
              // return;
@@ -44,7 +42,7 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
            await Dio().download(
                "${AppUrls.baseFileUrl}${state.invoiceDetailsList.link}",
                filePath, onReceiveProgress: (received, total) {
-             debugPrint('rec:${received},total:$total');
+             debugPrint('rec:$received,total:$total');
              int progress = (received * 100) ~/ total;
              emit(state.copyWith(downloadProgress: progress));
              debugPrint('download progress = ${state.downloadProgress}');
@@ -53,15 +51,15 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
                context: event.context,
                title:
                AppLocalizations.of(event.context)!.downloaded_successfully,
-               type: SnackBarType.SUCCESS);
+               type: SnackBarType.success);
            emit(state.copyWith(downloadProgress: 0, isDownloading: false));
 
          } catch (e) {
            emit(state.copyWith(isDownloading: false));
            CustomSnackBar.showSnackBar(
                context: event.context,
-               title: '${AppLocalizations.of(event.context)!.failed_download}',
-               type: SnackBarType.FAILURE);
+               title: AppLocalizations.of(event.context)!.failed_download,
+               type: SnackBarType.failure);
          }
        }
 

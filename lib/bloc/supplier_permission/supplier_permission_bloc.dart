@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/permission_model/permission_model.dart';
@@ -29,10 +30,10 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
           SupplierPermissionResModel response = SupplierPermissionResModel.fromJson(res);
           debugPrint('BrandPermission response = ${response.data.toString()}');
           debugPrint('BrandPermission url = ${AppUrls.baseUrl}${AppUrls.getBrandPermissionUrl}${event.subUserId}');
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
 
             emit(state.copyWith(isShimmering:false));
-            List<permissionModel>supplierPermissionList = [];
+            List<PermissionModel>supplierPermissionList = [];
 
             emit(state.copyWith(isSelectAll: true));
 
@@ -45,7 +46,7 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
 
             response.data?.forEach((element) {
               supplierPermissionList.add(
-                  permissionModel(
+                  PermissionModel(
                     supplierId: element.supplierId,
                       title: element.supplier?.contactName ?? '',
                       isEnable: element.isAllowed ?? false));
@@ -66,7 +67,7 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
 
 
       if(event is _switchButtonEvent){
-        List<permissionModel>supplierPermissionList = state.supplierPermissionList.toList(growable: true);
+        List<PermissionModel>supplierPermissionList = state.supplierPermissionList.toList(growable: true);
         if(event.index == -1){
           bool isEnable = !state.isSelectAll;
           supplierPermissionList.forEach((element) {
@@ -129,13 +130,13 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
 
           debugPrint('updatePermission url  = ${AppUrls.baseUrl}${AppUrls.updatePermissionUrl}');
           debugPrint('updatePermission response  = ${response}');
-          if (response[AppStrings.statusString] == 200) {
+          if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isUpdateProcess: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:  '${AppLocalizations.of(event.context)!.successmessage}',
-                type: SnackBarType.SUCCESS);
+                title:  '${AppLocalizations.of(event.context)!.success_message}',
+                type: SnackBarType.success);
 
           } else {
 

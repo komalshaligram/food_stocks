@@ -21,19 +21,19 @@ class ActivityTimeReqModel with _$ActivityTimeReqModel {
 class OperationTime with _$OperationTime {
   const factory OperationTime({
     @JsonKey(name: "Sunday")
-    List<Day>? Sunday,
+    List<Day>? sunday,
     @JsonKey(name: "Monday")
-    List<Day>? Monday,
+    List<Day>? monday,
     @JsonKey(name: "Tuesday")
-    List<Day>? Tuesday,
+    List<Day>? tuesday,
     @JsonKey(name: "Wednesday")
-    List<Day>? Wednesday,
+    List<Day>? wednesday,
     @JsonKey(name: "Thursday")
-    List<Day>? Thursday,
+    List<Day>? thursday,
     @JsonKey(name: "Friday")
-    List<Day>? Friday,
+    List<Day>? friday,
     @JsonKey(name: "Saturday")
-    List<Day>? Saturday,
+    List<Day>? saturday,
   }) = _OperationTime;
 
   factory OperationTime.fromJson(Map<String, dynamic> json) => _$OperationTimeFromJson(json);

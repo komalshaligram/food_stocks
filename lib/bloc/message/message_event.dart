@@ -9,15 +9,15 @@ class MessageEvent with _$MessageEvent {
   const factory MessageEvent.removeOrUpdateMessageEvent(
       {required String messageId,
       required bool isRead,
-      required bool isDelete}) = _RemoveOrUpdateMessageEvent;
+      required bool isDelete}) = _removeOrUpdateMessageEvent;
 
-  const factory MessageEvent.refreshListEvent({required BuildContext context}) =_RefreshListEvent;
+  const factory MessageEvent.refreshListEvent({required BuildContext context}) =_refreshListEvent;
 
-  const factory MessageEvent.MessageDeleteEvent({
+  const factory MessageEvent.messageDeleteEvent({
     required String messageId,
     required BuildContext context,
     required BuildContext dialogContext,
-  }) =_MessageDeleteEvent;
+  }) =_messageDeleteEvent;
 
 
 }

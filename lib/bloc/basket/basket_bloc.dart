@@ -1,18 +1,17 @@
-
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/product_stock_model/product_stock_model.dart';
 import 'package:food_stock/data/model/product_supplier_model/product_supplier_model.dart';
-import 'package:food_stock/data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart' as InsertCartModel;
-import 'package:food_stock/data/model/req_model/order_send_req_model/order_send_req_model.dart' as OrderSendModel;
+import 'package:food_stock/data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart' as insert;
+import 'package:food_stock/data/model/req_model/order_send_req_model/order_send_req_model.dart' as order;
 import 'package:food_stock/data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import 'package:food_stock/data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import 'package:food_stock/data/model/supplier_sale_model/supplier_sale_model.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,8 +32,8 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../bottom_nav/bottom_nav_bloc.dart';
+
 part 'basket_event.dart';
 part 'basket_state.dart';
 part 'basket_bloc.freezed.dart';
@@ -43,18 +42,18 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
+
   BasketBloc() : super(BasketState.initial()) {
     on<BasketEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if(preferencesHelper.getGuestUser()){
         debugPrint('basket_guestUser_____${preferencesHelper.getGuestUser()}');
-
       }
       else {
         if (event is _getAllCartEvent) {
-          emit(state.copyWith(isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(),
-          isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(),));
+          emit(state.copyWith(isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(),updatePaymentMethod: false,isPaymentFail: false,
+              isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(),isAllPaymentAvailable: preferencesHelper.getAvailablePayment()));
           debugPrint('cartId____${preferencesHelper.getCartId()}');
 
           emit(state.copyWith(
@@ -68,9 +67,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             );
 
             GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-
-            if (response.status == 200) {
-              emit(state.copyWith(CartItemList: response,
+            if (response.status == AppConstants.code_200) {
+              emit(state.copyWith(cartItemList: response,
                   isShimmering: false,
                   isQtyUpdated: false));
               List<ProductDetailsModel> temp = [];
@@ -83,9 +81,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       ProductStockModel(
                         maxQty: (product.sale?.isSale ?? false) ? int.parse(product.sale?.saleMaxQuantity.toString() ?? '-1') : -1,
                         quantity: product.totalQuantity ?? 0,
-                          productId: product.id ?? '',
-                          stock: product.productStock.toString(),
-                          lowStock: product.lowStock.toString(),
+                        productId: product.id ?? '',
+                        stock: product.productStock.toString(),
+                        lowStock: product.lowStock.toString(),
                       )) ??
                   []);
               productStockList[0].addAll(stockList);
@@ -109,8 +107,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 ));
               });
 
-              debugPrint('productStockList____${productStockList}');
-
+              debugPrint('productStockList____$productStockList');
 
               await preferencesHelper.setCartCount(
                   count: temp.isEmpty
@@ -120,14 +117,14 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               emit(state.copyWith(isAnimation: true));
 
               emit(state.copyWith(
-                  vatPercentage: response.data!.vatPercentage?.toDouble()??0.0,
-                  bottleQty: response.data?.cart?.first.bottleQuantities,
-                  bottleTax: response.data?.bottleTax ?? 0,
-                  basketProductList: temp,
-                  productStockList: productStockList,
-                  totalPayment: response.data?.cart?.first.totalAmount ?? 0,
-                  supplierCount: response.data?.cart?.first.suppliers ?? 1,
-                  isAnimation: false,
+                vatPercentage: response.data!.vatPercentage?.toDouble()??0.0,
+                bottleQty: response.data?.cart?.first.bottleQuantities,
+                bottleTax: response.data?.bottleTax ?? 0,
+                basketProductList: temp,
+                productStockList: productStockList,
+                totalPayment: response.data?.cart?.first.totalAmount ?? 0,
+                supplierCount: response.data?.cart?.first.suppliers ?? 1,
+                isAnimation: false,
               ));
             } else {
               emit(state.copyWith(isShimmering: false));
@@ -137,13 +134,23 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if (event is _productUpdateEvent) {
           List<ProductDetailsModel> list = [];
           list = [...state.basketProductList];
-          list[event.listIndex].isProcess = true;
-
-          emit(state.copyWith(
-              isLoading: true, basketProductList: list, isQtyUpdated: false,));
 
           try {
-            UpdateCartReqModel reqMap = UpdateCartReqModel();
+            if(state.productStockList[event.listIndex][state.productStockUpdateIndex].maxQty > 0){
+              if (event.productWeight >
+                  state.productStockList[event.listIndex][state.productStockUpdateIndex].maxQty
+              ) {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
+                    type: SnackBarType.failure);
+                return;
+              }
+            }
+            list[event.listIndex].isProcess = true;
+            emit(state.copyWith(
+              isLoading: true, basketProductList: list, isQtyUpdated: false,));
+            UpdateCartReqModel reqMap = const UpdateCartReqModel();
             if (event.saleId != '') {
               reqMap = UpdateCartReqModel(
                   supplierId: event.supplierId,
@@ -160,7 +167,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               );
             }
 
-            debugPrint('UpdateCart reqMap    ${reqMap}');
+            debugPrint('UpdateCart reqMap  $reqMap');
 
             final res = await DioClient(event.context).post(
               '${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}',
@@ -169,7 +176,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
 
-            if (response.status == 201) {
+            if (response.status == AppConstants.code_201) {
               add(BasketEvent.getAllCartEvent(context: event.context));
               List<ProductDetailsModel> list = [];
               list = [...state.basketProductList];
@@ -205,7 +212,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       response.message?.toLocalization() ?? response.message ??
                           '',
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             list[event.listIndex].isProcess = false;
@@ -215,7 +222,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             ));
           }
         }
-        else if (event is _SupplierSelectionEvent) {
+        else if (event is _supplierSelectionEvent) {
           debugPrint(
               'supplier[${event.supplierIndex}][${event.supplierSaleIndex}]');
           if (event.supplierIndex >= 0) {
@@ -250,7 +257,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             supplierList = supplierList
                 .map((supplier) => supplier.copyWith(selectedIndex: -1))
                 .toList();
-            debugPrint('selected supplier = ${supplierList}');
+            debugPrint('selected supplier = $supplierList');
             supplierList[event.supplierIndex] =
                 supplierList[event.supplierIndex]
                     .copyWith(selectedIndex: event.supplierSaleIndex);
@@ -262,7 +269,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 productStockList: productStockList));
           }
         }
-        else if (event is _AddToCartProductEvent) {
+        else if (event is _addToCartProductEvent) {
           if (state.productStockList[state.productListIndex][state
               .productStockUpdateIndex]
               .productSupplierIds.isEmpty) {
@@ -273,8 +280,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               0) {
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
-                type: SnackBarType.FAILURE);
+                title: AppLocalizations.of(event.context)!.add_1_quantity,
+                type: SnackBarType.failure);
             return;
           }
           if(state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty > 0){
@@ -283,8 +290,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             ) {
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
-                  type: SnackBarType.FAILURE);
+                  title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
+                  type: SnackBarType.failure);
               return;
             }
           }
@@ -321,7 +328,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 data: request,
               );
               UpdateCartResModel response = UpdateCartResModel.fromJson(res);
-              if (response.status == 201) {
+              if (response.status == AppConstants.code_201) {
                 Vibration.vibrate();
                 add(BasketEvent.getAllCartEvent(context: event.context));
                 List<List<ProductStockModel>> productStockList =
@@ -347,7 +354,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     title: AppStrings.getLocalizedStrings(
                         response.message?.toLocalization() ?? response.message!,
                         event.context),
-                    type: SnackBarType.SUCCESS);
+                    type: SnackBarType.success);
               } else {
                 emit(state.copyWith(isLoading: false));
                 CustomSnackBar.showSnackBar(
@@ -356,7 +363,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         response.message?.toLocalization() ??
                             response.message!,
                         event.context),
-                    type: SnackBarType.FAILURE);
+                    type: SnackBarType.failure);
               }
             } on ServerException {
               emit(state.copyWith(isLoading: false));
@@ -367,9 +374,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           } else {
             try {
               emit(state.copyWith(isLoading: true));
-              InsertCartModel.InsertCartReqModel insertCartReqModel =
-              InsertCartModel.InsertCartReqModel(products: [
-                InsertCartModel.Product(
+              insert.InsertCartReqModel insertCartReqModel =
+              insert.InsertCartReqModel(products: [
+                insert.Product(
                     productId: state
                         .productStockList[state.productListIndex][state
                         .productStockUpdateIndex]
@@ -420,7 +427,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 data: req,
               );
               InsertCartResModel response = InsertCartResModel.fromJson(res);
-              if (response.status == 201) {
+              if (response.status == AppConstants.code_201) {
                 add(BasketEvent.getAllCartEvent(context: event.context));
                 Vibration.vibrate();
                 Navigator.pop(event.context);
@@ -449,7 +456,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     title: AppStrings.getLocalizedStrings(
                         response.message?.toLocalization() ?? response.message!,
                         event.context),
-                    type: SnackBarType.SUCCESS);
+                    type: SnackBarType.success);
               } else if (response.status == 403) {
                 emit(state.copyWith(isLoading: false));
                 CustomSnackBar.showSnackBar(
@@ -458,7 +465,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         response.message?.toLocalization() ??
                             response.message!,
                         event.context),
-                    type: SnackBarType.FAILURE);
+                    type: SnackBarType.failure);
               } else {
                 emit(state.copyWith(isLoading: false));
                 CustomSnackBar.showSnackBar(
@@ -467,7 +474,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         response.message?.toLocalization() ??
                             response.message!,
                         event.context),
-                    type: SnackBarType.FAILURE);
+                    type: SnackBarType.failure);
               }
             } on ServerException {
               debugPrint('url1 = ');
@@ -478,9 +485,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             }
           }
         }
-        else if (event is _GetProductDetailsEvent) {
+        else if (event is _getProductDetailsEvent) {
           emit(state.copyWith(isCartCountChange: false));
-          add(BasketEvent.RemoveRelatedProductEvent());
+          add(const BasketEvent.removeRelatedProductEvent());
           debugPrint('product details id = ${event.productId}');
           debugPrint('productListIndex = ${event.productListIndex}');
           _isProductInCart = false;
@@ -498,8 +505,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             ProductDetailsResModel response =
             ProductDetailsResModel.fromJson(res);
 
-            debugPrint('GetProductDetails_____${response}');
-            if (response.status == 200) {
+            debugPrint('GetProductDetails_____$response');
+            if (response.status == AppConstants.code_200) {
               //new chanegs
 
               //0 for basket product.
@@ -530,7 +537,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   );
                   GetAllCartResModel response = GetAllCartResModel.fromJson(
                       res);
-                  if (response.status == 200) {
+                  if (response.status == AppConstants.code_200) {
                     debugPrint('cart before = ${response.data}');
                     response.data?.data?.forEach((cartProduct) {
                       if (cartProduct.id == event.productId ||
@@ -550,7 +557,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   }
                 } on ServerException {}
                 if (response.product != []) {
-                  add(BasketEvent.RelatedProductsEvent(context: event.context,
+                  add(BasketEvent.relatedProductsEvent(context: event.context,
                       productId: response.product?.first.id ?? ''));
                 }
                 if ((event.isBarcode)) {
@@ -584,7 +591,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                             .productStockList[productListIndex]
                         [productStockUpdateIndex]
                             .productSupplierIds
-                        ? supplier.saleProduct?.indexOf(
+                        ? !supplier.saleProduct!.contains(
                       supplier.saleProduct?.firstWhere(
                             (sale) =>
                         sale.saleId ==
@@ -593,10 +600,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                             productListIndex][
                             productStockUpdateIndex]
                                 .productSaleId,
-                        orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
+                        orElse: () => const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                       ) ??
-                          SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
-                        -1
+                          const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),)
                         ? -2
                         : supplier.saleProduct?.indexOf(
                       supplier.saleProduct?.firstWhere(
@@ -606,11 +612,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                             productListIndex][
                             productStockUpdateIndex]
                                 .productSaleId,
-                        orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
+                        orElse: () => const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                       ) ??
-                          SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
-                        -1
-                        : -1,
+                          const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ?? -1 : -1,
                     supplierSales: supplier.saleProduct?.map((sale) => SupplierSaleModel(
                         productStock: sale.productStock??0,
                         quantity: _productQuantity,
@@ -618,25 +622,18 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         saleName: sale.saleName ?? '',
                         maxQty: sale.saleMaxQuantity,
                         saleDescription:
-                        parse(sale.salesDescription ?? '')
-                            .body
-                            ?.text ??
-                            '',
-                        salePrice: double.parse(
-                            sale.discountedPrice ?? '0.0'),
-                        saleDiscount: double.parse(
-                            sale.discountPercentage ?? '0.0')))
-                        .toList() ??
+                        parse(sale.salesDescription ?? '').body?.text ?? '',
+                        salePrice: double.parse(sale.discountedPrice ?? '0.0'),
+                        saleDiscount: double.parse(sale.discountPercentage ?? '0.0'))).toList() ??
                         [],
                   );
                 })
                     .toList() ??
                     []);
-                supplierList.removeWhere((supplier) => supplier.stock == 0);
+                supplierList.removeWhere((supplier) => supplier.stock == '0');
                 debugPrint(
                     'response list = ${response.product?.first.supplierSales?.length}');
-                debugPrint('supplier list = ${supplierList}');
-
+                debugPrint('supplier list = $supplierList');
 
                 emit(state.copyWith(productStockList: []));
 
@@ -649,35 +646,35 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     isProductLoading: false));
                 if (supplierList.isNotEmpty) {
                   bool isSupplierSelected = false;
-                  supplierList.forEach((supplier) {
+                  for (var supplier in supplierList) {
                     if (supplier.selectedIndex != -1) {
                       isSupplierSelected = true;
-                      return;
+                      continue;
                     }
-                  });
+                  }
                   debugPrint('isSupplierSelected = $isSupplierSelected');
                   debugPrint('isSupplierSelected = ${state.productListIndex}');
                   if (!isSupplierSelected || state.productListIndex == 0) {
                     int supplierIndex = 0;
                     int supplierSaleIndex = -1;
                     double cheapestPrice = supplierList.first.basePrice;
-                    supplierList.forEach(
-                            (supplier) =>
-                            supplier.supplierSales.forEach((sale) {
+                    for (var supplier in supplierList) {
+                      for (var sale in supplier.supplierSales) {
                               if (sale.salePrice < cheapestPrice) {
                                 cheapestPrice = sale.salePrice;
                                 supplierIndex = supplierList.indexOf(supplier);
                                 supplierSaleIndex =
                                     supplier.supplierSales.indexOf(sale);
                               }
-                            }));
+                            }
+                    }
                     debugPrint('cheapest = $cheapestPrice');
-                    supplierList.forEach((supplier) {
+                    for (var supplier in supplierList) {
                       if (supplier.basePrice < cheapestPrice) {
                         cheapestPrice = supplier.basePrice;
                         supplierIndex = supplierList.indexOf(supplier);
                       }
-                    });
+                    }
                     if (supplierSaleIndex == -1) {
                       supplierSaleIndex = -2;
                     }
@@ -702,17 +699,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ?? '' ,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             Navigator.pop(event.context);
-            // emit(state.copyWith(isProductLoading: false));
-          } /*catch (e) {
-          debugPrint('bs error = $e');
-          // Navigator.pop(event.context);
-        }*/
+          }
         }
-        else if (event is _IncreaseQuantityOfProduct) {
+        else if (event is _increaseQuantityOfProduct) {
           List<List<ProductStockModel>> productStockList =
           state.productStockList.toList(growable: false);
           if (state.productStockUpdateIndex != -1) {
@@ -739,8 +732,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         .maxQty) {
                   CustomSnackBar.showSnackBar(
                       context: event.context,
-                      title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
-                      type: SnackBarType.FAILURE);
+                      title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
+                      type: SnackBarType.failure);
                   return;
                 }
               }
@@ -752,10 +745,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       [state.productStockUpdateIndex]
                           .quantity +
                           1);
-              debugPrint(
-                  'product quantity = ${productStockList[state
-                      .productListIndex][state.productStockUpdateIndex]
-                      .quantity}');
+
               emit(state.copyWith(productStockList: []));
               emit(state.copyWith(productStockList: productStockList));
             } else {
@@ -767,11 +757,11 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       .productListIndex][state.productStockUpdateIndex]
                       .stock}${AppLocalizations.of(event.context)!
                       .quantity_in_stock}",
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           }
         }
-        else if (event is _DecreaseQuantityOfProduct) {
+        else if (event is _decreaseQuantityOfProduct) {
           List<List<ProductStockModel>> productStockList =
           state.productStockList.toList(growable: false);
           if (state.productStockUpdateIndex != -1) {
@@ -788,16 +778,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       [state.productStockUpdateIndex]
                           .quantity -
                           1);
-              debugPrint(
-                  'product quantity = ${productStockList[state
-                      .productListIndex][state.productStockUpdateIndex]
-                      .quantity}');
+
               emit(state.copyWith(productStockList: []));
               emit(state.copyWith(productStockList: productStockList));
             } else {}
           }
         }
-        else if (event is _UpdateQuantityOfProduct) {
+        else if (event is _updateQuantityOfProduct) {
           List<List<ProductStockModel>> productStockList =
           state.productStockList.toList(growable: false);
           if (state.productStockUpdateIndex != -1) {
@@ -806,7 +793,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               quantityString = quantityString.substring(1);
             }
             int newQuantity = int.tryParse(quantityString) ?? 0;
-            debugPrint('new quantity = $newQuantity');
             if (newQuantity <=
                 double.parse(productStockList[state.productListIndex]
                 [state.productStockUpdateIndex]
@@ -816,10 +802,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   productStockList[state.productListIndex]
                   [state.productStockUpdateIndex]
                       .copyWith(quantity: newQuantity);
-              debugPrint(
-                  'product quantity update = ${productStockList[state
-                      .productListIndex][state.productStockUpdateIndex]
-                      .quantity}');
+
               emit(state.copyWith(productStockList: []));
               emit(state.copyWith(productStockList: productStockList));
             } else {
@@ -831,10 +814,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       quantity: int.tryParse(quantityString.substring(
                           0, quantityString.length - 1)) ??
                           0);
-              debugPrint(
-                  'product max quantity update = ${int.tryParse(
-                      quantityString.substring(0, quantityString.length - 1)) ??
-                      0}');
+
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
@@ -843,7 +823,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       .productListIndex][state.productStockUpdateIndex]
                       .stock}${AppLocalizations.of(event.context)!
                       .quantity_in_stock}",
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
               emit(state.copyWith(productStockList: []));
               emit(state.copyWith(productStockList: productStockList));
             }
@@ -857,11 +837,11 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               AppUrls.removeCartProductUrl,
               data: {AppStrings.cartProductIdString: event.cartProductId},
             );
-            if (response[AppStrings.statusString] == 200) {
+            if (response[AppStrings.statusString] == AppConstants.code_200) {
               add(BasketEvent.getAllCartEvent(context: event.context));
               Navigator.pop(event.dialogContext);
-              player.play(AssetSource('audio/delete_sound.mp3'));
-              add(BasketEvent.setCartCountEvent(isClearCart: false));
+              player.play(AssetSource(AppStrings.deleteSound));
+              add(const BasketEvent.setCartCountEvent(isClearCart: false));
               List<ProductDetailsModel> list = [];
               list = [...state.basketProductList];
               list.removeAt(event.listIndex);
@@ -880,7 +860,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 title: AppStrings.getLocalizedStrings(
                     response[AppStrings.messageString].toString().toLocalization(),
                     event.context),
-                type: SnackBarType.FAILURE,
+                type: SnackBarType.failure,
               );
 
             }
@@ -897,8 +877,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             final res = await DioClient(event.context)
                 .post(
                 '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}');
-            if (res[AppStrings.statusString] == 201) {
-              add(BasketEvent.setCartCountEvent(isClearCart: true));
+            if (res[AppStrings.statusString] == AppConstants.code_201) {
+              add(const BasketEvent.setCartCountEvent(isClearCart: true));
               List<ProductDetailsModel> list = [];
               list = [...state.basketProductList];
               list.clear();
@@ -918,7 +898,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             emit(state.copyWith(isRemoveProcess: false));
           }
         }
-        else if (event is _SetCartCountEvent) {
+        else if (event is _setCartCountEvent) {
           await preferencesHelper.setCartCount(
               count: event.isClearCart ? 0 : preferencesHelper.getCartCount() -
                   1);
@@ -928,89 +908,90 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           emit(state.copyWith(productImageIndex: event.index));
         }
         else if (event is _orderSendEvent) {
-          List<OrderSendModel.Product> ProductReqMap = [];
-          emit(state.copyWith(isLoading: true,isRemoveProcess : true));
-
-         state.CartItemList.data?.data?.forEach((element) {
+          List<order.Product> productReqMap = [];
+          emit(state.copyWith(isLoading: true,isRemoveProcess : true,updatePaymentMethod: false));
+          state.cartItemList.data?.data?.forEach((element) {
             debugPrint('product stock___${element.productStock}');
             if(element.productStock != 0 || element.productStock != 0.0 ){
-              ProductReqMap.add(OrderSendModel.Product(
-                  supplierId: element.suppliers?.first.id,
-                  productId: element.productDetails?.id,
-                  quantity: element.totalQuantity,
-                  saleId: element.id
-              ));
+              productReqMap.add(
+                  order.Product(
+                      supplierId: element.suppliers?.first.id,
+                      productId: element.productDetails?.id,
+                      quantity: element.totalQuantity,
+                      saleId: element.id
+                  ));
             }
             else{
               emit(state.copyWith(isLoading: false));
             }
           });
-
           try {
-            OrderSendModel.OrderSendReqModel reqMap = OrderSendModel
-                .OrderSendReqModel(products: ProductReqMap);
-            debugPrint('OrderSendReqModel = $reqMap}');
-            final res = await DioClient(event.context).post(
-              AppUrls.createOrderUrl,
-              data: reqMap,
-            );
+            debugPrint('payment count:${preferencesHelper.getPaymentMethodCount().toString()}');
+            debugPrint('payment list:${preferencesHelper.getPaymentMethodCount().toString()}');
 
-            debugPrint(
-                'Order create url  = ${AppUrls.baseUrl}${AppUrls
-                    .createOrderUrl}');
-            OrderSendResModel response = OrderSendResModel.fromJson(res);
-            debugPrint('OrderSendResModel  = $response');
 
-            if (response.status == 201) {
-              preferencesHelper.setCartCount(count: 0);
-              Navigator.pushNamed(
-                  event.context, RouteDefine.orderSuccessfulScreen.name);
-              emit(state.copyWith(isLoading: false,isRemoveProcess: false));
-            } else if (response.status == 403) {
-              CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ?? response.message!,
-                    event.context),
-                type: SnackBarType.FAILURE,
+            debugPrint('payment method:${preferencesHelper.getPaymentMethod()}');
+            if(int.parse(preferencesHelper.getPaymentMethodCount())>1 && !event.isFromDialog){
+              emit(state.copyWith(isLoading: false,updatePaymentMethod: true,isRemoveProcess: false,paymentTypesList: preferencesHelper.getPaymentMethodTypes()));
+            }else {
+              emit(state.copyWith(updatePaymentMethod: false));
+              order.OrderSendReqModel reqMap = order
+                  .OrderSendReqModel(products: productReqMap,paymentMethod: event.paymentMethod.isNotEmpty?event.paymentMethod:preferencesHelper.getPaymentMethod());
+              final res = await DioClient(event.context).post(
+                AppUrls.createOrderUrl,
+                data: reqMap,
               );
-              emit(state.copyWith(isLoading: false,isRemoveProcess: false));
-            } else if (response.status == 405) {
-              emit(state.copyWith(isLoading: false, isOrderPending: true,isRemoveProcess: false));
-            }
-            else {
 
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ?? response.message!,
-                      event.context),
-                  type: SnackBarType.FAILURE);
-              emit(state.copyWith(isLoading: false,isRemoveProcess: false));
+              OrderSendResModel response = OrderSendResModel.fromJson(res);
+
+              if (response.status == AppConstants.code_201) { ///success
+                preferencesHelper.setCartCount(count: 0);
+                Navigator.pushNamed(
+                    event.context, RouteDefine.orderSuccessfulScreen.name);
+                emit(state.copyWith(isLoading: false, isRemoveProcess: false));
+              } else if(response.status == AppConstants.code_402){ /// wallet related error
+                emit(state.copyWith(isLoading: false, isRemoveProcess: false, isPaymentFail: true,isWalletRelatedError: true,errorString: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ?? response.message!,
+                    event.context)));
+              }
+              else if (response.status == AppConstants.code_405) {
+                emit(state.copyWith(isLoading: false, isOrderPending: true, isRemoveProcess: false,isPaymentFail: false));
+              }else if(response.status == AppConstants.code_424){ ///credit card related error
+                emit(state.copyWith(isLoading: false, isRemoveProcess: false, isPaymentFail: true,isWalletRelatedError: false,errorString: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ?? response.message!,
+                    event.context)));
+              }
+              else {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: AppStrings.getLocalizedStrings(
+                        response.message?.toLocalization() ?? response.message!,
+                        event.context),
+                    type: SnackBarType.failure);
+                emit(state.copyWith(isLoading: false, isRemoveProcess: false,isPaymentFail: false,));
+              }
             }
           } on ServerException {
             emit(state.copyWith(isLoading: false,isRemoveProcess: false));
           }
         }
-        else if (event is _RelatedProductsEvent) {
+        else if (event is _relatedProductsEvent) {
           emit(state.copyWith(isRelatedShimmering: true));
-          debugPrint('productId____${event.productId}');
           final res = await DioClient(event.context).post(
               AppUrls.relatedProductsUrl,
-              data: {'mainProductId': event.productId});
+              data: {AppStrings.mainProductIdString: event.productId});
           RelatedProductResModel response =
           RelatedProductResModel.fromJson(res);
-          debugPrint('product categories = ${response.data?.length
-              .toString()}');
-          if (response.status == 200) {
+
+          if (response.status == AppConstants.code_200) {
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             List<ProductStockModel>stockList = [];
             stockList.addAll(response.data?.map(
-                    (Product) =>
+                    (product) =>
                     ProductStockModel(
-                      productId: Product.id ?? '',
-                      stock: (Product.productStock.toString()),
+                      productId: product.id ?? '',
+                      stock: (product.productStock.toString()),
                     )) ?? []);
             productStockList[1].addAll(stockList);
 
@@ -1025,26 +1006,23 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               title: AppStrings.getLocalizedStrings(
                   response.message?.toLocalization() ?? '',
                   event.context),
-              type: SnackBarType.SUCCESS,
+              type: SnackBarType.success,
             );
           }
         }
-        else if (event is _RemoveRelatedProductEvent) {
+        else if (event is _removeRelatedProductEvent) {
           emit(state.copyWith(relatedProductList: []));
         }
         else if (event is _refreshEvent) {
-          emit(state.copyWith(isOrderPending: false));
+          emit(state.copyWith(isOrderPending: false,isPaymentFail: false,updatePaymentMethod: false));
         }
         else  if(event is _getPermissionList){
           if(preferencesHelper.getSubUser()){
             try {
-
               final res = await DioClient(event.context).get(
                   path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-              debugPrint('AccountPermission response basket = ${response.data.toString()}');
-              debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
-              if (response.status == 200) {
+              if (response.status == AppConstants.code_200) {
 
                 var res = response.data?.permissions;
                 if(preferencesHelper.getAppLanguage() == AppStrings.englishString && preferencesHelper.getCanSeeWallet() != res?.canSeeWallet){
@@ -1063,7 +1041,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
                 preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
                 emit(state.copyWith(isAccountPermissionShimmering:false,
-                  isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(),
+                    isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(),
                     isSubUserAddToBasket: preferencesHelper.getCanAddToBasket()
                 ));
 
@@ -1075,31 +1053,26 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         response.message?.toLocalization() ??
                             response.message!,
                         event.context),
-                    type: SnackBarType.FAILURE);
+                    type: SnackBarType.failure);
 
               }
-            } on ServerException {
-
             } catch (e) {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: e.toString(),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
 
             }
           }
         }
         else if(event is _userApproveEvent){
           try {
-            debugPrint('clientId_____${preferencesHelper.getUserId()}');
             final res = await DioClient(event.context).post(
-                '${AppUrls.verifyClientUrl}',
+                AppUrls.verifyClientUrl,
                 data: {AppStrings.clientIdString:preferencesHelper.getUserId()}
             );
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-            debugPrint('verifyClient res_____$response');
-            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
               if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
                 Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
               }
@@ -1107,34 +1080,31 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
               }
             }
-          } on ServerException {}
+          }
           catch (e) {
             debugPrint('catch____$e');
           }
         }
-
         else if(event is _updateMaintenanceEvent){
           emit(state.copyWith(isDialogOpen: true));
         }
-        else if(event is _GeneralSettings){
+        else if(event is _payWithBankTransferEvent){
+          add(BasketEvent.orderSendEvent(context: event.context,failPayment: false,isFromDialog:true,paymentMethod: AppStrings.bankTransfer));
+        }
+        else if(event is _generalSettings){
           try {
-          emit(state.copyWith(retryLoading: event.isRetryLoading));
+            emit(state.copyWith(retryLoading: event.isRetryLoading));
             final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
-
-            debugPrint('general settings = ${response.data.toString()}');
-            if (response.status == 200) {
-
+            if (response.status == AppConstants.code_200) {
               if(preferencesHelper.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
                 add(BasketEvent.updateMaintenanceEvent(context: event.context));
                 Navigator.pop(event.dialogContext);
                 preferencesHelper.setIsAppOnMaintenance(isAppOnMaintenance: false);
-                emit(state.copyWith(isDialogOpen: false,isAppOnMaintenance: false,retryLoading: false));
-                debugPrint('pop dialog');
+                emit(state.copyWith(isDialogOpen: false,isAppOnMaintenance: false,retryLoading: false,updatePaymentMethod: false));
                 return;
               }else{
                 if(!state.isDialogOpen && !(response.data?.isAppOnMaintenance??false)  ){
-                  debugPrint('here');
                   emit(state.copyWith(isDialogOpen: true));
                 }else{
                   emit(state.copyWith(isDialogOpen: false));
@@ -1151,19 +1121,20 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   isIncludedVat: preferencesHelper.getIsIncludedVat(),
                   isSaleOn: preferencesHelper.getShowSale(),
                   retryLoading: false,
+                  bankTransferInfo: response.data?.taviliRivchitDetails?.bankTransferInfoText??'',
                   isAppOnMaintenance: preferencesHelper.getAppOnMaintenance()
               ));
             } else {
             }
-          } on ServerException {
           } catch (e) {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: e.toString(),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         }
       }
     });
   }
 }
+

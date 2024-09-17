@@ -8,7 +8,7 @@ class CommonSaleDescriptionDialog extends StatelessWidget {
   final void Function() onTap;
   final String buttonTitle;
 
-  CommonSaleDescriptionDialog({
+  const CommonSaleDescriptionDialog({
     super.key,
     required this.title,
     required this.onTap,
@@ -18,7 +18,7 @@ class CommonSaleDescriptionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: EdgeInsets.all(AppConstants.padding_15),
+      contentPadding: const EdgeInsets.all(AppConstants.padding_15),
       surfaceTintColor: AppColors.whiteColor,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppConstants.radius_10)),
@@ -27,7 +27,7 @@ class CommonSaleDescriptionDialog extends StatelessWidget {
         style: AppStyles.rkRegularTextStyle(
             size: AppConstants.font_14, color: AppColors.blackColor),
       ),
-      actionsPadding: EdgeInsets.only(
+      actionsPadding: const EdgeInsets.only(
           right: AppConstants.padding_15,
           bottom: AppConstants.padding_15,
           left: AppConstants.padding_15),
@@ -39,7 +39,7 @@ class CommonSaleDescriptionDialog extends StatelessWidget {
             Navigator.pop(context);
           },
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
             alignment: Alignment.center,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
             width: 80,

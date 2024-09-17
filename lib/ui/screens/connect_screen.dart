@@ -34,7 +34,7 @@ class ConnectScreen extends StatelessWidget {
 
 
 class ConnectScreenWidget extends StatelessWidget {
-   ConnectScreenWidget({super.key});
+   const ConnectScreenWidget({super.key});
 
 
   @override
@@ -91,7 +91,7 @@ class ConnectScreenWidget extends StatelessWidget {
                       child: Text(AppLocalizations.of(context)!.login_as_guest,style: TextStyle(color: AppColors.mainColor,
                       fontSize: AppConstants.mediumFont
                       )
-                        ,)):0.width
+                        ,)):0.width,
                 ],
               ),
             ),

@@ -2,10 +2,10 @@ part of 'otp_bloc.dart';
 
 @freezed
 class OtpEvent with _$OtpEvent {
-  const factory OtpEvent.setOtpTimer() = _SetOtpTimerEvent;
+  const factory OtpEvent.setOtpTimer() = _setOtpTimerEvent;
 
   const factory OtpEvent.changeOtpEvent({required String otp}) =
-      _ChangeOtpEvent;
+      _changeOtpEvent;
 
   const factory OtpEvent.updateOtpTimer() = _UpdateTimerEvent;
   const factory OtpEvent.cancelOtpTimerSubscription() = _cancelTimerscriptionEvent;

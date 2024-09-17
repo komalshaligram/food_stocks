@@ -21,7 +21,7 @@ class CommonDropDownButton extends StatelessWidget {
       ),
       alignment: Alignment.bottomCenter,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.only(
+        contentPadding: const EdgeInsets.only(
             left: AppConstants.padding_10,
             right: AppConstants.padding_10),
         enabledBorder: OutlineInputBorder(

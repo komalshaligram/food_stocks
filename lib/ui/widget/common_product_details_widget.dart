@@ -24,26 +24,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final void Function() onQuantityDecreaseTap;
   final void Function() imageOnTap;
   final void Function(String) onQuantityChanged;
-  final bool isRTL;
   final List<String> productImages;
   final String productStock;
   final double productPrice;
   final int productQuantity;
-/*
-  final String productName;
-  final String productSaleDescription;
-  final double productWeight;
-
-  final double salePrice;
-  final int productPerUnit;
-  final bool isSupplierAvailable;
-  final String qrCode;
-  final String lowStock;
-  final bool isPesach;
-  final String nmMashlim;
-
-  final bool isSaleOn;
-  final String maxQty;*/
   final double productUnitPrice;
  final List<Product> productDetails;
   final Function() addToOrderTap;
@@ -53,6 +37,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final double bottleTax;
   final bool isBottle;
   final bool isIncludedVat;
+
   const CommonProductDetailsWidget(
       {super.key,
       required this.context,
@@ -60,30 +45,12 @@ class CommonProductDetailsWidget extends StatelessWidget {
         required this.onPageChanged,
         required this.productImages,
         required this.productStock,
-
-
-     /*
-      required this.productName,
-      required this.productSaleDescription,
-      required this.productWeight,
-
-      required this.productPerUnit,
-        required this.salePrice,
-       this.isPesach = false,
-      required this.maxQty,
-      required this.isSupplierAvailable,
-      required this.qrCode,
-        required this.lowStock,
-      required this.nmMashlim,
-
-        this.isSaleOn = false,*/
         required this.productUnitPrice,
         required this.bottleTax,
         required this.isBottle,
         this.isLoading = false,
         required this.productDetails,
         required this.imageOnTap,
-        this.isRTL = false,
         required this.scrollController,
         required this.onQuantityIncreaseTap,
         required this.onQuantityDecreaseTap,
@@ -94,24 +61,19 @@ class CommonProductDetailsWidget extends StatelessWidget {
         required this.isSubUserAddToBasket,
         required this.totalBottleDeposit,
         required this.isIncludedVat,
-
       });
 
   @override
   Widget build(BuildContext context) {
-
-    debugPrint('productDetails123: $productDetails');
-    debugPrint('qrcode_____ ${productDetails.first.qrcode}');
-
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(AppConstants.radius_30),
           topRight: Radius.circular(AppConstants.radius_30),
         ),
         color: AppColors.whiteColor,
       ),
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: AppConstants.padding_10,
       ),
       child: Column(
@@ -140,16 +102,14 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: Container(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Icon(
-                            Icons.close,
-                            size: 36,
-                            color: AppColors.blackColor,
-                          ),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(
+                          Icons.close,
+                          size: 36,
+                          color: AppColors.blackColor,
                         ),
                       ),
                     ),
@@ -165,7 +125,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                   ( productDetails.first.sale?.isSale ?? false)?
+                   (productDetails.first.sale?.isSale ?? false)?
                    Text.rich(TextSpan(
                      text: isIncludedVat? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} (${AppLocalizations.of(context)?.price_includes_vat}):':
                      '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}: ',
@@ -194,7 +154,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                 productDetails.first.sale?.saleDescription != '' ? 8.height:0.height ,
                 productDetails.first.sale?.saleDescription != '' ? Container(
                   width: getScreenWidth(context) - 50,
-                  padding: EdgeInsets.all(3),
+                  padding: const EdgeInsets.all(3),
                   margin: EdgeInsets.zero,
                   decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
                   child: Text(
@@ -213,13 +173,13 @@ class CommonProductDetailsWidget extends StatelessWidget {
             children: [
               (productDetails.first.isPesach ??false)? 5.height:0.height,
               (productDetails.first.isPesach ?? false) ? Container(
-                  padding: EdgeInsets.only(left:3.0,right: 3.0),
+                  padding: const EdgeInsets.only(left:3.0,right: 3.0),
                   decoration: BoxDecoration(
                       color: AppColors.pesachBGColor,
                       border: Border.all(color: AppColors.pesachBGColor),
-                      borderRadius: BorderRadius.all(Radius.circular(10))
+                      borderRadius: const BorderRadius.all(Radius.circular(10))
                   ),
-                  child:productDetails.first.nmMashlim != ''?Text('${AppLocalizations.of(context)!.pesach}, ${productDetails.first.nmMashlim}'):Text(AppLocalizations.of(context)!.pesach,style: TextStyle(fontSize: 12),)
+                  child:productDetails.first.nmMashlim != ''?Text('${AppLocalizations.of(context)!.pesach}, ${productDetails.first.nmMashlim}'):Text(AppLocalizations.of(context)!.pesach,style: const TextStyle(fontSize: 12),)
               ):0.height,
               (productDetails.first.isPesach ?? false)?5.height:0.height,
               Column(
@@ -259,7 +219,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                             width: 150,
                                             decoration: BoxDecoration(
                                               color: AppColors.whiteColor,
-                                              borderRadius: BorderRadius.all(
+                                              borderRadius: const BorderRadius.all(
                                                   Radius.circular(AppConstants
                                                       .radius_10)),
                                             ),
@@ -316,7 +276,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                             width: 1),
                       ),
                     ),
-                    padding: EdgeInsets.fromLTRB(10, 10, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 20, 0),
                     child: productStock == '0' || productStock == "-1" || productStock == "0.0"
                         ? Column(
                       children: [
@@ -325,7 +285,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '${AppLocalizations.of(context)!.out_of_stock1}',
+                              AppLocalizations.of(context)!.out_of_stock1,
                               style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.smallFont,
                                   color: AppColors.redColor),
@@ -342,7 +302,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
+                            SizedBox(
                               width: getScreenWidth(context) >= 700
                                   ? (getScreenWidth(context) - 30) / 3
                                   : (getScreenWidth(context) - 30) / 2,
@@ -357,7 +317,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                         fontWeight: FontWeight.w700),
                                   ),
                                   !isIncludedVat ?  (productDetails.first.isBottle ?? false)?Container(
-                                      padding: EdgeInsets.only(top:3),
+                                      padding: const EdgeInsets.only(top:3),
                                       child: Text('${AppLocalizations.of(context)?.bottle_deposit}:${AppLocalizations.of(context)!.currency}${totalBottleDeposit.toStringAsFixed(AppConstants.amountFrLength)}')):0.height : 0.width,
                                   isIncludedVat? Text(
                                     '(${AppLocalizations.of(context)!.price_includes_vat})',
@@ -370,7 +330,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: getScreenWidth(context) >= 700
                                   ? (getScreenWidth(context) - 30) / 3
                                   : (getScreenWidth(context) - 30) / 2,
@@ -387,16 +347,16 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: AppColors.iconBGColor,
                                         borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(isRTL
+                                          topLeft: Radius.circular(context.rtl
                                               ? AppConstants.radius_5
                                               : AppConstants.radius_50),
-                                          bottomLeft: Radius.circular(isRTL
+                                          bottomLeft: Radius.circular(context.rtl
                                               ? AppConstants.radius_5
                                               : AppConstants.radius_50),
-                                          bottomRight: Radius.circular(isRTL
+                                          bottomRight: Radius.circular(context.rtl
                                               ? AppConstants.radius_50
                                               : AppConstants.radius_5),
-                                          topRight: Radius.circular(isRTL
+                                          topRight: Radius.circular(context.rtl
                                               ? AppConstants.radius_50
                                               : AppConstants.radius_5),
                                         ),
@@ -418,7 +378,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                         height: 50,
                                         decoration: BoxDecoration(
                                           color: AppColors.iconBGColor,
-                                          borderRadius: BorderRadius.only(
+                                          borderRadius: const BorderRadius.only(
                                             topLeft: Radius.circular(
                                                 AppConstants.radius_5),
                                             bottomLeft: Radius.circular(
@@ -436,7 +396,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                         alignment: Alignment.center,
                                         child: TextField(
                                           controller: TextEditingController(
-                                              text: "${productQuantity}")
+                                              text: "$productQuantity")
                                             ..selection =
                                             TextSelection.fromPosition(TextPosition(offset: "$productQuantity".length)),
                                           textAlign: TextAlign.center,
@@ -449,7 +409,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           textInputAction:
                                           TextInputAction.done,
                                           keyboardType: Platform.isIOS
-                                              ? TextInputType
+                                              ? const TextInputType
                                               .numberWithOptions(
                                               signed: true)
                                               : TextInputType.number,
@@ -460,7 +420,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           textDirection: TextDirection.ltr,
                                           onChanged: onQuantityChanged,
                                           cursorColor: AppColors.mainColor,
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               border: InputBorder.none,
                                               enabledBorder: InputBorder.none,
                                               focusedBorder: InputBorder.none,
@@ -490,16 +450,16 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: AppColors.iconBGColor,
                                         borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(isRTL
+                                          topLeft: Radius.circular(context.rtl
                                               ? AppConstants.radius_50
                                               : AppConstants.radius_5),
-                                          bottomLeft: Radius.circular(isRTL
+                                          bottomLeft: Radius.circular(context.rtl
                                               ? AppConstants.radius_50
                                               : AppConstants.radius_5),
-                                          bottomRight: Radius.circular(isRTL
+                                          bottomRight: Radius.circular(context.rtl
                                               ? AppConstants.radius_5
                                               : AppConstants.radius_50),
-                                          topRight: Radius.circular(isRTL
+                                          topRight: Radius.circular(context.rtl
                                               ? AppConstants.radius_5
                                               : AppConstants.radius_50),
                                         ),
@@ -518,9 +478,22 @@ class CommonProductDetailsWidget extends StatelessWidget {
                             ),
                           ],
                         ),
+                        (productDetails.first.sale?.saleMinQuantity!= '0') ?
+                        Container(
+                          alignment: Alignment.centerRight,
+                          margin: const EdgeInsets.only(top: 3),
+                          child: Text(
+                            '${AppLocalizations.of(context)!.minimum_box_title} : ${productDetails.first.sale?.saleMinQuantity}',
+                            style: AppStyles.rkBoldTextStyle(
+                                size: AppConstants.font_14,
+                                color: AppColors.blackColor,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        )
+                            :0.height,
                         (productDetails.first.sale?.isSale ?? false) ? Container(
                           alignment: Alignment.centerRight,
-                          margin: EdgeInsets.only(top: 3),
+                          margin: const EdgeInsets.only(top: 3),
                           child: Text(
                             '${AppLocalizations.of(context)!.maximum_qty} : ${productDetails.first.sale?.saleMaxQuantity}',
                             style: AppStyles.rkBoldTextStyle(
@@ -548,7 +521,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
               ),
             ],
           )
-
         ],
       ),
     );

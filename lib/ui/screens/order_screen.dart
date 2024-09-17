@@ -33,7 +33,7 @@ class OrderScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           OrderBloc()..add(OrderEvent.getAllOrderEvent(context: context)),
-      child: OrderScreenWidget(),
+      child: const OrderScreenWidget(),
     );
   }
 }
@@ -48,9 +48,8 @@ class OrderScreenWidget extends StatefulWidget {
 class _OrderScreenWidgetState extends State<OrderScreenWidget> {
 
 
-  int onTheWayStatus = 6;
-  int deliveryStatus = 5;
-  int cancelStatus = 4;
+
+  @override
   void initState() {
     super.initState();
 
@@ -63,7 +62,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.orders,
@@ -78,9 +77,9 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                 SmartRefresher(
               enablePullDown: true,
               controller: state.refreshController,
-              header: RefreshWidget(),
+              header: const RefreshWidget(),
               footer: CustomFooter(
-                  builder: (context, mode) => OrderSummaryScreenShimmerWidget(
+                  builder: (context, mode) => const OrderSummaryScreenShimmerWidget(
                         itemCount: 2,
                       )),
               enablePullUp: !state.isBottomOfProducts,
@@ -102,16 +101,16 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     state.isShimmering
-                        ? OrderSummaryScreenShimmerWidget(
+                        ? const OrderSummaryScreenShimmerWidget(
                             itemCount: 10,
                           )
-                        : (state.orderDetailsList.length) != 0
+                        : state.orderDetailsList.isNotEmpty
                             ?
                     AnimationLimiter(
                               child: ListView.builder(
                                   itemCount: state.orderDetailsList.length,
                                   shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
+                                  physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) =>
                                       AnimationConfiguration.staggeredList(
                                         duration: const Duration(seconds: 1),
@@ -153,9 +152,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
             SharedPreferencesHelper preferencesHelper =
             SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
             preferencesHelper.setOrderId(productOrderId:  orderDetailsList[index].id ?? '');
-            if(orderDetailsList[index].status?.orderStatusNo == cancelStatus){
-            }
-           else if ((orderDetailsList[index].suppliers ?? 0) > 1) {
+           if ((orderDetailsList[index].suppliers ?? 0) > 1) {
               Navigator.pushNamed(
                   context, RouteDefine.orderDetailsScreen.name,
                   arguments: {
@@ -193,8 +190,8 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
             }
           },
           child: Container(
-            margin: EdgeInsets.all(AppConstants.padding_10),
-            padding: EdgeInsets.symmetric(
+            margin: const EdgeInsets.all(AppConstants.padding_10),
+            padding: const EdgeInsets.symmetric(
                 vertical: AppConstants.padding_15,
                 horizontal: AppConstants.padding_10),
             decoration: BoxDecoration(
@@ -205,7 +202,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                     blurRadius: AppConstants.blur_10),
               ],
               borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                  const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -222,7 +219,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
+                        borderRadius: const BorderRadius.all(
                             Radius.circular(AppConstants.radius_100)),
                         border: Border.all(
                           color: AppColors.borderColor,
@@ -230,12 +227,12 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                         ),
                       ),
                       child: Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                             horizontal: AppConstants.padding_10,
                             vertical: AppConstants.padding_5),
                         decoration: BoxDecoration(
                           color: AppColors.lightGreyColor,
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                               Radius.circular(AppConstants.radius_100)),
                           border: Border.all(
                             color: AppColors.whiteColor,
@@ -243,7 +240,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                           ),
                         ),
                         child: Text(
-                            orderDetailsList[index].comaxInvoicePrice != '0' ? '${(formatNumber(value: orderDetailsList[index].comaxInvoicePrice.toString(), local: AppStrings.hebrewLocal))}'  :'${(formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal))}',
+                            orderDetailsList[index].rivchitInvoicePrice != '0' ? (formatNumber(value: orderDetailsList[index].rivchitInvoicePrice.toString(), local: AppStrings.hebrewLocal))  :'${(formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal))}',
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.font_14,
                               color: AppColors.whiteColor,
@@ -304,10 +301,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                               ?.toTitleCase() ??
                           '',
                       titleColor: AppColors.blackColor,
-                      valueColor: orderDetailsList[index].status?.orderStatusNo == onTheWayStatus
-                          ? AppColors.blueColor: orderDetailsList[index].status?.orderStatusNo ==
-                          deliveryStatus
-                          ? AppColors.mainColor : AppColors.orangeColor,
+                      valueColor: getStatusColor(orderDetailsList[index].status?.orderStatusNo??0),
                       valueTextSize: AppConstants.smallFont,
                     ),
                   ],

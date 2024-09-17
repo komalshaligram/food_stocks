@@ -5,13 +5,13 @@ class ProfileMenuEvent with _$ProfileMenuEvent {
   const factory ProfileMenuEvent.getPreferenceDataEvent() =
       _getPreferenceDataEvent;
 
-  const factory ProfileMenuEvent.getAppLanguage() = _GetAppLanguage;
+  const factory ProfileMenuEvent.getAppLanguage() = _getAppLanguage;
 
   const factory ProfileMenuEvent.logOutEvent({required BuildContext context}) =
       _logOutEvent;
 
   const factory ProfileMenuEvent.changeAppLanguageEvent(
-      {required BuildContext context}) = _ChangeAppLanguageEvent;
+      {required BuildContext context}) = _changeAppLanguageEvent;
 
   const factory ProfileMenuEvent.getProfileDetailsEvent({
     required BuildContext context,
@@ -23,7 +23,7 @@ class ProfileMenuEvent with _$ProfileMenuEvent {
   const factory ProfileMenuEvent.userApproveEvent(
       {required BuildContext context}) = _userApproveEvent;
 
-  const factory ProfileMenuEvent.generalSettings({required BuildContext context,required BuildContext dialogContext,required bool isRetryLoading})=_GeneralSettings;
+  const factory ProfileMenuEvent.generalSettings({required BuildContext context,required BuildContext dialogContext,required bool isRetryLoading})=_generalSettings;
 
   const factory ProfileMenuEvent.updateMaintenanceEvent(
       {required BuildContext context}) = _updateMaintenanceEvent;

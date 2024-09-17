@@ -3,51 +3,51 @@ part of 'reorder_bloc.dart';
 @freezed
 class ReorderEvent with _$ReorderEvent {
   const factory ReorderEvent.getPreviousOrderProductsEvent(
-      {required BuildContext context}) = _GetPreviousOrderProductsEvent;
+      {required BuildContext context}) = _getPreviousOrderProductsEvent;
 
   const factory ReorderEvent.getProductDetailsEvent(
       {required BuildContext context,
       required String productId,
       required bool isBarcode,
         required int productListIndex
-      }) = _GetProductDetailsEvent;
+      }) = _getProductDetailsEvent;
 
   const factory ReorderEvent.increaseQuantityOfProduct(
-      {required BuildContext context}) = _IncreaseQuantityOfProduct;
+      {required BuildContext context}) = _increaseQuantityOfProduct;
 
   const factory ReorderEvent.decreaseQuantityOfProduct(
-      {required BuildContext context}) = _DecreaseQuantityOfProduct;
+      {required BuildContext context}) = _decreaseQuantityOfProduct;
 
   const factory ReorderEvent.updateQuantityOfProduct(
       {required BuildContext context,
-      required String quantity}) = _UpdateQuantityOfProduct;
+      required String quantity}) = _updateQuantityOfProduct;
 
   const factory ReorderEvent.changeNoteOfProduct({required String newNote}) =
-      _ChangeNoteOfProduct;
+      _changeNoteOfProduct;
 
   const factory ReorderEvent.changeSupplierSelectionExpansionEvent(
-      {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
+      {bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
   const factory ReorderEvent.supplierSelectionEvent(
       {required int supplierIndex,
       required BuildContext context,
-      required int supplierSaleIndex}) = _SupplierSelectionEvent;
+      required int supplierSaleIndex}) = _supplierSelectionEvent;
 
   const factory ReorderEvent.addToCartProductEvent(
       {required BuildContext context,
       required String productId
-      }) = _AddToCartProductEvent;
+      }) = _addToCartProductEvent;
 
-  const factory ReorderEvent.setCartCountEvent() = _SetCartCountEvent;
+  const factory ReorderEvent.setCartCountEvent() = _setCartCountEvent;
 
   const factory ReorderEvent.updateImageIndexEvent({
     required int index,
-  }) = _UpdateImageIndexEvent;
+  }) = _updateImageIndexEvent;
 
-  const factory ReorderEvent.toggleNoteEvent() = _ToggleNoteEvent;
+  const factory ReorderEvent.toggleNoteEvent() = _toggleNoteEvent;
 
   const factory ReorderEvent.refreshListEvent({required BuildContext context}) =
-      _RefreshListEvent;
+      _refreshListEvent;
 
   const factory ReorderEvent.getCartCountEvent(
       ) = _getCartCountEvent;
@@ -56,20 +56,20 @@ class ReorderEvent with _$ReorderEvent {
       ) = _getGridListView;
 
   const factory ReorderEvent.changeCategoryExpansion({bool? isOpened}) =
-  _ChangeCategoryExpansion;
+  _changeCategoryExpansion;
 
   const factory ReorderEvent.globalSearchEvent({required BuildContext context}) =
-  _GlobalSearchEvent;
+  _globalSearchEvent;
 
   const factory ReorderEvent.updateGlobalSearchEvent(
       {required String search,
-        required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+        required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
 
   const factory ReorderEvent.getProductCategoriesListEvent(
-      {required BuildContext context}) = _GetProductCategoriesListEvent;
+      {required BuildContext context}) = _getProductCategoriesListEvent;
 
-  const factory ReorderEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
-  const factory ReorderEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
+  const factory ReorderEvent.relatedProductsEvent({required BuildContext context,required String productId}) = _relatedProductsEvent;
+  const factory ReorderEvent.removeRelatedProductEvent() = _removeRelatedProductEvent;
 
   const factory ReorderEvent.getPermissionList(
       {required BuildContext context }) = _getPermissionList;

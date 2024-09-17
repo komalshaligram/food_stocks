@@ -4,7 +4,7 @@ part of 'brands_permission_bloc.dart';
 class BrandsPermissionState with _$BrandsPermissionState{
   const factory BrandsPermissionState({
     required bool isShimmering,
-    required List<permissionModel>brandPermissionList,
+    required List<PermissionModel>brandPermissionList,
     required bool isRefresh,
     required bool isSelectAll,
     required bool isUpdateProcess,

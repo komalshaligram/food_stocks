@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:food_stock/main.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
@@ -23,8 +24,6 @@ class PushNotificationService {
   int notificationCount = 0;
   String mainPage = '';
   String subPage = '';
-
-
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   Future<void> setupInteractedMessage() async {
@@ -34,7 +33,6 @@ class PushNotificationService {
         badge: true,
         sound: true,
       );
-      debugPrint('User granted permission: ${settings.authorizationStatus}');
     } else {
       PermissionStatus status = await Permission.notification.request();
       if (status.isGranted) {
@@ -55,20 +53,20 @@ class PushNotificationService {
         debugPrint('main_page_____$mainPage');
         debugPrint('sub_page_____$subPage');
         debugPrint('id_____$id');
-        String? imageUrl;
+        FlutterAppBadger.removeBadge();
         SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         if(preferences.getSubUser()){
           mainPage = data['notification']['message']['subUserMainPage'] ?? '';
           subPage = data['notification']['message']['subUserSubPage'] ?? '';
           id = data['notification']['message']['subUserId'] ?? '';
-          imageUrl = data['notification']['message']['imageUrl'] ?? '';
+
         }
         else{
           mainPage = data['notification']['message']['mainPage'] ?? '';
           subPage = data['notification']['message']['subPage'] ?? '';
           id = data['notification']['message']['id'] ?? '';
-          imageUrl = data['notification']['message']['imageUrl'] ?? '';
+
         }
        showNotification(title: data['message']['title'],body: data['message']['body'],data: data,imageUrl: data['image'] ?? '',notiId: 0);
 
@@ -80,6 +78,7 @@ class PushNotificationService {
   }
 
    handleMessage(String mainPage,String subPage, String id)  async {
+
     debugPrint('_______handleMessage...');
     debugPrint('main_page_____$mainPage');
     debugPrint('sub_page_____$subPage');
@@ -161,7 +160,7 @@ class PushNotificationService {
       requestBadgePermission: true,
       requestAlertPermission: true,
     );
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
 
     String? fcmToken = '';
 
@@ -176,23 +175,21 @@ class PushNotificationService {
     flutterLocalNotificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
-        debugPrint("__________details______:${details}");
+        debugPrint("__________details______:$details");
         debugPrint('main_page_____$mainPage');
         debugPrint('sub_page_____$subPage');
         debugPrint('id_____$id');
-        handleMessage(mainPage, subPage, id);
+        //handleMessage(mainPage, subPage, id);
       },
     );
-// onMessage is called when the app is in foreground and a notific
-// ation is received
+// onMessage is called when the app is in foreground and a notification is received
     // app is open
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
       var data = json.decode(message!.data['data'].toString());
-
+      FlutterAppBadger.removeBadge();
       debugPrint('_____onMessage_______${data.toString()}');
       //debugPrint('_____onMessage_______${data['data']['image'].toString()}');
       //debugPrint('_____onMessage Noti_______${message.notification!.apple!.imageUrl!}');
-     var messageData =  json.decode(message.data['data'].toString() ?? '');
       if(Platform.isAndroid){
       showNotification(imageUrl:data['data']['image'], notiId: 0, title: message.notification!.title??'', body: message.notification!.body??'',
       data: data
@@ -213,22 +210,22 @@ class PushNotificationService {
     debugPrint('main_page_____$mainPage');
     debugPrint('sub_page_____$subPage');
     debugPrint('id_____$id');
-    debugPrint('data_____${data}');
+    debugPrint('data_____$data');
     channel = androidNotificationChannel();
     SharedPreferencesHelper preferences =
     SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-    if(preferences.getSubUser()){
+   /* if(preferences.getSubUser()){
       mainPage = data['notification']['message']['subUserMainPage'] ?? '';
       subPage = data['notification']['message']['subUserSubPage'] ?? '';
       id = data['notification']['message']['subUserId'] ?? '';
       imageUrl = data['notification']['message']['imageUrl'] ?? '';
     }
     else{
-      mainPage = data['notification']['message']['mainPage'] ?? '';
-      subPage = data['notification']['message']['subPage'] ?? '';
-      id = data['notification']['message']['id'] ?? '';
-      imageUrl = data['notification']['message']['imageUrl'] ?? '';
-    }
+      mainPage = data['message']['mainPage'] ?? '';
+      subPage = data['message']['subPage'] ?? '';
+      id = data['message']['id'] ?? '';
+      imageUrl = data['message']['imageUrl'] ?? '';
+    }*/
 /*
 
     if (imageUrl.isNotEmpty) {
@@ -269,7 +266,8 @@ class PushNotificationService {
     }else{
       fileName = null;
     }
-    debugPrint('ide___${id}');
+    debugPrint('ide___$id');
+    notificationCount = notificationCount++;
     await flutterLocalNotificationsPlugin.show(
         notiId,
         Bidi.stripHtmlIfNeeded(title),
@@ -293,14 +291,15 @@ class PushNotificationService {
             iOS: DarwinNotificationDetails(presentBanner: true,attachments: [DarwinNotificationAttachment(fileName ?? '')]
             ))
     );
+    FlutterAppBadger.updateBadgeCount(notificationCount);
     handleMessage(mainPage, subPage, id);
   }
   Future<File> writeToFile(ByteData data) async {
     final buffer = data.buffer;
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path;
-    var filePath = tempPath + '/file_01.tmp'; // file_01.tmp is dump file, can be anything
-    return new File(filePath).writeAsBytes(
+    var filePath = '$tempPath/file_01.tmp'; // file_01.tmp is dump file, can be anything
+    return  File(filePath).writeAsBytes(
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 

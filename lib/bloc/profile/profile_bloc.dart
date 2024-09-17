@@ -35,7 +35,7 @@ part 'profile_event.dart';
 part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  ProfileModel profileModel = ProfileModel();
+  ProfileModel profileModel = const ProfileModel();
   String imgUrl = '';
   String mobileNo = '';
 
@@ -49,7 +49,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             source:
                 event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (pickedFile != null) {
-          debugPrint("compress after size = ${await pickedFile.length()}");
           CroppedFile? croppedImage = await cropImage(
               path: pickedFile.path,
               shape: CropStyle.circle,
@@ -61,12 +60,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               bytes: croppedImage?.path.isNotEmpty ?? false
                   ? await File(croppedImage!.path).length()
                   : await pickedFile.length());
-          debugPrint('data1 final size = ${imageSize}');
+          debugPrint('data1 final size = $imageSize');
 
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
           }
-     //   else {
             try {
               emit(state.copyWith(isFileUploading: true,isUploadingProcess: true));
               debugPrint("image1 = ${croppedImage?.path ?? pickedFile.path}");
@@ -86,7 +84,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               debugPrint('img url = ${profileImageModel.filepath}');
               if (profileImageModel.filepath != '') {
                 imgUrl = profileImageModel.filepath ?? '';
-                debugPrint("image1 = ${imgUrl}\n${profileImageModel.filepath}");
                 emit(state.copyWith(
                     isUploadingProcess: false,
                     isFileUploading: false,
@@ -101,28 +98,23 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
-                      '${AppLocalizations.of(event.context)!.please_enter_email}',
-                  type: SnackBarType.FAILURE);
+                      AppLocalizations.of(event.context)!.please_enter_email,
+                  type: SnackBarType.failure);
             } catch (e) {
               emit(state.copyWith(isFileUploading: false,isUploadingProcess: false));
             }
           }
-      //  }
       }
       else if (event is _DeleteAccountEvent) {
         try {
           final res = await DioClient(event.context).post(
               '${AppUrls.deleteAccountUrl}${state.userId}');
-          if(res[AppStrings.statusString]==200){
+          if(res[AppStrings.statusString]==AppConstants.code_200){
             final response = await DioClient(event.context).put(
                 path: AppUrls.logOutUrl,
                 data: {"userId": preferences.getUserId()});
 
-            debugPrint('logOut url  = ${AppUrls.baseUrl}${AppUrls.logOutUrl}');
-
-            debugPrint('logOut response  = ${response}');
-
-            if (response[AppStrings.statusString] == 200) {
+            if (response[AppStrings.statusString] == AppConstants.code_200) {
               SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                   prefs: await SharedPreferences.getInstance());
               await preferencesHelper.setUserLoggedIn();
@@ -136,7 +128,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   title: AppStrings.getLocalizedStrings(
                       response[AppStrings.messageString].toString().toLocalization(),
                       event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.success);
               emit(state.copyWith());
             }
           }else{
@@ -151,12 +143,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(state.copyWith(isShimmering: true,language: preferences.getAppLanguage()));
           final res = await DioClient(event.context)
               .get(path: AppUrls.businessTypesUrl);
-          debugPrint('business type list res = $res');
           BusinessTypeModel response = BusinessTypeModel.fromJson(res);
         List<ClientType> list = [];
         list.add(ClientType(businessType: AppLocalizations.of(event.context)!.type_of_business));
         list.addAll(response.data?.clientTypes??[]);
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
                 isShimmering: false,
                 businessTypeList: list,
@@ -165,7 +156,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           } else {
             debugPrint('business types not found.\n${response.message}');
           }
-        } on ServerException {
         } catch (e) { emit(state.copyWith(isShimmering: false));}
       } else if (event is _ChangeBusinessTypeEventEvent) {
         emit(state.copyWith(selectedBusinessType: event.newBusinessType));
@@ -181,7 +171,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             clientTypeId: state.businessTypeList.firstWhere((businessType) =>
                     businessType.businessType == state.selectedBusinessType)
                 .id,
-            // applicationVersion: '1.0.0',
             israelId: state.israelIdController.text,
             deviceType: Platform.isAndroid
                 ? AppStrings.androidString
@@ -198,29 +187,29 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if (state.isUpdate) {
           emit(state.copyWith(isUpdating: true));
           try {
-            debugPrint('req = ${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson(),
               );
-            debugPrint('res = ${res}');
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
 
-              String? businessName = await Smartlook.instance.user.properties.getString("User business name");
+              String? businessName = await Smartlook.instance.user.properties.getString(AppStrings.userBusinessName);
 
               if(businessName == '' || businessName == null  ){
-                Smartlook.instance.user.properties.putString('User business name' ,value:response.data?.clients?.first.clientDetail?.bussinessName);
+                Smartlook.instance.user.properties.putString(AppStrings.userBusinessName ,value:response.data?.clients?.first.clientDetail?.bussinessName);
               }
 
               Smartlook.instance.user.setName(response.data?.clients?.first.clientDetail?.ownerName ?? '');
 
-
-              debugPrint('image = ${response.data?.clients?.first.profileImage}');
+              preferences.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString()??'0');
+              preferences.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
+              preferences.setPaymentMethodTypes(methods:response.data?.clients?.first.clientDetail?.availablePaymentTypes??[]);
               emit(
                 state.copyWith(
+                  isShimmering: false,
                   userId: response.data?.clients?.first.id ?? '',
                   isUpdating: false,
                   UserImageUrl:
@@ -245,7 +234,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                       text: response
                           .data?.clients?.first.clientDetail?.israelId
                           .toString()),
-
                   contactController: TextEditingController(
                       text: response.data?.clients?.first.contactName),
                 ),
@@ -258,7 +246,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             emit(state.copyWith(isUpdating: false));
@@ -268,7 +256,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       }
       else if (event is _updateProfileDetailsEvent) {
-        debugPrint('imageurl_____$imgUrl');
         ProfileModel updatedProfileModel = ProfileModel(
           profileImage: state.image.path != '' ? imgUrl : state.UserImageUrl,
           contactName: state.contactController.text,
@@ -286,7 +273,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         Map<String, dynamic> req = updatedProfileModel.toJson();
         Map<String, dynamic>? clientDetail =
             updatedProfileModel.clientDetail?.toJson();
-        debugPrint("update before Model = ${req}");
         clientDetail?.removeWhere((key, value) {
           if (value != null) {
             debugPrint("[$key] = $value");
@@ -301,16 +287,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           return value == null;
         });
         try {
-          debugPrint('profile req = ${req}');
           emit(state.copyWith(isLoading: true));
           final res = await DioClient(event.context).post(
-              AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
+              "${AppUrls.updateProfileDetailsUrl}/${preferences.getUserId()}",
               data:req,
             );
 
           reqUpdate.ProfileDetailsUpdateResModel response =
               reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             emit(state.copyWith(UserImageUrl: response.data?.client?.profileImage.toString() ?? ''));
 
             if(!preferences.getSubUser()){
@@ -324,17 +309,17 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             CustomSnackBar.showSnackBar(
               context: event.context,
               title:
-                  '${AppLocalizations.of(event.context)!.updated_successfully}',
-              type: SnackBarType.SUCCESS,
+                  AppLocalizations.of(event.context)!.updated_successfully,
+              type: SnackBarType.success,
             );
           }
           else {
             emit(state.copyWith(isLoading: false));
-            if(response.message == AppStrings.rivchitclienterrorString){
+            if(response.message == AppStrings.rivchitClientErrorString){
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppLocalizations.of(event.context)!.israel_id_or_business_id_number_error,
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
             else{
               CustomSnackBar.showSnackBar(
@@ -343,7 +328,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE,
+                type: SnackBarType.failure,
               );
             }
           }
@@ -362,19 +347,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
-                    '${AppLocalizations.of(event.context)!.removed_successfully}',
-                type: SnackBarType.SUCCESS);
+                    AppLocalizations.of(event.context)!.removed_successfully,
+                type: SnackBarType.success);
             return;
           }
           emit(state.copyWith(isFileUploading: true));
-          ProfileModel updatedProfileModel = ProfileModel(
+          ProfileModel updatedProfileModel = const ProfileModel(
             profileImage: '',
             clientDetail: ClientDetail()
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail =
           updatedProfileModel.clientDetail?.toJson();
-          debugPrint("update before Model = ${req}");
           clientDetail?.removeWhere((key, value) {
             if (value != null) {
               debugPrint("[$key] = $value");
@@ -388,22 +372,21 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             }
             return value == null;
           });
-          debugPrint('profile req = ${/*updatedProfileModel.toJson()*/ req}');
           final res = await DioClient(event.context).post(
-              AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
+              "${AppUrls.updateProfileDetailsUrl}/${preferences.getUserId()}",
               data: req,
           );
           reqUpdate.ProfileDetailsUpdateResModel response =
           reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             await preferences.removeProfileImage();
             emit(state.copyWith(isFileUploading: false));
             emit(state.copyWith(UserImageUrl: '', image: File('')));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
-                    '${AppLocalizations.of(event.context)!.removed_successfully}',
-                type: SnackBarType.SUCCESS);
+                    AppLocalizations.of(event.context)!.removed_successfully,
+                type: SnackBarType.success);
           } else {
             emit(state.copyWith(isFileUploading: false));
             CustomSnackBar.showSnackBar(
@@ -412,7 +395,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   response.message?.toLocalization() ??
                       response.message!,
                   event.context),
-              type: SnackBarType.FAILURE,
+              type: SnackBarType.failure,
             );
           }
         } catch (e) {
@@ -420,8 +403,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           CustomSnackBar.showSnackBar(
               context: event.context,
               title:
-                  '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              type: SnackBarType.FAILURE);
+                  AppLocalizations.of(event.context)!.something_is_wrong_try_again,
+              type: SnackBarType.failure);
         }
       }
     });

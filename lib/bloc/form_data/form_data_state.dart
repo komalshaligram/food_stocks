@@ -20,6 +20,7 @@ class FormDataState with _$FormDataState{
     required TextEditingController guarantee2addressController,
     required TextEditingController guarantee1PhoneController,
     required TextEditingController guarantee2PhoneController,
+    required TextEditingController agentCodeController,
     required bool isShimmering,
     required bool isAgentListShimmering,
     required bool haveMultiple,
@@ -48,7 +49,8 @@ class FormDataState with _$FormDataState{
     haveMultiple: false,
     isAgentListShimmering: false,
     isUpdate: false,
-    language: AppStrings.hebrewString
+    language: AppStrings.hebrewString,
+    agentCodeController: TextEditingController()
   );
 
 }

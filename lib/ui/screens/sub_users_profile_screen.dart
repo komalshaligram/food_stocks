@@ -17,7 +17,7 @@ import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 
 class SubUsersProfileRoute {
-  static Widget get route => SubUserProfileScreen();
+  static Widget get route => const SubUserProfileScreen();
 }
 
 class SubUserProfileScreen extends StatelessWidget {
@@ -26,8 +26,6 @@ class SubUserProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint("isUpdate : ${args?[AppStrings.isUpdateParamString] ?? ''}");
-    debugPrint("subUserId : ${args?[AppStrings.subUserIdString] ?? ''} ");
 
     return BlocProvider(
       create: (context) => SubUsersProfileBloc()
@@ -44,9 +42,7 @@ class SubUserProfileScreen extends StatelessWidget {
 
 class SubUserProfileScreenWidget extends StatelessWidget {
   SubUserProfileScreenWidget({super.key});
-
   final _formKey = GlobalKey<FormState>();
-
   String email = '';
 
   @override
@@ -57,7 +53,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.new_sub_user,
@@ -155,7 +151,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                                           }
                                         }
                                       } else {
-                                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id, type: SnackBarType.FAILURE);
+                                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id, type: SnackBarType.failure);
                                       }
                                     },
                                     fontColors: AppColors.whiteColor,
@@ -239,7 +235,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                           }
                         }
                       }else {
-                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id, type: SnackBarType.FAILURE);
+                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id, type: SnackBarType.failure);
                       }
                     },
                     fontColors: AppColors.whiteColor,
@@ -253,8 +249,8 @@ class SubUserProfileScreenWidget extends StatelessWidget {
 
   Widget profileMenuTiles({required title, required void Function() onTap, bool isDelete = false}) {
     return Container(
-      decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_5)), boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)]),
-      margin: EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_3),
+      decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)), boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)]),
+      margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_3),
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -293,10 +289,10 @@ class SubUserProfileScreenWidget extends StatelessWidget {
                 return CommonAlertDialog(
                   isLogOutProcess: state.isDeleteProcess,
                   directionality: directionality,
-                  title: '${AppLocalizations.of(context)!.delete_account}',
-                  subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
-                  positiveTitle: '${AppLocalizations.of(context)!.yes}',
-                  negativeTitle: '${AppLocalizations.of(context)!.no}',
+                  title: AppLocalizations.of(context)!.delete_account,
+                  subTitle: AppLocalizations.of(context)!.are_you_sure,
+                  positiveTitle: AppLocalizations.of(context)!.yes,
+                  negativeTitle: AppLocalizations.of(context)!.no,
                   negativeOnTap: () {
                     Navigator.pop(context);
                   },

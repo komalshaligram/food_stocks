@@ -58,8 +58,8 @@ class CommonSearchWidget extends StatelessWidget {
           child: Container(
             height: getScreenHeight(context),
             width: getScreenWidth(context),
-            padding: EdgeInsets.only(top: AppConstants.padding_10),
-            color: isCategoryExpand ? Color.fromARGB(65, 0, 0, 0) : null,
+            padding: const EdgeInsets.only(top: AppConstants.padding_10),
+            color: isCategoryExpand ? const Color.fromARGB(65, 0, 0, 0) : null,
           ),
         ),
         Positioned(
@@ -69,12 +69,12 @@ class CommonSearchWidget extends StatelessWidget {
           child: AnimatedContainer(
             width: getScreenWidth(context),
             height: isCategoryExpand ? getScreenHeight(context) * 0.65 : 60,
-            duration: Duration(milliseconds: 100),
-            margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+            duration: const Duration(milliseconds: 100),
+            margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
               borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_30)),
+                  const BorderRadius.all(Radius.circular(AppConstants.radius_30)),
               color: AppColors.whiteColor,
               boxShadow: [
                 BoxShadow(
@@ -89,10 +89,10 @@ class CommonSearchWidget extends StatelessWidget {
                   width: getScreenWidth(context),
                   height: 60,
                   padding:
-                      EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                      const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
+                    borderRadius: const BorderRadius.all(
                         Radius.circular(AppConstants.radius_100)),
                     color: AppColors.whiteColor,
                     border: Border.all(
@@ -143,10 +143,10 @@ class CommonSearchWidget extends StatelessWidget {
                             disabledBorder: AppStyles.searchFieldStyle(),
                             filled: true,
                             hintText: AppLocalizations.of(context)!.search,
-                            constraints: BoxConstraints(maxHeight: 40),
+                            constraints: const BoxConstraints(maxHeight: 40),
                             fillColor: AppColors.pageColor,
                             contentPadding:
-                                EdgeInsets.only(top: AppConstants.padding_3),
+                                const EdgeInsets.only(top: AppConstants.padding_3),
                             prefixIcon: Transform(
                               alignment: Alignment.center,
                               transform:
@@ -170,7 +170,7 @@ class CommonSearchWidget extends StatelessWidget {
                                   color: AppColors.greyColor,
                                 ),
                               ),
-                            ) : SizedBox(),
+                            ) : const SizedBox(),
                           ),
                           onTapOutside: (event) =>
                               FocusManager.instance.primaryFocus?.unfocus(),

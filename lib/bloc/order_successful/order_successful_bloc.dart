@@ -58,7 +58,7 @@ class OrderSuccessfulBloc
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         } on ServerException {}
       }

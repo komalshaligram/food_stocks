@@ -28,7 +28,7 @@ import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 
 class ProductSaleRoute {
-  static Widget get route => ProductSaleScreen();
+  static Widget get route => const ProductSaleScreen();
 }
 
 class ProductSaleScreen extends StatelessWidget {
@@ -50,8 +50,8 @@ class ProductSaleScreen extends StatelessWidget {
 }
 
 class ProductSaleScreenWidget extends StatelessWidget {
-  late final String saleProductId;
-   ProductSaleScreenWidget({super.key,this.saleProductId = ''});
+   final String saleProductId;
+   const ProductSaleScreenWidget({super.key,this.saleProductId = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
           return Scaffold(
             backgroundColor: AppColors.pageColor,
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+              preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 bgColor: AppColors.pageColor,
                 title: AppLocalizations.of(context)!.sales,
@@ -72,7 +72,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 },
                 trailingWidget: GestureDetector(
                     onTap: () {
-                      context.read<ProductSaleBloc>().add(ProductSaleEvent.getGridListView());
+                      context.read<ProductSaleBloc>().add(const ProductSaleEvent.getGridListView());
                     },
                     child: Icon(state.isGridView ? Icons.list : Icons.grid_view)),
               ),
@@ -94,9 +94,9 @@ class ProductSaleScreenWidget extends StatelessWidget {
                     SmartRefresher(
                   enablePullDown: true,
                   controller: state.refreshController,
-                  header: RefreshWidget(),
+                  header: const RefreshWidget(),
                   footer: CustomFooter(
-                    builder: (context, mode) => ProductSaleScreenShimmerWidget(),
+                    builder: (context, mode) => const ProductSaleScreenShimmerWidget(),
                   ),
                   enablePullUp: !state.isBottomOfProducts,
                   onRefresh: () {
@@ -110,15 +110,15 @@ class ProductSaleScreenWidget extends StatelessWidget {
                       children: [
                         state.isShimmering
                             ? state.isGridView
-                                ? ProductSaleScreenShimmerWidget()
+                                ? const ProductSaleScreenShimmerWidget()
                                 : StoreCategoryScreenSubcategoryShimmerWidget()
-                            : state.productSalesList.length == 0
+                            : state.productSalesList.isEmpty
                                 ? Container(
                                     height: getScreenHeight(context) - 80,
                                     width: getScreenWidth(context),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      '${AppLocalizations.of(context)!.currently_products_are_not_on_sale}',
+                                      AppLocalizations.of(context)!.currently_products_are_not_on_sale,
                                       style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
                                     ),
                                   )
@@ -127,8 +127,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         shrinkWrap: true,
                                         itemCount: state.productSalesList.length,
                                         physics: const NeverScrollableScrollPhysics(),
-                                        padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.48),
+                                        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.48),
                                         //getChildAspectRatio(context)),
                                         itemBuilder: (context, index) {
                                           return buildProductSaleListItem(
@@ -164,7 +164,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         itemCount: state.productSalesList.length,
                                         shrinkWrap: true,
                                         physics: const NeverScrollableScrollPhysics(),
-                                        padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                         itemBuilder: (context, index) => CommonSaleListView(
                                             context: context,
                                             discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ''),
@@ -264,7 +264,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                   builder: (BuildContext context1, ScrollController scrollController) {
                     return Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(AppConstants.radius_30),
                           topRight: Radius.circular(AppConstants.radius_30),
                         ),
@@ -272,7 +272,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                       ),
                       clipBehavior: Clip.hardEdge,
                       child: state.isProductLoading
-                          ? ProductDetailsShimmerWidget()
+                          ? const ProductDetailsShimmerWidget()
                           : SingleChildScrollView(
                               controller: ModalScrollController.of(context),
                               child: Column(
@@ -299,7 +299,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                             bottom: false,
                                             child: Stack(
                                               children: [
-                                                Container(
+                                                SizedBox(
                                                   height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
                                                   width: getScreenWidth(context),
                                                   child: GestureDetector(
@@ -324,8 +324,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                     onTap: () {
                                                       Navigator.pop(context);
                                                     },
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(top: 10.0),
+                                                    child: const Padding(
+                                                      padding: EdgeInsets.only(top: 10.0),
                                                       child: Icon(
                                                         Icons.close,
                                                         color: Colors.white,
@@ -353,10 +353,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1)
                                         :
                                     state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 0),
-
                                     productStock: state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString(),
-                                    isRTL: context.rtl,
-                                  //  isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
+
                                     scrollController: scrollController,
                                     productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                     onQuantityChanged: (quantity) {
@@ -407,7 +405,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
         ),
         Container(
           height: AppConstants.salesProductItemHeight,
-          padding: EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -459,6 +457,6 @@ class ProductSaleScreenWidget extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
             },
-            buttonTitle: "${AppLocalizations.of(context)!.ok}"));
+            buttonTitle: AppLocalizations.of(context)!.ok));
   }
 }

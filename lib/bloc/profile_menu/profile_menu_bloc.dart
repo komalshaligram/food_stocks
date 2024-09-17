@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/data/error/exceptions.dart';
 import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/routes/app_routes.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -38,9 +39,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         if (event is _getPreferenceDataEvent) {
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           emit(state.copyWith(applicationVersion:packageInfo.version ,buildNumber:packageInfo.buildNumber));
-          debugPrint('[UserImageUrl]  ${preferences.getUserImageUrl()}');
-          debugPrint('[username]   ${preferences.getUserName()}');
-          debugPrint('[logo]  ${preferences.getUserCompanyLogoUrl()}');
 
           emit(state.copyWith(
               UserImageUrl: preferences.getUserImageUrl(),language: preferences.getAppLanguage(),
@@ -56,7 +54,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
           emit(state.copyWith(userName: preferences.getUserName()));
         }
-        else if (event is _GetAppLanguage) {
+        else if (event is _getAppLanguage) {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
           String appLang = preferencesHelper.getAppLanguage();
@@ -71,16 +69,13 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 path: AppUrls.logOutUrl,
                 data: {"userId": preferences.getUserId()});
 
-            debugPrint('logOut url  = ${AppUrls.baseUrl}${AppUrls.logOutUrl}');
 
-            debugPrint('logOut response  = ${response}');
-
-            if (response[AppStrings.statusString] == 200) {
+            if (response[AppStrings.statusString] == AppConstants.code_200) {
               SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                   prefs: await SharedPreferences.getInstance());
               await preferencesHelper.setUserLoggedIn();
               await Provider.of<LocaleProvider>(event.context, listen: false)
-                  .setAppLocale(locale: Locale(AppStrings.hebrewString));
+                  .setAppLocale(locale:const Locale(AppStrings.hebrewString));
               Navigator.pop(event.context);
               Navigator.popUntil(event.context,
                       (route) => route.name == RouteDefine.bottomNavScreen.name);
@@ -88,8 +83,8 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
-                  '${AppLocalizations.of(event.context)!.logged_out_successfully}',
-                  type: SnackBarType.SUCCESS);
+                  AppLocalizations.of(event.context)!.logged_out_successfully,
+                  type: SnackBarType.success);
               emit(state.copyWith(isLogOutProcess: false));
             } else {
               CustomSnackBar.showSnackBar(
@@ -97,37 +92,35 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                   title: AppStrings.getLocalizedStrings(
                       response[AppStrings.messageString].toString().toLocalization(),
                       event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.success);
               emit(state.copyWith(isLogOutProcess: false));
             }
           } on ServerException {
             emit(state.copyWith(isLogOutProcess: false));
           }
         }
-        else if (event is _ChangeAppLanguageEvent) {
+        else if (event is _changeAppLanguageEvent) {
           if (state.isHebrewLanguage) {
             emit(state.copyWith(isHebrewLanguage: false));
             await Provider.of<LocaleProvider>(event.context, listen: false)
-                .setAppLocale(locale: Locale(AppStrings.englishString));
+                .setAppLocale(locale: const Locale(AppStrings.englishString));
           } else {
             emit(state.copyWith(isHebrewLanguage: true));
             await Provider.of<LocaleProvider>(event.context, listen: false)
-                .setAppLocale(locale: Locale(AppStrings.hebrewString));
+                .setAppLocale(locale: const Locale(AppStrings.hebrewString));
           }
         }
         else if (event is _getProfileDetailsEvent) {
 
           try {
-            debugPrint('req = ${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
               AppUrls.getProfileDetailsUrl,
               data: ProfileDetailsReqModel(id: preferences.getUserId())
                   .toJson(),
             );
-            debugPrint('res = ${res}');
             ProfileDetailsResModel response =
             ProfileDetailsResModel.fromJson(res);
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
               if(!preferences.getSubUser()){
                 preferences.setUserImageUrl(imageUrl: response.data?.clients?.first.profileImage ?? '');
                 emit(
@@ -143,12 +136,10 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
-          } on ServerException {
-
           } catch (e) {
-
+debugPrint(e.toString());
           }
 
         }
@@ -158,16 +149,14 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
 
           if(preferences.getSubUser()){
             try {
-              debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
               final res = await DioClient(event.context).get(
                   path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-              debugPrint('AccountPermission response profileMenu= ${response.data.toString()}');
 
-              if (response.status == 200) {
+              if (response.status == AppConstants.code_200) {
                 var res = response.data?.permissions;
 
-                if(/*preferences.getAppLanguage() == AppStrings.englishString &&*/ preferences.getCanSeeWallet() != res?.canSeeWallet){
+                if( preferences.getCanSeeWallet() != res?.canSeeWallet){
                   event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(
                       index: preferences.getCanSeeWallet() ? 4 : 3,context: event.context));
                 }
@@ -193,7 +182,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                     isAccountPermissionShimmering: false,
                     isCanSeeInvoices: preferences.getCanSeeInvoices()
                 ));
-
               } else {
                 CustomSnackBar.showSnackBar(
                     context: event.context,
@@ -201,47 +189,40 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                         response.message?.toLocalization() ??
                             response.message!,
                         event.context),
-                    type: SnackBarType.FAILURE);
+                    type: SnackBarType.failure);
 
               }
-            } on ServerException {
             } catch (e) {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: e.toString(),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           }
-
-
         }
         else if(event is _updateMaintenanceEvent){
           emit(state.copyWith(isDialogOpen: true));
         }
-        else if(event is _GeneralSettings){
+        else if(event is _generalSettings){
           try {
             emit(state.copyWith(retryLoading: event.isRetryLoading));
 
             final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
 
-            debugPrint('general settings = ${response.data.toString()}');
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
 
               if(preferences.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
                 add(ProfileMenuEvent.updateMaintenanceEvent(context: event.context));
                 Navigator.pop(event.dialogContext);
                 preferences.setIsAppOnMaintenance(isAppOnMaintenance: false);
                 emit(state.copyWith(isDialogOpen: false,isAppOnMaintenance: false,retryLoading: false));
-                debugPrint('pop dialog');
                 return;
               }else{
                 if(!state.isDialogOpen && !(response.data?.isAppOnMaintenance??false)  ){
-                  debugPrint('here');
                   emit(state.copyWith(isDialogOpen: true));
                 }else{
                   emit(state.copyWith(isDialogOpen: false));
-
                 }
               }
               preferences.setIsSaleOn(isSaleOn:  response.data?.isSaleOn ?? false);
@@ -260,26 +241,22 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               ));
             } else {
             }
-          } on ServerException {
           } catch (e) {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: e.toString(),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         }
-
         else if(event is _userApproveEvent){
           try {
-            debugPrint('clientId_____${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
-                '${AppUrls.verifyClientUrl}',
+                AppUrls.verifyClientUrl,
                 data: {AppStrings.clientIdString:preferences.getUserId()}
             );
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-            debugPrint('verifyClient res_____$response');
-            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
-            if (response.status == 200) {
+
+            if (response.status == AppConstants.code_200) {
               if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
                 Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
               }
@@ -288,14 +265,12 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               }
 
             }
-          } on ServerException {}
+          }
           catch (e) {
             debugPrint('catch____$e');
           }
-
         }
       }
-
     });
   }
 }

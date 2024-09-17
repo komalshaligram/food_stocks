@@ -17,6 +17,7 @@ class ProductStockModel with _$ProductStockModel {
     @Default(0.0) double totalPrice,
     @Default('') String lowStock,
     @Default(-1) int maxQty,
+    @Default(0) int minQty,
   }) = _ProductStockModel;
 
   factory ProductStockModel.fromJson(Map<String, dynamic> json) =>

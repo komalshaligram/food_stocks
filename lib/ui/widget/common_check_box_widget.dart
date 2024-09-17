@@ -6,7 +6,7 @@ import '../utils/themes/app_constants.dart';
 class CommonCheckBox extends StatelessWidget {
   final void Function(bool?)? onChanged;
   final bool value;
-   CommonCheckBox({super.key,required this.value, this.onChanged,});
+   const CommonCheckBox({super.key,required this.value, this.onChanged,});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class CommonCheckBox extends StatelessWidget {
               AppConstants
                   .radius_3),
         ),
-        side: MaterialStateBorderSide
+        side: WidgetStateBorderSide
             .resolveWith(
               (states) =>
               BorderSide(
@@ -28,9 +28,9 @@ class CommonCheckBox extends StatelessWidget {
         ),
         activeColor: AppColors
             .mainColor,
-        fillColor: MaterialStateColor.resolveWith(
+        fillColor: WidgetStateColor.resolveWith(
         (states) {
-    if (states.contains(MaterialState.selected)) {
+    if (states.contains(WidgetState.selected)) {
     return AppColors.mainColor;
     }
     return AppColors.whiteColor;

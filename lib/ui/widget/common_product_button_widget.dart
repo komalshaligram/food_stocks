@@ -18,7 +18,7 @@ class CommonProductButtonWidget extends StatelessWidget {
   final bool isLoading;
   final Color borderColor;
 
-  CommonProductButtonWidget(
+  const CommonProductButtonWidget(
       {super.key,
         required this.title,
         this.onPressed,
@@ -35,36 +35,36 @@ class CommonProductButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool _isBool = false;
+    bool isBool = false;
     return Container(
       height: height ?? AppConstants.buttonHeightSmall,
       width: width,
       clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+      margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
       padding: EdgeInsets.symmetric(
           horizontal: horizontalPadding, vertical: verticalPadding),
       decoration: BoxDecoration(
         gradient: AppColors.appMainGradientColor,
         //  color: bgColor,
           border: Border.all(color: borderColor),
-          borderRadius: BorderRadius.all(
+          borderRadius: const BorderRadius.all(
               Radius.circular(AppConstants.radius_7))),
       child: GestureDetector(
         onDoubleTap: onPressed,
         onTap: () {
-          if (!_isBool) {
+          if (!isBool) {
             onPressed?.call();
-            _isBool = true;
+            isBool = true;
           }
         },
         child: MaterialButton(
           elevation: 0,
           height: height ?? AppConstants.buttonHeightSmall,
           minWidth: width,
-          padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
           onPressed: null ,
           child: isLoading
-              ? CupertinoActivityIndicator(
+              ? const CupertinoActivityIndicator(
                   color: Colors.white,
                 )
               : Text(

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-
 import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
 
 class ProfileScreenShimmerWidget extends StatelessWidget {
-   bool isProfileImage;
+   final bool isProfileImage;
 
-   ProfileScreenShimmerWidget({super.key,this.isProfileImage = true});
+   const ProfileScreenShimmerWidget({super.key,this.isProfileImage = true});
 
   @override
   Widget build(BuildContext context) {
@@ -25,36 +23,6 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               10.height,
-              isProfileImage ?  Center(
-                child: Stack(
-                  children: [
-                    CommonShimmerWidget(
-                      child: Container(
-                        height: AppConstants.containerHeight_80,
-                        width: AppConstants.containerHeight_80,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          shape: BoxShape.circle,
-                        ),
-                        margin: EdgeInsets.only(
-                            bottom: AppConstants.padding_3,
-                            right: AppConstants.padding_3,
-                            left: AppConstants.padding_3),
-                      ),
-                    ),
-                  ],
-                ),
-              ) : 0.width,
-              3.height,
-              isProfileImage ?   Center(
-                child: CommonShimmerWidget(
-                  child: Container(
-                    width: 90,
-                    height: AppConstants.shimmerTextHeight,
-                    color: AppColors.whiteColor,
-                  ),
-                ),
-              ) : 0.width,
               buildTextFieldTitle(),
               buildTextField(),
               7.height,
@@ -90,7 +58,7 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
       ),
     );
@@ -101,11 +69,11 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
       child: Container(
         height: AppConstants.shimmerTextHeight,
         width: 140,
-        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );

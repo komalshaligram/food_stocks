@@ -12,6 +12,8 @@ class BankInfoState with _$BankInfoState{
     required bool isShimmering,
     required bool isApiShimmering,
     required bool isUpdate,
+    required bool isPaymentFail,
+    required bool isLoading
 
   }) = _BankInfoState;
 
@@ -22,7 +24,9 @@ class BankInfoState with _$BankInfoState{
     branchController: TextEditingController(),
     isShimmering: false,
     isApiShimmering: false,
-    isUpdate: false
+    isUpdate: false,
+    isPaymentFail: false,
+    isLoading:false
    
   );
 

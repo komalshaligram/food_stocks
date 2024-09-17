@@ -18,7 +18,8 @@ class AppConstants{
   static const double containerHeight_100 = 100;
   static const double relatedProductItemWidth = 140;
   static const double withoutSaleItemHeight = 210;
-
+  static const double animationDuration = 8000;
+  static const double timeOutDuration = 16000;
   //padding
   static const double padding_5 = 5;
   static const double padding_10 = 10;
@@ -34,8 +35,10 @@ class AppConstants{
   static const double padding_40 = 40;
   static const double padding_70 = 70;
   static const double padding_11 = 11;
+  static const double padding_85 = 85;
 
   //radius
+  static const double radius_2 = 2;
   static const double radius_3 = 3;
   static const double radius_4 = 4;
   static const double radius_5 = 5;
@@ -63,6 +66,12 @@ class AppConstants{
   static const double font_26 = 26;
   static const double font_22 = 22;
   static const double font_17 = 17;
+
+
+ //order status
+  static const int onTheWayStatus = 6;
+  static const int deliveryStatus = 5;
+  static const int cancelStatus = 4;
 
   //blur
   static const double blur_10 = 10;
@@ -114,6 +123,15 @@ class AppConstants{
   static const int appContentPageLimit = 10;
   static const int orderPageLimit = 15;
   static const int walletLimit = 10;
-
-
+  //status code
+  static const int code_200 = 200;
+  static const int code_201 = 201;
+  static const int code_400 = 400;
+  static const int code_401 = 401;
+  static const int code_402 = 402;
+  static const int code_403 = 403;
+  static const int code_405 = 405;
+  static const int code_424 = 424;
+  static const int code_500 = 500;
+  static const int code_503 = 503;
 }

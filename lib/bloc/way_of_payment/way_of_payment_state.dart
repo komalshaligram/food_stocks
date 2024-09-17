@@ -6,12 +6,15 @@ class WayOfPaymentState with _$WayOfPaymentState{
   const factory WayOfPaymentState({
     required int selectRadioTile,
     required bool isUpdate,
+    required TermsConditionReqModel termsReqModel,
+    required bool isEnablePayment
   }) = _WayOfPaymentState;
 
   factory WayOfPaymentState.initial()=> const WayOfPaymentState(
     selectRadioTile: 0,
-    isUpdate : false
-
+    isUpdate : false,
+      isEnablePayment:false,
+      termsReqModel:TermsConditionReqModel()
 
   );
 

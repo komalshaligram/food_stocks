@@ -5,7 +5,7 @@ part of 'categories_permission_bloc.dart';
 class CategoriesPermissionState with _$CategoriesPermissionState{
   const factory CategoriesPermissionState({
     required bool isShimmering,
-    required List<categoriesPermission>categoriesPermissionList,
+    required List<CategoriesPermission>categoriesPermissionList,
     required bool isRefresh,
     required bool isSelectAll,
     required bool isUpdateProcess,

@@ -14,7 +14,7 @@ class StoreScreenShimmerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         child: Column(
           children: [
             80.height,
@@ -23,7 +23,7 @@ class StoreScreenShimmerWidget extends StatelessWidget {
             buildListTitles(),
             buildListItems(context),
             5.height,
-            PesachBannerShimmerWidget(),
+            const PesachBannerShimmerWidget(),
             5.height,
             buildListTitles(),
             buildListItems(context),
@@ -43,9 +43,9 @@ class StoreScreenShimmerWidget extends StatelessWidget {
       child: Container(
         width: getScreenWidth(context),
         height: height ?? 110,
-        margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+        margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
+          borderRadius: const BorderRadius.all(
             Radius.circular(AppConstants.radius_10),
           ),
           color: AppColors.whiteColor,
@@ -72,11 +72,11 @@ class StoreScreenShimmerWidget extends StatelessWidget {
         child: Container(
       height: 90,
       width: 90,
-      margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+      margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
       decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
     ));
   }
 
@@ -85,11 +85,11 @@ class StoreScreenShimmerWidget extends StatelessWidget {
         child: Container(
       height: 170,
       width: 140,
-      margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+      margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
       decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
     ));
   }
 
@@ -98,11 +98,11 @@ class StoreScreenShimmerWidget extends StatelessWidget {
       child: Container(
         height: AppConstants.shimmerTextHeight,
         width: 100,
-        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );

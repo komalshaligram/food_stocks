@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 import 'package:food_stock/data/model/req_model/remove_issue/remove_issue_req_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/error/exceptions.dart';
 
 import '../../data/model/product_stock_model/product_stock_model.dart';
-import '../../data/model/req_model/create_issue/create_issue_req_model.dart'
-    as create;
+import '../../data/model/req_model/create_issue/create_issue_req_model.dart' as create;
 
 import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
@@ -30,64 +30,40 @@ part 'product_details_state.dart';
 part 'product_details_bloc.freezed.dart';
 
 class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> {
-
   ProductDetailsBloc() : super(ProductDetailsState.initial()) {
     on<ProductDetailsEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getOrderByIdEvent) {
         debugPrint('token___${preferencesHelper.getAuthToken()}');
-        debugPrint('orderid___${event.orderId}');
-        emit(state.copyWith(isShimmering: true, isLoading: true , language:preferencesHelper.getAppLanguage(),
-        isSubUserCreateDuplicateOrder: preferencesHelper.getCanDuplicateOrder(),
-          isIncludedVat: preferencesHelper.getIsIncludedVat()
-        ));
+
+        emit(state.copyWith(isShimmering: true, isLoading: true, language: preferencesHelper.getAppLanguage(), isSubUserCreateDuplicateOrder: preferencesHelper.getCanDuplicateOrder(), isIncludedVat: preferencesHelper.getIsIncludedVat()));
         try {
           final res = await DioClient(event.context).get(
             path: '${AppUrls.getOrderById}${preferencesHelper.getOrderId()}',
           );
           debugPrint('GetOrderById url   = ${AppUrls.getOrderById}${event.orderId}');
-       //   debugPrint('GetOrderById res  = $res');
+          //   debugPrint('GetOrderById res  = $res');
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
-        //  debugPrint('GetOrderByIdModel  = $response');
+          //  debugPrint('GetOrderByIdModel  = $response');
 
-          if (response.status == 200) {
-            emit(state.copyWith(
-                orderBySupplierProduct:
-                    response.data?.ordersBySupplier?.first ??
-                        OrdersBySupplier(),
-                orderData: response.data?.orderData?.first ??
-                    OrderDatum(),
-                isShimmering: false ,isLoading: false ,isRefresh: !state.isRefresh));
+          if (response.status == AppConstants.code_200) {
+            emit(state.copyWith(orderBySupplierProduct: response.data?.ordersBySupplier?.first ?? const OrdersBySupplier(), orderData: response.data?.orderData?.first ?? OrderDatum(), isShimmering: false, isLoading: false, isRefresh: !state.isRefresh));
           } else {
-            emit(state.copyWith(
-                isShimmering: false ,isLoading: false));
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.FAILURE);
+            emit(state.copyWith(isShimmering: false, isLoading: false));
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
           }
-        } on ServerException {emit(state.copyWith(
-            isShimmering: false ,isLoading: false));}
-        catch(e){
-          emit(state.copyWith(
-              isShimmering: false ,isLoading: false));
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: e.toString(),
-              type: SnackBarType.FAILURE);
+        } on ServerException {
+          emit(state.copyWith(isShimmering: false, isLoading: false));
+        } catch (e) {
+          emit(state.copyWith(isShimmering: false, isLoading: false));
+          CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
         }
       }
 
       if (event is _getProductDataEvent) {
-        emit(state.copyWith(
-            orderBySupplierProduct: event.orderBySupplierProduct,orderData: event.orderData, language: preferencesHelper.getAppLanguage()));
-      }
-      else if (event is _productProblemEvent) {
+        emit(state.copyWith(orderBySupplierProduct: event.orderBySupplierProduct, orderData: event.orderData, language: preferencesHelper.getAppLanguage()));
+      } else if (event is _productProblemEvent) {
         List<int> index = [];
         bool isAllCheck = false;
         index = [...state.productListIndex];
@@ -104,38 +80,21 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
 
         emit(state.copyWith(productListIndex: index, isAllCheck: isAllCheck));
       } else if (event is _radioButtonEvent) {
-        emit(state.copyWith(
-            selectedRadioTile: event.selectRadioTile,
-            isRefresh: !state.isRefresh
-        ));
+        emit(state.copyWith(selectedRadioTile: event.selectRadioTile, isRefresh: !state.isRefresh));
       } else if (event is _productIncrementEvent) {
         if (event.productQuantity > event.messingQuantity) {
           emit(state.copyWith(
-              quantity: event.messingQuantity.round() + 1,
-              isRefresh: !state.isRefresh,
-
+            quantity: event.messingQuantity.round() + 1,
+            isRefresh: !state.isRefresh,
           ));
+        } else {
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.missing_quantity_not_more_than_original, type: SnackBarType.failure);
         }
-        else {
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title:  '${AppLocalizations.of(event.context)!.missing_quantity_notmore_than_original}',
-              type: SnackBarType.FAILURE);
-        }
-      }
-
-      else if (event is _productDecrementEvent) {
+      } else if (event is _productDecrementEvent) {
         if (event.messingQuantity >= 1) {
-          emit(state.copyWith(
-              quantity: event.messingQuantity.round() - 1,
-              isRefresh: !state.isRefresh,
-          missingQuantity: event.messingQuantity.round() - 1
-          ));
+          emit(state.copyWith(quantity: event.messingQuantity.round() - 1, isRefresh: !state.isRefresh, missingQuantity: event.messingQuantity.round() - 1));
         }
-
-
-      }
-      else if (event is _createIssueEvent) {
+      } else if (event is _createIssueEvent) {
         emit(state.copyWith(isLoading: true));
         if (event.issue != '') {
           create.CreateIssueReqModel reqMap = create.CreateIssueReqModel(
@@ -155,52 +114,30 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               data: reqMap,
             );
 
-            debugPrint(
-                'createIssue url  = ${AppUrls.baseUrl}${AppUrls.createIssueUrl}${event.orderId}');
+            debugPrint('createIssue url  = ${AppUrls.baseUrl}${AppUrls.createIssueUrl}${event.orderId}');
             debugPrint('createIssue Req  = $reqMap');
             debugPrint('[order Id ] = ${event.orderId}');
-            if (response[AppStrings.statusString] == 201) {
-
+            if (response[AppStrings.statusString] == AppConstants.code_201) {
               emit(state.copyWith(isLoading: false));
 
-                Navigator.pop(event.BottomSheetContext,{AppStrings.issueString : event.issue});
+              Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: event.issue});
 
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response[AppStrings.messageString]
-                          .toString()
-                          .toLocalization(),
-                      event.context),
-                  type: SnackBarType.SUCCESS);
-
+              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.success);
             } else {
-              Navigator.pop(event.BottomSheetContext,{AppStrings.issueString :''});
+              Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: ''});
               emit(state.copyWith(isLoading: false));
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response[AppStrings.messageString].toString().toLocalization(),
-                      event.context),
-                  type: SnackBarType.FAILURE);
+              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.failure);
             }
           } on ServerException {
-            Navigator.pop(event.BottomSheetContext,{AppStrings.issueString : ''});
-          }
-          catch(e){
-            Navigator.pop(event.BottomSheetContext,{AppStrings.issueString : ''});
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: e.toString(),
-                type: SnackBarType.FAILURE);
+            Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: ''});
+          } catch (e) {
+            Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: ''});
+            CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
           }
         } else {
           emit(state.copyWith(isLoading: false));
           Navigator.pop(event.context);
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: '${AppLocalizations.of(event.context)!.select_issue}',
-              type: SnackBarType.FAILURE);
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.select_issue, type: SnackBarType.failure);
         }
       } else if (event is _checkAllEvent) {
         List<int> number = [];
@@ -210,115 +147,71 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
         } else {
           number = [];
         }
-        emit(state.copyWith(
-            productListIndex: number, isAllCheck: !state.isAllCheck));
-      }
-
-      else if(event is _getBottomSheetDataEvent){
+        emit(state.copyWith(productListIndex: number, isAllCheck: !state.isAllCheck));
+      } else if (event is _getBottomSheetDataEvent) {
         TextEditingController note = TextEditingController();
         note.text = event.note;
         emit(state.copyWith(addNoteController: note));
-      }
-      else if(event is _removeIssueEvent){
+      } else if (event is _removeIssueEvent) {
         emit(state.copyWith(isRemoveProcess: true));
 
-          RemoveIssueReqModel reqMap = RemoveIssueReqModel(
-            supplierId: event.supplierId,
-          orderId: event.orderId,
-            products: event.Product
+        RemoveIssueReqModel reqMap = RemoveIssueReqModel(supplierId: event.supplierId, orderId: event.orderId, products: event.product);
+
+        try {
+          final response = await DioClient(event.context).post(
+            AppUrls.removeIssueUrl,
+            data: reqMap,
           );
 
-          try {
-            final response = await DioClient(event.context).post(
-              '${AppUrls.removeIssueUrl}',
-              data: reqMap,
-            );
+          debugPrint('removeIssue url  = ${AppUrls.baseUrl}${AppUrls.removeIssueUrl}${'/'}${event.orderId}');
+          debugPrint('removeIssue Req  = $reqMap');
+          debugPrint('[order Id ] = ${event.orderId}');
+          if (response[AppStrings.statusString] == AppConstants.code_200) {
+            add(ProductDetailsEvent.getOrderByIdEvent(context: event.context, orderId: preferencesHelper.getOrderId()));
+            emit(state.copyWith(isRemoveProcess: false));
+            Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: 'issue'});
 
-            debugPrint(
-                'removeIssue url  = ${AppUrls.baseUrl}${AppUrls.removeIssueUrl}${'/'}${event.orderId}');
-            debugPrint('removeIssue Req  = $reqMap');
-            debugPrint('[order Id ] = ${event.orderId}');
-            if (response[AppStrings.statusString] == 200) {
-
-              add(ProductDetailsEvent.getOrderByIdEvent(context: event.context, orderId: preferencesHelper.getOrderId()));
-              emit(state.copyWith(isRemoveProcess: false));
-              Navigator.pop(event.BottomSheetContext,{AppStrings.issueString : 'issue'});
-
-              // Navigator.pop(event.context);
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response[AppStrings.messageString]
-                          .toString()
-                          .toLocalization(),
-                      event.context),
-                  type: SnackBarType.SUCCESS);
-            } else {
-              emit(state.copyWith(isRemoveProcess: false));
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response[AppStrings.messageString].toString().toLocalization() ,
-                      event.context),
-                  type: SnackBarType.FAILURE);
-            }
-          } on ServerException {  emit(state.copyWith(isRemoveProcess: false));}
-        catch(e){
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title:e.toString(),
-              type: SnackBarType.FAILURE);
+            // Navigator.pop(event.context);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.success);
+          } else {
+            emit(state.copyWith(isRemoveProcess: false));
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.failure);
+          }
+        } on ServerException {
+          emit(state.copyWith(isRemoveProcess: false));
+        } catch (e) {
+          CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
         }
-        }
-
-      else if (event is _duplicateOrderEvent) {
+      } else if (event is _duplicateOrderEvent) {
         emit(state.copyWith(isDuplicateOrderProcess: true));
         try {
           final response = await DioClient(event.context).post(
-            '${AppUrls.duplicateOrderUrl}',
-            data: {
-              AppStrings.orderIdString : event.orderId,
-              AppStrings.cartIdString : preferencesHelper.getCartId()
-            },
+            AppUrls.duplicateOrderUrl,
+            data: {AppStrings.orderIdString: event.orderId, AppStrings.cartIdString: preferencesHelper.getCartId()},
           );
 
-          debugPrint(
-              'duplicateOrder url  = ${AppUrls.baseUrl}${AppUrls.duplicateOrderUrl}');
+          debugPrint('duplicateOrder url  = ${AppUrls.baseUrl}${AppUrls.duplicateOrderUrl}');
           debugPrint('[order Id ] = ${event.orderId}');
           debugPrint('[cart Id ] = ${preferencesHelper.getCartId()}');
           debugPrint('duplicateOrder response = ${response}');
 
-          if (response[AppStrings.statusString] == 200) {
+          if (response[AppStrings.statusString] == AppConstants.code_200) {
+            Navigator.pop(event.dialogContext);
 
-           Navigator.pop(event.dialogContext);
-
-            Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name,
-                arguments: {AppStrings.isBasketScreenString: 'true'}
-            );
-           emit(state.copyWith(isDuplicateOrderProcess: false));
+            Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.isBasketScreenString: 'true'});
+            emit(state.copyWith(isDuplicateOrderProcess: false));
           } else {
             Navigator.pop(event.dialogContext);
             emit(state.copyWith(isDuplicateOrderProcess: false));
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response[AppStrings.messageString].toString().toLocalization(),
-                    event.context),
-                type: SnackBarType.FAILURE);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isDuplicateOrderProcess: false));
-        }
-        catch(e){
+        } catch (e) {
           emit(state.copyWith(isDuplicateOrderProcess: false));
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title:e.toString(),
-              type: SnackBarType.FAILURE);
+          CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
         }
-      }
-
-      else if (event is _getAllCartEvent) {
+      } else if (event is _getAllCartEvent) {
         debugPrint('cartId____${preferencesHelper.getCartId()}');
 
         emit(state.copyWith(isDuplicateOrderProcess: true));
@@ -327,59 +220,39 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             '${AppUrls.getAllCartUrl}${preferencesHelper.getCartId()}',
           );
 
-          debugPrint(
-              'duplicateOrder url  = ${AppUrls.baseUrl}${AppUrls.getAllCartUrl}');
+          debugPrint('duplicateOrder url  = ${AppUrls.baseUrl}${AppUrls.getAllCartUrl}');
 
-          debugPrint('GetAllCart response = ${res}');
+          debugPrint('GetAllCart response = $res');
 
           GetAllCartResModel response = GetAllCartResModel.fromJson(res);
 
-          if (response.status == 200) {
-            emit(state.copyWith(isDuplicateOrderProcess: false,));
-            List<ProductStockModel>stockList = [];
-            stockList.addAll(response.data?.data?.map(
-                    (product) =>
-                    ProductStockModel(
-                        quantity: product.totalQuantity?? 0,
-                        productId: product.id ?? '',
-                        stock: product.productStock.toString(),
-                        lowStock: product.lowStock.toString()
-                    )) ??
-                []);
+          if (response.status == AppConstants.code_200) {
+            emit(state.copyWith(
+              isDuplicateOrderProcess: false,
+            ));
+            List<ProductStockModel> stockList = [];
+            stockList.addAll(response.data?.data?.map((product) => ProductStockModel(quantity: product.totalQuantity ?? 0, productId: product.id ?? '', stock: product.productStock.toString(), lowStock: product.lowStock.toString())) ?? []);
 
-            await preferencesHelper.setCartCount(
-                count: stockList.length);
+            await preferencesHelper.setCartCount(count: stockList.length);
             emit(state.copyWith(isCartCount: true));
           } else {
-            emit(state.copyWith( isDuplicateOrderProcess: false));
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:  AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.FAILURE);
+            emit(state.copyWith(isDuplicateOrderProcess: false));
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
           }
-        } on ServerException { emit(state.copyWith(isDuplicateOrderProcess: false));}
-        catch(e){
-          emit(state.copyWith( isDuplicateOrderProcess: false));
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: e.toString(),
-              type: SnackBarType.FAILURE);
+        } on ServerException {
+          emit(state.copyWith(isDuplicateOrderProcess: false));
+        } catch (e) {
+          emit(state.copyWith(isDuplicateOrderProcess: false));
+          CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
         }
-      }
-
-      else  if(event is _getPermissionList){
-        if(preferencesHelper.getSubUser()){
+      } else if (event is _getPermissionList) {
+        if (preferencesHelper.getSubUser()) {
           try {
-
-            final res = await DioClient(event.context).get(
-                path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+            final res = await DioClient(event.context).get(path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
             debugPrint('AccountPermission response = ${response.data.toString()}');
             debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
               var res = response.data?.permissions;
               preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
               preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
@@ -387,39 +260,20 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               preferencesHelper.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
               preferencesHelper.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
               preferencesHelper.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
-              preferencesHelper.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo   ?? false);
-              preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo    ?? false);
-              preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
-              preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
-            /*  emit(state.copyWith(
+              preferencesHelper.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo ?? false);
+              preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
+              preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
+              preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
 
-                 :res?.canAddToCart ?? false,
-              ));*/
             } else {
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          response.message!,
-                      event.context),
-                  type: SnackBarType.FAILURE);
-
+              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
             }
           } on ServerException {
-
           } catch (e) {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: e.toString(),
-                type: SnackBarType.FAILURE);
-
+            CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
           }
         }
-
-
       }
-
-
     });
   }
 }

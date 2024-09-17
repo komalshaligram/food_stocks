@@ -20,7 +20,7 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
               shrinkWrap: true,
               itemCount: 5,
               padding:
-                  EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
+                  const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
               itemBuilder: (context, index) {
                 return buildFileOrForm();
               },
@@ -53,7 +53,7 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
               borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                  const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
             ),
           ),
         ),
@@ -70,7 +70,7 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
       ),
     );
@@ -81,11 +81,11 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
       child: Container(
         height: AppConstants.shimmerTextHeight,
         width: 140,
-        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );
@@ -96,11 +96,11 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
       child: Container(
         height: AppConstants.buttonHeight,
         width: double.maxFinite,
-        margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
+        margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         ),
       ),
     );

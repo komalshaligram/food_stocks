@@ -175,6 +175,7 @@
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				8A5284DFEF7C48D1277BFDFC /* [CP] Embed Pods Frameworks */,
 				5A872872D0DC6C2CB82FFC11 /* [CP] Copy Pods Resources */,
+				E5EA9C6C12DAE131C2728B7A /* FlutterFire: "flutterfire upload-crashlytics-symbols" */,
 			);
 			buildRules = (
 			);
@@ -322,6 +323,24 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 		};
+		E5EA9C6C12DAE131C2728B7A /* FlutterFire: "flutterfire upload-crashlytics-symbols" */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "FlutterFire: \"flutterfire upload-crashlytics-symbols\"";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\n#!/bin/bash\nPATH=${PATH}:$FLUTTER_ROOT/bin:$HOME/.pub-cache/bin\nflutterfire upload-crashlytics-symbols --upload-symbols-script-path=$PODS_ROOT/FirebaseCrashlytics/upload-symbols --platform=ios --apple-project-path=${SRCROOT} --env-platform-name=${PLATFORM_NAME} --env-configuration=${CONFIGURATION} --env-project-dir=${PROJECT_DIR} --env-built-products-dir=${BUILT_PRODUCTS_DIR} --env-dwarf-dsym-folder-path=${DWARF_DSYM_FOLDER_PATH} --env-dwarf-dsym-file-name=${DWARF_DSYM_FILE_NAME} --env-infoplist-path=${INFOPLIST_PATH} --default-config=default\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -360,8 +379,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -406,7 +425,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -420,13 +439,13 @@
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				APP_NAME = TAVILI;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				APP_NAME = "TAVILI-DEV";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 2;
@@ -435,7 +454,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -443,10 +462,10 @@
 				);
 				MARKETING_VERSION = 1.0.19;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev_release;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev_release;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -465,8 +484,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -505,7 +524,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
@@ -523,13 +542,13 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				APP_NAME = TAVILI;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				APP_NAME = "TAVILI-DEV";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 2;
@@ -537,7 +556,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -545,10 +564,10 @@
 				);
 				MARKETING_VERSION = 1.0.19;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev_release;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev_release;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -565,8 +584,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -611,7 +630,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -625,13 +644,13 @@
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				APP_NAME = TAVILI;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				APP_NAME = "TAVILI-DEV";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 2;
@@ -639,7 +658,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -647,10 +666,10 @@
 				);
 				MARKETING_VERSION = 1.0.19;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev_release;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev_release;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -668,8 +687,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -709,7 +728,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
@@ -727,13 +746,13 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				APP_NAME = TAVILI;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				APP_NAME = "TAVILI-DEV";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 2;
@@ -741,7 +760,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -749,10 +768,10 @@
 				);
 				MARKETING_VERSION = 1.0.19;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev_release;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev_release;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -769,8 +788,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -815,7 +834,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -828,8 +847,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -868,7 +887,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
@@ -886,13 +905,13 @@
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				APP_NAME = TAVILI;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				APP_NAME = "TAVILI-DEV";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 2;
@@ -900,7 +919,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -908,10 +927,10 @@
 				);
 				MARKETING_VERSION = 1.0.19;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev_release;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev_release;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -930,13 +949,13 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				APP_NAME = TAVILI;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				APP_NAME = "TAVILI-DEV";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 2;
@@ -944,7 +963,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -952,10 +971,10 @@
 				);
 				MARKETING_VERSION = 1.0.19;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev_release;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev_release;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -972,8 +991,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -1012,7 +1031,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1030,13 +1049,13 @@
 			baseConfigurationReference = 6EAE73EFC413102280D9AFC1 /* Pods-Runner.profile.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				APP_NAME = TAVILI;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				APP_NAME = "TAVILI-DEV";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 2;
@@ -1044,7 +1063,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1052,10 +1071,10 @@
 				);
 				MARKETING_VERSION = 1.0.19;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev_release;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev_release;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -1072,8 +1091,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -1112,7 +1131,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1130,13 +1149,13 @@
 			baseConfigurationReference = DD04F882CEC3ABE47A368E0D /* Pods-Runner.profile-dev.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				APP_NAME = TAVILI;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				APP_NAME = "TAVILI-DEV";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 2;
@@ -1144,7 +1163,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1152,10 +1171,10 @@
 				);
 				MARKETING_VERSION = 1.0.19;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev_release;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev_release;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -1172,8 +1191,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -1212,7 +1231,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1230,13 +1249,13 @@
 			baseConfigurationReference = C4E094292E82066939B8F6F1 /* Pods-Runner.profile-stag.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				APP_NAME = TAVILI;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-stag";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stag";
+				APP_NAME = "TAVILI-DEV";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-dev";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 2;
@@ -1244,7 +1263,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5R5A7UH9W6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = TAVILI;
+				INFOPLIST_KEY_CFBundleDisplayName = "TAVILI-DEV";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1252,10 +1271,10 @@
 				);
 				MARKETING_VERSION = 1.0.19;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.foodstock;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dev.tavili;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = food_stock_distribution;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = food_stock_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = tavili_dev_release;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tavili_dev_release;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

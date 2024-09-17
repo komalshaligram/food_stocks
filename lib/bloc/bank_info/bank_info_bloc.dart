@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/data/model/req_model/bank_info/bank_info_req_model.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -34,9 +36,8 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           final res = await DioClient(event.context).get(
               path: AppUrls.getBankDetailUrl);
           BankDetailModel response = BankDetailModel.fromJson(res);
-          debugPrint('bank details  response = ${response.data.toString()}');
-          debugPrint('bank details url = ${AppUrls.baseUrl}${AppUrls.getBankDetailUrl}');
-          if (response.status == 200) {
+          debugPrint('bank details response = ${response.data.toString()}');
+          if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
               isShimmering: false, bankList: response.data?.bankDetail ?? [],
               bankName: response.data?.bankDetail?.first.bankName ?? '',
@@ -54,6 +55,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
         termsConditionReqModel = event.termsConditionReqModel;
       }
       else if (event is _termsConditionApiEvent) {
+        debugPrint('termCondition response1 ____${termsConditionReqModel.toJson().toString()}');
         termsConditionReqModel = TermsConditionReqModel(
             id: preferencesHelper.getUserId(),
             agentId: termsConditionReqModel.agentId,
@@ -74,7 +76,9 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
                 .firstWhere((element) => element.bankName == state.bankName)
                 .id,
             accountNumber: state.accountNumberController.text.trim(),
-            branchNumber: state.branchController.text.trim()
+            branchNumber: state.branchController.text.trim(),
+            paymentType: AppStrings.wallet
+
         );
         Map<String, dynamic> req = termsConditionReqModel.toJson();
         req.removeWhere((key, value) {
@@ -108,6 +112,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
                 AppStrings.bankIdString : termsConditionReqModel.bankId,
                 AppStrings.branchNumberString : termsConditionReqModel.branchNumber,
                 AppStrings.accountNumberString : termsConditionReqModel.accountNumber,
+                AppStrings.paymentType : termsConditionReqModel.paymentType
               },
             ),
           );
@@ -116,8 +121,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
 
           TermsConditionResModel response =
           TermsConditionResModel.fromJson(res);
-          if(response.status == 200){
-
+          if(response.status == AppConstants.code_200){
             emit(state.copyWith(isApiShimmering: false,));
             Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name,
                 arguments: {
@@ -125,6 +129,12 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
                   AppStrings.termsConditionParamString :termsConditionReqModel
                 }
             );
+          }else{
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: response.message.toString(),
+                type: SnackBarType.failure);
+            emit(state.copyWith(isApiShimmering: false,));
           }
         } on ServerException {
           emit(state.copyWith(isApiShimmering: false,));
@@ -133,8 +143,47 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),
-              type: SnackBarType.FAILURE);
+              type: SnackBarType.failure);
           emit(state.copyWith(isApiShimmering: false,));
+        }
+      }
+     else if(event is _getArgumentEvent){
+        emit(state.copyWith(isPaymentFail: event.isPaymentFail,isUpdate: event.isUpdate));
+      }
+      else if(event is _addBankInfoEvent){
+        emit(state.copyWith(isApiShimmering: true));
+        try{
+          BankInfoReqModel reqMap = BankInfoReqModel(
+            branchNumber: state.branchController.text.toString().trim(),
+            bankId: state.bankList
+                .firstWhere((element) => element.bankName == state.bankName)
+                .id,
+            accountNumber: state.accountNumberController.text.toString().trim(),
+            clientId: preferencesHelper.getUserId()
+          );
+
+          final res = await DioClient(event.context).put(
+            path:AppUrls.addBankInfo,
+            data: reqMap.toJson(),
+          );
+
+          if (res[AppStrings.statusString] == AppConstants.code_200) {
+            emit(state.copyWith(isApiShimmering: false));
+            preferencesHelper.setPaymentMethod(method: AppStrings.wallet);
+            Navigator.pop(event.context);
+          }
+          else {
+            emit(state.copyWith(isApiShimmering: false));
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    res['message'].toLocalization(),
+                    event.context),
+                type: SnackBarType.failure);
+          }
+        }catch(e){
+          emit(state.copyWith(isApiShimmering: false));
+          debugPrint(e.toString());
         }
       }
     }

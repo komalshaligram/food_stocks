@@ -7,5 +7,5 @@ class ConnectEvent with _$ConnectEvent {
 
   factory ConnectEvent.logInAsGuest({
     required BuildContext context,
-  }) = _LogInAsGuest;
+  }) = _logInAsGuest;
 }

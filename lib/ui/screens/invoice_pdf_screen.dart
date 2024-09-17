@@ -19,11 +19,11 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'dart:io';
 
 class InvoicePdfRoute {
-  static Widget get route => InvoicePdfScreen();
+  static Widget get route => const InvoicePdfScreen();
 }
 
 class InvoicePdfScreen extends StatelessWidget {
-  InvoicePdfScreen({super.key});
+  const InvoicePdfScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +48,12 @@ class InvoicePdfScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    InvoicePdfBloc bloc = context.read<InvoicePdfBloc>();
     return BlocBuilder<InvoicePdfBloc, InvoicePdfState>(
       builder: (context, state) {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.my_invoices,
@@ -76,8 +75,8 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                         CustomSnackBar.showSnackBar(
                             context: context,
                             title:
-                                '${AppLocalizations.of(context)!.storage_permission}',
-                            type: SnackBarType.FAILURE);
+                                AppLocalizations.of(context)!.storage_permission,
+                            type: SnackBarType.failure);
                         return;
                       }
                     }
@@ -100,15 +99,15 @@ class InvoicePdfScreenWidget extends StatelessWidget {
             ),
           ),
           body: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             child: SafeArea(
               child: Stack(
                 children: [
                   Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.all(AppConstants.padding_8),
-                        padding: EdgeInsets.symmetric(
+                        margin: const EdgeInsets.all(AppConstants.padding_8),
+                        padding: const EdgeInsets.symmetric(
                             vertical: AppConstants.padding_8,
                             horizontal: AppConstants.padding_8),
                         decoration: BoxDecoration(
@@ -119,7 +118,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                       AppColors.shadowColor.withOpacity(0.15),
                                   blurRadius: AppConstants.blur_10),
                             ],
-                            borderRadius: BorderRadius.all(
+                            borderRadius: const BorderRadius.all(
                                 Radius.circular(AppConstants.radius_5))),
                         child: Column(
                           children: [
@@ -243,14 +242,14 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                       ? Container(
                           height: getScreenHeight(context),
                           width: getScreenWidth(context),
-                          color: Color.fromARGB(20, 0, 0, 0),
+                          color: const Color.fromARGB(20, 0, 0, 0),
                           alignment: Alignment.center,
                           child: Container(
                             height: 80,
                             width: 80,
                             decoration: BoxDecoration(
                                 color: AppColors.whiteColor,
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                     Radius.circular(AppConstants.radius_10))),
                             alignment: Alignment.center,
                             child: Column(

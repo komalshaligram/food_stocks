@@ -6,7 +6,7 @@ part of 'activity_time_bloc.dart';
 class ActivityTimeState with _$ActivityTimeState {
   const factory ActivityTimeState({
     required String time,
-    required List<ActivityTimeModel> OperationTimeList,
+    required List<ActivityTimeModel> operationTimeList,
     required bool isRefresh,
     required String errorMessage,
     required bool isUpdate,
@@ -15,9 +15,9 @@ class ActivityTimeState with _$ActivityTimeState {
 
   }) = _ActivityTimeState;
 
-  factory ActivityTimeState.initial()=> ActivityTimeState(
+  factory ActivityTimeState.initial()=>  const ActivityTimeState(
     time: AppStrings.timeString,
-        OperationTimeList: [],
+        operationTimeList: [],
         isRefresh: false,
         errorMessage: '',
         isUpdate: false,

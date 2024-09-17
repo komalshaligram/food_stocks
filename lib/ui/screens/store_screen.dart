@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/bloc/store_category/store_category_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/data/model/search_model/search_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -28,9 +29,9 @@ import '../../bloc/store/store_bloc.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_strings.dart';
 import '../widget/common_dialog_with_one_button.dart';
-import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_product_details_widget.dart';
+import '../widget/custom_dialog.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/pesach_banner_shimmer.dart';
 import '../widget/product_details_shimmer_widget.dart';
@@ -56,13 +57,13 @@ class StoreScreen extends StatelessWidget {
           ..add(StoreEvent.getRecommendationProductsListEvent(context: context))
           ..add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
       },
-      child: StoreScreenWidget(),
+      child: const StoreScreenWidget(),
     );
   }
 }
 
 class StoreScreenWidget extends StatelessWidget {
-  StoreScreenWidget({Key? key}) : super(key: key);
+  const StoreScreenWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -76,19 +77,16 @@ class StoreScreenWidget extends StatelessWidget {
         if (state.isAccountPermissionShimmering) {
           BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
-        debugPrint('state.isDialogOpen${state.isDialogOpen}');
         if(state.isAppOnMaintenance && !state.isDialogOpen){
           appUnderMaintenanceDialog(context: context, state: state);
           BlocProvider.of<StoreBloc>(context)
               .add(StoreEvent.updateMaintenanceEvent(context: context));
-          debugPrint('Maintenance is on going...........');
         }
       },
       child: BlocBuilder<StoreBloc, StoreState>(
         builder: (context, state) {
           return FocusDetector(
             onFocusGained: () {
-              // bloc.add(StoreEvent.userApproveEvent(context: context));
               bloc.add(StoreEvent.getPermissionList(context: context));
               if (!state.isAppOnMaintenance) {
                 bloc.add(StoreEvent.generalSettings(context: context, dialogContext: context,isRetryLoading: false));
@@ -108,7 +106,7 @@ class StoreScreenWidget extends StatelessWidget {
                           return Container(
                             height: 30,
                             width: 30,
-                            margin: EdgeInsets.only(top: 90),
+                            margin: const EdgeInsets.only(top: 90),
                             decoration: BoxDecoration(boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)], color: AppColors.whiteColor, shape: BoxShape.circle),
                             child: CupertinoActivityIndicator(
                               color: AppColors.mainColor,
@@ -118,7 +116,7 @@ class StoreScreenWidget extends StatelessWidget {
                         },
                       ),
                       footer: CustomFooter(
-                        builder: (context, mode) => StoreScreenShimmerWidget(),
+                        builder: (context, mode) => const StoreScreenShimmerWidget(),
                       ),
                       onRefresh: () {
                         if (!state.isAppOnMaintenance) {
@@ -135,7 +133,7 @@ class StoreScreenWidget extends StatelessWidget {
                       },
                       child: SingleChildScrollView(
                         child: state.isShimmering && state.productCategoryList.isEmpty
-                            ? StoreScreenShimmerWidget()
+                            ? const StoreScreenShimmerWidget()
                             : AnimationLimiter(
                                 child: Column(
                                   children: AnimationConfiguration.toStaggeredList(
@@ -166,7 +164,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   itemCount: state.productCategoryList.length,
                                                   shrinkWrap: true,
                                                   scrollDirection: Axis.horizontal,
-                                                  padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                                   itemBuilder: (context, index) {
                                                     return buildCategoryListItem(
                                                         categoryImage: state.productCategoryList[index].categoryImage ?? '',
@@ -187,7 +185,7 @@ class StoreScreenWidget extends StatelessWidget {
                                             ],
                                           ),
                                           crossFadeState: state.productCategoryList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                          duration: Duration(milliseconds: 300)),
+                                          duration: const Duration(milliseconds: 300)),
                                       AnimatedCrossFade(
                                           firstChild: getScreenWidth(context).width,
                                           secondChild: Column(
@@ -209,7 +207,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   itemCount: state.companiesList.length,
                                                   shrinkWrap: true,
                                                   scrollDirection: Axis.horizontal,
-                                                  padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                                   itemBuilder: (context, index) {
                                                     return buildCompanyListItem(
                                                         companyLogo: state.companiesList[index].brandLogo ?? '',
@@ -228,9 +226,9 @@ class StoreScreenWidget extends StatelessWidget {
                                             ],
                                           ),
                                           crossFadeState: state.companiesList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                          duration: Duration(milliseconds: 300)),
+                                          duration: const Duration(milliseconds: 300)),
                                       state.pesachBannerShimmering && state.pesachBannerURL.isEmpty
-                                          ? PesachBannerShimmerWidget()
+                                          ? const PesachBannerShimmerWidget()
                                           : state.showPesachBanner && state.pesachBannerURL.isNotEmpty
                                               ? InkWell(
                                                   onTap: () {
@@ -242,7 +240,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                       placeholder: (context, url) => const PesachBannerShimmerWidget(),
                                                       imageUrl: '${AppUrls.baseFileUrl}${state.pesachBannerURL}',
                                                       errorWidget: (context, url, error) {
-                                                        debugPrint('home error : $error');
                                                         return Container(
                                                           color: AppColors.whiteColor,
                                                         );
@@ -270,14 +267,10 @@ class StoreScreenWidget extends StatelessWidget {
                                                   itemCount: state.suppliersList.data?.length,
                                                   shrinkWrap: true,
                                                   scrollDirection: Axis.horizontal,
-                                                  padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                                   itemBuilder: (context, index) {
                                                     return buildCompanyListItem(
                                                         companyLogo: state.suppliersList.data?[index].logo ?? '',
-                                                        /*    isHomePreference:  (state.suppliersList.data != null )  ?  (state
-                                                            .suppliersList.data?[index]
-                                                            .supplierDetail?.isHomePreference ??
-                                                            false) : false,*/
                                                         companyName: state.suppliersList.data?[index].supplierDetail?.companyName ?? '',
                                                         onTap: () {
                                                           Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.suppliersList.data?[index].id ?? ''});
@@ -288,7 +281,7 @@ class StoreScreenWidget extends StatelessWidget {
                                             ],
                                           ),
                                           crossFadeState: state.suppliersList.data?.isEmpty ?? true ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                          duration: Duration(milliseconds: 300)),
+                                          duration: const Duration(milliseconds: 300)),
                                       AnimatedCrossFade(
                                           firstChild: getScreenWidth(context).width,
                                           secondChild: Column(
@@ -296,12 +289,7 @@ class StoreScreenWidget extends StatelessWidget {
                                               buildListTitles(
                                                   context: context,
                                                   title: AppLocalizations.of(context)!.sales,
-                                                  subTitle: /*state.productSalesList
-                                              .length <
-                                              6
-                                              ? ''
-                                              : */
-                                                      AppLocalizations.of(context)!.all_sales,
+                                                  subTitle: AppLocalizations.of(context)!.all_sales,
                                                   onTap: () {
                                                     Navigator.pushNamed(context, RouteDefine.productSaleScreen.name);
                                                   }),
@@ -312,7 +300,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   itemCount: state.productSalesList.length,
                                                   shrinkWrap: true,
                                                   scrollDirection: Axis.horizontal,
-                                                  padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                                   itemBuilder: (context, index) {
                                                     return CommonProductSaleItemWidget(
                                                         isSale: state.productSalesList[index].sale?.isSale,
@@ -329,7 +317,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                         lowStock: state.productSalesList[index].lowStock ?? '',
                                                         isPesach: state.productSalesList[index].isPesach,
                                                         onButtonTap: () {
-                                                          debugPrint("tap 1");
                                                           if (!state.isGuestUser) {
                                                             showProductDetails(isSaleOn: state.isSaleOn, context: context, productStock: state.productSalesList[index].productStock.toString(), productId: state.productSalesList[index].id ?? '');
                                                           } else {
@@ -342,7 +329,7 @@ class StoreScreenWidget extends StatelessWidget {
                                             ],
                                           ),
                                           crossFadeState: state.productSalesList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                          duration: Duration(milliseconds: 300)),
+                                          duration: const Duration(milliseconds: 300)),
                                       !state.isGuestUser
                                           ? AnimatedCrossFade(
                                               firstChild: getScreenWidth(context).width,
@@ -362,7 +349,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                         itemCount: state.recommendedProductsList.length,
                                                         shrinkWrap: true,
                                                         scrollDirection: Axis.horizontal,
-                                                        padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                                         itemBuilder: (context, index) => CommonProductSaleItemWidget(
                                                             isSale: state.recommendedProductsList[index].sale?.isSale,
                                                             isGuestUser: state.isGuestUser,
@@ -378,7 +365,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                             lowStock: state.recommendedProductsList[index].lowStock ?? '',
                                                             isPesach: state.recommendedProductsList[index].isPesach,
                                                             onButtonTap: () {
-                                                              debugPrint("tap 2");
                                                               if (!state.isGuestUser) {
                                                                 showProductDetails(isSaleOn: state.isSaleOn, context: context, productId: state.recommendedProductsList[index].id ?? '', productStock: state.recommendedProductsList[index].productStock.toString());
                                                               } else {
@@ -389,7 +375,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                 ],
                                               ),
                                               crossFadeState: state.recommendedProductsList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                              duration: Duration(milliseconds: 300))
+                                              duration: const Duration(milliseconds: 300))
                                           : 0.width,
                                       !state.isGuestUser
                                           ? AnimatedCrossFade(
@@ -410,7 +396,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                         itemCount: state.previousOrderProductsList.length,
                                                         shrinkWrap: true,
                                                         scrollDirection: Axis.horizontal,
-                                                        padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                                         itemBuilder: (context, index) => CommonProductSaleItemWidget(
                                                             isSale: state.previousOrderProductsList[index].sale?.isSale,
                                                             isGuestUser: state.isGuestUser,
@@ -426,7 +412,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                             lowStock: state.previousOrderProductsList[index].lowStock ?? '',
                                                             isPesach: state.previousOrderProductsList[index].isPesach,
                                                             onButtonTap: () {
-                                                              debugPrint("tap 1");
                                                               if (!state.isGuestUser) {
                                                                 showProductDetails(isSaleOn: state.isSaleOn, context: context, productId: state.previousOrderProductsList[index].id ?? '', productStock: state.previousOrderProductsList[index].productStock.toString());
                                                               } else {
@@ -437,7 +422,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                 ],
                                               ),
                                               crossFadeState: state.previousOrderProductsList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                              duration: Duration(milliseconds: 300))
+                                              duration: const Duration(milliseconds: 300))
                                           : 0.width,
                                       AppConstants.bottomNavSpace.height,
                                     ],
@@ -448,23 +433,23 @@ class StoreScreenWidget extends StatelessWidget {
                     ),
                     CommonSearchWidget(
                       onCloseTap: () {
-                        bloc.add(StoreEvent.changeCategoryExpansion(isOpened: false));
+                        bloc.add(const StoreEvent.changeCategoryExpansion(isOpened: false));
                       },
                       isCategoryExpand: state.isCategoryExpand,
                       isSearching: state.isSearching,
                       onFilterTap: () {
-                        bloc.add(StoreEvent.changeCategoryExpansion(isOpened: true));
+                        bloc.add(const StoreEvent.changeCategoryExpansion(isOpened: true));
                         bloc.add(StoreEvent.getProductCategoriesListEvent(context: context));
                       },
                       onSearchTap: () {
                         if (state.searchController.text != '') {
-                          bloc.add(StoreEvent.changeCategoryExpansion(isOpened: true));
+                          bloc.add(const StoreEvent.changeCategoryExpansion(isOpened: true));
                         }
                         bloc.add(StoreEvent.globalSearchEvent(context: context));
                       },
                       onSearch: (String search) {
                         if (search.length > 1) {
-                          bloc.add(StoreEvent.changeCategoryExpansion(isOpened: true));
+                          bloc.add(const StoreEvent.changeCategoryExpansion(isOpened: true));
                           bloc.add(StoreEvent.globalSearchEvent(context: context));
                         }
                       },
@@ -473,17 +458,17 @@ class StoreScreenWidget extends StatelessWidget {
                         Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
                       },
                       onOutSideTap: () {
-                        bloc.add(StoreEvent.changeCategoryExpansion(isOpened: false));
+                        bloc.add(const StoreEvent.changeCategoryExpansion(isOpened: false));
                       },
                       onSearchItemTap: () {
-                        bloc.add(StoreEvent.changeCategoryExpansion());
+                        bloc.add(const StoreEvent.changeCategoryExpansion());
                       },
                       controller: state.searchController,
                       searchList: state.searchList,
                       searchResultWidget: state.searchList.isEmpty
                           ? Center(
                               child: Text(
-                                '${AppLocalizations.of(context)!.search_result_not_found}',
+                                AppLocalizations.of(context)!.search_result_not_found,
                                 style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
                               ),
                             )
@@ -504,7 +489,7 @@ class StoreScreenWidget extends StatelessWidget {
                                     searchName: state.searchList[index].name,
                                     searchImage: state.searchList[index].image,
                                     searchType: state.searchList[index].searchType,
-                                    isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().length >= 1,
+                                    isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
                                     isLastItem: state.searchList.length - 1 == index,
                                     isShowSearchLabel: index == 0
                                         ? true
@@ -512,8 +497,6 @@ class StoreScreenWidget extends StatelessWidget {
                                             ? true
                                             : false,
                                     onSeeAllTap: () async {
-                                      debugPrint("searchType: ${state.searchList[index].searchType}");
-
                                       if (state.searchList[index].searchType == SearchTypes.category) {
                                         dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
                                         if (searchResult != null) {
@@ -539,12 +522,11 @@ class StoreScreenWidget extends StatelessWidget {
                                         CustomSnackBar.showSnackBar(
                                           context: context,
                                           title: AppStrings.getLocalizedStrings('Oops! in progress', context),
-                                          type: SnackBarType.SUCCESS,
+                                          type: SnackBarType.success,
                                         );
                                         return;
                                       }
                                       if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
-                                        debugPrint("tap 4");
                                         if (!state.isGuestUser) {
                                           showProductDetails(isSaleOn: state.isSaleOn, context: context, productId: state.searchList[index].searchId, isBarcode: true, productStock: state.searchList[index].productStock.toString());
                                         } else {
@@ -558,7 +540,7 @@ class StoreScreenWidget extends StatelessWidget {
                                       } else {
                                         state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
                                       }
-                                      bloc.add(StoreEvent.changeCategoryExpansion());
+                                      bloc.add(const StoreEvent.changeCategoryExpansion());
                                     });
                               },
                             ),
@@ -566,8 +548,7 @@ class StoreScreenWidget extends StatelessWidget {
                         String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
                         if (scanResult != '-1') {
                           // -1 result for cancel scanning
-                          debugPrint('result = $scanResult');
-                          debugPrint("tap 5");
+
                           if (!state.isGuestUser) {
                             showProductDetails(isSaleOn: state.isSaleOn, context: context, productId: scanResult, isBarcode: true, productStock: '1');
                           } else {
@@ -621,11 +602,11 @@ class StoreScreenWidget extends StatelessWidget {
         : Container(
             height: 150,
             width: 105,
-            margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_10),
+            margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_10),
             clipBehavior: Clip.hardEdge,
             // alignment: Alignment.center,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               color: AppColors.whiteColor,
               boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)],
             ),
@@ -633,62 +614,41 @@ class StoreScreenWidget extends StatelessWidget {
               onTap: onTap,
               child: Stack(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        // top: AppConstants.padding_5,
-                        // left: AppConstants.padding_5,
-                        //  right: AppConstants.padding_5,
-                        // bottom: AppConstants.padding_20,
-                        ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(AppConstants.padding_10)),
-                      child: categoryImage.isNotEmpty
-                          ? CachedNetworkImage(
-                              imageUrl: "${AppUrls.baseFileUrl}$categoryImage",
-                              fit: BoxFit.cover,
-                              height: 140,
-                              width: 105,
-                              alignment: Alignment.center,
-                              placeholder: (context, url) {
-                                return CommonShimmerWidget(
-                                  child: Container(
-                                    height: 140,
-                                    width: 105,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.whiteColor,
-                                    ),
-                                    // alignment: Alignment.center,
-                                    // child: CupertinoActivityIndicator(
-                                    //   color: AppColors.blackColor,
-                                    // ),
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.padding_10)),
+                    child: categoryImage.isNotEmpty
+                        ? CachedNetworkImage(
+                            imageUrl: "${AppUrls.baseFileUrl}$categoryImage",
+                            fit: BoxFit.cover,
+                            height: 140,
+                            width: 105,
+                            alignment: Alignment.center,
+                            placeholder: (context, url) {
+                              return CommonShimmerWidget(
+                                child: Container(
+                                  height: 140,
+                                  width: 105,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.whiteColor,
                                   ),
-                                );
-                              },
-                              errorWidget: (context, error, stackTrace) {
-                                debugPrint('product category list image error : $error');
-                                return Container(
-                                  // padding: EdgeInsets.only(
-                                  //     bottom: AppConstants.padding_10, top: 0),
-                                  child: Image.asset(
-                                    AppImagePath.imageNotAvailable5,
-                                    fit: BoxFit.cover,
-                                    width: 140,
-                                    height: 110,
-                                  ),
-                                );
-                              },
-                            )
-                          : Container(
-                              // padding: EdgeInsets.only(
-                              //     bottom: AppConstants.padding_10, top: 0),
-                              child: Image.asset(
+                                ),
+                              );
+                            },
+                            errorWidget: (context, error, stackTrace) {
+                              return Image.asset(
                                 AppImagePath.imageNotAvailable5,
                                 fit: BoxFit.cover,
                                 width: 140,
                                 height: 110,
-                              ),
-                            ),
-                    ),
+                              );
+                            },
+                          )
+                        : Image.asset(
+                          AppImagePath.imageNotAvailable5,
+                          fit: BoxFit.cover,
+                          width: 140,
+                          height: 110,
+                        ),
                   ),
                   Positioned(
                     bottom: 0,
@@ -697,11 +657,11 @@ class StoreScreenWidget extends StatelessWidget {
                     child: Container(
                       // height: 20,
                       alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_2),
+                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_2),
                       decoration: BoxDecoration(
                         gradient: AppColors.appMainGradientColor,
                         //    color: AppColors.mainColor,
-                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
+                        borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
                         // border: Border.all(color: AppColors.whiteColor, width: 1),
                       ),
                       clipBehavior: Clip.hardEdge,
@@ -735,14 +695,14 @@ class StoreScreenWidget extends StatelessWidget {
       width: 140,
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
-        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         boxShadow: [
           BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
         ],
       ),
       clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
-      padding: EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
+      margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
+      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
       child: InkWell(
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
@@ -764,25 +724,16 @@ class StoreScreenWidget extends StatelessWidget {
                             width: 70,
                             decoration: BoxDecoration(
                               color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+                              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
                             ),
-                            // alignment: Alignment.center,
-                            // child: CupertinoActivityIndicator(
-                            //   color: AppColors.blackColor,
-                            // ),
                           ),
                         );
                       },
                       errorWidget: (context, error, stackTrace) {
-                        debugPrint('sale list image error : $error');
-                        return Container(
-                          child: Image.asset(AppImagePath.imageNotAvailable5, height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                        );
+                        return Image.asset(AppImagePath.imageNotAvailable5, height: 70, width: double.maxFinite, fit: BoxFit.cover);
                       },
                     )
-                  : Container(
-                      child: Image.asset(AppImagePath.imageNotAvailable5, height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                    ),
+                  : Image.asset(AppImagePath.imageNotAvailable5, height: 70, width: double.maxFinite, fit: BoxFit.cover),
             ),
             5.height,
             Text(
@@ -825,14 +776,14 @@ class StoreScreenWidget extends StatelessWidget {
             height: 150,
             width: 105,
             clipBehavior: Clip.hardEdge,
-            margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
+            margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               color: AppColors.whiteColor,
               boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)],
             ),
             child: InkWell(
-              borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               onTap: onTap,
               child: Stack(
                 children: [
@@ -856,25 +807,20 @@ class StoreScreenWidget extends StatelessWidget {
                               );
                             },
                             errorWidget: (context, error, stackTrace) {
-                              debugPrint('product category list image error : $error');
-                              return Container(
-                                child: Image.asset(
-                                  AppImagePath.imageNotAvailable5,
-                                  fit: BoxFit.cover,
-                                  width: 110,
-                                  height: 105,
-                                ),
+                              return Image.asset(
+                                AppImagePath.imageNotAvailable5,
+                                fit: BoxFit.cover,
+                                width: 110,
+                                height: 105,
                               );
                             },
                           )
-                        : Container(
-                            child: Image.asset(
-                              AppImagePath.imageNotAvailable5,
-                              fit: BoxFit.cover,
-                              width: 110,
-                              height: 105,
-                            ),
-                          ),
+                        : Image.asset(
+                          AppImagePath.imageNotAvailable5,
+                          fit: BoxFit.cover,
+                          width: 110,
+                          height: 105,
+                        ),
                   ),
                   Positioned(
                     bottom: 0,
@@ -882,16 +828,11 @@ class StoreScreenWidget extends StatelessWidget {
                     right: 0,
                     child: Container(
                       height: 25,
-                      // width: 90,
                       alignment: Alignment.center,
-                      // margin:
-                      //     EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                      padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_2),
+                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_2),
                       decoration: BoxDecoration(
                         gradient: AppColors.appMainGradientColor,
-                        //  color: AppColors.mainColor,
-                        borderRadius: BorderRadius.only(bottomRight: Radius.circular(AppConstants.radius_10), bottomLeft: Radius.circular(AppConstants.radius_10)),
-                        // border: Border.all(color: AppColors.whiteColor, width: 1),
+                        borderRadius: const BorderRadius.only(bottomRight: Radius.circular(AppConstants.radius_10), bottomLeft: Radius.circular(AppConstants.radius_10)),
                       ),
                       child: CommonMarqueeWidget(
                         direction: Axis.horizontal,
@@ -916,7 +857,7 @@ class StoreScreenWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(color: AppColors.whiteColor, border: Border(bottom: BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1))),
-        padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_20, vertical: AppConstants.padding_15),
+        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20, vertical: AppConstants.padding_15),
         child: Text(
           category,
           style: AppStyles.rkRegularTextStyle(
@@ -956,7 +897,7 @@ class StoreScreenWidget extends StatelessWidget {
                   builder: (blocContext, state) {
                     return Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(AppConstants.radius_30),
                           topRight: Radius.circular(AppConstants.radius_30),
                         ),
@@ -964,7 +905,7 @@ class StoreScreenWidget extends StatelessWidget {
                       ),
                       clipBehavior: Clip.hardEdge,
                       child: state.isProductLoading
-                          ? ProductDetailsShimmerWidget()
+                          ? const ProductDetailsShimmerWidget()
                           : state.productDetails.isEmpty
                               ? NoDataBottomSheet(dialogContext: context)
                               : SingleChildScrollView(
@@ -979,7 +920,14 @@ class StoreScreenWidget extends StatelessWidget {
                                         totalBottleDeposit: (state.bottlePrice * (state.productDetails.first.numberOfUnit ?? 1).toDouble() * state.productStockList[state.productStockUpdateIndex].quantity),
                                         isBottle: (state.productDetails.first.isBottle ?? false),
                                         addToOrderTap: () {
-                                          context.read<StoreBloc>().add(StoreEvent.addToCartProductEvent(context: context1, productId: productId));
+                                          if(int.parse(state.productDetails.first.sale!.saleMinQuantity!)<= state
+                                              .productStockList[state.productStockUpdateIndex]
+                                              .quantity){
+                                            context.read<StoreBloc>().add(StoreEvent.addToCartProductEvent(context: context1, productId: productId));
+                                          }else{
+                                            showMinQtyConfirmDialog(context,productId,state.productDetails.first.sale!.saleMinQuantity.toString());
+                                          }
+
                                         },
                                         isLoading: state.isLoading,
                                         imageOnTap: () {
@@ -988,7 +936,7 @@ class StoreScreenWidget extends StatelessWidget {
                                             builder: (dialogContext) {
                                               return Stack(
                                                 children: [
-                                                  Container(
+                                                  SizedBox(
                                                     height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
                                                     width: getScreenWidth(context),
                                                     child: GestureDetector(
@@ -1013,8 +961,8 @@ class StoreScreenWidget extends StatelessWidget {
                                                       onTap: () {
                                                         Navigator.pop(dialogContext);
                                                       },
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.only(top: 10.0),
+                                                      child: const Padding(
+                                                        padding: EdgeInsets.only(top: 10.0),
                                                         child: Icon(
                                                           Icons.close,
                                                           color: Colors.white,
@@ -1033,15 +981,7 @@ class StoreScreenWidget extends StatelessWidget {
                                         productImages: [state.productDetails.first.mainImage ?? '', ...?state.productDetails.first.images?.map((image) => image.imageUrl ?? '')],
                                         productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? ''),
                                         productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productStockUpdateIndex].totalPrice * state.productStockList[state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
-                                        /*  productWeight: state
-                                  .productDetails.first.itemsWeight
-                                  .toDouble(),*/
                                         productStock: (state.productStockList[state.productStockUpdateIndex].stock.toString()),
-                                        isRTL: context.rtl,
-                                        /*isSupplierAvailable:
-                              state.productSupplierList.isEmpty
-                                  ? false
-                                  : true,*/
                                         scrollController: scrollController,
                                         productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
                                         onQuantityChanged: (quantity) {
@@ -1092,7 +1032,7 @@ class StoreScreenWidget extends StatelessWidget {
         ),
         Container(
           height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
-          padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -1137,8 +1077,8 @@ class StoreScreenWidget extends StatelessWidget {
               return CustomOneButtonDialog(
                 isLoading: state.retryLoading,
                 directionality: state.language,
-                title: '${AppLocalizations.of(context)!.under_maintenance}',
-                positiveTitle: '${AppLocalizations.of(context)!.retry}',
+                title: AppLocalizations.of(context)!.under_maintenance,
+                positiveTitle: AppLocalizations.of(context)!.retry,
                 positiveOnTap: () async {
                   bloc.add(StoreEvent.generalSettings(
                     context: context,
@@ -1154,5 +1094,38 @@ class StoreScreenWidget extends StatelessWidget {
     } else {
       context.read<StoreBloc>().add(StoreEvent.updateMaintenanceEvent(context: context));
     }
+  }
+
+  showMinQtyConfirmDialog(BuildContext context,String productId,String minBox){
+    showDialog(
+      context: context,
+      builder: (context1) =>
+          BlocProvider.value(
+            value: context.read<StoreBloc>(),
+            child: BlocBuilder<StoreBloc, StoreState>(
+              builder: (context, state) {
+                StoreBloc bloc = context.read<StoreBloc>();
+                return CustomDialog(
+                  directionality: state.language,
+                  title:'${AppLocalizations.of(context)?.minimum_box_title}$minBox${AppLocalizations.of(context)?.confirm_minimum_box}',
+                  positiveTitle: AppLocalizations.of(context)!.yes,
+                  negativeTitle: AppLocalizations.of(context)!.no,
+                  negativeOnTap: ()async{
+                    Navigator.pop(context);
+                  },
+                  positiveOnTap: () async {
+                    Navigator.pop(context);
+                    Navigator.pop(context1);
+                    bloc.add(StoreEvent.addToCartProductEvent(
+                        context: context1,
+                        productId: productId
+                    ));
+                  },
+                );
+
+              },
+            ),
+          ),
+    );
   }
 }

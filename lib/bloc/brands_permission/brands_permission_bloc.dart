@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/permission_model/permission_model.dart';
@@ -27,16 +28,14 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
           final res = await DioClient(event.context).get(
               path: '${AppUrls.getBrandPermissionUrl}${event.subUserId}');
           BrandPermissionResModel response = BrandPermissionResModel.fromJson(res);
-          debugPrint('BrandPermission response = ${response.data.toString()}');
-          debugPrint('BrandPermission url = ${AppUrls.baseUrl}${AppUrls.getBrandPermissionUrl}${event.subUserId}');
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
 
             emit(state.copyWith(isShimmering:false));
-            List<permissionModel>brandPermissionList = [];
+            List<PermissionModel>brandPermissionList = [];
 
             response.data?.forEach((element) {
               brandPermissionList.add(
-                  permissionModel(
+                  PermissionModel(
                       title: element.brand?.brandName ?? '',
                     isEnable: element.isAllowed ?? false,
                     brandId: element.brand?.id ?? ''
@@ -63,12 +62,12 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
 
 
       if(event is _switchButtonEvent){
-        List<permissionModel>brandPermissionList = state.brandPermissionList.toList(growable: true);
+        List<PermissionModel>brandPermissionList = state.brandPermissionList.toList(growable: true);
         if(event.index == -1){
           bool isEnable = !state.isSelectAll;
-          brandPermissionList.forEach((element) {
+          for (var element in brandPermissionList) {
             element.isEnable = isEnable;
-          });
+          }
           emit(state.copyWith(brandPermissionList: brandPermissionList,isSelectAll:isEnable ));
         }
         else {
@@ -96,13 +95,13 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
         try {
           emit(state.copyWith(isUpdateProcess: true));
           List<BrandPermission> updateBrandPermission = [];
-          state.brandPermissionList.forEach((element) {
+          for (var element in state.brandPermissionList) {
             updateBrandPermission.add(
                 BrandPermission(
                   brandId: element.brandId,
                   isAllowed: element.isEnable
             ));
-          });
+          }
 
           UpdatePermissionModel req = UpdatePermissionModel(
             brandPermissions: updateBrandPermission
@@ -117,22 +116,18 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
             return value == null;
           });
 
-          debugPrint('updatePermission req  = $updatePermissionReq');
-
 
           final response = await DioClient(event.context).put(
               path: '${AppUrls.updatePermissionUrl}${state.subUserId}',
               data: updatePermissionReq);
 
-          debugPrint('updatePermission url  = ${AppUrls.baseUrl}${AppUrls.updatePermissionUrl}');
-          debugPrint('updatePermission response  = ${response}');
-          if (response[AppStrings.statusString] == 200) {
+          if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isUpdateProcess: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:  '${AppLocalizations.of(event.context)!.successmessage}',
-                type: SnackBarType.SUCCESS);
+                title:  AppLocalizations.of(event.context)!.success_message,
+                type: SnackBarType.success);
 
           } else {
             emit(state.copyWith(isUpdateProcess: false));

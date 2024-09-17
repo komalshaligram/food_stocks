@@ -8,6 +8,7 @@ class WayOfPaymentEvent with _$WayOfPaymentEvent {
 
   const factory WayOfPaymentEvent.getArgumentEvent({
     required bool isUpdate,
+    required TermsConditionReqModel termsReqModel
   }) = _getArgumentEvent;
 
 }

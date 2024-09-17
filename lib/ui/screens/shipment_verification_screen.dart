@@ -22,7 +22,7 @@ import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 
 class ShipmentVerificationRoute {
-  static Widget get route => ShipmentVerificationScreen();
+  static Widget get route => const ShipmentVerificationScreen();
 }
 
 class ShipmentVerificationScreen extends StatelessWidget {
@@ -64,19 +64,19 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.shipment_verification,
               iconData: Icons.arrow_back_ios_sharp,
               trailingWidget: Padding(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   vertical: AppConstants.padding_10,
                 ),
                 child: CircularButtonWidget(
                   buttonName: AppLocalizations.of(context)!.total,
                     buttonValue:
-                    '${formatNumber(value: args?[AppStrings.totalAmountString] ?? '0', local: AppStrings.hebrewLocal)}',
+                    formatNumber(value: args?[AppStrings.totalAmountString] ?? '0', local: AppStrings.hebrewLocal),
                 ),
               ),
               onTap: () {
@@ -86,7 +86,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
           ),
           body: SafeArea(
             child: Padding(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                   vertical: AppConstants.padding_15,
                   horizontal: AppConstants.padding_15),
               child: Form(
@@ -97,7 +97,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                       padding: EdgeInsets.symmetric(
+                       padding: const EdgeInsets.symmetric(
                             vertical: AppConstants.padding_15,
                             horizontal: AppConstants.padding_10),
                         decoration: BoxDecoration(
@@ -107,7 +107,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                 color: AppColors.shadowColor.withOpacity(0.15),
                                 blurRadius: AppConstants.blur_10),
                           ],
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                               Radius.circular(AppConstants.radius_5)),
                         ),
                         child: Column(
@@ -168,7 +168,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                   flexValue: 2,
                                   title: AppLocalizations.of(context)!.total_order,
                                   value:
-                                      '${formatNumber(value: args?[AppStrings.totalOrderString] ?? '0', local: AppStrings.hebrewLocal)}',
+                                      formatNumber(value: args?[AppStrings.totalOrderString] ?? '0', local: AppStrings.hebrewLocal),
                                   titleColor: AppColors.mainColor,
                                   valueColor: AppColors.blackColor,
                                   valueTextWeight: FontWeight.w500,
@@ -216,7 +216,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                       ),
                       10.height,
                       Padding(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                             vertical: AppConstants.padding_5,
                             horizontal: AppConstants.padding_15),
                         child: Text(
@@ -230,7 +230,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                       SizedBox(
                         height: getScreenHeight(context) / 2.7,
                         child: Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: AppConstants.padding_15,
                               horizontal: AppConstants.padding_10),
                           decoration: BoxDecoration(
@@ -240,7 +240,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                   color: AppColors.shadowColor.withOpacity(0.15),
                                   blurRadius: AppConstants.blur_10),
                             ],
-                            borderRadius: BorderRadius.all(
+                            borderRadius: const BorderRadius.all(
                                 Radius.circular(AppConstants.radius_5)),
                           ),
                           child: Column(
@@ -286,7 +286,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                       },
                                       child: SvgPicture.asset(
                                         AppImagePath.delete,
-                                        colorFilter: ColorFilter.mode( Colors.red, BlendMode.srcIn),
+                                        colorFilter: const ColorFilter.mode( Colors.red, BlendMode.srcIn),
                                       ),
                                     ),
                                   ],
@@ -324,14 +324,14 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                               CustomSnackBar.showSnackBar(
                                   context: context,
                                   title:
-                                  '${AppLocalizations.of(context)!.signature_missing}',
-                                  type: SnackBarType.FAILURE);
+                                  AppLocalizations.of(context)!.signature_missing,
+                                  type: SnackBarType.failure);
                             }
                           }
                   
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: AppConstants.padding_20,
                               horizontal: AppConstants.padding_30),
                           color: AppColors.pageColor,

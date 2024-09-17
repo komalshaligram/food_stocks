@@ -4,72 +4,72 @@ part of 'supplier_products_bloc.dart';
 class SupplierProductsEvent with _$SupplierProductsEvent {
   const factory SupplierProductsEvent.getSupplierProductsIdEvent(
       {required String supplierId,
-      required String search}) = _GetSupplierProductsIdEvent;
+      required String search}) = _getSupplierProductsIdEvent;
 
   const factory SupplierProductsEvent.getSupplierProductsListEvent(
-      {required BuildContext context,required String searchType}) = _GetSupplierProductsListEvent;
+      {required BuildContext context,required String searchType}) = _getSupplierProductsListEvent;
 
   const factory SupplierProductsEvent.getProductDetailsEvent(
       {required BuildContext context,
       required String productId,
       required bool isBarcode,
         required int productListIndex
-      }) = _GetProductDetailsEvent;
+      }) = _getProductDetailsEvent;
 
   const factory SupplierProductsEvent.increaseQuantityOfProduct(
-      {required BuildContext context}) = _IncreaseQuantityOfProduct;
+      {required BuildContext context}) = _increaseQuantityOfProduct;
 
   const factory SupplierProductsEvent.decreaseQuantityOfProduct(
-      {required BuildContext context}) = _DecreaseQuantityOfProduct;
+      {required BuildContext context}) = _decreaseQuantityOfProduct;
 
   const factory SupplierProductsEvent.updateQuantityOfProduct(
       {required BuildContext context,
-      required String quantity}) = _UpdateQuantityOfProduct;
+      required String quantity}) = _updateQuantityOfProduct;
 
   const factory SupplierProductsEvent.changeNoteOfProduct(
-      {required String newNote}) = _ChangeNoteOfProduct;
+      {required String newNote}) = _changeNoteOfProduct;
 
   const factory SupplierProductsEvent.changeSupplierSelectionExpansionEvent(
-      {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
+      {bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
   const factory SupplierProductsEvent.supplierSelectionEvent(
       {required int supplierIndex,
       required BuildContext context,
-      required int supplierSaleIndex}) = _SupplierSelectionEvent;
+      required int supplierSaleIndex}) = _supplierSelectionEvent;
 
   const factory SupplierProductsEvent.addToCartProductEvent(
       {required BuildContext context,
       required String productId,
-      }) = _AddToCartProductEvent;
+      }) = _addToCartProductEvent;
 
-  const factory SupplierProductsEvent.setCartCountEvent() = _SetCartCountEvent;
+  const factory SupplierProductsEvent.setCartCountEvent() = _setCartCountEvent;
 
   const factory SupplierProductsEvent.updateImageIndexEvent({
     required int index,
-  }) = _UpdateImageIndexEvent;
+  }) = _updateImageIndexEvent;
 
-  const factory SupplierProductsEvent.toggleNoteEvent() = _ToggleNoteEvent;
+  const factory SupplierProductsEvent.toggleNoteEvent() = _toggleNoteEvent;
 
   const factory SupplierProductsEvent.refreshListEvent(
-      {required BuildContext context}) = _RefreshListEvent;
+      {required BuildContext context}) = _refreshListEvent;
 
   const factory SupplierProductsEvent.getAllProducts(
-      {required BuildContext context,required String search}) = _GetAllProductsEvent;
+      {required BuildContext context,required String search}) = _getAllProductsEvent;
 
   const factory SupplierProductsEvent.getGridListView(
       ) = _getGridListView;
   const factory SupplierProductsEvent.changeCategoryExpansion({bool? isOpened}) =
-  _ChangeCategoryExpansion;
+  _changeCategoryExpansion;
 
   const factory SupplierProductsEvent.globalSearchEvent({required BuildContext context}) =
-  _GlobalSearchEvent;
+  _globalSearchEvent;
 
   const factory SupplierProductsEvent.updateGlobalSearchEvent(
       {required String search,
-        required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+        required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
 
-  const factory SupplierProductsEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
-  const factory SupplierProductsEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
+  const factory SupplierProductsEvent.relatedProductsEvent({required BuildContext context,required String productId}) = _relatedProductsEvent;
+  const factory SupplierProductsEvent.removeRelatedProductEvent() = _removeRelatedProductEvent;
 
 
   const factory SupplierProductsEvent.getPermissionList(

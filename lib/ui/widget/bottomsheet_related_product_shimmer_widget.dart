@@ -23,7 +23,7 @@ class RelatedProductShimmerWidget extends StatelessWidget {
               margin: const EdgeInsets.all(AppConstants.padding_10),
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,
-                borderRadius: BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                     Radius.circular(AppConstants.radius_10)),
               ),
             ),
@@ -38,11 +38,11 @@ class RelatedProductShimmerWidget extends StatelessWidget {
       child: Container(
         height: height ?? AppConstants.shimmerTextHeight,
         width: width,
-        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-          BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+          const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );

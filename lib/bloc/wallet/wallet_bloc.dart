@@ -43,11 +43,11 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
     on<WalletEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      var date = new DateTime.now().toString();
+      var date =  DateTime.now().toString();
       var dateParse = DateTime.parse(date.toString());
       DateTime firstDayCurrentMonth = DateTime.utc(DateTime.now().year, DateTime.now().month, 1);
 
-      DateTime lastDayCurrentMonth = DateTime.utc(DateTime.now().year, DateTime.now().month + 1).subtract(Duration(days: 1));
+      DateTime lastDayCurrentMonth = DateTime.utc(DateTime.now().year, DateTime.now().month + 1).subtract(const Duration(days: 1));
 
       if(!preferencesHelper.getGuestUser()){
         if (event is _checkLanguage) {
@@ -82,7 +82,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             WalletRecordResModel response = WalletRecordResModel.fromJson(res);
                 debugPrint('WalletRecordResModel  = $response');
 
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
               emit(state.copyWith(
                   thisMonthExpense:
                   response.data?.currentMonth?.totalExpenses?.toDouble() ?? 0,
@@ -120,7 +120,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             expense.TotalExpenseResModel.fromJson(res);
               debugPrint('TotalExpenseRes  = $response');
 
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
 
               List<FlSpot> temp = [];
               List<int> number = List<int>.generate(12, (i) => i);
@@ -161,7 +161,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE,
+                type: SnackBarType.failure,
               );
             }
 
@@ -204,7 +204,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             AllWalletTransactionResModel.fromJson(res);
              debugPrint('AllWalletTransactionResModel  = $response');
 
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
               List<Datum> temp =
               state.walletTransactionsList.toList(growable: true);
               if ((response.metaData?.totalFilteredCount ?? 1) >
@@ -292,8 +292,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
             ExportWalletTransactionsResModel response =
             ExportWalletTransactionsResModel.fromJson(res);
-            debugPrint('ExportWalletTransactions response  = ${response}');
-            if (response.status == 200) {
+            debugPrint('ExportWalletTransactions response  = $response');
+            if (response.status == AppConstants.code_200) {
               emit(state.copyWith(isExportShimmering: false,isExportComplete: true,userEmail: preferencesHelper.getEmailId()));
               Uint8List pdf = base64.decode(response.data.toString());
               filePath =
@@ -301,16 +301,9 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               file = File(filePath);
               // debugPrint('[path]   ${filePath}');
               await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
-                /*    CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.SUCCESS,
-              );*/
+
               });
-              debugPrint('file____${file}');
+              debugPrint('file____$file');
 
             }
             else {
@@ -321,7 +314,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE,
+                type: SnackBarType.failure,
               );
             }
           } on ServerException {
@@ -331,7 +324,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),
-              type: SnackBarType.FAILURE,
+              type: SnackBarType.failure,
             );
             emit(state.copyWith(isExportShimmering: false));
           }
@@ -360,11 +353,10 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
             debugPrint('getOrdersCountUrl url  = ${AppUrls.baseUrl}${AppUrls.getOrdersCountUrl}');
             GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
-               debugPrint('getOrdersCount response  = ${response}');
-            if (response.status == 200) {
+               debugPrint('getOrdersCount response  = $response');
+            if (response.status == AppConstants.code_200) {
               emit(state.copyWith(orderThisMonth: (response.data?.toInt() ?? 0 )));
             }
-          } on ServerException {
           } catch (e) {
             debugPrint('catch');
           /*  CustomSnackBar.showSnackBar(
@@ -382,7 +374,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
               debugPrint('AccountPermission response wallet= ${response.data.toString()}');
               debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
-              if (response.status == 200) {
+              if (response.status == AppConstants.code_200) {
                 var res = response.data?.permissions;
                 if(preferencesHelper.getAppLanguage() == AppStrings.englishString && preferencesHelper.getCanSeeWallet() != res?.canSeeWallet){
                   event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(
@@ -408,33 +400,29 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                         response.message?.toLocalization() ??
                             response.message!,
                         event.context),
-                    type: SnackBarType.FAILURE);
+                    type: SnackBarType.failure);
 
               }
-            } on ServerException {
-
             } catch (e) {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: e.toString(),
-                  type: SnackBarType.FAILURE);
-
+                  type: SnackBarType.failure);
             }
           }
-
 
         }
         else if(event is _userApproveEvent){
           try {
             debugPrint('clientId_____${preferencesHelper.getUserId()}');
             final res = await DioClient(event.context).post(
-                '${AppUrls.verifyClientUrl}',
+                AppUrls.verifyClientUrl,
                 data: {AppStrings.clientIdString:preferencesHelper.getUserId()}
             );
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
             debugPrint('verifyClient res_____$response');
             debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
               if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
                 Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
               }
@@ -442,14 +430,12 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
               }
             }
-          } on ServerException {}
+          }
           catch (e) {
             debugPrint('catch____$e');
           }
-
         }
       }
-
     });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/screens/manage_credit_card.dart';
 
 import 'package:food_stock/ui/screens/bottom_nav_screen.dart';
 import 'package:food_stock/ui/screens/home_screen.dart';
@@ -12,7 +13,6 @@ import 'package:food_stock/ui/screens/planogram_product_screen.dart';
 import 'package:food_stock/ui/screens/product_category_screen.dart';
 import 'package:food_stock/ui/screens/product_sale_screen.dart';
 import 'package:food_stock/ui/screens/profile_menu_screen.dart';
-import 'package:food_stock/ui/screens/question_and_answer_screen.dart';
 import 'package:food_stock/ui/screens/otp_screen.dart';
 import 'package:food_stock/ui/screens/recommendation_products_screen.dart';
 import 'package:food_stock/ui/screens/reorder_screen.dart';
@@ -101,7 +101,8 @@ enum RouteDefine {
   brandPermissionScreen,
   supplierPermissionScreen,
   wayOfPaymentScreen,
-  creditCardDetailsScreen
+  creditCardDetailsScreen,
+  manageCreditCardScreen
 
 }
 
@@ -123,9 +124,6 @@ class AppRouting {
       RouteDefine.walletScreen.name: (_) => WalletRoute.route,
       RouteDefine.storeScreen.name: (_) => StoreRoute.route,
       RouteDefine.orderScreen.name: (_) => OrderRoute.route,
-      RouteDefine.questionAndAnswerScreen.name: (_) =>
-          QuestionAndAnswerRoute.route,
-    //  RouteDefine.appContentScreen.name: (_) => AppContentRoute.route,
       RouteDefine.messageScreen.name: (_) => MessageRoute.route,
       RouteDefine.messageContentScreen.name: (_) => MessageContentRoute.route,
       RouteDefine.otpScreen.name: (_) => OTPRoute.route,
@@ -164,7 +162,7 @@ class AppRouting {
       RouteDefine.supplierPermissionScreen.name: (_) => SupplierPermissionRoute.route,
       RouteDefine.wayOfPaymentScreen.name: (_) => WayOfPaymentRoute.route,
       RouteDefine.creditCardDetailsScreen.name: (_) => CreditCardDetailsRoute.route,
-
+      RouteDefine.manageCreditCardScreen.name: (_) => ManageCreditCardRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

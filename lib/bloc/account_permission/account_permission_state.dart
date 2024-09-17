@@ -4,13 +4,13 @@ part of 'account_permission_bloc.dart';
 class AccountPermissionState with _$AccountPermissionState{
   const factory AccountPermissionState({
     required bool isShimmering,
-    required List<permissionModel>permissionList,
+    required List<PermissionModel>permissionList,
     required bool isRefresh,
     required bool isUpdateProcess,
     required String subUserId,
   }) = _AccountPermissionState;
 
-  factory AccountPermissionState.initial() => AccountPermissionState(
+  factory AccountPermissionState.initial() => const AccountPermissionState(
       isShimmering: false,
       permissionList : [],
       isRefresh: false,

@@ -24,7 +24,7 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
     on<CompanyEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      if (event is _GetCompaniesListEvent) {
+      if (event is _getCompaniesListEvent) {
         emit(state.copyWith(language: preferencesHelper.getAppLanguage()));
         if (state.isLoadMore) {
           return;
@@ -39,7 +39,6 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
           emit(state.copyWith(
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
-           debugPrint('state.search___${state.search}');
           final res = await DioClient(event.context).post(
               AppUrls.getCompaniesUrl,
               data: CompanyReqModel(
@@ -48,11 +47,10 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
                       search: state.search)
                   .toJson());
           CompanyResModel response = CompanyResModel.fromJson(res);
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             List<Brand> companiesList =
                 state.companiesList.toList(growable: true);
             companiesList.addAll(response.data?.brandList ?? []);
-            debugPrint('new company list len = ${companiesList.length}');
             emit(state.copyWith(
                 companiesList: companiesList,
                 pageNum: state.pageNum + 1,
@@ -62,11 +60,6 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
                     ? true
                     : false,
                 isShimmering: false));
-            /*emit(state.copyWith(
-                isBottomOfCompanies: state.companiesList.length ==
-                        (response.data?.totalRecords ?? 0)
-                    ? true
-                    : false));*/
           } else {
             emit(state.copyWith(isLoadMore: false));
             CustomSnackBar.showSnackBar(
@@ -75,16 +68,16 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.success);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
-      } else if (event is _SetSearchEvent) {
+      } else if (event is _setSearchEvent) {
         emit(state.copyWith(search: event.search));
-      } else if (event is _RefreshListEvent) {
+      } else if (event is _refreshListEvent) {
         emit(state.copyWith(
             pageNum: 0, companiesList: [], isBottomOfCompanies: false));
         add(CompanyEvent.getCompaniesListEvent(context: event.context));

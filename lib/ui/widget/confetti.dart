@@ -26,7 +26,7 @@ class Confetti extends StatefulWidget {
   ];
 
   final bool isStopped;
-  final int snippingsCount;
+  final int snippingCount;
   final List<Color> colors;
   final double snipSize;
 
@@ -34,7 +34,7 @@ class Confetti extends StatefulWidget {
     this.colors = _defaultColors,
     this.isStopped = false,
   required this.snipSize ,
-   required this.snippingsCount ,
+   required this.snippingCount ,
     super.key,
   });
 
@@ -53,11 +53,11 @@ class ConfettiPainter extends CustomPainter {
   DateTime _lastTime = DateTime.now();
 
   final UnmodifiableListView<Color> colors;
-  int snippingsCount ;
+  int snippingCount ;
    double snipSize;
 
   ConfettiPainter(
-      {required Listenable animation, required Iterable<Color> colors,required this.snippingsCount , required this.snipSize})
+      {required Listenable animation, required Iterable<Color> colors,required this.snippingCount , required this.snipSize})
       : colors = UnmodifiableListView(colors),
         super(repaint: animation);
 
@@ -67,7 +67,7 @@ class ConfettiPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (_size == null) {
       _snippings = List.generate(
-          snippingsCount,
+          snippingCount,
           (i) => _PaperSnipping(
                 frontColor: colors[i % colors.length],
                 bounds: size,
@@ -106,7 +106,7 @@ class _ConfettiState extends State<Confetti>
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: ConfettiPainter(
-        snippingsCount: widget.snippingsCount,
+        snippingCount: widget.snippingCount,
         colors: widget.colors,
         animation: _controller,
         snipSize: widget.snipSize,

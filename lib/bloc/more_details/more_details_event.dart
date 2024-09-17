@@ -29,11 +29,9 @@ class MoreDetailsEvent with _$MoreDetailsEvent {
       {required BuildContext context,
       required bool isUpdate}) = _getProfileMoreDetailsEvent;
 
+  factory MoreDetailsEvent.setApprovalSMSSwitchEvent(
+      {required BuildContext context, required bool updatedVal}) = _setApprovalSMSSwitchEvent;
 
-
-  factory MoreDetailsEvent.deleteFileEvent({
-    required BuildContext context,
-  }) = _deleteFileEvent;
-
-
+  factory MoreDetailsEvent.checkBDIEvent(
+      {required BuildContext context,required String clientId}) = _checkBDIEvent;
 }

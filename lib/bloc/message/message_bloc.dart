@@ -53,12 +53,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
                 },
               ));
           GetMessagesResModel response = GetMessagesResModel.fromJson(res);
-          debugPrint(
-              'getMessage   url  = ${AppUrls.baseUrl}${AppUrls.getNotificationMessageUrl}');
 
-          debugPrint('getMessage response  = ${response}');
-
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             List<MessageData> messageList =
                 state.messageList.toList(growable: true);
             messageList.addAll(response.data
@@ -80,9 +76,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
                         ))
                     .toList() ??
                 []);
-            /* messageList.removeWhere(
-                (message) => (message.isPushNotification ?? false) == false);*/
-            debugPrint('new message list len = ${messageList.length}');
+
             emit(state.copyWith(
                 messageList: messageList,
                 pageNum: state.pageNum + 1,
@@ -102,20 +96,17 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
-      } else if (event is _RefreshListEvent) {
+      } else if (event is _refreshListEvent) {
         emit(state.copyWith(
             pageNum: 0, messageList: [], isBottomOfMessage: false));
         add(MessageEvent.getMessageListEvent(context: event.context));
       }
-      else if (event is _RemoveOrUpdateMessageEvent) {
+      else if (event is _removeOrUpdateMessageEvent) {
         List<MessageData> messageList =
             state.messageList.toList(growable: true);
-        debugPrint('message list len before delete = ${messageList.length}');
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
-        debugPrint('message count = ${preferencesHelper.getMessageCount()}');
-        debugPrint(
-            'message actual status = ${messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].isRead}');
+
         if (event.isRead) {
           if (messageList[messageList.indexOf(messageList
               .firstWhere((message) => message.id == event.messageId))]
@@ -140,33 +131,26 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
             List<String> deletedMessageList =
             state.deletedMessageList.toList(growable: true);
             deletedMessageList.add(deletedMessageId);
-            debugPrint('message delete list = ${deletedMessageList}');
             emit(state.copyWith(deletedMessageList: deletedMessageList));
           }
-          debugPrint('message list len after delete = ${messageList.length}');
         }
         emit(state.copyWith(messageList: messageList));
       }
 
-      else if(event is _MessageDeleteEvent){
+      else if(event is _messageDeleteEvent){
         try {
           DeleteMessageReq reqMap = DeleteMessageReq(
             notificationIds: [
               event.messageId,
             ],
           );
-          debugPrint('DeleteMessage req  = ${reqMap}');
           final response =
           await DioClient(event.context).post(AppUrls.deleteMessageUrl,
               data: reqMap,
             );
 
-          debugPrint(
-              'DeleteMessage url  = ${AppUrls.baseUrl}${AppUrls.deleteMessageUrl}');
 
-          debugPrint('DeleteMessage response  = ${response}');
-
-          if (response[AppStrings.statusString] == 200) {
+          if (response[AppStrings.statusString] == AppConstants.code_200) {
               add(MessageEvent.refreshListEvent(context: event.context));
             Navigator.pop(event.dialogContext);
 
@@ -176,9 +160,9 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
                 title: AppStrings.getLocalizedStrings(
                     response[AppStrings.messageString].toString().toLocalization() ,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
-        } on ServerException {}
+        }
         catch(e){
         }
       }

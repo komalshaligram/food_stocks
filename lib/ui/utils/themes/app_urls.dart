@@ -1,12 +1,11 @@
 class AppUrls {
- //static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
-static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///devUrl
-//static const String baseUrl = 'http://192.168.1.204:3000/api'; ///localUrl
-
+  //static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
+ static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///devUrl
+//static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
   static const String baseFileUrl = 'https://foodstock-buckets.s3.il-central-1.amazonaws.com/';
   static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
   static const String loginOTPUrl = '/v1/auth/clientLogin';
-  static const String RegistrationUrl = '/v1/clients/createClient';
+  static const String registrationUrl = '/v1/clients/createClient';
   static const String fileUploadUrl = '/v1/files/upload';
   static const String fileUpdateUrl = '/v1/admin/updateFiles';
   static const String businessTypesUrl = '/v1/settings/ClientTypes';
@@ -21,11 +20,9 @@ static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///dev
   static const String getProductSalesUrl = '/v1/sales/getSales';
   static const String getSaleProductsUrl = '/v1/store/SaleProducts';
   static const String getSuppliersUrl = '/v1/suppliers/getSupplier';
-  static const String getSupplierProductsUrl =
-      '/v1/supplierProduct/getSupplierProducts';
+  static const String getSupplierProductsUrl = '/v1/supplierProduct/getSupplierProducts';
   static const String getProductDetailsUrl = '/v1/store/ProductDetail';
-  static const String getPlanogramProductsUrl =
-      '/v1/store/getPalnogramProducts';
+  static const String getPlanogramProductsUrl = '/v1/store/getPalnogramProducts';
   static const String createOrderUrl = '/v1/orders/createOrder';
   static const String getAllOrderUrl = '/v1/orders/getAllOrders';
   static const String verifyProductStockUrl = '/v1/store/verifyStock';
@@ -33,46 +30,34 @@ static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///dev
   static const String getOrderById = '/v1/orders/getOrderById/';
   static const String verifyStockUrl = '/v1/store/verifyStock';
   static const String updateCartProductUrl = '/v1/cart/updateCartProducts/';
-  static const String listingCartProductsSupplierUrl =
-      '/v1/cart/listingCartProductsSupplier/';
+  static const String listingCartProductsSupplierUrl = '/v1/cart/listingCartProductsSupplier/';
   static const String createIssueUrl = '/v1/orders/issues/createIssue/';
   static const String deliveryConfirmUrl = '/v1/orders/delivery/confirm/';
   static const String clearCartUrl = '/v1/cart/clearCart/';
   static const String removeCartProductUrl = '/v1/cart/removeProduct';
-  static const String walletRecordUrl =
-      '/v1/walletTransaction/getWalletRecords';
-  static const String totalExpenseByYearUrl =
-      '/v1/walletTransaction/getTotalExpensesByYear';
-  static const String getAllWalletTransactionUrl =
-      '/v1/walletTransaction/getAllWalletTransactions';
+  static const String walletRecordUrl = '/v1/walletTransaction/getWalletRecords';
+  static const String totalExpenseByYearUrl = '/v1/walletTransaction/getTotalExpensesByYear';
+  static const String getAllWalletTransactionUrl = '/v1/walletTransaction/getAllWalletTransactions';
   static const String getSubCategoriesUrl = '/v1/store/getSubCategories';
   static const String getCompaniesUrl = '/v1/store/getBrand';
   static const String insertProductInCartUrl = '/v1/cart/addProduct/';
-  static const String exportWalletTransactionUrl =
-      '/v1/walletTransaction/exportWalletTransactions';
+  static const String exportWalletTransactionUrl = '/v1/walletTransaction/exportWalletTransactions';
   static const String getOrdersCountUrl = '/v1/orders/getOrdersCount';
-  static const String getAllQNAUrl =
-      '/v1/client/questionandanswer/getAllQuestionAndAnswer';
+  static const String getAllQNAUrl = '/v1/client/questionandanswer/getAllQuestionAndAnswer';
   static const String getAllMessagesUrl = '/v1/client/usermessages/getMessages';
-  static const String getNotificationMessageUrl =
-      '/v1/notifications/getNotifications';
-  static const String getAllAppContentsUrl =
-      '/v1/client/contents/getAllContents';
+  static const String getNotificationMessageUrl = '/v1/notifications/getNotifications';
+  static const String getAllAppContentsUrl = '/v1/client/contents/getAllContents';
   static const String getAppContentUrl = '/v1/client/contents/getContentsById/';
   static const String getCompanyProductsUrl = '/v1/store/getBrandProducts';
-  static const String getRecommendationProductsUrl =
-      '/v1/recommendation/products';
-  static const String getPreviousOrderProductsUrl =
-      '/v1/recommendation/getPrevoiusOrderproducts';
+  static const String getRecommendationProductsUrl = '/v1/recommendation/products';
+  static const String getPreviousOrderProductsUrl = '/v1/recommendation/getPrevoiusOrderproducts';
   static const String getGlobalSearchResultUrl = '/v1/store/globalSearch';
   static const String logOutUrl = '/v1/auth/logout';
-  static const String deleteMessageUrl =
-      '/v1/notifications/deleteNotifications';
+  static const String deleteMessageUrl = '/v1/notifications/deleteNotifications';
   static const String updateMessageUrl = '/v1/notifications/seenNotification';
-  static const String getUnreadMessageCountUrl =
-      '/v1/notifications/getNotificationsCount';
+  static const String getUnreadMessageCountUrl = '/v1/notifications/getNotificationsCount';
   static const String refreshTokenUrl = '/v1/auth/refreshToken';
-  static const String getPlanoramByIdUrl = '/v1/planograms/getPlanogram/';
+  static const String getPlanogramByIdUrl = '/v1/planograms/getPlanogram/';
   static const String otpVerifyUrl = '/v1/auth/otpVerification';
   static const String getPlanogramAllProductUrl = '/v1/store/getAllProducts';
   static const String removeIssueUrl = '/v1/orders/issues/removeIssue';
@@ -97,4 +82,10 @@ static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///dev
   static const String deleteClientSubUserUrl = '/v1/subuser/deleteClientSubuser';
   static const String updateSubUserUrl = '/v1/subuser/updateSubuser';
   static const String verifyClientUrl = '/v1/clients/verifyClient';
+  static const String updateCreditCardUrl = '/v1/clients/update-credit-card-details/';
+  static const String verifyAgentUrl = '/v1/clients/verifyAgent';
+ static const String addBankInfo = '/v1/clients/bank-information-updation';
+ static const String deleteCreditCardUrl = '/v1/clients/delete-credit-card-details';
+ static const String bdiUrl = '/v1/clients/checkBdi'; //getting payment options
+ static const String updateClientCredits = '/v1/clients/updateClientCredits/'; //navigation after successful registration
 }

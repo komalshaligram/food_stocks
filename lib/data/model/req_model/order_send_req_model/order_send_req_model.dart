@@ -6,12 +6,12 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'order_send_req_model.freezed.dart';
 part 'order_send_req_model.g.dart';
 
-
 @freezed
 class OrderSendReqModel with _$OrderSendReqModel {
   const factory OrderSendReqModel({
     @JsonKey(name: "products")
     List<Product>? products,
+    String? paymentMethod,
   }) = _OrderSendReqModel;
 
   factory OrderSendReqModel.fromJson(Map<String, dynamic> json) => _$OrderSendReqModelFromJson(json);

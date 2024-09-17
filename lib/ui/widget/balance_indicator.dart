@@ -9,7 +9,7 @@ class BalanceIndicator extends StatelessWidget {
   final int expense;
   final double totalBalance;
 
-  BalanceIndicator({super.key, required this.pendingBalance ,required this.expense , required this.totalBalance});
+  const BalanceIndicator({super.key, required this.pendingBalance ,required this.expense , required this.totalBalance});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,6 @@ class BalanceIndicator extends StatelessWidget {
             showTicks: false,
             startAngle: 270,
             endAngle: 270,
-            // radiusFactor: 1.1,
             axisLineStyle: AxisLineStyle(
                 thicknessUnit: GaugeSizeUnit.factor,
                 thickness: 0.2,

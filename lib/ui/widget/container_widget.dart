@@ -7,7 +7,7 @@ import '../utils/themes/app_colors.dart';
 
 class ContainerWidget extends StatelessWidget {
   final String name;
-   ContainerWidget({super.key,required this.name});
+   const ContainerWidget({super.key,required this.name});
   @override
   Widget build(BuildContext context) {
     return SizedBox(

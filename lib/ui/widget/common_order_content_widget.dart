@@ -44,7 +44,7 @@ class CommonOrderContentWidget extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: backGroundColor,
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(AppConstants.radius_5),
             ),
             border: Border.all(color:borderCoder, width: 1),

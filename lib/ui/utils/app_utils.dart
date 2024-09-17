@@ -28,8 +28,8 @@ double getScreenWidth(BuildContext context) {
 }
 
 enum SnackBarType {
-  SUCCESS,
-  FAILURE,
+  success,
+  failure,
 }
 
 bool isTablet(BuildContext context) {
@@ -42,12 +42,47 @@ bool isTablet(BuildContext context) {
   return isTablet;
 }
 
+String maskCreditCardNumber(String cardNumber) {
+  var firstDigits = cardNumber.substring(0, 4);
+  var lastDigits = cardNumber.substring(cardNumber.length - 4, cardNumber.length);
+  var requiredMask = 'X' * (cardNumber.length - firstDigits.length);
+  var maskedString = requiredMask + lastDigits;
+  var maskedCardNumberWithSpaces = maskedString.replaceAllMapped(RegExp(r'.{4}'), (match) => '${match.group(0)}-');
+  return maskedCardNumberWithSpaces.toString().substring(0,maskedCardNumberWithSpaces.length-1);
+}
+
+String formatExpiryDate(String text) {
+  String separator = '/';
+  if (text.length == 1 && int.parse(text) > 1) {
+    // Ensure the first digit (month) is not greater than 1
+    text = '0$text$separator';
+  } else if (text.length == 2 && int.parse(text) > 12) {
+    // Ensure the entered month is valid (not greater than 12)
+    text = '12$separator';
+  } else if (text.length > 2) {
+    text = '${text.substring(0, 2)}$separator${text.substring(2)}';
+  }
+  return text;
+}
+
 Future<String> getBottleTax() async {
   SharedPreferencesHelper preferencesHelper =
   SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
   debugPrint('___bottleTax_____ :${preferencesHelper.getBottleTax().toString()}');
   var value =  preferencesHelper.getBottleTax().toString();
    return Future.value(value.toString());
+}
+
+Color getStatusColor(int statusNum){
+  if(statusNum == AppConstants.onTheWayStatus){
+    return AppColors.blueColor;
+  }else if(statusNum == AppConstants.deliveryStatus){
+    return AppColors.mainColor;
+  }else if(statusNum == AppConstants.cancelStatus){
+    return AppColors.redColor;
+  }else{
+    return AppColors.orangeColor;
+  }
 }
 
  double getChildAspectRatio(BuildContext context , bool isSaleOn){
@@ -77,22 +112,7 @@ Widget isPesachLabelShow(bool isPesach,BuildContext context,){
  }
 }
 
-Widget saleDescWidget(BuildContext context,String salesDesc){
 
-    return Container(
-        padding: EdgeInsets.only(left: 5,right: 5),
-        decoration: BoxDecoration(
-            color: AppColors.redColor,
-            border: Border.all(color: AppColors.redColor),
-            borderRadius: BorderRadius.all(Radius.circular(10))
-        ),
-        child: Text(salesDesc,
-          style: AppStyles.rkRegularTextStyle(
-            size: AppConstants.font_13,
-          ),
-        ));
-
-}
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
   static void showSnackBar({
@@ -104,7 +124,7 @@ class CustomSnackBar {
       trailing: Container(),
       title,
       context,
-      backgroundColor: type == SnackBarType.SUCCESS
+      backgroundColor: type == SnackBarType.success
           ? AppColors.mainColor.withOpacity(0.85)
           : AppColors.redColor.withOpacity(0.85),
       toastBorderRadius: 8.0,
@@ -169,9 +189,6 @@ Future<void> _launchUrl(String storeUrl) async {
     } finally {
       launchUrl(_url);
     }
-    /*  if (!await launchUrl(_url)) {
-        throw Exception('Could not launch $_url');
-      }*/
 }
 
 bool isValidIsraeliID(String id) {
@@ -239,10 +256,7 @@ String getFileSizeString({required int bytes, int decimals = 0}) {
   return ((bytes / pow(1024, i)).toStringAsFixed(decimals)) + suffixList[i];
 }
 
-Future<String> scanBarcodeOrQRCode(
-    {required BuildContext context,
-    required String cancelText,
-    required ScanMode scanMode}) async {
+Future<String> scanBarcodeOrQRCode({required BuildContext context, required String cancelText, required ScanMode scanMode}) async {
   String barcodeSOrQRScanRes;
   try {
     barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode(
@@ -257,15 +271,14 @@ Future<String> scanBarcodeOrQRCode(
 
 bool isRTLContent({required BuildContext context}) {
   Locale locale = Localizations.localeOf(context);
-  List<Locale> rtlLocales = [Locale('he')];
+  List<Locale> rtlLocales = [Locale(AppStrings.hebrewString)];
   return rtlLocales.contains(locale) ? true : false;
 }
 
 extension RTLExtension on BuildContext {
   bool get rtl =>
-      [Locale('he')].contains(Localizations.localeOf(this)) ? true : false;
+      [Locale(AppStrings.hebrewString)].contains(Localizations.localeOf(this)) ? true : false;
 }
-
 
 
 String splitNumber(String price) {
@@ -335,12 +348,5 @@ double bottleDepositCalculationWithVat(
   debugPrint('bottle deposit $deposit');
   debugPrint('bottle tax $result');
   debugPrint('result $result');
-  return result;
-}
-
-
-
-double saleCalculation({required double price, required double salePer}) {
-  double result = price - (price * (salePer / 100));
   return result;
 }

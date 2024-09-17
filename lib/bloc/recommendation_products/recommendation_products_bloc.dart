@@ -20,7 +20,7 @@ import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model
 import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
-    as InsertCartModel;
+    as insert;
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
@@ -54,7 +54,7 @@ class RecommendationProductsBloc
     on<RecommendationProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
-      if (event is _GetRecommendationProductsEvent) {
+      if (event is _getRecommendationProductsEvent) {
         emit(state.copyWith(
             isIncludedVat: preferences.getIsIncludedVat(),
             isSaleOn: preferences.getShowSale(),
@@ -76,15 +76,13 @@ class RecommendationProductsBloc
                   pageNum: state.pageNum + 1,
               );
 
-          debugPrint('recommendation products req = ${request.toJson()}');
           final res = await DioClient(event.context)
               .post(AppUrls.getRecommendationProductsUrl,
                   data: request.toJson(),
                );
           RecommendationProductsResModel response =
               RecommendationProductsResModel.fromJson(res);
-          debugPrint('recommendation Products res = ${response.data}');
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             List<RecommendationData> recommendationProductsList =
                 state.recommendationProductsList.toList(growable: true);
             recommendationProductsList.addAll(response.data ?? []);
@@ -97,12 +95,7 @@ class RecommendationProductsBloc
                         maxQty: (recommendationProduct.sale?.isSale ?? false) ? int.parse(recommendationProduct.sale?.saleMaxQuantity ?? '0') : -1,
                         stock: recommendationProduct.productStock.toString())) ??
                 []);
-            debugPrint(
-                'new product list len = ${recommendationProductsList.length}');
-            debugPrint(
-                'new product stock list len = ${productStockList.length}');
             productStockList[1].addAll(stockList);
-
             emit(state.copyWith(
                 recommendationProductsList: recommendationProductsList,
                 productStockList: productStockList,
@@ -121,7 +114,7 @@ class RecommendationProductsBloc
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ?? '',
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
@@ -130,7 +123,7 @@ class RecommendationProductsBloc
         state.refreshController.loadComplete();
       }
 
-      else if (event is _RefreshListEvent) {
+      else if (event is _refreshListEvent) {
         add(RecommendationProductsEvent.getPermissionList(context: event.context));
         emit(state.copyWith(
             pageNum: 0,
@@ -144,10 +137,8 @@ class RecommendationProductsBloc
         add(RecommendationProductsEvent.getRecommendationProductsEvent(
             context: event.context));
       }
-      else if (event is _GetProductDetailsEvent) {
-        add(RecommendationProductsEvent.RemoveRelatedProductEvent());
-        debugPrint('product details id = ${event.productId}');
-        debugPrint('productListIndex = ${event.productListIndex}');
+      else if (event is _getProductDetailsEvent) {
+        add(const RecommendationProductsEvent.removeRelatedProductEvent());
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
@@ -162,10 +153,9 @@ class RecommendationProductsBloc
           ProductDetailsResModel response =
           ProductDetailsResModel.fromJson(res);
 
-           debugPrint('GetProductDetails_____${response}');
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
 
-            //new chanegs
+            //new changes
             //0 for barcode and search
             //1 for recommendation product.
             //2 related product.
@@ -174,12 +164,9 @@ class RecommendationProductsBloc
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
             int productListIndex  = event.productListIndex;
-             debugPrint('productStockList___${productStockList[2].length}');
-             debugPrint('productListIndex___${event.productListIndex}');
             int productStockUpdateIndex = 0;
             if(event.isBarcode ){
               productStockUpdateIndex = 0;
-               debugPrint('responseproductid____${response.product?.first.id}');
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                 quantity: _productQuantity,
@@ -194,18 +181,14 @@ class RecommendationProductsBloc
                   .indexWhere((productStock) =>
               productStock.productId == event.productId);
             }
-
             emit(state.copyWith(productListIndex:productListIndex,productStockUpdateIndex:productStockUpdateIndex,productStockList: productStockList));
-             debugPrint('planoGramUpdateIndex___${state.productListIndex}');
-             debugPrint('productStockUpdateIndex___${state.productStockUpdateIndex}');
             try {
 
               final res = await DioClient(event.context).post(
                   '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
                );
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-              if (response.status == 200) {
-                debugPrint('cart before = ${response.data}');
+              if (response.status == AppConstants.code_200) {
                 response.data?.data?.forEach((cartProduct) {
                   if (cartProduct.id == event.productId ||
                       cartProduct.id == state.productStockList[state.productListIndex]
@@ -223,11 +206,10 @@ class RecommendationProductsBloc
               }
             } on ServerException {}
             if(response.product!.isNotEmpty){
-              add(RecommendationProductsEvent.RelatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+              add(RecommendationProductsEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
             }
             if ( event.isBarcode ) {
 
-              debugPrint('responseproductid____${response.product?.first.id}');
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
                 quantity: _productQuantity,
@@ -254,7 +236,7 @@ class RecommendationProductsBloc
                         .productStockList[productListIndex]
                     [productStockUpdateIndex]
                         .productSupplierIds
-                    ? supplier.saleProduct?.indexOf(
+                    ? !supplier.saleProduct!.contains(
                   supplier.saleProduct?.firstWhere(
                         (sale) =>
                     sale.saleId ==
@@ -263,10 +245,9 @@ class RecommendationProductsBloc
                         productListIndex][
                         productStockUpdateIndex]
                             .productSaleId,
-                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
+                    orElse: () => const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                   ) ??
-                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ==
-                    -1
+                      const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),)
                     ? -2
                     : supplier.saleProduct?.indexOf(
                   supplier.saleProduct?.firstWhere(
@@ -276,9 +257,9 @@ class RecommendationProductsBloc
                         productListIndex][
                         productStockUpdateIndex]
                             .productSaleId,
-                    orElse: () => SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
+                    orElse: () => const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),
                   ) ??
-                      SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
+                      const SaleProduct(isSale: false,saleDescription: '',saleFromDate: '',saleMaxQuantity: '0',salePrice: '0',saleUntilDate:'' ),) ??
                     -1
                     : -1,
                 supplierSales: supplier.saleProduct?.map((sale) => SupplierSaleModel(
@@ -302,13 +283,8 @@ class RecommendationProductsBloc
             })
                 .toList() ??
                 []);
-            supplierList.removeWhere((supplier) => supplier.stock == 0);
-            debugPrint(
-                'response list = ${response.product?.first.supplierSales?.length}');
-            debugPrint('supplier list = ${supplierList}');
-            debugPrint('supplier list = ${supplierList}');
-            // debugPrint(
-            //     'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
+            supplierList.removeWhere((supplier) => supplier.stock == '0');
+
             String note = productStockList.isEmpty
                 ? ''
                 : productStockList.indexOf(state.productStockList.last) ==
@@ -327,40 +303,38 @@ class RecommendationProductsBloc
                 isProductLoading: false));
             if (supplierList.isNotEmpty) {
               bool isSupplierSelected = false;
-              supplierList.forEach((supplier) {
+              for (var supplier in supplierList) {
                 if (supplier.selectedIndex != -1) {
                   isSupplierSelected = true;
-                  return;
+                  continue;
                 }
-              });
-              debugPrint('isSupplierSelected = $isSupplierSelected');
-              debugPrint('isSupplierSelected = ${state.productListIndex}');
+              }
+
               if (!isSupplierSelected || state.productListIndex == 0) {
                 int supplierIndex = 0;
                 int supplierSaleIndex = -1;
                 double cheapestPrice = supplierList.first.basePrice;
-                supplierList.forEach(
-                        (supplier) => supplier.supplierSales.forEach((sale) {
+                for (var supplier in supplierList) {
+                  for (var sale in supplier.supplierSales) {
                       if (sale.salePrice < cheapestPrice) {
                         cheapestPrice = sale.salePrice;
                         supplierIndex = supplierList.indexOf(supplier);
                         supplierSaleIndex =
                             supplier.supplierSales.indexOf(sale);
                       }
-                    }));
-                debugPrint('cheapest = $cheapestPrice');
-                supplierList.forEach((supplier) {
+                    }
+                }
+
+                for (var supplier in supplierList) {
                   if (supplier.basePrice < cheapestPrice) {
                     cheapestPrice = supplier.basePrice;
                     supplierIndex = supplierList.indexOf(supplier);
                   }
-                });
+                }
                 if (supplierSaleIndex == -1) {
                   supplierSaleIndex = -2;
                 }
-                debugPrint('cheapest = $cheapestPrice');
-                debugPrint('supplier index = $supplierIndex');
-                debugPrint('supplier sale index = $supplierSaleIndex');
+
                 add(RecommendationProductsEvent.supplierSelectionEvent(
                     supplierIndex: supplierIndex,
                     context: event.context,
@@ -383,23 +357,15 @@ class RecommendationProductsBloc
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         } on ServerException {
           Navigator.pop(event.context);
-          // emit(state.copyWith(isProductLoading: false));
-        } /*catch (e) {
-          debugPrint('bs error = $e');
-          // Navigator.pop(event.context);
-        }*/
+
+        }
       }
-      else if (event is _IncreaseQuantityOfProduct) {
-        debugPrint('maxQty:${ state.productStockList[state.productListIndex]
-        [state.productStockUpdateIndex]
-            .maxQty}');
-        debugPrint('quantity:${ state.productStockList[state.productListIndex]
-        [state.productStockUpdateIndex]
-            .quantity}');
+      else if (event is _increaseQuantityOfProduct) {
+
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -427,12 +393,11 @@ class RecommendationProductsBloc
                       .maxQty) {
                 CustomSnackBar.showSnackBar(
                     context: event.context,
-                    title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
-                    type: SnackBarType.FAILURE);
+                    title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
+                    type: SnackBarType.failure);
                 return;
               }
             }
-            debugPrint('hi');
             productStockList[state.productListIndex]
             [state.productStockUpdateIndex] =
                 productStockList[state.productListIndex]
@@ -441,8 +406,7 @@ class RecommendationProductsBloc
                     [state.productStockUpdateIndex]
                         .quantity +
                         1);
-            debugPrint(
-                'product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           } else {
@@ -450,11 +414,11 @@ class RecommendationProductsBloc
                 context: event.context,
                 title:
                 "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
           }
         }
       }
-      else if (event is _DecreaseQuantityOfProduct) {
+      else if (event is _decreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -478,7 +442,7 @@ class RecommendationProductsBloc
           } else {}
         }
       }
-      else if (event is _UpdateQuantityOfProduct) {
+      else if (event is _updateQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -487,7 +451,6 @@ class RecommendationProductsBloc
             quantityString = quantityString.substring(1);
           }
           int newQuantity = int.tryParse(quantityString) ?? 0;
-          debugPrint('new quantity = $newQuantity');
           if (newQuantity <=
               double.parse(productStockList[state.productListIndex]
               [state.productStockUpdateIndex]
@@ -497,8 +460,7 @@ class RecommendationProductsBloc
                 productStockList[state.productListIndex]
                 [state.productStockUpdateIndex]
                     .copyWith(quantity: newQuantity);
-            debugPrint(
-                'product quantity update = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           } else {
@@ -510,19 +472,18 @@ class RecommendationProductsBloc
                     quantity: int.tryParse(quantityString.substring(
                         0, quantityString.length - 1)) ??
                         0);
-            debugPrint(
-                'product max quantity update = ${int.tryParse(quantityString.substring(0, quantityString.length - 1)) ?? 0}');
+
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
                 "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.failure);
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           }
         }
       }
-      else if (event is _ChangeNoteOfProduct) {
+      else if (event is _changeNoteOfProduct) {
         if (state.productStockUpdateIndex != -1) {
           List<List<ProductStockModel> >productStockList =
           state.productStockList.toList(growable: false);
@@ -532,16 +493,14 @@ class RecommendationProductsBloc
           emit(state.copyWith(productStockList: productStockList));
         }
       }
-      else if (event is _ChangeSupplierSelectionExpansionEvent)
+      else if (event is _changeSupplierSelectionExpansionEvent)
       {
         emit(state.copyWith(
             isSelectSupplier:
             event.isSelectSupplier ?? !state.isSelectSupplier));
-        debugPrint('supplier selection : ${state.isSelectSupplier}');
       }
-      else if (event is _SupplierSelectionEvent) {
-        debugPrint(
-            'supplier[${event.supplierIndex}][${event.supplierSaleIndex}]');
+      else if (event is _supplierSelectionEvent) {
+
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList =
           state.productSupplierList.toList(growable: true);
@@ -564,22 +523,19 @@ class RecommendationProductsBloc
                       : supplierList[event.supplierIndex]
                       .supplierSales[event.supplierSaleIndex]
                       .saleId);
-          /*debugPrint(
-              'selected stock supplier = ${productStockList[state.productStockUpdateIndex]}');*/
+
           supplierList = supplierList
               .map((supplier) => supplier.copyWith(selectedIndex: -1))
               .toList();
-          debugPrint('selected supplier = ${supplierList}');
           supplierList[event.supplierIndex] = supplierList[event.supplierIndex]
               .copyWith(selectedIndex: event.supplierSaleIndex);
-          debugPrint(
-              'selected supplier[${event.supplierIndex}] = ${supplierList[event.supplierIndex]}');
+
           emit(state.copyWith(
               productSupplierList: supplierList,
               productStockList: productStockList));
         }
       }
-      else if (event is _AddToCartProductEvent) {
+      else if (event is _addToCartProductEvent) {
         if (state.productStockList[state.productListIndex][state.productStockUpdateIndex]
             .productSupplierIds.isEmpty) {
 
@@ -589,8 +545,8 @@ class RecommendationProductsBloc
             0) {
           CustomSnackBar.showSnackBar(
               context: event.context,
-              title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
-              type: SnackBarType.FAILURE);
+              title: AppLocalizations.of(event.context)!.add_1_quantity,
+              type: SnackBarType.failure);
           return;
         }
         if(state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty > 0){
@@ -599,13 +555,12 @@ class RecommendationProductsBloc
           ) {
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.not_add_more_than_max_qty}',
-                type: SnackBarType.FAILURE);
+                title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
+                type: SnackBarType.failure);
             return;
           }
         }
         if (_isProductInCart) {
-          debugPrint('update cart');
           try {
             emit(state.copyWith(isLoading: true));
             UpdateCartReqModel request = UpdateCartReqModel(
@@ -629,7 +584,7 @@ class RecommendationProductsBloc
               data: request,
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
-            if (response.status == 201) {
+            if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
               Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
@@ -638,9 +593,7 @@ class RecommendationProductsBloc
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
                     isNoteOpen: false,
-                //    maxQty: _maxQuantity,
-                    quantity: /*state.productStockList[state.productStockUpdateIndex]
-                    .quantity +*/ _productQuantity,
+                    quantity:  _productQuantity,
                     productSupplierIds: '',
                     totalPrice: 0.0,
                     productSaleId: '',
@@ -654,7 +607,7 @@ class RecommendationProductsBloc
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ?? response.message!,
                       event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.success);
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -663,7 +616,7 @@ class RecommendationProductsBloc
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             emit(state.copyWith(isLoading: false));
@@ -674,9 +627,9 @@ class RecommendationProductsBloc
         } else {
           try {
             emit(state.copyWith(isLoading: true));
-            InsertCartModel.InsertCartReqModel insertCartReqModel =
-            InsertCartModel.InsertCartReqModel(products: [
-              InsertCartModel.Product(
+            insert.InsertCartReqModel insertCartReqModel =
+            insert.InsertCartReqModel(products: [
+              insert.Product(
                   productId: state
                       .productStockList[state.productListIndex][state.productStockUpdateIndex]
                       .productId,
@@ -703,14 +656,9 @@ class RecommendationProductsBloc
               }
               return value == null;
             });
-            debugPrint('insert cart req = $req');
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                 prefs: await SharedPreferences.getInstance());
 
-            debugPrint(
-                'insert cart url1 = ${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}');
-            debugPrint(
-                'insert cart url1 auth = ${preferencesHelper.getAuthToken()}');
             final res = await DioClient(event.context).post(
                 '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
@@ -721,13 +669,12 @@ class RecommendationProductsBloc
                   },
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
-            if (response.status == 201) {
-              add(RecommendationProductsEvent.setCartCountEvent());
+            if (response.status == AppConstants.code_201) {
+              add(const RecommendationProductsEvent.setCartCountEvent());
               Vibration.vibrate();
               Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
-               debugPrint('quandjfd____${state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
@@ -737,7 +684,7 @@ class RecommendationProductsBloc
                     totalPrice: 0.0,
                     productSaleId: '',
                   );
-              add(RecommendationProductsEvent.getCartCountEvent());
+              add(const RecommendationProductsEvent.getCartCountEvent());
 
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,duringCelebration: true));
@@ -747,7 +694,7 @@ class RecommendationProductsBloc
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ?? response.message!, event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.success);
             } else if (response.status == 403) {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -756,7 +703,7 @@ class RecommendationProductsBloc
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -765,7 +712,7 @@ class RecommendationProductsBloc
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             debugPrint('url1 = ');
@@ -776,14 +723,11 @@ class RecommendationProductsBloc
           }
         }
       }
-      else if (event is _SetCartCountEvent) {
-
+      else if (event is _setCartCountEvent) {
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
-        
-        debugPrint('cart count reccom= ${preferences.getCartCount()}');
-      } else if (event is _UpdateImageIndexEvent) {
+      } else if (event is _updateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
-      }   else if (event is _ToggleNoteEvent) {
+      }   else if (event is _toggleNoteEvent) {
         List <List<ProductStockModel>> productStockList =
         state.productStockList.toList(growable: true);
         productStockList[state.productListIndex][state.productStockUpdateIndex] =
@@ -800,7 +744,7 @@ class RecommendationProductsBloc
         preferences.setRecommendationProductGridListView(isRecommendationProductGrid: !state.isGridView);
         emit(state.copyWith(isGridView: !state.isGridView));
       }
-      else if (event is _ChangeCategoryExpansion) {
+      else if (event is _changeCategoryExpansion) {
         if(event.isOpened == false ){
           state.searchController.clear();
           emit(state.copyWith(searchController: state.searchController));
@@ -811,9 +755,8 @@ class RecommendationProductsBloc
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
       }
-      else if (event is _GlobalSearchEvent) {
+      else if (event is _globalSearchEvent) {
         emit(state.copyWith(search: state.searchController.text,bottleDeposit: preferences.getBottleTax()));
-        debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
           GlobalSearchReqModel(search: state.searchController.text,
@@ -824,16 +767,8 @@ class RecommendationProductsBloc
           final res = await DioClient(event.context).post(
               AppUrls.getGlobalSearchResultUrl,
               data: globalSearchReqModel.toJson());
-          debugPrint('data1 = $res');
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
-          debugPrint('cat len = ${response.data?.categoryData?.length}');
-          debugPrint(
-              'sub cat len = ${response.data?.subCategoryData?.length}');
-          debugPrint('com len = ${response.data?.companyData?.length}');
-          debugPrint('sale len = ${response.data?.saleData?.length}');
-          debugPrint('sup len = ${response.data?.supplierData?.length}');
-          debugPrint(
-              'sup prod len = ${response.data?.supplierProductData?.length}');
+
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList.addAll(state.productCategoryList.map((category) =>
@@ -846,7 +781,7 @@ class RecommendationProductsBloc
             return;
           }
           debugPrint('store search list =${response.status}');
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             //category search result
             searchList.addAll(response.data?.categoryData
@@ -894,11 +829,7 @@ class RecommendationProductsBloc
                   searchType: SearchTypes.supplier,
                   image: supplier.logo ?? '',
                   isPesach: supplier.isPesach??false,
-                 /* salePrice: double.parse(supplier.sale.salePrice.toString()),
-                  salesDesc:  parse(supplier.sale.saleDescription ?? '')
-                      .body
-                      ?.text ??
-                      '',*/
+
                 ))
                 .toList() ??
                 []);
@@ -912,7 +843,7 @@ class RecommendationProductsBloc
                   numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                   image: sale.mainImage ?? '',
                   isPesach: sale.isPesach??false,
-                //  salePrice: double.parse(sale.salePrice.toString()),
+
                   salesDesc:  parse(sale.salesDescription ?? '')
                       .body
                       ?.text ??
@@ -941,58 +872,53 @@ class RecommendationProductsBloc
                 ))
                 .toList() ??
                 []);
-            debugPrint('store search list = ${searchList.length}');
             emit(state.copyWith(
                 searchList: searchList,
                 search: state.searchController.text,
                 isSearching: false));
           } else {
-            // emit(state.copyWith(searchList: []));
+
             emit(state.copyWith(isSearching: false));
-            // CustomSnackBar.showSnackBar(
-            //     context: event.context,
-            //     title: response.message ?? AppStrings.somethingWrongString,
-            //     type: SnackBarType.SUCCESS);
+
           }
         } on ServerException {
           CustomSnackBar.showSnackBar(
             context: event.context,
             title:
-            '${AppLocalizations.of(event.context)!
-                .something_is_wrong_try_again}',
-            type: SnackBarType.FAILURE,
+            AppLocalizations.of(event.context)!
+                .something_is_wrong_try_again,
+            type: SnackBarType.failure,
           );
           emit(state.copyWith(isSearching: false));
         } catch (exc) {
           CustomSnackBar.showSnackBar(
             context: event.context,
             title:
-            '${AppLocalizations.of(event.context)!
-                .something_is_wrong_try_again}',
-            type: SnackBarType.FAILURE,
+            AppLocalizations.of(event.context)!
+                .something_is_wrong_try_again,
+            type: SnackBarType.failure,
           );
           emit(state.copyWith(isSearching: false));
         }
       }
-      else if (event is _UpdateGlobalSearchEvent) {
+      else if (event is _updateGlobalSearchEvent) {
         emit(state.copyWith(
             searchController: TextEditingController(text: event.search),
             searchList: event.searchList));
       }
 
-      else if (event is _GetProductCategoriesListEvent) {
+      else if (event is _getProductCategoriesListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
               AppUrls.getProductCategoriesUrl,
-              data: ProductCategoriesReqModel(
+              data: const ProductCategoriesReqModel(
                   pageNum: 1, pageLimit: 18)
                   .toJson());
           ProductCategoriesResModel response =
           ProductCategoriesResModel.fromJson(res);
-          debugPrint('product categories = ${response.data?.categories!.length
-              .toString()}');
-          if (response.status == 200) {
+
+          if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             searchList.addAll(response.data?.categories?.map((category) =>
                 SearchModel(
@@ -1001,7 +927,6 @@ class RecommendationProductsBloc
                     searchType: SearchTypes.category,
                     image: category.categoryImage ?? '')) ??
                 []);
-            debugPrint('store search list = ${searchList.length}');
             bool productVisible = response.data?.categories?.any((
                 element) => element.isHomePreference == true) ?? true;
 
@@ -1018,7 +943,7 @@ class RecommendationProductsBloc
                   response.message?.toLocalization() ??
                       response.message!,
                   event.context),
-              type: SnackBarType.SUCCESS,
+              type: SnackBarType.success,
 
             );
           }
@@ -1028,25 +953,23 @@ class RecommendationProductsBloc
           emit(state.copyWith(isShimmering: false));
         }
       }
-      else if(event is _RelatedProductsEvent){
+      else if(event is _relatedProductsEvent){
         emit(state.copyWith(isRelatedShimmering:true));
-         debugPrint('productId____${event.productId}');
         final res = await DioClient(event.context).post(
             AppUrls.relatedProductsUrl,
-            data: {'mainProductId':event.productId});
+            data: {AppStrings.mainProductIdString:event.productId});
         RelatedProductResModel response =
         RelatedProductResModel.fromJson(res);
-        debugPrint('product categories = ${response.data?.length
-            .toString()}');
-        if (response.status == 200) {
+
+        if (response.status == AppConstants.code_200) {
           List<List<ProductStockModel>> productStockList =
           state.productStockList.toList(growable: true);
           List<ProductStockModel>stockList = [];
           stockList.addAll(response.data?.map(
-                  (Product) =>
+                  (product) =>
                   ProductStockModel(
-                    productId: Product.id ?? '',
-                    stock: (Product.productStock.toString()),
+                    productId: product.id ?? '',
+                    stock: (product.productStock.toString()),
                   )) ?? []);
           productStockList[2].addAll(stockList);
           emit(state.copyWith(
@@ -1059,11 +982,11 @@ class RecommendationProductsBloc
             title: AppStrings.getLocalizedStrings(
                 response.message?.toLocalization() ??'',
                 event.context),
-            type: SnackBarType.SUCCESS,
+            type: SnackBarType.success,
           );
         }
       }
-      else if(event is _RemoveRelatedProductEvent){
+      else if(event is _removeRelatedProductEvent){
         emit(state.copyWith(relatedProductList: []));
       }
       else  if(event is _getPermissionList){
@@ -1073,9 +996,7 @@ class RecommendationProductsBloc
             final res = await DioClient(event.context).get(
                 path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-            debugPrint('AccountPermission response = ${response.data.toString()}');
-            debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
-            if (response.status == 200) {
+            if (response.status == AppConstants.code_200) {
               var res = response.data?.permissions;
               preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
               preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
@@ -1092,58 +1013,42 @@ class RecommendationProductsBloc
                 isSubUserAddToBasket :res?.canAddToCart ?? false,
               ));
             } else {
-
-
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
                           response.message!,
                       event.context),
-                  type: SnackBarType.FAILURE);
-
+                  type: SnackBarType.failure);
             }
-          } on ServerException {
-
           } catch (e) {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: e.toString(),
-                type: SnackBarType.FAILURE);
-
+                type: SnackBarType.failure);
           }
         }
-
-
       }
-
       else if(event is _userApproveEvent){
         try {
-          debugPrint('clientId_____${preferences.getUserId()}');
           final res = await DioClient(event.context).post(
-              '${AppUrls.verifyClientUrl}',
+              AppUrls.verifyClientUrl,
               data: {AppStrings.clientIdString:preferences.getUserId()}
           );
           VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-          debugPrint('verifyClient res_____$response');
-          debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
               Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
             }
             else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
               Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
             }
-
           }
-        } on ServerException {}
+        }
         catch (e) {
           debugPrint('catch____$e');
         }
-
       }
-
-
     });
   }
 }

@@ -32,7 +32,7 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
       required OrderDatum orderData}) = _getProductDataEvent;
 
   const factory ProductDetailsEvent.createIssueEvent(
-      {required BuildContext BottomSheetContext,
+      {required BuildContext bottomSheetContext,
       required BuildContext context,
       required String supplierId,
       required String productId,
@@ -56,8 +56,8 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
       {required BuildContext context,
       required String supplierId,
       required String orderId,
-      required List<String> Product,
-        required BuildContext BottomSheetContext,
+      required List<String> product,
+        required BuildContext bottomSheetContext,
       }) = _removeIssueEvent;
 
   const factory ProductDetailsEvent.duplicateOrderEvent({

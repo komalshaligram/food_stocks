@@ -1,5 +1,3 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,6 +81,12 @@ class CompanyProductsScreenWidget extends StatelessWidget {
           floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
           floatingActionButton:  !state.isGuestUser ? FloatingActionButton(
             elevation: 0,
+            backgroundColor:Colors.transparent,
+            onPressed: () {
+              Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
+                  arguments: {AppStrings.isBasketScreenString: 'true'}
+              );
+            },
             child:  Stack(
               children: [
                 Container(
@@ -142,7 +146,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                       child: IgnorePointer(
                         child: Confetti(
                           isStopped:!state.duringCelebration,
-                          snippingsCount: 10,
+                          snippingCount: 10,
                           snipSize: 3.0,
                           colors:[AppColors.mainColor],
                         ),
@@ -151,16 +155,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                   ),
               ],
             ),
-            backgroundColor:Colors.transparent,
-            onPressed: () {
-              Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
-                  arguments: {AppStrings.isBasketScreenString: 'true'}
-              );
-            },
           ):0.width,
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
              title: state.productList.isNotEmpty ? state.productList.elementAt(0).product?.brandId ??'':companyName??'',
@@ -170,14 +168,14 @@ class CompanyProductsScreenWidget extends StatelessWidget {
               },
               trailingWidget: GestureDetector(
                   onTap: (){
-                    context.read<CompanyProductsBloc>().add(CompanyProductsEvent.getGridListView());
+                    context.read<CompanyProductsBloc>().add(const CompanyProductsEvent.getGridListView());
                   },
                   child: Icon(state.isCompanyProductGrid ? Icons.list : Icons.grid_view)),
             ),
           ),
           body: FocusDetector(
              onFocusGained: (){
-               bloc.add(CompanyProductsEvent.getCartCountEvent());
+               bloc.add(const CompanyProductsEvent.getCartCountEvent());
              },
             child: SafeArea(
               child: Stack(
@@ -193,7 +191,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                 ? Container (
                                     height: getScreenHeight(context) - 80,
                                     width: getScreenWidth(context),
-                                    margin: EdgeInsets.only(top: 30),
+                                    margin: const EdgeInsets.only(top: 30),
                                     alignment: Alignment.center,
                                     child: Text(
                                       AppLocalizations.of(context)!.this_company_has_no_product,
@@ -206,10 +204,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                           enablePullDown: true,
                           controller: state.refreshController,
                           header:
-                          RefreshWidget(),
+                          const RefreshWidget(),
                           footer: CustomFooter(
                             builder: (context, mode) =>
-                               (state.isCompanyProductGrid && !state.isShimmering && state.isRefreshingProduct) ? SupplierProductsScreenShimmerWidget() :(!state.isCompanyProductGrid && !state.isShimmering && state.isRefreshingProduct)?  StoreCategoryScreenSubcategoryShimmerWidget() : SizedBox(),
+                               (state.isCompanyProductGrid && !state.isShimmering && state.isRefreshingProduct) ? SupplierProductsScreenShimmerWidget() :(!state.isCompanyProductGrid && !state.isShimmering && state.isRefreshingProduct)?  StoreCategoryScreenSubcategoryShimmerWidget() : const SizedBox(),
                           ),
                           enablePullUp: !state.isBottomOfProducts,
                           onRefresh: () {
@@ -226,7 +224,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       itemCount: state.productList.length,
                                       shrinkWrap: true,
                                       physics: const AlwaysScrollableScrollPhysics(),
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           horizontal: AppConstants.padding_5),
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
@@ -265,15 +263,11 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                       productStock: (state.productList[index].product?.productStock.toString() ?? '0'),
                                                       productListIndex: 1,
                                                     isSaleOn: state.isSaleOn
-
-
                                                   );
                                                 }
                                                 else{
                                                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                 }
-
-
                                               }, )
                                           )
 
@@ -281,7 +275,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       itemCount: state.productList.length,
                                       shrinkWrap: true,
                                       physics: const AlwaysScrollableScrollPhysics(),
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           horizontal: AppConstants.padding_5),
                                       itemBuilder: (context, index) =>CommonSaleListView(
                                           context: context,
@@ -325,22 +319,22 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                   ),
                       CommonSearchWidget(
                         onCloseTap: () {
-                          bloc.add(CompanyProductsEvent.changeCategoryExpansion(isOpened: false));
+                          bloc.add(const CompanyProductsEvent.changeCategoryExpansion(isOpened: false));
                         },
                         isFilterTap: true,
                         isCategoryExpand: state.isCategoryExpand,
                         isSearching: state.isSearching,
                         onFilterTap: () {
-                          bloc.add(CompanyProductsEvent.changeCategoryExpansion());
+                          bloc.add(const CompanyProductsEvent.changeCategoryExpansion());
                         },
                         onSearchTap: () {
                           if(state.searchController.text != ''){
-                            bloc.add(CompanyProductsEvent.changeCategoryExpansion(isOpened: true));
+                            bloc.add(const CompanyProductsEvent.changeCategoryExpansion(isOpened: true));
                           }
                         },
                         onSearch: (String search) {
                           if (search.length > 1) {
-                            bloc.add(CompanyProductsEvent.changeCategoryExpansion(isOpened: true));
+                            bloc.add(const CompanyProductsEvent.changeCategoryExpansion(isOpened: true));
                             bloc.add(
                                 CompanyProductsEvent.globalSearchEvent(context: context));
                           }
@@ -357,19 +351,19 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                 });
                         },
                         onOutSideTap: () {
-                          bloc.add(CompanyProductsEvent.changeCategoryExpansion(
+                          bloc.add(const CompanyProductsEvent.changeCategoryExpansion(
                               isOpened: false));
                         },
                         onSearchItemTap: () {
-                          bloc.add(CompanyProductsEvent.changeCategoryExpansion());
+                          bloc.add(const CompanyProductsEvent.changeCategoryExpansion());
                         },
                         controller: state.searchController,
                         searchList: state.searchList,
                         searchResultWidget: state.searchList.isEmpty
                             ? Center(
                           child: Text(
-                            '${AppLocalizations.of(context)!
-                                .search_result_not_found}',
+                            AppLocalizations.of(context)!
+                                .search_result_not_found,
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont,
                                 color: AppColors.textColor),
@@ -398,9 +392,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                 search.searchType ==
                                     state.searchList[index]
                                         .searchType)
-                                    .toList()
-                                    .length >=
-                                    1,
+                                    .toList().isNotEmpty,
                                 isLastItem:
                                 state.searchList.length - 1 == index,
                                 isShowSearchLabel: index == 0
@@ -503,7 +495,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       context: context,
                                       title: AppStrings.getLocalizedStrings(
                                           'Oops! in progress', context),
-                                      type: SnackBarType.SUCCESS,
+                                      type: SnackBarType.success,
                                     );
                                     return;
                                   }
@@ -578,7 +570,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                         });
                                   }
                                   bloc.add(
-                                      CompanyProductsEvent.changeCategoryExpansion());
+                                      const CompanyProductsEvent.changeCategoryExpansion());
                                 });
                           },
                         ),
@@ -628,12 +620,11 @@ class CompanyProductsScreenWidget extends StatelessWidget {
       required void Function() onPressed,
       required bool isRTL}) {
     return Container(
-      // height: 150,
-      // width: 130,
+
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius:
-            BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+            const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         boxShadow: [
           BoxShadow(
               color: AppColors.shadowColor.withOpacity(0.15),
@@ -641,10 +632,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
         ],
       ),
       clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_10,
           horizontal: AppConstants.padding_5),
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
       child: Column(
@@ -665,7 +656,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                       width: 70,
                       decoration: BoxDecoration(
                         color: AppColors.whiteColor,
-                        borderRadius: BorderRadius.all(
+                        borderRadius: const BorderRadius.all(
                             Radius.circular(AppConstants.radius_10)),
                       ),
                     ),
@@ -674,11 +665,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                 return child;
               },
               errorBuilder: (context, error, stackTrace) {
-                // debugPrint('sale list image error : $error');
-                return Container(
-                  child: Image.asset(AppImagePath.imageNotAvailable5,
-                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                );
+                return Image.asset(AppImagePath.imageNotAvailable5,
+                    height: 70, width: double.maxFinite, fit: BoxFit.cover);
               },
             ),
           ),
@@ -772,7 +760,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                    builder: (blocContext, state) {
                      return Container(
                        decoration: BoxDecoration(
-                         borderRadius: BorderRadius.only(
+                         borderRadius: const BorderRadius.only(
                            topLeft: Radius.circular(AppConstants.radius_30),
                            topRight: Radius.circular(AppConstants.radius_30),
                          ),
@@ -780,7 +768,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                        ),
                        clipBehavior: Clip.hardEdge,
                        child: state.isProductLoading
-                           ? ProductDetailsShimmerWidget()
+                           ? const ProductDetailsShimmerWidget()
                            : state.productDetails.isEmpty
                            ? NoDataBottomSheet(dialogContext: context)
                            : SingleChildScrollView(
@@ -790,11 +778,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                              CommonProductDetailsWidget(
                                isIncludedVat: state.isIncludedVat,
                                productDetails: state.productDetails,
-                               /*isSaleOn: state.productDetails.first.sale.isSale,
-                               salePrice: double.parse(state.productDetails.first.sale.salePrice),
-                               maxQty: state.productDetails.first.sale.saleMaxQuantity,
-                               endDate: state.productDetails.first.sale.saleUntilDate,
-                               startDate: state.productDetails.first.sale.saleFromDate,*/
                                isSubUserAddToBasket: state.isSubUserAddToBasket,
                                totalBottleDeposit: (state.bottleDeposit* (state.productDetails.first.numberOfUnit ?? 1) * state
                                    .productStockList[state.productListIndex][
@@ -818,7 +801,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                        bottom: false,
                                        child: Stack(
                                          children: [
-                                           Container(
+                                           SizedBox(
                                              height: getScreenHeight(context) - MediaQuery.of(context).padding.top ,
                                              width: getScreenWidth(context),
                                              child: GestureDetector(
@@ -844,8 +827,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                onTap: (){
                                                  Navigator.pop(dialogContext);
                                                },
-                                               child: Padding(
-                                                 padding: const EdgeInsets.only(top:10.0),
+                                               child: const Padding(
+                                                 padding: EdgeInsets.only(top:10.0),
                                                  child: Icon(Icons.close,
                                                    color: Colors.white,
                                                  ),
@@ -878,8 +861,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                    (state.productDetails.first.numberOfUnit ?? 1) ,
 
                                productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
-                               isRTL: context.rtl,
-
                                scrollController: scrollController,
                                productQuantity: state
                                    .productStockList[
@@ -945,7 +926,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
          ),
          Container(
            height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
-           padding: EdgeInsets.only(bottom:10,left: 10,right: 10),
+           padding: const EdgeInsets.only(bottom:10,left: 10,right: 10),
            child: ListView.builder(
              scrollDirection: Axis.horizontal,
              shrinkWrap: true,
@@ -999,7 +980,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
             },
-            buttonTitle: '${AppLocalizations.of(context)!.ok}'));
+            buttonTitle: AppLocalizations.of(context)!.ok));
   }
 
 

@@ -78,9 +78,7 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "ownerName") String? ownerName,
     @JsonKey(name: "clientTypeId") String? clientTypeId,
     @JsonKey(name: "israelId") String? israelId,
-    @JsonKey(name: "tokenId") String? tokenId,
     @JsonKey(name: "fax") String? fax,
-    // @JsonKey(name: "lastSeen") DateTime? lastSeen,
     @JsonKey(name: "monthlyCredits") String? monthlyCredits,
     @JsonKey(name: "applicationVersion") String? applicationVersion,
     @JsonKey(name: "deviceType") String? deviceType,
@@ -92,14 +90,19 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "forms") dynamic forms,
     @JsonKey(name: "files") dynamic files,
     @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "createdAt") DateTime? createdAt,
-    @JsonKey(name: "updatedAt") DateTime? updatedAt,
     @JsonKey(name: "clientTypes") List<ClientType>? clientTypes,
     @JsonKey(name: "totalExpense") String? totalExpense,
     @JsonKey(name: "expenseByMonth") String? expenseByMonth,
+    CreditCard? creditCard,
+    @JsonKey(name: "availablePaymentTypes")
+    required List<String> availablePaymentTypes,
+    @JsonKey(name: "paymentType")
+    required String paymentType,
     String? streetName,
     String? streetNumber,
     String? zip,
+    @JsonKey(name: "isAvailableAllPayments")
+    bool? isAvailableAllPayments,
   }) = _ClientDetail;
 
   factory ClientDetail.fromJson(Map<String, dynamic> json) =>
@@ -111,10 +114,6 @@ class ClientType with _$ClientType {
   const factory ClientType({
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "businessType") String? businessType,
-    @JsonKey(name: "createdBy") String? createdBy,
-    @JsonKey(name: "updatedBy") String? updatedBy,
-    @JsonKey(name: "createdAt") DateTime? createdAt,
-    @JsonKey(name: "updatedAt") DateTime? updatedAt,
     @JsonKey(name: "__v") int? v,
   }) = _ClientType;
 
@@ -122,7 +121,15 @@ class ClientType with _$ClientType {
       _$ClientTypeFromJson(json);
 }
 
+@freezed
+class CreditCard with _$CreditCard {
+  const factory CreditCard({
+     String? cardNumber,
+     String? expireDate,
+  }) = _CreditCard;
 
+  factory CreditCard.fromJson(Map<String, dynamic> json) => _$CreditCardFromJson(json);
+}
 
 @freezed
 class RoleDetails with _$RoleDetails {

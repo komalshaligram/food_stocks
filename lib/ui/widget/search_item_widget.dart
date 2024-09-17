@@ -28,7 +28,7 @@ class SearchItemWidget extends StatelessWidget {
     required this.context,
     required this.searchName,
     required this.searchImage,
-    this.isGuestUser = false,
+    required this.isGuestUser,
     required this.numberOfUnits,
     required this.priceOfBox,
     required this.salePrice,
@@ -43,7 +43,7 @@ class SearchItemWidget extends StatelessWidget {
   final bool isMoreResults;
   final bool? isLastItem;
   final String productStock;
-  bool isGuestUser = false;
+   bool isGuestUser = false;
   final int numberOfUnits;
   final bool isPesach;
   final Function() onTap;
@@ -138,7 +138,7 @@ class SearchItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
+                SizedBox(
                   height: 70,
                   width: 50,
                   child: !isGuestUser
@@ -151,7 +151,7 @@ class SearchItemWidget extends StatelessWidget {
                             if (loadingProgress == null) {
                               return child;
                             } else {
-                              return Container(
+                              return const SizedBox(
                                   height: 60,
                                   width: 50,
                                   child: CupertinoActivityIndicator());
@@ -181,7 +181,7 @@ class SearchItemWidget extends StatelessWidget {
                       : MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    SizedBox(
                       width: getScreenWidth(context) / 1.5,
                       child: Text(
                         searchName,
@@ -196,7 +196,7 @@ class SearchItemWidget extends StatelessWidget {
                     Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
+                        SizedBox(
                           width: 200,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -289,32 +289,30 @@ class SearchItemWidget extends StatelessWidget {
                         ),
                         !isGuestUser
                             ? salePrice != 0.0
-                                ? Container(
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
-                                          style: AppStyles.rkBoldTextStyle(
-                                                  size: AppConstants.font_12,
-                                                  color: AppColors.blueColor,
-                                                  fontWeight: FontWeight.w400)
-                                              .copyWith(
-                                                  decoration: TextDecoration
-                                                      .lineThrough),
-                                        ),
-                                        Text(
-                                          '${AppLocalizations.of(context)!.currency}${salePrice.toString()}',
-                                          style: AppStyles.rkBoldTextStyle(
+                                ? Column(
+                                  children: [
+                                    Text(
+                                      '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
+                                      style: AppStyles.rkBoldTextStyle(
                                               size: AppConstants.font_12,
-                                              color: AppColors.redColor,
-                                              fontWeight: FontWeight.w400),
-                                        ),
-                                      ],
+                                              color: AppColors.blueColor,
+                                              fontWeight: FontWeight.w400)
+                                          .copyWith(
+                                              decoration: TextDecoration
+                                                  .lineThrough),
                                     ),
-                                  )
+                                    Text(
+                                      '${AppLocalizations.of(context)!.currency}${salePrice.toString()}',
+                                      style: AppStyles.rkBoldTextStyle(
+                                          size: AppConstants.font_12,
+                                          color: AppColors.redColor,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  ],
+                                )
                                 : !isGuestUser
                                     ? priceOfBox != 0.0
-                                        ? Container(
+                                        ? SizedBox(
                                             width: 60,
                                             child: Text(
                                               '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
@@ -334,8 +332,8 @@ class SearchItemWidget extends StatelessWidget {
                     saleDesc.isNotEmpty
                         ? Container(
                             width: getScreenWidth(context) / 1.5,
-                            padding: EdgeInsets.all(3),
-                            margin: EdgeInsets.only(top: 5),
+                            padding: const EdgeInsets.all(3),
+                            margin: const EdgeInsets.only(top: 5),
                             decoration: BoxDecoration(
                                 color: AppColors.saleBGColor,
                                 border:

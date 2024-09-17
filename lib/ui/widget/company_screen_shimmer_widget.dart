@@ -13,9 +13,9 @@ class CompanyScreenShimmerWidget extends StatelessWidget {
       child: GridView.builder(
           shrinkWrap: true,
           itemCount: AppConstants.companyPageLimit,
-          padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
           gridDelegate:
-              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,childAspectRatio:0.9 ),
+              const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,childAspectRatio:0.9 ),
           itemBuilder: (context, index) =>
               buildCompanyListItem(context: context)),
     );
@@ -26,10 +26,10 @@ class CompanyScreenShimmerWidget extends StatelessWidget {
       child: Container(
         height: getScreenWidth(context),
         width: getScreenWidth(context),
-        margin: EdgeInsets.all(AppConstants.padding_10),
+        margin: const EdgeInsets.all(AppConstants.padding_10),
         decoration: BoxDecoration(
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
           color: AppColors.whiteColor,
           boxShadow: [
             BoxShadow(

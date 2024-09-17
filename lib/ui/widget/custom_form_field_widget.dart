@@ -37,7 +37,7 @@ class CustomFormField extends StatelessWidget {
     this.isBorderVisible = true,
     this.textFieldLabel,
     this.textFieldLabelSize,
-    this.inputformet,
+    this.inputFormat,
     this.autofocus = false,
     this.textInputAction,
     TextCapitalization textCapitalization = TextCapitalization.words,
@@ -59,12 +59,10 @@ class CustomFormField extends StatelessWidget {
   final Widget? suffixIcon;
   final BoxConstraints? suffixIconConstraints;
   final bool? isEnabled;
-  final List<TextInputFormatter>? inputformet;
+  final List<TextInputFormatter>? inputFormat;
   final TextInputType _keyboardType;
   final bool autofocus;
   final Color cursorColor;
-
-  // final TextInputAction _inputAction;
   final String _hint;
   final Color _fillColor;
   final String? textFieldLabel;
@@ -96,7 +94,7 @@ class CustomFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: ThemeData(
-        textSelectionTheme: TextSelectionThemeData(
+        textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Colors.white,
           selectionColor: Colors.white,
           selectionHandleColor: Colors.white,
@@ -104,21 +102,17 @@ class CustomFormField extends StatelessWidget {
       ),
       child: TextFormField(
         controller: _controller,
-        // textDirection: textDirection,
-        inputFormatters: inputformet,
+        inputFormatters: inputFormat,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         style: AppStyles.rkRegularTextStyle(
             color: AppColors.blackColor, size: 16, fontWeight: FontWeight.w400),
-        //  style:  TextStyle(color: AppColors.textHeaderColor , fontSize: 14),
         maxLines: maxLines,
         enabled: isEnabled,
         textInputAction: textInputAction,
         keyboardType: _keyboardType,
         obscureText: isObscure,
         onChanged: onChangeValue,
-        // maxLength: maxLimits,
         textCapitalization: TextCapitalization.sentences,
-        //   textInputAction: _inputAction,
         onTap: onTap,
         onTapOutside: (event) => FocusScope.of(context).unfocus(),
         onFieldSubmitted: onFieldSubmitted,
@@ -128,11 +122,10 @@ class CustomFormField extends StatelessWidget {
         textDirection: textDirection,
         textAlign:
             textDirection == TextDirection.ltr ? TextAlign.end : TextAlign.start,
-        // maxLength: maxLimits,
         validator: (value) =>
             AuthFormValidation().formValidation(value!, _validator ,context),
         decoration: InputDecoration(
-            labelStyle: TextStyle(color: AppColors.textColor),
+            labelStyle: TextStyle(color: AppColors.textColor,overflow: TextOverflow.visible),
             suffixIcon: postIconBtn,
             prefixIcon: prefixIcon,
             suffix: suffixIcon,
@@ -144,10 +137,11 @@ class CustomFormField extends StatelessWidget {
             hintStyle: TextStyle(
               color: AppColors.textColor,
             ),
-            // counterText: '',
+            errorMaxLines: 2,
             errorStyle: TextStyle(
                 color: AppColors.redColor,
                 height: height,
+                overflow: TextOverflow.visible,
                 fontWeight: FontWeight.w400),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(border),

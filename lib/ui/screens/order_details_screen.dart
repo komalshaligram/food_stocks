@@ -18,7 +18,7 @@ import '../widget/common_order_content_widget.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
 
 class OrderDetailsRoute {
-  static Widget get route => OrderDetailsScreen();
+  static Widget get route => const OrderDetailsScreen();
 }
 
 class OrderDetailsScreen extends StatelessWidget {
@@ -44,13 +44,12 @@ class OrderDetailsScreenWidget extends StatelessWidget {
   final String orderId;
   final String orderNumber;
 
-   OrderDetailsScreenWidget(
-      {required this.orderId, required this.orderNumber});
-  int onTheWayStatus = 6;
-  int deliveryStatus = 5;
+   const OrderDetailsScreenWidget(
+      {super.key, required this.orderId, required this.orderNumber});
+
+
   @override
   Widget build(BuildContext context) {
-  /*  OrderDetailsBloc bloc = context.read<OrderDetailsBloc>();*/
     return BlocListener<OrderDetailsBloc, OrderDetailsState>(
       listener: (context, state) {},
       child: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
@@ -58,7 +57,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
           return Scaffold(
             backgroundColor: AppColors.pageColor,
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+              preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 bgColor: AppColors.pageColor,
                 title: orderNumber.toString(),
@@ -71,13 +70,11 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                       (state.orderByIdList.data?.ordersBySupplier?.length ??
                                   0) ==
                               0
-                          ? SizedBox()
+                          ? const SizedBox()
                           : CircularButtonWidget(
                               buttonName: AppLocalizations.of(context)!.total,
                           buttonValue:
-                        //  '${AppLocalizations.of(context)!.currency}${(state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0')}'
-
-                             '${formatNumber(value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
+                             formatNumber(value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal),
                             ),
                 ),
                 onTap: () {
@@ -92,13 +89,13 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                 child: (state.orderByIdList.data?.ordersBySupplier?.length ??
                             0) ==
                         0
-                    ? OrderSummaryScreenShimmerWidget()
+                    ? const OrderSummaryScreenShimmerWidget()
                     : AnimationLimiter(
                       child: ListView.builder(
                           itemCount: state.orderByIdList.data?.ordersBySupplier?.length,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: AppConstants.padding_5),
                           itemBuilder: (context, index) =>
                               AnimationConfiguration.staggeredList(
@@ -120,7 +117,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
           onTap: () {
             Navigator.push(context,   PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(orderNumber: orderNumber,orderId: orderId,isNavigateToProductDetailString: false,
-              productData: orderByIdList.data?.ordersBySupplier?[index],
+              productData: orderByIdList.data!.ordersBySupplier![index],
             ),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(0.0, 1.0);
@@ -136,8 +133,8 @@ class OrderDetailsScreenWidget extends StatelessWidget {
 
           },
           child: Container(
-            margin: EdgeInsets.all(AppConstants.padding_10),
-            padding: EdgeInsets.symmetric(
+            margin: const EdgeInsets.all(AppConstants.padding_10),
+            padding: const EdgeInsets.symmetric(
                 vertical: AppConstants.padding_15,
                 horizontal: AppConstants.padding_10),
             decoration: BoxDecoration(
@@ -148,7 +145,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     blurRadius: AppConstants.blur_10),
               ],
               borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                  const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -171,15 +168,8 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                           .toTitleCase(),
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
-                           color: orderByIdList.data!.ordersBySupplier![index]
-                               .deliverStatus?.orderStatusNumber == onTheWayStatus
-                      ? AppColors.blueColor
-                          : orderByIdList.data!.ordersBySupplier![index]
-                               .deliverStatus?.orderStatusNumber ==
-                               deliveryStatus
-                      ? AppColors.mainColor
-                          : AppColors.orangeColor,
-
+                           color: getStatusColor(orderByIdList.data!.ordersBySupplier![index]
+                               .deliverStatus?.orderStatusNumber??0),
                           fontWeight: FontWeight.w700),
                     )
                   ],
@@ -209,7 +199,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                       value: orderByIdList.data!.ordersBySupplier![index]
                                   .orderDeliveryDate !=
                               ''
-                          ? '${orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate.toString()}'
+                          ? orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate.toString()
                           : '-',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
@@ -223,7 +213,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                       borderCoder: AppColors.lightBorderColor,
                       flexValue: 4,
                       title: AppLocalizations.of(context)!.total_order,
-                      value: '${formatNumber(value: orderByIdList.data!.ordersBySupplier![index].totalPayment?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
+                      value: formatNumber(value: orderByIdList.data!.ordersBySupplier![index].totalPayment?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal),
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextWeight: FontWeight.w500,

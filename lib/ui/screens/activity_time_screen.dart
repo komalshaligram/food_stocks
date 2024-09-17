@@ -40,13 +40,13 @@ class ActivityTimeScreen extends StatelessWidget {
         ..add(ActivityTimeEvent.getActivityTimeListEvent(
           context: context,
         )),
-      child: ActivityTimeScreenWidget(),
+      child: const ActivityTimeScreenWidget(),
     );
   }
 }
 
 class ActivityTimeScreenWidget extends StatelessWidget {
-  ActivityTimeScreenWidget();
+  const ActivityTimeScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -84,11 +84,11 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                 )),
           ),
           body: state.isShimmering
-              ? ActivityTimeScreenShimmerWidget()
+              ? const ActivityTimeScreenShimmerWidget()
               : SafeArea(
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                           horizontal: AppConstants.padding_5,
                           vertical: AppConstants.padding_5),
                       child: Column(
@@ -104,7 +104,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                     ? getScreenWidth(context) * 0.25 : getScreenWidth(context) >= 700 ? getScreenWidth(context) * 0.35
                                     : getScreenWidth(context) * 0.27,
                               ),
-                              Container(
+                              SizedBox(
                                   width: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 0.27 : getScreenWidth(context) * 0.25,
                                   height: getScreenHeight(context) >= 1000 ? 30 : 20,
                                   child: Text(
@@ -115,7 +115,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                     ),
                                   )),
                               18.width,
-                              Container(
+                              SizedBox(
                                   width: getScreenWidth(context) >= 700 ? getScreenWidth(context) * 0.27 : getScreenWidth(context) * 0.25,
                                   height: getScreenHeight(context) >= 1000 ? 30 : 20,
                                   child: Text(
@@ -128,25 +128,25 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                               10.height,
                             ],
                           ),
-                          state.OperationTimeList.isNotEmpty
+                          state.operationTimeList.isNotEmpty
                               ? ListView.builder(
-                                  itemCount: state.OperationTimeList.length,
+                                  itemCount: state.operationTimeList.length,
                                   shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
+                                  physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     return Padding(
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           vertical: AppConstants.padding_3),
                                       child: ActivityTimeRow(
                                         dayString: state
-                                            .OperationTimeList[index]
+                                            .operationTimeList[index]
                                             .dayString,
                                         rowIndex: index,
                                       ),
                                     );
                                   },
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                           40.height,
                           Padding(
                             padding: EdgeInsets.only(
@@ -174,7 +174,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                           ),
                           20.height,
                           state.isUpdate
-                              ? SizedBox()
+                              ? const SizedBox()
                               : Padding(
                                   padding: EdgeInsets.only(
                                       left: getScreenWidth(context) * 0.08,
@@ -212,7 +212,7 @@ class ActivityTimeRow extends StatelessWidget {
   final String dayString;
   final int rowIndex;
 
-  ActivityTimeRow({super.key, required this.dayString, required this.rowIndex});
+  const ActivityTimeRow({super.key, required this.dayString, required this.rowIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -225,33 +225,30 @@ class ActivityTimeRow extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: AppConstants.padding_10),
-                child: state.OperationTimeList.isNotEmpty
+                child: state.operationTimeList.isNotEmpty
                     ? ListView.builder(
                         shrinkWrap: true,
                         //      scrollDirection: Axis.vertical,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: state.OperationTimeList.isNotEmpty
-                            ? state.OperationTimeList[rowIndex].monday.length
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: state.operationTimeList.isNotEmpty
+                            ? state.operationTimeList[rowIndex].monday.length
                             : 0,
                         itemBuilder: (context, index) {
-                          return state.OperationTimeList.isNotEmpty
+                          return state.operationTimeList.isNotEmpty
                               ? Padding(
                                   padding: const EdgeInsets.only(bottom: AppConstants.padding_10),
                                   child: Row(
                                     children: [
                                       index == 0
                                           ? Expanded(
-                                            child: Container(
-                                              /*  width: getScreenWidth(context) *
-                                                    0.22,*/
-                                                child: Text(
-                                                  dayString,
-                                                  style: AppStyles
-                                                      .rkRegularTextStyle(
-                                                    size: AppConstants.smallFont,
-                                                    color: AppColors.textColor,
-                                                  ),
-                                                )),
+                                            child: Text(
+                                              dayString,
+                                              style: AppStyles
+                                                  .rkRegularTextStyle(
+                                                size: AppConstants.smallFont,
+                                                color: AppColors.textColor,
+                                              ),
+                                            ),
                                           )
                                           : Expanded(
                                             child: Container(
@@ -267,7 +264,7 @@ class ActivityTimeRow extends StatelessWidget {
                                         index: index,
                                         rowIndex: rowIndex,
                                         dayString: dayString,
-                                        time: state.OperationTimeList[rowIndex]
+                                        time: state.operationTimeList[rowIndex]
                                             .monday[index].from ?? AppStrings.timeString,
                                       ),
                                       15.width,
@@ -276,7 +273,7 @@ class ActivityTimeRow extends StatelessWidget {
                                         index: index,
                                         dayString: dayString,
                                         rowIndex: rowIndex,
-                                        time: state.OperationTimeList[rowIndex]
+                                        time: state.operationTimeList[rowIndex]
                                             .monday[index].until ?? AppStrings.timeString,
                                       ),
                                       15.width,
@@ -330,10 +327,10 @@ class ActivityTimeRow extends StatelessWidget {
                                     ],
                                   ),
                                 )
-                              : CupertinoActivityIndicator();
+                              : const CupertinoActivityIndicator();
                         },
                       )
-                    : CupertinoActivityIndicator(),
+                    : const CupertinoActivityIndicator(),
               ),
             ),
           ],
@@ -350,7 +347,7 @@ class TimeContainer extends StatelessWidget {
   final String dayString;
   final String time;
 
-  TimeContainer(
+  const TimeContainer(
       {super.key,
       required this.openingIndex,
       required this.index,
@@ -387,10 +384,10 @@ class TimeContainer extends StatelessWidget {
                     builder: (BuildContext c1) {
                       return Container(
                         // height: getScreenHeight(context) * 0.33,
-                        padding: EdgeInsets.only(top: 6.0),
+                        padding: const EdgeInsets.only(top: 6.0),
                         decoration: BoxDecoration(
                             color: AppColors.whiteColor,
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                                 topLeft:
                                     Radius.circular(AppConstants.radius_20),
                                 topRight:
@@ -441,10 +438,10 @@ class TimeContainer extends StatelessWidget {
                                         decoration: BoxDecoration(
                                             color: AppColors.borderColor
                                                 .withOpacity(0.6),
-                                            borderRadius: BorderRadius.all(
+                                            borderRadius: const BorderRadius.all(
                                                 Radius.circular(
                                                     AppConstants.radius_5))),
-                                        padding: EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                             horizontal: AppConstants.padding_30,
                                             vertical: AppConstants.padding_5),
                                         child: Text(

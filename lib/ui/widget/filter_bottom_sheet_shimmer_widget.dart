@@ -47,11 +47,11 @@ class FilterBottomSheetShimmerWidget extends StatelessWidget {
       child: Container(
         height: 25,
         width: 140,
-        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-          BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+          const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );
@@ -64,7 +64,7 @@ class FilterBottomSheetShimmerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-          BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
       ),
     );
@@ -74,11 +74,11 @@ class FilterBottomSheetShimmerWidget extends StatelessWidget {
       child: Container(
         width: 120,
         height: AppConstants.containerHeight,
-        margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
+        margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-          BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         ),
       ),
     );

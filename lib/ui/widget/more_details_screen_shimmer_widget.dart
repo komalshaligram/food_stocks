@@ -21,31 +21,26 @@ class MoreDetailsScreenShimmerWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              20.height,
+              buildTextFieldTitle(),
+              5.height,
+              buildTextField(),
               10.height,
               buildTextFieldTitle(),
+              5.height,
               buildTextField(),
-              7.height,
+              10.height,
               buildTextFieldTitle(),
+              5.height,
               buildTextField(),
-              7.height,
+              10.height,
               buildTextFieldTitle(),
+              5.height,
               buildTextField(),
-              7.height,
+              10.height,
               buildTextFieldTitle(),
+              5.height,
               buildTextField(),
-              7.height,
-              buildTextFieldTitle(),
-              CommonShimmerWidget(
-                child: Container(
-                  height: 130,
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(
-                    color: AppColors.whiteColor,
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(AppConstants.radius_5)),
-                  ),
-                ),
-              ),
               50.height,
               buildTextField(),
               20.height,
@@ -64,7 +59,7 @@ class MoreDetailsScreenShimmerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
       ),
     );
@@ -75,11 +70,11 @@ class MoreDetailsScreenShimmerWidget extends StatelessWidget {
       child: Container(
         height: AppConstants.shimmerTextHeight,
         width: 140,
-        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );

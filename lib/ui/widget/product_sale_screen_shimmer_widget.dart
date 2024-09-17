@@ -11,8 +11,8 @@ class ProductSaleScreenShimmerWidget extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       itemCount: AppConstants.saleProductPageLimit,
-      padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3, childAspectRatio: AppConstants.productGridAspectRatio7),
       itemBuilder: (context, index) {
         return buildProductSaleListItem();
@@ -23,12 +23,12 @@ class ProductSaleScreenShimmerWidget extends StatelessWidget {
   Widget buildProductSaleListItem() {
     return CommonShimmerWidget(
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           borderRadius:
               BorderRadius.all(Radius.circular(AppConstants.radius_10)),
           color: Colors.white,
         ),
-        margin: EdgeInsets.symmetric(
+        margin: const EdgeInsets.symmetric(
             vertical: AppConstants.padding_10,
             horizontal: AppConstants.padding_5),
       ),

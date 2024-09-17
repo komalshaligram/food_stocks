@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -124,6 +123,8 @@ class Sale with _$Sale {
     String? saleUntilDate,
     @JsonKey(name: "saleMaxQuantity")
     String? saleMaxQuantity,
+    @JsonKey(name: "saleMinQuantity")
+    String? saleMinQuantity,
     @JsonKey(name: "saleDescription")
     String? saleDescription,
   }) = _Sale;

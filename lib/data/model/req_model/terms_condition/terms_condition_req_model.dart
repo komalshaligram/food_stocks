@@ -44,6 +44,8 @@ class TermsConditionReqModel with _$TermsConditionReqModel {
     String? branchNumber,
     @JsonKey(name: "accountNumber")
     String? accountNumber,
+    @JsonKey(name: "paymentType")
+    String? paymentType,
     String? signature,
   }) = _TermsConditionReqModel;
 

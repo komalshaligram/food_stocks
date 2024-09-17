@@ -1,11 +1,11 @@
 
 
-class permissionModel{
+class PermissionModel{
   String title;
   bool isEnable;
   String? supplierId;
   String? brandId;
-  permissionModel({
+  PermissionModel({
     required this.title,
      this.isEnable = false,
     this.brandId,

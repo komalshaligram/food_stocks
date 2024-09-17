@@ -5,7 +5,7 @@ part of 'supplier_permission_bloc.dart';
 class SupplierPermissionState with _$SupplierPermissionState{
   const factory SupplierPermissionState({
     required bool isShimmering,
-    required List<permissionModel>supplierPermissionList,
+    required List<PermissionModel>supplierPermissionList,
     required bool isRefresh,
     required bool isSelectAll,
     required bool isUpdateProcess,

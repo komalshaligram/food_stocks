@@ -14,7 +14,7 @@ class CommonAlertDialog extends StatelessWidget {
   final String directionality;
   final bool isLogOutProcess;
 
-  CommonAlertDialog({
+  const CommonAlertDialog({
     super.key,
     required this.title,
      this.subTitle = '',
@@ -31,7 +31,7 @@ class CommonAlertDialog extends StatelessWidget {
     return Directionality(
       textDirection: directionality == 'en' ? TextDirection.ltr : TextDirection.rtl,
       child: AlertDialog(
-        contentPadding: EdgeInsets.all(20.0),
+        contentPadding: const EdgeInsets.all(20.0),
         surfaceTintColor: AppColors.whiteColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
         title: Text(title,
@@ -44,7 +44,7 @@ class CommonAlertDialog extends StatelessWidget {
           style: AppStyles.rkRegularTextStyle(
               color: AppColors.blackColor, size: AppConstants.font_14),
         ),
-        actionsPadding: EdgeInsets.only(
+        actionsPadding: const EdgeInsets.only(
             right: AppConstants.padding_20,
             bottom: AppConstants.padding_20,
             left: AppConstants.padding_20),
@@ -56,7 +56,7 @@ class CommonAlertDialog extends StatelessWidget {
                   onTap: positiveOnTap,
                   child: Container(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                        const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
                     alignment: Alignment.center,
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
@@ -79,7 +79,7 @@ class CommonAlertDialog extends StatelessWidget {
                   onTap: negativeOnTap,
                   child: Container(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                        const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
                     alignment: Alignment.center,
                     width: 80,
                     decoration: BoxDecoration(

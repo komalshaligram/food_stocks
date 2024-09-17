@@ -29,7 +29,7 @@ class NoDataBottomSheet extends StatelessWidget {
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: getScreenHeight(context) * 0.7,
             child: Center(
               child: Text(

@@ -103,6 +103,7 @@ class SaleProduct with _$SaleProduct {
     String? saleUntilDate,
 
     String? saleMaxQuantity,
+    String? saleMinQuantity,
 
     String? saleDescription,
   }) = _SaleProduct;

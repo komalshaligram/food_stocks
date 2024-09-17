@@ -14,7 +14,7 @@ import '../widget/common_app_bar.dart';
 import '../widget/custom_button_widget.dart';
 
 class AccountPermissionRoute {
-  static Widget get route => AccountPermissionScreen();
+  static Widget get route => const AccountPermissionScreen();
 }
 
 class AccountPermissionScreen extends StatelessWidget {
@@ -29,13 +29,13 @@ class AccountPermissionScreen extends StatelessWidget {
           context: context,
         subUserId: args?[AppStrings.subUserIdString] ?? ''
       )),
-      child: AccountPermissionScreenWidget(),
+      child: const AccountPermissionScreenWidget(),
     );
   }
 }
 
 class AccountPermissionScreenWidget extends StatelessWidget {
-   AccountPermissionScreenWidget({super.key});
+   const AccountPermissionScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class AccountPermissionScreenWidget extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.account_permission,
@@ -59,7 +59,7 @@ class AccountPermissionScreenWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10,vertical: AppConstants.padding_5),
               child: SingleChildScrollView(
-                child: state.isShimmering ? OrderSummaryScreenShimmerWidget(itemCount: 10,containerHeight: 40,):
+                child: state.isShimmering ? const OrderSummaryScreenShimmerWidget(itemCount: 10,containerHeight: 40,):
                 !state.isShimmering && state.permissionList.isEmpty?
                 SizedBox(
                   height: getScreenHeight(context) * 0.8,
@@ -76,7 +76,7 @@ class AccountPermissionScreenWidget extends StatelessWidget {
                  ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: state.permissionList.length,
                         itemBuilder: (context, index) {
                           return  Padding(
@@ -129,7 +129,7 @@ class AccountPermissionScreenWidget extends StatelessWidget {
           ),
 
       ),
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
       child: InkWell(

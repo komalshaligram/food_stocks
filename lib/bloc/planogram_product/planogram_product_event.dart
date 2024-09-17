@@ -3,46 +3,46 @@ part of 'planogram_product_bloc.dart';
 @freezed
 class PlanogramProductEvent with _$PlanogramProductEvent {
   const factory PlanogramProductEvent.getPlanogramProductsEvent(
-      {required PlanogramDatum planogram,required BuildContext context}) = _GetPlanogramProductsEvent;
+      {required PlanogramDatum planogram,required BuildContext context}) = _getPlanogramProductsEvent;
 
   const factory PlanogramProductEvent.getProductDetailsEvent(
       {required BuildContext context,
       required String productId,
       required bool isBarcode,
         required int productListIndex
-      }) = _GetProductDetailsEvent;
+      }) = _getProductDetailsEvent;
 
   const factory PlanogramProductEvent.increaseQuantityOfProduct(
-      {required BuildContext context}) = _IncreaseQuantityOfProduct;
+      {required BuildContext context}) = _increaseQuantityOfProduct;
 
   const factory PlanogramProductEvent.decreaseQuantityOfProduct(
-      {required BuildContext context}) = _DecreaseQuantityOfProduct;
+      {required BuildContext context}) = _decreaseQuantityOfProduct;
 
   const factory PlanogramProductEvent.updateQuantityOfProduct(
       {required BuildContext context,
-      required String quantity}) = _UpdateQuantityOfProduct;
+      required String quantity}) = _updateQuantityOfProduct;
 
   const factory PlanogramProductEvent.changeNoteOfProduct(
-      {required String newNote}) = _ChangeNoteOfProduct;
+      {required String newNote}) = _changeNoteOfProduct;
 
   const factory PlanogramProductEvent.changeSupplierSelectionExpansionEvent(
-      {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
+      {bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
   const factory PlanogramProductEvent.supplierSelectionEvent(
       {required int supplierIndex,
       required BuildContext context,
-      required int supplierSaleIndex}) = _SupplierSelectionEvent;
+      required int supplierSaleIndex}) = _supplierSelectionEvent;
 
   const factory PlanogramProductEvent.addToCartProductEvent(
       {required BuildContext context,
       required String productId
-      }) = _AddToCartProductEvent;
+      }) = _addToCartProductEvent;
 
-  const factory PlanogramProductEvent.setCartCountEvent() = _SetCartCountEvent;
+  const factory PlanogramProductEvent.setCartCountEvent() = _setCartCountEvent;
 
   const factory PlanogramProductEvent.updateImageIndexEvent({
     required int index,
-  }) = _UpdateImageIndexEvent;
+  }) = _updateImageIndexEvent;
 
   const factory PlanogramProductEvent.toggleNoteEvent() = _ToggleNoteEvent;
 
@@ -68,20 +68,20 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
       ) = _getGridListView;
 
   const factory PlanogramProductEvent.changeCategoryExpansion({bool? isOpened}) =
-  _ChangeCategoryExpansion;
+  _changeCategoryExpansion;
 
   const factory PlanogramProductEvent.globalSearchEvent({required BuildContext context}) =
-  _GlobalSearchEvent;
+  _globalSearchEvent;
 
   const factory PlanogramProductEvent.updateGlobalSearchEvent(
       {required String search,
-        required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+        required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
 
   const factory PlanogramProductEvent.getProductCategoriesListEvent(
-      {required BuildContext context}) = _GetProductCategoriesListEvent;
+      {required BuildContext context}) = _getProductCategoriesListEvent;
 
-  const factory PlanogramProductEvent.RelatedProductsEvent({required BuildContext context,required String productId}) = _RelatedProductsEvent;
-  const factory PlanogramProductEvent.RemoveRelatedProductEvent() = _RemoveRelatedProductEvent;
+  const factory PlanogramProductEvent.relatedProductsEvent({required BuildContext context,required String productId}) = _relatedProductsEvent;
+  const factory PlanogramProductEvent.removeRelatedProductEvent() = _removeRelatedProductEvent;
 
   const factory PlanogramProductEvent.getPermissionList(
       {required BuildContext context }) = _getPermissionList;

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/data/model/req_model/terms_condition/terms_condition_req_model.dart';
@@ -21,7 +22,6 @@ class BankInfoRoute {
   static Widget get route => const BankInfoScreen();
 }
 
-
 class BankInfoScreen extends StatelessWidget {
   const BankInfoScreen({super.key});
 
@@ -32,7 +32,8 @@ class BankInfoScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => BankInfoBloc()..add(BankInfoEvent.getBankNameEvent(context: context))
       ..add(BankInfoEvent.getTermsConditionModelEvent(context: context,
-          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? TermsConditionReqModel())),
+          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel()))
+        ..add(BankInfoEvent.getArgumentEvent(isPaymentFail: args?[AppStrings.isPaymentFail] ?? false,isUpdate: args?[AppStrings.updateString]??false)),
       child: BankInfoWidget(),
     );
   }
@@ -40,7 +41,9 @@ class BankInfoScreen extends StatelessWidget {
 
 class BankInfoWidget extends StatelessWidget {
    BankInfoWidget({super.key});
+
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     BankInfoBloc bloc = context.read<BankInfoBloc>();
@@ -72,7 +75,7 @@ class BankInfoWidget extends StatelessWidget {
           ),
           body: SafeArea(
             child: SingleChildScrollView(
-              child: state.isShimmering ? BankInfoScreenShimmerWidget():
+              child: state.isShimmering ? const BankInfoScreenShimmerWidget():
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: getScreenWidth(context) * 0.1),
@@ -100,6 +103,10 @@ class BankInfoWidget extends StatelessWidget {
                         name: AppLocalizations.of(context)!.branch_number,
                       ),
                       CustomFormField(
+                        inputFormat: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(16)
+                        ],
                         context: context,
                         controller: state.branchController,
                         keyboardType: TextInputType.number,
@@ -114,6 +121,10 @@ class BankInfoWidget extends StatelessWidget {
                       ),
                       CustomFormField(
                         context: context,
+                        inputFormat: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(16)
+                        ],
                         controller: state.accountNumberController,
                         keyboardType: TextInputType.number,
                         hint: "",
@@ -142,13 +153,18 @@ class BankInfoWidget extends StatelessWidget {
                   if (_formKey.currentState
                       ?.validate() ??
                       false) {
-                    bloc.add(BankInfoEvent.termsConditionApiEvent(context: context));
+                    if(!state.isUpdate){
+                      bloc.add(BankInfoEvent.termsConditionApiEvent(context: context));
+                    }
+                    else{
+                      bloc.add(BankInfoEvent.addBankInfoEvent(context: context));
+                    }
                   }
                 },
                 fontColors: AppColors.whiteColor,
               ),
             ),
-          ):SizedBox(),
+          ):const SizedBox(),
         );
       },
     );

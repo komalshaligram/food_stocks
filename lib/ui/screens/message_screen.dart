@@ -19,7 +19,7 @@ import '../widget/question_and_answer_screen_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 
 class MessageRoute {
-  static Widget get route => MessageScreen();
+  static Widget get route => const MessageScreen();
 }
 
 class MessageScreen extends StatelessWidget {
@@ -30,7 +30,7 @@ class MessageScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => MessageBloc()
         ..add(MessageEvent.getMessageListEvent(context: context)),
-      child: MessageScreenWidget(),
+      child: const MessageScreenWidget(),
     );
   }
 }
@@ -55,7 +55,7 @@ class MessageScreenWidget extends StatelessWidget {
             child: Scaffold(
               backgroundColor: AppColors.pageColor,
               appBar: PreferredSize(
-                preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+                preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
                 child: CommonAppBar(
                   bgColor: AppColors.pageColor,
                   title: AppLocalizations.of(context)!.messages,
@@ -72,10 +72,10 @@ class MessageScreenWidget extends StatelessWidget {
                     SmartRefresher(
                   enablePullDown: true,
                   controller: state.refreshController,
-                  header: RefreshWidget(),
+                  header: const RefreshWidget(),
                   footer: CustomFooter(
                     builder: (context, mode) =>
-                        QuestionAndAnswerScreenShimmerWidget(),
+                        const QuestionAndAnswerScreenShimmerWidget(),
                   ),
                   enablePullUp: !state.isBottomOfMessage,
                   onRefresh: () {
@@ -91,14 +91,14 @@ class MessageScreenWidget extends StatelessWidget {
                     child: Column(
                       children: [
                         state.isShimmering
-                            ? QuestionAndAnswerScreenShimmerWidget()
+                            ? const QuestionAndAnswerScreenShimmerWidget()
                             : state.messageList.isEmpty
                                 ? Container(
                                     height: getScreenHeight(context) - 80,
                                     width: getScreenWidth(context),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      '${AppLocalizations.of(context)!.messages_not_found}',
+                                      AppLocalizations.of(context)!.messages_not_found,
                                       style: AppStyles.pVRegularTextStyle(
                                           size: AppConstants.font_26,
                                           color: AppColors.blackColor),
@@ -109,7 +109,7 @@ class MessageScreenWidget extends StatelessWidget {
                                     shrinkWrap: true,
                                     physics:
                                         const NeverScrollableScrollPhysics(),
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         vertical: AppConstants.padding_10),
                                     itemBuilder: (context, index) {
                                       return Dismissible(
@@ -119,13 +119,13 @@ class MessageScreenWidget extends StatelessWidget {
                                           alignment: state.language == AppStrings.englishString
                                               ? Alignment.centerLeft
                                               : Alignment.centerRight,
-                                          margin: EdgeInsets.symmetric(
+                                          margin: const EdgeInsets.symmetric(
                                               vertical: AppConstants.padding_5,
                                               horizontal: AppConstants.padding_10),
                                           decoration: BoxDecoration(
                                             color: AppColors.redColor,
                                             borderRadius:
-                                            BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                                            const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                                           ),
                                           child: Padding(
                                             padding: const EdgeInsets.all(12),
@@ -150,12 +150,12 @@ class MessageScreenWidget extends StatelessWidget {
                                                       return AbsorbPointer(
                                                         absorbing: state.isRemoveProcess ? true : false,
                                                         child: CustomDialog(
-                                                          title: '${AppLocalizations.of(context)!.are_you_sure}',
+                                                          title: AppLocalizations.of(context)!.are_you_sure,
                                                           directionality: state.language,
                                                           positiveTitle:AppLocalizations.of(context)!.yes,
                                                           negativeTitle: AppLocalizations.of(context)!.no,
                                                           positiveOnTap: (){
-                                                            bloc.add(MessageEvent.MessageDeleteEvent(
+                                                            bloc.add(MessageEvent.messageDeleteEvent(
                                                                 messageId: state.messageList[index].id.toString(),
                                                                 context: context,
                                                                 dialogContext: context1
@@ -202,7 +202,6 @@ class MessageScreenWidget extends StatelessWidget {
                                                 AppStrings.messageIdString:
                                                     state.messageList[index].id
                                               });
-                                          debugPrint('message = $messageNewData');
                                           context.read<MessageBloc>().add(
                                               MessageEvent.removeOrUpdateMessageEvent(
                                                   messageId: messageNewData[
@@ -220,24 +219,12 @@ class MessageScreenWidget extends StatelessWidget {
                                       );
                                     },
                                   ),
-                        // state.isLoadMore
-                        //     ? QuestionAndAnswerScreenShimmerWidget()
-                        //     : 0.width,
+
                       ],
                     ),
                   ),
                 ),
-                // onNotification: (notification) {
-                //   if (notification.metrics.pixels ==
-                //       notification.metrics.maxScrollExtent) {
-                //     if (!state.isBottomOfMessage) {
-                //       context.read<MessageBloc>().add(
-                //           MessageEvent.getMessageListEvent(
-                //               context: context));
-                //     }
-                //   }
-                //   return true;
-                // }),
+
               ),
             ),
           );
@@ -259,17 +246,17 @@ class MessageScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius:
-            BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         boxShadow: [
           BoxShadow(
               color: AppColors.shadowColor.withOpacity(0.15),
               blurRadius: AppConstants.blur_10),
         ],
       ),
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           horizontal: AppConstants.padding_10,
           vertical: AppConstants.padding_5),
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_10,
           horizontal: AppConstants.padding_10),
       child: InkWell(
@@ -312,7 +299,7 @@ class MessageScreenWidget extends StatelessWidget {
                   ),
                   5.height,
                   Text(
-                    '${dateTime}',
+                    dateTime,
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.font_10,
                         color: AppColors.textColor),
@@ -333,7 +320,4 @@ class MessageScreenWidget extends StatelessWidget {
       ),
     );
   }
-
-
-
 }

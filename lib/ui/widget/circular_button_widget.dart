@@ -7,14 +7,14 @@ class CircularButtonWidget extends StatelessWidget {
   final String buttonName;
   final String buttonValue;
 
-   CircularButtonWidget({required this.buttonValue , required this.buttonName
+   const CircularButtonWidget({super.key, required this.buttonValue , required this.buttonName
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
+        borderRadius: const BorderRadius.all(
             Radius.circular(AppConstants.radius_100)),
         border: Border.all(
           color: AppColors.borderColor.withOpacity(0.6),
@@ -23,12 +23,12 @@ class CircularButtonWidget extends StatelessWidget {
       ),
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
             horizontal: AppConstants.padding_10,
             vertical: AppConstants.padding_5),
         decoration: BoxDecoration(
           color: AppColors.lightGreyColor,
-          borderRadius: BorderRadius.all(
+          borderRadius: const BorderRadius.all(
               Radius.circular(AppConstants.radius_100)),
           border: Border.all(
             color: AppColors.whiteColor,
@@ -36,28 +36,14 @@ class CircularButtonWidget extends StatelessWidget {
           ),
         ),
      child:
-    /*  Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('${buttonName}:',
-              style: TextStyle(
-                  color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
-            ),
-            Text(buttonValue,
-                style: TextStyle(
-                    color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700)
-            )
-          ],
-        ),
-*/
         RichText(
           text: TextSpan(
-            text: '${buttonName}',
+            text: buttonName,
             style: TextStyle(
                 color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
             children: <TextSpan>[
               TextSpan(
-                  text:':${buttonValue}',
+                  text:':$buttonValue',
                   style: TextStyle(
                       color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700)),
             ],

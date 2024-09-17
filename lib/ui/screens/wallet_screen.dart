@@ -36,21 +36,21 @@ class WalletScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => WalletBloc()
-        ..add(WalletEvent.getYearListEvent())
+        ..add(const WalletEvent.getYearListEvent())
         ..add(WalletEvent.getOrderCountEvent(context: context))
-        ..add(WalletEvent.checkLanguage())
+        ..add(const WalletEvent.checkLanguage())
         ..add(WalletEvent.getAllWalletTransactionEvent(
           context: context,
           endDate:  DateTime.utc(DateTime.now().year, DateTime.now().month + 1).subtract(const Duration(days: 1)),
           startDate: DateTime.utc(DateTime.now().year, DateTime.now().month, 1),
         )),
-      child: WalletScreenWidget(),
+      child: const WalletScreenWidget(),
     );
   }
 }
 
 class WalletScreenWidget extends StatefulWidget {
-  WalletScreenWidget({Key? key}) : super(key: key);
+  const WalletScreenWidget({Key? key}) : super(key: key);
 
   @override
   State<WalletScreenWidget> createState() => _WalletScreenWidgetState();
@@ -100,7 +100,6 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
 
     return BlocListener<WalletBloc, WalletState>(
       listener: (context, state)  {
-
         if(state.isExportComplete){
           showDialog(
             context:context,
@@ -111,13 +110,13 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                 width: 80,
                 positiveTitle: AppLocalizations.of(context)!.close,
                 positiveOnTap:()=>Navigator.pop(context1),
-                Subtitle:AppLocalizations.of(context)!.wallet_information_sent_to_your_email,
+                subTitle:AppLocalizations.of(context)!.wallet_information_sent_to_your_email,
               );
             },).then((value) {
-            context.read<WalletBloc>().add(WalletEvent.checkLanguage());
+            context.read<WalletBloc>().add(const WalletEvent.checkLanguage());
           });
         }
-        else if(state.isAccountPermissionShimmering ){
+        else if(state.isAccountPermissionShimmering){
           BlocProvider.of<BottomNavBloc>(context)
               .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
@@ -132,7 +131,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
             body: FocusDetector(
               onFocusGained: () {
                bloc.add(WalletEvent.userApproveEvent(context: context));
-                if ((state.walletTransactionsList.length) == 0) {
+                if (state.walletTransactionsList.isEmpty) {
                   bloc.add(WalletEvent.getAllWalletTransactionEvent(
                     context: context,
                     endDate: endDate,
@@ -144,7 +143,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                     year: state.year, context: context));
                 bloc.add(WalletEvent.getDropDownElementEvent(year: state.year));
                 bloc.add(WalletEvent.getPermissionList(context: context));
-                bloc.add(WalletEvent.checkLanguage());
+                bloc.add(const WalletEvent.checkLanguage());
                 minDate = DateTime(state.yearList.last, 1, 1);
               },
               child: AnimationLimiter(
@@ -152,8 +151,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                   child: NotificationListener<ScrollNotification>(
                     child: SingleChildScrollView(
                       physics: state.walletTransactionsList.isEmpty
-                          ? NeverScrollableScrollPhysics()
-                          : AlwaysScrollableScrollPhysics(),
+                          ? const NeverScrollableScrollPhysics()
+                          : const AlwaysScrollableScrollPhysics(),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -172,7 +171,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                               child: Container(
                                 width: getScreenWidth(context),
                                 clipBehavior: Clip.hardEdge,
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     vertical: AppConstants.padding_10,
                                     horizontal: AppConstants.padding_10),
                                 decoration: BoxDecoration(
@@ -216,7 +215,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                             Directionality(
                                               textDirection: TextDirection.rtl,
                                               child: Text(
-                                                '${formatNumber( value: state.balance.toString(),local: AppStrings.hebrewLocal)}',
+                                                formatNumber( value: state.balance.toString(),local: AppStrings.hebrewLocal),
                                                 style: AppStyles.rkRegularTextStyle(
                                                     size: AppConstants.font_14,
                                                     fontWeight: FontWeight.bold,
@@ -241,7 +240,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                     image: AppImagePath.credits,
                                                     title: AppLocalizations.of(
                                                             context)!.total_credit,
-                                                    value: '${formatNumber(value: state.totalCredit.toString() ,local: AppStrings.hebrewLocal) }'),
+                                                    value: formatNumber(value: state.totalCredit.toString() ,local: AppStrings.hebrewLocal)),
                                               ),
                                               10.width,
                                               Flexible(
@@ -253,7 +252,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                    '${formatNumber(value: state.thisMonthExpense.toString() ,local: AppStrings.hebrewLocal) }'),
+                                                    formatNumber(value: state.thisMonthExpense.toString() ,local: AppStrings.hebrewLocal)),
 
                                               ),
                                             ],
@@ -281,7 +280,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                             context)!
                                                         .last_months_expenses,
                                                     value:
-                                                        '${formatNumber(value: state.lastMonthExpense.toString(),local:AppStrings.hebrewLocal)}'),
+                                                        formatNumber(value: state.lastMonthExpense.toString(),local:AppStrings.hebrewLocal)),
                                               ),
                                             ],
                                           ),
@@ -304,10 +303,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                     AppLocalizations.of(context)!
                                         .monthly_expense_graph,
                                     style: AppStyles.rkRegularTextStyle(
-                                        size: /*  state.language == AppStrings.englishString
-                                          ? AppConstants.font_14
-                                          : */
-                                            AppConstants.smallFont,
+                                        size: AppConstants.smallFont,
                                         color: AppColors.blackColor),
                                   ),
                                   dropDownWidget(
@@ -319,7 +315,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                             ),
                             25.height,
                             state.isGraphProcess
-                                ? WalletScreenShimmerWidget()
+                                ? const WalletScreenShimmerWidget()
                                 : Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: SizedBox(
@@ -342,7 +338,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                         return value.map((e) {
                                                           return LineTooltipItem(
                                                               "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total}: ${AppLocalizations.of(context)!.currency}${e.y.toStringAsFixed(2)}",
-                                                              TextStyle(
+                                                              const TextStyle(
                                                                   fontSize: 8));
                                                         }).toList();
                                                       },
@@ -352,7 +348,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                           false,
                                                       tooltipMargin: 15,
                                                       tooltipPadding:
-                                                          EdgeInsets.only(
+                                                          const EdgeInsets.only(
                                                               bottom: 6)),
                                             ),
                                             lineBarsData: [
@@ -376,13 +372,13 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                   cutOffY: 0.0,
                                                   applyCutOffY: false,
                                                 ),
-                                                dotData: FlDotData(
+                                                dotData: const FlDotData(
                                                   show: false,
                                                 ),
                                               ),
                                             ],
                                             minY: 0,
-                                            gridData: FlGridData(show: false),
+                                            gridData: const FlGridData(show: false),
                                             titlesData: FlTitlesData(
                                               bottomTitles: AxisTitles(
                                                 sideTitles: SideTitles(
@@ -409,11 +405,11 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                   }),
                                                 ),
                                               ),
-                                              leftTitles: AxisTitles(
+                                              leftTitles: const AxisTitles(
                                                 sideTitles: SideTitles(
                                                     showTitles: false),
                                               ),
-                                              rightTitles: AxisTitles(
+                                              rightTitles: const AxisTitles(
                                                 sideTitles: SideTitles(
                                                     showTitles: false),
                                               ),
@@ -427,7 +423,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                             value.round()];
                                                     return Text(
                                                       month.toString() == "0.00"?'0':
-                                                        '${month.toString()}',
+                                                        month.toString(),
                                                       style: AppStyles
                                                           .rkRegularTextStyle(
                                                         size:
@@ -459,7 +455,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                         size: AppConstants.smallFont,
                                         color: AppColors.blackColor),
                                   ),
-                                  Text('')
+                                  const Text('')
                                 ],
                               ),
                             ),
@@ -492,8 +488,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                               CustomSnackBar.showSnackBar(
                                                   context: context,
                                                   title:
-                                                      '${AppLocalizations.of(context)!.storage_permission}',
-                                                  type: SnackBarType.FAILURE);
+                                                      AppLocalizations.of(context)!.storage_permission,
+                                                  type: SnackBarType.failure);
                                               return;
                                             }
                                           }
@@ -510,11 +506,11 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                 endDate:
                                                     endDate ?? DateTime.now(),
                                               ))
-                                            : SizedBox();
+                                            : const SizedBox();
                                       },
                                       child: Container(
                                         alignment: Alignment.center,
-                                        padding: EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                             vertical: AppConstants.padding_5,
                                             horizontal: AppConstants.padding_3),
                                         decoration: BoxDecoration(
@@ -522,7 +518,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                             borderRadius: BorderRadius.circular(
                                                 AppConstants.radius_3)),
                                         child: state.isExportShimmering
-                                            ? CupertinoActivityIndicator(
+                                            ? const CupertinoActivityIndicator(
                                                 color: Colors.white,
                                               )
                                             : Text(
@@ -543,12 +539,12 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                       ),
                                     ),
                                   ),
-                                  Expanded(flex: 1, child: SizedBox()),
+                                  const Expanded(flex: 1, child: SizedBox()),
                                   Expanded(
                                     flex: 7,
                                     child: Container(
                                         height: 45,
-                                        padding: EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                             horizontal: AppConstants.padding_10,
                                             vertical: AppConstants.padding_5),
                                         decoration: BoxDecoration(
@@ -559,7 +555,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                           color: AppColors.whiteColor,
                                         ),
                                         child: DateRangeField(
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                             enabledBorder: InputBorder.none,
                                             suffixIcon:
                                                 Icon(Icons.keyboard_arrow_down),
@@ -572,7 +568,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                             return showDateRangePickerDialog(
                                               context: context,
 
-                                              offset: Offset(65, 200),
+                                              offset: const Offset(65, 200),
                                               barrierColor: AppColors.whiteColor
                                                   .withOpacity(0.6),
                                               builder: datePickerBuilder,
@@ -611,7 +607,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                           pickerBuilder: (BuildContext context,
                                               dynamic Function(DateRange?)
                                                   onDateRangeChanged) {
-                                            return Text('');
+                                            return const Text('');
                                           },
                                           // pickerBuilder: datePickerBuilder,
                                         )),
@@ -623,12 +619,12 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                             Column(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(
+                                  padding: const EdgeInsets.only(
                                       bottom: 10
                                   ),
                                   child: state.isShimmering
-                                      ? OrderSummaryScreenShimmerWidget()
-                                      : state.walletTransactionsList.length != 0
+                                      ? const OrderSummaryScreenShimmerWidget()
+                                      : state.walletTransactionsList.isNotEmpty
                                           ? ListView.builder(
                                               itemCount: state
                                                   .walletTransactionsList
@@ -636,7 +632,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                               // scrollDirection: Axis.vertical,
                                               shrinkWrap: true,
                                               physics:
-                                                  NeverScrollableScrollPhysics(),
+                                                  const NeverScrollableScrollPhysics(),
                                               itemBuilder: (context, index) {
                                                 return Container(
                                                   color: AppColors.whiteColor,
@@ -689,7 +685,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                             ),
                                 ),
                                 state.isLoadMore
-                                    ? OrderSummaryScreenShimmerWidget(
+                                    ? const OrderSummaryScreenShimmerWidget(
                                         itemCount: 2)
                                     : 0.width,
                               ],
@@ -734,7 +730,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
       required BuildContext context1}) {
     WalletBloc bloc = context1.read<WalletBloc>();
     return Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: AppConstants.padding_5,
         ),
         decoration: BoxDecoration(
@@ -753,9 +749,9 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
             elevation: 0,
             isDense: true,
             value: date,
-            underline: SizedBox(),
-            borderRadius: BorderRadius.all(Radius.zero),
-            padding: EdgeInsets.all(5),
+            underline: const SizedBox(),
+            borderRadius: const BorderRadius.all(Radius.zero),
+            padding: const EdgeInsets.all(5),
             dropdownColor: AppColors.whiteColor,
             alignment: Alignment.bottomCenter,
             items: dateList.map((e) {
@@ -775,7 +771,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
 
   Widget listWidget({required BuildContext context, required int listIndex}) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 0),
+      margin: const EdgeInsets.symmetric(vertical: 0),
       child: BlocBuilder<WalletBloc, WalletState>(
         builder: (context, state) {
           /* WalletBloc bloc = context.read<WalletBloc>();*/
@@ -817,7 +813,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                             AppLocalizations.of(context)!.order || getType(state.walletTransactionsList[listIndex].type.toString()) ==
                         AppLocalizations.of(context)!.surfaces_order
                        ?'${'-'}''${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(), local: AppStrings.hebrewLocal)}'
-                        : '${formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '').toString()), local: AppStrings.hebrewLocal)}',
+                        : formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '').toString()), local: AppStrings.hebrewLocal),
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,
                         color: getType(state
@@ -833,7 +829,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                   CircularButtonWidget(
                       buttonName: AppLocalizations.of(context)!.balance_status,
           buttonValue:
-             '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(), local: AppStrings.hebrewLocal)}'),
+             formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(), local: AppStrings.hebrewLocal)),
                 ],
               ),
             ],
@@ -844,13 +840,13 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
   }
 
   String? getType(String type) {
-    if (type == 'credit') {
+    if (type == AppStrings.credit) {
       return AppLocalizations.of(context)!.monthly_credit;
-    } else if (type == 'debit') {
+    } else if (type == AppStrings.debit) {
       return AppLocalizations.of(context)!.order;
-    } else if (type == 'refund') {
+    } else if (type == AppStrings.refund) {
        return AppLocalizations.of(context)!.refund_for_order;
-    } else if (type == 'surfaceAmount') {
+    } else if (type == AppStrings.surfaceAmount) {
       return AppLocalizations.of(context)!.surfaces_order;
     } else {
       return AppLocalizations.of(context)!.refund;
@@ -860,9 +856,9 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
   Widget datePickerBuilder(
       BuildContext context, dynamic Function(DateRange?) onDateRangeChanged,
       [bool doubleMonth = false]) {
-    DateTime now = new DateTime.now();
+    DateTime now = DateTime.now();
 
-    return Container(
+    return SizedBox(
       height: getScreenHeight(context) >= 725
           ? getScreenHeight(context) / 2.3
           : getScreenHeight(context) / 1.9,
@@ -874,16 +870,16 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
         minDate: minDate,
         theme: CalendarTheme(
           selectedColor: AppColors.mainColor,
-          dayNameTextStyle: TextStyle(color: Colors.black45, fontSize: 10),
+          dayNameTextStyle: const TextStyle(color: Colors.black45, fontSize: 10),
           inRangeColor: AppColors.lightMainColor,
-          inRangeTextStyle: TextStyle(color: Colors.black),
-          selectedTextStyle: TextStyle(color: Colors.white),
-          todayTextStyle: TextStyle(fontWeight: FontWeight.bold),
-          defaultTextStyle: TextStyle(color: Colors.black, fontSize: 12),
+          inRangeTextStyle: const TextStyle(color: Colors.black),
+          selectedTextStyle: const TextStyle(color: Colors.white),
+          todayTextStyle: const TextStyle(fontWeight: FontWeight.bold),
+          defaultTextStyle: const TextStyle(color: Colors.black, fontSize: 12),
           radius: 10,
           tileSize: 40,
           selectedQuickDateRangeColor: AppColors.mainColor,
-          disabledTextStyle: TextStyle(color: Colors.grey),
+          disabledTextStyle: const TextStyle(color: Colors.grey),
         ),
         maxDate: DateTime(now.year, now.month, now.day),
       ),

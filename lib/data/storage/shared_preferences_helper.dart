@@ -57,6 +57,10 @@ class SharedPreferencesHelper {
   static const String subUserId = 'subUserId';
   static const String canSeeInvoices = 'canSeeInvoices';
   static const String appOnMaintenance= 'isAppOnMaintenance';
+  static const String paymentMethod = 'selectedPaymentMethod';
+  static const String paymentMethodCount = 'paymentMethodCount';
+  static const String availableAllPayment = 'availableAllPayment';
+  static const String paymentMethods = 'paymentMethods';
 
 
   final SharedPreferences prefs;
@@ -111,26 +115,27 @@ class SharedPreferencesHelper {
       await prefs.remove(subUserId);
       await prefs.remove(canSeeInvoices);
       await prefs.remove(appOnMaintenance);
+      await prefs.remove(paymentMethod);
+      await prefs.remove(paymentMethodCount);
+      await prefs.remove(availableAllPayment);
+      await prefs.remove(paymentMethods);
+
 
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
   }
 
-  Future<void> removeAppMaintenance() async {
-    await prefs.remove(appOnMaintenance);
-  }
-  Future<void> removeProfileImage() async {
-    await prefs.remove(userImage);
+
+  Future<void> setPaymentMethod({required String method}) async {
+    await prefs.setString(paymentMethod, method);
   }
 
-  Future<void> removeCompanyLogo() async {
-    await prefs.remove(userCompanyLogo);
+  Future<void> setPaymentMethodCount({required String count}) async {
+    await prefs.setString(paymentMethodCount, count);
   }
-  Future<void> removeAuthToken() async {
-    await prefs.remove(accessToken);
-  }
-  Future<void> removeRefreshToken() async {
-    await prefs.remove(refreshToken);
+
+  Future<void> removeProfileImage() async {
+    await prefs.remove(userImage);
   }
 
   Future<void> setAuthToken({required String accToken}) async {
@@ -286,6 +291,9 @@ class SharedPreferencesHelper {
     await prefs.setBool(seeOrder, isSeeOrder);
   }
 
+  Future<void> setAvailableAllPayment({required bool isAvailableAllPayment}) async {
+    await prefs.setBool(availableAllPayment, isAvailableAllPayment);
+  }
 
   Future<void> setCanApproveOrder({required bool isApproveOrder}) async {
     await prefs.setBool(approveOrder, isApproveOrder);
@@ -324,6 +332,9 @@ class SharedPreferencesHelper {
     await prefs.setBool(canSeeInvoices, isCanSeeInvoices);
   }
 
+  Future<void> setPaymentMethodTypes({required List<String> methods}) async {
+    await prefs.setStringList(paymentMethods, methods);
+  }
 
 
   String getAppLanguage() {
@@ -460,7 +471,9 @@ class SharedPreferencesHelper {
   String getLogo() {
     return prefs.getString(logo) ?? '';
   }
-
+  List<String> getPaymentMethodTypes() {
+    return prefs.getStringList(paymentMethods) ?? [];
+  }
   //permission
 
   bool getCanAccountAdmin() {
@@ -521,6 +534,13 @@ class SharedPreferencesHelper {
     return prefs.getBool(appOnMaintenance) ?? false;
   }
 
-
-
+  String getPaymentMethod() {
+    return prefs.getString(paymentMethod) ?? '';
+  }
+  String getPaymentMethodCount() {
+    return prefs.getString(paymentMethodCount) ?? '1';
+  }
+  bool getAvailablePayment() {
+    return prefs.getBool(availableAllPayment) ?? false;
+  }
 }

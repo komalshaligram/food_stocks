@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,20 +39,14 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
               contact: event.contactNumber, isRegistration: state.isRegister,
           applicationName: AppStrings.appName
           );
-          debugPrint(
-              'login req = ${reqMap.toJson()}');
-          debugPrint('url3 = ${AppUrls.existingUserLoginUrl}');
           final res = await DioClient(event.context).post(
             AppUrls.existingUserLoginUrl,
             data: reqMap,
           );
 
           LoginResModel response = LoginResModel.fromJson(res);
-          debugPrint('token_____${preferencesHelper.getFCMToken()}');
 
-          //    debugPrint('login response --- ${response}');
-
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
 
             await SmsAutoFill().listenForCode();
             preferencesHelper.setUserId(id: response.user?.id ?? '');
@@ -63,31 +58,15 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
               AppStrings.isRegisterString: state.isRegister
             });
             emit(state.copyWith( isLoading: false));
-          } else if(response.status == 403){
-             debugPrint('here');
+          } else if(response.status == AppConstants.code_403){
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.FAILURE);
-            emit(state.copyWith(
-              isLoading: false,
-            ));
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            emit(state.copyWith(isLoading: false,));
           }
           else {
-             debugPrint('here 1');
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.FAILURE);
-            emit(state.copyWith(
-              isLoading: false,
-            ));
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            emit(state.copyWith(isLoading: false,));
           }
         } on ServerException {
           emit(state.copyWith(
@@ -100,25 +79,21 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         }
       }
       else if (event is _checkVersionOfAppEvent) {
-        final _checker = StoreVersionChecker();
+        final checker = StoreVersionChecker();
         // PackageInfo packageInfo = await PackageInfo.fromPlatform();
-        _checker.checkUpdate().then((value) {
-          debugPrint('update available');
-           print(value.canUpdate); //return true if update is available
+        checker.checkUpdate().then((value) {
           debugPrint(value.currentVersion); //return current app version
           debugPrint(value.newVersion); //return the new app version
           debugPrint(value.appURL); //return the app url
           debugPrint(value.errorMessage);
           if(value.canUpdate && Platform.isAndroid){
-            customShowUpdateDialog(
-                event.context, preferencesHelper.getAppLanguage(),value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
+            customShowUpdateDialog(event.context, preferencesHelper.getAppLanguage(),value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
           }else if(value.canUpdate && Platform.isIOS){
-            customShowUpdateDialog(
-                event.context, preferencesHelper.getAppLanguage(),value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
+            customShowUpdateDialog(event.context, preferencesHelper.getAppLanguage(),value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
           }
         });
       }
-      else if (event is _ChangeAuthEvent) {
+      else if (event is _changeAuthEvent) {
         emit(state.copyWith(isRegister: event.isRegister));
       }
     });

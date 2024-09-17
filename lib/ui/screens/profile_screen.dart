@@ -1,30 +1,27 @@
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:food_stock/bloc/profile_menu/profile_menu_bloc.dart';
+
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
+
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/profile_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
-import '../utils/themes/app_urls.dart';
+
 import '../widget/common_alert_dialog.dart';
 import '../widget/common_drop_down_button.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../widget/file_selection_option_widget.dart';
+
 
 class ProfileRoute {
   static Widget get route => const ProfileScreen();
@@ -75,10 +72,9 @@ class ProfileScreenWidget extends StatelessWidget {
           CustomSnackBar.showSnackBar(
               context: context,
               title:
-                  '${AppLocalizations.of(context)!.file_size_must_be_less_then}',
-              type: SnackBarType.FAILURE);
+                  AppLocalizations.of(context)!.file_size_must_be_less_then,
+              type: SnackBarType.failure);
         }
-
       },
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
@@ -112,7 +108,7 @@ class ProfileScreenWidget extends StatelessWidget {
               elevation: 0,
             ),
             body: state.isShimmering
-                ? ProfileScreenShimmerWidget()
+                ? const ProfileScreenShimmerWidget()
                 : SingleChildScrollView(
                   child: Column(
                       children: [
@@ -128,387 +124,6 @@ class ProfileScreenWidget extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   10.height,
-                                  Center(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        showModalBottomSheet(
-                                            context: context,
-                                            builder: (context1) => Container(
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.whiteColor,
-                                                    borderRadius: BorderRadius.only(
-                                                        topRight:
-                                                            Radius.circular(
-                                                                AppConstants
-                                                                    .radius_20),
-                                                        topLeft: Radius.circular(
-                                                            AppConstants
-                                                                .radius_20)),
-                                                  ),
-                                                  clipBehavior: Clip.hardEdge,
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: AppConstants
-                                                          .padding_30,
-                                                      vertical: AppConstants
-                                                          .padding_20),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Text(
-                                                        AppLocalizations.of(
-                                                                context1)!
-                                                            .upload_photo,
-                                                        style: AppStyles
-                                                            .rkRegularTextStyle(
-                                                                size: AppConstants
-                                                                    .normalFont,
-                                                                color: AppColors
-                                                                    .blackColor,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                      ),
-                                                      30.height,
-                                                      FileSelectionOptionWidget(
-                                                          title: AppLocalizations
-                                                                  .of(context1)!
-                                                              .camera,
-                                                          icon: Icons
-                                                              .camera_alt_rounded,
-                                                          onTap: () async {
-                                                            Map<Permission,
-                                                                    PermissionStatus>
-                                                                statuses =
-                                                                await [
-                                                              Permission.camera,
-                                                            ].request();
-                                                            if (Platform
-                                                                .isAndroid) {
-                                                              if (!statuses[
-                                                                      Permission
-                                                                          .camera]!
-                                                                  .isGranted) {
-                                                                Navigator.pop(
-                                                                    context1);
-                                                                CustomSnackBar.showSnackBar(
-                                                                    context:
-                                                                        context,
-                                                                    title: AppLocalizations.of(
-                                                                            context)!
-                                                                        .camera_permission,
-                                                                    type: SnackBarType
-                                                                        .FAILURE);
-                                                                return;
-                                                              }
-                                                            } else if (Platform
-                                                                .isIOS) {
-                                                              // Navigator.pop(context);
-                                                            }
-                                                            bloc.add(ProfileEvent
-                                                                .pickProfileImageEvent(
-                                                                    context:
-                                                                        context,
-                                                                    isFromCamera:
-                                                                        true));
-                                                            Navigator.pop(
-                                                                context1);
-                                                          }),
-                                                      FileSelectionOptionWidget(
-                                                          title: AppLocalizations
-                                                                  .of(context1)!
-                                                              .gallery,
-                                                          icon: Icons.photo,
-                                                          lastItem: state
-                                                                  .UserImageUrl
-                                                                  .isEmpty
-                                                              ? true
-                                                              : false,
-                                                          onTap: () async {
-                                                            Map<Permission,
-                                                                    PermissionStatus>
-                                                                statuses =
-                                                                await [
-                                                              Permission
-                                                                  .storage,
-                                                            ].request();
-                                                            if (Platform
-                                                                .isAndroid) {
-                                                              DeviceInfoPlugin
-                                                                  deviceInfo =
-                                                                  DeviceInfoPlugin();
-                                                              AndroidDeviceInfo
-                                                                  androidInfo =
-                                                                  await deviceInfo
-                                                                      .androidInfo;
-                                                              if (androidInfo
-                                                                      .version
-                                                                      .sdkInt <
-                                                                  33) {
-                                                                if (!statuses[
-                                                                        Permission
-                                                                            .storage]!
-                                                                    .isGranted) {
-                                                                  CustomSnackBar.showSnackBar(
-                                                                      context:
-                                                                          context,
-                                                                      title: AppLocalizations.of(
-                                                                              context)!
-                                                                          .storage_permission,
-                                                                      type: SnackBarType
-                                                                          .FAILURE);
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                  return;
-                                                                }
-                                                              }
-                                                            } else if (Platform
-                                                                .isIOS) {
-                                                              // Navigator.pop(context);
-                                                            }
-                                                            bloc.add(ProfileEvent
-                                                                .pickProfileImageEvent(
-                                                                    context:
-                                                                        context,
-                                                                    isFromCamera:
-                                                                        false));
-                                                            Navigator.pop(
-                                                                context);
-                                                          }),
-                                                      state.UserImageUrl.isEmpty
-                                                          ? 0.width
-                                                          : FileSelectionOptionWidget(
-                                                              title: AppLocalizations.of(
-                                                                      context1)!
-                                                                  .remove,
-                                                              icon:
-                                                                  Icons.delete,
-                                                              iconColor:
-                                                                  AppColors
-                                                                      .redColor,
-                                                              lastItem: true,
-                                                              onTap: () {
-                                                                Navigator.pop(
-                                                                    context1);
-                                                                showDialog(
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (context2) =>
-                                                                          CommonAlertDialog(
-                                                                    directionality:
-                                                                        state
-                                                                            .language,
-                                                                    title:
-                                                                        '${AppLocalizations.of(context)!.remove}',
-                                                                    subTitle:
-                                                                        '${AppLocalizations.of(context)!.are_you_sure}',
-                                                                    positiveTitle:
-                                                                        '${AppLocalizations.of(context)!.yes}',
-                                                                    negativeTitle:
-                                                                        '${AppLocalizations.of(context)!.no}',
-                                                                    negativeOnTap:
-                                                                        () {
-                                                                      Navigator.pop(
-                                                                          context2);
-                                                                    },
-                                                                    positiveOnTap:
-                                                                        () async {
-                                                                      bloc.add(ProfileEvent.deleteFileEvent(
-                                                                          context:
-                                                                              context));
-                                                                      Navigator.pop(
-                                                                          context2);
-                                                                    },
-                                                                  ),
-                                                                );
-                                                              }),
-                                                    ],
-                                                  ),
-                                                ),
-                                            backgroundColor:
-                                                Colors.transparent);
-                                      },
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            height:
-                                                AppConstants.containerHeight_80,
-                                            width:
-                                                AppConstants.containerHeight_80,
-                                            margin: EdgeInsets.only(
-                                                bottom: AppConstants.padding_3,
-                                                right: AppConstants.padding_3,
-                                                left: AppConstants.padding_3),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  width: 0.5,
-                                                  color: state.UserImageUrl
-                                                          .isNotEmpty
-                                                      ? AppColors
-                                                          .lightBorderColor
-                                                      : Colors.transparent),
-                                              borderRadius:
-                                                  BorderRadius.circular(200),
-                                              color:
-                                                  state.UserImageUrl.isNotEmpty
-                                                      ? AppColors.whiteColor
-                                                      : AppColors.mainColor
-                                                          .withOpacity(0.1),
-                                            ),
-                                            child: state.isUploadingProcess
-                                                ? CupertinoActivityIndicator()
-                                                : state.isUpdate
-                                                    ? state.UserImageUrl
-                                                            .isNotEmpty
-                                                        ? state.image.path != ''
-                                                            ? SizedBox(
-                                                                height: getScreenHeight(
-                                                                        context) *
-                                                                    0.18,
-                                                                width:
-                                                                    getScreenWidth(
-                                                                        context),
-                                                                child:
-                                                                    ClipRRect(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              40),
-                                                                  child: Image
-                                                                      .file(
-                                                                    state.image,
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  ),
-                                                                ))
-                                                            : ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            40),
-                                                                child: Image
-                                                                    .network(
-                                                                  '${AppUrls.baseFileUrl}${state.UserImageUrl}',
-                                                                  fit: BoxFit
-                                                                      .contain,
-                                                                  loadingBuilder:
-                                                                      (context,
-                                                                          child,
-                                                                          loadingProgress) {
-                                                                    if (loadingProgress ==
-                                                                        null) {
-                                                                      return child;
-                                                                    } else {
-                                                                      return Center(
-                                                                        child:
-                                                                            CupertinoActivityIndicator(
-                                                                          color:
-                                                                              AppColors.blackColor,
-                                                                        ),
-                                                                      );
-                                                                    }
-                                                                  },
-                                                                  errorBuilder:
-                                                                      (context,
-                                                                          error,
-                                                                          stackTrace) {
-                                                                    return Container(
-                                                                        decoration: BoxDecoration(
-                                                                            color: AppColors
-                                                                                .whiteColor,
-                                                                            shape: BoxShape
-                                                                                .circle),
-                                                                        alignment:
-                                                                            Alignment
-                                                                                .center,
-                                                                        child: SvgPicture
-                                                                            .asset(
-                                                                          AppImagePath
-                                                                              .placeholderProfile,
-                                                                          width:
-                                                                              80,
-                                                                          height:
-                                                                              80,
-                                                                          fit: BoxFit
-                                                                              .scaleDown,
-                                                                        ));
-                                                                  },
-                                                                ),
-                                                              )
-                                                        : SvgPicture.asset(
-                                                            AppImagePath
-                                                                .placeholderProfile,
-                                                            width: 80,
-                                                            height: 80,
-                                                            fit: BoxFit
-                                                                .scaleDown,
-                                                          )
-                                                    : state.image.path != ''
-                                                        ? ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        40),
-                                                            child: Image.file(
-                                                              File(state
-                                                                  .image.path),
-                                                              fit: BoxFit
-                                                                  .contain,
-                                                            ),
-                                                          )
-                                                        : SvgPicture.asset(
-                                                            AppImagePath
-                                                                .placeholderProfile,
-                                                            width: 80,
-                                                            height: 80,
-                                                            fit: BoxFit
-                                                                .scaleDown,
-                                                            // colorFilter: ColorFilter.mode(
-                                                            //     AppColors.mainColor,
-                                                            //     BlendMode.dstIn),
-                                                          ),
-                                          ),
-                                          Positioned(
-                                            right: context.rtl ? null : 1,
-                                            left: context.rtl ? 1 : null,
-                                            bottom: 1,
-                                            child: Container(
-                                                width: 29,
-                                                height: 29,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    border: Border.all(
-                                                        color: AppColors
-                                                            .borderColor)),
-                                                child: SvgPicture.asset(
-                                                    AppImagePath.camera,
-                                                    colorFilter:
-                                                        ColorFilter.mode(
-                                                            AppColors.mainColor,
-                                                            BlendMode.srcIn),
-                                                    fit: BoxFit.scaleDown)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  3.height,
-                                  Container(
-                                    width: getScreenWidth(context1),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      AppLocalizations.of(context)!
-                                          .profile_picture,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_14,
-                                          color: AppColors.textColor),
-                                    ),
-                                  ),
-                                  7.height,
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!
                                         .type_of_business,
@@ -532,8 +147,6 @@ class ProfileScreenWidget extends StatelessWidget {
                                     },
                                     value: state.selectedBusinessType,
                                   ),
-
-
                                   7.height,
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!
@@ -556,7 +169,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                   CustomFormField(
                                     context: context,
                                     controller: state.businessIdController,
-                                    inputformet: [
+                                    inputFormat: [
                                       FilteringTextInputFormatter.digitsOnly,
                                       LengthLimitingTextInputFormatter(9)
                                     ],
@@ -574,7 +187,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                   CustomFormField(
                                     context: context,
                                     controller: state.ownerNameController,
-                                    inputformet: [
+                                    inputFormat: [
                                       LengthLimitingTextInputFormatter(20)
                                     ],
                                     keyboardType: TextInputType.text,
@@ -591,7 +204,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                   CustomFormField(
                                     context: context,
                                     controller: state.israelIdController,
-                                    inputformet: [
+                                    inputFormat: [
                                       FilteringTextInputFormatter.digitsOnly,
                                       LengthLimitingTextInputFormatter(9)
                                     ],
@@ -608,7 +221,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                   7.height,
                                   CustomFormField(
                                     controller: state.contactController,
-                                    inputformet: [
+                                    inputFormat: [
                                       LengthLimitingTextInputFormatter(20)
                                     ],
                                     keyboardType: TextInputType.text,
@@ -632,7 +245,6 @@ class ProfileScreenWidget extends StatelessWidget {
                                     onPressed: state.isLoading
                                         ? null
                                         : () {
-
                                             if (state.selectedBusinessType!= AppLocalizations.of(context)?.type_of_business) {
                                               if(isValidIsraeliID(state.businessIdController.text.toString().trim())) {
                                                    if(isValidIsraeliID(state.israelIdController.text.toString().trim())) {
@@ -655,7 +267,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                          title: AppLocalizations.of(
                                                              context)!
                                                              .please_enter_valid_israel_id,
-                                                         type: SnackBarType.FAILURE);
+                                                         type: SnackBarType.failure);
                                                    }
                                               }else{
                                                 CustomSnackBar.showSnackBar(
@@ -663,7 +275,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                     title: AppLocalizations.of(
                                                         context)!
                                                         .please_enter_valid_business_id,
-                                                    type: SnackBarType.FAILURE);
+                                                    type: SnackBarType.failure);
                                               }
                                             } else {
                                               CustomSnackBar.showSnackBar(
@@ -671,7 +283,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                   title: AppLocalizations.of(
                                                           context)!
                                                       .select_business_type,
-                                                  type: SnackBarType.FAILURE);
+                                                  type: SnackBarType.failure);
                                             }
                                           },
                                     fontColors: AppColors.whiteColor,
@@ -699,7 +311,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                         state.isUpdating
                             ? Container(
-                                color: Color.fromARGB(10, 0, 0, 0),
+                                color: const Color.fromARGB(10, 0, 0, 0),
                                 height: getScreenHeight(context),
                                 width: getScreenWidth(context),
                                 alignment: Alignment.center,
@@ -726,10 +338,10 @@ class ProfileScreenWidget extends StatelessWidget {
         context: context,
         builder: (context1) => CommonAlertDialog(
               directionality: directionality,
-              title: '${AppLocalizations.of(context)!.delete_account}',
-              subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
-              positiveTitle: '${AppLocalizations.of(context)!.yes}',
-              negativeTitle: '${AppLocalizations.of(context)!.no}',
+              title: AppLocalizations.of(context)!.delete_account,
+              subTitle: AppLocalizations.of(context)!.are_you_sure,
+              positiveTitle: AppLocalizations.of(context)!.yes,
+              negativeTitle: AppLocalizations.of(context)!.no,
               negativeOnTap: () {
                 Navigator.pop(context);
               },
@@ -752,9 +364,9 @@ class ProfileScreenWidget extends StatelessWidget {
         context: context,
         builder: (context1) => CommonAlertDialog(
               directionality: directionality,
-              title: '${AppLocalizations.of(context)!.delete_account}',
-              subTitle: '${AppLocalizations.of(context)!.delete_pop_up_msg}',
-              positiveTitle: '${AppLocalizations.of(context)!.close}',
+              title: AppLocalizations.of(context)!.delete_account,
+              subTitle: AppLocalizations.of(context)!.delete_pop_up_msg,
+              positiveTitle: AppLocalizations.of(context)!.close,
               positiveOnTap: () async {
                 Navigator.pop(context1);
                 bloc.add(ProfileEvent.deleteAccountEvent(context: context));
