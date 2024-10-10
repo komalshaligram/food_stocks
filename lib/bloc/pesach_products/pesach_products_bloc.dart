@@ -529,7 +529,6 @@ class PesachProductsBloc
       else if (event is _addToCartProductEvent) {
         if (state.productStockList[state.productListIndex][state.productStockUpdateIndex]
             .productSupplierIds.isEmpty) {
-
           return;
         }
         if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity ==
@@ -577,16 +576,16 @@ class PesachProductsBloc
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
-              Navigator.pop(event.context);
+           //   Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
-                    isNoteOpen: false,
+                    productIsInCart: true,
                     quantity:_productQuantity,
-                    productSupplierIds: '',
-                    totalPrice: 0.0,
+                    productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
+                    totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                     productSaleId: '',
                   );
 
@@ -661,18 +660,20 @@ class PesachProductsBloc
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              add(const PesachProductsEvent.setCartCountEvent());
+              if(state.productStockList[state.productListIndex][state.productStockUpdateIndex].productIsInCart){
+                add(const PesachProductsEvent.setCartCountEvent());
+              }
               Vibration.vibrate();
-              Navigator.pop(event.context);
+            //  Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
-                    isNoteOpen: false,
+                    productIsInCart: false,
                     quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                    productSupplierIds: '',
-                    totalPrice: 0.0,
+                    productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
+                    totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                     productSaleId: '',
                   );
                  add(const PesachProductsEvent.getCartCountEvent());

@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:food_stock/bloc/order_summary/order_summary_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
@@ -45,6 +45,22 @@ class OrderSummaryScreenWidget extends StatelessWidget {
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
+              trailingWidget: Container(
+                padding: const EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.greyColor,
+                  border: Border.all(color: AppColors.whiteColor,width: 3),
+                  borderRadius: const BorderRadius.all(Radius.circular(20))
+                ),
+                child: Container(
+                  padding: const EdgeInsets.only(left: 8,right: 8,top: 3,bottom: 3),
+                    decoration: BoxDecoration(color: AppColors.greyColor,
+                        borderRadius: const BorderRadius.all(Radius.circular(20))),
+                    child: Text('${AppLocalizations.of(context)!.total} :${formatNumber(value:vatCalculation(price: state.orderSummaryList.data?.cart?.first.totalAmount?? 0,vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
+                      style:  TextStyle(
+                color:AppColors.whiteColor
+                    ),)),
+              ),
               bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.order_summary,
               iconData: Icons.arrow_back_ios_sharp,
@@ -73,159 +89,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                     position: index,
                                     child: SlideAnimation(
                                         child: FadeInAnimation(
-                                            child: orderListItem(index: index, context: context)))),
-                          ),
-                        ),
-                      ),
-                (state.orderSummaryList.data?.data?.length ?? 0) == 0
-                    ? 0.width
-                    : Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                              left: AppConstants.padding_20,
-                              right: AppConstants.padding_20,
-                              top: AppConstants.padding_10,
-                              bottom: AppConstants.padding_40),
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor.withOpacity(0.95),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: AppColors.shadowColor.withOpacity(0.20),
-                                  blurRadius: AppConstants.blur_10),
-                            ],
-                            borderRadius: const BorderRadius.all(
-                                Radius.circular(AppConstants.radius_40)),
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: AppConstants.padding_5,
-                                horizontal: AppConstants.padding_5),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(AppConstants.radius_40),
-                              color: AppColors.whiteColor,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                      height: AppConstants.containerHeight_65,
-                                      alignment: Alignment.center,
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: AppConstants.padding_5,
-                                          horizontal: AppConstants.padding_5),
-                                      decoration: BoxDecoration(
-                                          color: AppColors.mainColor,
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: context.rtl
-                                                  ? const Radius.circular(
-                                                      AppConstants.radius_6)
-                                                  : const Radius.circular(
-                                                      AppConstants.radius_30),
-                                              bottomLeft: context.rtl
-                                                  ? const Radius.circular(
-                                                      AppConstants.radius_6)
-                                                  : const Radius.circular(
-                                                      AppConstants.radius_30),
-                                              bottomRight: context.rtl
-                                                  ? const Radius.circular(
-                                                      AppConstants.radius_30)
-                                                  : const Radius.circular(
-                                                      AppConstants.radius_6),
-                                              topRight: context.rtl
-                                                  ? const Radius.circular(
-                                                      AppConstants.radius_30)
-                                                  : const Radius.circular(AppConstants.radius_6))),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '${AppLocalizations.of(context)!.total}${' : '}',
-                                            style: AppStyles.rkRegularTextStyle(
-                                              color: AppColors.whiteColor,
-                                              size:
-                                                  getScreenWidth(context) <= 380
-                                                      ? AppConstants.smallFont
-                                                      : AppConstants.mediumFont,
-                                            ),
-                                          ),
-                                          Text(
-                                              formatNumber(value:vatCalculation(price: state.orderSummaryList.data?.cart?.first.totalAmount?? 0,vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal),
-                                              style:
-                                                  AppStyles.rkRegularTextStyle(
-                                                      color:
-                                                          AppColors.whiteColor,
-                                                      size: AppConstants
-                                                          .normalFont,
-                                                      fontWeight:
-                                                          FontWeight.w700)),
-                                        ],
-                                      )
-                                      ),
-                                ),
-                                6.width,
-                                Expanded(
-                                  flex: 2,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      if (!state.isLoading) {
-                                        bloc.add(
-                                            OrderSummaryEvent.orderSendEvent(
-                                          context: context,
-                                        ));
-                                      }
-                                    },
-                                    child: Container(
-                                      height: AppConstants.containerHeight_65,
-                                      alignment: Alignment.center,
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: AppConstants.padding_5,
-                                          horizontal: AppConstants.padding_5),
-                                      decoration: BoxDecoration(
-                                          color: AppColors.navSelectedColor,
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: context.rtl
-                                                  ? const Radius.circular(
-                                                      AppConstants.radius_30)
-                                                  : const Radius.circular(
-                                                      AppConstants.radius_6),
-                                              bottomLeft: context.rtl
-                                                  ? const Radius.circular(
-                                                      AppConstants.radius_30)
-                                                  : const Radius.circular(
-                                                      AppConstants.radius_6),
-                                              bottomRight: context.rtl
-                                                  ? const Radius.circular(
-                                                      AppConstants.radius_6)
-                                                  : const Radius.circular(
-                                                      AppConstants.radius_30),
-                                              topRight: context.rtl
-                                                  ? const Radius.circular(
-                                                      AppConstants.radius_6)
-                                                  : const Radius.circular(
-                                                      AppConstants.radius_30))),
-                                      child: state.isLoading
-                                          ? const CupertinoActivityIndicator()
-                                          : Text(
-                                              AppLocalizations.of(context)!
-                                                  .send_order,
-                                              style:
-                                                  AppStyles.rkRegularTextStyle(
-                                                size: getScreenWidth(context) <=
-                                                        380
-                                                    ? AppConstants.normalFont
-                                                    : AppConstants.mediumFont,
-                                                color: AppColors.whiteColor,
-                                              ),
-                                            ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                                            child: orderListItem(index: index, context: context,bloc:bloc)))),
                           ),
                         ),
                       ),
@@ -237,7 +101,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget orderListItem({required int index, required BuildContext context}) {
+  Widget orderListItem({required int index, required BuildContext context,required OrderSummaryBloc bloc}) {
    /* OrderSummaryBloc bloc = context.read<OrderSummaryBloc>();*/
     return BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
       builder: (context, state) {
@@ -262,8 +126,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             children: [
               Text(
                 state.orderSummaryList.data?.data?[index].suppliers
-                        ?.contactName! ??
-                    '',
+                        ?.contactName! ?? '',
                 style: AppStyles.rkRegularTextStyle(
                   size: AppConstants.font_14,
                   color: AppColors.blackColor,
@@ -275,7 +138,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     backGroundColor: AppColors.iconBGColor,
                     borderCoder: AppColors.lightBorderColor,
-                    flexValue: 2,
+                    flexValue: 3,
                     title: AppLocalizations.of(context)!.products,
                     value: state
                             .orderSummaryList.data?.data?[index].totalQuantity
@@ -288,16 +151,18 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   ),
                   5.width,
                   CommonOrderContentWidget(
-                    backGroundColor: AppColors.whiteColor,
-                    borderCoder: AppColors.whiteColor,
-                    flexValue: 1,
-                    title: AppLocalizations.of(context)!.delivery_date,
-                    value: '-',
-                    titleColor: AppColors.whiteColor,
-                    valueColor: AppColors.whiteColor,
-                    valueTextSize: AppConstants.font_10,
-                    valueTextWeight: FontWeight.w500,
-                    columnPadding: AppConstants.padding_10,
+                    backGroundColor: AppColors.iconBGColor,
+                    borderCoder: AppColors.lightBorderColor,
+                    flexValue: 5,
+                    title: AppLocalizations.of(context)!.savings_for_sales,
+                    value: state
+                        .orderSummaryList.data?.data?[index].totalQuantity
+                        ?.toString() ??
+                        '',
+                    titleColor: AppColors.orangeColor,
+                    valueColor: AppColors.blackColor,
+                    valueTextWeight: FontWeight.w700,
+                    valueTextSize: AppConstants.smallFont,
                   ),
                   5.width,
                   CommonOrderContentWidget(
@@ -312,7 +177,34 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     valueTextWeight: FontWeight.w500,
                     valueTextSize: AppConstants.smallFont,
                   ),
+
                 ],
+              ),
+             8.height,
+          /*    Container(
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.only(left:10,right: 10,top: 5,bottom: 5),
+                decoration: BoxDecoration(
+                  color: AppColors.redColor,
+                ),
+                child: Text(AppLocalizations.of(context)!.not_minimum_order,style: TextStyle(color: AppColors.whiteColor),),
+              ),
+            */
+              CustomButtonWidget(
+                buttonText: AppLocalizations.of(context)!.send_order,
+                bGColor: AppColors.mainColor,
+                height: 40,
+                isLoading: state.isLoading,
+                onPressed: () {
+                  if (!state.isLoading) {
+                    bloc.add(
+                        OrderSummaryEvent.orderSendEvent(
+                          context: context,
+                        ));
+                  }
+                },
+                fontColors: AppColors.whiteColor,
               ),
             ],
           ),

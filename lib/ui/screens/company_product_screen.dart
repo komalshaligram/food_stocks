@@ -839,19 +839,11 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                    },);
                                },
                                context: context,
-                               productImageIndex: state.imageIndex,
-                               onPageChanged: (index, p1) {
-                                 context.read<CompanyProductsBloc>().add(
-                                     CompanyProductsEvent.updateImageIndexEvent(
-                                         index: index));
-                               },
+
+
                                productImages: [
                                  state.productDetails.first.mainImage ??
-                                     '',
-                                 ...state.productDetails.first.images
-                                     ?.map((image) =>
-                                 image.imageUrl ?? '') ??
-                                     []
+                                     ''
                                ],
 
                                productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),

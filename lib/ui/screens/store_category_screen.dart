@@ -1221,20 +1221,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   },);
                               },
                               context: context,
-                              productImageIndex: state.imageIndex,
-                              onPageChanged: (index, p1) {
-                                context.read<StoreCategoryBloc>().add(
-                                    StoreCategoryEvent
-                                        .updateImageIndexEvent(
-                                        index: index));
-                              },
+
                               productImages: [
                                 state.productDetails.first.mainImage ??
-                                    '',
-                                ...state.productDetails.first.images?.map(
-                                        (image) =>
-                                    image.imageUrl ?? '') ??
-                                    []
+                                    ''
                               ],
 
                               productPrice: state

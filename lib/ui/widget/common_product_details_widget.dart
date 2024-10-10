@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:carousel_slider/carousel_slider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:food_stock/ui/widget/common_product_details_button.dart';
@@ -17,8 +17,6 @@ import '../utils/themes/app_urls.dart';
 
 class CommonProductDetailsWidget extends StatelessWidget {
   final BuildContext context;
-  final int productImageIndex;
-  final dynamic Function(int, CarouselPageChangedReason)? onPageChanged;
   final ScrollController scrollController;
   final void Function() onQuantityIncreaseTap;
   final void Function() onQuantityDecreaseTap;
@@ -41,8 +39,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
   const CommonProductDetailsWidget(
       {super.key,
       required this.context,
-        required this.productImageIndex,
-        required this.onPageChanged,
         required this.productImages,
         required this.productStock,
         required this.productUnitPrice,
@@ -199,7 +195,50 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                 right: AppConstants.padding_10,
                                 left: AppConstants.padding_10,
                                 top: AppConstants.padding_10),
-                            child: CarouselSlider(
+                           child: productImages.first.isNotEmpty ?  GestureDetector(
+                             onTap: imageOnTap,
+                             child: Image.network(
+                               "${AppUrls.baseFileUrl}${productImages.first}",
+                               height: 150,
+                               fit: BoxFit.contain,
+                               loadingBuilder:
+                                   (context, child, loadingProgress) {
+                                 if (loadingProgress
+                                     ?.cumulativeBytesLoaded !=
+                                     loadingProgress
+                                         ?.expectedTotalBytes) {
+                                   return CommonShimmerWidget(
+                                     child: Container(
+                                       height: 150,
+                                       width: 150,
+                                       decoration: BoxDecoration(
+                                         color: AppColors.whiteColor,
+                                         borderRadius: const BorderRadius.all(
+                                             Radius.circular(AppConstants
+                                                 .radius_10)),
+                                       ),
+                                     ),
+                                   );
+                                 }
+                                 return child;
+                               },
+                               errorBuilder:
+                                   (context, error, stackTrace) {
+                                 return Image.asset(
+                                   AppImagePath.imageNotAvailable5,
+                                   fit: BoxFit.cover,
+                                   // width: 90,
+                                   height: 150,
+                                 );
+                               },
+                             ),
+                           ) : Image.asset(
+                             AppImagePath.imageNotAvailable5,
+                             fit: BoxFit.cover,
+                             // width: 90,
+                             height: 150,
+                           ),
+                           /* child: CarouselSlider(
                                 items: productImages
                                     .map((productImage) => GestureDetector(
                                   onTap: imageOnTap,
@@ -247,13 +286,12 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                     .toList(),
                                 options: CarouselOptions(
                                     height: 150,
-                                    onPageChanged: onPageChanged,
                                     initialPage: productImageIndex,
                                     aspectRatio: 16 / 9,
                                     scrollDirection: Axis.horizontal,
                                     enableInfiniteScroll: false,
                                     autoPlayCurve: Curves.decelerate,
-                                    pageSnapping: true)),
+                                    pageSnapping: true)),*/
                           ),
                         ],
                       ),

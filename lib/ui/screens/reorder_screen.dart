@@ -575,11 +575,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                           );
                                         },
                                         context: context,
-                                        productImageIndex: state.imageIndex,
-                                        onPageChanged: (index, p1) {
-                                          context.read<ReorderBloc>().add(ReorderEvent.updateImageIndexEvent(index: index));
-                                        },
-                                        productImages: [state.productDetails.first.mainImage ?? '', ...?state.productDetails.first.images?.map((image) => image.imageUrl ?? '')],
+
+                                        productImages: [state.productDetails.first.mainImage ?? ''],
                                         productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
                                         productPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
                                         productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),

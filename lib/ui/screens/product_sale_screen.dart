@@ -339,15 +339,9 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     },
 
                                     context: context,
-                                    productImageIndex: state.imageIndex,
-                                    onPageChanged: (index, p1) {
-                                      context.read<ProductSaleBloc>().add(ProductSaleEvent.updateImageIndexEvent(index: index));
-                                    },
                                     productUnitPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
 
-                                    productImages: [state.productDetails.first.mainImage ?? '' ,
-
-                                      ...state.productDetails.first.images?.map((image) => image.imageUrl ?? '') ?? []],
+                                    productImages: [state.productDetails.first.mainImage ?? '' ],
 
                                     productPrice:(state.productDetails.first.sale?.isSale ?? false) ?
                                     double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1)

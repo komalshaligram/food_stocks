@@ -586,16 +586,16 @@ class RecommendationProductsBloc
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
-              Navigator.pop(event.context);
+            //  Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
-                    isNoteOpen: false,
+                    productIsInCart: false,
                     quantity:  _productQuantity,
-                    productSupplierIds: '',
-                    totalPrice: 0.0,
+                    productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
+                    totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                     productSaleId: '',
                   );
               emit(state.copyWith(
@@ -672,16 +672,17 @@ class RecommendationProductsBloc
             if (response.status == AppConstants.code_201) {
               add(const RecommendationProductsEvent.setCartCountEvent());
               Vibration.vibrate();
-              Navigator.pop(event.context);
+           //   Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
-                    isNoteOpen: false,
+                    productIsInCart: true,
                     quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                    productSupplierIds: '',
-                    totalPrice: 0.0,
+                    productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
+
+                    totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                     productSaleId: '',
                   );
               add(const RecommendationProductsEvent.getCartCountEvent());
@@ -695,7 +696,7 @@ class RecommendationProductsBloc
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ?? response.message!, event.context),
                   type: SnackBarType.success);
-            } else if (response.status == 403) {
+            } else if (response.status == AppConstants.code_403) {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -727,14 +728,6 @@ class RecommendationProductsBloc
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
       } else if (event is _updateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
-      }   else if (event is _toggleNoteEvent) {
-        List <List<ProductStockModel>> productStockList =
-        state.productStockList.toList(growable: true);
-        productStockList[state.productListIndex][state.productStockUpdateIndex] =
-            productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
-                isNoteOpen: !productStockList[state.productListIndex][state.productStockUpdateIndex]
-                    .isNoteOpen);
-        emit(state.copyWith(productStockList: productStockList));
       }
       else if (event is _getCartCountEvent) {
         emit(

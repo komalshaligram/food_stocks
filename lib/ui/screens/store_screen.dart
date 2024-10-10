@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/store_category/store_category_bloc.dart';
 import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import 'package:food_stock/data/model/search_model/search_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -17,6 +16,7 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_marquee_widget.dart';
 import 'package:food_stock/ui/widget/common_product_button_widget.dart';
+import 'package:food_stock/ui/widget/common_product_list_widget.dart';
 import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -47,12 +47,13 @@ class StoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocProvider(
       create: (context) {
         return StoreBloc()
+          ..add(StoreEvent.getSuppliersListEvent(context: context))
           ..add(StoreEvent.getProductCategoriesListEvent(context: context))
           ..add(StoreEvent.getCompaniesListEvent(context: context))
-          ..add(StoreEvent.getSuppliersListEvent(context: context))
           ..add(StoreEvent.getProductSalesListEvent(context: context))
           ..add(StoreEvent.getRecommendationProductsListEvent(context: context))
           ..add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
@@ -91,6 +92,12 @@ class StoreScreenWidget extends StatelessWidget {
               if (!state.isAppOnMaintenance) {
                 bloc.add(StoreEvent.generalSettings(context: context, dialogContext: context,isRetryLoading: false));
               }
+              bloc.add(StoreEvent.getProductCategoriesListEvent(context: context));
+              bloc.add(StoreEvent.getCompaniesListEvent(context: context));
+              bloc.add(StoreEvent.getSuppliersListEvent(context: context));
+              bloc.add(StoreEvent.getProductSalesListEvent(context: context));
+              bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
+              bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
             },
             child: Scaffold(
               backgroundColor: AppColors.pageColor,
@@ -296,7 +303,7 @@ class StoreScreenWidget extends StatelessWidget {
                                               SizedBox(
                                                 width: getScreenWidth(context),
                                                 height: state.isGuestUser ? 200 : AppConstants.salesProductItemHeight,
-                                                child: ListView.builder(
+                                                child:state.isSaleShimmering?CommonProductListShimmerWidget(): ListView.builder(
                                                   itemCount: state.productSalesList.length,
                                                   shrinkWrap: true,
                                                   scrollDirection: Axis.horizontal,
@@ -345,7 +352,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   SizedBox(
                                                     width: getScreenWidth(context),
                                                     height: state.isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
-                                                    child: ListView.builder(
+                                                    child: state.isRecommendedShimmering?CommonProductListShimmerWidget():ListView.builder(
                                                         itemCount: state.recommendedProductsList.length,
                                                         shrinkWrap: true,
                                                         scrollDirection: Axis.horizontal,
@@ -392,7 +399,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   SizedBox(
                                                     width: getScreenWidth(context),
                                                     height: state.isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
-                                                    child: ListView.builder(
+                                                    child: state.isPreviousOrderShimmering?CommonProductListShimmerWidget(): ListView.builder(
                                                         itemCount: state.previousOrderProductsList.length,
                                                         shrinkWrap: true,
                                                         scrollDirection: Axis.horizontal,
@@ -581,7 +588,7 @@ class StoreScreenWidget extends StatelessWidget {
             onTap: onTap,
             child: Text(
               title,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor,fontWeight: FontWeight.bold),
             ),
           ),
           GestureDetector(
@@ -927,7 +934,6 @@ class StoreScreenWidget extends StatelessWidget {
                                           }else{
                                             showMinQtyConfirmDialog(context,productId,state.productDetails.first.sale!.saleMinQuantity.toString());
                                           }
-
                                         },
                                         isLoading: state.isLoading,
                                         imageOnTap: () {
@@ -974,11 +980,7 @@ class StoreScreenWidget extends StatelessWidget {
                                           );
                                         },
                                         context: context,
-                                        productImageIndex: state.imageIndex,
-                                        onPageChanged: (index, p1) {
-                                          context.read<StoreBloc>().add(StoreEvent.updateImageIndexEvent(index: index));
-                                        },
-                                        productImages: [state.productDetails.first.mainImage ?? '', ...?state.productDetails.first.images?.map((image) => image.imageUrl ?? '')],
+                                        productImages: [state.productDetails.first.mainImage ?? ''],
                                         productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? ''),
                                         productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productStockUpdateIndex].totalPrice * state.productStockList[state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
                                         productStock: (state.productStockList[state.productStockUpdateIndex].stock.toString()),

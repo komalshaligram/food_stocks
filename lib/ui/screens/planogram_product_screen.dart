@@ -702,21 +702,11 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   },);
                               },
                               context: context,
-                              productImageIndex: state.imageIndex,
-                              onPageChanged: (index, p1) {
-                                context.read<PlanogramProductBloc>().add(
-                                    PlanogramProductEvent.updateImageIndexEvent(
-                                        index: index));
-                              },
                               productImages: [
                                 state.productDetails.first.mainImage ??
-                                    '',
-                                ...?state.productDetails.first.images?.map((image) =>
-                                image.imageUrl ?? '')
+                                    ''
                               ],
-
                               productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
-
                               productPrice: state
                                   .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
@@ -728,7 +718,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   (state.productDetails.first
                                       .numberOfUnit ??
                                       0) ,
-
                               productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                               scrollController: scrollController,
                               productQuantity:  state

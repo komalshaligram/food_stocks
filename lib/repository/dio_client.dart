@@ -25,7 +25,7 @@ class DioClient {
   late BuildContext _context;
   bool isLogOut = false;
   bool isLoggedIn = true;
-
+bool isInProgress = false;
   DioClient(this._context)
       : _dio = Dio(
           BaseOptions(
@@ -61,24 +61,27 @@ class DioClient {
           }));
 
   Future post(String path, {Object? data, Map<String, dynamic>? queryParameters, Options? options}) async {
+
     SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     final connectivityResult = await (Connectivity().checkConnectivity());
+preferencesHelper.setApiUrl(ApiUrl: path);
     debugPrint('URL = ${AppUrls.baseUrl}$path');
     debugPrint('token = ${preferencesHelper.getAuthToken()}');
     debugPrint('req:${data.toString()}');
       if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi|| connectivityResult == ConnectivityResult.ethernet) {
         try {
+
           Options requestOptions = options ?? Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferencesHelper.getAuthToken()}'});
           requestOptions.headers = requestOptions.headers ?? {};
-
           var response = await _dio.post(path, data: data, queryParameters: queryParameters, options: requestOptions);
           debugPrint("$path: RES: ${response.toString()}");
+            isInProgress = false;
           return response.data;
         } on DioException catch (e) {
           if (e.response?.statusCode == AppConstants.code_401 && path != AppUrls.refreshTokenUrl) {
-            tokenExpirationWork(path, data, preferencesHelper, AppStrings.post_method, queryParameters ?? {});
+            return tokenExpirationWork(path, data, preferencesHelper, AppStrings.post_method, queryParameters ?? {});
           } else if (path == AppUrls.refreshTokenUrl && e.response?.statusCode == AppConstants.code_401) {
-            manageRefreshTokenWork(preferencesHelper, queryParameters ?? {});
+            return manageRefreshTokenWork(preferencesHelper, queryParameters ?? {});
           } else {
             throw _createErrorEntity(e, context: _context);
           }
@@ -94,7 +97,7 @@ class DioClient {
     }
   }
 
-  void tokenExpirationWork(String path, Object? data, SharedPreferencesHelper preferencesHelper, String type, Map<String, dynamic> queryParams) async {
+   tokenExpirationWork(String path, Object? data, SharedPreferencesHelper preferencesHelper, String type, Map<String, dynamic> queryParams) async {
     ///save data of expire api
     preferencesHelper.setApiUrl(ApiUrl: path);
     preferencesHelper.setReqPram(ReqPram: jsonEncode(data));
@@ -105,15 +108,16 @@ class DioClient {
     debugPrint('[refreshToken token] ${res.data?.accessToken}');
 
     if (res.status == AppConstants.code_200) {
-      manageAccessTokenWork(preferencesHelper, res, type, queryParams);
+      return manageAccessTokenWork(preferencesHelper, res, type, queryParams, path,  data );
     }
     if (res.status == AppConstants.code_401) {
       //logout work
-      manageRefreshTokenWork(preferencesHelper, queryParams);
+     return manageRefreshTokenWork(preferencesHelper, queryParams);
     }
+
   }
 
-  void manageAccessTokenWork(SharedPreferencesHelper preferencesHelper, dynamic res, String type, Map<String, dynamic> queryParams) async {
+   manageAccessTokenWork(SharedPreferencesHelper preferencesHelper, dynamic res, String type, Map<String, dynamic> queryParams,String path, Object? data) async {
     preferencesHelper.setUserLoggedIn(isLoggedIn: true);
     preferencesHelper.setAuthToken(accToken: res.data?.accessToken ?? '');
     preferencesHelper.setRefreshToken(refToken: res.data?.refreshToken ?? '');
@@ -123,20 +127,20 @@ class DioClient {
     var response;
     switch (type) {
       case "GET":
-        response = await _dio.get(preferencesHelper.getApiUrl(), queryParameters: queryParams, options: requestOptions);
+        response = await _dio.get(path, queryParameters: queryParams, options: requestOptions);
         break;
       case "POST":
         response = await _dio.post(
-          preferencesHelper.getApiUrl(),
-          data: preferencesHelper.getRqPram(),
+           path,
+          data: data,
           options: requestOptions,
           queryParameters: queryParams,
         );
         break;
       case "PUT":
         response = await _dio.put(
-          preferencesHelper.getApiUrl(),
-          data: preferencesHelper.getRqPram(),
+          path,
+          data: data,
           options: requestOptions,
           queryParameters: queryParams,
         );
@@ -164,20 +168,23 @@ class DioClient {
   // GET
   Future get({required String path, Map<String, dynamic>? query, Options? options}) async {
     try {
+      isInProgress = true;
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       debugPrint('URL = ${AppUrls.baseUrl}$path');
+
       debugPrint('token = ${preferencesHelper.getAuthToken()}');
       final connectivityResult = await (Connectivity().checkConnectivity());
         if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi|| connectivityResult == ConnectivityResult.ethernet) {
           try {
             final response = await _dio.get(path, queryParameters: query, options: options ?? Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferencesHelper.getAuthToken()}'}));
             debugPrint("$path: RES: ${response.toString()}");
+            isInProgress = false;
             return response.data as Map<String, dynamic>;
           } on DioException catch (e) {
             if (e.response?.statusCode == AppConstants.code_401 && path != AppUrls.refreshTokenUrl) {
-              tokenExpirationWork(path, null, preferencesHelper, AppStrings.get_method, query ?? {});
+              return tokenExpirationWork(path, null, preferencesHelper, AppStrings.get_method, query ?? {});
             } else if (path == AppUrls.refreshTokenUrl && e.response?.statusCode == AppConstants.code_401) {
-              manageRefreshTokenWork(preferencesHelper, query ?? {});
+              return manageRefreshTokenWork(preferencesHelper, query ?? {});
             } else {
               throw _createErrorEntity(e, context: _context);
             }
@@ -233,9 +240,9 @@ class DioClient {
             return response.data;
           } on DioException catch (e) {
             if (e.response?.statusCode == AppConstants.code_401 && path != AppUrls.refreshTokenUrl) {
-              tokenExpirationWork(path, data, preferencesHelper, AppStrings.put_method, query ?? {});
+              return tokenExpirationWork(path, data, preferencesHelper, AppStrings.put_method, query ?? {});
             } else if (path == AppUrls.refreshTokenUrl && e.response?.statusCode == AppConstants.code_401) {
-              manageRefreshTokenWork(preferencesHelper, query ?? {});
+              return manageRefreshTokenWork(preferencesHelper, query ?? {});
             } else {
               throw _createErrorEntity(e, context: _context);
             }
@@ -277,9 +284,9 @@ class DioClient {
             return response.data;
           } on DioException catch (e) {
             if (e.response?.statusCode == AppConstants.code_401 && path != AppUrls.refreshTokenUrl) {
-              tokenExpirationWork(path, data, preferencesHelper, AppStrings.put_method, query ?? {});
+              return tokenExpirationWork(path, data, preferencesHelper, AppStrings.put_method, query ?? {});
             } else if (path == AppUrls.refreshTokenUrl && e.response?.statusCode == AppConstants.code_401) {
-              manageRefreshTokenWork(preferencesHelper, query ?? {});
+              return manageRefreshTokenWork(preferencesHelper, query ?? {});
             } else {
               throw _createErrorEntity(e, context: _context);
             }

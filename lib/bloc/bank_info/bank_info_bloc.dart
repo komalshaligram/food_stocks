@@ -22,7 +22,7 @@ part 'bank_info_bloc.freezed.dart';
 
 
 class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
-  TermsConditionReqModel termsConditionReqModel = TermsConditionReqModel();
+  TermsConditionReqModel termsConditionReqModel = const TermsConditionReqModel();
   BankInfoBloc() : super(BankInfoState.initial()) {
     on<BankInfoEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
@@ -117,7 +117,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
             ),
           );
           debugPrint('termCondition url = ${AppUrls.baseUrl}${AppUrls.termsConditionUrl}');
-          debugPrint('termCondition response ____${res}');
+          debugPrint('termCondition response ____$res');
 
           TermsConditionResModel response =
           TermsConditionResModel.fromJson(res);
@@ -168,9 +168,9 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           );
 
           if (res[AppStrings.statusString] == AppConstants.code_200) {
-            emit(state.copyWith(isApiShimmering: false));
             preferencesHelper.setPaymentMethod(method: AppStrings.wallet);
             Navigator.pop(event.context);
+            emit(state.copyWith(isApiShimmering: false));
           }
           else {
             emit(state.copyWith(isApiShimmering: false));

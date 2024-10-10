@@ -110,7 +110,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 []);
             debugPrint('store search list = ${searchList.length}');
             bool productVisible = response.data?.categories?.any((element) => element.isHomePreference==true)??true;
-
             emit(state.copyWith(
                 isCatVisible: productVisible,
                 productCategoryList: response.data?.categories ?? [],
@@ -139,7 +138,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       }
       else if (event is _getProductSalesListEvent) {
         try {
-          emit(state.copyWith(isShimmering: true));
+          emit(state.copyWith(isShimmering: true,isSaleShimmering: true));
           final res = await DioClient(event.context).post(
               AppUrls.getSaleProductsUrl,
               data: const ProductSalesReqModel(
@@ -163,9 +162,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(
                 productSalesList: response.data ?? [] ,
                 productStockList: productStockList,
-                isShimmering: false));
+                isShimmering: false,isSaleShimmering:false));
           } else {
-            emit(state.copyWith(isShimmering: false));
+            emit(state.copyWith(isShimmering: false,isSaleShimmering:false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
@@ -174,9 +173,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             );
           }
         } on ServerException {
-          emit(state.copyWith(isShimmering: false));
+          emit(state.copyWith(isShimmering: false,isSaleShimmering: false));
         } catch (exc) {
-          emit(state.copyWith(isShimmering: false));
+          emit(state.copyWith(isShimmering: false,isSaleShimmering: false));
         }
       }
 
@@ -184,7 +183,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
         if(!preferencesHelper.getGuestUser()){
           try {
-            emit(state.copyWith(isShimmering: true));
+            emit(state.copyWith(isRecommendedShimmering: true));
             final res = await DioClient(event.context).post(
                 AppUrls.getRecommendationProductsUrl,
                 data: const RecommendationProductsReqModel(
@@ -203,12 +202,14 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       productId: recommendationProduct.id ?? '',
                       stock: recommendationProduct.productStock.toString())) ?? []);
               productStockList.add(barcodeStock);
+
               emit(state.copyWith(
                   recommendedProductsList: response.data ?? [],
+                  isRecommendedShimmering:false,
                   productStockList: productStockList,
                   isShimmering: false));
             } else {
-              emit(state.copyWith(isShimmering: false));
+              emit(state.copyWith(isShimmering: false, isRecommendedShimmering:false,));
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -218,9 +219,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               );
             }
           } on ServerException {
-            emit(state.copyWith(isShimmering: false));
+            emit(state.copyWith(isShimmering: false, isRecommendedShimmering:false,));
           } catch (exc) {
-            emit(state.copyWith(isShimmering: false));
+            emit(state.copyWith(isShimmering: false, isRecommendedShimmering:false,));
           }
         }
 
@@ -396,7 +397,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   productSaleId: '',
                   productSupplierIds: '',
                   note: '',
-                  isNoteOpen: false,
+                  productIsInCart: true,
+
 
                 );
 
@@ -717,16 +719,18 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
-              Navigator.pop(event.context);
+         //     Navigator.pop(event.context);
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: true);
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex].copyWith(
                 note: '',
-                isNoteOpen: false,
-                quantity: state.productStockList[state.productStockUpdateIndex]
+                    productIsInCart: true,
+
+                    quantity: state.productStockList[state.productStockUpdateIndex]
                     .quantity,
-                productSupplierIds: '',
+                productSupplierIds:  state.productStockList[state.productStockUpdateIndex]
+                    .productSupplierIds,
                 totalPrice: state.productStockList[state.productStockUpdateIndex]
                     .totalPrice,
                 productSaleId: '',
@@ -799,17 +803,21 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             );
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              Navigator.pop(event.context);
-              add(const StoreEvent.setCartCountEvent());
+           //   Navigator.pop(event.context);
+              if(!state.productStockList[state.productStockUpdateIndex]
+                  .productIsInCart){
+                add(const StoreEvent.setCartCountEvent());
+              }
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: true);
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex].copyWith(
                     note: '',
-                isNoteOpen: false,
-                quantity: state.productStockList[state.productStockUpdateIndex]
+                    productIsInCart: true,
+                    quantity: state.productStockList[state.productStockUpdateIndex]
                     .quantity ,
-                productSupplierIds: '',
+                productSupplierIds: state.productStockList[state.productStockUpdateIndex]
+                    .productSupplierIds,
                 totalPrice: state.productStockList[state.productStockUpdateIndex]
                     .totalPrice ,
                 productSaleId: '',
@@ -1052,24 +1060,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             searchController: TextEditingController(text: event.search),
             searchList: event.searchList));
       }
-      else if (event is _toggleNoteEvent) {
-        List<ProductStockModel> productStockList =
-            state.productStockList.toList(growable: true);
-        if (event.isBarcode) {
-          productStockList[productStockList.indexOf(productStockList.last)] =
-              productStockList[productStockList.indexOf(productStockList.last)]
-                  .copyWith(
-                      isNoteOpen: !productStockList[
-                              productStockList.indexOf(productStockList.last)]
-                          .isNoteOpen);
-        } else {
-          productStockList[state.productStockUpdateIndex] =
-              productStockList[state.productStockUpdateIndex].copyWith(
-                  isNoteOpen: !productStockList[state.productStockUpdateIndex]
-                      .isNoteOpen);
-        }
-        emit(state.copyWith(productStockList: productStockList));
-      }
+
       else if (event is _resetGlobalSearchEvent) {
         List<SearchModel> searchList = [];
         searchList.addAll(state.productCategoryList.map((category) =>
@@ -1087,7 +1078,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
             if(!preferencesHelper.getGuestUser()){
               try {
-                emit(state.copyWith(isShimmering: true));
+                emit(state.copyWith(isPreviousOrderShimmering: true));
                 final res = await DioClient(event.context).post(
                   AppUrls.getPreviousOrderProductsUrl,
                   data: const PreviousOrderProductsReqModel(
@@ -1111,10 +1102,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   emit(state.copyWith(
                       previousOrderProductsList: response.previousProductData ?? [],
                       productStockList: productStockList,
-                      isShimmering: false));
+                      isPreviousOrderShimmering: false));
 
                 } else {
-                  emit(state.copyWith(isShimmering: false));
+                  emit(state.copyWith(isShimmering: false,isPreviousOrderShimmering:false));
                   CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
@@ -1126,9 +1117,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   );
                 }
               } on ServerException {
-                emit(state.copyWith(isShimmering: false));
+                emit(state.copyWith(isShimmering: false,isPreviousOrderShimmering:false));
               } catch (exc) {
-                emit(state.copyWith(isShimmering: false));
+                emit(state.copyWith(isShimmering: false,isPreviousOrderShimmering:false));
               }
             }
 

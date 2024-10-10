@@ -480,6 +480,7 @@ class AppStrings {
         return AppLocalizations.of(context)!.bdi_error;
       case 'creditcardpaymentfailed' :
         return AppLocalizations.of(context)!.credit_card_payment_failed;
+
     }
     return key;
   }

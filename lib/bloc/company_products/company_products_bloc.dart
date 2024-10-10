@@ -201,7 +201,6 @@ class CompanyProductsBloc
                   }));
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
               if (response.status == AppConstants.code_200) {
-                debugPrint('cart before = ${response.data}');
                 response.data?.data?.forEach((cartProduct) {
                   if (cartProduct.id == event.productId ||
                       cartProduct.id == state.productStockList[state.productListIndex]
@@ -610,16 +609,16 @@ class CompanyProductsBloc
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
-              Navigator.pop(event.context);
+             // Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
                   state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
-                isNoteOpen: false,
+                productIsInCart: true,
                 quantity:  _productQuantity,
-                productSupplierIds: '',
-                totalPrice: 0.0,
+                    productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
+                    totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                 productSaleId: '',
               );
               emit(state.copyWith(
@@ -701,18 +700,21 @@ class CompanyProductsBloc
                   },
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
-            if (response.status == 201) {
-              add(const CompanyProductsEvent.setCartCountEvent());
+            if (response.status == AppConstants.code_201) {
+              if(  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productIsInCart){
+                add(const CompanyProductsEvent.setCartCountEvent());
+              }
               Vibration.vibrate();
-              Navigator.pop(event.context);
+              //Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
                   state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
                 quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                productSupplierIds: '',
-                totalPrice: 0.0,
+                    productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
+                    totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
+                productIsInCart: true,
                 productSaleId: '',
               );
               add(const CompanyProductsEvent.getCartCountEvent());
@@ -764,16 +766,6 @@ class CompanyProductsBloc
       else if (event is _updateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
       }
-      else if (event is _toggleNoteEvent) {
-       List <List<ProductStockModel>> productStockList =
-            state.productStockList.toList(growable: true);
-        productStockList[state.productListIndex][state.productStockUpdateIndex] =
-            productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
-                isNoteOpen: !productStockList[state.productListIndex][state.productStockUpdateIndex]
-                    .isNoteOpen);
-        emit(state.copyWith(productStockList: productStockList));
-      }
-
       else if (event is _getCartCountEvent) {
         emit(
             state.copyWith(cartCount: preferences.getCartCount(),isSubUserAddToBasket : preferences.getCanAddToBasket()));

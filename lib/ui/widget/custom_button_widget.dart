@@ -19,7 +19,6 @@ class CustomButtonWidget extends StatelessWidget {
   final double width;
   final double fontSize;
   final bool isDeleteButton;
-
   final Widget? iconWidget;
 
   const CustomButtonWidget({super.key, required this.buttonText, this.onPressed,

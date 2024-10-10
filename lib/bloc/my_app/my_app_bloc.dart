@@ -65,7 +65,7 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
           if (res != null) {
             ProfileDetailsUpdateResModel response =
                 ProfileDetailsUpdateResModel.fromJson(res);
-            debugPrint('profile response = ${response}');
+            debugPrint('profile response = $response');
             if (response.status == 200) {
               debugPrint('______success');
             } else {}

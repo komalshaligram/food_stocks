@@ -601,18 +601,18 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
-              Navigator.pop(event.context);
+           //   Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
-                    isNoteOpen: false,
+                    productIsInCart: true,
                     quantity: /*state.productStockList[state.productStockUpdateIndex]
                     .quantity +*/ _productQuantity,
-                    productSupplierIds: '',
-                    totalPrice: 0.0,
+                    totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                     productSaleId: '',
+                    productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                   );
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
@@ -689,16 +689,16 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             if (response.status == AppConstants.code_201) {
               add(const ReorderEvent.setCartCountEvent());
               Vibration.vibrate();
-              Navigator.pop(event.context);
+          //    Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
-                    isNoteOpen: false,
+                    productIsInCart: true,
                     quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                    productSupplierIds: '',
-                    totalPrice: 0.0,
+                    productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
+                    totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                     productSaleId: '',
                   );
               add(const ReorderEvent.getCartCountEvent());
@@ -744,14 +744,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
       } else if (event is _updateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
-      }  else if (event is _toggleNoteEvent) {
-        List <List<ProductStockModel>> productStockList =
-        state.productStockList.toList(growable: true);
-        productStockList[state.productListIndex][state.productStockUpdateIndex] =
-            productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
-                isNoteOpen: !productStockList[state.productListIndex][state.productStockUpdateIndex]
-                    .isNoteOpen);
-        emit(state.copyWith(productStockList: productStockList));
       }
       else if (event is _getCartCountEvent) {
         emit(

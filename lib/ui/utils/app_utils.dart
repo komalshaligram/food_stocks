@@ -96,11 +96,11 @@ Color getStatusColor(int statusNum){
 Widget isPesachLabelShow(bool isPesach,BuildContext context,){
  if(isPesach){
    return Container(
-       padding: EdgeInsets.only(left: 5,right: 5),
+       padding: const EdgeInsets.only(left: 5,right: 5),
        decoration: BoxDecoration(
            color: AppColors.pesachBGColor,
            border: Border.all(color: AppColors.pesachBGColor),
-           borderRadius: BorderRadius.all(Radius.circular(10))
+           borderRadius: const BorderRadius.all(Radius.circular(10))
        ),
        child: Text(AppLocalizations.of(context)!.pesach,
          style: AppStyles.rkRegularTextStyle(

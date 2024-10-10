@@ -548,5 +548,8 @@
   "select_valid_month": "Please select valid month",
   "minimum_box": "Minimum box",
   "minimum_box_title": "The minimum boxes for this sale is: ",
-"confirm_minimum_box": ",are you sure you don’t want to get the sale price?"
+"confirm_minimum_box": ",are you sure you don’t want to get the sale price?",
+  "savings_for_sales": "Savings for sales",
+  "not_minimum_order": "Not minimum order"
+
 }

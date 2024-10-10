@@ -15,7 +15,6 @@ class AppUrls {
   static const String filesListUrl = '/v1/settings/ClientFiles';
   static const String operationTimeUrl = '/v1/clients/operationTime';
   static const String cityListUrl = '/v1/settings/Cities';
-  static const String removeFileUrl = '/v1/files/remove';
   static const String getProductCategoriesUrl = '/v1/store/getCategories';
   static const String getProductSalesUrl = '/v1/sales/getSales';
   static const String getSaleProductsUrl = '/v1/store/SaleProducts';
@@ -25,10 +24,8 @@ class AppUrls {
   static const String getPlanogramProductsUrl = '/v1/store/getPalnogramProducts';
   static const String createOrderUrl = '/v1/orders/createOrder';
   static const String getAllOrderUrl = '/v1/orders/getAllOrders';
-  static const String verifyProductStockUrl = '/v1/store/verifyStock';
   static const String getAllCartUrl = '/v1/cart/listingCartProducts/';
   static const String getOrderById = '/v1/orders/getOrderById/';
-  static const String verifyStockUrl = '/v1/store/verifyStock';
   static const String updateCartProductUrl = '/v1/cart/updateCartProducts/';
   static const String listingCartProductsSupplierUrl = '/v1/cart/listingCartProductsSupplier/';
   static const String createIssueUrl = '/v1/orders/issues/createIssue/';
@@ -43,10 +40,8 @@ class AppUrls {
   static const String insertProductInCartUrl = '/v1/cart/addProduct/';
   static const String exportWalletTransactionUrl = '/v1/walletTransaction/exportWalletTransactions';
   static const String getOrdersCountUrl = '/v1/orders/getOrdersCount';
-  static const String getAllQNAUrl = '/v1/client/questionandanswer/getAllQuestionAndAnswer';
   static const String getAllMessagesUrl = '/v1/client/usermessages/getMessages';
   static const String getNotificationMessageUrl = '/v1/notifications/getNotifications';
-  static const String getAllAppContentsUrl = '/v1/client/contents/getAllContents';
   static const String getAppContentUrl = '/v1/client/contents/getContentsById/';
   static const String getCompanyProductsUrl = '/v1/store/getBrandProducts';
   static const String getRecommendationProductsUrl = '/v1/recommendation/products';
@@ -68,7 +63,6 @@ class AppUrls {
   static const String generalSettingUrl = '/v1/settings/getSettings';
   static const String getBusinessTypeUrl = '/v1/settings/BusinessType';
   static const String getBankDetailUrl = '/v1/settings/BankDetail';
-  static const String getAgentUrl = '/v1/settings/Agent';
   static const String termsConditionUrl = '/v1/clients/getTermsAndConditionForm';
   static const String duplicateOrderUrl = '/v1/cart/duplicateOrder';
   static const String clientInvoicesUrl = '/v1/clients/clientInvoices';

@@ -53,7 +53,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             }
           } else {
             emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toLocalization(), event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(context: event.context, title:AppStrings.messageString.contains('_') ?AppStrings.getLocalizedStrings(res[AppStrings.messageString].toLocalization(), event.context):res[AppStrings.messageString], type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(

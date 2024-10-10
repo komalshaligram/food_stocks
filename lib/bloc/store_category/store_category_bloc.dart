@@ -850,7 +850,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
-              Navigator.pop(event.context);
+            //  Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.planoGramUpdateIndex]
@@ -859,12 +859,13 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   [state.productStockUpdateIndex]
                       .copyWith(
                     note: '',
-                    isNoteOpen: false,
+                    productIsInCart: true,
                     quantity: state
                         .productStockList[state.planoGramUpdateIndex]
                     [state.productStockUpdateIndex]
                         .quantity,
-                    productSupplierIds: '',
+                    productSupplierIds: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].productSupplierIds,
+
                     totalPrice: state
                         .productStockList[state.planoGramUpdateIndex]
                     [state.productStockUpdateIndex]
@@ -949,8 +950,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
-              add(const StoreCategoryEvent.setCartCountEvent());
-              Navigator.pop(event.context);
+              if(!state
+                  .productStockList[state.planoGramUpdateIndex]
+              [state.productStockUpdateIndex].productIsInCart){
+                add(const StoreCategoryEvent.setCartCountEvent());
+              }
+            //  Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.planoGramUpdateIndex]
@@ -959,13 +964,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   [state.productStockUpdateIndex]
                       .copyWith(
                     note: '',
-                    isNoteOpen: false,
+                    productIsInCart: true,
                     quantity: state
                         .productStockList[state.planoGramUpdateIndex]
                     [state.productStockUpdateIndex]
                         .quantity,
-                    productSupplierIds: '',
-                    totalPrice: state
+                    productSupplierIds: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].productSupplierIds,                    totalPrice: state
                         .productStockList[state.planoGramUpdateIndex]
                     [state.productStockUpdateIndex]
                         .totalPrice,
@@ -1135,35 +1139,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               context: event.context));
         }
       }
-      else if (event is _toggleNoteEvent) {
-        List<List<ProductStockModel>> productStockList =
-        state.productStockList.toList(growable: true);
-        if (event.isBarcode) {
-          debugPrint(
-              'toggled,${productStockList.indexOf(productStockList.last)}');
-          productStockList[productStockList.indexOf(productStockList.last)][0] =
-              productStockList[productStockList.indexOf(productStockList.last)]
-              [0]
-                  .copyWith(
-                  isNoteOpen: !productStockList[productStockList
-                      .indexOf(productStockList.last)][0]
-                      .isNoteOpen);
-        } else {
-          debugPrint(
-              'toggled,${state.planoGramUpdateIndex},${state.productStockUpdateIndex}');
-          productStockList[state.planoGramUpdateIndex]
-          [state.productStockUpdateIndex] =
-              productStockList[state.planoGramUpdateIndex]
-              [state.productStockUpdateIndex]
-                  .copyWith(
-                  isNoteOpen: !productStockList[state.planoGramUpdateIndex]
-                  [state.productStockUpdateIndex]
-                      .isNoteOpen);
-        }
-        emit(state.copyWith(productStockList: []));
-        emit(state.copyWith(productStockList: productStockList));
-      }
-
       else if(event is _getPlanogramByIdEvent){
         try {
           final res = await DioClient(event.context)

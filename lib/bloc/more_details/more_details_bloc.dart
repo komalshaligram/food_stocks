@@ -72,7 +72,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           ProfileModel updatedProfileModel = ProfileModel(
             cityId: state.cityListResModel?.data?.cities?.firstWhere((city) => city.cityName == state.selectCity).id,
             email: state.emailController.text,
-            clientDetail: ClientDetail(zip: state.zipController.text.trim(), streetNumber: state.streetNumberController.text.trim(), streetName: state.streetNameController.text.trim()),
+            clientDetail: ClientDetail(approveSmsAndEmail: state.approveForSMS,zip: state.zipController.text.trim(), streetNumber: state.streetNumberController.text.trim(), streetName: state.streetNameController.text.trim()),
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail = updatedProfileModel.clientDetail?.toJson();

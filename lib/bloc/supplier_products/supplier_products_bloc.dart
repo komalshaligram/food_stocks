@@ -436,10 +436,10 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
-                isNoteOpen: false,
+                productIsInCart: true,
                 quantity: _productQuantity,
                 productSupplierIds: '',
-                totalPrice: 0.0,
+                totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                 productSaleId: '',
               );
 
@@ -487,10 +487,10 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
-                isNoteOpen: false,
+                productIsInCart: true,
                 quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                 productSupplierIds: '',
-                totalPrice: 0.0,
+                totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                 productSaleId: '',
               );
               //   add(SupplierProductsEvent.getCartCountEvent());
