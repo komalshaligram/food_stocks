@@ -307,6 +307,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                               shrinkWrap: true,
                               itemBuilder: (listViewContext, index) {
                                 return SearchItemWidget(
+                                    isShowSeeAll: index==state.searchList.length-1?true:false,
                                     salePrice: state.searchList[index].salePrice,
                                     saleDesc: state.searchList[index].salesDesc,
                                     isPesach: state.searchList[index].isPesach,

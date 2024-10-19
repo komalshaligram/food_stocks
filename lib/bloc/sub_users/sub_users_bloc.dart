@@ -107,7 +107,7 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
         try {
           debugPrint('clientId_____${preferences.getUserId()}');
           final res = await DioClient(event.context).post(
-              '${AppUrls.verifyClientUrl}',
+              AppUrls.verifyClientUrl,
               data: {AppStrings.clientIdString:preferences.getUserId()}
           );
           VerifyClientResModel response = VerifyClientResModel.fromJson(res);

@@ -405,6 +405,5 @@ class FormDataScreenWidget extends StatelessWidget {
     }else{
       return true;
     }
-    return false;
   }
 }

@@ -461,7 +461,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 productId: response.product?.first.id ?? '',
                 stock: (response.product?.first.supplierSales?.first.productStock.toString()  ?? '0'),
                 maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
-              );;
+              );
 
               emit(state.copyWith(productStockList: productStockList));
 

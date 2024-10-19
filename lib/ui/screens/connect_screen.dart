@@ -27,7 +27,7 @@ class ConnectScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => ConnectBloc(),
 
-      child: ConnectScreenWidget(),
+      child: const ConnectScreenWidget(),
     );
   }
 }

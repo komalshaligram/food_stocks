@@ -22,7 +22,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DioClient {
   final Dio _dio;
-  late BuildContext _context;
+  late final BuildContext _context;
   bool isLogOut = false;
   bool isLoggedIn = true;
 bool isInProgress = false;
@@ -64,7 +64,7 @@ bool isInProgress = false;
 
     SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     final connectivityResult = await (Connectivity().checkConnectivity());
-preferencesHelper.setApiUrl(ApiUrl: path);
+preferencesHelper.setApiUrl(apiUrl: path);
     debugPrint('URL = ${AppUrls.baseUrl}$path');
     debugPrint('token = ${preferencesHelper.getAuthToken()}');
     debugPrint('req:${data.toString()}');
@@ -79,7 +79,7 @@ preferencesHelper.setApiUrl(ApiUrl: path);
           return response.data;
         } on DioException catch (e) {
           if (e.response?.statusCode == AppConstants.code_401 && path != AppUrls.refreshTokenUrl) {
-            return tokenExpirationWork(path, data, preferencesHelper, AppStrings.post_method, queryParameters ?? {});
+            return tokenExpirationWork(path, data, preferencesHelper, AppStrings.postMethod, queryParameters ?? {});
           } else if (path == AppUrls.refreshTokenUrl && e.response?.statusCode == AppConstants.code_401) {
             return manageRefreshTokenWork(preferencesHelper, queryParameters ?? {});
           } else {
@@ -99,8 +99,8 @@ preferencesHelper.setApiUrl(ApiUrl: path);
 
    tokenExpirationWork(String path, Object? data, SharedPreferencesHelper preferencesHelper, String type, Map<String, dynamic> queryParams) async {
     ///save data of expire api
-    preferencesHelper.setApiUrl(ApiUrl: path);
-    preferencesHelper.setReqPram(ReqPram: jsonEncode(data));
+    preferencesHelper.setApiUrl(apiUrl: path);
+    preferencesHelper.setReqPram(reqPram: jsonEncode(data));
 
     final response = await post(AppUrls.refreshTokenUrl, data: {"token": 'Bearer ${preferencesHelper.getRefreshToken()}'});
 
@@ -182,7 +182,7 @@ preferencesHelper.setApiUrl(ApiUrl: path);
             return response.data as Map<String, dynamic>;
           } on DioException catch (e) {
             if (e.response?.statusCode == AppConstants.code_401 && path != AppUrls.refreshTokenUrl) {
-              return tokenExpirationWork(path, null, preferencesHelper, AppStrings.get_method, query ?? {});
+              return tokenExpirationWork(path, null, preferencesHelper, AppStrings.getMethod, query ?? {});
             } else if (path == AppUrls.refreshTokenUrl && e.response?.statusCode == AppConstants.code_401) {
               return manageRefreshTokenWork(preferencesHelper, query ?? {});
             } else {
@@ -240,7 +240,7 @@ preferencesHelper.setApiUrl(ApiUrl: path);
             return response.data;
           } on DioException catch (e) {
             if (e.response?.statusCode == AppConstants.code_401 && path != AppUrls.refreshTokenUrl) {
-              return tokenExpirationWork(path, data, preferencesHelper, AppStrings.put_method, query ?? {});
+              return tokenExpirationWork(path, data, preferencesHelper, AppStrings.putMethod, query ?? {});
             } else if (path == AppUrls.refreshTokenUrl && e.response?.statusCode == AppConstants.code_401) {
               return manageRefreshTokenWork(preferencesHelper, query ?? {});
             } else {
@@ -284,7 +284,7 @@ preferencesHelper.setApiUrl(ApiUrl: path);
             return response.data;
           } on DioException catch (e) {
             if (e.response?.statusCode == AppConstants.code_401 && path != AppUrls.refreshTokenUrl) {
-              return tokenExpirationWork(path, data, preferencesHelper, AppStrings.put_method, query ?? {});
+              return tokenExpirationWork(path, data, preferencesHelper, AppStrings.putMethod, query ?? {});
             } else if (path == AppUrls.refreshTokenUrl && e.response?.statusCode == AppConstants.code_401) {
               return manageRefreshTokenWork(preferencesHelper, query ?? {});
             } else {

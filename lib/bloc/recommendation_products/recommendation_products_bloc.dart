@@ -593,10 +593,10 @@ class RecommendationProductsBloc
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
                     productIsInCart: false,
-                    quantity:  _productQuantity,
+                    quantity:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                     productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                     totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
-                    productSaleId: '',
+                    productSaleId:state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId,
                   );
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
@@ -681,9 +681,8 @@ class RecommendationProductsBloc
                     productIsInCart: true,
                     quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                     productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
-
                     totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
-                    productSaleId: '',
+                    productSaleId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId,
                   );
               add(const RecommendationProductsEvent.getCartCountEvent());
 

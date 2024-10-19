@@ -550,6 +550,8 @@
   "minimum_box_title": "The minimum boxes for this sale is: ",
 "confirm_minimum_box": ",are you sure you don’t want to get the sale price?",
   "savings_for_sales": "Savings for sales",
-  "not_minimum_order": "Not minimum order"
+  "not_minimum_order": "Not minimum order",
+  "show_all_results": "Show All Results",
+  "bank_transfer_information": "Bank transfer information"
 
 }

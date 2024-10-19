@@ -131,7 +131,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.48),
                                         //getChildAspectRatio(context)),
                                         itemBuilder: (context, index) {
-                                          return buildProductSaleListItem(
+                                          return buildProductSaleGridViewItem(
                                             productStock: state.productSalesList[index].productStock.toString(),
                                             isPesach: state.productSalesList[index].isPesach ?? false,
                                             lowStock: state.productSalesList[index].lowStock ?? '',
@@ -199,7 +199,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildProductSaleListItem({
+  Widget buildProductSaleGridViewItem({
     required int index,
     required BuildContext context,
     required String saleImage,

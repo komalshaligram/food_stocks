@@ -92,7 +92,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   imageUrl: response.data?.user?.profileImage ?? '');
               preferencesHelper.setUserLoggedIn(isLoggedIn: true);
               preferencesHelper.setWalletId(
-                  UserWalletId: response.data?.wallet ?? '');
+                  userWalletId: response.data?.wallet ?? '');
               preferencesHelper.setIsSubUser(
                   isSubUser: (response.data?.adminType == AppStrings.subUserString) ? true : false);
               preferencesHelper.setEmailId(userEmailId: response.data?.user?.email ?? '');
@@ -214,7 +214,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferencesHelper.setUserId(id: response.data?.user?.id ?? '');
             /* preferencesHelper.setUserLoggedIn(isLoggedIn: true);*/
               preferencesHelper.setWalletId(
-                  UserWalletId: response.data?.wallet ?? '');
+                  userWalletId: response.data?.wallet ?? '');
               emit(state.copyWith(isLoading: false));
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);

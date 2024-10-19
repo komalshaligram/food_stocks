@@ -27,12 +27,11 @@ class MessageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MessageScreenWidget();
-    /*return BlocProvider(
+    return BlocProvider(
       create: (context) => MessageBloc()
         ..add(MessageEvent.getMessageListEvent(context: context)),
       child: const MessageScreenWidget(),
-    );*/
+    );
   }
 }
 

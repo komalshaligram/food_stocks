@@ -603,7 +603,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           } else {
             emit(state.copyWith(isLoading: true));
 
-
             ProfileDetailsUpdateReqModel reqMap = ProfileDetailsUpdateReqModel(
                 clientDetail: ClientDetail(operationTime: [
                   OperationTime(sunday: sundayList),
@@ -615,7 +614,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   OperationTime(saturday: saturdayAndHolidaysList),
                 ]));
 
-
             Map<String, dynamic> req = reqMap.toJson();
             Map<String, dynamic>? clientDetail = reqMap.clientDetail?.toJson();
             debugPrint("update before Model = $req");
@@ -625,9 +623,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               }
               return value == null;
             });
-
-
-
             req[AppStrings.clientDetailString] = clientDetail;
             req.removeWhere((key, value) {
               if (value != null) {
@@ -641,14 +636,11 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 "${AppUrls.updateProfileDetailsUrl}/${preferences.getUserId()}",
                 data: req,
               );
-
               debugPrint('operation update req _____$req');
-
               req_update.ProfileDetailsUpdateResModel res1 =
               req_update.ProfileDetailsUpdateResModel.fromJson(res);
-
               debugPrint('operation update res _____$res1');
-              if (res1.status == 200) {
+              if (res1.status == AppConstants.code_200) {
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(
                   context: event.context,

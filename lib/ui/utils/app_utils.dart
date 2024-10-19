@@ -93,7 +93,7 @@ Color getStatusColor(int statusNum){
        ? AppConstants.productGridAspectRatio51:AppConstants.productGridAspectRatio51;
  }
 
-Widget isPesachLabelShow(bool isPesach,BuildContext context,){
+Widget isPesachLabelShow(bool isPesach,BuildContext context){
  if(isPesach){
    return Container(
        padding: const EdgeInsets.only(left: 5,right: 5),
@@ -158,7 +158,7 @@ customShowUpdateDialog(
                   _launchUrl(storeUrl);
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                   alignment: Alignment.center,
                   width: AppConstants.containerHeight_80,
                   decoration: BoxDecoration(
@@ -180,14 +180,14 @@ customShowUpdateDialog(
 }
 
 Future<void> _launchUrl(String storeUrl) async {
-  Uri _url = Uri.parse(storeUrl);
+  Uri url = Uri.parse(storeUrl);
 
     try {
-      launchUrl(_url);
+      launchUrl(url);
     } on PlatformException catch (e) {
       debugPrint(e.toString());
     } finally {
-      launchUrl(_url);
+      launchUrl(url);
     }
 }
 
@@ -271,13 +271,13 @@ Future<String> scanBarcodeOrQRCode({required BuildContext context, required Stri
 
 bool isRTLContent({required BuildContext context}) {
   Locale locale = Localizations.localeOf(context);
-  List<Locale> rtlLocales = [Locale(AppStrings.hebrewString)];
+  List<Locale> rtlLocales = [const Locale(AppStrings.hebrewString)];
   return rtlLocales.contains(locale) ? true : false;
 }
 
 extension RTLExtension on BuildContext {
   bool get rtl =>
-      [Locale(AppStrings.hebrewString)].contains(Localizations.localeOf(this)) ? true : false;
+      [const Locale(AppStrings.hebrewString)].contains(Localizations.localeOf(this)) ? true : false;
 }
 
 
@@ -300,7 +300,7 @@ extension StringCasingExtension on String {
       .join(' ');
 
   String toLocalization() =>
-      this.contains('.') ? this.split('.')[1].toLowerCase() : this;
+      contains('.') ? split('.')[1].toLowerCase() : this;
 }
 
 String formatNumber({required String value, required String local}) {
@@ -308,7 +308,7 @@ String formatNumber({required String value, required String local}) {
     locale: local,
   ).format(double.parse(value)));
   String result1 = splitNumber(result);
-  return '${result1}';
+  return result1;
 }
 
 double vatCalculation(

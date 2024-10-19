@@ -374,6 +374,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                           shrinkWrap: true,
                           itemBuilder: (listViewContext, index) {
                             return SearchItemWidget(
+                                isShowSeeAll: index==state.searchList.length-1?true:false,
                                 priceOfBox: state.searchList[index].priceOfBox,
                                 salePrice: state.searchList[index].salePrice,
                                 saleDesc: state.searchList[index].salesDesc,

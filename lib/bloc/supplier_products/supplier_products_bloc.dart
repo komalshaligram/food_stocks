@@ -432,13 +432,13 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
-              Navigator.pop(event.context);
+              //Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
                 productIsInCart: true,
-                quantity: _productQuantity,
-                productSupplierIds: '',
+                quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
+                productSupplierIds: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                 totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                 productSaleId: '',
               );
@@ -469,7 +469,6 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
             });
             debugPrint('insert cart req = $req');
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-
             debugPrint('insert cart url1 = ${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}');
             debugPrint('insert cart url1 auth = ${preferencesHelper.getAuthToken()}');
             final res = await DioClient(event.context).post('${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
@@ -483,13 +482,13 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
             if (response.status == AppConstants.code_201) {
               add(const SupplierProductsEvent.setCartCountEvent());
               Vibration.vibrate();
-              Navigator.pop(event.context);
+             // Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
                 productIsInCart: true,
                 quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                productSupplierIds: '',
+                productSupplierIds: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                 totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                 productSaleId: '',
               );

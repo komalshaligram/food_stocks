@@ -50,7 +50,6 @@ import '../../ui/utils/themes/app_urls.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 
-import 'home_repository.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
@@ -104,10 +103,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
             final res = await DioClient(event.context).post(AppUrls.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
-
-//final res = _homeRepository.getProductDetailsEvent(context: event.context, productId: params: event.productId);
             ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
-
             if (response.status == AppConstants.code_200) {
               //new changes
               //0 for barcode and search
@@ -554,19 +550,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 Smartlook.instance.user.properties.putString(AppStrings.userBusinessName, value: preferences.getBusinessName());
                 Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: preferences.getPhoneNumber());
               }
-              if(state.recommendedProductsList.isEmpty){
+            //  if(state.recommendedProductsList.isEmpty){
                 add(HomeEvent.userApproveEvent(context: event.context));
                 if (!state.isAppOnMaintenance) {
                   add(HomeEvent.generalSettings(context: event.context, dialogContext: event.context, isRetryLoading: false));
                 }
                 add(const HomeEvent.getPreferencesDataEvent());
                 add(HomeEvent.getCartCountEvent(context: event.context));
-               add(HomeEvent.getMessageListEvent(context: event.context));
+                add(HomeEvent.getMessageListEvent(context: event.context));
                 add(HomeEvent.getOrderCountEvent(context: event.context));
                 add(HomeEvent.getProductSalesListEvent(context: event.context));
                 add(HomeEvent.getPermissionList(context: event.context));
                 add(HomeEvent.getRecommendationProductsListEvent(context: event.context));
-              }
+            //  }
             }
           } catch (e) {
             debugPrint(e.toString());
@@ -790,6 +786,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 add(HomeEvent.updateMaintenanceEvent(context: event.context));
                 Navigator.pop(event.dialogContext);
                 preferences.setIsAppOnMaintenance(isAppOnMaintenance: false);
+                preferences.setBankTransferDetail(details: response.data?.taviliRivchitDetails?.bankTransferInfoText??'');
                 emit(state.copyWith(isDialogOpen: false, isAppOnMaintenance: false, retryLoading: false));
                 return;
               } else {

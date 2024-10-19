@@ -211,6 +211,7 @@ debugPrint(e.toString());
             SettingResModel response = SettingResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {
+              preferences.setBankTransferDetail(details: response.data?.taviliRivchitDetails?.bankTransferInfoText??'');
 
               if(preferences.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){
                 add(ProfileMenuEvent.updateMaintenanceEvent(context: event.context));

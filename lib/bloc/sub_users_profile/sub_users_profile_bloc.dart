@@ -45,7 +45,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             return;
           }
           String imageSize = getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await pickedFile.length());
-          debugPrint('data1 final size = ${imageSize}');
+          debugPrint('data1 final size = $imageSize');
 
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
@@ -99,8 +99,8 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             AppUrls.createSubUserUrl,
             data: req,
           );
-          debugPrint('create subUser req = ${req}');
-          debugPrint('create subUser res = ${res}');
+          debugPrint('create subUser req = $req');
+          debugPrint('create subUser res = $res');
           debugPrint('url = ${AppUrls.createSubUserUrl}');
           SubUserResModel response = SubUserResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
@@ -124,9 +124,9 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             clientId: preferences.getUserId(),
             ids: [state.subUserId],
           );
-          debugPrint('delete Account req= ${req}');
+          debugPrint('delete Account req= $req');
 
-          final res = await DioClient(event.context).post('${AppUrls.deleteClientSubUserUrl}', data: req);
+          final res = await DioClient(event.context).post(AppUrls.deleteClientSubUserUrl, data: req);
 
           debugPrint('delete Account Url= ${AppUrls.deleteClientSubUserUrl}');
 
@@ -134,7 +134,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             emit(state.copyWith(isDeleteProcess: false));
             Navigator.pop(event.dialogContext);
             Navigator.pushNamed(event.context, RouteDefine.subUsersScreen.name);
-            CustomSnackBar.showSnackBar(context: event.context, title: '${AppLocalizations.of(event.context)!.success_message}', type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.success_message, type: SnackBarType.success);
           } else {
             debugPrint('${res.message}');
             emit(state.copyWith(isDeleteProcess: false));

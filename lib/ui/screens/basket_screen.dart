@@ -100,7 +100,7 @@ class BasketScreenWidget extends StatelessWidget {
                       bankTransferDialog(
                           context: context1,
                           language: state.language,
-                          text: state.bankTransferInfo ?? '',
+                          text: state.bankTransferInfo,
                           function: () {
                             bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
                           });
@@ -126,7 +126,7 @@ class BasketScreenWidget extends StatelessWidget {
                       bankTransferDialog(
                           context: context1,
                           language: state.language,
-                          text: state.bankTransferInfo ?? '',
+                          text: state.bankTransferInfo ,
                           function: () {
                             bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
                           });
@@ -681,7 +681,6 @@ class BasketScreenWidget extends StatelessWidget {
                               });
                             }
                           }
-                          ;
                         },
                         negativeOnTap: () {
                           Navigator.pop(context1);
@@ -709,7 +708,7 @@ class BasketScreenWidget extends StatelessWidget {
                   return AbsorbPointer(
                       absorbing: state.isRemoveProcess ? true : false,
                       child: CustomDialog(
-                        title: updateClearString == AppStrings.clearString ? AppLocalizations.of(context)!.you_want_clear_cart : '${AppLocalizations.of(context)!.you_want_delete_product}',
+                        title: updateClearString == AppStrings.clearString ? AppLocalizations.of(context)!.you_want_clear_cart : AppLocalizations.of(context)!.you_want_delete_product,
                         directionality: state.language,
                         positiveTitle: AppLocalizations.of(context)!.yes,
                         isProcessing: state.isRemoveProcess,

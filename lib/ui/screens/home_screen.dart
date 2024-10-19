@@ -32,16 +32,14 @@ import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../utils/themes/app_urls.dart';
-import '../widget/balance_indicator.dart';
 import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_product_list_widget.dart';
 import '../widget/common_search_widget.dart';
-import '../widget/dashboard_stats_widget.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/pesach_banner_shimmer.dart';
 import '../widget/search_item_widget.dart';
-import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
+
 
 class HomeRoute {
   static Widget get route => HomeScreen();
@@ -49,8 +47,8 @@ class HomeRoute {
 
 class HomeScreen extends StatelessWidget {
   String isSubCategory;
-
   HomeScreen({super.key, this.isSubCategory = ''});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -63,8 +61,8 @@ class HomeScreen extends StatelessWidget {
 
 class HomeScreenWidget extends StatelessWidget {
   String isNavigation = '';
-  HomeScreenWidget({super.key, this.isNavigation = ''});
 
+  HomeScreenWidget({super.key, this.isNavigation = ''});
   ScrollController controller = ScrollController();
 
   @override
@@ -258,7 +256,6 @@ class HomeScreenWidget extends StatelessWidget {
                                     child: Column(
                                       children: [
                                         80.height,
-
                                         state.pesachBannerShimmering && state.pesachBannerURL.isEmpty
                                             ? const PesachBannerShimmerWidget()
                                             : state.showPesachBanner && state.pesachBannerURL.isNotEmpty
@@ -490,6 +487,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     shrinkWrap: true,
                                     itemBuilder: (listViewContext, index) {
                                       return SearchItemWidget(
+                                          isShowSeeAll: index==state.searchList.length-1?true:false,
                                           isGuestUser: state.isGuestUser,
                                           priceOfBox: state.searchList[index].priceOfBox,
                                           salePrice: state.searchList[index].salePrice,

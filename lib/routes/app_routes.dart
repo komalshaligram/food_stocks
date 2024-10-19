@@ -21,6 +21,7 @@ import 'package:food_stock/ui/screens/store_category_screen.dart';
 import 'package:food_stock/ui/screens/supplier_products_screen.dart';
 import '../ui/screens/account_permission_screen.dart';
 import '../ui/screens/bank_info_screen.dart';
+import '../ui/screens/bank_transfer_screen.dart';
 import '../ui/screens/basket_screen.dart';
 import '../ui/screens/brands_permission_screen.dart';
 import '../ui/screens/categories_permission_screen.dart';
@@ -102,7 +103,8 @@ enum RouteDefine {
   supplierPermissionScreen,
   wayOfPaymentScreen,
   creditCardDetailsScreen,
-  manageCreditCardScreen
+  manageCreditCardScreen,
+  bankTransferScreen
 
 }
 
@@ -163,6 +165,7 @@ class AppRouting {
       RouteDefine.wayOfPaymentScreen.name: (_) => WayOfPaymentRoute.route,
       RouteDefine.creditCardDetailsScreen.name: (_) => CreditCardDetailsRoute.route,
       RouteDefine.manageCreditCardScreen.name: (_) => ManageCreditCardRoute.route,
+      RouteDefine.bankTransferScreen.name: (_) => BankTransferScreenRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

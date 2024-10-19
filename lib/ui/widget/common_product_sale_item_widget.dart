@@ -31,7 +31,6 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final String productStock;
   final bool? isSale;
 
-
   const CommonProductSaleItemWidget({
     super.key,
     this.height,
@@ -39,7 +38,6 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     required this.saleImage,
     required this.title,
     required this.description,
-
     required this.productName,
     required this.onButtonTap,
     required this.discountedPrice,
@@ -51,7 +49,6 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     this.isPesach = false,
     required this.isSale,
     this.productStock = '0',
-
   });
 
   @override
@@ -82,36 +79,36 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                   Center(
                     child: !isGuestUser
                         ? saleImage.isNotEmpty
-                        ? CachedNetworkImage(
-                      imageUrl: "${AppUrls.baseFileUrl}$saleImage",
-                      height: imageHeight,
-                      fit: BoxFit.fitHeight,
-                      placeholder: (context, url) {
-                        return CommonShimmerWidget(
-                          child: Container(
+                            ? CachedNetworkImage(
+                                imageUrl: "${AppUrls.baseFileUrl}$saleImage",
+                                height: imageHeight,
+                                fit: BoxFit.fitHeight,
+                                placeholder: (context, url) {
+                                  return CommonShimmerWidget(
+                                    child: Container(
+                                      height: imageHeight,
+                                      width: 70,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.whiteColor,
+                                        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                errorWidget: (context, error, stackTrace) {
+                                  return Image.asset(AppImagePath.imageNotAvailable5, height: imageHeight, width: double.maxFinite, fit: BoxFit.cover);
+                                },
+                              )
+                            : Image.asset(
+                                AppImagePath.imageNotAvailable5,
+                                height: imageHeight,
+                                width: 70,
+                              )
+                        : Image.asset(
+                            AppImagePath.imageNotAvailable5,
                             height: imageHeight,
                             width: 70,
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-                            ),
                           ),
-                        );
-                      },
-                      errorWidget: (context, error, stackTrace) {
-                        return Image.asset(AppImagePath.imageNotAvailable5, height: imageHeight, width: double.maxFinite, fit: BoxFit.cover);
-                      },
-                    )
-                        : Image.asset(
-                      AppImagePath.imageNotAvailable5,
-                      height: imageHeight,
-                      width: 70,
-                    )
-                        : Image.asset(
-                      AppImagePath.imageNotAvailable5,
-                      height: imageHeight,
-                      width: 70,
-                    ),
                   ),
                   2.height,
                   Text(
@@ -121,48 +118,56 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   2.height,
-                  description.isNotEmpty?Center(
-                    child: Container(
-                      width: width!-10,
-                      padding: const EdgeInsets.all(3),
-                      decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
-                      child: Text(
-                        "${parse(description).body?.text}",
-                        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor,),
-                        maxLines: 3,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ):0.height,
-                  isGuestUser ? 0.height
-                      : (productStock) == '0' || productStock =='0.0'?Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.only(top:5.0),
-                    child: Text(
-                      AppLocalizations.of(context)!.out_of_stock1,
-                      textAlign: TextAlign.center,
-                      style: AppStyles.rkBoldTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.redColor,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  )
-                      : lowStock.isNotEmpty?Text(lowStock,
-                      style: AppStyles.rkBoldTextStyle(
-                          size: AppConstants.font_12,
-                          color: AppColors.orangeColor,
-                          fontWeight: FontWeight.w400)):0.width,
+                  description.isNotEmpty
+                      ? Center(
+                          child: Container(
+                            width: width! - 10,
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                            child: Text(
+                              "${parse(description).body?.text}",
+                              style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.font_10,
+                                color: AppColors.whiteColor,
+                              ),
+                              maxLines: 3,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        )
+                      : 0.height,
+                  isGuestUser
+                      ? 0.height
+                      : (productStock) == '0' || productStock == '0.0'
+                          ? Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: Text(
+                                AppLocalizations.of(context)!.out_of_stock1,
+                                textAlign: TextAlign.center,
+                                style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.redColor, fontWeight: FontWeight.w400),
+                              ),
+                            )
+                          : lowStock.isNotEmpty
+                              ? Text(lowStock, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.orangeColor, fontWeight: FontWeight.w400))
+                              : 0.width,
                   1.height,
                   Center(child: isPesachLabelShow(isPesach!, context)),
-                  isPesach! ? 2.height :0.height,
+                  isPesach! ? 2.height : 0.height,
                   !isGuestUser
-                      ? isSale!?Center(
-                    child: Text(
-                      "${AppLocalizations.of(context)!.currency}${originalPrice?.toStringAsFixed(2)}",
-                      style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600,).copyWith(decoration: TextDecoration.lineThrough),
-                    ),
-                  ):0.width
+                      ? isSale!
+                          ? Center(
+                            child: Text(
+                              "${AppLocalizations.of(context)!.currency}${originalPrice?.toStringAsFixed(2)}",
+                              style: AppStyles.rkBoldTextStyle(
+                                size: AppConstants.font_12,
+                                color: AppColors.blackColor,
+                                fontWeight: FontWeight.w600,
+                              ).copyWith(decoration: TextDecoration.lineThrough),
+                            ),
+                          )
+                          : 0.width
                       : 0.width,
                 ],
               ),
@@ -170,7 +175,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
             !isGuestUser
                 ? Center(
                     child: CommonProductButtonWidget(
-                      title: isSale!?"${AppLocalizations.of(context)!.currency}${discountedPrice.toStringAsFixed(2)}":"${AppLocalizations.of(context)!.currency}${originalPrice?.toStringAsFixed(2)}",
+                      title: isSale! ? "${AppLocalizations.of(context)!.currency}${discountedPrice.toStringAsFixed(2)}" : "${AppLocalizations.of(context)!.currency}${originalPrice?.toStringAsFixed(2)}",
                       onPressed: onButtonTap,
                       // height: 35,
                       width: 110,

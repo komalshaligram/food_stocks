@@ -616,21 +616,20 @@ class CompanyProductsBloc
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
                 productIsInCart: true,
-                quantity:  _productQuantity,
+                quantity:   productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                     productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                     totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
-                productSaleId: '',
+                productSaleId:  productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId,
               );
-              emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
-
-
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ?? response.message!,
                       event.context),
                   type: SnackBarType.success);
+              emit(state.copyWith(
+                  isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
+
             } else {
               Navigator.pop(event.context);
               emit(state.copyWith(isLoading: false));
@@ -715,7 +714,7 @@ class CompanyProductsBloc
                     productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                     totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                 productIsInCart: true,
-                productSaleId: '',
+                productSaleId:  productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId,
               );
               add(const CompanyProductsEvent.getCartCountEvent());
 

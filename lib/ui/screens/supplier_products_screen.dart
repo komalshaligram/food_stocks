@@ -88,9 +88,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 },
                 trailingWidget: GestureDetector(
                     onTap: () {
-                      context
-                          .read<SupplierProductsBloc>()
-                          .add(const SupplierProductsEvent.getGridListView());
+                      context.read<SupplierProductsBloc>().add(const SupplierProductsEvent.getGridListView());
                     },
                     child:
                         Icon(state.isGridView ? Icons.list : Icons.grid_view)),
@@ -286,7 +284,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                                   .productStock
                                                                   .toString(),
                                                                 isSaleOn: state.isSaleOn
-
                                                             );
                                                           } else {
                                                             Navigator.pushNamed(
@@ -361,6 +358,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                               shrinkWrap: true,
                               itemBuilder: (listViewContext, index) {
                                 return SearchItemWidget(
+                                    isShowSeeAll: index==state.searchList.length-1?true:false,
                                   saleDesc: state.searchList[index].salesDesc,
                                   salePrice: state.searchList[index].salePrice,
                                   isPesach: state.searchList[index].isPesach,
@@ -503,8 +501,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   .searchList[index].searchId,
                                               isBarcode: true,
                                             isSaleOn: state.isSaleOn
-
-
                                           );
                                         } else {
                                           Navigator.pushNamed(context,
@@ -577,15 +573,13 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             showProductDetails(
                               productListIndex: 0,
                                 context: context,
-                                // productStock: '1',
                                 productId: scanResult,
                                 isBarcode: true,
                                 productStock: '1',
                               isSaleOn: state.isSaleOn
                             );
                           } else {
-                            Navigator.pushNamed(
-                                context, RouteDefine.connectScreen.name);
+                            Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                           }
                         }
                       },

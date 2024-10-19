@@ -26,9 +26,9 @@ class AppStrings {
   static const rivchitClientErrorString = 'MESSAGE.RIVCHITCLIENTERROR';
 
   //methods
-  static const post_method = 'POST';
-  static const get_method = 'GET';
-  static const put_method = 'PUT';
+  static const postMethod = 'POST';
+  static const getMethod = 'GET';
+  static const putMethod = 'PUT';
 
   //sound path
   static const deleteSound = 'audio/delete_sound.mp3';
@@ -428,8 +428,7 @@ class AppStrings {
         return AppLocalizations.of(context)!.deduction_is_negative;
       case 'something_is_wrong_try_again':
         return AppLocalizations.of(context)!.something_is_wrong_try_again;
-      case 'loginsuccessmessage':
-        return AppLocalizations.of(context)!.login_success_message;
+
       case 'accountnotapprove':
         return AppLocalizations.of(context)!.account_not_approve;
       case 'rivchitcredentialsnotset':

@@ -1,0 +1,82 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/bloc/bank_transfer/bank_transfer_bloc.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../utils/themes/app_colors.dart';
+import '../utils/themes/app_constants.dart';
+import '../utils/themes/app_styles.dart';
+
+
+class BankTransferScreenRoute {
+  static Widget get route => const BankTransferScreen();
+}
+
+class BankTransferScreen extends StatelessWidget {
+  const BankTransferScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => BankTransferBloc()..add(BankTransferEvent.getBankTransferInfoEvent(context: context)),
+      child: const BankTransferWidget(),
+    );
+  }
+}
+
+class BankTransferWidget extends StatefulWidget {
+  const BankTransferWidget({super.key});
+
+  @override
+  State<BankTransferWidget> createState() => _BankTransferWidgetState();
+}
+
+class _BankTransferWidgetState extends State<BankTransferWidget> {
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<BankTransferBloc, BankTransferState>(
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: AppColors.whiteColor,
+          appBar: AppBar(
+            surfaceTintColor: AppColors.whiteColor,
+            leading: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
+            title: Align(
+              alignment:
+              context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+              child: Text(
+                AppLocalizations.of(context)!.bank_transfer_information,
+                style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.smallFont,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            backgroundColor: AppColors.whiteColor,
+            titleSpacing: 0,
+            elevation: 0,
+          ),
+          body: SafeArea(
+            child: Container(
+              alignment:
+              context.rtl ? Alignment.topRight : Alignment.topLeft,
+              margin: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                border: Border.all(color: AppColors.borderColor)
+              ),
+              padding: const EdgeInsets.only(left:10.0,right: 10,top: 8,bottom: 8),
+              child: state.isLoading?const CircularProgressIndicator():Text(state.bankTransferDetails),
+            ),
+          ),
+
+        );
+      },
+    );
+  }
+}

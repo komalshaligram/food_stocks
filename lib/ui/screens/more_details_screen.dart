@@ -104,7 +104,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                         builder: (context1) {
                                           return ValueListenableBuilder(
                                               valueListenable: listNotifier,
-                                              builder: (context, _content, child) {
+                                              builder: (context, content, child) {
                                                 return Padding(
                                                   padding: const EdgeInsets.all(15.0),
                                                   child: SizedBox(
@@ -319,7 +319,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                 bloc.add(MoreDetailsEvent.registrationApiEvent(context: context));
                                               }
                                             } else {
-                                              CustomSnackBar.showSnackBar(context: context, title: '${AppLocalizations.of(context)!.please_enter_city}', type: SnackBarType.failure);
+                                              CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_city, type: SnackBarType.failure);
                                             }
                                           },
                                     fontColors: AppColors.whiteColor,

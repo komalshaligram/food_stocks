@@ -11,7 +11,7 @@ class BrandsPermissionState with _$BrandsPermissionState{
     required String subUserId,
   }) = _BrandsPermissionState;
 
-  factory BrandsPermissionState.initial() => BrandsPermissionState(
+  factory BrandsPermissionState.initial() => const BrandsPermissionState(
       isShimmering: false,
       brandPermissionList : [],
       isRefresh: false,

@@ -65,7 +65,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
           ),
           body: SingleChildScrollView(
             child: state.isShimmering && state.isUpdate
-                ? ProfileScreenShimmerWidget(
+                ? const ProfileScreenShimmerWidget(
                     isProfileImage: false,
                   )
                 : Padding(

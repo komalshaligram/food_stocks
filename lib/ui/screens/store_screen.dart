@@ -92,7 +92,6 @@ class StoreScreenWidget extends StatelessWidget {
               if (!state.isAppOnMaintenance) {
                 bloc.add(StoreEvent.generalSettings(context: context, dialogContext: context,isRetryLoading: false));
               }
-              bloc.add(StoreEvent.getProductCategoriesListEvent(context: context));
               bloc.add(StoreEvent.getCompaniesListEvent(context: context));
               bloc.add(StoreEvent.getSuppliersListEvent(context: context));
               bloc.add(StoreEvent.getProductSalesListEvent(context: context));
@@ -548,7 +547,7 @@ class StoreScreenWidget extends StatelessWidget {
                                         state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
                                       }
                                       bloc.add(const StoreEvent.changeCategoryExpansion());
-                                    });
+                                    },   isShowSeeAll: index==state.searchList.length-1?true:false,);
                               },
                             ),
                       onScanTap: () async {

@@ -23,6 +23,7 @@ class SharedPreferencesHelper {
   static const String orderId = 'orderId';
   static const String gridView = 'gridView';
   static const String bottleTax = 'bottleTax';
+  static const String bankTransferDetail = 'bankTransferDetail';
   static const String emailId = 'userEmailId';
   static const String guestUser = 'guestUser';
   static const String companyProductGrid = 'isCompanyProductGrid';
@@ -186,16 +187,16 @@ class SharedPreferencesHelper {
     await prefs.setString(phoneNumber, userPhoneNumber);
   }
 
-  Future<void> setWalletId({required String UserWalletId}) async {
-    await prefs.setString(walletId, UserWalletId);
+  Future<void> setWalletId({required String userWalletId}) async {
+    await prefs.setString(walletId, userWalletId);
   }
 
-  Future<void> setApiUrl({required String ApiUrl}) async {
-    await prefs.setString(reqApiUrl, ApiUrl);
+  Future<void> setApiUrl({required String apiUrl}) async {
+    await prefs.setString(reqApiUrl, apiUrl);
   }
 
-  Future<void> setReqPram({required String ReqPram}) async {
-    await prefs.setString(apiPram, ReqPram);
+  Future<void> setReqPram({required String reqPram}) async {
+    await prefs.setString(apiPram, reqPram);
   }
 
   Future<void> setIsAppOnMaintenance({required bool isAppOnMaintenance}) async {
@@ -209,6 +210,9 @@ class SharedPreferencesHelper {
   }
   Future<void> setBottleTax({required double bottleDeposit}) async {
     await prefs.setDouble(bottleTax, bottleDeposit);
+  }
+  Future<void> setBankTransferDetail({required String details}) async {
+    await prefs.setString(bankTransferDetail, details);
   }
   Future<void> setIsGuestUser({bool isGuestUser = false}) async {
     await prefs.setBool(guestUser, isGuestUser);
@@ -516,6 +520,9 @@ class SharedPreferencesHelper {
   }
   bool getCanSeeFormsFiles() {
     return prefs.getBool(seeFormsFiles) ?? true;
+  }
+ String getBankTransferDetail()  {
+    return prefs.getString(bankTransferDetail)??'';
   }
 
   bool getCanManageSubUser() {

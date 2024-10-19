@@ -339,7 +339,7 @@
 "already_linked_with_sale":"קיים כבר מבצע לא ניתן להוריד את הספק",
 "already_exist":"הודעה באותו שם קיימת כבר",
 "wallet_already_exist":"ארנק קיים כבר",
-"not_enough_balance":"אין מספיק ייתרה",
+"not_enough_balance":"אין לך מספיק ייתרה בארנק",
 "invalid_amount":"סכום לא תקין",
 "deduction_is_negative":"החזרים יוצגו במינוס בארנק",
 "missing_quantity_not_more_than_original": "כמות לא יכולה להיות יותר מהכמות המקורית",
@@ -548,5 +548,8 @@
   "credit_card_payment_failed": "תשלום בכרטיס אשראי נכשל",
   "my_invoices" : "החשבוניות שלי",
   "savings_for_sales": "Savings for sales",
-  "not_minimum_order": "Not minimum order"
+  "not_minimum_order": "Not minimum order",
+  "show_all_results": "הצג את כל התוצאות ",
+  "bank_transfer_information": "פרטי חשבון להעברה בנקאית"
+
 }
