@@ -996,6 +996,7 @@ class StoreScreenWidget extends StatelessWidget {
                                             context.read<StoreBloc>().add(StoreEvent.decreaseQuantityOfProduct(context: context1));
                                           }
                                         },
+                                        onCloseTap: (){Navigator.pop(context);},
                                       ),
                                       10.height,
                                       state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn)

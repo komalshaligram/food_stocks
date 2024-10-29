@@ -52,6 +52,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       }
       else {
         if (event is _getAllCartEvent) {
+          debugPrint('cartId____${preferencesHelper.getAvailablePayment()}');
           emit(state.copyWith(isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(),updatePaymentMethod: false,isPaymentFail: false,
               isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(),isAllPaymentAvailable: preferencesHelper.getAvailablePayment()));
           debugPrint('cartId____${preferencesHelper.getAvailablePayment()}');
@@ -116,7 +117,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 ));
               });
 
-              debugPrint('productStockList____$productStockList');
 
               await preferencesHelper.setCartCount(
                   count: temp.isEmpty
@@ -131,9 +131,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 bottleTax: response.data?.bottleTax ?? 0,
                 basketProductList: temp,
                 productStockList: productStockList,
-                totalPayment: response.data?.cart?.first.totalAmount ?? 0,
+                totalPayment: response.data?.cart?.first.totalAmount!.toDouble() ?? 0,
                 supplierCount: response.data?.cart?.first.suppliers ?? 1,
-                isAnimation: false,
+            //    isAnimation: false,
               ));
             } else {
               emit(state.copyWith(isShimmering: false));
@@ -339,7 +339,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               UpdateCartResModel response = UpdateCartResModel.fromJson(res);
               if (response.status == AppConstants.code_201) {
                 Vibration.vibrate();
-                add(BasketEvent.getAllCartEvent(context: event.context));
+
+              //  add(BasketEvent.getAllCartEvent(context: event.context));
                 List<List<ProductStockModel>> productStockList =
                 state.productStockList.toList(growable: true);
                 productStockList[state.productListIndex][state
@@ -352,7 +353,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                       productSaleId:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId,
                     );
-                Navigator.pop(event.context);
                 emit(state.copyWith(
                     isLoading: false,
                     productStockList: productStockList,

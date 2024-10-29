@@ -111,10 +111,10 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               }
 
               else{
-                if(businessName == '' || businessName == null  ){
+                if(businessName == '' || businessName == null){
                   Smartlook.instance.user.properties.putString(AppStrings.userBusinessName ,value:response.data?.user?.clientDetail?.bussinessName ?? '');
                 }
-                else if(phoneNumber == '' || phoneNumber == null ){
+                else if(phoneNumber == '' || phoneNumber == null){
                   Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum ,value:response.data?.user?.phoneNumber);
                 }
               }

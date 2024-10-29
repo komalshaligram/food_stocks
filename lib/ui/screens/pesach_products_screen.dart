@@ -586,6 +586,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                             context.read<PesachProductsBloc>().add(PesachProductsEvent.decreaseQuantityOfProduct(context: context1));
                                           }
                                         },
+                                        onCloseTap: (){Navigator.pop(context);},
                                       ),
                                       state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn),
                                       10.height

@@ -1285,6 +1285,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 }
 
                               },
+                              onCloseTap: (){Navigator.pop(context);},
                             ),
                             0.height,
                             state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context,isSaleOn)

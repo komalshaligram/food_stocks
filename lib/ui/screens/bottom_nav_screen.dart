@@ -64,7 +64,6 @@ final String basketScreen;
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
-          debugPrint('index final :${state.index}');
           return WillPopScope(
             onWillPop: () {
               if (state.index == 0) {

@@ -164,7 +164,7 @@ class PushNotificationService {
 
     String? fcmToken = '';
 
-    fcmToken = await FirebaseMessaging.instance.getToken();
+    fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getAPNSToken();
 
     SharedPreferencesHelper preferences =
     SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());

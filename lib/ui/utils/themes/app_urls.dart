@@ -1,12 +1,12 @@
 class AppUrls {
-  static const String baseUrl = 'https://api.foodstock.shtibel.com/api';
+ //static const String baseUrl = 'https://api.foodstock.shtibel.com/api';
 
   ///prodUrl
-  //static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///devUrl
+  static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///devUrl
   //static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
   static const String baseFileUrl = 'https://foodstock-buckets.s3.il-central-1.amazonaws.com/';
   static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
-  static const String loginOTPUrl = '/v1/auth/clientLogin';
+    static const String loginOTPUrl = '/v1/auth/clientLogin';
   //static const String registrationUrl = '/v1/clients/createClient';
   static const String fileUploadUrl = '/v1/files/upload';
   static const String fileUpdateUrl = '/v1/admin/updateFiles';
@@ -84,7 +84,6 @@ class AppUrls {
   // static const String deleteCreditCardUrl = '/v1/clients/delete-credit-card-details';
   // static const String bdiUrl = '/v1/clients/checkBdi'; //getting payment options
   //static const String updateClientCredits = '/v1/clients/updateClientCredits/'; //navigation after successful registration
-
   static const String updateCreditCardUrl = '/v2/clients/update-credit-card-details/';
   static const String deleteCreditCardUrl = '/v2/clients/delete-credit-card-details';
   static const String verifyAgentUrl = '/v2/clients/verifyAgent';

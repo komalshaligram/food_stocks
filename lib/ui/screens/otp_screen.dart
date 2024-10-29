@@ -110,6 +110,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                         child:SizedBox(
                           height: 80,
                           child: PinFieldAutoFill(
+                            keyboardType: TextInputType.number,
                             decoration: BoxLooseDecoration(
                               textStyle: const TextStyle(fontSize: AppConstants.font_30, color: Colors.black),
                               strokeColorBuilder: FixedColorBuilder(AppColors.mainColor),
@@ -121,7 +122,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                             codeLength: 4,
                             onCodeSubmitted: (code) {
                               bloc.add(OtpEvent.changeOtpEvent(otp: code));
-                              SystemChannels.textInput.invokeMethod("TextInput.show");
+                           //   SystemChannels.textInput.invokeMethod("TextInput.show");
                             },
                             onCodeChanged: (code) {
                               _code= code!;

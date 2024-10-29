@@ -371,7 +371,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   productSupplierIds: productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                   quantity: productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                   totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
-                  productSaleId: '',
+                  productSaleId: productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId,
                 );
                 emit(state.copyWith(isLoading: false, productStockList: productStockList));
 
@@ -415,7 +415,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                   productSupplierIds: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                   totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
-                  productSaleId: '',
+                  productSaleId:productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId,
                 );
 
                 emit(state.copyWith(isLoading: false, productStockList: productStockList, isCartCountChange: false));
@@ -532,7 +532,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               preferences.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
               preferences.setBusinessName(businessName: response.data?.clients?.first.clientDetail?.bussinessName ?? '');
               preferences.setEmailId(userEmailId: response.data?.clients?.first.email ?? '');
-              debugPrint('Payment Types:${response.data?.clients?.first.clientDetail?.availablePaymentTypes.toSet()}');
+              debugPrint('Payment Types:${response.data?.clients?.first.clientDetail?.isAvailableAllPayments.toString()}');
               if (!preferences.getSubUser()) {
                 preferences.setUserImageUrl(imageUrl: response.data?.clients?.first.profileImage ?? '');
                 emit(
@@ -736,7 +736,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } catch (exc) {
             emit(state.copyWith(isShimmering: false));
           }
-        } /*else if (event is _checkVersionOfAppEvent) {
+        } else if (event is _checkVersionOfAppEvent) {
           final checker = StoreVersionChecker();
           checker.checkUpdate().then((value) {
             if (value.canUpdate && Platform.isAndroid) {
@@ -745,7 +745,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               customShowUpdateDialog(event.context, preferences.getAppLanguage(), value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
             }
           });
-        }*/ else if (event is _relatedProductsEvent) {
+        } else if (event is _relatedProductsEvent) {
           emit(state.copyWith(isRelatedShimmering: true));
           final res = await DioClient(event.context).post(AppUrls.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
 
@@ -801,7 +801,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
               emit(state.copyWith(language: preferences.getAppLanguage(), pesachBannerShimmering: false, pesachBannerURL: response.data?.pesachBanner ?? '', showPesachBanner: response.data?.isShowPesachBanner ?? false, bottlePrice: response.data?.bottlePrice ?? 0.0, isIncludedVat: preferences.getIsIncludedVat(), isSaleOn: preferences.getShowSale(), retryLoading: false, isAppOnMaintenance: preferences.getAppOnMaintenance()));
             } else {
-              emit(state.copyWith(pesachBannerShimmering: false, retryLoading: false));
+              emit(state.copyWith(pesachBannerShimmering: false , retryLoading: false));
             }
           } on ServerException {
             emit(state.copyWith(pesachBannerShimmering: false, retryLoading: false));

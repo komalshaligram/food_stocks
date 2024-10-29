@@ -744,6 +744,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
            bottom: false,
            child: DraggableScrollableSheet(
              expand: true,
+             snap: true,
              maxChildSize: 1 -
                  (MediaQuery.of(context).viewPadding.top /
                      getScreenHeight(context)*0.2),
@@ -879,6 +880,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                            context: context1));
                                  }
                                },
+                               onCloseTap: (){Navigator.pop(context);},
                              ),
                              state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context,isSaleOn)
                            ],

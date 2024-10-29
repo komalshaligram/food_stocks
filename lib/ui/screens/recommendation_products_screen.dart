@@ -493,11 +493,13 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                         onQuantityIncreaseTap: () {
                                           context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.increaseQuantityOfProduct(context: context1));
                                         },
+
                                         onQuantityDecreaseTap: () {
                                           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
                                             context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.decreaseQuantityOfProduct(context: context1));
                                           }
                                         },
+                                        onCloseTap: (){Navigator.pop(context);},
                                       ),
                                       state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn)
                                     ],

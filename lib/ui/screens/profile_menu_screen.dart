@@ -72,7 +72,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
               bloc.add(ProfileMenuEvent.getPermissionList(context: context));
               bloc.add(const ProfileMenuEvent.getPreferenceDataEvent());
               bloc.add(const ProfileMenuEvent.getAppLanguage());
-                bloc.add(ProfileMenuEvent.generalSettings(context: context,dialogContext: context,isRetryLoading: false));
+              bloc.add(ProfileMenuEvent.generalSettings(context: context,dialogContext: context,isRetryLoading: false));
               bloc.add(ProfileMenuEvent.getProfileDetailsEvent(context: context));
             },
             child: Scaffold(

@@ -791,7 +791,7 @@ class HomeScreenWidget extends StatelessWidget {
                                           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
                                             context.read<HomeBloc>().add(HomeEvent.decreaseQuantityOfProduct(context: context1));
                                           }
-                                        },
+                                        },   onCloseTap: (){Navigator.pop(context);},
                                       ),
                                       state.relatedProductList.isEmpty ? 0.height : relatedProductWidget(context1, state.relatedProductList, context, scrollController, isSaleOn),
                                     ],

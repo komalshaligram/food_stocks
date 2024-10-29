@@ -23,7 +23,7 @@ mixin _$BottomNavEvent {
     required TResult Function(BuildContext context) updateCartCountEvent,
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
     required TResult Function(BuildContext context) getPreferencesDataEvent,
@@ -35,7 +35,7 @@ mixin _$BottomNavEvent {
     TResult? Function(BuildContext context)? updateCartCountEvent,
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
   }) =>
@@ -46,7 +46,7 @@ mixin _$BottomNavEvent {
     TResult Function(BuildContext context)? updateCartCountEvent,
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
     required TResult orElse(),
@@ -57,7 +57,7 @@ mixin _$BottomNavEvent {
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_NavigateToStoreScreenEvent value)
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     required TResult Function(_seeWalletPermissionUpdateEvent value)
         seeWalletPermissionUpdateEvent,
     required TResult Function(_getPreferencesDataEvent value)
@@ -69,7 +69,7 @@ mixin _$BottomNavEvent {
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_NavigateToStoreScreenEvent value)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult? Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
@@ -80,7 +80,7 @@ mixin _$BottomNavEvent {
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_NavigateToStoreScreenEvent value)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
@@ -205,7 +205,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     required TResult Function(BuildContext context) updateCartCountEvent,
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
     required TResult Function(BuildContext context) getPreferencesDataEvent,
@@ -220,7 +220,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult? Function(BuildContext context)? updateCartCountEvent,
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
   }) {
@@ -234,7 +234,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult Function(BuildContext context)? updateCartCountEvent,
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
     required TResult orElse(),
@@ -251,7 +251,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_NavigateToStoreScreenEvent value)
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     required TResult Function(_seeWalletPermissionUpdateEvent value)
         seeWalletPermissionUpdateEvent,
     required TResult Function(_getPreferencesDataEvent value)
@@ -266,7 +266,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_NavigateToStoreScreenEvent value)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult? Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
@@ -280,7 +280,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_NavigateToStoreScreenEvent value)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
@@ -379,7 +379,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     required TResult Function(BuildContext context) updateCartCountEvent,
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
     required TResult Function(BuildContext context) getPreferencesDataEvent,
@@ -394,7 +394,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult? Function(BuildContext context)? updateCartCountEvent,
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
   }) {
@@ -408,7 +408,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult Function(BuildContext context)? updateCartCountEvent,
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
     required TResult orElse(),
@@ -425,7 +425,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_NavigateToStoreScreenEvent value)
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     required TResult Function(_seeWalletPermissionUpdateEvent value)
         seeWalletPermissionUpdateEvent,
     required TResult Function(_getPreferencesDataEvent value)
@@ -440,7 +440,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_NavigateToStoreScreenEvent value)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult? Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
@@ -454,7 +454,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_NavigateToStoreScreenEvent value)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
@@ -541,7 +541,7 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
 
   @override
   String toString() {
-    return 'BottomNavEvent.NavigateToStoreScreenEvent(context: $context, storeScreen: $storeScreen, basketScreen: $basketScreen)';
+    return 'BottomNavEvent.navigateToStoreScreenEvent(context: $context, storeScreen: $storeScreen, basketScreen: $basketScreen)';
   }
 
   @override
@@ -574,12 +574,12 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     required TResult Function(BuildContext context) updateCartCountEvent,
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
     required TResult Function(BuildContext context) getPreferencesDataEvent,
   }) {
-    return NavigateToStoreScreenEvent(context, storeScreen, basketScreen);
+    return navigateToStoreScreenEvent(context, storeScreen, basketScreen);
   }
 
   @override
@@ -589,11 +589,11 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     TResult? Function(BuildContext context)? updateCartCountEvent,
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
   }) {
-    return NavigateToStoreScreenEvent?.call(context, storeScreen, basketScreen);
+    return navigateToStoreScreenEvent?.call(context, storeScreen, basketScreen);
   }
 
   @override
@@ -603,13 +603,13 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     TResult Function(BuildContext context)? updateCartCountEvent,
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
     required TResult orElse(),
   }) {
-    if (NavigateToStoreScreenEvent != null) {
-      return NavigateToStoreScreenEvent(context, storeScreen, basketScreen);
+    if (navigateToStoreScreenEvent != null) {
+      return navigateToStoreScreenEvent(context, storeScreen, basketScreen);
     }
     return orElse();
   }
@@ -620,13 +620,13 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_NavigateToStoreScreenEvent value)
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     required TResult Function(_seeWalletPermissionUpdateEvent value)
         seeWalletPermissionUpdateEvent,
     required TResult Function(_getPreferencesDataEvent value)
         getPreferencesDataEvent,
   }) {
-    return NavigateToStoreScreenEvent(this);
+    return navigateToStoreScreenEvent(this);
   }
 
   @override
@@ -635,12 +635,12 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_NavigateToStoreScreenEvent value)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult? Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
   }) {
-    return NavigateToStoreScreenEvent?.call(this);
+    return navigateToStoreScreenEvent?.call(this);
   }
 
   @override
@@ -649,14 +649,14 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_NavigateToStoreScreenEvent value)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
     required TResult orElse(),
   }) {
-    if (NavigateToStoreScreenEvent != null) {
-      return NavigateToStoreScreenEvent(this);
+    if (navigateToStoreScreenEvent != null) {
+      return navigateToStoreScreenEvent(this);
     }
     return orElse();
   }
@@ -754,7 +754,7 @@ class _$seeWalletPermissionUpdateEventImpl
     required TResult Function(BuildContext context) updateCartCountEvent,
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
     required TResult Function(BuildContext context) getPreferencesDataEvent,
@@ -769,7 +769,7 @@ class _$seeWalletPermissionUpdateEventImpl
     TResult? Function(BuildContext context)? updateCartCountEvent,
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
   }) {
@@ -783,7 +783,7 @@ class _$seeWalletPermissionUpdateEventImpl
     TResult Function(BuildContext context)? updateCartCountEvent,
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
     required TResult orElse(),
@@ -800,7 +800,7 @@ class _$seeWalletPermissionUpdateEventImpl
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_NavigateToStoreScreenEvent value)
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     required TResult Function(_seeWalletPermissionUpdateEvent value)
         seeWalletPermissionUpdateEvent,
     required TResult Function(_getPreferencesDataEvent value)
@@ -815,7 +815,7 @@ class _$seeWalletPermissionUpdateEventImpl
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_NavigateToStoreScreenEvent value)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult? Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
@@ -829,7 +829,7 @@ class _$seeWalletPermissionUpdateEventImpl
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_NavigateToStoreScreenEvent value)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
@@ -929,7 +929,7 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
     required TResult Function(BuildContext context) updateCartCountEvent,
     required TResult Function(
             BuildContext context, String storeScreen, String basketScreen)
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
     required TResult Function(BuildContext context) getPreferencesDataEvent,
@@ -944,7 +944,7 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
     TResult? Function(BuildContext context)? updateCartCountEvent,
     TResult? Function(
             BuildContext context, String storeScreen, String basketScreen)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
   }) {
@@ -958,7 +958,7 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
     TResult Function(BuildContext context)? updateCartCountEvent,
     TResult Function(
             BuildContext context, String storeScreen, String basketScreen)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
     required TResult orElse(),
@@ -975,7 +975,7 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_NavigateToStoreScreenEvent value)
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     required TResult Function(_seeWalletPermissionUpdateEvent value)
         seeWalletPermissionUpdateEvent,
     required TResult Function(_getPreferencesDataEvent value)
@@ -990,7 +990,7 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_NavigateToStoreScreenEvent value)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult? Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
@@ -1004,7 +1004,7 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_NavigateToStoreScreenEvent value)?
-        NavigateToStoreScreenEvent,
+        navigateToStoreScreenEvent,
     TResult Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,

@@ -889,6 +889,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         context: context1));
                                           }
                                         },
+                                        onCloseTap: (){Navigator.pop(context);},
                                       ),
                                       state.relatedProductList.isEmpty
                                           ? 0.width

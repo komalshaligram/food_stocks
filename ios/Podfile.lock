@@ -109,7 +109,7 @@ PODS:
     - Flutter
   - flutter_localization (0.0.1):
     - Flutter
-  - flutter_smartlook (4.1.23):
+  - flutter_smartlook (4.1.25):
     - Flutter
   - GoogleDataTransport (9.4.1):
     - GoogleUtilities/Environment (~> 7.7)
@@ -311,7 +311,7 @@ SPEC CHECKSUMS:
   flutter_barcode_scanner: 7a1144744c28dc0c57a8de7218ffe5ec59a9e4bf
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
   flutter_localization: f43b18844a2b3d2c71fd64f04ffd6b1e64dd54d4
-  flutter_smartlook: 55a0dab1a117fcba312e15bf29a6a6c32b6eeeca
+  flutter_smartlook: d69a8835090a32f8a1fb96e248293c7ea2cbfb4e
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   image_cropper: a3291c624a953049bc6a02e1f8c8ceb162a24b25
