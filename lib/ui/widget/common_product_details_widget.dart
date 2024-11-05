@@ -37,8 +37,9 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final bool isBottle;
   final bool isIncludedVat;
   final Function() onCloseTap;
+  final bool isFromBasketScreen;
 
-  const CommonProductDetailsWidget({super.key, required this.context, required this.productImages, required this.productStock, required this.productUnitPrice, required this.bottleTax, required this.isBottle, this.isLoading = false, required this.productDetails, required this.imageOnTap, required this.scrollController, required this.onQuantityIncreaseTap, required this.onQuantityDecreaseTap, required this.onQuantityChanged, required this.addToOrderTap, required this.productPrice, required this.productQuantity, required this.isSubUserAddToBasket, required this.totalBottleDeposit, required this.isIncludedVat, required this.onCloseTap});
+  const CommonProductDetailsWidget({super.key, required this.context, required this.productImages, required this.productStock, required this.productUnitPrice, required this.bottleTax, required this.isBottle, this.isLoading = false, required this.productDetails, required this.imageOnTap, required this.scrollController, required this.onQuantityIncreaseTap, required this.onQuantityDecreaseTap, required this.onQuantityChanged, required this.addToOrderTap, required this.productPrice, required this.productQuantity, required this.isSubUserAddToBasket, required this.totalBottleDeposit, required this.isIncludedVat, required this.onCloseTap,this.isFromBasketScreen = false});
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +58,24 @@ class CommonProductDetailsWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           GestureDetector(
+            onVerticalDragDown: (detail){
+
+            },
+            onVerticalDragStart: (detail){
+              if(isFromBasketScreen){
+                onCloseTap();
+              }
+            },
+            onVerticalDragEnd: (detail){
+              if(isFromBasketScreen){
+                onCloseTap();
+              }
+            },
             onVerticalDragUpdate: (dragDetails) {
               debugPrint('onVerticalDragUpdate1');
-              onCloseTap();
-            },
-            onPanUpdate: (detail) {
-              debugPrint('detail:$detail');
-              Navigator.pop(context);
+              if(isFromBasketScreen){
+                onCloseTap();
+              }
             },
             child: Column(
               children: [
@@ -85,7 +97,9 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     ),
                     Expanded(
                       child: GestureDetector(
-                        onTap: onCloseTap,
+                        onTap: isFromBasketScreen?onCloseTap:(){
+                          Navigator.pop(context);
+                        },
                         child: Icon(
                           Icons.close,
                           size: 36,

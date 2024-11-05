@@ -65,7 +65,7 @@ class HomeState with _$HomeState {
       cartCount: 0,
       messageCount: 0,
       productSalesList: [],
-      isProductSaleShimmering: false,
+      isProductSaleShimmering: true,
       isLoading: false,
       isProductLoading: false,
       productDetails: [],

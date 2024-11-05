@@ -116,8 +116,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
               },
             ),
           );
-          debugPrint('termCondition url = ${AppUrls.baseUrl}${AppUrls.termsConditionUrl}');
-          debugPrint('termCondition response ____$res');
+
 
           TermsConditionResModel response =
           TermsConditionResModel.fromJson(res);
@@ -132,7 +131,10 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           }else{
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: response.message.toString(),
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message??'',
+                    event.context),
                 type: SnackBarType.failure);
             emit(state.copyWith(isApiShimmering: false,));
           }

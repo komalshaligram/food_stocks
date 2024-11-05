@@ -437,7 +437,7 @@ class StoreScreenWidget extends StatelessWidget {
                               ),
                       ),
                     ),
-                    CommonSearchWidget(
+                   /* CommonSearchWidget(
                       onCloseTap: () {
                         bloc.add(const StoreEvent.changeCategoryExpansion(isOpened: false));
                       },
@@ -560,6 +560,129 @@ class StoreScreenWidget extends StatelessWidget {
                           } else {
                             Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                           }
+                        }
+                      },
+                    ),*/
+                    CommonSearchWidget(
+                      isFilterTap: true,
+                      isCategoryExpand: state.isCategoryExpand,
+                      isSearching: state.isSearching,
+                      onFilterTap: () {
+                        bloc.add(const StoreEvent.changeCategoryExpansion());
+                      },
+                      onCloseTap: () {
+                        bloc.add(const StoreEvent.changeCategoryExpansion(isOpened: false));
+                      },
+                      onSearchTap: () {
+                        debugPrint('onSearchTap');
+                        if (state.searchController.text.isNotEmpty) {
+                          bloc.add(const StoreEvent.changeCategoryExpansion(isOpened: true));
+                        }
+                      },
+                      onSearch: (String search) {
+                        debugPrint('onSearch');
+                        if (search.length > 1) {
+                          bloc.add(const StoreEvent.changeCategoryExpansion(isOpened: true));
+                          bloc.add(StoreEvent.globalSearchEvent(context: context));
+                        }
+                      },
+                      onSearchSubmit: (String search) {
+                        debugPrint('onSearchSubmit');
+                        Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                      },
+                      onOutSideTap: () {
+                        bloc.add(const StoreEvent.changeCategoryExpansion(isOpened: false));
+                      },
+                      onSearchItemTap: () {
+                        bloc.add(const StoreEvent.changeCategoryExpansion());
+                      },
+                      controller: state.searchController,
+                      searchList: state.searchList,
+                      searchResultWidget: state.searchList.isEmpty
+                          ? Center(
+                        child: Text(
+                          AppLocalizations.of(context)!.search_result_not_found,
+                          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                        ),
+                      )
+                          : ListView.builder(
+                        itemCount: state.searchList.length,
+                        shrinkWrap: true,
+                        itemBuilder: (listViewContext, index) {
+                          return SearchItemWidget(
+                              isShowSeeAll: index==state.searchList.length-1?true:false,
+                              isGuestUser: state.isGuestUser,
+                              priceOfBox: state.searchList[index].priceOfBox,
+                              salePrice: state.searchList[index].salePrice,
+                              saleDesc: state.searchList[index].salesDesc,
+                              isPesach: state.searchList[index].isPesach,
+                              lowStock: state.searchList[index].lowStock.toString(),
+                              numberOfUnits: state.searchList[index].numberOfUnits,
+                              productStock: state.searchList[index].productStock.toString(),
+                              context: context,
+                              searchName: state.searchList[index].name,
+                              searchImage: state.searchList[index].image,
+                              searchType: state.searchList[index].searchType,
+                              isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
+                              isLastItem: state.searchList.length - 1 == index,
+                              isShowSearchLabel: index == 0
+                                  ? true
+                                  : state.searchList[index].searchType != state.searchList[index - 1].searchType
+                                  ? true
+                                  : false,
+                              onSeeAllTap: () async {
+                                debugPrint("searchType: ${state.searchList[index].searchType}");
+                                if (state.searchList[index].searchType == SearchTypes.category) {
+                                  dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
+                                  if (searchResult != null) {
+                                    bloc.add(StoreEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                  }
+                                } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
+                                  dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].categoryId, AppStrings.categoryNameString: state.searchList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
+                                  if (searchResult != null) {
+                                    bloc.add(StoreEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                  }
+                                } else {
+                                  state.searchList[index].searchType == SearchTypes.company
+                                      ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
+                                      : state.searchList[index].searchType == SearchTypes.supplier
+                                      ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
+                                      : state.searchList[index].searchType == SearchTypes.sale
+                                      ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
+                                      : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                                }
+                              },
+                              onTap: () async {
+                                if (state.searchList[index].searchType == SearchTypes.subCategory) {
+                                  CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    title: AppStrings.getLocalizedStrings('Oops! in progress', context),
+                                    type: SnackBarType.success,
+                                  );
+                                  return;
+                                }
+                                if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
+                                  debugPrint("tap 4");
+                                  showProductDetails(context: context, productId: state.searchList[index].searchId, isBarcode: true, planoGramIndex: 0, isSaleOn: state.isSaleOn, productStock: (state.searchList[index].productStock.toString()));
+                                } else if (state.searchList[index].searchType == SearchTypes.category) {
+                                  dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
+                                  if (searchResult != null) {
+                                    bloc.add(StoreEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                  }
+                                } else {
+                                  state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
+                                }
+                                bloc.add(const StoreEvent.changeCategoryExpansion());
+                              });
+                        },
+                      ),
+                      onScanTap: () async {
+                        String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
+                        if (scanResult != '-1') {
+                          // -1 result for cancel scanning
+                          debugPrint('result = $scanResult');
+                          debugPrint("tap 5");
+                          showProductDetails(context: context, productId: scanResult, isBarcode: true, productStock: '1', planoGramIndex: 0, isSaleOn: state.isSaleOn);
                         }
                       },
                     ),

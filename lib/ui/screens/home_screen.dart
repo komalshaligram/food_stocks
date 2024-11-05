@@ -236,11 +236,13 @@ class HomeScreenWidget extends StatelessWidget {
                                     },
                                   ),
                                   onRefresh: () {
-                                    bloc.add(HomeEvent.userApproveEvent(context: context));
-                                    handleMessageOnBackground();
                                     bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
-                                    bloc.add(const HomeEvent.getPreferencesDataEvent());
+                                    bloc.add(HomeEvent.userApproveEvent(context: context));
                                     bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
+                                    bloc.add(HomeEvent.getProductSalesListEvent(context: context));
+                                    handleMessageOnBackground();
+
+                                    bloc.add(const HomeEvent.getPreferencesDataEvent());
                                     bloc.add(HomeEvent.getMessageListEvent(context: context));
                                     bloc.add(HomeEvent.getCartCountEvent(context: context));
                                     bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
@@ -248,7 +250,8 @@ class HomeScreenWidget extends StatelessWidget {
                                       bloc.add(HomeEvent.generalSettings(context: context, dialogContext: context, isRetryLoading: false));
                                     }
                                     bloc.add(HomeEvent.getPermissionList(context: context));
-                                    bloc.add(HomeEvent.getProductSalesListEvent(context: context));
+
+
                                     state.refreshController.refreshCompleted();
                                     state.refreshController.loadComplete();
                                   },
@@ -292,35 +295,38 @@ class HomeScreenWidget extends StatelessWidget {
                                                 SizedBox(
                                                   width: getScreenWidth(context),
                                                   height: AppConstants.salesProductItemHeight,
-                                                  child: state.isProductSaleShimmering ?CommonProductListShimmerWidget():ListView.builder(
-                                                    itemCount: state.productSalesList.length,
-                                                    shrinkWrap: true,
-                                                    scrollDirection: Axis.horizontal,
-                                                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                                    itemBuilder: (context, index) {
-                                                      return CommonProductSaleItemWidget(
-                                                          isSale: state.productSalesList[index].sale?.isSale,
-                                                          isGuestUser: state.isGuestUser,
-                                                          height: AppConstants.salesProductItemHeight,
-                                                          width: 140,
-                                                          productName: state.productSalesList[index].productName ?? '',
-                                                          saleImage: state.productSalesList[index].mainImage ?? '',
-                                                          title: state.productSalesList[index].name,
-                                                          description: parse(state.productSalesList[index].sale?.saleDescription).body?.text ?? '',
-                                                          discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ""),
-                                                          originalPrice: state.productSalesList[index].productPrice,
-                                                          productStock: state.productSalesList[index].productStock.toString(),
-                                                          lowStock: state.productSalesList[index].lowStock ?? '',
-                                                          isPesach: state.productSalesList[index].isPesach,
-                                                          onButtonTap: () {
-                                                            debugPrint("tap 1");
-                                                            if (!state.isGuestUser) {
-                                                              showProductDetails(isSaleOn: state.isSaleOn, productListIndex: 3, context: context, productId: state.productSalesList[index].id ?? '', productStock: state.productSalesList[index].productStock.toString());
-                                                            } else {
-                                                              Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                                            }
-                                                          });
-                                                    },
+                                                  child: state.isProductSaleShimmering ?CommonProductListShimmerWidget():AbsorbPointer(
+                                                    absorbing: state.isProductSaleShimmering,
+                                                    child: ListView.builder(
+                                                      itemCount: state.productSalesList.length,
+                                                      shrinkWrap: true,
+                                                      scrollDirection: Axis.horizontal,
+                                                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                      itemBuilder: (context, index) {
+                                                        return CommonProductSaleItemWidget(
+                                                            isSale: state.productSalesList[index].sale?.isSale,
+                                                            isGuestUser: state.isGuestUser,
+                                                            height: AppConstants.salesProductItemHeight,
+                                                            width: 140,
+                                                            productName: state.productSalesList[index].productName ?? '',
+                                                            saleImage: state.productSalesList[index].mainImage ?? '',
+                                                            title: state.productSalesList[index].name,
+                                                            description: parse(state.productSalesList[index].sale?.saleDescription).body?.text ?? '',
+                                                            discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ""),
+                                                            originalPrice: state.productSalesList[index].productPrice,
+                                                            productStock: state.productSalesList[index].productStock.toString(),
+                                                            lowStock: state.productSalesList[index].lowStock ?? '',
+                                                            isPesach: state.productSalesList[index].isPesach,
+                                                            onButtonTap: () {
+                                                              debugPrint("tap 1");
+                                                              if (!state.isGuestUser) {
+                                                                showProductDetails(isSaleOn: state.isSaleOn, productListIndex: 3, context: context, productId: state.productSalesList[index].id ?? '', productStock: state.productSalesList[index].productStock.toString());
+                                                              } else {
+                                                                Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                              }
+                                                            });
+                                                      },
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -598,7 +604,7 @@ class HomeScreenWidget extends StatelessWidget {
                 debugPrint('noti from  home');
                 FlutterAppBadger.removeBadge();
                 PushNotificationService().showNotification(
-                  notiId: message.notification.hashCode,
+                  notificationId: message.notification.hashCode,
                   data: data,
                   imageUrl: Platform.isAndroid ? message.notification?.android?.imageUrl ?? '' : message.notification?.apple?.imageUrl ?? '',
                   title: message.notification?.title ?? '',

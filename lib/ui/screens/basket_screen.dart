@@ -795,6 +795,7 @@ class BasketScreenWidget extends StatelessWidget {
                                       child: Column(
                                         children: [
                                           CommonProductDetailsWidget(
+                                            isFromBasketScreen: true,
                                             isIncludedVat: state.isIncludedVat,
                                             productDetails: state.productDetails,
                                             isSubUserAddToBasket: state.isSubUserAddToBasket,

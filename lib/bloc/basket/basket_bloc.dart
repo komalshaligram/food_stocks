@@ -133,7 +133,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 productStockList: productStockList,
                 totalPayment: response.data?.cart?.first.totalAmount!.toDouble() ?? 0,
                 supplierCount: response.data?.cart?.first.suppliers ?? 1,
-            //    isAnimation: false,
+                isAnimation: false,
               ));
             } else {
               emit(state.copyWith(isShimmering: false));
@@ -423,9 +423,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   prefs: await SharedPreferences.getInstance());
 
               debugPrint(
-                  'insert cart url1 = ${AppUrls
-                      .insertProductInCartUrl}${preferencesHelper
-                      .getCartId()}');
+                  'insert cart url1 = ${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}');
               debugPrint(
                   'insert cart url1 auth = ${preferencesHelper
                       .getAuthToken()}');

@@ -193,7 +193,6 @@ class DioClient {
         );
         throw Exception("Network Error");
       }
-      //  }
     } on DioException catch (e) {
       throw _createErrorEntity(e);
     }

@@ -266,7 +266,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           emit(state.copyWith(isLoading: false));
           Navigator.pushNamed(
             event.context,
-            RouteDefine.activityTimeScreen.name,
+            RouteDefine.formDataScreen.name,
           );
         } catch (e) {
           debugPrint('');

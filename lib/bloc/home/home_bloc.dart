@@ -517,6 +517,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         } else if (event is _getProfileDetailsEvent) {
           try {
+            emit(state.copyWith(allShimmering: true));
             final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
                 data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
                 options: Options(
@@ -586,9 +587,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       )) ??
                   []);
               productStockList[1].addAll(stockList);
-              emit(state.copyWith(recommendedProductsList: response.data ?? [], productStockList: productStockList, isShimmering: false));
+              emit(state.copyWith(recommendedProductsList: response.data ?? [], productStockList: productStockList, isShimmering: false,allShimmering: false));
             } else {
-              emit(state.copyWith(isShimmering: false));
+              emit(state.copyWith(isShimmering: false,allShimmering: false));
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
@@ -596,9 +597,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               );
             }
           } on ServerException {
-            emit(state.copyWith(isShimmering: false));
+            emit(state.copyWith(isShimmering: false,allShimmering: false));
           } catch (exc) {
-            emit(state.copyWith(isShimmering: false));
+            emit(state.copyWith(isShimmering: false,allShimmering: false));
           }
         } else if (event is _changeCategoryExpansion) {
           if (event.isOpened != null) {

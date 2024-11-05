@@ -258,7 +258,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                   7.height,
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!.zip,
-                                    star: '*',
+                                    star: '',
                                   ),
                                   CustomFormField(
                                     context: context,
@@ -271,7 +271,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     hint: AppLocalizations.of(context)!.zip,
                                     fillColor: AppColors.whiteColor,
                                     textInputAction: TextInputAction.done,
-                                    validator: AppStrings.zipValString,
+                                    validator: state.zipController.text.toString().isNotEmpty?AppStrings.zipValString:'',
                                   ),
                                   10.height,
                                   Padding(

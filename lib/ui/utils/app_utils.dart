@@ -311,6 +311,18 @@ String formatNumber({required String value, required String local}) {
   return result1;
 }
 
+String formatNumberForWallet({required String value, required String local,required BuildContext context}) {
+  debugPrint('value:$value');
+  String result = (NumberFormat.compactSimpleCurrency(
+    locale: local,
+    decimalDigits: 1,
+  ).format(double.parse(value)));
+  debugPrint('result:$result');
+  String result1 =value.split('.')[0]+ AppLocalizations.of(context)!.currency;
+  debugPrint('resul1:$result1');
+  return result1;
+}
+
 double vatCalculation(
     {required double price,
     required double vat,
