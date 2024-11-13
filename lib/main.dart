@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:food_stock/ui/screens/my_app_screen.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,13 +19,13 @@ final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
 @pragma('vm:entry-point')
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint("__________BackgroundHandler______");
+  printData("__________BackgroundHandler______");
     await Firebase.initializeApp();
-    debugPrint("Handling in main${message.toString()}");
-    debugPrint("Handling a background message:${message.messageId}");
-    debugPrint("Handling a background message:${message.data.toString()}");
+    printData("Handling in main${message.toString()}");
+    printData("Handling a background message:${message.messageId}");
+    printData("Handling a background message:${message.data.toString()}");
  /*   if(message.data!=null){
-      debugPrint('notifrom main');
+      printData('notifrom main');
       PushNotificationService().showNotification(
           notiId: message.notification.hashCode,
       imageUrl:Platform.isAndroid? message.notification?.android?.imageUrl??'':message.notification?.apple?.imageUrl??'',

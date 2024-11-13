@@ -59,21 +59,12 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           final res = await DioClient(event.context).post(AppUrls.getSaleProductsUrl, data: ProductSalesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.saleProductPageLimit, search: state.search).toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            List<ProductSale> saleProductsList = response.data?.toList(growable: true) ?? [];
-            /*     saleProductsList
-                .forEach((sale) => debugPrint('p = ${sale.endDate}'));*/
-            // saleProductsList.removeWhere(
-            //     (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
-            debugPrint('sale Products = ${saleProductsList.length}');
-            debugPrint('sale Products = ${response.data?.length}');
             List<ProductSale> productSaleList = state.productSalesList.toList(growable: true);
             productSaleList.addAll(response.data ?? []);
             List<ProductStockModel> stockList = [];
             List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
             stockList.addAll(response.data?.map((saleProduct) => ProductStockModel(productId: saleProduct.id ?? '', maxQty: int.parse(saleProduct.sale?.saleMaxQuantity ?? '0'), stock: (saleProduct.productStock.toString()))) ?? []);
             productStockList[1].addAll(stockList);
-            debugPrint('new product sale list len = ${productSaleList.length}');
-            debugPrint('new product sale stock list len = ${productStockList.length}');
             emit(state.copyWith(productSalesList: productSaleList, productStockList: productStockList, pageNum: state.pageNum + 1, isLoadMore: false, isShimmering: false));
             emit(state.copyWith(isBottomOfProducts: productSaleList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false));
           } else {
@@ -119,8 +110,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             if (response.product!.isNotEmpty) {
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               int productListIndex = event.productListIndex;
-              debugPrint('productStockList___${productStockList[2].length}');
-              debugPrint('productListIndex___${event.productListIndex}');
+
               int productStockUpdateIndex = 0;
               if (event.isBarcode) {
                 productStockUpdateIndex = 0;
@@ -249,7 +239,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           Navigator.pop(event.context);
           emit(state.copyWith(isProductLoading: false));
         } catch (e) {
-          debugPrint('bs error = $e');
+          printData('bs error = $e');
         }
       } else if (event is _increaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
@@ -277,7 +267,6 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 0) {
             productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(quantity: productStockList[state.productListIndex][state.productStockUpdateIndex].quantity - 1);
-            debugPrint('product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           } else {}
@@ -377,7 +366,6 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           } on ServerException {
             emit(state.copyWith(isLoading: false));
           } catch (e) {
-            debugPrint('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         } else {
@@ -387,7 +375,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             Map<String, dynamic> req = insertCartReqModel.toJson();
             req.removeWhere((key, value) {
               if (value != null) {
-                debugPrint("[$key] = $value");
+                printData("[$key] = $value");
               }
               return value == null;
             });
@@ -428,10 +416,10 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
             }
           } on ServerException {
-            debugPrint('url1 = ');
+            printData('url1 = ');
             emit(state.copyWith(isLoading: false));
           } catch (e) {
-            debugPrint('err = $e');
+            printData('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         }
@@ -479,7 +467,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             }
           }
         } catch (e) {
-          debugPrint('catch____$e');
+          printData('catch____$e');
         }
       }
     });

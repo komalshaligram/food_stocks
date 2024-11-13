@@ -507,7 +507,7 @@
   "israel_id_or_business_id_number_error":"נתגלתה שגיאה במספר ת.ז. או במספק עוסק מורשה",
   "rivchitclienterror":"rivchitclienterror",
   "change_credit_card":"שנה את כרטיס האשראי שלך",
-  "change_to_wallet_payment":"תשלום מהאובליגו שלך מס\"ב",
+  "change_to_wallet_payment":"תשלום מהארנק שלך",
   "pay_with_bank_transfer":"תשלום בהעברה בנקאית",
   "pay_with_credit_card":"תשלום בכרטיס אשראי",
   "pay_with_wallet":"תשלום מהארנק",

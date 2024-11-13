@@ -46,10 +46,8 @@ class AppConfig {
         break;
     }
     (context as Element).markNeedsBuild();
-
-    debugPrint('STARTED WITH FLAVOR ${AppConfigManager.appConfig!.flavor}');
   }
-//
+
   static Future<String> getAppUrl() async {
     final String? flavor =
     await const MethodChannel('flavor').invokeMethod<String>('getFlavor');

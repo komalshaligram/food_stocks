@@ -80,10 +80,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         emit(state.copyWith(
             isSelectSupplier:
                 event.isSelectSupplier ?? !state.isSelectSupplier));
-        debugPrint('supplier selection : ${state.isSelectSupplier}');
+        printData('supplier selection : ${state.isSelectSupplier}');
       }
       else if (event is _getProductCategoriesListEvent) {
-         debugPrint('getGuestUser_____${preferencesHelper.getGuestUser()}');
+         printData('getGuestUser_____${preferencesHelper.getGuestUser()}');
         emit(state.copyWith(isGuestUser: preferencesHelper.getGuestUser(),
         isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(),
           isSaleOn: preferencesHelper.getShowSale(),
@@ -97,7 +97,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   .toJson());
           ProductCategoriesResModel response =
               ProductCategoriesResModel.fromJson(res);
-          debugPrint('product categories = ${response.data?.categories!.length.toString()}');
+          printData('product categories = ${response.data?.categories!.length.toString()}');
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             searchList.addAll(response.data?.categories?.map((category) =>
@@ -107,7 +107,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         searchType: SearchTypes.category,
                         image: category.categoryImage ?? '')) ??
                 []);
-            debugPrint('store search list = ${searchList.length}');
+            printData('store search list = ${searchList.length}');
             bool productVisible = response.data?.categories?.any((element) => element.isHomePreference==true)??true;
             emit(state.copyWith(
                 isCatVisible: productVisible,
@@ -233,7 +233,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
                   .toJson());
           SuppliersResModel response = SuppliersResModel.fromJson(res);
-          debugPrint('suppliers = ${response.data}');
+          printData('suppliers = ${response.data}');
           if (response.status == AppConstants.code_200) {
             bool productVisible = response.data?.any((element) => element.supplierDetail?.isHomePreference==true)??true;
             emit(state.copyWith(suppliersList: response, isShimmering: false,isSupplierVisible: productVisible));
@@ -265,7 +265,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       pageNum: 1, pageLimit: AppConstants.companyPageLimit)
                   .toJson());
           CompanyResModel response = CompanyResModel.fromJson(res);
-          debugPrint('companies = ${response.data}');
+          printData('companies = ${response.data}');
           if (response.status == AppConstants.code_200) {
            bool company = response.data?.brandList?.any((element) => element.isHomePreference==true)??true;
             emit(state.copyWith(isCompanyVisible: company));
@@ -352,7 +352,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     }));
                 GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                 if (response.status == AppConstants.code_200) {
-                  debugPrint('cart before = ${response.data}');
+                  printData('cart before = ${response.data}');
                   response.data?.data?.forEach((cartProduct) {
                     if (cartProduct.id ==
                         state.productStockList[state.productStockUpdateIndex]
@@ -368,7 +368,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       return;
                     }
                   });
-                  debugPrint(
+                  printData(
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
@@ -585,7 +585,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     quantity: productStockList[state.productStockUpdateIndex]
                             .quantity +
                         1);
-            debugPrint(
+            printData(
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
             emit(state.copyWith(productStockList: productStockList));
           } else {
@@ -714,7 +714,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           } on ServerException {
             emit(state.copyWith(isLoading: false));
           } catch (e) {
-            debugPrint('err = $e');
+            printData('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         } else {
@@ -724,7 +724,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             Map<String, dynamic> req = insertCartReqModel.toJson();
             req.removeWhere((key, value) {
               if (value != null) {
-                debugPrint("[$key] = $value");
+                printData("[$key] = $value");
               }
               return value == null;
             });
@@ -759,10 +759,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
             }
           } on ServerException {
-            debugPrint('url1 = ');
+            printData('url1 = ');
             emit(state.copyWith(isLoading: false));
           } catch (e) {
-            debugPrint('err = $e');
+            printData('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         }
@@ -838,7 +838,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(searchList: searchList, isSearching: false));
             return;
           }
-          debugPrint('store search list =${response.status}');
+          printData('store search list =${response.status}');
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
            //category search result
@@ -1201,7 +1201,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             }
           }
           catch (e) {
-            debugPrint('catch____$e');
+            printData('catch____$e');
           }
         }
       }

@@ -268,7 +268,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     ],
                                     textDirection: context.rtl ? TextDirection.ltr : null,
                                     keyboardType: TextInputType.number,
-                                    hint: AppLocalizations.of(context)!.zip,
+                                    hint: "",
                                     fillColor: AppColors.whiteColor,
                                     textInputAction: TextInputAction.done,
                                     validator: state.zipController.text.toString().isNotEmpty?AppStrings.zipValString:'',

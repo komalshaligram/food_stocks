@@ -543,13 +543,10 @@ class ReorderScreenWidget extends StatelessWidget {
                                                     width: getScreenWidth(context),
                                                     child: GestureDetector(
                                                       onVerticalDragStart: (dragDetails) {
-                                                        debugPrint('onVerticalDragStart');
                                                       },
                                                       onVerticalDragUpdate: (dragDetails) {
-                                                        debugPrint('onVerticalDragUpdate');
                                                       },
                                                       onVerticalDragEnd: (endDetails) {
-                                                        debugPrint('onVerticalDragEnd');
                                                         Navigator.pop(dialogContext);
                                                       },
                                                       child: PhotoView(

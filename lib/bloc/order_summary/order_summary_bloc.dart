@@ -27,7 +27,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
     on<OrderSummaryEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      debugPrint('cart id =  ${preferencesHelper.getCartId()}');
+      printData('cart id =  ${preferencesHelper.getCartId()}');
 
       if (event is _getDataEvent) {
         emit(state.copyWith(

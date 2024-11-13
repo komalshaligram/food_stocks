@@ -391,8 +391,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                             ? true
                                             : false,
                                     onSeeAllTap: () async {
-                                      debugPrint(
-                                          "searchType: ${state.searchList[index].searchType}");
+
                                       if (state.searchList[index].searchType ==
                                           SearchTypes.category) {
                                         dynamic searchResult =
@@ -489,7 +488,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                               SearchTypes.sale ||
                                           state.searchList[index].searchType ==
                                               SearchTypes.product) {
-                                         debugPrint("tap 4");
+
                                         if (!state.isGuestUser) {
                                           showProductDetails(
                                             productListIndex: 0,
@@ -567,8 +566,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             scanMode: ScanMode.BARCODE);
                         if (scanResult != '-1') {
                           // -1 result for cancel scanning
-                          debugPrint('result = $scanResult');
-                           debugPrint("tap 5");
+                          printData('result = $scanResult');
                           if (!state.isGuestUser) {
                             showProductDetails(
                               productListIndex: 0,
@@ -648,7 +646,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                       return child;
                     },
                     errorBuilder: (context, error, stackTrace) {
-                      // debugPrint('sale list image error : $error');
                       return Image.asset(AppImagePath.imageNotAvailable5,
                           height: 70,
                           width: double.maxFinite,
@@ -784,18 +781,15 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                       child: GestureDetector(
                                                         onVerticalDragStart:
                                                             (dragDetails) {
-                                                           debugPrint(
-                                                              'onVerticalDragStart');
+
                                                         },
                                                         onVerticalDragUpdate:
                                                             (dragDetails) {
-                                                           debugPrint(
-                                                              'onVerticalDragUpdate');
+
                                                         },
                                                         onVerticalDragEnd:
                                                             (endDetails) {
-                                                           debugPrint(
-                                                              'onVerticalDragEnd');
+
                                                           Navigator.pop(
                                                               dialogContext);
                                                         },

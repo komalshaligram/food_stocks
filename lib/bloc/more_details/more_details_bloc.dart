@@ -78,14 +78,14 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           Map<String, dynamic>? clientDetail = updatedProfileModel.clientDetail?.toJson();
           clientDetail?.removeWhere((key, value) {
             if (value != null) {
-              debugPrint("[$key] = $value");
+              printData("[$key] = $value");
             }
             return value == null;
           });
           req[AppStrings.clientDetailString] = clientDetail;
           req.removeWhere((key, value) {
             if (value != null) {
-              debugPrint("[$key] = $value");
+              printData("[$key] = $value");
             }
             return value == null;
           });
@@ -269,7 +269,12 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             RouteDefine.formDataScreen.name,
           );
         } catch (e) {
-          debugPrint('');
+          printData(e.toString());
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: AppLocalizations.of(event.context)!.internal_server_error,
+            type: SnackBarType.failure,
+          );
           emit(state.copyWith(isLoading: false));
         }
       }

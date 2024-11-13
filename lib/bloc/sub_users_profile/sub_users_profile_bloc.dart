@@ -39,20 +39,20 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
       } else if (event is _pickProfileImageEvent) {
         final pickedFile = await ImagePicker().pickImage(source: event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (pickedFile != null) {
-          debugPrint("compress after size = ${await pickedFile.length()}");
+          printData("compress after size = ${await pickedFile.length()}");
           CroppedFile? croppedImage = await cropImage(path: pickedFile.path, shape: CropStyle.circle, quality: AppConstants.fileQuality);
           if (croppedImage?.path.isEmpty ?? true) {
             return;
           }
           String imageSize = getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await pickedFile.length());
-          debugPrint('data1 final size = $imageSize');
+          printData('data1 final size = $imageSize');
 
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
           }
           try {
             emit(state.copyWith(isFileUploading: true, isUploadingProcess: true));
-            debugPrint("image1 = ${croppedImage?.path ?? pickedFile.path}");
+            printData("image1 = ${croppedImage?.path ?? pickedFile.path}");
             final response = await DioClient(event.context).uploadFileProgressWithFormData(
               path: AppUrls.fileUploadUrl,
               formData: FormData.fromMap(
@@ -61,17 +61,17 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             );
             FileUploadModel profileImageModel = FileUploadModel.fromJson(response);
 
-            debugPrint('img url = ${profileImageModel.filepath}');
+            printData('img url = ${profileImageModel.filepath}');
             if (profileImageModel.filepath != '') {
               imgUrl = profileImageModel.filepath ?? '';
-              debugPrint("image1 = ${imgUrl}\n${profileImageModel.filepath}");
+              printData("image1 = ${imgUrl}\n${profileImageModel.filepath}");
               emit(state.copyWith(
                 isUploadingProcess: false,
                 image: File(croppedImage?.path ?? pickedFile.path),
                 subUserProfileImage: profileImageModel.filepath ?? '',
               ));
-              debugPrint("image1 = ${croppedImage?.path}\n${pickedFile.path}");
-              debugPrint("image1 = ${state.image}");
+              printData("image1 = ${croppedImage?.path}\n${pickedFile.path}");
+              printData("image1 = ${state.image}");
             }
           } on ServerException {
             emit(state.copyWith(isFileUploading: false, isUploadingProcess: false));
@@ -83,14 +83,14 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
         emit(state.copyWith(isLoading: true));
 
         try {
-          debugPrint('req = ${preferences.getUserId()}');
+          printData('req = ${preferences.getUserId()}');
 
           SubUserReqModel req = SubUserReqModel(israelId: state.israelIdController.text.trim(), contactName: state.nameController.text.trim(), clientId: preferences.getUserId(), email: state.emailController.text.trim(), phoneNumber: state.phoneNumberController.text.trim(), profileImage: state.subUserProfileImage);
           Map<String, dynamic> subUserReqModel = req.toJson();
 
           subUserReqModel.removeWhere((key, value) {
             if (value != null) {
-              debugPrint("[$key] = $value");
+              printData("[$key] = $value");
             }
             return value == null;
           });
@@ -99,9 +99,9 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             AppUrls.createSubUserUrl,
             data: req,
           );
-          debugPrint('create subUser req = $req');
-          debugPrint('create subUser res = $res');
-          debugPrint('url = ${AppUrls.createSubUserUrl}');
+          printData('create subUser req = $req');
+          printData('create subUser res = $res');
+          printData('url = ${AppUrls.createSubUserUrl}');
           SubUserResModel response = SubUserResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
@@ -124,11 +124,11 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             clientId: preferences.getUserId(),
             ids: [state.subUserId],
           );
-          debugPrint('delete Account req= $req');
+          printData('delete Account req= $req');
 
           final res = await DioClient(event.context).post(AppUrls.deleteClientSubUserUrl, data: req);
 
-          debugPrint('delete Account Url= ${AppUrls.deleteClientSubUserUrl}');
+          printData('delete Account Url= ${AppUrls.deleteClientSubUserUrl}');
 
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isDeleteProcess: false));
@@ -136,7 +136,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             Navigator.pushNamed(event.context, RouteDefine.subUsersScreen.name);
             CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.success_message, type: SnackBarType.success);
           } else {
-            debugPrint('${res.message}');
+            printData('${res.message}');
             emit(state.copyWith(isDeleteProcess: false));
           }
         } on ServerException {
@@ -158,17 +158,17 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
 
           updateSubUserReq.removeWhere((key, value) {
             if (value != null) {
-              debugPrint("[$key] = $value");
+              printData("[$key] = $value");
             }
             return value == null;
           });
 
-          debugPrint('update subUser req  = $updateSubUserReq');
+          printData('update subUser req  = $updateSubUserReq');
 
           final response = await DioClient(event.context).put(path: '${AppUrls.updateSubUserUrl}', data: updateSubUserReq);
 
-          debugPrint('update subUser url  = ${AppUrls.baseUrl}${AppUrls.getAllSubUserUrl}');
-          debugPrint('update subUser response  = ${response}');
+          printData('update subUser url  = ${AppUrls.baseUrl}${AppUrls.getAllSubUserUrl}');
+          printData('update subUser response  = ${response}');
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(context: event.context, title: '${AppLocalizations.of(event.context)!.success_message}', type: SnackBarType.success);
@@ -199,11 +199,11 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
 
           req.removeWhere((key, value) {
             if (value != null) {
-              debugPrint("[$key] = $value");
+              printData("[$key] = $value");
             }
             return value == null;
           });
-          debugPrint('update  req = ${req}');
+          printData('update  req = ${req}');
           final res = await DioClient(event.context).post(
             AppUrls.updateSubUserUrl,
             data: req,
@@ -236,7 +236,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
 
             getSubUserReq.removeWhere((key, value) {
               if (value != null) {
-                debugPrint("[$key] = $value");
+                printData("[$key] = $value");
               }
               return value == null;
             });
@@ -246,11 +246,11 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
               data: getSubUserReq,
             );
 
-            debugPrint('subUser req = ${getSubUserReq}');
+            printData('subUser req = ${getSubUserReq}');
 
-            debugPrint('url = ${AppUrls.baseUrl}${AppUrls.getAllSubUserUrl}');
+            printData('url = ${AppUrls.baseUrl}${AppUrls.getAllSubUserUrl}');
             GetSubUserResModel response = GetSubUserResModel.fromJson(res);
-            debugPrint('subUser res = ${response}');
+            printData('subUser res = ${response}');
 
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(

@@ -37,8 +37,7 @@ class ProductSaleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint('product sale args = $args');
-    debugPrint('saleProductId = ${args?[AppStrings.companyIdString] ?? ''}');
+
     return BlocProvider(
       create: (context) => ProductSaleBloc()
         ..add(ProductSaleEvent.setSearchEvent(search: args?[AppStrings.searchString] ?? ''))
@@ -304,13 +303,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                   width: getScreenWidth(context),
                                                   child: GestureDetector(
                                                     onVerticalDragStart: (dragDetails) {
-                                                      debugPrint('onVerticalDragStart');
                                                     },
                                                     onVerticalDragUpdate: (dragDetails) {
-                                                      debugPrint('onVerticalDragUpdate');
                                                     },
                                                     onVerticalDragEnd: (endDetails) {
-                                                      debugPrint('onVerticalDragEnd');
                                                       Navigator.pop(context);
                                                     },
                                                     child: PhotoView(

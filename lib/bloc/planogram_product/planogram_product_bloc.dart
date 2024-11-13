@@ -116,7 +116,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                       return;
                     }
                   });
-                  debugPrint('1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
+                  printData('1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
               if (response.product!.isNotEmpty) {
@@ -221,7 +221,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
           emit(state.copyWith(isProductLoading: false));
           Navigator.pop(event.context);
         } catch (e) {
-          debugPrint('bs error = $e');
+          printData('bs error = $e');
           // Navigator.pop(event.context);
         }
       } else if (event is _increaseQuantityOfProduct) {
@@ -251,7 +251,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 0) {
             productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(quantity: productStockList[state.productListIndex][state.productStockUpdateIndex].quantity - 1);
-            debugPrint('product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+            printData('product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           } else {}
@@ -354,7 +354,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
           } on ServerException {
             emit(state.copyWith(isLoading: false));
           } catch (e) {
-            debugPrint('err = $e');
+            printData('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         } else {
@@ -364,7 +364,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             Map<String, dynamic> req = insertCartReqModel.toJson();
             req.removeWhere((key, value) {
               if (value != null) {
-                debugPrint("[$key] = $value");
+                printData("[$key] = $value");
               }
               return value == null;
             });
@@ -633,7 +633,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
               }
             }
           } catch (e) {
-            debugPrint('catch____$e');
+            printData('catch____$e');
           }
         }
       }

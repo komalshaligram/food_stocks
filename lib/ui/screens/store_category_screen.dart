@@ -1190,13 +1190,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             width: getScreenWidth(context),
                                             child: GestureDetector(
                                               onVerticalDragStart: (dragDetails) {
-                                                debugPrint('onVerticalDragStart');
                                               },
                                               onVerticalDragUpdate: (dragDetails) {
-                                                debugPrint('onVerticalDragUpdate');
                                               },
                                               onVerticalDragEnd: (endDetails) {
-                                                debugPrint('onVerticalDragEnd');
                                                 Navigator.pop(context);
                                               },
                                               child: PhotoView(
@@ -1380,7 +1377,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         required String search,
         required String isSubCategory,
         required List<SearchModel> searchList}) {
-    debugPrint('subCategoryName:$subCategoryName');
     return Container(
       width: getScreenWidth(context),
       margin: EdgeInsets.only(
@@ -1431,7 +1427,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           GestureDetector(
             onTap: () {
               if (!(subCategoryName?.isEmpty ?? true)) {
-                debugPrint('cate');
                 BlocProvider.of<StoreCategoryBloc>(context).add(
                     StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(
                         isSubCategory: true, context: context));

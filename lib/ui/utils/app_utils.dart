@@ -1,6 +1,7 @@
 
 import 'dart:io';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -68,7 +69,6 @@ String formatExpiryDate(String text) {
 Future<String> getBottleTax() async {
   SharedPreferencesHelper preferencesHelper =
   SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-  debugPrint('___bottleTax_____ :${preferencesHelper.getBottleTax().toString()}');
   var value =  preferencesHelper.getBottleTax().toString();
    return Future.value(value.toString());
 }
@@ -137,6 +137,13 @@ class CustomSnackBar {
   }
 }
 
+
+printData(String? message){
+  if(kDebugMode){
+    debugPrint(message??'');
+  }
+}
+
 customShowUpdateDialog(
     BuildContext context, String directionality, String storeUrl) {
   return showDialog(
@@ -154,7 +161,6 @@ customShowUpdateDialog(
               alignment: Alignment.center,
               child: GestureDetector(
                 onTap: () {
-                  debugPrint(storeUrl);
                   _launchUrl(storeUrl);
                 },
                 child: Container(
@@ -185,7 +191,7 @@ Future<void> _launchUrl(String storeUrl) async {
     try {
       launchUrl(url);
     } on PlatformException catch (e) {
-      debugPrint(e.toString());
+      printData(e.toString());
     } finally {
       launchUrl(url);
     }
@@ -261,11 +267,11 @@ Future<String> scanBarcodeOrQRCode({required BuildContext context, required Stri
   try {
     barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode(
         '#ff20BF6B', cancelText, true, scanMode);
-     debugPrint(barcodeSOrQRScanRes);
+    printData(barcodeSOrQRScanRes);
   } on PlatformException {
     barcodeSOrQRScanRes = 'Failed to get platform version.';
   }
-  debugPrint('barcode = $barcodeSOrQRScanRes');
+  printData('barcode = $barcodeSOrQRScanRes');
   return barcodeSOrQRScanRes;
 }
 
@@ -312,14 +318,14 @@ String formatNumber({required String value, required String local}) {
 }
 
 String formatNumberForWallet({required String value, required String local,required BuildContext context}) {
-  debugPrint('value:$value');
+
   String result = (NumberFormat.compactSimpleCurrency(
     locale: local,
     decimalDigits: 1,
   ).format(double.parse(value)));
-  debugPrint('result:$result');
+
   String result1 =value.split('.')[0]+ AppLocalizations.of(context)!.currency;
-  debugPrint('resul1:$result1');
+
   return result1;
 }
 
@@ -347,18 +353,11 @@ double totalVatAmountCalculation(
 double bottleDepositCalculation(
     { double units =1, required double deposit,required double qty}) {
   double result = qty * deposit * units;
-  debugPrint('qty$qty');
-  debugPrint('bottle deposit$deposit');
-  debugPrint('bottle tax$result');
   return result;
 }
 
 double bottleDepositCalculationWithVat(
     {  required double deposit,required double qty, double vatPercentage = 1}) {
   double result = (qty * deposit) + ((qty * deposit * vatPercentage)/100) ;
-  debugPrint('qty$qty');
-  debugPrint('bottle deposit $deposit');
-  debugPrint('bottle tax $result');
-  debugPrint('result $result');
   return result;
 }

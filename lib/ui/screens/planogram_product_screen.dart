@@ -343,7 +343,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   ? true
                                   : false,
                               onSeeAllTap: () async {
-                                debugPrint("searchType: ${state.searchList[index].searchType}");
+                                printData("searchType: ${state.searchList[index].searchType}");
                                 if (state.searchList[index].searchType ==
                                     SearchTypes.category) {
                                   dynamic searchResult =
@@ -518,8 +518,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             scanMode: ScanMode.BARCODE);
                         if (scanResult != '-1') {
                           // -1 result for cancel scanning
-                          debugPrint('result = $scanResult');
-                          debugPrint("tap 5");
+                          printData('result = $scanResult');
+
                           if(!state.isGuestUser){
                             showProductDetails(
                                 context: context,
@@ -670,13 +670,10 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                             width: getScreenWidth(context),
                                             child: GestureDetector(
                                               onVerticalDragStart: (dragDetails) {
-                                                  debugPrint('onVerticalDragStart');
                                               },
                                               onVerticalDragUpdate: (dragDetails) {
-                                                  debugPrint('onVerticalDragUpdate');
                                               },
                                               onVerticalDragEnd: (endDetails) {
-                                                 debugPrint('onVerticalDragEnd');
                                                 Navigator.pop(dialogContext);
                                               },
                                               child: PhotoView(

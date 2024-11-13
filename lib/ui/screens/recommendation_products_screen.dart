@@ -217,7 +217,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                           lowStock: state.recommendationProductsList[index].lowStock ?? '',
                                                           isPesach: state.recommendationProductsList[index].isPesach,
                                                           onButtonTap: () {
-                                                            debugPrint("tap 1");
                                                             showProductDetails(context: context, productId: state.recommendationProductsList[index].id ?? '', productStock: state.recommendationProductsList[index].productStock.toString(), productListIndex: 1, isSaleOn: state.isSaleOn);
                                                           });
                                                     })
@@ -447,13 +446,10 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                       width: getScreenWidth(context),
                                                       child: GestureDetector(
                                                         onVerticalDragStart: (dragDetails) {
-                                                          debugPrint('onVerticalDragStart');
                                                         },
                                                         onVerticalDragUpdate: (dragDetails) {
-                                                          debugPrint('onVerticalDragUpdate');
                                                         },
                                                         onVerticalDragEnd: (endDetails) {
-                                                          debugPrint('onVerticalDragEnd');
                                                           Navigator.pop(dialogContext);
                                                         },
                                                         child: PhotoView(

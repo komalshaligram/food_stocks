@@ -404,7 +404,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                     ? true
                                     : false,
                                 onSeeAllTap: () async {
-                                  debugPrint("searchType: ${state.searchList[index].searchType}");
+                                  printData("searchType: ${state.searchList[index].searchType}");
 
                                   if (state.searchList[index].searchType ==
                                       SearchTypes.category) {
@@ -504,7 +504,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       SearchTypes.sale ||
                                       state.searchList[index].searchType ==
                                           SearchTypes.product) {
-                                     debugPrint("tap 4");
+                         
                                     if(!state.isGuestUser){
                                       showProductDetails(
                                           context: context,
@@ -582,8 +582,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                               scanMode: ScanMode.BARCODE);
                           if (scanResult != '-1') {
                             // -1 result for cancel scanning
-                            debugPrint('result = $scanResult');
-                             debugPrint("tap 5");
+                            printData('result = $scanResult');
+                    
                             if(!state.isGuestUser){
                               showProductDetails(
                                   context: context,
@@ -808,13 +808,13 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                              width: getScreenWidth(context),
                                              child: GestureDetector(
                                                onVerticalDragStart: (dragDetails) {
-                                                   debugPrint('onVerticalDragStart');
+                                             
                                                },
                                                onVerticalDragUpdate: (dragDetails) {
-                                                   debugPrint('onVerticalDragUpdate');
+                                           
                                                },
                                                onVerticalDragEnd: (endDetails) {
-                                                  debugPrint('onVerticalDragEnd');
+                                                
                                                  Navigator.pop(dialogContext);
                                                },
                                                child: PhotoView(
@@ -880,7 +880,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                            context: context1));
                                  }
                                },
-                               onCloseTap: (){Navigator.pop(context);},
+                               onCloseTap: (){
+                                 Navigator.pop(context);
+                                 },
                              ),
                              state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context,isSaleOn)
                            ],

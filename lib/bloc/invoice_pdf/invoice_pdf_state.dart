@@ -9,7 +9,7 @@ class InvoicePdfState with _$InvoicePdfState{
     required int downloadProgress,
   }) = _InvoicePdfState;
 
-  factory InvoicePdfState.initial()=>  InvoicePdfState(
+  factory InvoicePdfState.initial()=>  const InvoicePdfState(
  invoiceDetailsList: Invoice(),
     downloadProgress: 0,
     isDownloading: false,

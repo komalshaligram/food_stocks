@@ -68,7 +68,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if (event is _getPreferencesDataEvent) {
           emit(state.copyWith(isIncludedVat: preferences.getIsIncludedVat(), isSaleOn: preferences.getShowSale(), isSubUserSeeWallet: preferences.getCanSeeWallet(), isSubUserAddToBasket: preferences.getCanAddToBasket(), userImageUrl: preferences.getUserImageUrl(), userCompanyLogoUrl: preferences.getUserCompanyLogoUrl(), messageCount: preferences.getMessageCount(), cartCount: preferences.getCartCount(), bottlePrice: preferences.getBottleTax()));
         } else if (event is _getCartCountEvent) {
-          debugPrint('id_______${preferences.getUserId()}');
+          printData('id_______${preferences.getUserId()}');
           try {
             final res = await DioClient(event.context).post(
               '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
@@ -294,7 +294,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if (state.productStockUpdateIndex != -1) {
             if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 0) {
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(quantity: productStockList[state.productListIndex][state.productStockUpdateIndex].quantity - 1);
-              debugPrint('product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+              printData('product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
               emit(state.copyWith(productStockList: []));
               emit(state.copyWith(productStockList: productStockList));
             } else {}
@@ -377,13 +377,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
               } else {
-                emit(state.copyWith(isLoading: false));
+                Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+                emit(state.copyWith(isLoading: false));
               }
             } on ServerException {
               emit(state.copyWith(isLoading: false));
             } catch (e) {
-              debugPrint('err = $e');
+              printData('err = $e');
               emit(state.copyWith(isLoading: false));
             }
           } else {
@@ -393,7 +394,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               Map<String, dynamic> req = insertCartReqModel.toJson();
               req.removeWhere((key, value) {
                 if (value != null) {
-                  debugPrint("[$key] = $value");
+                  printData("[$key] = $value");
                 }
                 return value == null;
               });
@@ -428,10 +429,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
             } on ServerException {
-              debugPrint('url1 = ');
+              printData('url1 = ');
               emit(state.copyWith(isLoading: false));
             } catch (e) {
-              debugPrint('err = $e');
+              printData('err = $e');
               emit(state.copyWith(isLoading: false));
             }
           }
@@ -503,7 +504,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
           if (event.isDelete) {
             messageList.removeWhere((message) => message.id == event.messageId);
-            debugPrint('message list len after delete = ${messageList.length}');
+            printData('message list len after delete = ${messageList.length}');
           }
           emit(state.copyWith(messageList: []));
           emit(state.copyWith(messageList: messageList));
@@ -533,7 +534,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               preferences.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
               preferences.setBusinessName(businessName: response.data?.clients?.first.clientDetail?.bussinessName ?? '');
               preferences.setEmailId(userEmailId: response.data?.clients?.first.email ?? '');
-              debugPrint('Payment Types:${response.data?.clients?.first.clientDetail?.isAvailableAllPayments.toString()}');
+              printData('Payment Types:${response.data?.clients?.first.clientDetail?.isAvailableAllPayments.toString()}');
               if (!preferences.getSubUser()) {
                 preferences.setUserImageUrl(imageUrl: response.data?.clients?.first.profileImage ?? '');
                 emit(
@@ -566,7 +567,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             //  }
             }
           } catch (e) {
-            debugPrint(e.toString());
+            printData(e.toString());
           }
         } else if (event is _getRecommendationProductsListEvent) {
           try {
@@ -692,7 +693,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                           ))
                       .toList() ??
                   []);
-              debugPrint('store search list = ${searchList.length}');
+              printData('store search list = ${searchList.length}');
               emit(state.copyWith(searchList: searchList, search: state.searchController.text, isSearching: false));
             } else {
               emit(state.copyWith(isSearching: false));
@@ -781,7 +782,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
 
-            debugPrint('general settings = ${response.data.toString()}');
+            printData('general settings = ${response.data.toString()}');
             if (response.status == AppConstants.code_200) {
               if (preferences.getAppOnMaintenance() && !(response.data?.isAppOnMaintenance ?? false)) {
                 add(HomeEvent.updateMaintenanceEvent(context: event.context));
@@ -852,7 +853,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
             }
           } catch (e) {
-            debugPrint('catch____$e');
+            printData('catch____$e');
           }
         }
       }

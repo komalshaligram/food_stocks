@@ -9,6 +9,7 @@ class OtpState with _$OtpState {
     required String otp,
     required bool isLoading,
     required String errorMessage,
+    required bool isRegister
 
   }) = _OtpState;
 
@@ -17,6 +18,7 @@ class OtpState with _$OtpState {
       otp: '',
       isLoading: false,
       errorMessage: '',
+    isRegister: false
 
   ) ;
 

@@ -41,8 +41,6 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).get(path: AppUrls.getBusinessTypeUrl);
           BusinessNameModel response = BusinessNameModel.fromJson(res);
-          debugPrint('agent response = ${response.data.toString()}');
-          debugPrint('Business url = ${AppUrls.baseUrl}${AppUrls.getBusinessTypeUrl}');
           List<BusinessType> businessTypeList = [];
           businessTypeList.add(BusinessType(businessTypeName: AppLocalizations.of(event.context)!.type_of_business));
           businessTypeList.addAll(response.data?.businessType ?? []);
@@ -59,10 +57,9 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
       }
     else if (event is _navigateToNextScreenEvent) {
 
-        debugPrint('business___${state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).businessTypeName}');
+        printData('business___${state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).businessTypeName}');
         termsConditionReqModel = TermsConditionReqModel(
           id: preferencesHelper.getUserId(),
-          agentId: state.agentCodeController.text.trim(),
           businessTypeId: state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id,
           owner1FullName: state.owner1NameController.text.trim(),
           owner1IsraelId: state.owner1israelIdController.text.trim(),
@@ -84,33 +81,22 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           emit(state.copyWith(isShimmering: true));
           Map reqMap ={"agentCode":state.agentCodeController.text.trim()};
           final res = await DioClient(event.context).post(AppUrls.verifyAgentUrl,data: reqMap);
-          debugPrint("res:$res");
-          if(res['status']==AppConstants.code_200){
-            debugPrint("success");
+
+          if(res[AppStrings.statusString]==AppConstants.code_200){
+
             emit(state.copyWith(isShimmering: false));
             add(FormDataEvent.navigateToNextScreenEvent(context: event.context));
           }else{
-            debugPrint("fail${res['message']}");
+
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     res['message'].toString().toLocalization(),
                     event.context),
                 type: SnackBarType.failure);
-            debugPrint("fail1${    res['message'].toString().toLocalization()}");
+
             emit(state.copyWith(isShimmering: false));
           }
-         /* BusinessNameModel response = BusinessNameModel.fromJson(res);
-          debugPrint('agent response = ${response.data.toString()}');
-          debugPrint('Business url = ${AppUrls.baseUrl}${AppUrls.getBusinessTypeUrl}');
-          List<BusinessType> businessTypeList = [];
-          businessTypeList.add(BusinessType(businessTypeName: AppLocalizations.of(event.context)!.type_of_business));
-          businessTypeList.addAll(response.data?.businessType ?? []);
-          if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(isShimmering: false, businessTypeList: businessTypeList, business: businessTypeList.first.businessTypeName.toString(), haveMultiple: response.data?.businessType?.first.haveMultiple ?? false));
-          } else {
-            emit(state.copyWith(isShimmering: false));
-          }*/
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
         } catch (exc) {

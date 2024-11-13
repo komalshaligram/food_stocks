@@ -127,7 +127,6 @@ class HomeScreenWidget extends StatelessWidget {
                                         imageUrl: '${AppUrls.baseFileUrl}${state.userImageUrl}',
                                         fit: BoxFit.cover,
                                         errorWidget: (context, url, error) {
-                                          debugPrint('home error : $error');
                                           return Container(
                                             color: AppColors.whiteColor,
                                           );
@@ -172,9 +171,7 @@ class HomeScreenWidget extends StatelessWidget {
                                           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
                                           onTap: () async {
                                             dynamic messageResult = await Navigator.pushNamed(context, RouteDefine.messageScreen.name);
-                                            debugPrint('delete = $messageResult');
                                             if (messageResult != null) {
-                                              debugPrint('delete = ${messageResult[AppStrings.messageIdListString]}');
                                               bloc.add(HomeEvent.updateMessageListEvent(messageIdList: messageResult[AppStrings.messageIdListString] ?? ''));
                                             }
                                           },
@@ -272,7 +269,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                 placeholder: (context, url) => const PesachBannerShimmerWidget(),
                                                 imageUrl: '${AppUrls.baseFileUrl}${state.pesachBannerURL}',
                                                 errorWidget: (context, url, error) {
-                                                  debugPrint('home error : $error');
                                                   return Container(
                                                     color: AppColors.whiteColor,
                                                   );
@@ -318,7 +314,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                             lowStock: state.productSalesList[index].lowStock ?? '',
                                                             isPesach: state.productSalesList[index].isPesach,
                                                             onButtonTap: () {
-                                                              debugPrint("tap 1");
                                                               if (!state.isGuestUser) {
                                                                 showProductDetails(isSaleOn: state.isSaleOn, productListIndex: 3, context: context, productId: state.productSalesList[index].id ?? '', productStock: state.productSalesList[index].productStock.toString());
                                                               } else {
@@ -367,7 +362,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                           lowStock: state.recommendedProductsList[index].lowStock ?? '',
                                                           isPesach: state.recommendedProductsList[index].isPesach,
                                                           onButtonTap: () {
-                                                            debugPrint("tap 1");
                                                             if (!state.isGuestUser) {
                                                               showProductDetails(
                                                                 isSaleOn: state.isSaleOn,
@@ -432,7 +426,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                       AppStrings.messageIdString: state.messageList[index].id,
                                                       AppStrings.isReadMoreString: true,
                                                     });
-                                                    debugPrint('message = $messageNewData');
                                                     if (messageNewData != null) {
                                                       context.read<HomeBloc>().add(HomeEvent.removeOrUpdateMessageEvent(messageId: messageNewData[AppStrings.messageIdString], isRead: messageNewData[AppStrings.messageReadString], isDelete: messageNewData[AppStrings.messageDeleteString]));
                                                     }
@@ -457,20 +450,17 @@ class HomeScreenWidget extends StatelessWidget {
                                     bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: false));
                                   },
                                   onSearchTap: () {
-                                    debugPrint('onSearchTap');
                                     if (state.searchController.text.isNotEmpty) {
                                       bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: true));
                                     }
                                   },
                                   onSearch: (String search) {
-                                    debugPrint('onSearch');
                                     if (search.length > 1) {
                                       bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: true));
                                       bloc.add(HomeEvent.globalSearchEvent(context: context));
                                     }
                                   },
                                   onSearchSubmit: (String search) {
-                                    debugPrint('onSearchSubmit');
                                     Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
                                   },
                                   onOutSideTap: () {
@@ -514,7 +504,7 @@ class HomeScreenWidget extends StatelessWidget {
                                               ? true
                                               : false,
                                           onSeeAllTap: () async {
-                                            debugPrint("searchType: ${state.searchList[index].searchType}");
+                                            printData("searchType: ${state.searchList[index].searchType}");
                                             if (state.searchList[index].searchType == SearchTypes.category) {
                                               dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
                                               if (searchResult != null) {
@@ -545,7 +535,7 @@ class HomeScreenWidget extends StatelessWidget {
                                               return;
                                             }
                                             if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
-                                              debugPrint("tap 4");
+
                                               showProductDetails(context: context, productId: state.searchList[index].searchId, isBarcode: true, productListIndex: 0, isSaleOn: state.isSaleOn, productStock: (state.searchList[index].productStock.toString()));
                                             } else if (state.searchList[index].searchType == SearchTypes.category) {
                                               dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
@@ -563,8 +553,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
                                     if (scanResult != '-1') {
                                       // -1 result for cancel scanning
-                                      debugPrint('result = $scanResult');
-                                      debugPrint("tap 5");
+                                      printData('result = $scanResult');
                                       showProductDetails(context: context, productId: scanResult, isBarcode: true, productStock: '1', productListIndex: 0, isSaleOn: state.isSaleOn);
                                     }
                                   },
@@ -596,12 +585,10 @@ class HomeScreenWidget extends StatelessWidget {
       PushNotificationService().firebaseMessaging.getInitialMessage().then(
         (message) async {
           if (message != null) {
-            debugPrint("onMessageClosedApp: ${message.data}");
             if (message.data.isNotEmpty) {
               var data = json.decode(message.data['data'].toString());
-              debugPrint('data home:${data.toString()}');
+              printData('data home:${data.toString()}');
               if (data != null) {
-                debugPrint('noti from  home');
                 FlutterAppBadger.removeBadge();
                 PushNotificationService().showNotification(
                   notificationId: message.notification.hashCode,
@@ -729,10 +716,8 @@ class HomeScreenWidget extends StatelessWidget {
                                         isBottle: (state.productDetails.first.isBottle ?? false),
                                         addToOrderTap: () {
                                           if (int.parse(state.productDetails.first.sale!.saleMinQuantity!) <= state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
-                                            debugPrint('here 1  ');
                                             context.read<HomeBloc>().add(HomeEvent.addToCartProductEvent(context: context1, productId: productId));
                                           } else {
-                                            debugPrint('here');
                                             showMinQtyConfirmDialog(context, productId, state.productDetails.first.sale!.saleMinQuantity.toString());
                                           }
                                         },
@@ -748,13 +733,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                     width: getScreenWidth(context),
                                                     child: GestureDetector(
                                                       onVerticalDragStart: (dragDetails) {
-                                                        debugPrint('onVerticalDragStart');
                                                       },
                                                       onVerticalDragUpdate: (dragDetails) {
-                                                        debugPrint('onVerticalDragUpdate');
                                                       },
                                                       onVerticalDragEnd: (endDetails) {
-                                                        debugPrint('onVerticalDragEnd');
                                                         Navigator.pop(dialogContext);
                                                       },
                                                       child: PhotoView(
@@ -838,7 +820,6 @@ class HomeScreenWidget extends StatelessWidget {
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
           child: ListView.builder(
             controller: ScrollController(),
-            //physics: const ClampingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemBuilder: (context2, i) {
@@ -974,9 +955,11 @@ class HomeScreenWidget extends StatelessWidget {
                 Navigator.pop(context);
               },
               positiveOnTap: () async {
-                Navigator.pop(context);
-                Navigator.pop(context1);
-                bloc.add(HomeEvent.addToCartProductEvent(context: context1, productId: productId));
+                bloc.add(HomeEvent.addToCartProductEvent(context: context, productId: productId));
+                await Future.delayed(const Duration(seconds: 1)).then((_){
+                  printData('message');
+                  Navigator.pop(context1);
+                });
               },
             );
           },

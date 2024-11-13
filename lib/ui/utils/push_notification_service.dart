@@ -16,6 +16,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'app_utils.dart';
+
 class PushNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
@@ -36,7 +38,7 @@ class PushNotificationService {
     } else {
       PermissionStatus status = await Permission.notification.request();
       if (status.isGranted) {
-        debugPrint('Granted!!!');
+        printData('Granted!!!');
         // notification permission is granted
       } else {
         // Open settings to enable notification permission
@@ -46,13 +48,13 @@ class PushNotificationService {
 
     FirebaseMessaging.onMessageOpenedApp.listen(
           (RemoteMessage message) async {
-        debugPrint('_____Here at onMessageOpenedApp....$message');
+        printData('_____Here at onMessageOpenedApp....$message');
         var data = json.decode(message.data['data'].toString());
-        debugPrint('_____onMessage_______${data.toString()}');
-        debugPrint('_____onMessage Noti_______${message.notification.toString()}');
-        debugPrint('main_page_____$mainPage');
-        debugPrint('sub_page_____$subPage');
-        debugPrint('id_____$id');
+        printData('_____onMessage_______${data.toString()}');
+        printData('_____onMessage Noti_______${message.notification.toString()}');
+        printData('main_page_____$mainPage');
+        printData('sub_page_____$subPage');
+        printData('id_____$id');
         FlutterAppBadger.removeBadge();
         SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -79,13 +81,13 @@ class PushNotificationService {
 
    handleMessage(String mainPage,String subPage, String id)  async {
     if (subPage == '') {
-      debugPrint('_______handleMessage1...');
+      printData('_______handleMessage1...');
       if (mainPage == 'companyScreen') {
-        debugPrint('_______handleMessage2...${navigatorKey.currentState.toString()}');
+        printData('_______handleMessage2...${navigatorKey.currentState.toString()}');
         Navigator.pushNamed(navigatorKey.currentState!.context,
             RouteDefine.companyScreen.name,
             arguments: {AppStrings.companyIdString: id});
-        debugPrint('_______handleMessage3...');
+        printData('_______handleMessage3...');
       }
       if (mainPage == 'saleScreen') {
         Navigator.pushNamed(navigatorKey.currentState!.context,
@@ -141,7 +143,7 @@ class PushNotificationService {
   getToken() async {
   //  fcmToken = Platform.isAndroid? await firebaseMessaging.getToken(): await firebaseMessaging.getAPNSToken();
     fcmToken = (await firebaseMessaging.getToken().then((value) {
-      debugPrint('Token: $value');
+      printData('Token: $value');
       return value??'';
     }));
   }
@@ -168,10 +170,10 @@ class PushNotificationService {
     flutterLocalNotificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
-        debugPrint("__________details______:$details");
-        debugPrint('main_page_____$mainPage');
-        debugPrint('sub_page_____$subPage');
-        debugPrint('id_____$id');
+        printData("__________details______:$details");
+        printData('main_page_____$mainPage');
+        printData('sub_page_____$subPage');
+        printData('id_____$id');
         //handleMessage(mainPage, subPage, id);
       },
     );
@@ -183,7 +185,7 @@ class PushNotificationService {
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
       var data = json.decode(message!.data['data'].toString());
       FlutterAppBadger.removeBadge();
-      debugPrint('_____onMessage_______${data.toString()}');
+      printData('_____onMessage_______${data.toString()}');
       if(Platform.isAndroid){
         showNotification(imageUrl:data['data']['image'], notificationId: 0, title: message.notification!.title??'', body: message.notification!.body??'',
             data: data
@@ -198,7 +200,7 @@ class PushNotificationService {
     SharedPreferencesHelper preferences =
     SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     preferences.setFCMToken(fcmTokenId: fcmToken??'');
-    debugPrint("FCM Token: ${preferences.getFCMToken()}");
+    printData("FCM Token: ${preferences.getFCMToken()}");
   _handleAppIsOpen();
   }
 
@@ -211,11 +213,11 @@ class PushNotificationService {
     var data,
 
   }) async {
-    debugPrint('____notification_____');
-    debugPrint('main_page_____$mainPage');
-    debugPrint('sub_page_____$subPage');
-    debugPrint('id_____$id');
-    debugPrint('data_____$data');
+    printData('____notification_____');
+    printData('main_page_____$mainPage');
+    printData('sub_page_____$subPage');
+    printData('id_____$id');
+    printData('data_____$data');
     channel = androidNotificationChannel();
     SharedPreferencesHelper preferences =
     SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -238,7 +240,7 @@ class PushNotificationService {
           .load(imageUrl))
           .buffer
           .asUint8List();
-      debugPrint('imageUrl__${imageByte}');
+      printData('imageUrl__${imageByte}');
     }
     var file;
     try {
@@ -271,7 +273,7 @@ class PushNotificationService {
     }else{
       fileName = null;
     }
-    debugPrint('ide___$id');
+    printData('ide___$id');
     notificationCount = notificationCount++;
     await flutterLocalNotificationsPlugin.show(
         notificationId,

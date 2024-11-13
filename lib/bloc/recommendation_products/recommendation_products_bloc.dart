@@ -201,7 +201,7 @@ class RecommendationProductsBloc
                     return;
                   }
                 });
-                debugPrint(
+                printData(
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
@@ -435,8 +435,7 @@ class RecommendationProductsBloc
                     [state.productStockUpdateIndex]
                         .quantity -
                         1);
-            debugPrint(
-                'product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+   
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           } else {}
@@ -621,7 +620,7 @@ class RecommendationProductsBloc
           } on ServerException {
             emit(state.copyWith(isLoading: false));
           } catch (e) {
-            debugPrint('err = $e');
+            printData('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         } else {
@@ -652,7 +651,7 @@ class RecommendationProductsBloc
             Map<String, dynamic> req = insertCartReqModel.toJson();
             req.removeWhere((key, value) {
               if (value != null) {
-                debugPrint("[$key] = $value");
+                printData("[$key] = $value");
               }
               return value == null;
             });
@@ -715,10 +714,8 @@ class RecommendationProductsBloc
                   type: SnackBarType.failure);
             }
           } on ServerException {
-            debugPrint('url1 = ');
             emit(state.copyWith(isLoading: false));
           } catch (e) {
-            debugPrint('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         }
@@ -772,7 +769,7 @@ class RecommendationProductsBloc
             emit(state.copyWith(searchList: searchList, isSearching: false));
             return;
           }
-          debugPrint('store search list =${response.status}');
+    
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             //category search result
@@ -1038,7 +1035,7 @@ class RecommendationProductsBloc
           }
         }
         catch (e) {
-          debugPrint('catch____$e');
+          printData('catch____$e');
         }
       }
     });

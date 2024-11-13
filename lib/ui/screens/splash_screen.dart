@@ -21,7 +21,6 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint('splash args = $args');
     return BlocProvider(
       create: (context) => SplashBloc()
         ..add(SplashEvent.splashLoaded(
@@ -51,7 +50,7 @@ class SplashScreenWidget extends StatelessWidget {
               prefs: await SharedPreferences.getInstance());
           getVersion(preferencesHelper);
 
-          debugPrint('${preferencesHelper.getUserLoggedIn()}');
+          printData('${preferencesHelper.getUserLoggedIn()}');
           if (preferencesHelper.getUserLoggedIn()) {
             Navigator.pushReplacementNamed(
                 context, RouteDefine.bottomNavScreen.name, arguments: {

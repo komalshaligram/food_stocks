@@ -28,17 +28,13 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
       if (state.isLoading) {
         return;
       }
-      SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _logInApiDataEvent) {
         emit(state.copyWith(isLoading: true));
         preferencesHelper.setIsGuestUser(isGuestUser: false);
         try {
-          LoginReqModel reqMap = LoginReqModel(
-              contact: event.contactNumber, isRegistration: state.isRegister,
-          applicationName: AppStrings.appName
-          );
+          LoginReqModel reqMap = LoginReqModel(contact: event.contactNumber, applicationName: AppStrings.appName);
           final res = await DioClient(event.context).post(
             AppUrls.existingUserLoginUrl,
             data: reqMap,
@@ -47,26 +43,26 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           LoginResModel response = LoginResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-
             await SmsAutoFill().listenForCode();
-            preferencesHelper.setUserId(id: response.user?.id ?? '');
             preferencesHelper.setIsGuestUser(isGuestUser: false);
-            preferencesHelper.setPhoneNumber(
-                userPhoneNumber: event.contactNumber);
-            Navigator.pushNamed(event.context, RouteDefine.otpScreen.name, arguments: {
-              AppStrings.contactString: event.contactNumber,
-              AppStrings.isRegisterString: state.isRegister
-            });
-            emit(state.copyWith( isLoading: false));
-          } else if(response.status == AppConstants.code_403){
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
-            emit(state.copyWith(isLoading: false,));
-          }
-          else {
+           // preferencesHelper.setUserExist(isUserExist: response.data?.isUserExists??false);
+            if (response.user != null) {
+              preferencesHelper.setUserId(id: response.user?.id ?? '');
+              preferencesHelper.setPhoneNumber(userPhoneNumber: event.contactNumber);
+            }
+           // Navigator.pushNamed(event.context, RouteDefine.otpScreen.name, arguments: {AppStrings.contactString: event.contactNumber, AppStrings.isRegisterString: state.isRegister});
+            Navigator.pushNamed(event.context, RouteDefine.otpScreen.name, arguments: {AppStrings.contactString: event.contactNumber, AppStrings.isRegisterString: !(response.data?.isUserExists??false)});
+            emit(state.copyWith(isLoading: false));
+          } else if (response.status == AppConstants.code_403) {
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
-            emit(state.copyWith(isLoading: false,));
+            emit(state.copyWith(
+              isLoading: false,
+            ));
+          } else {
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            emit(state.copyWith(
+              isLoading: false,
+            ));
           }
         } on ServerException {
           emit(state.copyWith(
@@ -77,23 +73,21 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             isLoading: false,
           ));
         }
-      }
-      else if (event is _checkVersionOfAppEvent) {
+      } else if (event is _checkVersionOfAppEvent) {
         final checker = StoreVersionChecker();
         // PackageInfo packageInfo = await PackageInfo.fromPlatform();
         checker.checkUpdate().then((value) {
-          debugPrint(value.currentVersion); //return current app version
-          debugPrint(value.newVersion); //return the new app version
-          debugPrint(value.appURL); //return the app url
-          debugPrint(value.errorMessage);
-          if(value.canUpdate && Platform.isAndroid){
-            customShowUpdateDialog(event.context, preferencesHelper.getAppLanguage(),value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
-          }else if(value.canUpdate && Platform.isIOS){
-            customShowUpdateDialog(event.context, preferencesHelper.getAppLanguage(),value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
+          printData(value.currentVersion); //return current app version
+          printData(value.newVersion); //return the new app version
+          printData(value.appURL); //return the app url
+          printData(value.errorMessage);
+          if (value.canUpdate && Platform.isAndroid) {
+            customShowUpdateDialog(event.context, preferencesHelper.getAppLanguage(), value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
+          } else if (value.canUpdate && Platform.isIOS) {
+            customShowUpdateDialog(event.context, preferencesHelper.getAppLanguage(), value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
           }
         });
-      }
-      else if (event is _changeAuthEvent) {
+      } else if (event is _changeAuthEvent) {
         emit(state.copyWith(isRegister: event.isRegister));
       }
     });

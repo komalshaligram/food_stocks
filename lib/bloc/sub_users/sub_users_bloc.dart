@@ -49,14 +49,9 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
             AppUrls.getAllSubUserUrl,
             data: req,
           );
-          debugPrint('get all subUser req = ${req}');
-
-          debugPrint('url = ${AppUrls.baseUrl}${AppUrls.getAllSubUserUrl}');
           GetSubUserResModel response = GetSubUserResModel.fromJson(res);
-          debugPrint('get all subUser res = ${response}');
 
-
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             List<User> subUserList = state.subUserList.toList(growable: true);
             if ((response.data?.totalRecords ?? 1) > state.subUserList.length) {
               subUserList.addAll(response.data?.users ?? []);
@@ -105,15 +100,15 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
         emit(state.copyWith(isBottomOfProducts: false,isPop: true,pageNum: 0));
 
         try {
-          debugPrint('clientId_____${preferences.getUserId()}');
+          printData('clientId_____${preferences.getUserId()}');
           final res = await DioClient(event.context).post(
               AppUrls.verifyClientUrl,
               data: {AppStrings.clientIdString:preferences.getUserId()}
           );
           VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-          debugPrint('verifyClient res_____$response');
-          debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
-          if (response.status == 200) {
+          printData('verifyClient res_____$response');
+          printData('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+          if (response.status == AppConstants.code_200) {
             if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
               Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
             }
@@ -127,7 +122,7 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
           }
         } on ServerException {}
         catch (e) {
-          debugPrint('catch____$e');
+          printData('catch____$e');
         }
 
 

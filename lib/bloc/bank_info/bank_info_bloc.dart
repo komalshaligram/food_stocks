@@ -36,7 +36,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           final res = await DioClient(event.context).get(
               path: AppUrls.getBankDetailUrl);
           BankDetailModel response = BankDetailModel.fromJson(res);
-          debugPrint('bank details response = ${response.data.toString()}');
+        
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
               isShimmering: false, bankList: response.data?.bankDetail ?? [],
@@ -55,10 +55,9 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
         termsConditionReqModel = event.termsConditionReqModel;
       }
       else if (event is _termsConditionApiEvent) {
-        debugPrint('termCondition response1 ____${termsConditionReqModel.toJson().toString()}');
+     
         termsConditionReqModel = TermsConditionReqModel(
             id: preferencesHelper.getUserId(),
-            agentId: termsConditionReqModel.agentId,
             businessTypeId: termsConditionReqModel.businessTypeId,
             owner1FullName: termsConditionReqModel.owner1FullName,
             owner1IsraelId: termsConditionReqModel.owner1IsraelId,
@@ -83,7 +82,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
         Map<String, dynamic> req = termsConditionReqModel.toJson();
         req.removeWhere((key, value) {
           if (value != null) {
-            debugPrint("[$key] = $value");
+            printData("[$key] = $value");
           }
           return value == null;
         });
@@ -95,7 +94,6 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
             formData: FormData.fromMap(
               {
                 AppStrings.userIdString : preferencesHelper.getUserId(),
-                AppStrings.agentIdString : termsConditionReqModel.agentId,
                 AppStrings.businessTypeIdString : termsConditionReqModel.businessTypeId,
                 AppStrings.owner1FullNameString : termsConditionReqModel.owner1FullName,
                 AppStrings.owner1IsraelIdString : termsConditionReqModel.owner1IsraelId,
@@ -185,7 +183,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           }
         }catch(e){
           emit(state.copyWith(isApiShimmering: false));
-          debugPrint(e.toString());
+          printData(e.toString());
         }
       }
     }

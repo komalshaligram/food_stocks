@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,7 @@ import '../../data/model/req_model/profile_req_model/profile_model.dart'
 import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
+import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 part 'my_app_state.dart';
@@ -43,7 +45,7 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
 
         clientDetail?.removeWhere((key, value) {
           if (value != null) {
-            debugPrint("[$key] = $value");
+            printData("[$key] = $value");
           }
           return value == null;
         });
@@ -51,23 +53,21 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
         req[AppStrings.clientDetailString] = clientDetail;
         req.removeWhere((key, value) {
           if (value != null) {
-            debugPrint("[$key] = $value");
+            printData("[$key] = $value");
           }
           return value == null;
         });
-        debugPrint("update before Model = ${req}");
         try {
-          debugPrint('profile req = ${req}');
           final res = await DioClient(event.context).post(
-            AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
+            "${AppUrls.updateProfileDetailsUrl}/${preferences.getUserId()}",
             data: req,
           );
           if (res != null) {
             ProfileDetailsUpdateResModel response =
                 ProfileDetailsUpdateResModel.fromJson(res);
-            debugPrint('profile response = $response');
-            if (response.status == 200) {
-              debugPrint('______success');
+            printData('profile response = $response');
+            if (response.status == AppConstants.code_200) {
+              printData('______success');
             } else {}
           }
         } on ServerException {}

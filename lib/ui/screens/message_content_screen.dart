@@ -250,11 +250,8 @@ class MessageContentScreenWidget extends StatelessWidget {
     required String subPage,
     required String id,
   }) {
-    debugPrint('subPage  = $subPage');
-    debugPrint('mainPage  = $mainPage');
     if (subPage == '') {
       if (mainPage == 'companyScreen') {
-        debugPrint('companyScreen___');
         Navigator.pushNamed(navigatorKey.currentState!.context, RouteDefine.companyScreen.name, arguments: {AppStrings.companyIdString: id});
       }
       if (mainPage == 'saleScreen') {

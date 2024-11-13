@@ -14,7 +14,7 @@ String loginRequestToJson(LoginReqModel data) => json.encode(data.toJson());
 class LoginReqModel with _$LoginReqModel {
   const factory LoginReqModel({
     required String contact,
-    required bool isRegistration,
+
     required String applicationName,
   }) = _LoginReqModel;
 

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -33,17 +34,17 @@ class OrderSuccessfulBloc
         try {
           WalletRecordReqModel reqMap =
               WalletRecordReqModel(userId: preferencesHelper.getUserId());
-          debugPrint('WalletRecordReqModel = $reqMap}');
+    
           final res = await DioClient(event.context).post(
             AppUrls.walletRecordUrl,
             data: reqMap,
           );
 
-          debugPrint('WalletRecord url  = ${AppUrls.walletRecordUrl}');
-          WalletRecordResModel response = WalletRecordResModel.fromJson(res);
-          debugPrint('WalletRecordResModel  = $response');
 
-          if (response.status == 200) {
+          WalletRecordResModel response = WalletRecordResModel.fromJson(res);
+
+
+          if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
                 thisMonthExpense: response.data?.currentMonth?.totalExpenses?.toDouble() ?? 0,
                 lastMonthExpense: response.data?.previousMonth?.totalExpenses?.toDouble() ?? 0,
@@ -79,18 +80,15 @@ class OrderSuccessfulBloc
             endDate: DateTime(now.year, now.month, daysInMonth(DateTime.now())),
           );
 
-          debugPrint('getOrdersCount reqMap = $reqMap}');
 
           final res =
           await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
             data: reqMap,
           );
 
-          debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
           GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
-          debugPrint('getOrdersCount response  = ${response}');
 
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             emit(state.copyWith(orderThisMonth: response.data!.toInt()));
           }
         } on ServerException {}

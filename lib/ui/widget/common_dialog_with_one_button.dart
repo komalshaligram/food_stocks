@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
@@ -37,31 +38,29 @@ class CustomOneButtonDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Directionality(
       textDirection: directionality == AppStrings.englishString ? TextDirection.ltr : TextDirection.rtl,
       child: AlertDialog(
         contentPadding: const EdgeInsets.all(20.0),
         surfaceTintColor: AppColors.whiteColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        title: RichText(
-          text:  TextSpan(
-            text: subTitle == '' ? '': '$subTitle' ':',
-            style: AppStyles.rkRegularTextStyle(
-              size: AppConstants.font_14,
-              color: AppColors.blackColor,),
-            children: <TextSpan>[
-              TextSpan(
-                text:
-                title,
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(title,
                 style: AppStyles.rkRegularTextStyle(
-                    color: AppColors.blackColor, size: AppConstants.smallFont,
+                    color: subTitle.isNotEmpty?AppColors.redColor:AppColors.blackColor, size: AppConstants.smallFont,
                     fontWeight: FontWeight.w600
-                ),
-              ),
-            ],
-          ),
+                )),
+            subTitle.isEmpty?0.height: Text(subTitle,
+                style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_14,
+                  color: AppColors.blackColor,))
+          ],
         ),
-
         actionsPadding: const EdgeInsets.only(
             right: AppConstants.padding_20,
             bottom: AppConstants.padding_10,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../app_utils.dart';
+
 class AppStrings {
   static const appName = 'Tavili';
   static const cropImageString = 'Crop Image';
@@ -204,7 +206,7 @@ class AppStrings {
   static const userPhoneNum =  "User phone number";
 
   static String getLocalizedStrings(String key, BuildContext context) {
-    debugPrint('Key$key');
+    printData('Key$key');
     switch (key) {
       case 'errmessage':
         return AppLocalizations.of(context)!.err_message;

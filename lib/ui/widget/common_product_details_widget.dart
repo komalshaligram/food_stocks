@@ -72,7 +72,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
               }
             },
             onVerticalDragUpdate: (dragDetails) {
-              debugPrint('onVerticalDragUpdate1');
               if(isFromBasketScreen){
                 onCloseTap();
               }
@@ -184,13 +183,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     onVerticalDragStart: (dragDetails) {
-                      debugPrint('onVerticalDragStart2');
                     },
                     onVerticalDragUpdate: (dragDetails) {
-                      debugPrint('onVerticalDragUpdate2');
                     },
                     onVerticalDragEnd: (endDetails) {
-                      debugPrint('onVerticalDragEnd2');
                     },
                     child: Center(
                       child: Stack(

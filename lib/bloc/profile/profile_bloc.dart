@@ -60,14 +60,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               bytes: croppedImage?.path.isNotEmpty ?? false
                   ? await File(croppedImage!.path).length()
                   : await pickedFile.length());
-          debugPrint('data1 final size = $imageSize');
 
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
           }
             try {
               emit(state.copyWith(isFileUploading: true,isUploadingProcess: true));
-              debugPrint("image1 = ${croppedImage?.path ?? pickedFile.path}");
               final response =
                   await DioClient(event.context).uploadFileProgressWithFormData(
                 path: AppUrls.fileUploadUrl,
@@ -81,7 +79,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               );
               FileUploadModel profileImageModel =
                   FileUploadModel.fromJson(response);
-              debugPrint('img url = ${profileImageModel.filepath}');
               if (profileImageModel.filepath != '') {
                 imgUrl = profileImageModel.filepath ?? '';
                 emit(state.copyWith(
@@ -89,9 +86,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                     isFileUploading: false,
                     image: File(croppedImage?.path ?? pickedFile.path),
                     UserImageUrl: profileImageModel.filepath ?? ''));
-                debugPrint(
-                    "image1 = ${croppedImage?.path}\n${pickedFile.path}");
-                debugPrint("image1 = ${state.image}");
+                
               }
             } on ServerException {
               emit(state.copyWith(isFileUploading: false,isUploadingProcess: false));
@@ -132,7 +127,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               emit(state.copyWith());
             }
           }else{
-            debugPrint('${res.message}');
+            printData('${res.message}');
           }
         } on ServerException {
           emit(state.copyWith());
@@ -153,9 +148,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 businessTypeList: list,
                 selectedBusinessType:
                 list.elementAt(0).businessType??''));
-          } else {
-            debugPrint('business types not found.\n${response.message}');
-          }
+          } 
         } catch (e) { emit(state.copyWith(isShimmering: false));}
       } else if (event is _ChangeBusinessTypeEventEvent) {
         emit(state.copyWith(selectedBusinessType: event.newBusinessType));
@@ -275,14 +268,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             updatedProfileModel.clientDetail?.toJson();
         clientDetail?.removeWhere((key, value) {
           if (value != null) {
-            debugPrint("[$key] = $value");
+            printData("[$key] = $value");
           }
           return value == null;
         });
         req[AppStrings.clientDetailString] = clientDetail;
         req.removeWhere((key, value) {
           if (value != null) {
-            debugPrint("[$key] = $value");
+            printData("[$key] = $value");
           }
           return value == null;
         });
@@ -361,14 +354,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           updatedProfileModel.clientDetail?.toJson();
           clientDetail?.removeWhere((key, value) {
             if (value != null) {
-              debugPrint("[$key] = $value");
+              printData("[$key] = $value");
             }
             return value == null;
           });
           req[AppStrings.clientDetailString] = clientDetail;
           req.removeWhere((key, value) {
             if (value != null) {
-              debugPrint("[$key] = $value");
+              printData("[$key] = $value");
             }
             return value == null;
           });

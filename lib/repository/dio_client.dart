@@ -46,16 +46,16 @@ class DioClient {
               contentType: Headers.jsonContentType,
               responseType: ResponseType.json),
         )..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
-            //  debugPrint("app request data ${options.data}");
+            //  printData("app request data ${options.data}");
             return handler.next(options);
           }, onResponse: (response, handler) async {
             if (kDebugMode) {
-              debugPrint("app response data ${response.data}");
+              printData("app response data ${response.data}");
             }
             return handler.next(response);
           }, onError: (DioException e, handler) {
             if (kDebugMode) {
-              debugPrint("app error data $e");
+              printData("app error data $e");
             }
             return handler.next(e);
           }));
@@ -64,15 +64,15 @@ class DioClient {
     SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     final connectivityResult = await (Connectivity().checkConnectivity());
     preferencesHelper.setApiUrl(apiUrl: path);
-    debugPrint('URL = ${AppUrls.baseUrl}$path');
-    debugPrint('token = ${preferencesHelper.getAuthToken()}');
-    debugPrint('req:${data.toString()}');
+    printData('URL = ${AppUrls.baseUrl}$path');
+    printData('token = ${preferencesHelper.getAuthToken()}');
+    printData('req:${data.toString()}');
     if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi || connectivityResult == ConnectivityResult.ethernet) {
       try {
         Options requestOptions = options ?? Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferencesHelper.getAuthToken()}'});
         requestOptions.headers = requestOptions.headers ?? {};
         var response = await _dio.post(path, data: data, queryParameters: queryParameters, options: requestOptions);
-        debugPrint("$path: RES: ${response.toString()}");
+        printData("$path: RES: ${response.toString()}");
         isInProgress = false;
         return response.data;
       } on DioException catch (e) {
@@ -102,7 +102,7 @@ class DioClient {
     final response = await post(AppUrls.refreshTokenUrl, data: {"token": 'Bearer ${preferencesHelper.getRefreshToken()}'});
 
     RefreshTokenModel res = RefreshTokenModel.fromJson(response);
-    debugPrint('[refreshToken token] ${res.data?.accessToken}');
+    printData('[refreshToken token] ${res.data?.accessToken}');
 
     if (res.status == AppConstants.code_200) {
       return manageAccessTokenWork(preferencesHelper, res, type, queryParams, path, data);
@@ -117,7 +117,7 @@ class DioClient {
     preferencesHelper.setUserLoggedIn(isLoggedIn: true);
     preferencesHelper.setAuthToken(accToken: res.data?.accessToken ?? '');
     preferencesHelper.setRefreshToken(refToken: res.data?.refreshToken ?? '');
-    debugPrint('accessToken_____${res.data?.accessToken ?? ''}');
+    printData('accessToken_____${res.data?.accessToken ?? ''}');
     Options requestOptions = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferencesHelper.getAuthToken()}'});
     requestOptions.headers = requestOptions.headers ?? {};
     var response;
@@ -142,7 +142,7 @@ class DioClient {
         );
         break;
     }
-    debugPrint('res_______________________$response');
+    printData('res_______________________$response');
     return response.data;
   }
 
@@ -152,7 +152,7 @@ class DioClient {
     if (response.statusCode == AppConstants.code_200 && !isLogOut) {
       isLogOut = true;
       await preferencesHelper.setUserLoggedIn();
-      debugPrint('Token Expired = ${response.data}');
+      printData('Token Expired = ${response.data}');
       await Provider.of<LocaleProvider>(_context, listen: false).setAppLocale(locale: const Locale(AppStrings.hebrewString));
       Navigator.popUntil(_context, (route) => route.name == RouteDefine.bottomNavScreen.name);
       Navigator.pushNamed(_context, RouteDefine.connectScreen.name);
@@ -166,13 +166,13 @@ class DioClient {
     try {
       isInProgress = true;
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      debugPrint('URL = ${AppUrls.baseUrl}$path');
-      debugPrint('token = ${preferencesHelper.getAuthToken()}');
+      printData('URL = ${AppUrls.baseUrl}$path');
+      printData('token = ${preferencesHelper.getAuthToken()}');
       final connectivityResult = await (Connectivity().checkConnectivity());
       if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi || connectivityResult == ConnectivityResult.ethernet) {
         try {
           final response = await _dio.get(path, queryParameters: query, options: options ?? Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferencesHelper.getAuthToken()}'}));
-          debugPrint("$path: RES: ${response.toString()}");
+          printData("$path: RES: ${response.toString()}");
           isInProgress = false;
           return response.data as Map<String, dynamic>;
         } on DioException catch (e) {
@@ -200,7 +200,7 @@ class DioClient {
 
   Future<Map<String, dynamic>> uploadFileProgressWithFormData({required String path, required FormData formData}) async {
     try {
-      debugPrint('URL = ${AppUrls.baseUrl}$path');
+      printData('URL = ${AppUrls.baseUrl}$path');
       final response = await _dio.post(
         path,
         data: formData,
@@ -218,9 +218,9 @@ class DioClient {
       if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi || connectivityResult == ConnectivityResult.ethernet) {
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         try {
-          debugPrint('URL = ${AppUrls.baseUrl}$path');
-          debugPrint('token = ${preferencesHelper.getAuthToken()}');
-          debugPrint('req:${data.toString()}');
+          printData('URL = ${AppUrls.baseUrl}$path');
+          printData('token = ${preferencesHelper.getAuthToken()}');
+          printData('req:${data.toString()}');
           final response = await _dio.put(path,
               data: data,
               queryParameters: query,
@@ -230,7 +230,7 @@ class DioClient {
                       HttpHeaders.authorizationHeader: 'Bearer ${preferencesHelper.getAuthToken()}',
                     },
                   ));
-          debugPrint('$path: res:${response.data.toString()}');
+          printData('$path: res:${response.data.toString()}');
           return response.data;
         } on DioException catch (e) {
           if (e.response?.statusCode == AppConstants.code_401 && path != AppUrls.refreshTokenUrl) {
@@ -242,7 +242,7 @@ class DioClient {
           }
         }
       } else {
-        debugPrint('error');
+        printData('error');
         showDialog(
           context: _context,
           builder: (context) => NoInternetDialog(positiveOnTap: () {
@@ -264,9 +264,9 @@ class DioClient {
       if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi || connectivityResult == ConnectivityResult.ethernet) {
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         try {
-          debugPrint('URL = ${AppUrls.baseUrl}$path');
-          debugPrint('token = ${preferencesHelper.getAuthToken()}');
-          debugPrint('req:${data.toString()}');
+          printData('URL = ${AppUrls.baseUrl}$path');
+          printData('token = ${preferencesHelper.getAuthToken()}');
+          printData('req:${data.toString()}');
           final response = await _dio.delete(path,
               data: data,
               options: options ??
@@ -286,7 +286,7 @@ class DioClient {
           }
         }
       } else {
-        debugPrint('error');
+        printData('error');
         showDialog(
           context: _context,
           builder: (context) => NoInternetDialog(positiveOnTap: () {
@@ -367,19 +367,19 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
 }
 
 void onError(ErrorEntity eInfo) {
-  debugPrint('error.code -> ${eInfo.code}, error.message -> ${eInfo.message}');
+  printData('error.code -> ${eInfo.code}, error.message -> ${eInfo.message}');
   switch (eInfo.code) {
     case 400:
-      debugPrint("Server syntax error");
+      printData("Server syntax error");
       break;
     case 401:
-      debugPrint("You are denied to continue");
+      printData("You are denied to continue");
       break;
     case 500:
-      debugPrint("Server internal error");
+      printData("Server internal error");
       break;
     default:
-      debugPrint("Unknown error");
+      printData("Unknown error");
       break;
   }
 }
