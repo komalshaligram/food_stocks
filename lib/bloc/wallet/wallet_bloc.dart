@@ -72,15 +72,13 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           try {
             WalletRecordReqModel reqMap =
             WalletRecordReqModel(userId: preferencesHelper.getUserId());
-            debugPrint('WalletRecordReqModel = $reqMap}');
+ 
             final res = await DioClient(event.context).post(
               AppUrls.walletRecordUrl,
               data: reqMap,
             );
 
-            debugPrint('WalletRecord url  = ${AppUrls.baseUrl}${AppUrls.walletRecordUrl}');
             WalletRecordResModel response = WalletRecordResModel.fromJson(res);
-                debugPrint('WalletRecordResModel  = $response');
 
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(
@@ -108,17 +106,16 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               year: event.year,
             );
 
-            debugPrint('TotalExpenseReqModel = $reqMap}');
+        
             final res = await DioClient(event.context).post(
               AppUrls.totalExpenseByYearUrl,
               data: reqMap,
             );
 
-            debugPrint(
-                'totalExpenseByYearUrl url  = ${AppUrls.baseUrl}${AppUrls.totalExpenseByYearUrl}');
+         
             expense.TotalExpenseResModel response =
             expense.TotalExpenseResModel.fromJson(res);
-              debugPrint('TotalExpenseRes  = $response');
+    
 
             if (response.status == AppConstants.code_200) {
 
@@ -191,18 +188,15 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 startDate: event.startDate ?? firstDayCurrentMonth,
                 endDate: event.endDate ?? lastDayCurrentMonth);
 
-            debugPrint('AllWalletTransactionReqModel = $reqMap}');
 
             final res = await DioClient(event.context).post(
               AppUrls.getAllWalletTransactionUrl,
               data: reqMap,
             );
 
-            debugPrint(
-                'AllWalletTransaction url  = ${AppUrls.baseUrl}${AppUrls.getAllWalletTransactionUrl}');
+          
             AllWalletTransactionResModel response =
             AllWalletTransactionResModel.fromJson(res);
-             debugPrint('AllWalletTransactionResModel  = $response');
 
             if (response.status == AppConstants.code_200) {
               List<Datum> temp =
@@ -283,27 +277,24 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               endDate: event.endDate.toString(),
             );
 
-            debugPrint('ExportWalletTransactions  ReqModel = $reqMap}');
             final res = await DioClient(event.context)
                 .post(AppUrls.exportWalletTransactionUrl, data: reqMap);
 
-            debugPrint(
-                'exportWalletTransaction url  = ${AppUrls.baseUrl}${AppUrls.exportWalletTransactionUrl}');
 
             ExportWalletTransactionsResModel response =
             ExportWalletTransactionsResModel.fromJson(res);
-            debugPrint('ExportWalletTransactions response  = $response');
+ 
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(isExportShimmering: false,isExportComplete: true,userEmail: preferencesHelper.getEmailId()));
               Uint8List pdf = base64.decode(response.data.toString());
               filePath =
               '${dir.path}/${preferencesHelper.getUserName()}${'.'}${(DateTime.now()).hour}${'.'}${(DateTime.now()).minute}${'.'}${DateTime.now().second}${'.pdf'}';
               file = File(filePath);
-              // debugPrint('[path]   ${filePath}');
+          
               await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
 
               });
-              debugPrint('file____$file');
+              printData('file____$file');
 
             }
             else {
@@ -320,7 +311,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           } on ServerException {
             emit(state.copyWith(isExportShimmering: false));
           } catch (e) {
-            debugPrint('catch1');
+  
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),
@@ -344,21 +335,21 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               endDate: DateTime(now.year, now.month, daysInMonth(DateTime.now())),
             );
 
-            debugPrint('getOrdersCount reqMap = $reqMap}');
+         
 
             final res = await DioClient(event.context).post(
               AppUrls.getOrdersCountUrl,
               data: reqMap,
             );
 
-            debugPrint('getOrdersCountUrl url  = ${AppUrls.baseUrl}${AppUrls.getOrdersCountUrl}');
+      
             GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
-               debugPrint('getOrdersCount response  = $response');
+         
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(orderThisMonth: (response.data?.toInt() ?? 0 )));
             }
           } catch (e) {
-            debugPrint('catch');
+            printData('catch');
           /*  CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),
@@ -372,8 +363,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               final res = await DioClient(event.context).get(
                   path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-              debugPrint('AccountPermission response wallet= ${response.data.toString()}');
-              debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
               if (response.status == AppConstants.code_200) {
                 var res = response.data?.permissions;
                 if(preferencesHelper.getAppLanguage() == AppStrings.englishString && preferencesHelper.getCanSeeWallet() != res?.canSeeWallet){
@@ -414,14 +403,13 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
         }
         else if(event is _userApproveEvent){
           try {
-            debugPrint('clientId_____${preferencesHelper.getUserId()}');
+        
             final res = await DioClient(event.context).post(
                 AppUrls.verifyClientUrl,
                 data: {AppStrings.clientIdString:preferencesHelper.getUserId()}
             );
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-            debugPrint('verifyClient res_____$response');
-            debugPrint('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+
             if (response.status == AppConstants.code_200) {
               if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
                 Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
@@ -432,7 +420,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             }
           }
           catch (e) {
-            debugPrint('catch____$e');
+            printData('catch____$e');
           }
         }
       }

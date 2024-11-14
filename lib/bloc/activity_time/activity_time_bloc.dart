@@ -54,10 +54,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   .toJson(),
             );
 
-            debugPrint('respo_______$res');
-
             response = res_get.ProfileDetailsResModel.fromJson(res);
-            debugPrint('response_______${response.toJson()}');
 
             if (response.status == AppConstants.code_200) {
               if ((response.data?.clients?.first.clientDetail?.operationTime?.isNotEmpty ?? false)) {
@@ -65,7 +62,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 int listLength = response.data?.clients?.first.clientDetail
                     ?.operationTime?.length ??
                     0;
-
 
                 var sundayRs = (listLength) > 0
                     ? (response.data?.clients?.first.clientDetail
@@ -565,7 +561,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
 
               ]);
 
-              debugPrint('operation time reqMap + $reqMap');
               try {
                 final response1 = await DioClient(event.context).post(
                     '${AppUrls.operationTimeUrl}/${preferences.getUserId()}',
@@ -573,10 +568,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 res.ActivityTimeResModel operationTimeResModel =
                 res.ActivityTimeResModel.fromJson(response1);
 
-                debugPrint(
-                    'operation time response --- $operationTimeResModel');
-
-                if (response1['status'] == 200) {
+                if (response1[AppStrings.statusString] == AppConstants.code_200) {
                   Navigator.pushNamed(
                       event.context, RouteDefine.formDataScreen.name);
                   emit(state.copyWith(isLoading: false));
@@ -603,7 +595,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           } else {
             emit(state.copyWith(isLoading: true));
 
-
             ProfileDetailsUpdateReqModel reqMap = ProfileDetailsUpdateReqModel(
                 clientDetail: ClientDetail(operationTime: [
                   OperationTime(sunday: sundayList),
@@ -615,40 +606,33 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   OperationTime(saturday: saturdayAndHolidaysList),
                 ]));
 
-
             Map<String, dynamic> req = reqMap.toJson();
             Map<String, dynamic>? clientDetail = reqMap.clientDetail?.toJson();
-            debugPrint("update before Model = $req");
+            printData("update before Model = $req");
             clientDetail?.removeWhere((key, value) {
               if (value != null) {
-                debugPrint("[$key] = $value");
+                printData("[$key] = $value");
               }
               return value == null;
             });
-
-
-
             req[AppStrings.clientDetailString] = clientDetail;
             req.removeWhere((key, value) {
               if (value != null) {
-                debugPrint("[$key] = $value");
+                printData("[$key] = $value");
               }
               return value == null;
             });
-            debugPrint("update after Model = $req");
+            printData("update after Model = $req");
             try {
               final res = await DioClient(event.context).post(
                 "${AppUrls.updateProfileDetailsUrl}/${preferences.getUserId()}",
                 data: req,
               );
-
-              debugPrint('operation update req _____$req');
-
+              printData('operation update req _____$req');
               req_update.ProfileDetailsUpdateResModel res1 =
               req_update.ProfileDetailsUpdateResModel.fromJson(res);
-
-              debugPrint('operation update res _____$res1');
-              if (res1.status == 200) {
+              printData('operation update res _____$res1');
+              if (res1.status == AppConstants.code_200) {
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(
                   context: event.context,

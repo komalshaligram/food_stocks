@@ -201,7 +201,7 @@ class RecommendationProductsBloc
                     return;
                   }
                 });
-                debugPrint(
+                printData(
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
             } on ServerException {}
@@ -435,8 +435,7 @@ class RecommendationProductsBloc
                     [state.productStockUpdateIndex]
                         .quantity -
                         1);
-            debugPrint(
-                'product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+   
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           } else {}
@@ -586,17 +585,17 @@ class RecommendationProductsBloc
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
-              Navigator.pop(event.context);
+            //  Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
-                    isNoteOpen: false,
-                    quantity:  _productQuantity,
-                    productSupplierIds: '',
-                    totalPrice: 0.0,
-                    productSaleId: '',
+                    productIsInCart: false,
+                    quantity:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
+                    productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
+                    totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
+                    productSaleId:state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId,
                   );
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
@@ -621,7 +620,7 @@ class RecommendationProductsBloc
           } on ServerException {
             emit(state.copyWith(isLoading: false));
           } catch (e) {
-            debugPrint('err = $e');
+            printData('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         } else {
@@ -652,7 +651,7 @@ class RecommendationProductsBloc
             Map<String, dynamic> req = insertCartReqModel.toJson();
             req.removeWhere((key, value) {
               if (value != null) {
-                debugPrint("[$key] = $value");
+                printData("[$key] = $value");
               }
               return value == null;
             });
@@ -672,17 +671,17 @@ class RecommendationProductsBloc
             if (response.status == AppConstants.code_201) {
               add(const RecommendationProductsEvent.setCartCountEvent());
               Vibration.vibrate();
-              Navigator.pop(event.context);
+           //   Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
-                    isNoteOpen: false,
+                    productIsInCart: true,
                     quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                    productSupplierIds: '',
-                    totalPrice: 0.0,
-                    productSaleId: '',
+                    productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
+                    totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
+                    productSaleId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId,
                   );
               add(const RecommendationProductsEvent.getCartCountEvent());
 
@@ -695,7 +694,7 @@ class RecommendationProductsBloc
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ?? response.message!, event.context),
                   type: SnackBarType.success);
-            } else if (response.status == 403) {
+            } else if (response.status == AppConstants.code_403) {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -715,10 +714,8 @@ class RecommendationProductsBloc
                   type: SnackBarType.failure);
             }
           } on ServerException {
-            debugPrint('url1 = ');
             emit(state.copyWith(isLoading: false));
           } catch (e) {
-            debugPrint('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         }
@@ -727,14 +724,6 @@ class RecommendationProductsBloc
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
       } else if (event is _updateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
-      }   else if (event is _toggleNoteEvent) {
-        List <List<ProductStockModel>> productStockList =
-        state.productStockList.toList(growable: true);
-        productStockList[state.productListIndex][state.productStockUpdateIndex] =
-            productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
-                isNoteOpen: !productStockList[state.productListIndex][state.productStockUpdateIndex]
-                    .isNoteOpen);
-        emit(state.copyWith(productStockList: productStockList));
       }
       else if (event is _getCartCountEvent) {
         emit(
@@ -780,7 +769,7 @@ class RecommendationProductsBloc
             emit(state.copyWith(searchList: searchList, isSearching: false));
             return;
           }
-          debugPrint('store search list =${response.status}');
+    
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             //category search result
@@ -1046,7 +1035,7 @@ class RecommendationProductsBloc
           }
         }
         catch (e) {
-          debugPrint('catch____$e');
+          printData('catch____$e');
         }
       }
     });

@@ -374,6 +374,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                           shrinkWrap: true,
                           itemBuilder: (listViewContext, index) {
                             return SearchItemWidget(
+                                isShowSeeAll: index==state.searchList.length-1?true:false,
                                 priceOfBox: state.searchList[index].priceOfBox,
                                 salePrice: state.searchList[index].salePrice,
                                 saleDesc: state.searchList[index].salesDesc,
@@ -403,7 +404,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                     ? true
                                     : false,
                                 onSeeAllTap: () async {
-                                  debugPrint("searchType: ${state.searchList[index].searchType}");
+                                  printData("searchType: ${state.searchList[index].searchType}");
 
                                   if (state.searchList[index].searchType ==
                                       SearchTypes.category) {
@@ -503,7 +504,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       SearchTypes.sale ||
                                       state.searchList[index].searchType ==
                                           SearchTypes.product) {
-                                     debugPrint("tap 4");
+                         
                                     if(!state.isGuestUser){
                                       showProductDetails(
                                           context: context,
@@ -581,8 +582,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                               scanMode: ScanMode.BARCODE);
                           if (scanResult != '-1') {
                             // -1 result for cancel scanning
-                            debugPrint('result = $scanResult');
-                             debugPrint("tap 5");
+                            printData('result = $scanResult');
+                    
                             if(!state.isGuestUser){
                               showProductDetails(
                                   context: context,
@@ -743,6 +744,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
            bottom: false,
            child: DraggableScrollableSheet(
              expand: true,
+             snap: true,
              maxChildSize: 1 -
                  (MediaQuery.of(context).viewPadding.top /
                      getScreenHeight(context)*0.2),
@@ -806,13 +808,13 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                              width: getScreenWidth(context),
                                              child: GestureDetector(
                                                onVerticalDragStart: (dragDetails) {
-                                                   debugPrint('onVerticalDragStart');
+                                             
                                                },
                                                onVerticalDragUpdate: (dragDetails) {
-                                                   debugPrint('onVerticalDragUpdate');
+                                           
                                                },
                                                onVerticalDragEnd: (endDetails) {
-                                                  debugPrint('onVerticalDragEnd');
+                                                
                                                  Navigator.pop(dialogContext);
                                                },
                                                child: PhotoView(
@@ -839,19 +841,11 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                    },);
                                },
                                context: context,
-                               productImageIndex: state.imageIndex,
-                               onPageChanged: (index, p1) {
-                                 context.read<CompanyProductsBloc>().add(
-                                     CompanyProductsEvent.updateImageIndexEvent(
-                                         index: index));
-                               },
+
+
                                productImages: [
                                  state.productDetails.first.mainImage ??
-                                     '',
-                                 ...state.productDetails.first.images
-                                     ?.map((image) =>
-                                 image.imageUrl ?? '') ??
-                                     []
+                                     ''
                                ],
 
                                productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
@@ -886,6 +880,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                            context: context1));
                                  }
                                },
+                               onCloseTap: (){
+                                 Navigator.pop(context);
+                                 },
                              ),
                              state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context,isSaleOn)
                            ],

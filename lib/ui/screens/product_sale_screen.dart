@@ -37,8 +37,7 @@ class ProductSaleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint('product sale args = $args');
-    debugPrint('saleProductId = ${args?[AppStrings.companyIdString] ?? ''}');
+
     return BlocProvider(
       create: (context) => ProductSaleBloc()
         ..add(ProductSaleEvent.setSearchEvent(search: args?[AppStrings.searchString] ?? ''))
@@ -131,7 +130,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.48),
                                         //getChildAspectRatio(context)),
                                         itemBuilder: (context, index) {
-                                          return buildProductSaleListItem(
+                                          return buildProductSaleGridViewItem(
                                             productStock: state.productSalesList[index].productStock.toString(),
                                             isPesach: state.productSalesList[index].isPesach ?? false,
                                             lowStock: state.productSalesList[index].lowStock ?? '',
@@ -199,7 +198,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildProductSaleListItem({
+  Widget buildProductSaleGridViewItem({
     required int index,
     required BuildContext context,
     required String saleImage,
@@ -304,13 +303,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                   width: getScreenWidth(context),
                                                   child: GestureDetector(
                                                     onVerticalDragStart: (dragDetails) {
-                                                      debugPrint('onVerticalDragStart');
                                                     },
                                                     onVerticalDragUpdate: (dragDetails) {
-                                                      debugPrint('onVerticalDragUpdate');
                                                     },
                                                     onVerticalDragEnd: (endDetails) {
-                                                      debugPrint('onVerticalDragEnd');
                                                       Navigator.pop(context);
                                                     },
                                                     child: PhotoView(
@@ -339,15 +335,9 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     },
 
                                     context: context,
-                                    productImageIndex: state.imageIndex,
-                                    onPageChanged: (index, p1) {
-                                      context.read<ProductSaleBloc>().add(ProductSaleEvent.updateImageIndexEvent(index: index));
-                                    },
                                     productUnitPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
 
-                                    productImages: [state.productDetails.first.mainImage ?? '' ,
-
-                                      ...state.productDetails.first.images?.map((image) => image.imageUrl ?? '') ?? []],
+                                    productImages: [state.productDetails.first.mainImage ?? '' ],
 
                                     productPrice:(state.productDetails.first.sale?.isSale ?? false) ?
                                     double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1)
@@ -368,6 +358,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         context.read<ProductSaleBloc>().add(ProductSaleEvent.decreaseQuantityOfProduct(context: context1));
                                       }
                                     },
+                                    onCloseTap: (){Navigator.pop(context);},
                                   ),
                                   state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context)
                                 ],

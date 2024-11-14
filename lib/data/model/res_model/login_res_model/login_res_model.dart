@@ -16,11 +16,24 @@ class LoginResModel with _$LoginResModel {
 
     User? user,
 
+    Data? data,
+
     bool? success,
   }) = _LoginResModel;
 
   factory LoginResModel.fromJson(Map<String, dynamic> json) => _$LoginResModelFromJson(json);
 }
+
+@freezed
+class Data with _$Data {
+  const factory Data({
+    @JsonKey(name: "isUserExists")
+    required bool isUserExists,
+  }) = _Data;
+
+  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
+}
+
 
 @freezed
 class User with _$User {

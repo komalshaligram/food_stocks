@@ -39,13 +39,15 @@ class BasketScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => BasketBloc(),
-      child: const BasketScreenWidget(),
+      child:  BasketScreenWidget(),
     );
   }
 }
 
 class BasketScreenWidget extends StatelessWidget {
-  const BasketScreenWidget({Key? key}) : super(key: key);
+    BasketScreenWidget({Key? key}) : super(key: key);
+
+   final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,6 @@ class BasketScreenWidget extends StatelessWidget {
         } else if (state.isAppOnMaintenance && !state.isDialogOpen) {
           appUnderMaintenanceDialog(context: context, state: state);
           BlocProvider.of<BasketBloc>(context).add(BasketEvent.updateMaintenanceEvent(context: context));
-          debugPrint('Maintenance is on going...........');
         } else if (state.isOrderPending) {
           showDialog(
             context: context,
@@ -82,74 +83,15 @@ class BasketScreenWidget extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context1) {
+              printData('available all : ${state.isAllPaymentAvailable}');
               if (state.isAllPaymentAvailable) {
-                if(state.isWalletRelatedError){
-                  return CustomOneButtonDialog(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
-                    title:  '${state.errorString}\n${AppLocalizations.of(context)!.payment_dialog_option_title}',
-                    directionality: state.language,
-                    positiveTitle: AppLocalizations.of(context)!.pay_with_credit_card,
-                    positiveOnTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
-                    },
-                    positiveOnTap1: () {
-                      Navigator.pop(context);
-                      bankTransferDialog(
-                          context: context1,
-                          language: state.language,
-                          text: state.bankTransferInfo ?? '',
-                          function: () {
-                            bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
-                          });
-                    },
-                    positiveTitle1: AppLocalizations.of(context)!.pay_with_bank_transfer,
-                  );
-                }else {
-                  return CustomOneButtonDialog(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
-                    title:'${state.errorString}\n${AppLocalizations.of(context)!.payment_dialog_option_title}',
-                    directionality: state.language,
-                    positiveTitle: AppLocalizations.of(context)!.change_credit_card,
-                    positiveOnTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
-                    },
-                    positiveOnTap1: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name, arguments: {AppStrings.isPaymentFail: false, AppStrings.updateString: true});
-                    },
-                    positiveOnTap2: () {
-                      Navigator.pop(context);
-                      bankTransferDialog(
-                          context: context1,
-                          language: state.language,
-                          text: state.bankTransferInfo ?? '',
-                          function: () {
-                            bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
-                          });
-                    },
-                    positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
-                    positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
-                  );
+                if (state.isWalletRelatedError) {
+                  return twoOptionPaymentDialog(context, state, bloc, context1);
+                } else {
+                  return threeOptionPaymentDialog(context, state, bloc, context1);
                 }
               } else {
-                return CustomOneButtonDialog(
-                  width: MediaQuery.of(context).size.width,
-                  title: AppLocalizations.of(context)!.payment_dialog_option_title,
-                  directionality: state.language,
-                  positiveTitle: AppLocalizations.of(context)!.change_credit_card,
-                  positiveOnTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
-                  },
-                );
+                return twoOptionPaymentDialog(context, state, bloc, context1);
               }
             },
           ).then((value) {
@@ -166,22 +108,20 @@ class BasketScreenWidget extends StatelessWidget {
                 positiveTitle: AppLocalizations.of(context)!.pay_with_credit_card,
                 positiveOnTap: () {
                   Navigator.pop(context);
-                  for(int i =0;i<state.paymentTypesList.length;i++){
-                    if(state.paymentTypesList.elementAt(i)==AppStrings.creditCard){
-                      bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.creditCard));
-                    }else{
-                      Navigator.pushNamed(context, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
-                    }
+                  bool c = state.paymentTypesList.any((e) => e == AppStrings.creditCard);
+                  if (c) {
+                    bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.creditCard));
+                  } else {
+                    Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
                   }
                 },
                 positiveOnTap1: () {
                   Navigator.pop(context);
-                  for(int i =0;i<state.paymentTypesList.length;i++){
-                    if(state.paymentTypesList.elementAt(i)==AppStrings.wallet){
-                      bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.wallet));
-                    }else{
-                      Navigator.pushNamed(context, RouteDefine.bankInfoScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail, AppStrings.updateString: true});
-                    }
+                  bool c = state.paymentTypesList.any((e) => e == AppStrings.wallet);
+                  if (c) {
+                    bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.wallet));
+                  } else {
+                    Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail, AppStrings.updateString: true});
                   }
                 },
                 positiveOnTap2: () {
@@ -339,6 +279,74 @@ class BasketScreenWidget extends StatelessWidget {
     );
   }
 
+  twoOptionPaymentDialog(BuildContext context, BasketState state, BasketBloc bloc, BuildContext context1) {
+    return CustomOneButtonDialog(
+      width: MediaQuery.of(context).size.width,
+      subTitle: AppLocalizations.of(context)!.payment_dialog_option_title,
+      title: state.errorString,
+      directionality: state.language,
+      positiveTitle: state.isPaymentFail && state.errorString != AppStrings.getLocalizedStrings(AppLocalizations.of(context)!.credit_card_not_found, context)?AppLocalizations.of(context)!.pay_with_credit_card:AppLocalizations.of(context)!.change_credit_card,
+      positiveTitle1: AppLocalizations.of(context)!.pay_with_bank_transfer,
+      positiveOnTap: () {
+        Navigator.pop(context);
+        if (state.isPaymentFail && state.errorString != AppStrings.getLocalizedStrings(AppLocalizations.of(context)!.credit_card_not_found, context)) {
+          bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.creditCard));
+        } else {
+          Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
+        }
+      },
+      positiveOnTap1: () {
+        Navigator.pop(context);
+        bankTransferDialog(
+            context: context1,
+            language: state.language,
+            text: state.bankTransferInfo,
+            function: () {
+              bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
+            });
+      },
+    );
+  }
+
+  threeOptionPaymentDialog(BuildContext context, BasketState state, BasketBloc bloc, BuildContext context1) {
+    return CustomOneButtonDialog(
+      width: MediaQuery.of(context).size.width,
+      title: state.errorString,
+      subTitle: AppLocalizations.of(context)!.payment_dialog_option_title,
+      directionality: state.language,
+      positiveTitle: state.isPaymentFail && !state.isWalletRelatedError ? AppLocalizations.of(context)!.change_credit_card : AppLocalizations.of(context)!.pay_with_credit_card,
+      positiveOnTap: () {
+        Navigator.pop(context);
+        if (state.isPaymentFail && state.errorString != AppStrings.getLocalizedStrings(AppLocalizations.of(context)!.credit_card_not_found, context)) {
+          bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.creditCard));
+        } else {
+          Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
+        }
+      },
+      positiveOnTap1: () {
+        Navigator.pop(context);
+        printData(' state.bankTransferInfo:${state.bankTransferInfo}');
+        if (state.isPaymentFail && state.bankTransferInfo.isNotEmpty) {
+          bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.wallet));
+        } else {
+          Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name, arguments: {AppStrings.isPaymentFail: false, AppStrings.updateString: true});
+        }
+      },
+      positiveOnTap2: () {
+        Navigator.pop(context);
+        bankTransferDialog(
+            context: context1,
+            language: state.language,
+            text: state.bankTransferInfo,
+            function: () {
+              bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
+            });
+      },
+      positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
+      positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
+    );
+  }
+
   Widget totalAmountCard(BasketState state, BuildContext context) {
     BasketBloc bloc = context.read<BasketBloc>();
     return Container(
@@ -374,10 +382,7 @@ class BasketScreenWidget extends StatelessWidget {
                       for (var element in state.basketProductList) {
                         basketProductStockList.add(element.productStock ?? 0);
                       }
-                      debugPrint('basketProductStockList___$basketProductStockList');
                       basketProductStockList.sort();
-                      debugPrint('basketProductStockList_1__$basketProductStockList');
-                      debugPrint('basketProductStockList_2__${basketProductStockList.first}');
                       if (basketProductStockList.first == 0.0 || basketProductStockList.first == 0) {
                         removeOutOfStockProductDialog(
                           context: context,
@@ -385,7 +390,8 @@ class BasketScreenWidget extends StatelessWidget {
                       } else {
                         if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
                           if (state.supplierCount == 1) {
-                            bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: true, isFromDialog: false, paymentMethod: ''));
+                            paymentOptionPopup(state, context, bloc);
+                            //bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: true, isFromDialog: false, paymentMethod: ''));
                           } else {
                             Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
                               AppStrings.getCartListString: state.cartItemList,
@@ -497,7 +503,7 @@ class BasketScreenWidget extends StatelessWidget {
             ),
             child: GestureDetector(
               onTap: () {
-                showProductDetails(isSaleOn: state.isSaleOn, context: context, cartProductId: state.cartItemList.data?.data?[index].id ?? '', productListIndex: 0, productStock: state.cartItemList.data?.data?[index].productStock.toString() ?? '0');
+                showProductDetails(isSaleOn: state.isSaleOn, context: state.context??context, cartProductId: state.cartItemList.data?.data?[index].id ?? '', productListIndex: 0, productStock: state.cartItemList.data?.data?[index].productStock.toString() ?? '0');
               },
               child: Column(
                 children: [
@@ -557,6 +563,7 @@ class BasketScreenWidget extends StatelessWidget {
                                 style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.bold),
                               ),
                               5.height,
+                              // Text('Supplier Name'),
                               productStock == 0 || productStock == 0.0
                                   ? Text(
                                       AppLocalizations.of(context)!.product_no_longer_in_stock,
@@ -678,14 +685,14 @@ class BasketScreenWidget extends StatelessWidget {
                         positiveOnTap: () {
                           if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
                             if (state.supplierCount == 1) {
-                              bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: true, isFromDialog: false, paymentMethod: ''));
+                              paymentOptionPopup(state, context, bloc, isFromRemovePopUp: true);
+                              //   bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: true, isFromDialog: false, paymentMethod: ''));
                             } else {
                               Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
                                 AppStrings.getCartListString: state.cartItemList,
                               });
                             }
                           }
-                          ;
                         },
                         negativeOnTap: () {
                           Navigator.pop(context1);
@@ -694,6 +701,53 @@ class BasketScreenWidget extends StatelessWidget {
                 },
               ),
             ));
+  }
+
+  void paymentOptionPopup(BasketState state, BuildContext context, BasketBloc bloc, {bool isFromRemovePopUp = false}) {
+    showDialog(
+        context: context,
+        builder: (context1) {
+          bool c = state.paymentTypesList.any((e) => e == AppStrings.wallet);
+          if (c) {
+            return CustomOneButtonDialog(
+              width: MediaQuery.of(context).size.width,
+              title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
+              directionality: state.language,
+              positiveTitle: AppLocalizations.of(context)!.pay_with_credit_card,
+              positiveOnTap: () {
+                Navigator.pop(context);
+                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.creditCard));
+              },
+              positiveOnTap1: () {
+                Navigator.pop(context);
+                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.wallet));
+              },
+              positiveOnTap2: () {
+                Navigator.pop(context);
+                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.bankTransfer));
+              },
+              positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
+              positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
+            );
+          } else {
+            return CustomOneButtonDialog(
+              width: MediaQuery.of(context).size.width,
+              title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
+              directionality: state.language,
+              positiveTitle: AppLocalizations.of(context)!.pay_with_credit_card,
+              positiveOnTap: () {
+                Navigator.pop(context);
+                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.creditCard));
+                //  Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
+              },
+              positiveOnTap1: () {
+                Navigator.pop(context);
+                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.bankTransfer));
+              },
+              positiveTitle1: AppLocalizations.of(context)!.pay_with_bank_transfer,
+            );
+          }
+        });
   }
 
   void deleteDialog({
@@ -713,7 +767,7 @@ class BasketScreenWidget extends StatelessWidget {
                   return AbsorbPointer(
                       absorbing: state.isRemoveProcess ? true : false,
                       child: CustomDialog(
-                        title: updateClearString == AppStrings.clearString ? AppLocalizations.of(context)!.you_want_clear_cart : '${AppLocalizations.of(context)!.you_want_delete_product}',
+                        title: updateClearString == AppStrings.clearString ? AppLocalizations.of(context)!.you_want_clear_cart : AppLocalizations.of(context)!.you_want_delete_product,
                         directionality: state.language,
                         positiveTitle: AppLocalizations.of(context)!.yes,
                         isProcessing: state.isRemoveProcess,
@@ -754,10 +808,11 @@ class BasketScreenWidget extends StatelessWidget {
       isDismissible: true,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       enableDrag: true,
-      builder: (context1) {
+      builder: (c) {
         return SafeArea(
           bottom: false,
           child: DraggableScrollableSheet(
+            shouldCloseOnMinExtent: false,
             expand: true,
             maxChildSize: 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
             minChildSize: 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
@@ -769,108 +824,114 @@ class BasketScreenWidget extends StatelessWidget {
                   builder: (blocContext, state) {
                     return AbsorbPointer(
                       absorbing: state.isLoading ? true : false,
-                      child: Container(
-                        height: getScreenHeight(context),
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(AppConstants.radius_30),
-                            topRight: Radius.circular(AppConstants.radius_30),
+                      child: GestureDetector(
+                        onVerticalDragStart: (dragDetails) {},
+                        onVerticalDragDown: (dragDetails){},
+                        onVerticalDragUpdate: (dragDetails) {
+                          debugPrint("hereree");
+                          Navigator.pop(context);
+                          context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(context: state.context??context));
+                        },
+                        onVerticalDragEnd: (endDetails) {},
+                        child: Container(
+                          height: getScreenHeight(context1),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(AppConstants.radius_30),
+                              topRight: Radius.circular(AppConstants.radius_30),
+                            ),
+                            color: AppColors.whiteColor,
                           ),
-                          color: AppColors.whiteColor,
-                        ),
-                        child: state.isProductLoading
-                            ? const ProductDetailsShimmerWidget()
-                            : state.productDetails.isEmpty
-                                ? NoDataBottomSheet(dialogContext: context)
-                                : SingleChildScrollView(
-                                    controller: ModalScrollController.of(context),
-                                    child: Column(
-                                      children: [
-                                        CommonProductDetailsWidget(
-                                          isIncludedVat: state.isIncludedVat,
-                                          productDetails: state.productDetails,
-                                          isSubUserAddToBasket: state.isSubUserAddToBasket,
-                                          bottleTax: state.bottleTax,
-                                          totalBottleDeposit: (state.bottleTax * (state.productDetails.first.numberOfUnit ?? 1).toDouble() * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
-                                          isBottle: (state.productDetails.first.isBottle ?? false),
-                                          addToOrderTap: () {
-                                            FocusManager.instance.primaryFocus?.unfocus();
-                                            context.read<BasketBloc>().add(BasketEvent.addToCartProductEvent(
-                                                  context: context1,
-                                                  productId: cartProductId,
-                                                ));
-                                          },
-                                          isLoading: state.isLoading,
-                                          imageOnTap: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (dialogContext) {
-                                                return Stack(
-                                                  children: [
-                                                    SizedBox(
-                                                      height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
-                                                      width: getScreenWidth(context),
-                                                      child: GestureDetector(
-                                                        onVerticalDragStart: (dragDetails) {
-                                                          debugPrint('onVerticalDragStart');
-                                                        },
-                                                        onVerticalDragUpdate: (dragDetails) {
-                                                          debugPrint('onVerticalDragUpdate');
-                                                        },
-                                                        onVerticalDragEnd: (endDetails) {
-                                                          debugPrint('onVerticalDragEnd');
-                                                          Navigator.pop(dialogContext);
-                                                        },
-                                                        child: PhotoView(
-                                                          imageProvider: NetworkImage(
-                                                            '${AppUrls.baseFileUrl}${state.productDetails[state.productImageIndex].mainImage}',
+                          child: state.isProductLoading
+                              ? const ProductDetailsShimmerWidget()
+                              : state.productDetails.isEmpty
+                                  ? NoDataBottomSheet(dialogContext: context)
+                                  : SingleChildScrollView(
+                                      controller: ModalScrollController.of(context1),
+                                      child: Column(
+                                        children: [
+                                          CommonProductDetailsWidget(
+                                            isFromBasketScreen: true,
+                                            isIncludedVat: state.isIncludedVat,
+                                            productDetails: state.productDetails,
+                                            isSubUserAddToBasket: state.isSubUserAddToBasket,
+                                            bottleTax: state.bottleTax,
+                                            totalBottleDeposit: (state.bottleTax * (state.productDetails.first.numberOfUnit ?? 1).toDouble() * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
+                                            isBottle: (state.productDetails.first.isBottle ?? false),
+                                            addToOrderTap: () {
+                                              FocusManager.instance.primaryFocus?.unfocus();
+                                              context.read<BasketBloc>().add(BasketEvent.addToCartProductEvent(
+                                                    context: context1,
+                                                    productId: cartProductId,
+                                                  ));
+                                            },
+                                            isLoading: state.isLoading,
+                                            imageOnTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (dialogContext) {
+                                                  return Stack(
+                                                    children: [
+                                                      SizedBox(
+                                                        height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
+                                                        width: getScreenWidth(context),
+                                                        child: GestureDetector(
+                                                          onVerticalDragStart: (dragDetails) {},
+                                                          onVerticalDragUpdate: (dragDetails) {},
+                                                          onVerticalDragEnd: (endDetails) {
+                                                            Navigator.pop(dialogContext);
+                                                          },
+                                                          child: PhotoView(
+                                                            imageProvider: NetworkImage(
+                                                              '${AppUrls.baseFileUrl}${state.productDetails[state.productImageIndex].mainImage}',
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.pop(dialogContext);
-                                                        },
-                                                        child: const Padding(
-                                                          padding: EdgeInsets.only(top: 10.0),
-                                                          child: Icon(
-                                                            Icons.close,
-                                                            color: Colors.white,
-                                                          ),
-                                                        )),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          },
-                                          context: context,
-                                          productImageIndex: state.productImageIndex,
-                                          onPageChanged: (index, p1) {
-                                            context.read<BasketBloc>().add(BasketEvent.updateImageIndexEvent(index: index));
-                                          },
-                                          productImages: [state.productDetails.first.mainImage ?? '', ...?state.productDetails.first.images?.map((image) => image.imageUrl ?? '')],
-                                          productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
-                                          productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
-                                          productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
-                                          scrollController: scrollController,
-                                          productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                                          onQuantityChanged: (quantity) {
-                                            context.read<BasketBloc>().add(BasketEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
-                                          },
-                                          onQuantityIncreaseTap: () {
-                                            context.read<BasketBloc>().add(BasketEvent.increaseQuantityOfProduct(context: context1));
-                                          },
-                                          onQuantityDecreaseTap: () {
-                                            if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
-                                              context.read<BasketBloc>().add(BasketEvent.decreaseQuantityOfProduct(context: context1));
-                                            }
-                                          },
-                                        ),
-                                        state.relatedProductList.isEmpty ? 0.height : relatedProductWidget(context1, state, context, isSaleOn),
-                                      ],
+                                                      GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.pop(dialogContext);
+                                                          },
+                                                          child: const Padding(
+                                                            padding: EdgeInsets.only(top: 10.0),
+                                                            child: Icon(
+                                                              Icons.close,
+                                                              color: Colors.white,
+                                                            ),
+                                                          )),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            context: context,
+                                            productImages: [state.productDetails.first.mainImage ?? ''],
+                                            productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
+                                            productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
+                                            productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
+                                            scrollController: scrollController,
+                                            productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
+                                            onQuantityChanged: (quantity) {
+                                              context.read<BasketBloc>().add(BasketEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
+                                            },
+                                            onQuantityIncreaseTap: () {
+                                              context.read<BasketBloc>().add(BasketEvent.increaseQuantityOfProduct(context: context1));
+                                            },
+                                            onQuantityDecreaseTap: () {
+                                              if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                                context.read<BasketBloc>().add(BasketEvent.decreaseQuantityOfProduct(context: context1));
+                                              }
+                                            },
+                                            onCloseTap: () {
+                                              Navigator.pop(context);
+                                              context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(context: state.context??context));
+                                            },
+                                          ),
+                                          state.relatedProductList.isEmpty ? 0.height : relatedProductWidget(context, state, context1, isSaleOn),
+                                        ],
+                                      ),
                                     ),
-                                  ),
+                        ),
                       ),
                     );
                   },
@@ -926,7 +987,7 @@ class BasketScreenWidget extends StatelessWidget {
                   isPesach: state.relatedProductList.elementAt(i).isPesach,
                   onButtonTap: () {
                     Navigator.pop(prevContext);
-                    showProductDetails(isSaleOn: isSaleOn, context: context, cartProductId: state.relatedProductList[i].id ?? '', isBarcode: false, productStock: state.relatedProductList[i].productStock.toString(), productListIndex: 1);
+                    showProductDetails(isSaleOn: isSaleOn, context: state.context??context, cartProductId: state.relatedProductList[i].id ?? '', isBarcode: false, productStock: state.relatedProductList[i].productStock.toString(), productListIndex: 1);
                   },
                 );
               },
@@ -954,7 +1015,6 @@ class BasketScreenWidget extends StatelessWidget {
             ),
             actionsPadding: const EdgeInsets.only(right: AppConstants.padding_20, bottom: AppConstants.padding_10, left: AppConstants.padding_20),
             actions: [
-
               InkWell(
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
@@ -982,7 +1042,7 @@ class BasketScreenWidget extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(gradient: AppColors.connectGradientColor, border: Border.all(color: AppColors.mainColor),borderRadius: BorderRadius.circular(8.0)),
+                  decoration: BoxDecoration(gradient: AppColors.connectGradientColor, border: Border.all(color: AppColors.mainColor), borderRadius: BorderRadius.circular(8.0)),
                   child: Text(
                     AppLocalizations.of(context)!.close,
                     style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor, size: AppConstants.smallFont),

@@ -7,7 +7,7 @@ class BottomNavEvent with _$BottomNavEvent {
   const factory BottomNavEvent.updateCartCountEvent({required BuildContext context}) = _UpdateCartCountEvent;
 
 
-  const factory BottomNavEvent.NavigateToStoreScreenEvent(
+  const factory BottomNavEvent.navigateToStoreScreenEvent(
       {required BuildContext context,
         required String storeScreen,
         required String basketScreen,

@@ -25,9 +25,7 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
         emit(state.copyWith(isLoading: true));
         try {
           final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl, data: ProfileDetailsReqModel(id: preferencesHelper.getUserId()).toJson());
-          debugPrint('getUserId = ${preferencesHelper.getUserId()}');
           ProfileDetailsResModel resModel = ProfileDetailsResModel.fromJson(res);
-          debugPrint('credit card res = ${resModel.data?.clients?.elementAt(0).clientDetail?.creditCard}');
           if (resModel.status == AppConstants.code_200) {
             preferencesHelper.setPaymentMethod(method: resModel.data?.clients?.first.clientDetail?.paymentType ?? '');
             preferencesHelper.setPaymentMethodCount(count: resModel.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
@@ -61,7 +59,6 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
             emit(state.copyWith(isDeleteLoading: false));
           }
         } catch (e) {}
-        debugPrint('');
         emit(state.copyWith(isDeleteLoading: false));
       }
     });

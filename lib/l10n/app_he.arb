@@ -48,7 +48,7 @@
 "balance_status": "יתרה לניצול",
 "currency": "₪",
 "all_sales": "כל המבצעים",
-"sales": "מבצעים",
+  "sales": "לצפיה בכל המבצעים",
 "my_basket": "הסל שלי",
 "new_order": "הזמנה חדשה",
 "all_messages": "כל ההודעות",
@@ -94,7 +94,7 @@
 "signature": "חתימה",
 "categories": "קטגוריות",
 "all_categories": "כל הקטגוריות",
-"recommended_for_you": "מומלצים בשבילך",
+  "recommended_for_you": "לצפיה בכל המומלצים בשבילך",
 "all_recommended": "כל המומלצים",
 "from_your_previous_orders": "מהזמנות קודמות שלך",
 "more": "הכל",
@@ -339,7 +339,7 @@
 "already_linked_with_sale":"קיים כבר מבצע לא ניתן להוריד את הספק",
 "already_exist":"הודעה באותו שם קיימת כבר",
 "wallet_already_exist":"ארנק קיים כבר",
-"not_enough_balance":"אין מספיק ייתרה",
+"not_enough_balance":"אין לך מספיק ייתרה בארנק",
 "invalid_amount":"סכום לא תקין",
 "deduction_is_negative":"החזרים יוצגו במינוס בארנק",
 "missing_quantity_not_more_than_original": "כמות לא יכולה להיות יותר מהכמות המקורית",
@@ -507,7 +507,7 @@
   "israel_id_or_business_id_number_error":"נתגלתה שגיאה במספר ת.ז. או במספק עוסק מורשה",
   "rivchitclienterror":"rivchitclienterror",
   "change_credit_card":"שנה את כרטיס האשראי שלך",
-  "change_to_wallet_payment":"תשלום מהאובליגו שלך מס\"ב",
+  "change_to_wallet_payment":"תשלום מהארנק שלך",
   "pay_with_bank_transfer":"תשלום בהעברה בנקאית",
   "pay_with_credit_card":"תשלום בכרטיס אשראי",
   "pay_with_wallet":"תשלום מהארנק",
@@ -546,5 +546,10 @@
   "minimum_box_title": "מינימום מארזים להזמנה עבור המבצע",
   "confirm_minimum_box": ", אתה בטוח שאתה לא רוצה את מחיר המבצע ?",
   "credit_card_payment_failed": "תשלום בכרטיס אשראי נכשל",
-  "my_invoices" : "החשבוניות שלי"
+  "my_invoices" : "החשבוניות שלי",
+  "savings_for_sales": "Savings for sales",
+  "not_minimum_order": "Not minimum order",
+  "show_all_results": "הצג את כל התוצאות ",
+  "bank_transfer_information": "פרטי חשבון להעברה בנקאית"
+
 }

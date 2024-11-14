@@ -27,7 +27,7 @@ class ConnectScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => ConnectBloc(),
 
-      child: ConnectScreenWidget(),
+      child: const ConnectScreenWidget(),
     );
   }
 }
@@ -64,15 +64,7 @@ class ConnectScreenWidget extends StatelessWidget {
                   SizedBox(
                     height: getScreenHeight(context) * 0.01,
                   ),
-                  CustomButtonWidget(
-                    buttonText: AppLocalizations.of(context)!.register,
-                    bGColor: AppColors.mainColor,
-                    onPressed: () {
-                      Navigator.pushNamed(context, RouteDefine.loginScreen.name,
-                          arguments: {AppStrings.isRegisterString: true});
-                    },
-                  ),
-                  20.height,
+
                   CustomButtonWidget(
                     buttonText: AppLocalizations.of(context)!.login,
                     fontColors: AppColors.mainColor,

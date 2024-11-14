@@ -29,7 +29,8 @@ class CommonSaleListView extends StatelessWidget {
   final BuildContext context;
   final String? salesDesc;
 
-  CommonSaleListView({super.key,
+
+  const CommonSaleListView({super.key,
     this.height,
     required this.discountedPrice,
     required this.productImage,
@@ -76,7 +77,7 @@ class CommonSaleListView extends StatelessWidget {
               height: 70,
               width: 70,
               fit: BoxFit.contain,
-              placeholder: (context, url) {
+              placeholder: (context, url) { 
                 return CommonShimmerWidget(
                   child: Container(
                     height: 70,
@@ -155,22 +156,7 @@ class CommonSaleListView extends StatelessWidget {
                             ],
                           ),
                         ),
-                        !isGuestUser ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            isFromSale! ? Text('${AppLocalizations
-                                .of(context)
-                                ?.currency}${price.toStringAsFixed(2)}',
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.font_12,
-                                  color: AppColors.redColor,
-                                  fontWeight: FontWeight.w500).copyWith(
-                                  decoration: TextDecoration.lineThrough,
-                                  decorationColor: AppColors.redColor),) : 0
-                                .height,
 
-                          ],
-                        ) : 0.width,
                       ],
                     ),
                     Column(

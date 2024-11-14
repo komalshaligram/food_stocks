@@ -56,7 +56,6 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
           Map<String, dynamic> reqMap ={};
           reqMap = {
             AppStrings.userIdString: termsConditionReqModel.id,
-            AppStrings.agentIdString: termsConditionReqModel.agentId,
             AppStrings.businessTypeIdString: termsConditionReqModel.businessTypeId,
             AppStrings.owner1FullNameString: termsConditionReqModel.owner1FullName,
             AppStrings.owner1IsraelIdString: termsConditionReqModel.owner1IsraelId,
@@ -81,7 +80,6 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
           if(termsConditionReqModel.paymentType!=AppStrings.creditCard){
             reqMap.addAll({AppStrings.bankIdString : termsConditionReqModel.bankId, AppStrings.branchNumberString: termsConditionReqModel.branchNumber,});
           }
-          debugPrint('reqMap:${reqMap.toString()}');
 
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).uploadFileProgressWithFormData(
@@ -200,16 +198,8 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
       guarantee2Signature = imagePath.path;
     }
 
-    debugPrint('owner1Signature___$owner1Signature');
-    debugPrint('guarantee1Signature___$guarantee1Signature');
-    debugPrint('guarantee2Signature___$guarantee2Signature');
-    debugPrint('owner2Signature ____$owner2Signature');
-
     if(state.isOwner2Available ){
-      debugPrint('owner1Signature___$owner1Signature');
-      debugPrint('guarantee1Signature___$guarantee1Signature');
-      debugPrint('guarantee2Signature___$guarantee2Signature');
-      debugPrint('owner2Signature ____$owner2Signature');
+
       if(owner1Signature != '' &&  owner2Signature != ''
           && guarantee1Signature != '' && guarantee2Signature !=''){
         emit(state.copyWith(isNextEnable: true));
@@ -219,8 +209,6 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
       if(state.isGuarantee1Available && guarantee1Signature == ''){
         emit(state.copyWith(isNextEnable: false));
       }else{
-        debugPrint('owner1Signature___$owner1Signature');
-        debugPrint('guarantee1Signature___$guarantee1Signature');
         emit(state.copyWith(isNextEnable: true));
       }
 

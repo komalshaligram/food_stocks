@@ -1,6 +1,7 @@
 
 import 'dart:io';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -45,7 +46,7 @@ bool isTablet(BuildContext context) {
 String maskCreditCardNumber(String cardNumber) {
   var firstDigits = cardNumber.substring(0, 4);
   var lastDigits = cardNumber.substring(cardNumber.length - 4, cardNumber.length);
-  var requiredMask = 'X' * (cardNumber.length - firstDigits.length);
+  var requiredMask = 'X' * (16 - firstDigits.length);
   var maskedString = requiredMask + lastDigits;
   var maskedCardNumberWithSpaces = maskedString.replaceAllMapped(RegExp(r'.{4}'), (match) => '${match.group(0)}-');
   return maskedCardNumberWithSpaces.toString().substring(0,maskedCardNumberWithSpaces.length-1);
@@ -68,7 +69,6 @@ String formatExpiryDate(String text) {
 Future<String> getBottleTax() async {
   SharedPreferencesHelper preferencesHelper =
   SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-  debugPrint('___bottleTax_____ :${preferencesHelper.getBottleTax().toString()}');
   var value =  preferencesHelper.getBottleTax().toString();
    return Future.value(value.toString());
 }
@@ -93,14 +93,14 @@ Color getStatusColor(int statusNum){
        ? AppConstants.productGridAspectRatio51:AppConstants.productGridAspectRatio51;
  }
 
-Widget isPesachLabelShow(bool isPesach,BuildContext context,){
+Widget isPesachLabelShow(bool isPesach,BuildContext context){
  if(isPesach){
    return Container(
-       padding: EdgeInsets.only(left: 5,right: 5),
+       padding: const EdgeInsets.only(left: 5,right: 5),
        decoration: BoxDecoration(
            color: AppColors.pesachBGColor,
            border: Border.all(color: AppColors.pesachBGColor),
-           borderRadius: BorderRadius.all(Radius.circular(10))
+           borderRadius: const BorderRadius.all(Radius.circular(10))
        ),
        child: Text(AppLocalizations.of(context)!.pesach,
          style: AppStyles.rkRegularTextStyle(
@@ -137,6 +137,13 @@ class CustomSnackBar {
   }
 }
 
+
+printData(String? message){
+ // if(kDebugMode){
+    debugPrint(message??'');
+ // }
+}
+
 customShowUpdateDialog(
     BuildContext context, String directionality, String storeUrl) {
   return showDialog(
@@ -154,11 +161,10 @@ customShowUpdateDialog(
               alignment: Alignment.center,
               child: GestureDetector(
                 onTap: () {
-                  debugPrint(storeUrl);
                   _launchUrl(storeUrl);
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                   alignment: Alignment.center,
                   width: AppConstants.containerHeight_80,
                   decoration: BoxDecoration(
@@ -180,14 +186,14 @@ customShowUpdateDialog(
 }
 
 Future<void> _launchUrl(String storeUrl) async {
-  Uri _url = Uri.parse(storeUrl);
+  Uri url = Uri.parse(storeUrl);
 
     try {
-      launchUrl(_url);
+      launchUrl(url);
     } on PlatformException catch (e) {
-      debugPrint(e.toString());
+      printData(e.toString());
     } finally {
-      launchUrl(_url);
+      launchUrl(url);
     }
 }
 
@@ -261,23 +267,23 @@ Future<String> scanBarcodeOrQRCode({required BuildContext context, required Stri
   try {
     barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode(
         '#ff20BF6B', cancelText, true, scanMode);
-     debugPrint(barcodeSOrQRScanRes);
+    printData(barcodeSOrQRScanRes);
   } on PlatformException {
     barcodeSOrQRScanRes = 'Failed to get platform version.';
   }
-  debugPrint('barcode = $barcodeSOrQRScanRes');
+  printData('barcode = $barcodeSOrQRScanRes');
   return barcodeSOrQRScanRes;
 }
 
 bool isRTLContent({required BuildContext context}) {
   Locale locale = Localizations.localeOf(context);
-  List<Locale> rtlLocales = [Locale(AppStrings.hebrewString)];
+  List<Locale> rtlLocales = [const Locale(AppStrings.hebrewString)];
   return rtlLocales.contains(locale) ? true : false;
 }
 
 extension RTLExtension on BuildContext {
   bool get rtl =>
-      [Locale(AppStrings.hebrewString)].contains(Localizations.localeOf(this)) ? true : false;
+      [const Locale(AppStrings.hebrewString)].contains(Localizations.localeOf(this)) ? true : false;
 }
 
 
@@ -300,7 +306,7 @@ extension StringCasingExtension on String {
       .join(' ');
 
   String toLocalization() =>
-      this.contains('.') ? this.split('.')[1].toLowerCase() : this;
+      contains('.') ? split('.')[1].toLowerCase() : this;
 }
 
 String formatNumber({required String value, required String local}) {
@@ -308,7 +314,19 @@ String formatNumber({required String value, required String local}) {
     locale: local,
   ).format(double.parse(value)));
   String result1 = splitNumber(result);
-  return '${result1}';
+  return result1;
+}
+
+String formatNumberForWallet({required String value, required String local,required BuildContext context}) {
+
+  String result = (NumberFormat.compactSimpleCurrency(
+    locale: local,
+    decimalDigits: 1,
+  ).format(double.parse(value)));
+
+  String result1 =value.split('.')[0]+ AppLocalizations.of(context)!.currency;
+
+  return result1;
 }
 
 double vatCalculation(
@@ -335,18 +353,11 @@ double totalVatAmountCalculation(
 double bottleDepositCalculation(
     { double units =1, required double deposit,required double qty}) {
   double result = qty * deposit * units;
-  debugPrint('qty$qty');
-  debugPrint('bottle deposit$deposit');
-  debugPrint('bottle tax$result');
   return result;
 }
 
 double bottleDepositCalculationWithVat(
     {  required double deposit,required double qty, double vatPercentage = 1}) {
   double result = (qty * deposit) + ((qty * deposit * vatPercentage)/100) ;
-  debugPrint('qty$qty');
-  debugPrint('bottle deposit $deposit');
-  debugPrint('bottle tax $result');
-  debugPrint('result $result');
   return result;
 }

@@ -43,12 +43,14 @@ class BasketState with _$BasketState {
       required bool isAllPaymentAvailable,
       required bool isWalletRelatedError,
           required String errorString,
+          required BuildContext? context,
           required List<String> paymentTypesList,
       required bool updatePaymentMethod}) = _BasketState;
 
   //don't add const here
   factory BasketState.initial() =>  BasketState(
       cartItemList: GetAllCartResModel(),
+      context:null,
       isShimmering: false,
       productWeight: 0,
       basketProductList: [],

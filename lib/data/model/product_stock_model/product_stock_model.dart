@@ -9,10 +9,11 @@ class ProductStockModel with _$ProductStockModel {
   const factory ProductStockModel({
     required String productId,
     @Default('') String productSupplierIds,
+    @Default('') String cartProductId,
     @Default('') String productSaleId,
     @Default(0) int quantity,
     @Default('') String note,
-    @Default(false) bool isNoteOpen,
+    @Default(false) bool productIsInCart,
     @Default('0') String stock,
     @Default(0.0) double totalPrice,
     @Default('') String lowStock,

@@ -27,7 +27,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
     on<OrderSummaryEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      debugPrint('cart id =  ${preferencesHelper.getCartId()}');
+      printData('cart id =  ${preferencesHelper.getCartId()}');
 
       if (event is _getDataEvent) {
         emit(state.copyWith(
@@ -63,12 +63,13 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             supplierId: element.suppliers?.first.id ?? '',
             productId: element.productDetails?.id ?? '',
             quantity: element.totalQuantity,
-          saleId: element.id
+          saleId: element.id,
+
           ));
         });
 
         try {
-          OrderSendReqModel reqMap = OrderSendReqModel(products: productReqMap);
+          OrderSendReqModel reqMap = OrderSendReqModel(products: productReqMap,paymentMethod: preferencesHelper.getPaymentMethod());
           final res = await DioClient(event.context).post(
             AppUrls.createOrderUrl,
             data: reqMap,

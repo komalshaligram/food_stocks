@@ -28,7 +28,6 @@ class ShipmentVerificationBloc
     on<ShipmentVerificationEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      debugPrint('token___${preferencesHelper.getAuthToken()}');
 
       if (event is _signatureEvent) {
         emit(state.copyWith(isSignaturePadActive: true , isDelete: false));
@@ -40,11 +39,9 @@ class ShipmentVerificationBloc
 
     else  if (event is _deliveryConfirmEvent) {
         String signUrl = '';
-        debugPrint('surfaces____${state.surfacesController.text}');
         emit(state.copyWith(isLoading: true));
         if (event.signPath.isNotEmpty) {
           try {
-            debugPrint('sign path____${event.signPath}');
             final response =
                 await DioClient(event.context).uploadFileProgressWithFormData(
               path: AppUrls.fileUploadUrl,
@@ -56,12 +53,10 @@ class ShipmentVerificationBloc
                 },
               ),
             );
-            debugPrint('fileUpload url = ${AppUrls.baseUrl}${AppUrls.fileUploadUrl}');
             FileUploadModel signModel = FileUploadModel.fromJson(response);
-            debugPrint('img url = ${signModel.filepath}');
             if (signModel.filepath != '') {
               signUrl = signModel.filepath ?? '';
-              debugPrint("image = $signUrl");
+
             }
           } on ServerException {}
 
@@ -72,14 +67,12 @@ class ShipmentVerificationBloc
                 signature: signUrl,
                 returningSurface: int.parse(state.surfacesController.text)
               );
-              debugPrint('delivery Confirm ReqModel = $reqMap}');
+
              final response = await DioClient(event.context).post(
                   '${AppUrls.deliveryConfirmUrl}${event.orderId}',
                   data: reqMap,
                 );
 
-              debugPrint('delivery Confirm url  = ${AppUrls.baseUrl}${AppUrls.deliveryConfirmUrl}${event.orderId}');
-             debugPrint('delivery Confirm model  = $response');
 
              if (response[AppStrings.statusString] == 200) {
                emit(state.copyWith(isLoading: true));

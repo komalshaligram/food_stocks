@@ -12,7 +12,7 @@ class CategoriesPermissionState with _$CategoriesPermissionState{
     required String subUserId,
   }) = _CategoriesPermissionState;
 
-  factory CategoriesPermissionState.initial() => CategoriesPermissionState(
+  factory CategoriesPermissionState.initial() => const CategoriesPermissionState(
       isShimmering: false,
       categoriesPermissionList : [],
       isRefresh: false,

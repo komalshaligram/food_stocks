@@ -28,24 +28,24 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
            Directory? dir;
            if (defaultTargetPlatform == TargetPlatform.android) {
              dir = Directory('/storage/emulated/0/Documents');
-             debugPrint('dir = ${await dir.stat()}');
+             printData('dir = ${await dir.stat()}');
              // return;
            } else {
              dir = await getApplicationDocumentsDirectory();
            }
-           debugPrint('path______${state.invoiceDetailsList.link?.split('/').last.split('.').first}');
+           printData('path______${state.invoiceDetailsList.link?.split('/').last.split('.').first}');
 
            String filePath =
                '${dir.path}/${state.invoiceDetailsList.link?.split('/').last.split('.').first}_${DateTime.now().day}_${DateTime.now().month}_${DateTime.now().hour}_${DateTime.now().minute}${'.pdf'}';
-           debugPrint( " download    ${AppUrls.baseFileUrl}${state.invoiceDetailsList.link}");
+           printData( " download    ${AppUrls.baseFileUrl}${state.invoiceDetailsList.link}");
 
            await Dio().download(
                "${AppUrls.baseFileUrl}${state.invoiceDetailsList.link}",
                filePath, onReceiveProgress: (received, total) {
-             debugPrint('rec:$received,total:$total');
+             printData('rec:$received,total:$total');
              int progress = (received * 100) ~/ total;
              emit(state.copyWith(downloadProgress: progress));
-             debugPrint('download progress = ${state.downloadProgress}');
+             printData('download progress = ${state.downloadProgress}');
            });
            CustomSnackBar.showSnackBar(
                context: event.context,

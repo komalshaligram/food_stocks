@@ -61,7 +61,7 @@ class FileUploadScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<FileUploadBloc, FileUploadState>(
         builder: (context, state) {
-          debugPrint('formsAndFilesList___${state.formsAndFilesList}');
+          printData('formsAndFilesList___${state.formsAndFilesList}');
           return WillPopScope(
             onWillPop: () async {
               SharedPreferencesHelper preferencesHelper =
@@ -338,8 +338,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
                       AndroidDeviceInfo androidInfo =
                       await deviceInfo.androidInfo;
-                      debugPrint(
-                          'Running on android version ${androidInfo.version.sdkInt}');
+
                       if (androidInfo.version.sdkInt < 33) {
                         if (!statuses[Permission.storage]!.isGranted) {
                           CustomSnackBar.showSnackBar(
@@ -628,7 +627,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                         ),
                       ),
                       errorWidget: (context, url, error) {
-                        debugPrint('file upload error : $error');
+
                         return Center(
                           child: Text(
                             AppStrings.failedToLoadString,

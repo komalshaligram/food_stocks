@@ -313,6 +313,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (listViewContext, index) {
                           return SearchItemWidget(
+                              isShowSeeAll: index==state.searchList.length-1?true:false,
                               salePrice: state.searchList[index].salePrice,
                               saleDesc: state.searchList[index].salesDesc,
                               isPesach: state.searchList[index].isPesach,
@@ -342,7 +343,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   ? true
                                   : false,
                               onSeeAllTap: () async {
-                                debugPrint("searchType: ${state.searchList[index].searchType}");
+                                printData("searchType: ${state.searchList[index].searchType}");
                                 if (state.searchList[index].searchType ==
                                     SearchTypes.category) {
                                   dynamic searchResult =
@@ -517,8 +518,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             scanMode: ScanMode.BARCODE);
                         if (scanResult != '-1') {
                           // -1 result for cancel scanning
-                          debugPrint('result = $scanResult');
-                          debugPrint("tap 5");
+                          printData('result = $scanResult');
+
                           if(!state.isGuestUser){
                             showProductDetails(
                                 context: context,
@@ -669,13 +670,10 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                             width: getScreenWidth(context),
                                             child: GestureDetector(
                                               onVerticalDragStart: (dragDetails) {
-                                                  debugPrint('onVerticalDragStart');
                                               },
                                               onVerticalDragUpdate: (dragDetails) {
-                                                  debugPrint('onVerticalDragUpdate');
                                               },
                                               onVerticalDragEnd: (endDetails) {
-                                                 debugPrint('onVerticalDragEnd');
                                                 Navigator.pop(dialogContext);
                                               },
                                               child: PhotoView(
@@ -702,21 +700,11 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   },);
                               },
                               context: context,
-                              productImageIndex: state.imageIndex,
-                              onPageChanged: (index, p1) {
-                                context.read<PlanogramProductBloc>().add(
-                                    PlanogramProductEvent.updateImageIndexEvent(
-                                        index: index));
-                              },
                               productImages: [
                                 state.productDetails.first.mainImage ??
-                                    '',
-                                ...?state.productDetails.first.images?.map((image) =>
-                                image.imageUrl ?? '')
+                                    ''
                               ],
-
                               productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
-
                               productPrice: state
                                   .productStockList[state.productListIndex][
                               state.productStockUpdateIndex]
@@ -728,7 +716,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   (state.productDetails.first
                                       .numberOfUnit ??
                                       0) ,
-
                               productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                               scrollController: scrollController,
                               productQuantity:  state
@@ -756,6 +743,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                           context: context1));
                                 }
                               },
+                              onCloseTap: (){Navigator.pop(context);},
                             ),
                             state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context,isSaleOn)
                           ],

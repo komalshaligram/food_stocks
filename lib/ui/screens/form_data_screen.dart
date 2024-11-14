@@ -83,279 +83,268 @@ class FormDataScreenWidget extends StatelessWidget {
                 child: state.isShimmering || state.isAgentListShimmering
                     ? const FormDataScreenShimmerWidget()
                     : Padding(
-                  padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        10.height,
-                        CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.my_agent_code,
+                        padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              10.height,
+                              CustomContainerWidget(
+                                name: AppLocalizations.of(context)!.my_agent_code,
+                              ),
+                              CustomFormField(
+                                inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(6)],
+                                context: context,
+                                controller: state.agentCodeController,
+                                keyboardType: TextInputType.number,
+                                hint: "",
+                                fillColor: Colors.transparent,
+                                textInputAction: TextInputAction.next,
+                                maxLimits: 6,
+                                validator: AppStrings.agentCodeString,
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name: AppLocalizations.of(context)!.type_of_business,
+                              ),
+                              CommonDropDownButton(
+                                items: state.businessTypeList.map((business) {
+                                  return DropdownMenuItem<String>(
+                                    value: business.businessTypeName,
+                                    child: Text(business.businessTypeName ?? ''),
+                                  );
+                                }).toList(),
+                                onChanged: (newBusiness) {
+                                  bloc.add(FormDataEvent.selectBusinessTypeEvent(business: newBusiness ?? '', haveMultiple: true));
+                                  if (!state.haveMultiple) {
+                                    state.guarantee1NameController.text = '';
+                                    state.guarantee1addressController.text = '';
+                                    state.guarantee1idController.text = '';
+                                    state.guarantee1PhoneController.text = '';
+                                    state.guarantee2NameController.text = '';
+                                    state.guarantee2addressController.text = '';
+                                    state.guarantee2idController.text = '';
+                                    state.guarantee2PhoneController.text = '';
+                                    state.owner2NameController.text = '';
+                                    state.owner2israelIdController.text = '';
+                                  }
+                                },
+                                value: state.business,
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name: AppLocalizations.of(context)!.owner1_full_name,
+                              ),
+                              CustomFormField(
+                                context: context,
+                                controller: state.owner1NameController,
+                                keyboardType: TextInputType.text,
+                                hint: "",
+                                fillColor: Colors.transparent,
+                                textInputAction: TextInputAction.next,
+                                validator: AppStrings.ownerNameValString,
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name: AppLocalizations.of(context)!.owner_1_israel_id,
+                              ),
+                              CustomFormField(
+                                context: context,
+                                controller: state.owner1israelIdController,
+                                keyboardType: TextInputType.number,
+                                inputFormat: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                hint: "",
+                                fillColor: Colors.transparent,
+                                textInputAction: TextInputAction.next,
+                                validator: AppStrings.idValString,
+                              ),
+                              7.height,
+                              state.haveMultiple
+                                  ? Column(
+                                      children: [
+                                        CustomContainerWidget(
+                                          name: AppLocalizations.of(context)!.guarantee_1_full_name,
+                                        ),
+                                        CustomFormField(
+                                          context: context,
+                                          controller: state.guarantee1NameController,
+                                          keyboardType: TextInputType.text,
+                                          hint: "",
+                                          fillColor: Colors.transparent,
+                                          textInputAction: TextInputAction.next,
+                                          validator: AppStrings.guaranteeNameString,
+                                        ),
+                                        7.height,
+                                        CustomContainerWidget(
+                                          name: AppLocalizations.of(context)!.guarantee_1_israel_id,
+                                        ),
+                                        CustomFormField(
+                                          context: context,
+                                          controller: state.guarantee1idController,
+                                          inputFormat: [
+                                            FilteringTextInputFormatter.digitsOnly,
+                                          ],
+                                          keyboardType: TextInputType.number,
+                                          hint: "",
+                                          fillColor: Colors.transparent,
+                                          textInputAction: TextInputAction.next,
+                                          validator: AppStrings.idValString,
+                                        ),
+                                        7.height,
+                                        CustomContainerWidget(
+                                          name: state.language == AppStrings.hebrewString ? '${AppLocalizations.of(context)!.guarantee_1_address}${1}' : '${AppLocalizations.of(context)!.guarantee_1_address}',
+                                        ),
+                                        CustomFormField(
+                                          context: context,
+                                          controller: state.guarantee1addressController,
+                                          keyboardType: TextInputType.text,
+                                          hint: "",
+                                          fillColor: Colors.transparent,
+                                          textInputAction: TextInputAction.next,
+                                          validator: AppStrings.addressValString,
+                                        ),
+                                        7.height,
+                                        CustomContainerWidget(
+                                          name: AppLocalizations.of(context)!.guarantee_1_phone_number,
+                                        ),
+                                        CustomFormField(
+                                          inputFormat: [LengthLimitingTextInputFormatter(10)],
+                                          context: context,
+                                          controller: state.guarantee1PhoneController,
+                                          keyboardType: TextInputType.number,
+                                          hint: "",
+                                          fillColor: Colors.transparent,
+                                          textInputAction: TextInputAction.next,
+                                          validator: AppStrings.mobileValString,
+                                        ),
+                                        7.height,
+                                        CustomContainerWidget(
+                                          name: AppLocalizations.of(context)!.owner2_full_name,
+                                          star: '',
+                                        ),
+                                        CustomFormField(
+                                          context: context,
+                                          controller: state.owner2NameController,
+                                          keyboardType: TextInputType.text,
+                                          hint: "",
+                                          fillColor: Colors.transparent,
+                                          textInputAction: TextInputAction.next,
+                                          validator: AppStrings.ownerName2ValString,
+                                          onChangeValue: (t) {
+                                            ownerName = t;
+                                          },
+                                        ),
+                                        7.height,
+                                        CustomContainerWidget(
+                                          name: AppLocalizations.of(context)!.owner_2_israel_id,
+                                          star: '',
+                                        ),
+                                        CustomFormField(
+                                          context: context,
+                                          controller: state.owner2israelIdController,
+                                          keyboardType: TextInputType.number,
+                                          inputFormat: [
+                                            FilteringTextInputFormatter.digitsOnly,
+                                          ],
+                                          hint: "",
+                                          fillColor: Colors.transparent,
+                                          textInputAction: TextInputAction.next,
+                                          validator: state.owner2NameController.text.toString().isNotEmpty ? AppStrings.idValString : '',
+                                        ),
+                                        7.height,
+                                        CustomContainerWidget(
+                                          name: AppLocalizations.of(context)!.guarantee_2_full_name,
+                                          star: '',
+                                        ),
+                                        CustomFormField(
+                                          context: context,
+                                          controller: state.guarantee2NameController,
+                                          keyboardType: TextInputType.text,
+                                          hint: "",
+                                          fillColor: Colors.transparent,
+                                          textInputAction: TextInputAction.next,
+                                          validator: state.owner2NameController.text.toString().isNotEmpty ? AppStrings.guaranteeName2String : '',
+                                        ),
+                                        7.height,
+                                        CustomContainerWidget(
+                                          name: AppLocalizations.of(context)!.guarantee_2_israel_id,
+                                          star: '',
+                                        ),
+                                        CustomFormField(
+                                          context: context,
+                                          controller: state.guarantee2idController,
+                                          keyboardType: TextInputType.number,
+                                          inputFormat: [
+                                            FilteringTextInputFormatter.digitsOnly,
+                                          ],
+                                          hint: "",
+                                          fillColor: Colors.transparent,
+                                          textInputAction: TextInputAction.next,
+                                          validator: ownerName.isNotEmpty ? AppStrings.idValString : '',
+                                        ),
+                                        7.height,
+                                        CustomContainerWidget(
+                                          name: state.language == AppStrings.hebrewString ? '${AppLocalizations.of(context)!.guarantee_2_address}${2}' : '${AppLocalizations.of(context)!.guarantee_2_address}',
+                                          star: '',
+                                        ),
+                                        CustomFormField(
+                                          context: context,
+                                          controller: state.guarantee2addressController,
+                                          keyboardType: TextInputType.text,
+                                          hint: "",
+                                          fillColor: Colors.transparent,
+                                          textInputAction: TextInputAction.next,
+                                          validator: ownerName.isNotEmpty ? AppStrings.addressValString : '',
+                                        ),
+                                        7.height,
+                                        CustomContainerWidget(
+                                          name: AppLocalizations.of(context)!.guarantee_2_phone_number,
+                                          star: '',
+                                        ),
+                                        CustomFormField(
+                                          inputFormat: [LengthLimitingTextInputFormatter(10)],
+                                          context: context,
+                                          controller: state.guarantee2PhoneController,
+                                          keyboardType: TextInputType.number,
+                                          hint: "",
+                                          fillColor: Colors.transparent,
+                                          textInputAction: TextInputAction.done,
+                                          validator: ownerName.isNotEmpty ? AppStrings.mobileValString : '',
+                                        ),
+                                      ],
+                                    )
+                                  : const SizedBox(),
+                              40.height,
+                              CustomButtonWidget(
+                                buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
+                                bGColor: AppColors.mainColor,
+                                onPressed: () {
+                                  if (state.business != AppLocalizations.of(context)!.type_of_business) {
+                                    if (isValidIsraeliID(state.owner1israelIdController.text.toString().trim())) {
+                                      if (_formKey.currentState!.validate()) {
+                                        bool success = validation(state, context);
+                                        if (success) {
+                                          bloc.add(FormDataEvent.verifyAgentEvent(context: context));
+                                        }
+                                      }
+                                    } else {
+                                      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_owner1, type: SnackBarType.failure);
+                                    }
+                                  } else {
+                                    CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
+                                  }
+                                },
+                                fontColors: AppColors.whiteColor,
+                              ),
+                              20.height,
+                            ],
+                          ),
                         ),
-                        CustomFormField(
-                          inputFormat: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(6)
-                          ],
-                          context: context,
-                          controller: state.agentCodeController,
-                          keyboardType: TextInputType.number,
-                          hint: "",
-                          fillColor: Colors.transparent,
-                          textInputAction: TextInputAction.next,
-                          maxLimits: 6,
-                          validator: AppStrings.agentCodeString ,
-                        ),
-                        7.height,
-                        CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.type_of_business,
-                        ),
-                        CommonDropDownButton(
-                          items: state.businessTypeList.map((business) {
-                            return DropdownMenuItem<String>(
-                              value: business.businessTypeName,
-                              child: Text(business.businessTypeName ?? ''),
-                            );
-                          }).toList(),
-                          onChanged: (newBusiness) {
-                            bloc.add(FormDataEvent.selectBusinessTypeEvent(business: newBusiness ?? '', haveMultiple: true));
-                            if(!state.haveMultiple){
-                              state.guarantee1NameController.text='';
-                              state.guarantee1addressController.text='';
-                              state.guarantee1idController.text='';
-                              state.guarantee1PhoneController.text='';
-                              state.guarantee2NameController.text='';
-                              state.guarantee2addressController.text='';
-                              state.guarantee2idController.text ='';
-                              state.guarantee2PhoneController.text='';
-                              state.owner2NameController.text='';
-                              state.owner2israelIdController.text='';
-
-                            }
-                          },
-                          value: state.business,
-                        ),
-                        7.height,
-                        CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.owner1_full_name,
-                        ),
-                        CustomFormField(
-                          context: context,
-                          controller: state.owner1NameController,
-                          keyboardType: TextInputType.text,
-                          hint: "",
-                          fillColor: Colors.transparent,
-                          textInputAction: TextInputAction.next,
-                          validator: AppStrings.ownerNameValString,
-                        ),
-                        7.height,
-                        CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.owner_1_israel_id,
-                        ),
-                        CustomFormField(
-                          context: context,
-                          controller: state.owner1israelIdController,
-                          keyboardType: TextInputType.number,
-                          inputFormat: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          hint: "",
-                          fillColor: Colors.transparent,
-                          textInputAction: TextInputAction.next,
-                          validator: AppStrings.idValString,
-                        ),
-                        7.height,
-                        state.haveMultiple
-                            ? Column(
-                          children: [
-                            CustomContainerWidget(
-                              name: AppLocalizations.of(context)!.guarantee_1_full_name,
-                            ),
-                            CustomFormField(
-                              context: context,
-                              controller: state.guarantee1NameController,
-                              keyboardType: TextInputType.text,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: AppStrings.guaranteeNameString,
-                            ),
-                            7.height,
-                            CustomContainerWidget(
-                              name: AppLocalizations.of(context)!.guarantee_1_israel_id,
-                            ),
-                            CustomFormField(
-                              context: context,
-                              controller: state.guarantee1idController,
-                              inputFormat: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              keyboardType: TextInputType.number,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: AppStrings.idValString,
-                            ),
-                            7.height,
-                            CustomContainerWidget(
-                              name: state.language == AppStrings.hebrewString ? '${AppLocalizations.of(context)!.guarantee_1_address}${1}' : '${AppLocalizations.of(context)!.guarantee_1_address}',
-                            ),
-                            CustomFormField(
-                              context: context,
-                              controller: state.guarantee1addressController,
-                              keyboardType: TextInputType.text,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: AppStrings.addressValString,
-                            ),
-                            7.height,
-                            CustomContainerWidget(
-                              name: AppLocalizations.of(context)!.guarantee_1_phone_number,
-                            ),
-                            CustomFormField(
-                              inputFormat: [
-                                LengthLimitingTextInputFormatter(10)
-                              ],
-                              context: context,
-                              controller: state.guarantee1PhoneController,
-                              keyboardType: TextInputType.number,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: AppStrings.mobileValString,
-                            ),
-                            7.height,
-                            CustomContainerWidget(
-                              name: AppLocalizations.of(context)!.owner2_full_name,
-                              star: '',
-                            ),
-                            CustomFormField(
-                              context: context,
-                              controller: state.owner2NameController,
-                              keyboardType: TextInputType.text,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: AppStrings.ownerName2ValString,
-                              onChangeValue: (t) {
-                                debugPrint('ownerName:$t');
-                                ownerName = t;
-                                debugPrint('ownerName1:$t');
-                              },
-                            ),
-                            7.height,
-                            CustomContainerWidget(
-                              name: AppLocalizations.of(context)!.owner_2_israel_id,
-                              star: '',
-                            ),
-                            CustomFormField(
-                              context: context,
-                              controller: state.owner2israelIdController,
-                              keyboardType: TextInputType.number,
-                              inputFormat: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: state.owner2NameController.text.toString().isNotEmpty ? AppStrings.idValString : '',
-                            ),
-                            7.height,
-                            CustomContainerWidget(
-                              name: AppLocalizations.of(context)!.guarantee_2_full_name,
-                              star: '',
-                            ),
-                            CustomFormField(
-                              context: context,
-                              controller: state.guarantee2NameController,
-                              keyboardType: TextInputType.text,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator:  state.owner2NameController.text.toString().isNotEmpty ? AppStrings.guaranteeName2String : '',
-                            ),
-                            7.height,
-                            CustomContainerWidget(
-                              name: AppLocalizations.of(context)!.guarantee_2_israel_id,
-                              star: '',
-                            ),
-                            CustomFormField(
-                              context: context,
-                              controller: state.guarantee2idController,
-                              keyboardType: TextInputType.number,
-                              inputFormat: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: ownerName.isNotEmpty ? AppStrings.idValString : '',
-                            ),
-                            7.height,
-                            CustomContainerWidget(
-                              name: state.language == AppStrings.hebrewString ? '${AppLocalizations.of(context)!.guarantee_2_address}${2}' : '${AppLocalizations.of(context)!.guarantee_2_address}',
-                              star: '',
-                            ),
-                            CustomFormField(
-                              context: context,
-                              controller: state.guarantee2addressController,
-                              keyboardType: TextInputType.text,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: ownerName.isNotEmpty ? AppStrings.addressValString : '',
-                            ),
-                            7.height,
-                            CustomContainerWidget(
-                              name: AppLocalizations.of(context)!.guarantee_2_phone_number,
-                              star: '',
-                            ),
-                            CustomFormField(
-                              inputFormat: [
-                                LengthLimitingTextInputFormatter(10)
-                              ],
-                              context: context,
-                              controller: state.guarantee2PhoneController,
-                              keyboardType: TextInputType.number,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.done,
-                              validator: ownerName.isNotEmpty ? AppStrings.mobileValString : '',
-                            ),
-                          ],
-                        )
-                            : const SizedBox(),
-                        40.height,
-                        CustomButtonWidget(
-                          buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
-                          bGColor: AppColors.mainColor,
-                          onPressed: () {
-                            if (state.business != AppLocalizations.of(context)!.type_of_business) {
-                              if (isValidIsraeliID(state.owner1israelIdController.text.toString().trim())) {
-
-                               if( _formKey.currentState!.validate()){
-                                 bool success =  validation(state,context);
-                                 if(success){
-                                   bloc.add(FormDataEvent.verifyAgentEvent(context: context));
-                                 }
-                               }
-                              } else {
-                                CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_owner1, type: SnackBarType.failure);
-                              }
-                            } else {
-                              CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
-                            }
-                          },
-                          fontColors: AppColors.whiteColor,
-                        ),
-                        20.height,
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
               ),
             ),
           ),
@@ -364,25 +353,25 @@ class FormDataScreenWidget extends StatelessWidget {
     );
   }
 
-  bool validation(FormDataState state,BuildContext context){
-    if(state.haveMultiple){
+  bool validation(FormDataState state, BuildContext context) {
+    if (state.haveMultiple) {
       if (isValidIsraeliID(state.guarantee1idController.text.toString().trim())) {
         if (ownerName.isNotEmpty) {
           if (isValidIsraeliID(state.owner2israelIdController.text.toString().trim())) {
             if (isValidIsraeliID(state.guarantee2idController.text.toString().trim())) {
-              if(state.guarantee2NameController.text.toString().isNotEmpty){
-                if(state.guarantee2addressController.text.toString().isNotEmpty){
-                  if(state.guarantee2PhoneController.text.toString().isNotEmpty){
+              if (state.guarantee2NameController.text.toString().isNotEmpty) {
+                if (state.guarantee2addressController.text.toString().isNotEmpty) {
+                  if (state.guarantee2PhoneController.text.toString().isNotEmpty) {
                     return true;
-                  }else{
+                  } else {
                     CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.phone_number_cant_be_empty, type: SnackBarType.failure);
                     return false;
                   }
-                }else{
+                } else {
                   CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_address, type: SnackBarType.failure);
                   return false;
                 }
-              }else{
+              } else {
                 CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_guarantee2_name, type: SnackBarType.failure);
                 return false;
               }
@@ -394,17 +383,15 @@ class FormDataScreenWidget extends StatelessWidget {
             CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_owner2, type: SnackBarType.failure);
             return false;
           }
-        }else{
-            return true;
+        } else {
+          return true;
         }
-      }
-      else {
+      } else {
         CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_guarantee1, type: SnackBarType.failure);
         return false;
       }
-    }else{
+    } else {
       return true;
     }
-    return false;
   }
 }

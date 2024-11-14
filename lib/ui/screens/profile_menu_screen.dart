@@ -72,7 +72,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
               bloc.add(ProfileMenuEvent.getPermissionList(context: context));
               bloc.add(const ProfileMenuEvent.getPreferenceDataEvent());
               bloc.add(const ProfileMenuEvent.getAppLanguage());
-                bloc.add(ProfileMenuEvent.generalSettings(context: context,dialogContext: context,isRetryLoading: false));
+              bloc.add(ProfileMenuEvent.generalSettings(context: context,dialogContext: context,isRetryLoading: false));
               bloc.add(ProfileMenuEvent.getProfileDetailsEvent(context: context));
             },
             child: Scaffold(
@@ -242,6 +242,14 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                         RouteDefine.manageCreditCardScreen.name,
                                       );
                                     }) : 0.width,
+                                 profileMenuTiles(
+                                    title:
+                                    AppLocalizations.of(context)!.bank_transfer_information,
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                        RouteDefine.bankTransferScreen.name,
+                                      );
+                                    }) ,
                                 profileMenuTiles(
                                     title:
                                         AppLocalizations.of(context)!.log_out,

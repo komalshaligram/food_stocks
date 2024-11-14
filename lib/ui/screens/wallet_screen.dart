@@ -41,7 +41,7 @@ class WalletScreen extends StatelessWidget {
         ..add(const WalletEvent.checkLanguage())
         ..add(WalletEvent.getAllWalletTransactionEvent(
           context: context,
-          endDate:  DateTime.utc(DateTime.now().year, DateTime.now().month + 1).subtract(const Duration(days: 1)),
+          endDate: DateTime.utc(DateTime.now().year, DateTime.now().month + 1).subtract(const Duration(days: 1)),
           startDate: DateTime.utc(DateTime.now().year, DateTime.now().month, 1),
         )),
       child: const WalletScreenWidget(),
@@ -56,8 +56,7 @@ class WalletScreenWidget extends StatefulWidget {
   State<WalletScreenWidget> createState() => _WalletScreenWidgetState();
 }
 
-class _WalletScreenWidgetState extends State<WalletScreenWidget>
-    with SingleTickerProviderStateMixin {
+class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTickerProviderStateMixin {
   DateRange? selectedDateRange;
 
   DateTime? minDate;
@@ -99,29 +98,26 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
     };
 
     return BlocListener<WalletBloc, WalletState>(
-      listener: (context, state)  {
-        if(state.isExportComplete){
+      listener: (context, state) {
+        if (state.isExportComplete) {
           showDialog(
-            context:context,
+            context: context,
             builder: (context1) {
               return CustomOneButtonDialog(
                 title: state.userEmail,
                 directionality: state.language,
                 width: 80,
                 positiveTitle: AppLocalizations.of(context)!.close,
-                positiveOnTap:()=>Navigator.pop(context1),
-                subTitle:AppLocalizations.of(context)!.wallet_information_sent_to_your_email,
+                positiveOnTap: () => Navigator.pop(context1),
+                subTitle: AppLocalizations.of(context)!.wallet_information_sent_to_your_email,
               );
-            },).then((value) {
+            },
+          ).then((value) {
             context.read<WalletBloc>().add(const WalletEvent.checkLanguage());
           });
+        } else if (state.isAccountPermissionShimmering) {
+          BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
         }
-        else if(state.isAccountPermissionShimmering){
-          BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
-        }
-
-
       },
       child: BlocBuilder<WalletBloc, WalletState>(
         builder: (context, state) {
@@ -130,7 +126,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-               bloc.add(WalletEvent.userApproveEvent(context: context));
+                bloc.add(WalletEvent.userApproveEvent(context: context));
                 if (state.walletTransactionsList.isEmpty) {
                   bloc.add(WalletEvent.getAllWalletTransactionEvent(
                     context: context,
@@ -139,8 +135,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                   ));
                 }
                 bloc.add(WalletEvent.getWalletRecordEvent(context: context));
-                bloc.add(WalletEvent.getTotalExpenseEvent(
-                    year: state.year, context: context));
+                bloc.add(WalletEvent.getTotalExpenseEvent(year: state.year, context: context));
                 bloc.add(WalletEvent.getDropDownElementEvent(year: state.year));
                 bloc.add(WalletEvent.getPermissionList(context: context));
                 bloc.add(const WalletEvent.checkLanguage());
@@ -150,76 +145,46 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                 child: SafeArea(
                   child: NotificationListener<ScrollNotification>(
                     child: SingleChildScrollView(
-                      physics: state.walletTransactionsList.isEmpty
-                          ? const NeverScrollableScrollPhysics()
-                          : const AlwaysScrollableScrollPhysics(),
+                      physics: state.walletTransactionsList.isEmpty ? const NeverScrollableScrollPhysics() : const AlwaysScrollableScrollPhysics(),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: AnimationConfiguration.toStaggeredList(
                           duration: const Duration(seconds: 1),
-                          childAnimationBuilder: (widget) => SlideAnimation(
-                              duration: const Duration(seconds: 1),
-                              verticalOffset:
-                                  MediaQuery.of(context).size.height / 5,
-                              child: FadeInAnimation(child: widget)),
+                          childAnimationBuilder: (widget) => SlideAnimation(duration: const Duration(seconds: 1), verticalOffset: MediaQuery.of(context).size.height / 5, child: FadeInAnimation(child: widget)),
                           children: [
                             35.height,
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: AppConstants.padding_10),
+                              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
                               child: Container(
                                 width: getScreenWidth(context),
                                 clipBehavior: Clip.hardEdge,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: AppConstants.padding_10,
-                                    horizontal: AppConstants.padding_10),
-                                decoration: BoxDecoration(
-                                    color: AppColors.whiteColor,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: AppColors.shadowColor
-                                              .withOpacity(0.15),
-                                          blurRadius: AppConstants.blur_10)
-                                    ],
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(
-                                            AppConstants.radius_10))),
+                                padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
+                                decoration: BoxDecoration(color: AppColors.whiteColor, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)], borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
                                 child: Row(
                                   children: [
                                     Expanded(
                                         flex: 1,
                                         child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              AppLocalizations.of(context)!
-                                                  .balance_status,
-                                              style:
-                                                  AppStyles.rkRegularTextStyle(
+                                              AppLocalizations.of(context)!.balance_status,
+                                              style: AppStyles.rkRegularTextStyle(
                                                 size: AppConstants.smallFont,
                                                 color: AppColors.blackColor,
                                               ),
                                               textAlign: TextAlign.center,
                                             ),
                                             6.height,
-                                            BalanceIndicator(
-                                                pendingBalance: formatNumber(
-                                                  value: state.balance.toString(),local: AppStrings.hebrewLocal),
-                                                expense:
-                                                    state.expensePercentage.round(),
-                                                totalBalance: 100),
+                                            BalanceIndicator(pendingBalance: formatNumberForWallet(value: state.balance.toString(), local: AppStrings.hebrewLocal, context: context), expense: state.expensePercentage.round(), totalBalance: 100),
                                             6.height,
                                             Directionality(
-                                              textDirection: TextDirection.rtl,
+                                              textDirection: TextDirection.ltr,
                                               child: Text(
-                                                formatNumber( value: state.balance.toString(),local: AppStrings.hebrewLocal),
-                                                style: AppStyles.rkRegularTextStyle(
-                                                    size: AppConstants.font_14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: AppColors.blackColor),
+                                                formatNumberForWallet(value: state.balance.toString(), local: AppStrings.hebrewLocal, context: context),
+                                                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, fontWeight: FontWeight.bold, color: AppColors.blackColor),
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),
@@ -234,26 +199,11 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                           Row(
                                             children: [
                                               Flexible(
-                                                child: DashBoardStatsWidget(
-                                                  fontSize:  AppConstants.font_14,
-                                                    context: context,
-                                                    image: AppImagePath.credits,
-                                                    title: AppLocalizations.of(
-                                                            context)!.total_credit,
-                                                    value: formatNumber(value: state.totalCredit.toString() ,local: AppStrings.hebrewLocal)),
+                                                child: DashBoardStatsWidget(fontSize: AppConstants.font_14, context: context, image: AppImagePath.credits, title: AppLocalizations.of(context)!.total_credit, value: formatNumberForWallet(value: state.totalCredit.toString(), local: AppStrings.hebrewLocal, context: context)),
                                               ),
                                               10.width,
                                               Flexible(
-                                                child: DashBoardStatsWidget(
-                                                    fontSize:  AppConstants.font_14,
-                                                    context: context,
-                                                    image: AppImagePath.expense,
-                                                    title: AppLocalizations.of(
-                                                            context)!
-                                                        .this_months_expenses,
-                                                    value:
-                                                    formatNumber(value: state.thisMonthExpense.toString() ,local: AppStrings.hebrewLocal)),
-
+                                                child: DashBoardStatsWidget(fontSize: AppConstants.font_14, context: context, image: AppImagePath.expense, title: AppLocalizations.of(context)!.this_months_expenses, value: formatNumberForWallet(value: state.thisMonthExpense.toString(), local: AppStrings.hebrewLocal, context: context)),
                                               ),
                                             ],
                                           ),
@@ -261,26 +211,11 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                           Row(
                                             children: [
                                               Flexible(
-                                                child: DashBoardStatsWidget(
-                                                    fontSize:  AppConstants.font_14,
-                                                    context: context,
-                                                    image: AppImagePath.orders,
-                                                    title: AppLocalizations.of(
-                                                        context)!
-                                                        .this_months_orders,
-                                                    value: state.orderThisMonth.toString()),
+                                                child: DashBoardStatsWidget(fontSize: AppConstants.font_14, context: context, image: AppImagePath.orders, title: AppLocalizations.of(context)!.this_months_orders, value: state.orderThisMonth.toString()),
                                               ),
                                               10.width,
                                               Flexible(
-                                                child: DashBoardStatsWidget(
-                                                    fontSize:  AppConstants.font_14,
-                                                    context: context,
-                                                    image: AppImagePath.expense,
-                                                    title: AppLocalizations.of(
-                                                            context)!
-                                                        .last_months_expenses,
-                                                    value:
-                                                        formatNumber(value: state.lastMonthExpense.toString(),local:AppStrings.hebrewLocal)),
+                                                child: DashBoardStatsWidget(fontSize: AppConstants.font_14, context: context, image: AppImagePath.expense, title: AppLocalizations.of(context)!.last_months_expenses, value: formatNumberForWallet(value: state.lastMonthExpense.toStringAsFixed(0), local: AppStrings.hebrewLocal, context: context)),
                                               ),
                                             ],
                                           ),
@@ -293,23 +228,15 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                             ),
                             25.height,
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: AppConstants.padding_15),
+                              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context)!
-                                        .monthly_expense_graph,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.smallFont,
-                                        color: AppColors.blackColor),
+                                    AppLocalizations.of(context)!.monthly_expense_graph,
+                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
                                   ),
-                                  dropDownWidget(
-                                      date: state.year,
-                                      dateList: state.yearList,
-                                      context1: context),
+                                  dropDownWidget(date: state.year, dateList: state.yearList, context1: context),
                                 ],
                               ),
                             ),
@@ -322,40 +249,28 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                       height: getScreenHeight(context) * 0.21,
                                       width: double.maxFinite,
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 2),
+                                        padding: const EdgeInsets.symmetric(horizontal: 2),
                                         child: LineChart(
                                           LineChartData(
-                                            borderData:
-                                                FlBorderData(show: false),
+                                            borderData: FlBorderData(show: false),
                                             lineTouchData: LineTouchData(
                                               enabled: true,
-                                              touchTooltipData:
-                                                  LineTouchTooltipData(
-                                                      fitInsideHorizontally:
-                                                          true,
-                                                      getTooltipItems: (value) {
-                                                        return value.map((e) {
-                                                          return LineTooltipItem(
-                                                              "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total}: ${AppLocalizations.of(context)!.currency}${e.y.toStringAsFixed(2)}",
-                                                              const TextStyle(
-                                                                  fontSize: 8));
-                                                        }).toList();
-                                                      },
-                                                      tooltipBgColor:
-                                                          Colors.transparent,
-                                                      showOnTopOfTheChartBoxArea:
-                                                          false,
-                                                      tooltipMargin: 15,
-                                                      tooltipPadding:
-                                                          const EdgeInsets.only(
-                                                              bottom: 6)),
+                                              touchTooltipData: LineTouchTooltipData(
+                                                  fitInsideHorizontally: true,
+                                                  getTooltipItems: (value) {
+                                                    return value.map((e) {
+                                                      return LineTooltipItem("${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total}: ${AppLocalizations.of(context)!.currency}${e.y.toStringAsFixed(2)}", const TextStyle(fontSize: 8));
+                                                    }).toList();
+                                                  },
+                                                  tooltipBgColor: Colors.transparent,
+                                                  showOnTopOfTheChartBoxArea: false,
+                                                  tooltipMargin: 15,
+                                                  tooltipPadding: const EdgeInsets.only(bottom: 6)),
                                             ),
                                             lineBarsData: [
                                               LineChartBarData(
                                                 spots: state.monthlyExpenseList,
-                                                color: AppColors.mainColor
-                                                    .withOpacity(0.8),
+                                                color: AppColors.mainColor.withOpacity(0.8),
                                                 isCurved: false,
                                                 belowBarData: BarAreaData(
                                                   show: true,
@@ -363,10 +278,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                     begin: Alignment.topCenter,
                                                     end: Alignment.bottomCenter,
                                                     colors: [
-                                                      AppColors.graphColor
-                                                          .withOpacity(0.2),
-                                                      AppColors.graphColor
-                                                          .withOpacity(0.01),
+                                                      AppColors.graphColor.withOpacity(0.2),
+                                                      AppColors.graphColor.withOpacity(0.01),
                                                     ],
                                                   ),
                                                   cutOffY: 0.0,
@@ -383,22 +296,15 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                               bottomTitles: AxisTitles(
                                                 sideTitles: SideTitles(
                                                   showTitles: true,
-                                                  getTitlesWidget:
-                                                      ((value, meta) {
-                                                    String? month =
-                                                        monthMap[value];
+                                                  getTitlesWidget: ((value, meta) {
+                                                    String? month = monthMap[value];
                                                     return Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 5),
+                                                      padding: const EdgeInsets.only(top: 5),
                                                       child: Text(
                                                         month.toString(),
-                                                        style: AppStyles
-                                                            .rkRegularTextStyle(
-                                                          size: AppConstants
-                                                              .font_8,
-                                                          color: AppColors
-                                                              .navSelectedColor,
+                                                        style: AppStyles.rkRegularTextStyle(
+                                                          size: AppConstants.font_8,
+                                                          color: AppColors.navSelectedColor,
                                                         ),
                                                       ),
                                                     );
@@ -406,30 +312,21 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                 ),
                                               ),
                                               leftTitles: const AxisTitles(
-                                                sideTitles: SideTitles(
-                                                    showTitles: false),
+                                                sideTitles: SideTitles(showTitles: false),
                                               ),
                                               rightTitles: const AxisTitles(
-                                                sideTitles: SideTitles(
-                                                    showTitles: false),
+                                                sideTitles: SideTitles(showTitles: false),
                                               ),
                                               topTitles: AxisTitles(
                                                 sideTitles: SideTitles(
                                                   showTitles: true,
-                                                  getTitlesWidget:
-                                                      ((value, meta) {
-                                                    String? month =
-                                                        state.graphDataList[
-                                                            value.round()];
+                                                  getTitlesWidget: ((value, meta) {
+                                                    String? month = state.graphDataList[value.round()];
                                                     return Text(
-                                                      month.toString() == "0.00"?'0':
-                                                        month.toString(),
-                                                      style: AppStyles
-                                                          .rkRegularTextStyle(
-                                                        size:
-                                                            AppConstants.font_8,
-                                                        color: AppColors
-                                                            .navSelectedColor,
+                                                      month.toString() == "0.00" ? '0' : month.toString(),
+                                                      style: AppStyles.rkRegularTextStyle(
+                                                        size: AppConstants.font_8,
+                                                        color: AppColors.navSelectedColor,
                                                       ),
                                                     );
                                                   }),
@@ -443,17 +340,13 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                   ),
                             5.height,
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: AppConstants.padding_15),
+                              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     AppLocalizations.of(context)!.history,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.smallFont,
-                                        color: AppColors.blackColor),
+                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
                                   ),
                                   const Text('')
                                 ],
@@ -461,35 +354,24 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                             ),
                             3.height,
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: AppConstants.padding_10),
+                              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-
                                   Expanded(
                                     flex: 2,
                                     child: GestureDetector(
                                       onTap: () async {
-                                        Map<Permission, PermissionStatus>
-                                            statuses = await [
+                                        Map<Permission, PermissionStatus> statuses = await [
                                           Permission.storage,
                                         ].request();
 
                                         if (Platform.isAndroid) {
-                                          DeviceInfoPlugin deviceInfo =
-                                              DeviceInfoPlugin();
-                                          AndroidDeviceInfo androidInfo =
-                                              await deviceInfo.androidInfo;
+                                          DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                                          AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
                                           if (androidInfo.version.sdkInt < 33) {
-                                            if (!statuses[Permission.storage]!
-                                                .isGranted) {
-                                              CustomSnackBar.showSnackBar(
-                                                  context: context,
-                                                  title:
-                                                      AppLocalizations.of(context)!.storage_permission,
-                                                  type: SnackBarType.failure);
+                                            if (!statuses[Permission.storage]!.isGranted) {
+                                              CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.storage_permission, type: SnackBarType.failure);
                                               return;
                                             }
                                           }
@@ -498,43 +380,24 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                         }
 
                                         state.walletTransactionsList.isNotEmpty
-                                            ? bloc.add(WalletEvent
-                                                .exportWalletTransactionEvent(
+                                            ? bloc.add(WalletEvent.exportWalletTransactionEvent(
                                                 context: context,
-                                                startDate:
-                                                    startDate ?? state.firstDateOfMonth,
-                                                endDate:
-                                                    endDate ?? DateTime.now(),
+                                                startDate: startDate ?? state.firstDateOfMonth,
+                                                endDate: endDate ?? DateTime.now(),
                                               ))
                                             : const SizedBox();
                                       },
                                       child: Container(
                                         alignment: Alignment.center,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: AppConstants.padding_5,
-                                            horizontal: AppConstants.padding_3),
-                                        decoration: BoxDecoration(
-                                          gradient: AppColors.appMainGradientColor,
-                                            borderRadius: BorderRadius.circular(
-                                                AppConstants.radius_3)),
+                                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_3),
+                                        decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_3)),
                                         child: state.isExportShimmering
                                             ? const CupertinoActivityIndicator(
                                                 color: Colors.white,
                                               )
                                             : Text(
-                                                AppLocalizations.of(context)!
-                                                    .export,
-                                                style: AppStyles
-                                                    .rkRegularTextStyle(
-                                                        size: state.language ==
-                                                                AppStrings
-                                                                    .englishString
-                                                            ? AppConstants
-                                                                .font_12
-                                                            : AppConstants
-                                                                .font_14,
-                                                        color: AppColors
-                                                            .whiteColor),
+                                                AppLocalizations.of(context)!.export,
+                                                style: AppStyles.rkRegularTextStyle(size: state.language == AppStrings.englishString ? AppConstants.font_12 : AppConstants.font_14, color: AppColors.whiteColor),
                                               ),
                                       ),
                                     ),
@@ -544,21 +407,16 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                     flex: 7,
                                     child: Container(
                                         height: 45,
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: AppConstants.padding_10,
-                                            vertical: AppConstants.padding_5),
+                                        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.radius_7),
-                                          border: Border.all(
-                                              color: AppColors.borderColor),
+                                          borderRadius: BorderRadius.circular(AppConstants.radius_7),
+                                          border: Border.all(color: AppColors.borderColor),
                                           color: AppColors.whiteColor,
                                         ),
                                         child: DateRangeField(
                                           decoration: const InputDecoration(
                                             enabledBorder: InputBorder.none,
-                                            suffixIcon:
-                                                Icon(Icons.keyboard_arrow_down),
+                                            suffixIcon: Icon(Icons.keyboard_arrow_down),
                                             contentPadding: EdgeInsets.all(0),
                                           ),
                                           showDateRangePicker: ({
@@ -567,46 +425,31 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                           }) {
                                             return showDateRangePickerDialog(
                                               context: context,
-
                                               offset: const Offset(65, 200),
-                                              barrierColor: AppColors.whiteColor
-                                                  .withOpacity(0.6),
+                                              barrierColor: AppColors.whiteColor.withOpacity(0.6),
                                               builder: datePickerBuilder,
                                             );
                                           },
-                                          onDateRangeSelected:
-                                              (DateRange? value) {
+                                          onDateRangeSelected: (DateRange? value) {
                                             startDate = value?.start;
                                             endDate = value?.end;
 
                                             if (value == null) {
-                                              selectedDateRange =
-                                                  state.selectedDateRange;
-                                              bloc.add(
-                                                  WalletEvent.getDateRangeEvent(
-                                                      context: context,
-                                                      range: state
-                                                          .selectedDateRange));
+                                              selectedDateRange = state.selectedDateRange;
+                                              bloc.add(WalletEvent.getDateRangeEvent(context: context, range: state.selectedDateRange));
                                             } else {
                                               selectedDateRange = value;
-                                              bloc.add(
-                                                  WalletEvent.getDateRangeEvent(
-                                                      context: context,
-                                                      range: value));
+                                              bloc.add(WalletEvent.getDateRangeEvent(context: context, range: value));
 
-                                              bloc.add(WalletEvent
-                                                  .getAllWalletTransactionEvent(
+                                              bloc.add(WalletEvent.getAllWalletTransactionEvent(
                                                 context: context,
                                                 endDate: value.end,
                                                 startDate: value.start,
                                               ));
                                             }
                                           },
-                                          selectedDateRange:
-                                              state.selectedDateRange,
-                                          pickerBuilder: (BuildContext context,
-                                              dynamic Function(DateRange?)
-                                                  onDateRangeChanged) {
+                                          selectedDateRange: state.selectedDateRange,
+                                          pickerBuilder: (BuildContext context, dynamic Function(DateRange?) onDateRangeChanged) {
                                             return const Text('');
                                           },
                                           // pickerBuilder: datePickerBuilder,
@@ -619,43 +462,28 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                             Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 10
-                                  ),
+                                  padding: const EdgeInsets.only(bottom: 10),
                                   child: state.isShimmering
                                       ? const OrderSummaryScreenShimmerWidget()
                                       : state.walletTransactionsList.isNotEmpty
                                           ? ListView.builder(
-                                              itemCount: state
-                                                  .walletTransactionsList
-                                                  .length,
+                                              itemCount: state.walletTransactionsList.length,
                                               // scrollDirection: Axis.vertical,
                                               shrinkWrap: true,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
+                                              physics: const NeverScrollableScrollPhysics(),
                                               itemBuilder: (context, index) {
                                                 return Container(
                                                   color: AppColors.whiteColor,
                                                   child: Column(
                                                     children: [
                                                       Padding(
-                                                        padding: const EdgeInsets
-                                                            .symmetric(
-                                                            vertical:
-                                                                AppConstants
-                                                                    .padding_10,
-                                                            horizontal:
-                                                                AppConstants
-                                                                    .padding_15),
-                                                        child: listWidget(
-                                                            context: context,
-                                                            listIndex: index),
+                                                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_15),
+                                                        child: listWidget(context: context, listIndex: index),
                                                       ),
                                                       Container(
                                                         width: double.maxFinite,
                                                         height: 1,
-                                                        color: AppColors
-                                                            .borderColor,
+                                                        color: AppColors.borderColor,
                                                       ),
                                                     ],
                                                   ),
@@ -663,31 +491,15 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                               },
                                             )
                                           : SizedBox(
-                                              height: getScreenHeight(
-                                                          context) >=
-                                                      725
-                                                  ? getScreenHeight(context) / 9
-                                                  : getScreenHeight(context) /
-                                                      9,
+                                              height: getScreenHeight(context) >= 725 ? getScreenHeight(context) / 9 : getScreenHeight(context) / 9,
                                               child: Center(
                                                   child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .no_data,
-                                                style: AppStyles
-                                                    .pVRegularTextStyle(
-                                                        size: AppConstants
-                                                            .normalFont,
-                                                        color: AppColors
-                                                            .blackColor,
-                                                        fontWeight:
-                                                            FontWeight.w400),
+                                                AppLocalizations.of(context)!.no_data,
+                                                style: AppStyles.pVRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w400),
                                               )),
                                             ),
                                 ),
-                                state.isLoadMore
-                                    ? const OrderSummaryScreenShimmerWidget(
-                                        itemCount: 2)
-                                    : 0.width,
+                                state.isLoadMore ? const OrderSummaryScreenShimmerWidget(itemCount: 2) : 0.width,
                               ],
                             ),
                           ],
@@ -695,15 +507,9 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                       ),
                     ),
                     onNotification: (notification) {
-                      if (notification.metrics.pixels ==
-                          notification.metrics.maxScrollExtent) {
-                        if ((state.balanceSheetList.metaData
-                                    ?.totalFilteredCount ??
-                                1) >
-                            state.walletTransactionsList.length) {
-                          context
-                              .read<WalletBloc>()
-                              .add(WalletEvent.getAllWalletTransactionEvent(
+                      if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                        if ((state.balanceSheetList.metaData?.totalFilteredCount ?? 1) > state.walletTransactionsList.length) {
+                          context.read<WalletBloc>().add(WalletEvent.getAllWalletTransactionEvent(
                                 context: context,
                                 startDate: startDate,
                                 endDate: endDate,
@@ -724,10 +530,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
     );
   }
 
-  Widget dropDownWidget(
-      {required int date,
-      required List<int> dateList,
-      required BuildContext context1}) {
+  Widget dropDownWidget({required int date, required List<int> dateList, required BuildContext context1}) {
     WalletBloc bloc = context1.read<WalletBloc>();
     return Container(
         padding: const EdgeInsets.symmetric(
@@ -757,15 +560,12 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
             items: dateList.map((e) {
               return DropdownMenuItem<int>(
                 value: e,
-                child: Text(e.toString(),
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_12)),
+                child: Text(e.toString(), style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12)),
               );
             }).toList(),
             onChanged: (value) {
               bloc.add(WalletEvent.getDropDownElementEvent(year: value!));
-              bloc.add(WalletEvent.getTotalExpenseEvent(
-                  year: value, context: context1));
+              bloc.add(WalletEvent.getTotalExpenseEvent(year: value, context: context1));
             }));
   }
 
@@ -783,25 +583,19 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    state.walletTransactionsList[listIndex].createdAt!
-                        .replaceRange(11, 16, '')
-                        .toString(),
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_12,
-                        color: AppColors.blackColor),
+                    state.walletTransactionsList[listIndex].createdAt!.replaceRange(11, 16, '').toString(),
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor),
                   ),
                   10.height,
                   Text(
-            getType(state.walletTransactionsList[listIndex].type.toString()) ==
-             AppLocalizations.of(context)!.order ?
-            '${getType(state.walletTransactionsList[listIndex].type.toString())}'':${state.walletTransactionsList[listIndex].orderId}':
-          getType(state.walletTransactionsList[listIndex].type.toString()) ==
-          AppLocalizations.of(context)!.refund_for_order  ? '${getType(state.walletTransactionsList[listIndex].type.toString())}'':${state.walletTransactionsList[listIndex].orderId}':
-          getType(state.walletTransactionsList[listIndex].type.toString()) ==
-          AppLocalizations.of(context)!.surfaces_order ? '${getType(state.walletTransactionsList[listIndex].type.toString())}'':${state.walletTransactionsList[listIndex].orderId}' :
-          '${getType(state.walletTransactionsList[listIndex].type.toString())}',
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_12, color: AppColors.blueColor),
+                    getType(state.walletTransactionsList[listIndex].type.toString()) == AppLocalizations.of(context)!.order
+                        ? '${getType(state.walletTransactionsList[listIndex].type.toString())}' ':${state.walletTransactionsList[listIndex].orderId}'
+                        : getType(state.walletTransactionsList[listIndex].type.toString()) == AppLocalizations.of(context)!.refund_for_order
+                            ? '${getType(state.walletTransactionsList[listIndex].type.toString())}' ':${state.walletTransactionsList[listIndex].orderId}'
+                            : getType(state.walletTransactionsList[listIndex].type.toString()) == AppLocalizations.of(context)!.surfaces_order
+                                ? '${getType(state.walletTransactionsList[listIndex].type.toString())}' ':${state.walletTransactionsList[listIndex].orderId}'
+                                : '${getType(state.walletTransactionsList[listIndex].type.toString())}',
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blueColor),
                   ),
                 ],
               ),
@@ -809,27 +603,18 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    getType(state.walletTransactionsList[listIndex].type.toString()) ==
-                            AppLocalizations.of(context)!.order || getType(state.walletTransactionsList[listIndex].type.toString()) ==
-                        AppLocalizations.of(context)!.surfaces_order
-                       ?'${'-'}''${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(), local: AppStrings.hebrewLocal)}'
-                        : formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '').toString()), local: AppStrings.hebrewLocal),
+                    getType(state.walletTransactionsList[listIndex].type.toString()) == AppLocalizations.of(context)!.order || getType(state.walletTransactionsList[listIndex].type.toString()) == AppLocalizations.of(context)!.surfaces_order ? '${'-'}' '${formatNumberForWallet(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(), local: AppStrings.hebrewLocal, context: context)}' : formatNumberForWallet(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '').toString()), local: AppStrings.hebrewLocal, context: context),
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,
-                        color: getType(state
-                                    .walletTransactionsList[listIndex].type
-                                    .toString()) ==
-                                AppLocalizations.of(context)!.monthly_credit
+                        color: getType(state.walletTransactionsList[listIndex].type.toString()) == AppLocalizations.of(context)!.monthly_credit
                             ? AppColors.mainColor
-                            :getType(state.walletTransactionsList[listIndex].type.toString()) ==
-                            AppLocalizations.of(context)!.refund_for_order  ? AppColors.mainColor : AppColors.redColor,
+                            : getType(state.walletTransactionsList[listIndex].type.toString()) == AppLocalizations.of(context)!.refund_for_order
+                                ? AppColors.mainColor
+                                : AppColors.redColor,
                         fontWeight: FontWeight.w600),
                   ),
                   3.height,
-                  CircularButtonWidget(
-                      buttonName: AppLocalizations.of(context)!.balance_status,
-          buttonValue:
-             formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(), local: AppStrings.hebrewLocal)),
+                  CircularButtonWidget(buttonName: AppLocalizations.of(context)!.balance_status, buttonValue: formatNumberForWallet(value: state.walletTransactionsList[listIndex].balance.toString(), local: AppStrings.hebrewLocal, context: context)),
                 ],
               ),
             ],
@@ -845,7 +630,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
     } else if (type == AppStrings.debit) {
       return AppLocalizations.of(context)!.order;
     } else if (type == AppStrings.refund) {
-       return AppLocalizations.of(context)!.refund_for_order;
+      return AppLocalizations.of(context)!.refund_for_order;
     } else if (type == AppStrings.surfaceAmount) {
       return AppLocalizations.of(context)!.surfaces_order;
     } else {
@@ -853,15 +638,11 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
     }
   }
 
-  Widget datePickerBuilder(
-      BuildContext context, dynamic Function(DateRange?) onDateRangeChanged,
-      [bool doubleMonth = false]) {
+  Widget datePickerBuilder(BuildContext context, dynamic Function(DateRange?) onDateRangeChanged, [bool doubleMonth = false]) {
     DateTime now = DateTime.now();
 
     return SizedBox(
-      height: getScreenHeight(context) >= 725
-          ? getScreenHeight(context) / 2.3
-          : getScreenHeight(context) / 1.9,
+      height: getScreenHeight(context) >= 725 ? getScreenHeight(context) / 2.3 : getScreenHeight(context) / 1.9,
       child: DateRangePickerWidget(
         doubleMonth: doubleMonth,
         initialDateRange: selectedDateRange,

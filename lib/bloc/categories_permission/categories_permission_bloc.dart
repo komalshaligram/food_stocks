@@ -108,20 +108,20 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
           List<update.CategoryPermission> updateCategoryPermissionList = [];
           List<String> categories = [];
 
-          state.categoriesPermissionList.forEach((element) {
+          for (var element in state.categoriesPermissionList) {
             categories.add(element.categoryId!);
-          });
+          }
 
-          List<update.SubCategory> SubCategoryList = [];
+          List<update.SubCategory> subCategoryList = [];
 
           for (int i = 0; i < categories.length; i++) {
-            SubCategoryList = [];
+            subCategoryList = [];
             for (int j = 0; j < (state.categoriesPermissionList[i].subCategories?.length ?? 0); j++) {
               if (categories[i] == state.categoriesPermissionList[i].subCategories?[j].subCategoryData?.parentCategoryId) {
-                SubCategoryList.add(update.SubCategory(subCategoryId: state.categoriesPermissionList[i].subCategories?[j].subCategoryId, isAllowed: state.categoriesPermissionList[i].subCategories?[j].isAllowed));
+                subCategoryList.add(update.SubCategory(subCategoryId: state.categoriesPermissionList[i].subCategories?[j].subCategoryId, isAllowed: state.categoriesPermissionList[i].subCategories?[j].isAllowed));
               }
             }
-            updateCategoryPermissionList.add(update.CategoryPermission(subCategories: SubCategoryList, isAllowed: state.categoriesPermissionList[i].isAllowed, categoryId: state.categoriesPermissionList[i].categoryId));
+            updateCategoryPermissionList.add(update.CategoryPermission(subCategories: subCategoryList, isAllowed: state.categoriesPermissionList[i].isAllowed, categoryId: state.categoriesPermissionList[i].categoryId));
           }
 
           update.UpdatePermissionModel req = update.UpdatePermissionModel(categoryPermissions: updateCategoryPermissionList);
@@ -130,7 +130,7 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
 
           updatePermissionReq.removeWhere((key, value) {
             if (value != null) {
-              debugPrint("[$key] = $value");
+              printData("[$key] = $value");
             }
             return value == null;
           });
@@ -140,7 +140,7 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isUpdateProcess: false));
             Navigator.pop(event.context);
-            CustomSnackBar.showSnackBar(context: event.context, title: '${AppLocalizations.of(event.context)!.success_message}', type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.success_message, type: SnackBarType.success);
           } else {
             emit(state.copyWith(isUpdateProcess: false));
           }

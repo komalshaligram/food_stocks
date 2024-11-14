@@ -11,6 +11,7 @@ class HomeState with _$HomeState {
     required bool isProductSaleShimmering,
     required bool isLoading,
     required bool isProductLoading,
+    required bool allShimmering,
     required List<Product> productDetails,
     required List<List<ProductStockModel>> productStockList,
     required int productStockUpdateIndex,
@@ -54,6 +55,7 @@ class HomeState with _$HomeState {
     required String language,
     required bool isDialogOpen,
     required bool retryLoading,
+    required BuildContext? context,
     required RefreshController refreshController,
 
   }) = _HomeState;
@@ -64,7 +66,7 @@ class HomeState with _$HomeState {
       cartCount: 0,
       messageCount: 0,
       productSalesList: [],
-      isProductSaleShimmering: false,
+      isProductSaleShimmering: true,
       isLoading: false,
       isProductLoading: false,
       productDetails: [],
@@ -115,6 +117,8 @@ class HomeState with _$HomeState {
       isDialogOpen : false,
       language :AppStrings.hebrewString,
       retryLoading:false,
+      allShimmering: true,
+      context : null,
       refreshController: RefreshController()
   );
 }

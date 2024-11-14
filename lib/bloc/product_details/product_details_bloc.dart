@@ -35,17 +35,16 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getOrderByIdEvent) {
-        debugPrint('token___${preferencesHelper.getAuthToken()}');
 
         emit(state.copyWith(isShimmering: true, isLoading: true, language: preferencesHelper.getAppLanguage(), isSubUserCreateDuplicateOrder: preferencesHelper.getCanDuplicateOrder(), isIncludedVat: preferencesHelper.getIsIncludedVat()));
         try {
           final res = await DioClient(event.context).get(
             path: '${AppUrls.getOrderById}${preferencesHelper.getOrderId()}',
           );
-          debugPrint('GetOrderById url   = ${AppUrls.getOrderById}${event.orderId}');
-          //   debugPrint('GetOrderById res  = $res');
+          printData('GetOrderById url   = ${AppUrls.getOrderById}${event.orderId}');
+   
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
-          //  debugPrint('GetOrderByIdModel  = $response');
+       
 
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(orderBySupplierProduct: response.data?.ordersBySupplier?.first ?? const OrdersBySupplier(), orderData: response.data?.orderData?.first ?? OrderDatum(), isShimmering: false, isLoading: false, isRefresh: !state.isRefresh));
@@ -114,9 +113,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               data: reqMap,
             );
 
-            debugPrint('createIssue url  = ${AppUrls.baseUrl}${AppUrls.createIssueUrl}${event.orderId}');
-            debugPrint('createIssue Req  = $reqMap');
-            debugPrint('[order Id ] = ${event.orderId}');
+         
             if (response[AppStrings.statusString] == AppConstants.code_201) {
               emit(state.copyWith(isLoading: false));
 
@@ -163,9 +160,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             data: reqMap,
           );
 
-          debugPrint('removeIssue url  = ${AppUrls.baseUrl}${AppUrls.removeIssueUrl}${'/'}${event.orderId}');
-          debugPrint('removeIssue Req  = $reqMap');
-          debugPrint('[order Id ] = ${event.orderId}');
+      
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             add(ProductDetailsEvent.getOrderByIdEvent(context: event.context, orderId: preferencesHelper.getOrderId()));
             emit(state.copyWith(isRemoveProcess: false));
@@ -190,11 +185,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             data: {AppStrings.orderIdString: event.orderId, AppStrings.cartIdString: preferencesHelper.getCartId()},
           );
 
-          debugPrint('duplicateOrder url  = ${AppUrls.baseUrl}${AppUrls.duplicateOrderUrl}');
-          debugPrint('[order Id ] = ${event.orderId}');
-          debugPrint('[cart Id ] = ${preferencesHelper.getCartId()}');
-          debugPrint('duplicateOrder response = ${response}');
-
+   
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             Navigator.pop(event.dialogContext);
 
@@ -212,7 +203,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
         }
       } else if (event is _getAllCartEvent) {
-        debugPrint('cartId____${preferencesHelper.getCartId()}');
+        printData('cartId____${preferencesHelper.getCartId()}');
 
         emit(state.copyWith(isDuplicateOrderProcess: true));
         try {
@@ -220,10 +211,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             '${AppUrls.getAllCartUrl}${preferencesHelper.getCartId()}',
           );
 
-          debugPrint('duplicateOrder url  = ${AppUrls.baseUrl}${AppUrls.getAllCartUrl}');
-
-          debugPrint('GetAllCart response = $res');
-
+       
           GetAllCartResModel response = GetAllCartResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
@@ -250,8 +238,8 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           try {
             final res = await DioClient(event.context).get(path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-            debugPrint('AccountPermission response = ${response.data.toString()}');
-            debugPrint('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+          
+            printData('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
             if (response.status == AppConstants.code_200) {
               var res = response.data?.permissions;
               preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);

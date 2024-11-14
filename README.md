@@ -38,7 +38,14 @@ samples, guidance on mobile development, and a full API reference.
 
 - Reference the following commands to get started:
   📦 To create a new release use: "shorebird release".
+- shorebird release android --flavor prod
+- shorebird release ios --flavor stag
+
+ 
   🚀 To push an update use: "shorebird patch".
+  shorebird patch ios --flavor dev
+
   👀 To preview a release use: "shorebird preview".
   🚀 To make this patch available to your users : "shorebird patch ios-alpha".
-  
+
+shorebird patch --platforms=ios --flavor=dev --release-version=1.0.34+1

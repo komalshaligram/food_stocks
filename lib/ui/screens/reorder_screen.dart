@@ -310,6 +310,7 @@ class ReorderScreenWidget extends StatelessWidget {
                               shrinkWrap: true,
                               itemBuilder: (listViewContext, index) {
                                 return SearchItemWidget(
+                                    isShowSeeAll: index==state.searchList.length?true:false,
                                     salePrice: state.searchList[index].salePrice,
                                     saleDesc: state.searchList[index].salesDesc,
                                     isPesach: state.searchList[index].isPesach,
@@ -542,13 +543,10 @@ class ReorderScreenWidget extends StatelessWidget {
                                                     width: getScreenWidth(context),
                                                     child: GestureDetector(
                                                       onVerticalDragStart: (dragDetails) {
-                                                        debugPrint('onVerticalDragStart');
                                                       },
                                                       onVerticalDragUpdate: (dragDetails) {
-                                                        debugPrint('onVerticalDragUpdate');
                                                       },
                                                       onVerticalDragEnd: (endDetails) {
-                                                        debugPrint('onVerticalDragEnd');
                                                         Navigator.pop(dialogContext);
                                                       },
                                                       child: PhotoView(
@@ -575,11 +573,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                           );
                                         },
                                         context: context,
-                                        productImageIndex: state.imageIndex,
-                                        onPageChanged: (index, p1) {
-                                          context.read<ReorderBloc>().add(ReorderEvent.updateImageIndexEvent(index: index));
-                                        },
-                                        productImages: [state.productDetails.first.mainImage ?? '', ...?state.productDetails.first.images?.map((image) => image.imageUrl ?? '')],
+
+                                        productImages: [state.productDetails.first.mainImage ?? ''],
                                         productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
                                         productPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
                                         productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
@@ -596,6 +591,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                             context.read<ReorderBloc>().add(ReorderEvent.decreaseQuantityOfProduct(context: context1));
                                           }
                                         },
+                                        onCloseTap: (){Navigator.pop(context);},
                                       ),
                                       state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn)
                                     ],

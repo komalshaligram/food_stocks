@@ -660,6 +660,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (listViewContext, index) {
                           return SearchItemWidget(
+                              isShowSeeAll: index==state.searchList.length?true:false,
                               salePrice: state.searchList[index].salePrice,
                               saleDesc: state.searchList[index].salesDesc,
                               isPesach: state.searchList[index].isPesach,
@@ -1189,13 +1190,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             width: getScreenWidth(context),
                                             child: GestureDetector(
                                               onVerticalDragStart: (dragDetails) {
-                                                debugPrint('onVerticalDragStart');
                                               },
                                               onVerticalDragUpdate: (dragDetails) {
-                                                debugPrint('onVerticalDragUpdate');
                                               },
                                               onVerticalDragEnd: (endDetails) {
-                                                debugPrint('onVerticalDragEnd');
                                                 Navigator.pop(context);
                                               },
                                               child: PhotoView(
@@ -1221,20 +1219,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   },);
                               },
                               context: context,
-                              productImageIndex: state.imageIndex,
-                              onPageChanged: (index, p1) {
-                                context.read<StoreCategoryBloc>().add(
-                                    StoreCategoryEvent
-                                        .updateImageIndexEvent(
-                                        index: index));
-                              },
+
                               productImages: [
                                 state.productDetails.first.mainImage ??
-                                    '',
-                                ...state.productDetails.first.images?.map(
-                                        (image) =>
-                                    image.imageUrl ?? '') ??
-                                    []
+                                    ''
                               ],
 
                               productPrice: state
@@ -1294,6 +1282,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 }
 
                               },
+                              onCloseTap: (){Navigator.pop(context);},
                             ),
                             0.height,
                             state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context,isSaleOn)
@@ -1388,7 +1377,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         required String search,
         required String isSubCategory,
         required List<SearchModel> searchList}) {
-    debugPrint('subCategoryName:$subCategoryName');
     return Container(
       width: getScreenWidth(context),
       margin: EdgeInsets.only(
@@ -1439,7 +1427,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           GestureDetector(
             onTap: () {
               if (!(subCategoryName?.isEmpty ?? true)) {
-                debugPrint('cate');
                 BlocProvider.of<StoreCategoryBloc>(context).add(
                     StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(
                         isSubCategory: true, context: context));

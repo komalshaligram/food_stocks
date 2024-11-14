@@ -44,7 +44,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
 
           // CreditCardResModel response = CreditCardResModel.fromJson(res);
           if (res[AppStrings.statusString] == AppConstants.code_200) {
-            debugPrint('isFromRegFlow:${state.isFromRegFlow}');
+
             if (state.isFromRegFlow) {
               add(CreditCardDetailsEvent.termsConditionApiEvent(context: event.context));
             } else {
@@ -53,7 +53,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             }
           } else {
             emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toLocalization(), event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(context: event.context, title:AppStrings.messageString.contains('_') ?AppStrings.getLocalizedStrings(res[AppStrings.messageString].toLocalization(), event.context):res[AppStrings.messageString], type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(
@@ -63,7 +63,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
           emit(state.copyWith(
             isLoading: false,
           ));
-          debugPrint("error:${e.toString()}");
+          printData("error:${e.toString()}");
         }
       } else if (event is _termsConditionApiEvent) {
         try {
@@ -71,7 +71,6 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             paymentType: AppStrings.creditCard,
             id: preferencesHelper.getUserId(),
             accountNumber: state.termsModel.accountNumber,
-            agentId: state.termsModel.agentId,
             bankId: state.termsModel.bankId,
             branchNumber: state.termsModel.branchNumber,
             businessTypeId: state.termsModel.businessTypeId,
@@ -88,12 +87,12 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             owner2FullName: state.termsModel.owner2FullName,
             owner2IsraelId: state.termsModel.owner2IsraelId,
           );
-          debugPrint("bank id________:${state.termsModel.bankId}");
+
 
           Map<String, dynamic> req = termsConditionReqModel.toJson();
           req.removeWhere((key, value) {
             if (value != null) {
-              debugPrint("[$key] = $value");
+              printData("[$key] = $value");
             }
             return value == null;
           });
@@ -102,7 +101,6 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             formData: FormData.fromMap(
               {
                 AppStrings.userIdString: termsConditionReqModel.id,
-                AppStrings.agentIdString: termsConditionReqModel.agentId,
                 AppStrings.businessTypeIdString: termsConditionReqModel.businessTypeId,
                 AppStrings.owner1FullNameString: termsConditionReqModel.owner1FullName,
                 AppStrings.owner1IsraelIdString: termsConditionReqModel.owner1IsraelId,

@@ -104,7 +104,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                         builder: (context1) {
                                           return ValueListenableBuilder(
                                               valueListenable: listNotifier,
-                                              builder: (context, _content, child) {
+                                              builder: (context, content, child) {
                                                 return Padding(
                                                   padding: const EdgeInsets.all(15.0),
                                                   child: SizedBox(
@@ -258,7 +258,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                   7.height,
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!.zip,
-                                    star: '*',
+                                    star: '',
                                   ),
                                   CustomFormField(
                                     context: context,
@@ -268,10 +268,10 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     ],
                                     textDirection: context.rtl ? TextDirection.ltr : null,
                                     keyboardType: TextInputType.number,
-                                    hint: AppLocalizations.of(context)!.zip,
+                                    hint: "",
                                     fillColor: AppColors.whiteColor,
                                     textInputAction: TextInputAction.done,
-                                    validator: AppStrings.zipValString,
+                                    validator: state.zipController.text.toString().isNotEmpty?AppStrings.zipValString:'',
                                   ),
                                   10.height,
                                   Padding(
@@ -319,7 +319,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                 bloc.add(MoreDetailsEvent.registrationApiEvent(context: context));
                                               }
                                             } else {
-                                              CustomSnackBar.showSnackBar(context: context, title: '${AppLocalizations.of(context)!.please_enter_city}', type: SnackBarType.failure);
+                                              CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_city, type: SnackBarType.failure);
                                             }
                                           },
                                     fontColors: AppColors.whiteColor,

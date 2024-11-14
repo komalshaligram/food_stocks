@@ -217,7 +217,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                           lowStock: state.recommendationProductsList[index].lowStock ?? '',
                                                           isPesach: state.recommendationProductsList[index].isPesach,
                                                           onButtonTap: () {
-                                                            debugPrint("tap 1");
                                                             showProductDetails(context: context, productId: state.recommendationProductsList[index].id ?? '', productStock: state.recommendationProductsList[index].productStock.toString(), productListIndex: 1, isSaleOn: state.isSaleOn);
                                                           });
                                                     })
@@ -297,6 +296,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               shrinkWrap: true,
                               itemBuilder: (listViewContext, index) {
                                 return SearchItemWidget(
+                                  isShowSeeAll: index==state.searchList.length-1?true:false,
                                   salePrice: state.searchList[index].salePrice,
                                   saleDesc: state.searchList[index].salesDesc,
                                   isPesach: state.searchList[index].isPesach,
@@ -446,13 +446,10 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                       width: getScreenWidth(context),
                                                       child: GestureDetector(
                                                         onVerticalDragStart: (dragDetails) {
-                                                          debugPrint('onVerticalDragStart');
                                                         },
                                                         onVerticalDragUpdate: (dragDetails) {
-                                                          debugPrint('onVerticalDragUpdate');
                                                         },
                                                         onVerticalDragEnd: (endDetails) {
-                                                          debugPrint('onVerticalDragEnd');
                                                           Navigator.pop(dialogContext);
                                                         },
                                                         child: PhotoView(
@@ -480,11 +477,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                           );
                                         },
                                         context: context,
-                                        productImageIndex: state.imageIndex,
-                                        onPageChanged: (index, p1) {
-                                          context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.updateImageIndexEvent(index: index));
-                                        },
-                                        productImages: [state.productDetails.first.mainImage ?? '', ...?state.productDetails.first.images?.map((image) => image.imageUrl ?? '')],
+                                        productImages: [state.productDetails.first.mainImage ?? ''],
                                         productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? ''),
                                         productPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
                                         productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
@@ -496,11 +489,13 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                         onQuantityIncreaseTap: () {
                                           context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.increaseQuantityOfProduct(context: context1));
                                         },
+
                                         onQuantityDecreaseTap: () {
                                           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
                                             context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.decreaseQuantityOfProduct(context: context1));
                                           }
                                         },
+                                        onCloseTap: (){Navigator.pop(context);},
                                       ),
                                       state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn)
                                     ],

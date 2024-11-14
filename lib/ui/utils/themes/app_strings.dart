@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../app_utils.dart';
+
 class AppStrings {
   static const appName = 'Tavili';
   static const cropImageString = 'Crop Image';
@@ -26,9 +28,9 @@ class AppStrings {
   static const rivchitClientErrorString = 'MESSAGE.RIVCHITCLIENTERROR';
 
   //methods
-  static const post_method = 'POST';
-  static const get_method = 'GET';
-  static const put_method = 'PUT';
+  static const postMethod = 'POST';
+  static const getMethod = 'GET';
+  static const putMethod = 'PUT';
 
   //sound path
   static const deleteSound = 'audio/delete_sound.mp3';
@@ -204,7 +206,7 @@ class AppStrings {
   static const userPhoneNum =  "User phone number";
 
   static String getLocalizedStrings(String key, BuildContext context) {
-    debugPrint('Key$key');
+    printData('Key$key');
     switch (key) {
       case 'errmessage':
         return AppLocalizations.of(context)!.err_message;
@@ -428,8 +430,7 @@ class AppStrings {
         return AppLocalizations.of(context)!.deduction_is_negative;
       case 'something_is_wrong_try_again':
         return AppLocalizations.of(context)!.something_is_wrong_try_again;
-      case 'loginsuccessmessage':
-        return AppLocalizations.of(context)!.login_success_message;
+
       case 'accountnotapprove':
         return AppLocalizations.of(context)!.account_not_approve;
       case 'rivchitcredentialsnotset':
@@ -480,6 +481,7 @@ class AppStrings {
         return AppLocalizations.of(context)!.bdi_error;
       case 'creditcardpaymentfailed' :
         return AppLocalizations.of(context)!.credit_card_payment_failed;
+
     }
     return key;
   }

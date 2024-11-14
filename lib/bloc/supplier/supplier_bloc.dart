@@ -40,11 +40,10 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
                       search: state.search)
                   .toJson());
           SuppliersResModel response = SuppliersResModel.fromJson(res);
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             List<Datum> supplierList =
                 state.suppliersList.toList(growable: true);
             supplierList.addAll(response.data ?? []);
-            debugPrint('new supplier list len = ${supplierList.length}');
             emit(state.copyWith(
                 suppliersList: supplierList,
                 pageNum: state.pageNum + 1,

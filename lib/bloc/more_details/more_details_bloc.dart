@@ -72,20 +72,20 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           ProfileModel updatedProfileModel = ProfileModel(
             cityId: state.cityListResModel?.data?.cities?.firstWhere((city) => city.cityName == state.selectCity).id,
             email: state.emailController.text,
-            clientDetail: ClientDetail(zip: state.zipController.text.trim(), streetNumber: state.streetNumberController.text.trim(), streetName: state.streetNameController.text.trim()),
+            clientDetail: ClientDetail(approveSmsAndEmail: state.approveForSMS,zip: state.zipController.text.trim(), streetNumber: state.streetNumberController.text.trim(), streetName: state.streetNameController.text.trim()),
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail = updatedProfileModel.clientDetail?.toJson();
           clientDetail?.removeWhere((key, value) {
             if (value != null) {
-              debugPrint("[$key] = $value");
+              printData("[$key] = $value");
             }
             return value == null;
           });
           req[AppStrings.clientDetailString] = clientDetail;
           req.removeWhere((key, value) {
             if (value != null) {
-              debugPrint("[$key] = $value");
+              printData("[$key] = $value");
             }
             return value == null;
           });
@@ -266,10 +266,15 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           emit(state.copyWith(isLoading: false));
           Navigator.pushNamed(
             event.context,
-            RouteDefine.activityTimeScreen.name,
+            RouteDefine.formDataScreen.name,
           );
         } catch (e) {
-          debugPrint('');
+          printData(e.toString());
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: AppLocalizations.of(event.context)!.internal_server_error,
+            type: SnackBarType.failure,
+          );
           emit(state.copyWith(isLoading: false));
         }
       }

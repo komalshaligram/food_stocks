@@ -116,7 +116,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                       return;
                     }
                   });
-                  debugPrint('1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
+                  printData('1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
               if (response.product!.isNotEmpty) {
@@ -221,7 +221,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
           emit(state.copyWith(isProductLoading: false));
           Navigator.pop(event.context);
         } catch (e) {
-          debugPrint('bs error = $e');
+          printData('bs error = $e');
           // Navigator.pop(event.context);
         }
       } else if (event is _increaseQuantityOfProduct) {
@@ -251,7 +251,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 0) {
             productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(quantity: productStockList[state.productListIndex][state.productStockUpdateIndex].quantity - 1);
-            debugPrint('product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
+            printData('product quantity = ${productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}');
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           } else {}
@@ -329,17 +329,18 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              Navigator.pop(event.context);
+             // Navigator.pop(event.context);
               Vibration.vibrate();
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
-                isNoteOpen: false,
+                productIsInCart: true,
                 quantity: /*state.productStockList[state.productStockUpdateIndex]
                     .quantity +*/
                     _productQuantity,
-                productSupplierIds: '',
-                totalPrice: 0.0,
+                productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
+
+                totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                 productSaleId: '',
               );
 
@@ -353,7 +354,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
           } on ServerException {
             emit(state.copyWith(isLoading: false));
           } catch (e) {
-            debugPrint('err = $e');
+            printData('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         } else {
@@ -363,7 +364,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             Map<String, dynamic> req = insertCartReqModel.toJson();
             req.removeWhere((key, value) {
               if (value != null) {
-                debugPrint("[$key] = $value");
+                printData("[$key] = $value");
               }
               return value == null;
             });
@@ -375,16 +376,18 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             );
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              add(const PlanogramProductEvent.setCartCountEvent());
+              if(!state.productStockList[state.productListIndex][state.productStockUpdateIndex].productIsInCart){
+                add(const PlanogramProductEvent.setCartCountEvent());
+              }
               Vibration.vibrate();
-              Navigator.pop(event.context);
+           //   Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
-                isNoteOpen: false,
+                productIsInCart: true,
                 quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                productSupplierIds: '',
-                totalPrice: 0.0,
+                productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
+                totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                 productSaleId: '',
               );
               add(const PlanogramProductEvent.getCartCountEvent());
@@ -409,10 +412,6 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
       } else if (event is _updateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
-      } else if (event is _ToggleNoteEvent) {
-        List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
-        productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(isNoteOpen: !productStockList[state.productListIndex][state.productStockUpdateIndex].isNoteOpen);
-        emit(state.copyWith(productStockList: productStockList));
       } else if (event is _getCartCountEvent) {
         emit(state.copyWith(
           cartCount: preferences.getCartCount(),
@@ -634,7 +633,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
               }
             }
           } catch (e) {
-            debugPrint('catch____$e');
+            printData('catch____$e');
           }
         }
       }

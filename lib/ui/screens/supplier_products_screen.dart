@@ -88,9 +88,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 },
                 trailingWidget: GestureDetector(
                     onTap: () {
-                      context
-                          .read<SupplierProductsBloc>()
-                          .add(const SupplierProductsEvent.getGridListView());
+                      context.read<SupplierProductsBloc>().add(const SupplierProductsEvent.getGridListView());
                     },
                     child:
                         Icon(state.isGridView ? Icons.list : Icons.grid_view)),
@@ -286,7 +284,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                                   .productStock
                                                                   .toString(),
                                                                 isSaleOn: state.isSaleOn
-
                                                             );
                                                           } else {
                                                             Navigator.pushNamed(
@@ -361,6 +358,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                               shrinkWrap: true,
                               itemBuilder: (listViewContext, index) {
                                 return SearchItemWidget(
+                                    isShowSeeAll: index==state.searchList.length-1?true:false,
                                   saleDesc: state.searchList[index].salesDesc,
                                   salePrice: state.searchList[index].salePrice,
                                   isPesach: state.searchList[index].isPesach,
@@ -393,8 +391,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                             ? true
                                             : false,
                                     onSeeAllTap: () async {
-                                      debugPrint(
-                                          "searchType: ${state.searchList[index].searchType}");
+
                                       if (state.searchList[index].searchType ==
                                           SearchTypes.category) {
                                         dynamic searchResult =
@@ -491,7 +488,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                               SearchTypes.sale ||
                                           state.searchList[index].searchType ==
                                               SearchTypes.product) {
-                                         debugPrint("tap 4");
+
                                         if (!state.isGuestUser) {
                                           showProductDetails(
                                             productListIndex: 0,
@@ -503,8 +500,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   .searchList[index].searchId,
                                               isBarcode: true,
                                             isSaleOn: state.isSaleOn
-
-
                                           );
                                         } else {
                                           Navigator.pushNamed(context,
@@ -571,21 +566,18 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             scanMode: ScanMode.BARCODE);
                         if (scanResult != '-1') {
                           // -1 result for cancel scanning
-                          debugPrint('result = $scanResult');
-                           debugPrint("tap 5");
+                          printData('result = $scanResult');
                           if (!state.isGuestUser) {
                             showProductDetails(
                               productListIndex: 0,
                                 context: context,
-                                // productStock: '1',
                                 productId: scanResult,
                                 isBarcode: true,
                                 productStock: '1',
                               isSaleOn: state.isSaleOn
                             );
                           } else {
-                            Navigator.pushNamed(
-                                context, RouteDefine.connectScreen.name);
+                            Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                           }
                         }
                       },
@@ -654,7 +646,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                       return child;
                     },
                     errorBuilder: (context, error, stackTrace) {
-                      // debugPrint('sale list image error : $error');
                       return Image.asset(AppImagePath.imageNotAvailable5,
                           height: 70,
                           width: double.maxFinite,
@@ -790,18 +781,15 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                       child: GestureDetector(
                                                         onVerticalDragStart:
                                                             (dragDetails) {
-                                                           debugPrint(
-                                                              'onVerticalDragStart');
+
                                                         },
                                                         onVerticalDragUpdate:
                                                             (dragDetails) {
-                                                           debugPrint(
-                                                              'onVerticalDragUpdate');
+
                                                         },
                                                         onVerticalDragEnd:
                                                             (endDetails) {
-                                                           debugPrint(
-                                                              'onVerticalDragEnd');
+
                                                           Navigator.pop(
                                                               dialogContext);
                                                         },
@@ -832,20 +820,10 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                           );
                                         },
                                         context: context,
-                                        productImageIndex: state.imageIndex,
-                                        onPageChanged: (index, p1) {
-                                          context
-                                              .read<SupplierProductsBloc>()
-                                              .add(SupplierProductsEvent
-                                                  .updateImageIndexEvent(
-                                                      index: index));
-                                        },
+
                                         productImages: [
                                           state.productDetails.first
                                                   .mainImage ?? '',
-                                          ...?state.productDetails.first.images
-                                                  ?.map((image) =>
-                                                      image.imageUrl ?? '')
                                         ],
                                         productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? ''),
                                         productPrice: (state.productDetails.first.sale?.isSale ?? false)?
@@ -905,6 +883,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         context: context1));
                                           }
                                         },
+                                        onCloseTap: (){Navigator.pop(context);},
                                       ),
                                       state.relatedProductList.isEmpty
                                           ? 0.width

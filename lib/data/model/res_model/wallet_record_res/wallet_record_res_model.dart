@@ -1,5 +1,3 @@
-
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'wallet_record_res_model.freezed.dart';
 part 'wallet_record_res_model.g.dart';

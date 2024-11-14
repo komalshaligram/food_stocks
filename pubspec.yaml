@@ -17,8 +17,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
 
-#version: 1.0.20+1
-version: 1.0.34+1
+#version: 1.0.35+44
+version: 1.0.36+2
 
 
 environment:
@@ -29,7 +29,7 @@ environment:
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flzutter pub outdated`.
+# versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
@@ -60,9 +60,9 @@ dependencies:
   permission_handler: ^11.0.0
   path_provider: ^2.1.1
   firebase_crashlytics: ^3.3.7
-  firebase_core: ^2.17.0
-  firebase_messaging: ^14.6.9
-  flutter_local_notifications: ^16.3.2
+  firebase_core: ^2.22.0
+  firebase_messaging: ^14.7.4
+  flutter_local_notifications: ^17.0.1
   package_info_plus: ^5.0.1
   flutter_dotenv: ^5.1.0
   fl_chart: ^0.64.0
@@ -70,7 +70,6 @@ dependencies:
   flutter_barcode_scanner: ^2.0.0
   flutter_date_range_picker: ^0.0.14
   html: ^0.15.4
-  carousel_slider: ^4.2.1
   pull_to_refresh: ^2.0.0
   vibration: ^1.8.4
   file_picker: ^6.1.1
@@ -79,8 +78,7 @@ dependencies:
   liquid_pull_to_refresh: ^3.0.1
   flutter_staggered_animations: ^1.1.1
   getwidget: ^4.0.0
-  sms_autofill: ^2.3.0
-  version_check: ^0.7.1
+  sms_autofill: ^2.4.0
   url_launcher: ^6.2.4
   flutter_app_badger: ^1.5.0
   store_version_checker: ^1.0.1
@@ -93,6 +91,7 @@ dependencies:
   flutter_html: any
   http_parser: any
   device_info_plus: any
+
 
 
 dependency_overrides:
