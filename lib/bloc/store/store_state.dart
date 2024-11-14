@@ -46,6 +46,7 @@ class StoreState with _$StoreState {
       required bool isAppOnMaintenance,
       required String language,
       required bool isDialogOpen,
+          required BuildContext? context,
       required bool retryLoading}) = _StoreState;
 
   factory StoreState.initial() => StoreState(
@@ -92,5 +93,6 @@ class StoreState with _$StoreState {
       retryLoading: false,
       isPreviousOrderShimmering: false,
       isRecommendedShimmering:false,
+      context: null,
       isSaleShimmering: false);
 }

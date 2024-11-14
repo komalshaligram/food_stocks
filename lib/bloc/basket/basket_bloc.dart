@@ -54,7 +54,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         if (event is _getAllCartEvent) {
           printData('getAvailablePayment:${preferencesHelper.getAvailablePayment()}');
           emit(state.copyWith(isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(),updatePaymentMethod: false,isPaymentFail: false,
-              paymentTypesList: preferencesHelper.getPaymentMethodTypes(),
+              paymentTypesList: preferencesHelper.getPaymentMethodTypes(),context: event.context,
               isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(),isAllPaymentAvailable: preferencesHelper.getAvailablePayment()));
           printData('getPaymentMethodTypes:${preferencesHelper.getPaymentMethodTypes()}');
 

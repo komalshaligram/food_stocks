@@ -24,15 +24,6 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     printData("Handling in main${message.toString()}");
     printData("Handling a background message:${message.messageId}");
     printData("Handling a background message:${message.data.toString()}");
- /*   if(message.data!=null){
-      printData('notifrom main');
-      PushNotificationService().showNotification(
-          notiId: message.notification.hashCode,
-      imageUrl:Platform.isAndroid? message.notification?.android?.imageUrl??'':message.notification?.apple?.imageUrl??'',
-        title: message.notification?.title??'',
-        body: message.notification?.body??'',data: message.data.toString()
-      );
-  }*/
 }
 
 void main() async {
@@ -55,6 +46,7 @@ void main() async {
         }
       });
     }
+
     runApp(const MyApp());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }

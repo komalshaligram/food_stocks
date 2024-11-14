@@ -315,7 +315,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             isPesach: state.productSalesList[index].isPesach,
                                                             onButtonTap: () {
                                                               if (!state.isGuestUser) {
-                                                                showProductDetails(isSaleOn: state.isSaleOn, productListIndex: 3, context: context, productId: state.productSalesList[index].id ?? '', productStock: state.productSalesList[index].productStock.toString());
+                                                                showProductDetails(isSaleOn: state.isSaleOn, productListIndex: 3, context: state.context??context, productId: state.productSalesList[index].id ?? '', productStock: state.productSalesList[index].productStock.toString());
                                                               } else {
                                                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                               }
@@ -365,7 +365,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             if (!state.isGuestUser) {
                                                               showProductDetails(
                                                                 isSaleOn: state.isSaleOn,
-                                                                context: context,
+                                                                context: state.context??context,
                                                                 productId: state.recommendedProductsList[index].id ?? '',
                                                                 productStock: (state.recommendedProductsList[index].productStock.toString()),
                                                                 productListIndex: 1,
@@ -536,7 +536,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             }
                                             if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
 
-                                              showProductDetails(context: context, productId: state.searchList[index].searchId, isBarcode: true, productListIndex: 0, isSaleOn: state.isSaleOn, productStock: (state.searchList[index].productStock.toString()));
+                                              showProductDetails(context: state.context??context, productId: state.searchList[index].searchId, isBarcode: true, productListIndex: 0, isSaleOn: state.isSaleOn, productStock: (state.searchList[index].productStock.toString()));
                                             } else if (state.searchList[index].searchType == SearchTypes.category) {
                                               dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
                                               if (searchResult != null) {
@@ -566,9 +566,9 @@ class HomeScreenWidget extends StatelessWidget {
                     ),
                     state.allShimmering?Center(
                       child: SizedBox(
-                          height: 80,
-                          width: 80,
-                          child: CupertinoActivityIndicator(color: AppColors.mainColor,)),
+                          height: 120,
+                          width: 120,
+                          child: CupertinoActivityIndicator(color: AppColors.mainColor,radius: 20,)),
                     ):0.height
                   ],
                 ),
@@ -591,7 +591,7 @@ class HomeScreenWidget extends StatelessWidget {
               if (data != null) {
                 FlutterAppBadger.removeBadge();
                 PushNotificationService().showNotification(
-                  notificationId: message.notification.hashCode,
+                  notiId: message.notification.hashCode,
                   data: data,
                   imageUrl: Platform.isAndroid ? message.notification?.android?.imageUrl ?? '' : message.notification?.apple?.imageUrl ?? '',
                   title: message.notification?.title ?? '',

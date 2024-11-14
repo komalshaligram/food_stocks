@@ -55,6 +55,7 @@ class HomeState with _$HomeState {
     required String language,
     required bool isDialogOpen,
     required bool retryLoading,
+    required BuildContext? context,
     required RefreshController refreshController,
 
   }) = _HomeState;
@@ -117,6 +118,7 @@ class HomeState with _$HomeState {
       language :AppStrings.hebrewString,
       retryLoading:false,
       allShimmering: true,
+      context : null,
       refreshController: RefreshController()
   );
 }

@@ -236,9 +236,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           printData('suppliers = ${response.data}');
           if (response.status == AppConstants.code_200) {
             bool productVisible = response.data?.any((element) => element.supplierDetail?.isHomePreference==true)??true;
-            emit(state.copyWith(suppliersList: response, isShimmering: false,isSupplierVisible: productVisible));
+            emit(state.copyWith(suppliersList: response, isShimmering: false,isSupplierVisible: productVisible,context: event.context));
           } else {
-            emit(state.copyWith(isShimmering: false));
+            emit(state.copyWith(isShimmering: false,context: event.context));
             CustomSnackBar.showSnackBar(
                 context: event.context,
               title: AppStrings.getLocalizedStrings(

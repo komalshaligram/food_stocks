@@ -323,7 +323,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                               isPesach: state.productSalesList[index].isPesach,
                                                               onButtonTap: () {
                                                                 if (!state.isGuestUser) {
-                                                                  showProductDetails(isSaleOn: state.isSaleOn, context: context, productStock: state.productSalesList[index].productStock.toString(), productId: state.productSalesList[index].id ?? '');
+                                                                  showProductDetails(isSaleOn: state.isSaleOn, context: state.context??context, productStock: state.productSalesList[index].productStock.toString(), productId: state.productSalesList[index].id ?? '');
                                                                 } else {
                                                                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                                 }
@@ -373,7 +373,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                                 isPesach: state.recommendedProductsList[index].isPesach,
                                                                 onButtonTap: () {
                                                                   if (!state.isGuestUser) {
-                                                                    showProductDetails(isSaleOn: state.isSaleOn, context: context, productId: state.recommendedProductsList[index].id ?? '', productStock: state.recommendedProductsList[index].productStock.toString());
+                                                                    showProductDetails(isSaleOn: state.isSaleOn, context: state.context??context, productId: state.recommendedProductsList[index].id ?? '', productStock: state.recommendedProductsList[index].productStock.toString());
                                                                   } else {
                                                                     Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                                   }
@@ -422,7 +422,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                                 isPesach: state.previousOrderProductsList[index].isPesach,
                                                                 onButtonTap: () {
                                                                   if (!state.isGuestUser) {
-                                                                    showProductDetails(isSaleOn: state.isSaleOn, context: context, productId: state.previousOrderProductsList[index].id ?? '', productStock: state.previousOrderProductsList[index].productStock.toString());
+                                                                    showProductDetails(isSaleOn: state.isSaleOn, context: state.context??context, productId: state.previousOrderProductsList[index].id ?? '', productStock: state.previousOrderProductsList[index].productStock.toString());
                                                                   } else {
                                                                     Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                                   }

@@ -39,13 +39,15 @@ class BasketScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => BasketBloc(),
-      child: const BasketScreenWidget(),
+      child:  BasketScreenWidget(),
     );
   }
 }
 
 class BasketScreenWidget extends StatelessWidget {
-  const BasketScreenWidget({Key? key}) : super(key: key);
+    BasketScreenWidget({Key? key}) : super(key: key);
+
+   final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -501,7 +503,7 @@ class BasketScreenWidget extends StatelessWidget {
             ),
             child: GestureDetector(
               onTap: () {
-                showProductDetails(isSaleOn: state.isSaleOn, context: context, cartProductId: state.cartItemList.data?.data?[index].id ?? '', productListIndex: 0, productStock: state.cartItemList.data?.data?[index].productStock.toString() ?? '0');
+                showProductDetails(isSaleOn: state.isSaleOn, context: state.context??context, cartProductId: state.cartItemList.data?.data?[index].id ?? '', productListIndex: 0, productStock: state.cartItemList.data?.data?[index].productStock.toString() ?? '0');
               },
               child: Column(
                 children: [
@@ -806,7 +808,7 @@ class BasketScreenWidget extends StatelessWidget {
       isDismissible: true,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       enableDrag: true,
-      builder: (context1) {
+      builder: (c) {
         return SafeArea(
           bottom: false,
           child: DraggableScrollableSheet(
@@ -824,13 +826,15 @@ class BasketScreenWidget extends StatelessWidget {
                       absorbing: state.isLoading ? true : false,
                       child: GestureDetector(
                         onVerticalDragStart: (dragDetails) {},
+                        onVerticalDragDown: (dragDetails){},
                         onVerticalDragUpdate: (dragDetails) {
+                          debugPrint("hereree");
                           Navigator.pop(context);
-                          context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(context: context1));
+                          context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(context: state.context??context));
                         },
                         onVerticalDragEnd: (endDetails) {},
                         child: Container(
-                          height: getScreenHeight(context),
+                          height: getScreenHeight(context1),
                           decoration: BoxDecoration(
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(AppConstants.radius_30),
@@ -843,7 +847,7 @@ class BasketScreenWidget extends StatelessWidget {
                               : state.productDetails.isEmpty
                                   ? NoDataBottomSheet(dialogContext: context)
                                   : SingleChildScrollView(
-                                      controller: ModalScrollController.of(context),
+                                      controller: ModalScrollController.of(context1),
                                       child: Column(
                                         children: [
                                           CommonProductDetailsWidget(
@@ -920,10 +924,10 @@ class BasketScreenWidget extends StatelessWidget {
                                             },
                                             onCloseTap: () {
                                               Navigator.pop(context);
-                                              context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(context: context1));
+                                              context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(context: state.context??context));
                                             },
                                           ),
-                                          state.relatedProductList.isEmpty ? 0.height : relatedProductWidget(context1, state, context, isSaleOn),
+                                          state.relatedProductList.isEmpty ? 0.height : relatedProductWidget(context, state, context1, isSaleOn),
                                         ],
                                       ),
                                     ),
@@ -983,7 +987,7 @@ class BasketScreenWidget extends StatelessWidget {
                   isPesach: state.relatedProductList.elementAt(i).isPesach,
                   onButtonTap: () {
                     Navigator.pop(prevContext);
-                    showProductDetails(isSaleOn: isSaleOn, context: context, cartProductId: state.relatedProductList[i].id ?? '', isBarcode: false, productStock: state.relatedProductList[i].productStock.toString(), productListIndex: 1);
+                    showProductDetails(isSaleOn: isSaleOn, context: state.context??context, cartProductId: state.relatedProductList[i].id ?? '', isBarcode: false, productStock: state.relatedProductList[i].productStock.toString(), productListIndex: 1);
                   },
                 );
               },

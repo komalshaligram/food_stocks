@@ -19,7 +19,7 @@ class AppConstants{
   static const double relatedProductItemWidth = 140;
   static const double withoutSaleItemHeight = 210;
   static const double animationDuration = 8000;
-  static const double timeOutDuration = 16000;
+  static const double timeOutDuration = 18000;
   //padding
   static const double padding_5 = 5;
   static const double padding_10 = 10;

@@ -11,6 +11,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:provider/provider.dart';
 import '../../app_config.dart';
+
 import '../../data/services/locale_provider.dart';
 import '../../main.dart';
 
@@ -63,7 +64,6 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
       builder: (context, child) {
         return SmartlookRecordingWidget(
           child: MaterialApp(
-              key: scaffoldKey,
               navigatorKey: navigatorKey,
               debugShowCheckedModeBanner: false,
               locale: Provider.of<LocaleProvider>(context).locale,
@@ -75,7 +75,7 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
                 textSelectionTheme: TextSelectionThemeData(
                   cursorColor: AppColors.mainColor,
                   selectionColor: AppColors.mainColor,
-                  selectionHandleColor: Colors.transparent,
+                  selectionHandleColor: const Color(0xffcefad0),
                 ),
                 primarySwatch: Colors.green,
                 canvasColor: Colors.white,

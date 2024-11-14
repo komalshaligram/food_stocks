@@ -46,7 +46,7 @@ bool isTablet(BuildContext context) {
 String maskCreditCardNumber(String cardNumber) {
   var firstDigits = cardNumber.substring(0, 4);
   var lastDigits = cardNumber.substring(cardNumber.length - 4, cardNumber.length);
-  var requiredMask = 'X' * (cardNumber.length - firstDigits.length);
+  var requiredMask = 'X' * (16 - firstDigits.length);
   var maskedString = requiredMask + lastDigits;
   var maskedCardNumberWithSpaces = maskedString.replaceAllMapped(RegExp(r'.{4}'), (match) => '${match.group(0)}-');
   return maskedCardNumberWithSpaces.toString().substring(0,maskedCardNumberWithSpaces.length-1);
@@ -139,9 +139,9 @@ class CustomSnackBar {
 
 
 printData(String? message){
-  if(kDebugMode){
+ // if(kDebugMode){
     debugPrint(message??'');
-  }
+ // }
 }
 
 customShowUpdateDialog(

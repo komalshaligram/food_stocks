@@ -50,7 +50,6 @@ import '../../ui/utils/themes/app_urls.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 
-
 part 'home_event.dart';
 part 'home_state.dart';
 part 'home_bloc.freezed.dart';
@@ -66,7 +65,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       if (preferences.getGuestUser()) {
       } else {
         if (event is _getPreferencesDataEvent) {
-          emit(state.copyWith(isIncludedVat: preferences.getIsIncludedVat(), isSaleOn: preferences.getShowSale(), isSubUserSeeWallet: preferences.getCanSeeWallet(), isSubUserAddToBasket: preferences.getCanAddToBasket(), userImageUrl: preferences.getUserImageUrl(), userCompanyLogoUrl: preferences.getUserCompanyLogoUrl(), messageCount: preferences.getMessageCount(), cartCount: preferences.getCartCount(), bottlePrice: preferences.getBottleTax()));
+          emit(state.copyWith(isIncludedVat: preferences.getIsIncludedVat(), isSaleOn: preferences.getShowSale(), isSubUserSeeWallet: preferences.getCanSeeWallet(), isSubUserAddToBasket: preferences.getCanAddToBasket(), userImageUrl: preferences.getUserImageUrl(), userCompanyLogoUrl: preferences.getUserCompanyLogoUrl(), messageCount: preferences.getMessageCount(), cartCount: preferences.getCartCount(), bottlePrice: preferences.getBottleTax(),));
         } else if (event is _getCartCountEvent) {
           printData('id_______${preferences.getUserId()}');
           try {
@@ -540,6 +539,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 emit(
                   state.copyWith(
                     userImageUrl: response.data?.clients?.first.profileImage ?? '',
+                    context: event.context
                   ),
                 );
               }
@@ -588,9 +588,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       )) ??
                   []);
               productStockList[1].addAll(stockList);
-              emit(state.copyWith(recommendedProductsList: response.data ?? [], productStockList: productStockList, isShimmering: false,allShimmering: false));
+              emit(state.copyWith(recommendedProductsList: response.data ?? [], productStockList: productStockList, isShimmering: false,));
             } else {
-              emit(state.copyWith(isShimmering: false,allShimmering: false));
+              emit(state.copyWith(isShimmering: false,));
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),

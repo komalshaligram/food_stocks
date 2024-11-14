@@ -41,8 +41,10 @@ samples, guidance on mobile development, and a full API reference.
 - shorebird release android --flavor prod
 - shorebird release ios --flavor stag
 
-
+ 
   🚀 To push an update use: "shorebird patch".
+  shorebird patch ios --flavor dev
+
   👀 To preview a release use: "shorebird preview".
   🚀 To make this patch available to your users : "shorebird patch ios-alpha".
 
