@@ -61,7 +61,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
           try {
             OtpReqModel reqMap = OtpReqModel(contact: event.contact, otp: event.otp, tokenId: preferencesHelper.getFCMToken());
 
-            final res = await DioClient(event.context).post(AppUrls.loginOTPUrl, data: reqMap);
+            final res = await DioClient(event.context).post(AppUrlEndPoints.loginOTPUrl, data: reqMap);
 
             LoginOtpResModel response = LoginOtpResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
@@ -159,7 +159,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               contact: event.contact,
               otp: event.otp,
             );
-            final res = await DioClient(event.context).post(AppUrls.otpVerifyUrl, data: reqMap);
+            final res = await DioClient(event.context).post(AppUrlEndPoints.otpVerifyUrl, data: reqMap);
             LoginOtpResModel response = LoginOtpResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {
@@ -196,7 +196,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
           LoginReqModel reqMap = LoginReqModel(applicationName: AppStrings.appName, contact: event.contactNumber);
 
           final res = await DioClient(event.context).post(
-            AppUrls.existingUserLoginUrl,
+            AppUrlEndPoints.existingUserLoginUrl,
             data: reqMap,
           );
 

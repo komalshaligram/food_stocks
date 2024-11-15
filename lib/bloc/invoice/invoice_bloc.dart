@@ -47,7 +47,7 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
 
           debugPrint('Invoices req = ${request.toJson()}');
           final res = await DioClient(event.context)
-              .post(AppUrls.clientInvoicesUrl,
+              .post(AppUrlEndPoints.clientInvoicesUrl,
               data: request.toJson(),
            );
           InvoicesResModel response =

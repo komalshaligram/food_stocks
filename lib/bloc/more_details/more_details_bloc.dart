@@ -46,7 +46,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         profileModel = event.profileModel;
         try {
           emit(state.copyWith(isShimmering: true, language: preferencesHelper.getAppLanguage()));
-          final response = await DioClient(event.context).get(path: AppUrls.cityListUrl);
+          final response = await DioClient(event.context).get(path: AppUrlEndPoints.cityListUrl);
           CityListResModel cityListResModel = CityListResModel.fromJson(response);
           if (cityListResModel.status == AppConstants.code_200) {
             List<String> temp = [];
@@ -92,7 +92,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           try {
             emit(state.copyWith(isLoading: true));
             final res = await DioClient(event.context).post(
-              "${AppUrls.updateProfileDetailsUrl}/${preferencesHelper.getUserId()}",
+              "${AppUrlEndPoints.updateProfileDetailsUrl}/${preferencesHelper.getUserId()}",
               data: req,
             );
 
@@ -155,7 +155,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 
           try {
             emit(state.copyWith(isLoading: true));
-            final response = await DioClient(event.context).post(AppUrls.registrationUrl, data: reqMap);
+            final response = await DioClient(event.context).post(AppUrlEndPoints.registrationUrl, data: reqMap);
 
             res.ProfileResModel profileResModel = res.ProfileResModel.fromJson(response);
 
@@ -232,7 +232,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           try {
             emit(state.copyWith(isUpdating: true));
             final res = await DioClient(event.context).post(
-              AppUrls.getProfileDetailsUrl,
+              AppUrlEndPoints.getProfileDetailsUrl,
               data: req.ProfileDetailsReqModel(id: preferencesHelper.getUserId()).toJson(),
             );
             res_get.ProfileDetailsResModel response = res_get.ProfileDetailsResModel.fromJson(res);
@@ -257,7 +257,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
       } else if (event is _checkBDIEvent) {
         try {
           Map reqMap = {AppStrings.idString: event.clientId};
-          final res = await DioClient(event.context).post(AppUrls.bdiUrl, data: reqMap);
+          final res = await DioClient(event.context).post(AppUrlEndPoints.bdiUrl, data: reqMap);
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             preferencesHelper.setAvailableAllPayment(isAvailableAllPayment: res['data']['isAvailableAllPayment']);
           } else {

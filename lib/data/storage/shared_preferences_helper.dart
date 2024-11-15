@@ -62,7 +62,7 @@ class SharedPreferencesHelper {
   static const String paymentMethodCount = 'paymentMethodCount';
   static const String availableAllPayment = 'availableAllPayment';
   static const String paymentMethods = 'paymentMethods';
-  static const String isUserExists ='isUserExists';
+  static const String isWalletApproved ='isWalletApproved';
 
 
   final SharedPreferences prefs;
@@ -100,7 +100,7 @@ class SharedPreferencesHelper {
       await prefs.remove(fax);
       await prefs.remove(zip);
       await prefs.remove(logo);
-      await prefs.remove(isUserExists);
+      await prefs.remove(isWalletApproved);
 
 
       await prefs.remove(accountAdmin);
@@ -204,8 +204,8 @@ class SharedPreferencesHelper {
   Future<void> setIsAppOnMaintenance({required bool isAppOnMaintenance}) async {
     await prefs.setBool(appOnMaintenance, isAppOnMaintenance);
   }
-  Future<void> setUserExist({required bool isUserExist}) async {
-    await prefs.setBool(isUserExists, isUserExist);
+  Future<void> setIsWalletApproved({required bool walletApproved}) async {
+    await prefs.setBool(isWalletApproved, walletApproved);
   }
 
   Future<void> setOrderId({required String productOrderId}) async {
@@ -354,8 +354,8 @@ class SharedPreferencesHelper {
   bool getUserLoggedIn() {
     return prefs.getBool(userLoggedIn) ?? false;
   }
-  bool getUserExist() {
-    return prefs.getBool(isUserExists) ?? false;
+  bool getWalletApproved() {
+    return prefs.getBool(isWalletApproved) ?? false;
   }
 
   String getAuthToken() {

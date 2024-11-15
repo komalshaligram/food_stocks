@@ -35,7 +35,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             language: preferencesHelper.getAppLanguage()));
         try {
           final res = await DioClient(event.context).post(
-            '${AppUrls.listingCartProductsSupplierUrl}${preferencesHelper.getCartId()}',
+            '${AppUrlEndPoints.listingCartProductsSupplierUrl}${preferencesHelper.getCartId()}',
           );
           CartProductsSupplierResModel response =
               CartProductsSupplierResModel.fromJson(res);
@@ -71,7 +71,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
         try {
           OrderSendReqModel reqMap = OrderSendReqModel(products: productReqMap,paymentMethod: preferencesHelper.getPaymentMethod());
           final res = await DioClient(event.context).post(
-            AppUrls.createOrderUrl,
+            AppUrlEndPoints.createOrderUrl,
             data: reqMap,
           );
 
@@ -80,7 +80,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           if (response.status == AppConstants.code_201) {
             try {
               final res = await DioClient(event.context).post(
-                '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}',
+                '${AppUrlEndPoints.clearCartUrl}${preferencesHelper.getCartId()}',
               );
               if (res[AppStrings.statusString] == AppConstants.code_201) {
                 preferencesHelper.setCartCount(count: 0);

@@ -20,6 +20,7 @@ class AppConstants{
   static const double withoutSaleItemHeight = 210;
   static const double animationDuration = 8000;
   static const double timeOutDuration = 18000;
+
   //padding
   static const double padding_5 = 5;
   static const double padding_10 = 10;
@@ -66,7 +67,6 @@ class AppConstants{
   static const double font_26 = 26;
   static const double font_22 = 22;
   static const double font_17 = 17;
-
 
  //order status
   static const int onTheWayStatus = 6;
@@ -123,6 +123,7 @@ class AppConstants{
   static const int appContentPageLimit = 10;
   static const int orderPageLimit = 15;
   static const int walletLimit = 10;
+
   //status code
   static const int code_200 = 200;
   static const int code_201 = 201;

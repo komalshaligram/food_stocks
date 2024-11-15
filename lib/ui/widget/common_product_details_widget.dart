@@ -197,7 +197,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                 ? GestureDetector(
                                     onTap: imageOnTap,
                                     child: Image.network(
-                                      "${AppUrls.baseFileUrl}${productImages.first}",
+                                      "${AppUrlEndPoints.baseFileUrl}${productImages.first}",
                                       height: 150,
                                       fit: BoxFit.contain,
                                       loadingBuilder: (context, child, loadingProgress) {

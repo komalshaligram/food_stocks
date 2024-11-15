@@ -241,7 +241,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                     padding: const EdgeInsets.only(left: 8.0, right: 8),
                                                     child: CachedNetworkImage(
                                                       placeholder: (context, url) => const PesachBannerShimmerWidget(),
-                                                      imageUrl: '${AppUrls.baseFileUrl}${state.pesachBannerURL}',
+                                                      imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.pesachBannerURL}',
                                                       errorWidget: (context, url, error) {
                                                         return Container(
                                                           color: AppColors.whiteColor,
@@ -744,7 +744,7 @@ class StoreScreenWidget extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(AppConstants.padding_10)),
                     child: categoryImage.isNotEmpty
                         ? CachedNetworkImage(
-                            imageUrl: "${AppUrls.baseFileUrl}$categoryImage",
+                            imageUrl: "${AppUrlEndPoints.baseFileUrl}$categoryImage",
                             fit: BoxFit.cover,
                             height: 140,
                             width: 105,
@@ -840,7 +840,7 @@ class StoreScreenWidget extends StatelessWidget {
             Center(
               child: saleImage.isNotEmpty
                   ? CachedNetworkImage(
-                      imageUrl: "${AppUrls.baseFileUrl}$saleImage",
+                      imageUrl: "${AppUrlEndPoints.baseFileUrl}$saleImage",
                       height: 70,
                       fit: BoxFit.fitHeight,
                       placeholder: (context, url) {
@@ -917,7 +917,7 @@ class StoreScreenWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: AppConstants.padding_20),
                     child: companyLogo.isNotEmpty
                         ? CachedNetworkImage(
-                            imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
+                            imageUrl: "${AppUrlEndPoints.baseFileUrl}$companyLogo",
                             fit: BoxFit.scaleDown,
                             height: 110,
                             width: 105,
@@ -1070,7 +1070,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                       },
                                                       child: PhotoView(
                                                         imageProvider: NetworkImage(
-                                                          '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                          '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                         ),
                                                       ),
                                                     ),

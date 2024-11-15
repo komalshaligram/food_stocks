@@ -91,7 +91,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getProductCategoriesUrl,
+              AppUrlEndPoints.getProductCategoriesUrl,
               data: const ProductCategoriesReqModel(
                       pageNum: 1, pageLimit: 18)
                   .toJson());
@@ -139,7 +139,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         try {
           emit(state.copyWith(isShimmering: true,isSaleShimmering: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getSaleProductsUrl,
+              AppUrlEndPoints.getSaleProductsUrl,
               data: const ProductSalesReqModel(
                       pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
                   .toJson());
@@ -182,7 +182,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           try {
             emit(state.copyWith(isRecommendedShimmering: true));
             final res = await DioClient(event.context).post(
-                AppUrls.getRecommendationProductsUrl,
+                AppUrlEndPoints.getRecommendationProductsUrl,
                 data: const RecommendationProductsReqModel(
                     pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
                     .toJson(),);
@@ -228,7 +228,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getSuppliersUrl,
+              AppUrlEndPoints.getSuppliersUrl,
               data: const SuppliersReqModel(
                       pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
                   .toJson());
@@ -260,7 +260,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getCompaniesUrl,
+              AppUrlEndPoints.getCompaniesUrl,
               data: const CompanyReqModel(
                       pageNum: 1, pageLimit: AppConstants.companyPageLimit)
                   .toJson());
@@ -299,7 +299,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false,));
           final res = await DioClient(event.context).post(
-              AppUrls.getProductDetailsUrl,
+              AppUrlEndPoints.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response =
               ProductDetailsResModel.fromJson(res);
@@ -345,7 +345,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 SharedPreferencesHelper preferences = SharedPreferencesHelper(
                     prefs: await SharedPreferences.getInstance());
                 final res = await DioClient(event.context).post(
-                    '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+                    '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
                     options: Options(headers: {
                       HttpHeaders.authorizationHeader:
                       'Bearer ${preferences.getAuthToken()}'
@@ -688,7 +688,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             );
             SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
             final res = await DioClient(event.context).post(
-              '${AppUrls.updateCartProductUrl}${preferences.getCartId()}',
+              '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
               data: request,
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
@@ -730,7 +730,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             });
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
             final res = await DioClient(event.context).post(
-              '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
+              '${AppUrlEndPoints.insertProductInCartUrl}${preferencesHelper.getCartId()}',
               data: req,
             );
             InsertCartResModel response = InsertCartResModel.fromJson(res);
@@ -822,7 +822,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getGlobalSearchResultUrl,
+              AppUrlEndPoints.getGlobalSearchResultUrl,
               data: globalSearchReqModel.toJson());
 
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
@@ -975,7 +975,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               try {
                 emit(state.copyWith(isPreviousOrderShimmering: true));
                 final res = await DioClient(event.context).post(
-                  AppUrls.getPreviousOrderProductsUrl,
+                  AppUrlEndPoints.getPreviousOrderProductsUrl,
                   data: const PreviousOrderProductsReqModel(
                       pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
                       .toJson(),
@@ -1024,7 +1024,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         if(event.productId != ''){
           emit(state.copyWith(isRelatedShimmering:true));
           final res = await DioClient(event.context).post(
-              AppUrls.relatedProductsUrl,
+              AppUrlEndPoints.relatedProductsUrl,
               data: {AppStrings.mainProductIdString:event.productId});
           RelatedProductResModel response =
           RelatedProductResModel.fromJson(res);
@@ -1064,7 +1064,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         try {
           emit(state.copyWith(pesachBannerShimmering: true,retryLoading: event.isRetryLoading));
 
-          final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
+          final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
           SettingResModel response = SettingResModel.fromJson(res);
           preferencesHelper.setBankTransferDetail(details: response.data?.taviliRivchitDetails?.bankTransferInfoText??'');
           if (response.status == AppConstants.code_200) {
@@ -1117,7 +1117,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           if (preferencesHelper.getSubUser()) {
             try {
               final res = await DioClient(event.context).get(
-                  path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper
+                  path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferencesHelper
                       .getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel
                   .fromJson(res);
@@ -1181,7 +1181,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           try {
 
             final res = await DioClient(event.context).post(
-                AppUrls.verifyClientUrl,
+                AppUrlEndPoints.verifyClientUrl,
                 data: {AppStrings.clientIdString: preferencesHelper.getUserId()}
             );
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);

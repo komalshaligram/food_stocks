@@ -56,7 +56,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         }
         try {
           emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
-          final res = await DioClient(event.context).post(AppUrls.getSaleProductsUrl, data: ProductSalesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.saleProductPageLimit, search: state.search).toJson());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getSaleProductsUrl, data: ProductSalesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.saleProductPageLimit, search: state.search).toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             List<ProductSale> productSaleList = state.productSalesList.toList(growable: true);
@@ -99,7 +99,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
 
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
-          final res = await DioClient(event.context).post(AppUrls.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
@@ -126,7 +126,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
 
               emit(state.copyWith(productListIndex: productListIndex, productStockUpdateIndex: productStockUpdateIndex));
               try {
-                final res = await DioClient(event.context).post('${AppUrls.getAllCartUrl}${preferences.getCartId()}', options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
+                final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}', options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
                 GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                 if (response.status == AppConstants.code_200) {
                   response.data?.data?.forEach((cartProduct) {
@@ -339,7 +339,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             );
             SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
             final res = await DioClient(event.context).post(
-              '${AppUrls.updateCartProductUrl}${preferences.getCartId()}',
+              '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
               data: request,
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
@@ -381,7 +381,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             });
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
-            final res = await DioClient(event.context).post('${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
+            final res = await DioClient(event.context).post('${AppUrlEndPoints.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
                 options: Options(
                   headers: {
@@ -432,7 +432,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         emit(state.copyWith(search: event.search));
       } else if (event is _relatedProductsEvent) {
         emit(state.copyWith(isRelatedShimmering: true));
-        final res = await DioClient(event.context).post(AppUrls.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
+        final res = await DioClient(event.context).post(AppUrlEndPoints.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
         RelatedProductResModel response = RelatedProductResModel.fromJson(res);
 
         if (response.status == AppConstants.code_200) {
@@ -457,7 +457,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         emit(state.copyWith(relatedProductList: []));
       } else if (event is _userApproveEvent) {
         try {
-          final res = await DioClient(event.context).post(AppUrls.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
+          final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
           VerifyClientResModel response = VerifyClientResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             if (!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)) {

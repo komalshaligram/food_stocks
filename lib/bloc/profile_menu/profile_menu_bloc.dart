@@ -50,7 +50,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         } else if (event is _logOutEvent) {
           emit(state.copyWith(isLogOutProcess: true));
           try {
-            final response = await DioClient(event.context).put(path: AppUrls.logOutUrl, data: {"userId": preferences.getUserId()});
+            final response = await DioClient(event.context).put(path: AppUrlEndPoints.logOutUrl, data: {"userId": preferences.getUserId()});
 
             if (response[AppStrings.statusString] == AppConstants.code_200) {
               SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -79,7 +79,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         } else if (event is _getProfileDetailsEvent) {
           try {
             final res = await DioClient(event.context).post(
-              AppUrls.getProfileDetailsUrl,
+              AppUrlEndPoints.getProfileDetailsUrl,
               data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
             );
             ProfileDetailsResModel response = ProfileDetailsResModel.fromJson(res);
@@ -101,7 +101,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         } else if (event is _getPermissionList) {
           if (preferences.getSubUser()) {
             try {
-              final res = await DioClient(event.context).get(path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+              final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
 
               if (response.status == AppConstants.code_200) {
@@ -136,7 +136,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
           try {
             emit(state.copyWith(retryLoading: event.isRetryLoading));
 
-            final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
+            final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {
@@ -167,7 +167,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
           }
         } else if (event is _userApproveEvent) {
           try {
-            final res = await DioClient(event.context).post(AppUrls.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
+            final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {

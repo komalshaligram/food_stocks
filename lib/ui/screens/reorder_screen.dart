@@ -426,7 +426,7 @@ class ReorderScreenWidget extends StatelessWidget {
         children: [
           Center(
             child: Image.network(
-              "${AppUrls.baseFileUrl}$productImage",
+              "${AppUrlEndPoints.baseFileUrl}$productImage",
               height: 70,
               fit: BoxFit.fitHeight,
               loadingBuilder: (context, child, loadingProgress) {
@@ -551,7 +551,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                                       },
                                                       child: PhotoView(
                                                         imageProvider: NetworkImage(
-                                                          '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                          '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                         ),
                                                       ),
                                                     ),

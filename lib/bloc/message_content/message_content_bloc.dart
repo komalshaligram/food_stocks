@@ -41,7 +41,7 @@ class MessageContentBloc
             ],
           );
           final response =
-              await DioClient(event.context).post(AppUrls.deleteMessageUrl,
+              await DioClient(event.context).post(AppUrlEndPoints.deleteMessageUrl,
                   data: reqMap,
                 );
 
@@ -76,7 +76,7 @@ class MessageContentBloc
             ],
           );
           final response = await DioClient(event.context).put(
-              path: AppUrls.updateMessageUrl,
+              path: AppUrlEndPoints.updateMessageUrl,
               data: reqMap.toJson(),
               options: Options(
                 headers: {

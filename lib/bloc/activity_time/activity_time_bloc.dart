@@ -49,7 +49,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           emit(state.copyWith(isShimmering: true));
           try {
             final res = await DioClient(event.context).post(
-              AppUrls.getProfileDetailsUrl,
+              AppUrlEndPoints.getProfileDetailsUrl,
               data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                   .toJson(),
             );
@@ -563,7 +563,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
 
               try {
                 final response1 = await DioClient(event.context).post(
-                    '${AppUrls.operationTimeUrl}/${preferences.getUserId()}',
+                    '${AppUrlEndPoints.operationTimeUrl}/${preferences.getUserId()}',
                     data: reqMap);
                 res.ActivityTimeResModel operationTimeResModel =
                 res.ActivityTimeResModel.fromJson(response1);
@@ -625,7 +625,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             printData("update after Model = $req");
             try {
               final res = await DioClient(event.context).post(
-                "${AppUrls.updateProfileDetailsUrl}/${preferences.getUserId()}",
+                "${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}",
                 data: req,
               );
               printData('operation update req _____$req');

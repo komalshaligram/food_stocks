@@ -617,7 +617,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                       width: double.maxFinite,
                     )
                         : CachedNetworkImage(
-                      imageUrl: "${AppUrls.baseFileUrl}$url",
+                      imageUrl: "${AppUrlEndPoints.baseFileUrl}$url",
                       fit: BoxFit.scaleDown,
                       alignment: Alignment.center,
                       placeholder: (context, url) => Center(

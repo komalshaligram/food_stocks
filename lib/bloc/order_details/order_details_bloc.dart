@@ -23,7 +23,7 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
       if (event is _getOrderByIdEvent) {
         try {
           final res = await DioClient(event.context).get(
-              path: '${AppUrls.getOrderById}${event.orderId}',
+              path: '${AppUrlEndPoints.getOrderById}${event.orderId}',
        );
 
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);

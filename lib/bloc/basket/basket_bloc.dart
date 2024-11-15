@@ -65,7 +65,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               cartCount: preferencesHelper.getCartCount()));
           try {
             final res = await DioClient(event.context).post(
-              '${AppUrls.getAllCartUrl}${preferencesHelper.getCartId()}',
+              '${AppUrlEndPoints.getAllCartUrl}${preferencesHelper.getCartId()}',
             );
 
             GetAllCartResModel response = GetAllCartResModel.fromJson(res);
@@ -180,7 +180,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             printData('UpdateCart reqMap  $reqMap');
 
             final res = await DioClient(event.context).post(
-              '${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}',
+              '${AppUrlEndPoints.updateCartProductUrl}${preferencesHelper.getCartId()}',
               data: reqMap,
             );
 
@@ -334,7 +334,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               SharedPreferencesHelper preferences = SharedPreferencesHelper(
                   prefs: await SharedPreferences.getInstance());
               final res = await DioClient(event.context).post(
-                '${AppUrls.updateCartProductUrl}${preferences.getCartId()}',
+                '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
                 data: request,
               );
               UpdateCartResModel response = UpdateCartResModel.fromJson(res);
@@ -424,12 +424,12 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   prefs: await SharedPreferences.getInstance());
 
               printData(
-                  'insert cart url1 = ${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}');
+                  'insert cart url1 = ${AppUrlEndPoints.insertProductInCartUrl}${preferencesHelper.getCartId()}');
               printData(
                   'insert cart url1 auth = ${preferencesHelper
                       .getAuthToken()}');
               final res = await DioClient(event.context).post(
-                '${AppUrls.insertProductInCartUrl}${preferencesHelper
+                '${AppUrlEndPoints.insertProductInCartUrl}${preferencesHelper
                     .getCartId()}',
                 data: req,
               );
@@ -508,7 +508,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 isProductLoading: true, isSelectSupplier: false));
 
             final res = await DioClient(event.context).post(
-                AppUrls.getProductDetailsUrl,
+                AppUrlEndPoints.getProductDetailsUrl,
                 data: ProductDetailsReqModel(params: event.productId).toJson());
 
             ProductDetailsResModel response =
@@ -542,7 +542,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         .productStockUpdateIndex}');
                 try {
                   final res = await DioClient(event.context).post(
-                    '${AppUrls.getAllCartUrl}${preferencesHelper.getCartId()}',
+                    '${AppUrlEndPoints.getAllCartUrl}${preferencesHelper.getCartId()}',
                   );
                   GetAllCartResModel response = GetAllCartResModel.fromJson(
                       res);
@@ -843,7 +843,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           try {
             final player = AudioPlayer();
             final response = await DioClient(event.context).post(
-              AppUrls.removeCartProductUrl,
+              AppUrlEndPoints.removeCartProductUrl,
               data: {AppStrings.cartProductIdString: event.cartProductId},
             );
 
@@ -892,7 +892,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           try {
             final res = await DioClient(event.context)
                 .post(
-                '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}');
+                '${AppUrlEndPoints.clearCartUrl}${preferencesHelper.getCartId()}');
             if (res[AppStrings.statusString] == AppConstants.code_201) {
               add(const BasketEvent.setCartCountEvent(isClearCart: true));
               List<ProductDetailsModel> list = [];
@@ -952,7 +952,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               order.OrderSendReqModel reqMap = order
                   .OrderSendReqModel(products: productReqMap,paymentMethod: event.paymentMethod.isNotEmpty?event.paymentMethod:preferencesHelper.getPaymentMethod());
               final res = await DioClient(event.context).post(
-                AppUrls.createOrderUrl,
+                AppUrlEndPoints.createOrderUrl,
                 data: reqMap,
               );
 
@@ -984,9 +984,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         response.message?.toLocalization() ?? response.message!,
                         event.context),
                     type: SnackBarType.failure);
-                if(event.isFromDialog){
+              /*  if(event.isFromDialog){
                   Navigator.pop(event.context);
-                }
+                }*/
                 emit(state.copyWith(isLoading: false, isRemoveProcess: false,isPaymentFail: false,));
               }
             }
@@ -997,7 +997,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if (event is _relatedProductsEvent) {
           emit(state.copyWith(isRelatedShimmering: true));
           final res = await DioClient(event.context).post(
-              AppUrls.relatedProductsUrl,
+              AppUrlEndPoints.relatedProductsUrl,
               data: {AppStrings.mainProductIdString: event.productId});
           RelatedProductResModel response =
           RelatedProductResModel.fromJson(res);
@@ -1039,7 +1039,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           if(preferencesHelper.getSubUser()){
             try {
               final res = await DioClient(event.context).get(
-                  path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+                  path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
               if (response.status == AppConstants.code_200) {
 
@@ -1083,7 +1083,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if(event is _userApproveEvent){
           try {
             final res = await DioClient(event.context).post(
-                AppUrls.verifyClientUrl,
+                AppUrlEndPoints.verifyClientUrl,
                 data: {AppStrings.clientIdString:preferencesHelper.getUserId()}
             );
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
@@ -1109,7 +1109,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if(event is _generalSettings){
           try {
             emit(state.copyWith(retryLoading: event.isRetryLoading));
-            final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
+            final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               if(preferencesHelper.getAppOnMaintenance() &&  !(response.data?.isAppOnMaintenance??false)){

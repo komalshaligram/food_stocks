@@ -103,6 +103,7 @@ class ClientDetail with _$ClientDetail {
     String? zip,
     @JsonKey(name: "isAvailableAllPayments")
     bool? isAvailableAllPayments,
+    //bool? isWalletApproved
   }) = _ClientDetail;
 
   factory ClientDetail.fromJson(Map<String, dynamic> json) =>

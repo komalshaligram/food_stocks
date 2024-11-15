@@ -311,7 +311,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                     },
                                                     child: PhotoView(
                                                       imageProvider: NetworkImage(
-                                                        '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                        '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                       ),
                                                     ),
                                                   ),

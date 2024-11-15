@@ -962,7 +962,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   Center(
                     child: !isGuestUser
                         ? Image.network(
-                      "${AppUrls.baseFileUrl}${list[index].planogramproducts?[subIndex].mainImage}",
+                      "${AppUrlEndPoints.baseFileUrl}${list[index].planogramproducts?[subIndex].mainImage}",
                       height: 70,
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
@@ -1198,7 +1198,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               },
                                               child: PhotoView(
                                                 imageProvider: NetworkImage(
-                                                  '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                  '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                 ),
                                               ),
                                             ),

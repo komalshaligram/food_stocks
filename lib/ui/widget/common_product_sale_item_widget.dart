@@ -80,7 +80,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                     child: !isGuestUser
                         ? saleImage.isNotEmpty
                             ? CachedNetworkImage(
-                                imageUrl: "${AppUrls.baseFileUrl}$saleImage",
+                                imageUrl: "${AppUrlEndPoints.baseFileUrl}$saleImage",
                                 height: imageHeight,
                                 fit: BoxFit.fitHeight,
                                 placeholder: (context, url) {

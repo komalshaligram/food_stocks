@@ -118,7 +118,7 @@ class SearchItemWidget extends StatelessWidget {
                   width: 50,
                   child: !isGuestUser
                       ? Image.network(
-                          '${AppUrls.baseFileUrl}$searchImage',
+                          '${AppUrlEndPoints.baseFileUrl}$searchImage',
                           fit: BoxFit.scaleDown,
                           height: 60,
                           width: 50,

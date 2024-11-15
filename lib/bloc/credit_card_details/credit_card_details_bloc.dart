@@ -38,7 +38,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
           CreditCardReqModel reqMap = CreditCardReqModel(cardNum: state.creditCardNumberController.text.trim(), expDate_YY: state.validityController.text.trim(), expDate_MM: state.selectedMonth);
 
           final res = await DioClient(event.context).post(
-            AppUrls.updateCreditCardUrl + preferencesHelper.getUserId(),
+            AppUrlEndPoints.updateCreditCardUrl + preferencesHelper.getUserId(),
             data: reqMap,
           );
 
@@ -97,7 +97,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             return value == null;
           });
           final res = await DioClient(event.context).uploadFileProgressWithFormData(
-            path: AppUrls.termsConditionUrl,
+            path: AppUrlEndPoints.termsConditionUrl,
             formData: FormData.fromMap(
               {
                 AppStrings.userIdString: termsConditionReqModel.id,
