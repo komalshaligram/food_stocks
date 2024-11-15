@@ -44,7 +44,7 @@ class ShipmentVerificationBloc
           try {
             final response =
                 await DioClient(event.context).uploadFileProgressWithFormData(
-              path: AppUrls.fileUploadUrl,
+              path: AppUrlEndPoints.fileUploadUrl,
               formData: FormData.fromMap(
                 {
                   AppStrings.signatureString: await MultipartFile.fromFile(
@@ -69,7 +69,7 @@ class ShipmentVerificationBloc
               );
 
              final response = await DioClient(event.context).post(
-                  '${AppUrls.deliveryConfirmUrl}${event.orderId}',
+                  '${AppUrlEndPoints.deliveryConfirmUrl}${event.orderId}',
                   data: reqMap,
                 );
 

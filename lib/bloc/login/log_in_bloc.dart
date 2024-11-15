@@ -36,7 +36,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         try {
           LoginReqModel reqMap = LoginReqModel(contact: event.contactNumber, applicationName: AppStrings.appName);
           final res = await DioClient(event.context).post(
-            AppUrls.existingUserLoginUrl,
+            AppUrlEndPoints.existingUserLoginUrl,
             data: reqMap,
           );
 

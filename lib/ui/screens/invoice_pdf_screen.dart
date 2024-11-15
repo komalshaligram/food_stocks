@@ -230,7 +230,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                         color: Colors.white,
                         height: getScreenHeight(context) * 0.7,
                         child: SfPdfViewer.network(
-                          '${AppUrls.baseFileUrl}${invoiceDetailsList.link ?? ''}',
+                          '${AppUrlEndPoints.baseFileUrl}${invoiceDetailsList.link ?? ''}',
                           key: _pdfViewerKey,
                           controller: _pdfViewerController,
 

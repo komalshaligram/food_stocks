@@ -75,14 +75,14 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               pageNum: state.pageNum + 1);
           printData('previous products req = ${request.toJson()}');
           final res = await DioClient(event.context)
-              .post(AppUrls.getPreviousOrderProductsUrl,
+              .post(AppUrlEndPoints.getPreviousOrderProductsUrl,
                   data: request.toJson(),
                 );
           PreviousOrderProductsResModel response =
               PreviousOrderProductsResModel.fromJson(res);
           printData(
               'previous order res = ${response.previousProductData}');
-          printData('previous order url =${AppUrls.baseUrl} ${AppUrls.getPreviousOrderProductsUrl}');
+          printData('previous order url =${AppUrlEndPoints.baseUrl} ${AppUrlEndPoints.getPreviousOrderProductsUrl}');
           if (response.status == AppConstants.code_200) {
             List<PreviousOrderProductData> previousOrderProductsList =
                 state.previousOrderProductsList.toList(growable: true);
@@ -156,7 +156,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
           final res = await DioClient(event.context).post(
-              AppUrls.getProductDetailsUrl,
+              AppUrlEndPoints.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
 
           ProductDetailsResModel response =
@@ -198,7 +198,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             try {
 
               final res = await DioClient(event.context).post(
-                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+                  '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
                 );
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
               if (response.status == AppConstants.code_200) {
@@ -595,7 +595,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             SharedPreferencesHelper preferences = SharedPreferencesHelper(
                 prefs: await SharedPreferences.getInstance());
             final res = await DioClient(event.context).post(
-              '${AppUrls.updateCartProductUrl}${preferences.getCartId()}',
+              '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
               data: request,
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
@@ -674,7 +674,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 prefs: await SharedPreferences.getInstance());
 
             final res = await DioClient(event.context).post(
-                '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
+                '${AppUrlEndPoints.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
                 options: Options(
                   headers: {
@@ -771,7 +771,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getGlobalSearchResultUrl,
+              AppUrlEndPoints.getGlobalSearchResultUrl,
               data: globalSearchReqModel.toJson());
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
           if (state.searchController.text == '') {
@@ -914,7 +914,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getProductCategoriesUrl,
+              AppUrlEndPoints.getProductCategoriesUrl,
               data: const ProductCategoriesReqModel(
                   pageNum: 1, pageLimit: 18)
                   .toJson());
@@ -960,7 +960,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
       else if(event is _relatedProductsEvent){
         emit(state.copyWith(isRelatedShimmering:true));
         final res = await DioClient(event.context).post(
-            AppUrls.relatedProductsUrl,
+            AppUrlEndPoints.relatedProductsUrl,
             data: {AppStrings.mainProductIdString:event.productId});
         RelatedProductResModel response =
         RelatedProductResModel.fromJson(res);
@@ -998,7 +998,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           try {
 
             final res = await DioClient(event.context).get(
-                path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+                path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {
@@ -1184,12 +1184,12 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         try {
           printData('clientId_____${preferences.getUserId()}');
           final res = await DioClient(event.context).post(
-              AppUrls.verifyClientUrl,
+              AppUrlEndPoints.verifyClientUrl,
               data: {AppStrings.clientIdString:preferences.getUserId()}
           );
           VerifyClientResModel response = VerifyClientResModel.fromJson(res);
           printData('verifyClient res_____$response');
-          printData('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+          printData('verifyClient url_____${AppUrlEndPoints.baseUrl}${AppUrlEndPoints.verifyClientUrl}');
           if (response.status == AppConstants.code_200) {
             if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
               Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);

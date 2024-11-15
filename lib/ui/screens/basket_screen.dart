@@ -528,7 +528,7 @@ class BasketScreenWidget extends StatelessWidget {
                                 fit: BoxFit.fitWidth,
                               )
                             : Image.network(
-                                '${AppUrls.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
+                                '${AppUrlEndPoints.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
                                 width: 100,
                                 height: 100,
                                 fit: BoxFit.contain,
@@ -883,7 +883,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                           },
                                                           child: PhotoView(
                                                             imageProvider: NetworkImage(
-                                                              '${AppUrls.baseFileUrl}${state.productDetails[state.productImageIndex].mainImage}',
+                                                              '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.productImageIndex].mainImage}',
                                                             ),
                                                           ),
                                                         ),

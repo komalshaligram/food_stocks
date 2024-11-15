@@ -73,7 +73,7 @@ class CommonSaleListView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             !isGuestUser ? productImage.isNotEmpty ? CachedNetworkImage(
-              imageUrl: "${AppUrls.baseFileUrl}$productImage",
+              imageUrl: "${AppUrlEndPoints.baseFileUrl}$productImage",
               height: 70,
               width: 70,
               fit: BoxFit.contain,

@@ -172,7 +172,7 @@ class SupplierScreenWidget extends StatelessWidget {
           children: [
             Expanded(
               child: supplierLogo.isNotEmpty ? CachedNetworkImage(
-                imageUrl: "${AppUrls.baseFileUrl}$supplierLogo",
+                imageUrl: "${AppUrlEndPoints.baseFileUrl}$supplierLogo",
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.center,
                 placeholder: (context, url) => CommonShimmerWidget(

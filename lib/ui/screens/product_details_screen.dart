@@ -608,7 +608,7 @@ class _ProductDetailsScreenWidgetState
                 state.orderBySupplierProduct.products?[index].mainImage !=
                     ''
                     ? Image.network(
-                  '${AppUrls.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
+                  '${AppUrlEndPoints.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
                   width: AppConstants.containerHeight_80,
                   height: AppConstants.containerHeight_80,
                   fit: BoxFit.contain,
@@ -967,7 +967,7 @@ class _ProductDetailsScreenWidgetState
                               children: [
                                 image != ''
                                     ? Image.network(
-                                  '${AppUrls.baseFileUrl}$image',
+                                  '${AppUrlEndPoints.baseFileUrl}$image',
                                   width: AppConstants.containerSize_50,
                                   height: AppConstants.containerSize_50,
                                   fit: BoxFit.fill,

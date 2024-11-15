@@ -24,7 +24,7 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
       if (event is _getCreditCardInfoEvent) {
         emit(state.copyWith(isLoading: true));
         try {
-          final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl, data: ProfileDetailsReqModel(id: preferencesHelper.getUserId()).toJson());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl, data: ProfileDetailsReqModel(id: preferencesHelper.getUserId()).toJson());
           ProfileDetailsResModel resModel = ProfileDetailsResModel.fromJson(res);
           if (resModel.status == AppConstants.code_200) {
             preferencesHelper.setPaymentMethod(method: resModel.data?.clients?.first.clientDetail?.paymentType ?? '');
@@ -47,7 +47,7 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
         try {
           emit(state.copyWith(isDeleteLoading: true));
           Map<String, dynamic> reqMap = {"id": preferencesHelper.getUserId()};
-          final res = await DioClient(event.context).delete(path: AppUrls.deleteCreditCardUrl, data: reqMap);
+          final res = await DioClient(event.context).delete(path: AppUrlEndPoints.deleteCreditCardUrl, data: reqMap);
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isCreditCardExist: false, isDeleteLoading: false));
           } else {

@@ -26,10 +26,10 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
           emit(state.copyWith(isShimmering: true , subUserId: event.subUserId));
           debugPrint('subUserId____${event.subUserId}');
           final res = await DioClient(event.context).get(
-              path: '${AppUrls.getSupplierPermissionUrl}${event.subUserId}');
+              path: '${AppUrlEndPoints.getSupplierPermissionUrl}${event.subUserId}');
           SupplierPermissionResModel response = SupplierPermissionResModel.fromJson(res);
           debugPrint('BrandPermission response = ${response.data.toString()}');
-          debugPrint('BrandPermission url = ${AppUrls.baseUrl}${AppUrls.getBrandPermissionUrl}${event.subUserId}');
+          debugPrint('BrandPermission url = ${AppUrlEndPoints.baseUrl}${AppUrlEndPoints.getBrandPermissionUrl}${event.subUserId}');
           if (response.status == AppConstants.code_200) {
 
             emit(state.copyWith(isShimmering:false));
@@ -125,10 +125,10 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
 
 
           final response = await DioClient(event.context).put(
-              path: '${AppUrls.updatePermissionUrl}${state.subUserId}',
+              path: '${AppUrlEndPoints.updatePermissionUrl}${state.subUserId}',
               data: updatePermissionReq);
 
-          debugPrint('updatePermission url  = ${AppUrls.baseUrl}${AppUrls.updatePermissionUrl}');
+          debugPrint('updatePermission url  = ${AppUrlEndPoints.baseUrl}${AppUrlEndPoints.updatePermissionUrl}');
           debugPrint('updatePermission response  = ${response}');
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isUpdateProcess: false));

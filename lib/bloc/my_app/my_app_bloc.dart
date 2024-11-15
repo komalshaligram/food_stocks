@@ -59,7 +59,7 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
         });
         try {
           final res = await DioClient(event.context).post(
-            "${AppUrls.updateProfileDetailsUrl}/${preferences.getUserId()}",
+            "${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}",
             data: req,
           );
           if (res != null) {

@@ -419,7 +419,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
           Center(
             child: productImage.isNotEmpty
                 ? Image.network(
-                    "${AppUrls.baseFileUrl}$productImage",
+                    "${AppUrlEndPoints.baseFileUrl}$productImage",
                     height: 70,
                     fit: BoxFit.fitHeight,
                     loadingBuilder: (context, child, loadingProgress) {
@@ -545,7 +545,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                         child: state.productDetails[state.imageIndex].mainImage != ''
                                                             ? PhotoView(
                                                                 imageProvider: NetworkImage(
-                                                                  '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                                  '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                                 ),
                                                               )
                                                             : const SizedBox(),

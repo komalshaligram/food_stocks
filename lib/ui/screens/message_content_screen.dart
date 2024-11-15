@@ -106,7 +106,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                             alignment: Alignment.center,
                             child: state.message.message?.messageImage != null && state.message.message?.messageImage != ''
                                 ? Image.network(
-                                    '${AppUrls.baseFileUrl}${state.message.message?.messageImage ?? ''}',
+                                    '${AppUrlEndPoints.baseFileUrl}${state.message.message?.messageImage ?? ''}',
                                     height: getScreenHeight(context),
                                     width: double.maxFinite,
                                     fit: BoxFit.contain,
@@ -165,7 +165,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                                         alignment: Alignment.center,
                                         child: state.message.message?.messageImage != null && state.message.message?.messageImage != ''
                                             ? Image.network(
-                                                '${AppUrls.baseFileUrl}${state.message.message?.messageImage ?? ''}',
+                                                '${AppUrlEndPoints.baseFileUrl}${state.message.message?.messageImage ?? ''}',
                                                 fit: BoxFit.contain,
                                                 loadingBuilder: (context, child, loadingProgress) {
                                                   if (loadingProgress == null) {

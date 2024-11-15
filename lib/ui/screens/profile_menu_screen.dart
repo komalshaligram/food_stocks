@@ -113,7 +113,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20),
                                     child: CachedNetworkImage(
                                       imageUrl:
-                                          '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                          '${AppUrlEndPoints.baseFileUrl}${state.UserImageUrl}',
                                       fit: BoxFit.fill,
                                       placeholder: (context, url) =>
                                           const CupertinoActivityIndicator(),

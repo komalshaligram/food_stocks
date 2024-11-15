@@ -17,7 +17,6 @@ import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 
-
 class BankInfoRoute {
   static Widget get route => const BankInfoScreen();
 }

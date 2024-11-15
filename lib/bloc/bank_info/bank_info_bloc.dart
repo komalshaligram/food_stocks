@@ -34,7 +34,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).get(
-              path: AppUrls.getBankDetailUrl);
+              path: AppUrlEndPoints.getBankDetailUrl);
           BankDetailModel response = BankDetailModel.fromJson(res);
         
           if (response.status == AppConstants.code_200) {
@@ -90,7 +90,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           emit(state.copyWith(isApiShimmering: true,));
           final res =
           await DioClient(event.context).uploadFileProgressWithFormData(
-            path: AppUrls.termsConditionUrl,
+            path: AppUrlEndPoints.termsConditionUrl,
             formData: FormData.fromMap(
               {
                 AppStrings.userIdString : preferencesHelper.getUserId(),
@@ -163,7 +163,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           );
 
           final res = await DioClient(event.context).put(
-            path:AppUrls.addBankInfo,
+            path:AppUrlEndPoints.addBankInfo,
             data: reqMap.toJson(),
           );
 

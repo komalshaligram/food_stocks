@@ -36,7 +36,7 @@ class OrderSuccessfulBloc
               WalletRecordReqModel(userId: preferencesHelper.getUserId());
     
           final res = await DioClient(event.context).post(
-            AppUrls.walletRecordUrl,
+            AppUrlEndPoints.walletRecordUrl,
             data: reqMap,
           );
 
@@ -82,7 +82,7 @@ class OrderSuccessfulBloc
 
 
           final res =
-          await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
+          await DioClient(event.context).post(AppUrlEndPoints.getOrdersCountUrl,
             data: reqMap,
           );
 

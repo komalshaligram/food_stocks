@@ -21,7 +21,7 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
       if (event is _getPermissionList) {
         try {
           emit(state.copyWith(isShimmering: true, subUserId: event.subUserId));
-          final res = await DioClient(event.context).get(path: '${AppUrls.getCategoriesPermissionUrl}${event.subUserId}');
+          final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getCategoriesPermissionUrl}${event.subUserId}');
           CategoriesPermissionResModel response = CategoriesPermissionResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
@@ -135,7 +135,7 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
             return value == null;
           });
 
-          final response = await DioClient(event.context).put(path: '${AppUrls.updatePermissionUrl}${state.subUserId}', data: updatePermissionReq);
+          final response = await DioClient(event.context).put(path: '${AppUrlEndPoints.updatePermissionUrl}${state.subUserId}', data: updatePermissionReq);
 
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isUpdateProcess: false));

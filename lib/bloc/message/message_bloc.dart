@@ -41,7 +41,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
               isLoadMore: state.pageNum == 0 ? false : true));
           final res = await DioClient(event.context).post(
               //AppUrls.getAllMessagesUrl,
-              AppUrls.getNotificationMessageUrl,
+              AppUrlEndPoints.getNotificationMessageUrl,
               data: GetMessagesReqModel(
                       pageNum: state.pageNum + 1,
                       pageLimit: AppConstants.messagePageLimit)
@@ -145,7 +145,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
             ],
           );
           final response =
-          await DioClient(event.context).post(AppUrls.deleteMessageUrl,
+          await DioClient(event.context).post(AppUrlEndPoints.deleteMessageUrl,
               data: reqMap,
             );
 

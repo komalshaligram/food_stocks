@@ -83,7 +83,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
 
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).uploadFileProgressWithFormData(
-            path: AppUrls.termsConditionUrl,
+            path: AppUrlEndPoints.termsConditionUrl,
             formData: FormData.fromMap(reqMap),
           );
 

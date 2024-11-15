@@ -39,7 +39,7 @@ class ProductCategoryBloc
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
           final res = await DioClient(event.context).post(
-              AppUrls.getProductCategoriesUrl,
+              AppUrlEndPoints.getProductCategoriesUrl,
               data: ProductCategoriesReqModel(
                       pageNum: state.pageNum + 1,
                       pageLimit: AppConstants.productCategoryPageLimit,

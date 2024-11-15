@@ -70,7 +70,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           printData('id_______${preferences.getUserId()}');
           try {
             final res = await DioClient(event.context).post(
-              '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+              '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
             );
             if (res != null) {
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
@@ -83,7 +83,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } on ServerException {}
           //message count
           try {
-            final res = await DioClient(event.context).post(AppUrls.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
 
             MessageCountResModel response = MessageCountResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
@@ -101,7 +101,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           try {
             emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
-            final res = await DioClient(event.context).post(AppUrls.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
             ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               //new changes
@@ -130,7 +130,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 emit(state.copyWith(productListIndex: productListIndex, productStockUpdateIndex: productStockUpdateIndex));
                 try {
                   final res = await DioClient(event.context).post(
-                    '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+                    '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
                   );
                   GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                   if (response.status == AppConstants.code_200) {
@@ -244,7 +244,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         } else if (event is _getProductSalesListEvent) {
           try {
             emit(state.copyWith(isProductSaleShimmering: true));
-            final res = await DioClient(event.context).post(AppUrls.getSaleProductsUrl, data: const ProductSalesReqModel(pageNum: 1, pageLimit: AppConstants.defaultPageLimit).toJson());
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getSaleProductsUrl, data: const ProductSalesReqModel(pageNum: 1, pageLimit: AppConstants.defaultPageLimit).toJson());
             ProductSalesResModel response = ProductSalesResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {
@@ -356,7 +356,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               );
               SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
               final res = await DioClient(event.context).post(
-                '${AppUrls.updateCartProductUrl}${preferences.getCartId()}',
+                '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
                 data: request,
               );
               UpdateCartResModel response = UpdateCartResModel.fromJson(res);
@@ -399,7 +399,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               });
               SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
               final res = await DioClient(event.context).post(
-                '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
+                '${AppUrlEndPoints.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
               );
               InsertCartResModel response = InsertCartResModel.fromJson(res);
@@ -450,7 +450,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             );
 
             final res = await DioClient(event.context).post(
-              AppUrls.getOrdersCountUrl,
+              AppUrlEndPoints.getOrdersCountUrl,
               data: reqMap,
             );
 
@@ -464,7 +464,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         else if (event is _getMessageListEvent) {
           try {
             final res = await DioClient(event.context).post(
-              AppUrls.getNotificationMessageUrl,
+              AppUrlEndPoints.getNotificationMessageUrl,
               data: const GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson(),
             );
             if (res != null) {
@@ -518,7 +518,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         } else if (event is _getProfileDetailsEvent) {
           try {
             emit(state.copyWith(allShimmering: true));
-            final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl,
                 data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
                 options: Options(
                   headers: {
@@ -529,6 +529,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             if (response.status == AppConstants.code_200) {
               preferences.setAvailableAllPayment(isAvailableAllPayment: response.data?.clients?.first.clientDetail?.isAvailableAllPayments ?? false);
               preferences.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
+             // preferences.setIsWalletApproved(walletApproved: response.data?.clients?.first.clientDetail?.isWalletApproved??false);
               preferences.setPaymentMethodTypes(methods: response.data?.clients?.first.clientDetail?.availablePaymentTypes ?? []);
               preferences.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
               preferences.setBusinessName(businessName: response.data?.clients?.first.clientDetail?.bussinessName ?? '');
@@ -564,6 +565,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 add(HomeEvent.getProductSalesListEvent(context: event.context));
                 add(HomeEvent.getPermissionList(context: event.context));
                 add(HomeEvent.getRecommendationProductsListEvent(context: event.context));
+                add(HomeEvent.checkVersionOfAppEvent(context: event.context));
             //  }
             }
           } catch (e) {
@@ -573,7 +575,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           try {
             emit(state.copyWith(isShimmering: true, ));
             final res = await DioClient(event.context).post(
-              AppUrls.getRecommendationProductsUrl,
+              AppUrlEndPoints.getRecommendationProductsUrl,
               data: const RecommendationProductsReqModel(pageNum: 1, pageLimit: AppConstants.defaultPageLimit).toJson(),
             );
             RecommendationProductsResModel response = RecommendationProductsResModel.fromJson(res);
@@ -613,7 +615,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           try {
             GlobalSearchReqModel globalSearchReqModel = GlobalSearchReqModel(search: state.searchController.text, sortField: AppStrings.sortFieldString, sortOrder: AppStrings.sortOrderString);
             emit(state.copyWith(isSearching: true, bottlePrice: preferences.getBottleTax()));
-            final res = await DioClient(event.context).post(AppUrls.getGlobalSearchResultUrl, data: globalSearchReqModel.toJson());
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getGlobalSearchResultUrl, data: globalSearchReqModel.toJson());
             GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
 
             if (state.searchController.text == '') {
@@ -718,7 +720,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         } else if (event is _getProductCategoriesListEvent) {
           try {
             emit(state.copyWith(isShimmering: true));
-            final res = await DioClient(event.context).post(AppUrls.getProductCategoriesUrl, data: const ProductCategoriesReqModel(pageNum: 1, pageLimit: 18).toJson());
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getProductCategoriesUrl, data: const ProductCategoriesReqModel(pageNum: 1, pageLimit: 18).toJson());
             ProductCategoriesResModel response = ProductCategoriesResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               List<SearchModel> searchList = [];
@@ -740,8 +742,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         } else if (event is _checkVersionOfAppEvent) {
           final checker = StoreVersionChecker();
+          printData('version :${checker.currentVersion.toString()}');
           checker.checkUpdate().then((value) {
             if (value.canUpdate && Platform.isAndroid) {
+
               customShowUpdateDialog(event.context, preferences.getAppLanguage(), value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
             } else if (value.canUpdate && Platform.isIOS) {
               customShowUpdateDialog(event.context, preferences.getAppLanguage(), value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
@@ -749,7 +753,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           });
         } else if (event is _relatedProductsEvent) {
           emit(state.copyWith(isRelatedShimmering: true));
-          final res = await DioClient(event.context).post(AppUrls.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
+          final res = await DioClient(event.context).post(AppUrlEndPoints.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
 
           RelatedProductResModel response = RelatedProductResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
@@ -779,7 +783,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           try {
             emit(state.copyWith(pesachBannerShimmering: true, retryLoading: event.isRetryLoading));
 
-            final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
+            final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
 
             printData('general settings = ${response.data.toString()}');
@@ -813,7 +817,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         } else if (event is _getPermissionList) {
           if (preferences.getSubUser()) {
             try {
-              final res = await DioClient(event.context).get(path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+              final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
               if (response.status == AppConstants.code_200) {
                 var res = response.data?.permissions;
@@ -843,7 +847,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         } else if (event is _userApproveEvent) {
           try {
-            final res = await DioClient(event.context).post(AppUrls.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
+            final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               if (!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)) {

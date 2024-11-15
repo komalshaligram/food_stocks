@@ -29,7 +29,7 @@ class PreviewScreen extends StatelessWidget {
         ),
       ),
       body: SfPdfViewer.network(
-        '${AppUrls.baseFileUrl}${args?[AppStrings.privacyPolicyPdfString]}'
+        '${AppUrlEndPoints.baseFileUrl}${args?[AppStrings.privacyPolicyPdfString]}'
       ),
     );
   }

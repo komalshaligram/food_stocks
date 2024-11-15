@@ -28,7 +28,7 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
         try {
           emit(state.copyWith(isShimmering: true , subUserId: event.subUserId));
           final res = await DioClient(event.context).get(
-              path: '${AppUrls.getAccountPermissionUrl}${event.subUserId}');
+              path: '${AppUrlEndPoints.getAccountPermissionUrl}${event.subUserId}');
           AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             List<PermissionModel>permissionList = [];
@@ -125,7 +125,7 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
 
 
           final response = await DioClient(event.context).put(
-              path: '${AppUrls.updatePermissionUrl}${state.subUserId}',
+              path: '${AppUrlEndPoints.updatePermissionUrl}${state.subUserId}',
               data: updatePermissionReq);
 
             if (response[AppStrings.statusString] == AppConstants.code_200) {

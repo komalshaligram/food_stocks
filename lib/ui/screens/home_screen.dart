@@ -124,7 +124,7 @@ class HomeScreenWidget extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(20),
                                       child: CachedNetworkImage(
                                         placeholder: (context, url) => const Center(child: CupertinoActivityIndicator()),
-                                        imageUrl: '${AppUrls.baseFileUrl}${state.userImageUrl}',
+                                        imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.userImageUrl}',
                                         fit: BoxFit.cover,
                                         errorWidget: (context, url, error) {
                                           return Container(
@@ -238,7 +238,6 @@ class HomeScreenWidget extends StatelessWidget {
                                     bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
                                     bloc.add(HomeEvent.getProductSalesListEvent(context: context));
                                     handleMessageOnBackground();
-
                                     bloc.add(const HomeEvent.getPreferencesDataEvent());
                                     bloc.add(HomeEvent.getMessageListEvent(context: context));
                                     bloc.add(HomeEvent.getCartCountEvent(context: context));
@@ -247,8 +246,6 @@ class HomeScreenWidget extends StatelessWidget {
                                       bloc.add(HomeEvent.generalSettings(context: context, dialogContext: context, isRetryLoading: false));
                                     }
                                     bloc.add(HomeEvent.getPermissionList(context: context));
-
-
                                     state.refreshController.refreshCompleted();
                                     state.refreshController.loadComplete();
                                   },
@@ -267,7 +264,7 @@ class HomeScreenWidget extends StatelessWidget {
                                               padding: const EdgeInsets.only(left: 8.0, right: 8),
                                               child: CachedNetworkImage(
                                                 placeholder: (context, url) => const PesachBannerShimmerWidget(),
-                                                imageUrl: '${AppUrls.baseFileUrl}${state.pesachBannerURL}',
+                                                imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.pesachBannerURL}',
                                                 errorWidget: (context, url, error) {
                                                   return Container(
                                                     color: AppColors.whiteColor,
@@ -741,7 +738,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                       },
                                                       child: PhotoView(
                                                         imageProvider: NetworkImage(
-                                                          '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                          '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                         ),
                                                       ),
                                                     ),

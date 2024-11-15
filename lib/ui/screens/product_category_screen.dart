@@ -210,7 +210,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_10), topRight: Radius.circular(AppConstants.radius_10)),
                 child: Image.network(
-                  "${AppUrls.baseFileUrl}$categoryImage",
+                  "${AppUrlEndPoints.baseFileUrl}$categoryImage",
                   fit: BoxFit.cover,
                   alignment: Alignment.center,
                   loadingBuilder: (context, child, loadingProgress) {
