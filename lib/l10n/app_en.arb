@@ -552,6 +552,15 @@
   "savings_for_sales": "Savings for sales",
   "not_minimum_order": "Not minimum order",
   "show_all_results": "Show All Results",
-  "bank_transfer_information": "Bank transfer information"
-
+  "bank_transfer_information": "Bank transfer information",
+  "pay_with_bank_check": "Pay with bank check",
+  "pay_with_bank_check": "Pay with bank check",
+  "due_date" : "Due Date",
+  "paid" : "Paid",
+   "pending" : "Pending",
+  "wallet" : "Wallet",
+   "bank_transfer" : "Bank Transfer",
+   "credit_card": "Credit Card",
+   "bank_check" : "Bank Check",
+   "payment_type" :"Payment Type"
 }

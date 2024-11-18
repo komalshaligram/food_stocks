@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -13,6 +12,7 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/utils/themes/app_constants.dart';
 part 'account_permission_event.dart';
 part 'account_permission_state.dart';
 part 'account_permission_bloc.freezed.dart';

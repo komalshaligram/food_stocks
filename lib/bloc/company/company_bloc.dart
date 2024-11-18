@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/data/model/res_model/company_res_model/company_res_model.dart';
+import '../../data/model/res_model/company_res_model/company_res_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';

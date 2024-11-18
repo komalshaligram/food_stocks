@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../bloc/invoice/invoice_bloc.dart';
 import '../../data/model/res_model/invoices_res/invoices_res_model.dart';
@@ -116,6 +116,9 @@ class InvoiceScreenWidget extends StatelessWidget {
         );
       },
     );
+
+
+
   }
 
   Widget invoiceList({
@@ -192,7 +195,7 @@ class InvoiceScreenWidget extends StatelessWidget {
                     titleMaxLine: 2,
                     maxLine: 2,
                     title: AppLocalizations.of(context)!.invoice_status,
-                    value: invoiceStatue.toCapitalized(),
+                    value: getType(invoiceStatue.toString(), context).toString(),
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextSize: AppConstants.font_12,
@@ -233,6 +236,21 @@ class InvoiceScreenWidget extends StatelessWidget {
                     titleTextSize: AppConstants.font_12,
                     columnPadding: 2,
                     valueTextWeight: FontWeight.w400),
+                4.width,
+              /*  CommonOrderContentWidget(
+                    backGroundColor: AppColors.iconBGColor,
+                    borderCoder: AppColors.lightBorderColor,
+                    flexValue: 3,
+                    titleMaxLine: 2,
+                    maxLine: 2,
+                    title: AppLocalizations.of(context)!.due_date,
+                    value: invoiceType.toCapitalized(),
+                    titleColor: AppColors.mainColor,
+                    valueColor: AppColors.blackColor,
+                    valueTextSize: AppConstants.font_12,
+                    titleTextSize: AppConstants.font_12,
+                    columnPadding: 2,
+                    valueTextWeight: FontWeight.w400),*/
               ],
             ),
 
@@ -241,6 +259,16 @@ class InvoiceScreenWidget extends StatelessWidget {
       ),
     );
   }
+
+  String? getType(String type , BuildContext context) {
+    if (type == AppStrings.pending) {
+      return AppLocalizations.of(context)!.pending;
+    } else if (type == AppStrings.paid) {
+      return AppLocalizations.of(context)!.paid;
+    }
+    return '';
+  }
+
 }
 
 

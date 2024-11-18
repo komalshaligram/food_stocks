@@ -5,12 +5,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:food_stock/data/storage/shared_preferences_helper.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_styles.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../data/storage/shared_preferences_helper.dart';
+import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
@@ -35,7 +35,7 @@ enum SnackBarType {
 
 bool isTablet(BuildContext context) {
   bool isTablet = false;
-  if (MediaQuery.of(context).size.height < 700) {
+  if (MediaQuery.of(context).size.height < 800) {
     isTablet = false;
   } else {
     return true;

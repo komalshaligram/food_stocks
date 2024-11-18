@@ -23,9 +23,6 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
     on<InvoiceEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
-
-
-
       if (event is _getInvoicesDataEvent) {
 
         if (state.isLoadMore) {

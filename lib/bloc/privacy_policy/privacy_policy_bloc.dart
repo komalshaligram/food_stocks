@@ -6,8 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/app_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';

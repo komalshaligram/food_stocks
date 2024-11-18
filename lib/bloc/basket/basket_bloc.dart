@@ -2,16 +2,16 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/data/model/product_stock_model/product_stock_model.dart';
-import 'package:food_stock/data/model/product_supplier_model/product_supplier_model.dart';
-import 'package:food_stock/data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart' as insert;
-import 'package:food_stock/data/model/req_model/order_send_req_model/order_send_req_model.dart' as order;
-import 'package:food_stock/data/model/req_model/product_details_req_model/product_details_req_model.dart';
-import 'package:food_stock/data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
-import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
-import 'package:food_stock/data/model/supplier_sale_model/supplier_sale_model.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import '../../data/model/product_stock_model/product_stock_model.dart';
+import '../../data/model/product_supplier_model/product_supplier_model.dart';
+import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart' as insert;
+import '../../data/model/req_model/order_send_req_model/order_send_req_model.dart' as order;
+import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
+import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
+import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
+import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -115,6 +115,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   weight: element.productDetails?.itemsWeight?.toDouble() ?? 0,
                   lowStock: element.lowStock,
                   productStock: element.productStock?.toDouble(),
+                  supplierName : element.suppliers?.first.contactName ?? ''
                 ));
               });
 
@@ -972,9 +973,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 emit(state.copyWith(isLoading: false, isOrderPending: true, isRemoveProcess: false,isPaymentFail: false));
               }else if(response.status == AppConstants.code_424){ ///credit card related error
                 printData('error:${response.message}');
-                emit(state.copyWith(isLoading: false, isRemoveProcess: false, isPaymentFail: true,isWalletRelatedError: false,errorString: response.message!.contains('MESSAGE')?AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ?? response.message!,
-                    event.context):response.message!,
+                emit(state.copyWith(isLoading: false, isRemoveProcess: false, isPaymentFail: true,isWalletRelatedError: false,
+                  errorString: response.message!.contains('MESSAGE')?AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ?? response.message!, event.context):response.message!,
                 ));
               }
               else {

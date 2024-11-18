@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/data/model/bottom_nav_model/bottom_nav_model.dart';
-import 'package:food_stock/data/storage/shared_preferences_helper.dart';
+import '../../data/model/bottom_nav_model/bottom_nav_model.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../ui/utils/themes/app_strings.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:food_stock/bloc/splash/splash_bloc.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import '../../bloc/splash/splash_bloc.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_img_path.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/storage/shared_preferences_helper.dart';

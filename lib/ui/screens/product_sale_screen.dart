@@ -2,17 +2,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/product_sale/product_sale_bloc.dart';
+import '../../bloc/product_sale/product_sale_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
-import 'package:food_stock/ui/widget/common_sale_description_dialog.dart';
-import 'package:food_stock/ui/widget/common_sale_listview.dart';
-import 'package:food_stock/ui/widget/product_sale_screen_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/widget/common_product_sale_item_widget.dart';
+import '../../ui/widget/common_sale_description_dialog.dart';
+import '../../ui/widget/common_sale_listview.dart';
+import '../../ui/widget/product_sale_screen_shimmer_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
+import '../../ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
@@ -127,10 +127,14 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         itemCount: state.productSalesList.length,
                                         physics: const NeverScrollableScrollPhysics(),
                                         padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.48),
+                                        gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
+                                            childAspectRatio: isTablet(context) ? 0.60 :0.48
+                                        ),
                                         //getChildAspectRatio(context)),
                                         itemBuilder: (context, index) {
+                                          printData('screenheight+____${getScreenHeight(context).toString()}');
                                           return buildProductSaleGridViewItem(
+
                                             productStock: state.productSalesList[index].productStock.toString(),
                                             isPesach: state.productSalesList[index].isPesach ?? false,
                                             lowStock: state.productSalesList[index].lowStock ?? '',

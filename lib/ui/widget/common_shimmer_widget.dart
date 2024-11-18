@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
+import '../../ui/utils/app_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CommonShimmerWidget extends StatelessWidget {

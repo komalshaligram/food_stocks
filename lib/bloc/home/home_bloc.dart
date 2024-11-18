@@ -4,13 +4,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smartlook/flutter_smartlook.dart';
-import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
-import 'package:food_stock/data/model/req_model/update_cart/update_cart_req_model.dart';
-import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
-import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
-import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
-import 'package:food_stock/data/model/res_model/setting_res_model/setting_res_model.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import '../../data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
+import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
+import '../../data/model/res_model/message_count_res_model/message_count_res_model.dart';
+import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -48,7 +48,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
-import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
+import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
@@ -65,9 +65,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       if (preferences.getGuestUser()) {
       } else {
         if (event is _getPreferencesDataEvent) {
-          emit(state.copyWith(isIncludedVat: preferences.getIsIncludedVat(), isSaleOn: preferences.getShowSale(), isSubUserSeeWallet: preferences.getCanSeeWallet(), isSubUserAddToBasket: preferences.getCanAddToBasket(), userImageUrl: preferences.getUserImageUrl(), userCompanyLogoUrl: preferences.getUserCompanyLogoUrl(), messageCount: preferences.getMessageCount(), cartCount: preferences.getCartCount(), bottlePrice: preferences.getBottleTax(),));
+          emit(state.copyWith(
+            isIncludedVat: preferences.getIsIncludedVat(),
+            isSaleOn: preferences.getShowSale(),
+            isSubUserSeeWallet: preferences.getCanSeeWallet(),
+            isSubUserAddToBasket: preferences.getCanAddToBasket(),
+            userImageUrl: preferences.getUserImageUrl(), userCompanyLogoUrl: preferences.getUserCompanyLogoUrl(), messageCount: preferences.getMessageCount(), cartCount: preferences.getCartCount(), bottlePrice: preferences.getBottleTax(),));
         } else if (event is _getCartCountEvent) {
-          printData('id_______${preferences.getUserId()}');
           try {
             final res = await DioClient(event.context).post(
               '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
@@ -243,20 +247,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         } else if (event is _getProductSalesListEvent) {
           try {
-            emit(state.copyWith(isProductSaleShimmering: true));
+            emit(state.copyWith(isProductSaleShimmering: true , allShimmering: true));
             final res = await DioClient(event.context).post(AppUrlEndPoints.getSaleProductsUrl, data: const ProductSalesReqModel(pageNum: 1, pageLimit: AppConstants.defaultPageLimit).toJson());
             ProductSalesResModel response = ProductSalesResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {
+
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               List<ProductStockModel> stockList = [];
 
               stockList.addAll(response.data?.map((saleProduct) => ProductStockModel(maxQty: (saleProduct.sale?.isSale ?? false) ? int.parse(saleProduct.sale?.saleMaxQuantity ?? '0') : -1, productId: saleProduct.id ?? '', stock: (saleProduct.productStock.toString()))) ?? []);
               productStockList[3].addAll(stockList);
-
+              add(HomeEvent.getRecommendationProductsListEvent(context: event.context));
               emit(state.copyWith(productSalesList: response.data ?? [], productStockList: productStockList, isProductSaleShimmering: false,allShimmering:false));
+
+
             } else {
-              emit(state.copyWith(isProductSaleShimmering: false,allShimmering:false));
+              add(HomeEvent.getRecommendationProductsListEvent(context: event.context));
+              emit(state.copyWith(isProductSaleShimmering: false,allShimmering: false,));
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
@@ -264,8 +272,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               );
             }
           } on ServerException {
+            add(HomeEvent.getRecommendationProductsListEvent(context: event.context));
             emit(state.copyWith(allShimmering: false,isProductSaleShimmering: false));
           } catch (exc) {
+            add(HomeEvent.getRecommendationProductsListEvent(context: event.context));
             emit(state.copyWith(allShimmering: false,isProductSaleShimmering: false));
           }
         } else if (event is _increaseQuantityOfProduct) {
@@ -517,7 +527,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         } else if (event is _getProfileDetailsEvent) {
           try {
-            emit(state.copyWith(allShimmering: true));
+
             final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl,
                 data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
                 options: Options(
@@ -554,17 +564,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: preferences.getPhoneNumber());
               }
             //  if(state.recommendedProductsList.isEmpty){
-                add(HomeEvent.userApproveEvent(context: event.context));
+              add(HomeEvent.getPermissionList(context: event.context));
                 if (!state.isAppOnMaintenance) {
                   add(HomeEvent.generalSettings(context: event.context, dialogContext: event.context, isRetryLoading: false));
                 }
-                add(const HomeEvent.getPreferencesDataEvent());
+                add(HomeEvent.getPreferencesDataEvent());
                 add(HomeEvent.getCartCountEvent(context: event.context));
                 add(HomeEvent.getMessageListEvent(context: event.context));
                 add(HomeEvent.getOrderCountEvent(context: event.context));
-                add(HomeEvent.getProductSalesListEvent(context: event.context));
-                add(HomeEvent.getPermissionList(context: event.context));
-                add(HomeEvent.getRecommendationProductsListEvent(context: event.context));
                 add(HomeEvent.checkVersionOfAppEvent(context: event.context));
             //  }
             }
@@ -573,7 +580,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         } else if (event is _getRecommendationProductsListEvent) {
           try {
-            emit(state.copyWith(isShimmering: true, ));
+            emit(state.copyWith(isShimmering: true,));
             final res = await DioClient(event.context).post(
               AppUrlEndPoints.getRecommendationProductsUrl,
               data: const RecommendationProductsReqModel(pageNum: 1, pageLimit: AppConstants.defaultPageLimit).toJson(),
@@ -590,7 +597,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       )) ??
                   []);
               productStockList[1].addAll(stockList);
-              emit(state.copyWith(recommendedProductsList: response.data ?? [], productStockList: productStockList, isShimmering: false,));
+              emit(state.copyWith(recommendedProductsList: response.data ?? [], productStockList: productStockList, isShimmering: false,
+              ));
             } else {
               emit(state.copyWith(isShimmering: false,));
               CustomSnackBar.showSnackBar(
@@ -600,9 +608,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               );
             }
           } on ServerException {
-            emit(state.copyWith(isShimmering: false,allShimmering: false));
+            emit(state.copyWith(isShimmering: false, ));
           } catch (exc) {
-            emit(state.copyWith(isShimmering: false,allShimmering: false));
+            emit(state.copyWith(isShimmering: false, ));
           }
         } else if (event is _changeCategoryExpansion) {
           if (event.isOpened != null) {
@@ -815,6 +823,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(pesachBannerShimmering: false, retryLoading: false));
           }
         } else if (event is _getPermissionList) {
+        printData('preferences.getSubUser()___${preferences.getSubUser()}');
+        printData('preferences.getSubUser()___${preferences.getCanAddToBasket()}');
           if (preferences.getSubUser()) {
             try {
               final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
@@ -833,6 +843,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
                 preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices ?? false);
+                printData('home___${res?.canAddToCart}');
                 emit(state.copyWith(
                   isAccountPermissionShimmering: false,
                   isSubUserSeeWallet: res?.canSeeWallet ?? false,

@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';

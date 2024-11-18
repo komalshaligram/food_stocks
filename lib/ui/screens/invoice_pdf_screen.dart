@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../bloc/invoice_pdf/invoice_pdf_bloc.dart';

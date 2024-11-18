@@ -50,6 +50,8 @@ class Datum with _$Datum {
     String? comaxInvoicePrice,
     String? rivchitInvoicePrice,
     String? totalRefundAmount,
+    String? dueDate,
+    String? paymentMethod,
 
   }) = _Datum;
 

@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:food_stock/data/model/res_model/get_messages_res_model/get_messages_res_model.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import '../../data/model/res_model/get_messages_res_model/get_messages_res_model.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

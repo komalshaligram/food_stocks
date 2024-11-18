@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/data/model/req_model/terms_condition/terms_condition_req_model.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/way_of_payment/way_of_payment_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
+import '../../ui/widget/common_shimmer_widget.dart';
 
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';

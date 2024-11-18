@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/supplier_products/supplier_products_bloc.dart';
-import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
-import 'package:food_stock/data/model/search_model/search_model.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import '../../bloc/supplier_products/supplier_products_bloc.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import '../../data/model/search_model/search_model.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
-import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:food_stock/ui/widget/supplier_products_screen_shimmer_widget.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/widget/common_product_sale_item_widget.dart';
+import '../../ui/widget/common_shimmer_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
+import '../../ui/widget/supplier_products_screen_shimmer_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
@@ -169,6 +169,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context,state.isSaleOn)),
                                                   itemBuilder: (context, index) {
                                                     return CommonProductSaleItemWidget(
+                                                        imageHeight: isTablet(context) ? 100 : 70,
                                                         isGuestUser: state.isGuestUser,
                                                         height: AppConstants.salesProductItemHeight,
                                                         width: 140,

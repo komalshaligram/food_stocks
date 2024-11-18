@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:food_stock/bloc/order_summary/order_summary_bloc.dart';
+import '../../bloc/order_summary/order_summary_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/widget/custom_button_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/widget/custom_button_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';

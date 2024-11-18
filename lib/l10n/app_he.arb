@@ -550,6 +550,17 @@
   "savings_for_sales": "Savings for sales",
   "not_minimum_order": "Not minimum order",
   "show_all_results": "הצג את כל התוצאות ",
-  "bank_transfer_information": "פרטי חשבון להעברה בנקאית"
+  "bank_transfer_information": "פרטי חשבון להעברה בנקאית",
+  "pay_with_bank_check": "פרטי חשבון להעברה בנקאית",
+  "due_date" : "תאריך לתשלום",
+  "paid" : "שולם",
+  "pending" : "ממתין לתשלום",
+  "wallet" : "ארנק",
+  "bank_transfer" : "העברה בנקאית",
+  "credit_card": "כרטיס אשראי",
+  "bank_check" : "שיק",
+  "payment_type" :"Payment Type"
+
+
 
 }

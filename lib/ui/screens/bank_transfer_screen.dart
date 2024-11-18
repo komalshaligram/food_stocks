@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/bloc/bank_transfer/bank_transfer_bloc.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
+import '../../bloc/bank_transfer/bank_transfer_bloc.dart';
+import '../../ui/utils/app_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -19,20 +20,22 @@ class BankTransferScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => BankTransferBloc()..add(BankTransferEvent.getBankTransferInfoEvent(context: context)),
-      child: const BankTransferWidget(),
+      child:  BankTransferWidget(),
     );
   }
 }
 
 class BankTransferWidget extends StatefulWidget {
-  const BankTransferWidget({super.key});
+   BankTransferWidget({super.key});
+
+
 
   @override
   State<BankTransferWidget> createState() => _BankTransferWidgetState();
 }
 
 class _BankTransferWidgetState extends State<BankTransferWidget> {
-
+  TextEditingController textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BankTransferBloc, BankTransferState>(
@@ -57,6 +60,27 @@ class _BankTransferWidgetState extends State<BankTransferWidget> {
                 ),
               ),
             ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: GestureDetector(
+                    onTap: () {
+                      textController = TextEditingController(text:state.bankTransferDetails);
+                      Clipboard.setData(ClipboardData(text:
+                      textController.text))
+                          .then((_) {
+                        textController.clear();
+                        CustomSnackBar.showSnackBar(context: context, title: 'Copied to your clipboard !', type: SnackBarType.success);
+                      });
+                    },
+                    child: Text('copy',
+                      style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.smallFont,
+                        color: AppColors.redColor,
+                      ),
+                    )),
+              ),
+            ],
             backgroundColor: AppColors.whiteColor,
             titleSpacing: 0,
             elevation: 0,
@@ -71,7 +95,13 @@ class _BankTransferWidgetState extends State<BankTransferWidget> {
                 border: Border.all(color: AppColors.borderColor)
               ),
               padding: const EdgeInsets.only(left:10.0,right: 10,top: 8,bottom: 8),
-              child: state.isLoading?const CircularProgressIndicator():Text(state.bankTransferDetails),
+              child: state.isLoading?const CircularProgressIndicator():
+              SelectableText(state.bankTransferDetails,
+              style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.smallFont,
+                color: AppColors.blackColor,
+              ),
+              ),
             ),
           ),
 

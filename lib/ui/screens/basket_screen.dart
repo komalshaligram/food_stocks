@@ -4,22 +4,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/basket/basket_bloc.dart';
-import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import '../../bloc/basket/basket_bloc.dart';
+import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_styles.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:food_stock/ui/widget/basket_screen_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/common_product_details_widget.dart';
-import 'package:food_stock/ui/widget/custom_button_widget.dart';
-import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/utils/themes/app_img_path.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/widget/basket_screen_shimmer_widget.dart';
+import '../../ui/widget/common_product_details_widget.dart';
+import '../../ui/widget/custom_button_widget.dart';
+import '../../ui/widget/product_details_shimmer_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
@@ -134,7 +134,12 @@ class BasketScreenWidget extends StatelessWidget {
                         bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
                       });
                 },
+                positiveOnTap3: () {
+                  Navigator.pop(context);
+                  bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck));
+                },
                 positiveTitle1: AppLocalizations.of(context)!.pay_with_wallet,
+                positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
                 positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
               );
             },
@@ -305,6 +310,11 @@ class BasketScreenWidget extends StatelessWidget {
               bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
             });
       },
+      positiveOnTap2: () {
+        Navigator.pop(context);
+        bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck));
+      },
+      positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_check,
     );
   }
 
@@ -342,8 +352,13 @@ class BasketScreenWidget extends StatelessWidget {
               bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
             });
       },
+      positiveOnTap3: () {
+        Navigator.pop(context);
+        bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck));
+      },
       positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
       positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
+      positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
     );
   }
 
@@ -563,7 +578,11 @@ class BasketScreenWidget extends StatelessWidget {
                                 style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.bold),
                               ),
                               5.height,
-                              // Text('Supplier Name'),
+                          /*  Text(state.basketProductList[index].supplierName ?? '',
+                              style: TextStyle(
+                                color: AppColors.mainColor
+                              ),
+                              ),*/
                               productStock == 0 || productStock == 0.0
                                   ? Text(
                                       AppLocalizations.of(context)!.product_no_longer_in_stock,
@@ -685,6 +704,7 @@ class BasketScreenWidget extends StatelessWidget {
                         positiveOnTap: () {
                           if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
                             if (state.supplierCount == 1) {
+                              Navigator.pop(context1);
                               paymentOptionPopup(state, context, bloc, isFromRemovePopUp: true);
                               //   bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: true, isFromDialog: false, paymentMethod: ''));
                             } else {
@@ -724,10 +744,22 @@ class BasketScreenWidget extends StatelessWidget {
               },
               positiveOnTap2: () {
                 Navigator.pop(context);
+                bankTransferDialog(
+                    context: context1,
+                    language: state.language,
+                    text: state.bankTransferInfo,
+                    function: () {
+                      bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
+                    });
                 bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.bankTransfer));
+              },
+              positiveOnTap3: () {
+                Navigator.pop(context);
+                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck));
               },
               positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
               positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
+              positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
             );
           } else {
             return CustomOneButtonDialog(
