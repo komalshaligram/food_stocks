@@ -134,12 +134,12 @@ class BasketScreenWidget extends StatelessWidget {
                         bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
                       });
                 },
-                positiveOnTap3: () {
+              /*  positiveOnTap3: () {
                   Navigator.pop(context);
                   bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck));
-                },
+                },*/
                 positiveTitle1: AppLocalizations.of(context)!.pay_with_wallet,
-                positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
+             //   positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
                 positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
               );
             },
@@ -310,11 +310,11 @@ class BasketScreenWidget extends StatelessWidget {
               bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
             });
       },
-      positiveOnTap2: () {
+     /* positiveOnTap2: () {
         Navigator.pop(context);
         bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck));
-      },
-      positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_check,
+      },*/
+     // positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_check,
     );
   }
 
@@ -352,13 +352,13 @@ class BasketScreenWidget extends StatelessWidget {
               bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
             });
       },
-      positiveOnTap3: () {
+    /*  positiveOnTap3: () {
         Navigator.pop(context);
         bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck));
-      },
+      },*/
       positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
       positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
-      positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
+     // positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
     );
   }
 
@@ -753,13 +753,13 @@ class BasketScreenWidget extends StatelessWidget {
                     });
                 bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.bankTransfer));
               },
-              positiveOnTap3: () {
+              /*positiveOnTap3: () {
                 Navigator.pop(context);
                 bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck));
-              },
+              },*/
               positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
               positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
-              positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
+             // positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
             );
           } else {
             return CustomOneButtonDialog(
