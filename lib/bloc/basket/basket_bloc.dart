@@ -955,7 +955,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 AppUrlEndPoints.createOrderUrl,
                 data: reqMap,
               );
-
+              debugPrint(reqMap.toString());
               OrderSendResModel response = OrderSendResModel.fromJson(res);
 
               if (response.status == AppConstants.code_201) { ///success

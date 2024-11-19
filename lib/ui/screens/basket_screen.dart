@@ -724,7 +724,13 @@ class BasketScreenWidget extends StatelessWidget {
               },
               positiveOnTap2: () {
                 Navigator.pop(context);
-                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.bankTransfer));
+                bankTransferDialog(
+                    context: context1,
+                    language: state.language,
+                    text: state.bankTransferInfo,
+                    function: () {
+                      bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
+                    });
               },
               positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
               positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
