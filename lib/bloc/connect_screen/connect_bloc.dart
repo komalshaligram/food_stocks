@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/data/storage/shared_preferences_helper.dart';
-import 'package:food_stock/routes/app_routes.dart';
+import '../../data/storage/shared_preferences_helper.dart';
+import '../../routes/app_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

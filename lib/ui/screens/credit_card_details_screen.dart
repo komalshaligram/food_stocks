@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
+import '../../ui/utils/app_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/widget/container_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/widget/container_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/credit_card_details/credit_card_details_bloc.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../utils/themes/app_colors.dart';

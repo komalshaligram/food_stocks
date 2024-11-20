@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_colors.dart';
 
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/connect_screen/connect_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';

@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_styles.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_styles.dart';
 import '../utils/themes/app_colors.dart';
 
 

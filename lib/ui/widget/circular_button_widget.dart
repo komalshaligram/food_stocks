@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 

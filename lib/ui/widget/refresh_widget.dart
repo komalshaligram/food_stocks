@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../utils/themes/app_colors.dart';

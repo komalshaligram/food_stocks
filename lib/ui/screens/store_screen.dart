@@ -6,20 +6,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
-import 'package:food_stock/data/model/search_model/search_model.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
-import 'package:food_stock/ui/utils/themes/app_styles.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:food_stock/ui/widget/common_marquee_widget.dart';
-import 'package:food_stock/ui/widget/common_product_button_widget.dart';
-import 'package:food_stock/ui/widget/common_product_list_widget.dart';
-import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
-import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import '../../data/model/search_model/search_model.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_img_path.dart';
+import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/widget/common_marquee_widget.dart';
+import '../../ui/widget/common_product_button_widget.dart';
+import '../../ui/widget/common_product_list_widget.dart';
+import '../../ui/widget/common_product_sale_item_widget.dart';
+import '../../ui/widget/common_shimmer_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
@@ -92,9 +92,9 @@ class StoreScreenWidget extends StatelessWidget {
               }
               bloc.add(StoreEvent.getCompaniesListEvent(context: context));
               bloc.add(StoreEvent.getSuppliersListEvent(context: context));
-              bloc.add(StoreEvent.getProductSalesListEvent(context: context));
-              bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
-              bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
+            //  bloc.add(StoreEvent.getProductSalesListEvent(context: context));
+            //  bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
+             // bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
             },
             child: Scaffold(
               backgroundColor: AppColors.pageColor,

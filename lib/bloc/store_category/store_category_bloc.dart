@@ -1,16 +1,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/data/error/exceptions.dart';
-import 'package:food_stock/data/model/req_model/planogram_req_model/planogram_req_model.dart';
-import 'package:food_stock/data/model/req_model/product_subcategories_req_model/product_subcategories_req_model.dart';
-import 'package:food_stock/data/model/res_model/planogram_res_model/planogram_res_model.dart';
-import 'package:food_stock/data/model/res_model/product_subcategories_res_model/product_subcategories_res_model.dart';
-import 'package:food_stock/repository/dio_client.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import '../../data/error/exceptions.dart';
+import '../../data/model/req_model/planogram_req_model/planogram_req_model.dart';
+import '../../data/model/req_model/product_subcategories_req_model/product_subcategories_req_model.dart';
+import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart';
+import '../../data/model/res_model/product_subcategories_res_model/product_subcategories_res_model.dart';
+import '../../repository/dio_client.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';

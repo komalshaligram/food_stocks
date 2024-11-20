@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/themes/app_styles.dart';
+import '../../ui/utils/themes/app_styles.dart';
 
 class ButtonWidget extends StatelessWidget {
   final String buttonText;

@@ -168,6 +168,9 @@ class AppStrings {
  static const wallet = 'wallet';
  static const creditCard = 'creditCard';
  static const bankTransfer = 'bankTransfer';
+  static const bankCheck = 'bankCheck';
+  static const pending = 'pending';
+  static const paid = 'paid';
 
  //types
   static const credit = 'credit';
@@ -206,7 +209,7 @@ class AppStrings {
   static const userPhoneNum =  "User phone number";
 
   static String getLocalizedStrings(String key, BuildContext context) {
-    printData('Key$key');
+    printData('Key   $key');
     switch (key) {
       case 'errmessage':
         return AppLocalizations.of(context)!.err_message;

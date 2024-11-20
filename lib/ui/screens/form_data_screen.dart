@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
+import '../../ui/utils/app_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/form_data/form_data_bloc.dart';
 import '../../data/storage/shared_preferences_helper.dart';

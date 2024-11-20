@@ -1,4 +1,4 @@
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {

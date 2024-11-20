@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/company_products/company_products_bloc.dart';
-import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../bloc/company_products/company_products_bloc.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
@@ -240,7 +240,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                               lowStock: (state.productList[index].product?.lowStock.toString() ?? ''),
                                               height: AppConstants.relatedProductItemHeight,
                                               width:  140,
-                                              imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                               productStock: (state.productList[index].product?.productStock.toString() ?? '0'),
                                               saleImage: state.productList[index].product?.mainImage ??
                                                   '',

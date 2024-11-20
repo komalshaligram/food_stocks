@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_colors.dart';
@@ -81,12 +81,12 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                         ? saleImage.isNotEmpty
                             ? CachedNetworkImage(
                                 imageUrl: "${AppUrlEndPoints.baseFileUrl}$saleImage",
-                                height: imageHeight,
+                                height: isTablet(context) ? 110 : imageHeight,
                                 fit: BoxFit.fitHeight,
                                 placeholder: (context, url) {
                                   return CommonShimmerWidget(
                                     child: Container(
-                                      height: imageHeight,
+                                      height: isTablet(context) ? 110 : imageHeight,
                                       width: 70,
                                       decoration: BoxDecoration(
                                         color: AppColors.whiteColor,
@@ -96,17 +96,18 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                                   );
                                 },
                                 errorWidget: (context, error, stackTrace) {
-                                  return Image.asset(AppImagePath.imageNotAvailable5, height: imageHeight, width: double.maxFinite, fit: BoxFit.cover);
+                                  return Image.asset(AppImagePath.imageNotAvailable5,
+                                      height: isTablet(context) ? 110 : imageHeight, width: double.maxFinite, fit: BoxFit.cover);
                                 },
                               )
                             : Image.asset(
                                 AppImagePath.imageNotAvailable5,
-                                height: imageHeight,
+                                height: isTablet(context) ? 110 : imageHeight,
                                 width: 70,
                               )
                         : Image.asset(
                             AppImagePath.imageNotAvailable5,
-                            height: imageHeight,
+                            height: isTablet(context) ? 110 : imageHeight,
                             width: 70,
                           ),
                   ),

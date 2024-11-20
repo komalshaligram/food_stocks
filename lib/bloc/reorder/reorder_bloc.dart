@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/data/model/req_model/previous_order_products_req_model/previous_order_products_req_model.dart';
-import 'package:food_stock/data/model/res_model/previous_order_products_res_model/previous_order_products_res_model.dart';
+import '../../data/model/req_model/previous_order_products_req_model/previous_order_products_req_model.dart';
+import '../../data/model/res_model/previous_order_products_res_model/previous_order_products_res_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:html/parser.dart';
@@ -37,7 +37,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
-import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
+import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 
 part 'reorder_event.dart';
 
