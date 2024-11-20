@@ -591,6 +591,7 @@ class StoreScreenWidget extends StatelessWidget {
                         Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
                       },
                       onOutSideTap: () {
+                        state.searchController.clear();
                         bloc.add(const StoreEvent.changeCategoryExpansion(isOpened: false));
                       },
                       onSearchItemTap: () {
@@ -598,7 +599,7 @@ class StoreScreenWidget extends StatelessWidget {
                       },
                       controller: state.searchController,
                       searchList: state.searchList,
-                      searchResultWidget: state.searchList.isEmpty
+                      searchResultWidget: state.isSearching ? const SizedBox() :state.searchList.isEmpty
                           ? Center(
                               child: Text(
                                 AppLocalizations.of(context)!.search_result_not_found,

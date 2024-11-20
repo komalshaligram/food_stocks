@@ -613,6 +613,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(isShimmering: false, ));
           }
         } else if (event is _changeCategoryExpansion) {
+          if(event.isOpened == false){
+            emit(state.copyWith(searchList: []));
+          }
           if (event.isOpened != null) {
             emit(state.copyWith(isCategoryExpand: event.isOpened ?? false));
           } else {
