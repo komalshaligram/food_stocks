@@ -80,7 +80,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
               if (response.status == AppConstants.code_200) {
                 emit(state.copyWith(isCartCountChange: true));
-                await preferences.setCartCount(count: response.data?.data?.length ?? preferences.getCartCount());
+                 await preferences.setCartCount(count: response.data?.data?.length ?? preferences.getCartCount());
                 emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
               }
             }
