@@ -113,6 +113,8 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 pageNum: state.pageNum + 1,
                 isShimmering: false,
                 isLoadMore: false));
+            printData('previousOrder___${state.previousOrderProductsList.length}');
+            printData('totalFilteredCount___${response.metaData?.totalFilteredCount}');
             emit(state.copyWith(
                 isBottomOfProducts: state.previousOrderProductsList.length ==
                         (response.metaData?.totalFilteredCount ?? 0)
@@ -136,6 +138,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
       } else if (event is _refreshListEvent) {
         add(ReorderEvent.getPermissionList(context: event.context));
         emit(state.copyWith(
+          isShimmering: true,
             pageNum: 0,
             previousOrderProductsList: [],
             productStockList: [

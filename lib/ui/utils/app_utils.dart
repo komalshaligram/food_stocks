@@ -35,10 +35,10 @@ enum SnackBarType {
 
 bool isTablet(BuildContext context) {
   bool isTablet = false;
-  if (MediaQuery.of(context).size.height < 800) {
-    isTablet = false;
+  if ((getScreenHeight(context) > 800) && (getScreenWidth(context) > 500)) {
+      isTablet = true;
   } else {
-    return true;
+    return false;
   }
   return isTablet;
 }
