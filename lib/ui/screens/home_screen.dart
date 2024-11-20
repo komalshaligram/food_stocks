@@ -465,6 +465,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
                                   },
                                   onOutSideTap: () {
+                                    state.searchController.clear();
                                     bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: false));
                                   },
                                   onSearchItemTap: () {
@@ -472,7 +473,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   },
                                   controller: state.searchController,
                                   searchList: state.searchList,
-                                  searchResultWidget: state.searchList.isEmpty
+                                  searchResultWidget:state.isSearching ? const SizedBox() : state.searchList.isEmpty
                                       ? Center(
                                     child: Text(
                                       AppLocalizations.of(context)!.search_result_not_found,

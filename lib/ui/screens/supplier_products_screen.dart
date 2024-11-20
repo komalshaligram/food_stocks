@@ -337,6 +337,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             });
                       },
                       onOutSideTap: () {
+                        state.searchController.clear();
                         bloc.add(const SupplierProductsEvent.changeCategoryExpansion(
                             isOpened: false));
                       },
@@ -345,7 +346,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                       },
                       controller: state.searchController,
                       searchList: state.searchList,
-                      searchResultWidget: state.searchList.isEmpty
+                      searchResultWidget:state.isSearching ? const SizedBox() : state.searchList.isEmpty
                           ? Center(
                               child: Text(
                                 AppLocalizations.of(context)!.search_result_not_found,

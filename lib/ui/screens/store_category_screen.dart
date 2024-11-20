@@ -617,9 +617,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
 
                       },
                       onSearch: (String search) {
-                        if(state.searchController.text != ''){
-                          bloc.add(
-                              StoreCategoryEvent.globalSearchEvent(context: context));
+                        if (search.length > 1) {
+                          bloc.add( const StoreCategoryEvent.changeCategoryExpansionEvent(isOpened: true));
+                          bloc.add(StoreCategoryEvent.globalSearchEvent(context: context));
                         }
 
                       },
@@ -633,10 +633,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             });
                       },
                       onSearchTap: () {
-                        bloc.add(const StoreCategoryEvent.changeCategoryExpansionEvent(
-                            isOpened: true));
+                  if (state.searchController.text.isNotEmpty) {
+                      bloc.add(const StoreCategoryEvent.changeCategoryExpansionEvent(
+                       isOpened: true));
+                 }
                       },
                       onOutSideTap: () {
+                        state.searchController.clear();
                         bloc.add(const StoreCategoryEvent.changeCategoryExpansionEvent(
                             isOpened: false));
                       },
@@ -646,7 +649,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       },
                       controller: state.searchController,
                       searchList: state.searchList,
-                      searchResultWidget: state.searchList.isEmpty
+                      searchResultWidget: state.isSearching ? const SizedBox() :state.searchList.isEmpty
                           ? Center(
                         child: Text(
                           AppLocalizations.of(context)!.search_result_not_found,

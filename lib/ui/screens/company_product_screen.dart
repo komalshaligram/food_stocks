@@ -350,6 +350,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                 });
                         },
                         onOutSideTap: () {
+                          state.searchController.clear();
                           bloc.add(const CompanyProductsEvent.changeCategoryExpansion(
                               isOpened: false));
                         },
@@ -358,7 +359,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                         },
                         controller: state.searchController,
                         searchList: state.searchList,
-                        searchResultWidget: state.searchList.isEmpty
+                        searchResultWidget: state.isSearching ? const SizedBox() :state.searchList.isEmpty
                             ? Center(
                           child: Text(
                             AppLocalizations.of(context)!

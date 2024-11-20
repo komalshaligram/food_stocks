@@ -290,6 +290,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             });
                       },
                       onOutSideTap: () {
+                        state.searchController.clear();
                         bloc.add(const PlanogramProductEvent.changeCategoryExpansion(
                             isOpened: false));
                       },
@@ -298,7 +299,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                       },
                       controller: state.searchController,
                       searchList: state.searchList,
-                      searchResultWidget: state.searchList.isEmpty
+                      searchResultWidget: state.isSearching ? const SizedBox() :state.searchList.isEmpty
                           ? Center(
                         child: Text(
                           AppLocalizations.of(context)!

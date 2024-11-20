@@ -68,11 +68,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         ));
       }
       if (event is _changeCategoryExpansionEvent) {
-        if(event.isOpened == false ){
-          state.searchController.clear();
-          emit(state.copyWith(searchController: state.searchController));
+        if(event.isOpened == false){
+          emit(state.copyWith(searchList: []));
         }
-
         if (event.isOpened != null) {
           emit(state.copyWith(isCategoryExpand: event.isOpened ?? false,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false));
 
