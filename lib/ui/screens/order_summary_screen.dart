@@ -182,7 +182,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
               ),
              8.height,
           /*    Container(
-                alignment: Alignment.center,
+                alignment: Alignment.center,2
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.only(left:10,right: 10,top: 5,bottom: 5),
                 decoration: BoxDecoration(

@@ -62,7 +62,7 @@ class _BankTransferWidgetState extends State<BankTransferWidget> {
             ),
             actions: [
               Padding(
-                padding: const EdgeInsets.only(right: 20),
+                padding: const EdgeInsets.only(right: 20,left: 10),
                 child: GestureDetector(
                     onTap: () {
                       textController = TextEditingController(text:state.bankTransferDetails);
@@ -70,10 +70,10 @@ class _BankTransferWidgetState extends State<BankTransferWidget> {
                       textController.text))
                           .then((_) {
                         textController.clear();
-                        CustomSnackBar.showSnackBar(context: context, title: 'Copied to your clipboard !', type: SnackBarType.success);
+                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.copied, type: SnackBarType.success);
                       });
                     },
-                    child: Text('copy',
+                    child: Text(AppLocalizations.of(context)!.copy,
                       style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,
                         color: AppColors.redColor,

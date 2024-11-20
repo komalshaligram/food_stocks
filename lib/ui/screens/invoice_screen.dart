@@ -108,6 +108,9 @@ class InvoiceScreenWidget extends StatelessWidget {
                         invoiceStatue: state
                             .invoiceDetailsList[index].paymentStatus
                             .toString(),
+                      dueDate:state
+                          .invoiceDetailsList[index].dueDate
+                          .toString()
 
                     ),
               ),
@@ -128,6 +131,7 @@ class InvoiceScreenWidget extends StatelessWidget {
     required String invoicePrice,
     required String invoiceStatue,
     required String invoiceNumber,
+    required String dueDate,
     required List<Invoice>invoicesList,
     required int index,
   }) {
@@ -237,20 +241,20 @@ class InvoiceScreenWidget extends StatelessWidget {
                     columnPadding: 2,
                     valueTextWeight: FontWeight.w400),
                 4.width,
-              /*  CommonOrderContentWidget(
+                CommonOrderContentWidget(
                     backGroundColor: AppColors.iconBGColor,
                     borderCoder: AppColors.lightBorderColor,
                     flexValue: 3,
                     titleMaxLine: 2,
                     maxLine: 2,
                     title: AppLocalizations.of(context)!.due_date,
-                    value: invoiceType.toCapitalized(),
+                    value: dueDate,
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextSize: AppConstants.font_12,
                     titleTextSize: AppConstants.font_12,
                     columnPadding: 2,
-                    valueTextWeight: FontWeight.w400),*/
+                    valueTextWeight: FontWeight.w400),
               ],
             ),
 

@@ -163,7 +163,6 @@ class PushNotificationService {
     await Future.delayed(const Duration(seconds: 1));
 
     String? fcmToken = '';
-    String? token = await FirebaseMessaging.instance.getAPNSToken();
 
     fcmToken = await FirebaseMessaging.instance.getToken();
 

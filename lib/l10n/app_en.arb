@@ -562,5 +562,7 @@
    "bank_transfer" : "Bank Transfer",
    "credit_card": "Credit Card",
    "bank_check" : "Bank Check",
-   "payment_type" :"Payment Type"
+   "payment_type" :"Payment Type",
+  "copy": "Copy",
+  "copied": "Copied!"
 }

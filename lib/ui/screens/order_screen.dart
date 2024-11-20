@@ -277,7 +277,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                           : AppConstants.smallFont,
                     ),
                     5.width,
-                    /*CommonOrderContentWidget(
+                    CommonOrderContentWidget(
                       backGroundColor: AppColors.iconBGColor,
                       borderCoder: AppColors.lightBorderColor,
                       flexValue: 4,
@@ -286,11 +286,11 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                       orderDetailsList[index].paymentMethod == AppStrings.creditCard ? "-":
                       orderDetailsList[index].dueDate
                           ?.replaceRange(11, 16, '').replaceRange(6, 8, '') ??
-                          '',
+                          '-',
                       titleColor: AppColors.blackColor,
                       valueColor: AppColors.blackColor,
                       valueTextSize: AppConstants.smallFont,
-                    ),*/
+                    ),
                     5.width,
                     CommonOrderContentWidget(
                       backGroundColor: AppColors.iconBGColor,
@@ -306,7 +306,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                     ),
                   ],
                 ),
-                /*7.height,
+                7.height,
                 RichText(
                   text: TextSpan(
                     text: '${AppLocalizations.of(context)!.payment_type} : ' ,
@@ -314,12 +314,12 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                         color: AppColors.blackColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
                     children: <TextSpan>[
                       TextSpan(
-                          text:'${getType((orderDetailsList[index].paymentMethod.toString())) ?? ''}',
+                          text:getType((orderDetailsList[index].paymentMethod.toString())) ?? '',
                           style: TextStyle(
                             color: AppColors.mainColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700,)),
                     ],
                   ),
-                )*/
+                )
               ],
             ),
           ),

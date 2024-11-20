@@ -110,7 +110,7 @@ class BasketScreenWidget extends StatelessWidget {
                   Navigator.pop(context);
                   bool c = state.paymentTypesList.any((e) => e == AppStrings.creditCard);
                   if (c) {
-                    bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.creditCard));
+                    bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.creditCard,isFromRemovePopUp:false));
                   } else {
                     Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
                   }
@@ -119,7 +119,7 @@ class BasketScreenWidget extends StatelessWidget {
                   Navigator.pop(context);
                   bool c = state.paymentTypesList.any((e) => e == AppStrings.wallet);
                   if (c) {
-                    bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.wallet));
+                    bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.wallet,isFromRemovePopUp:false));
                   } else {
                     Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail, AppStrings.updateString: true});
                   }
@@ -131,15 +131,15 @@ class BasketScreenWidget extends StatelessWidget {
                       language: state.language,
                       text: state.bankTransferInfo ?? '',
                       function: () {
-                        bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
+                        bloc.add(BasketEvent.payWithBankTransferEvent(context: context,isFromRemovePopUp:false));
                       });
                 },
-              /*  positiveOnTap3: () {
+                positiveOnTap3: () {
                   Navigator.pop(context);
-                  bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck));
-                },*/
+                  bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck,isFromRemovePopUp:false));
+                },
                 positiveTitle1: AppLocalizations.of(context)!.pay_with_wallet,
-             //   positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
+                positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
                 positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
               );
             },
@@ -295,7 +295,7 @@ class BasketScreenWidget extends StatelessWidget {
       positiveOnTap: () {
         Navigator.pop(context);
         if (state.isPaymentFail && state.errorString != AppStrings.getLocalizedStrings(AppLocalizations.of(context)!.credit_card_not_found, context)) {
-          bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.creditCard));
+          bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.creditCard,isFromRemovePopUp:false));
         } else {
           Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
         }
@@ -307,14 +307,14 @@ class BasketScreenWidget extends StatelessWidget {
             language: state.language,
             text: state.bankTransferInfo,
             function: () {
-              bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
+              bloc.add(BasketEvent.payWithBankTransferEvent(context: context,isFromRemovePopUp:false));
             });
       },
-     /* positiveOnTap2: () {
+      positiveOnTap2: () {
         Navigator.pop(context);
-        bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck));
-      },*/
-     // positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_check,
+        bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck,isFromRemovePopUp:false));
+      },
+      positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_check,
     );
   }
 
@@ -328,7 +328,7 @@ class BasketScreenWidget extends StatelessWidget {
       positiveOnTap: () {
         Navigator.pop(context);
         if (state.isPaymentFail && state.errorString != AppStrings.getLocalizedStrings(AppLocalizations.of(context)!.credit_card_not_found, context)) {
-          bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.creditCard));
+          bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.creditCard,isFromRemovePopUp:false));
         } else {
           Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
         }
@@ -337,9 +337,9 @@ class BasketScreenWidget extends StatelessWidget {
         Navigator.pop(context);
         printData(' state.bankTransferInfo:${state.bankTransferInfo}');
         if (state.isPaymentFail && state.bankTransferInfo.isNotEmpty) {
-          bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.wallet));
+          bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.wallet,isFromRemovePopUp:false));
         } else {
-          Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name, arguments: {AppStrings.isPaymentFail: false, AppStrings.updateString: true});
+          Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name, arguments: {AppStrings.isPaymentFail: false, AppStrings.updateString: true,});
         }
       },
       positiveOnTap2: () {
@@ -349,16 +349,16 @@ class BasketScreenWidget extends StatelessWidget {
             language: state.language,
             text: state.bankTransferInfo,
             function: () {
-              bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
+              bloc.add(BasketEvent.payWithBankTransferEvent(context: context,isFromRemovePopUp:false));
             });
       },
-    /*  positiveOnTap3: () {
+      positiveOnTap3: () {
         Navigator.pop(context);
-        bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck));
-      },*/
+        bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck,isFromRemovePopUp:false));
+      },
       positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
       positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
-     // positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
+      positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
     );
   }
 
@@ -704,7 +704,6 @@ class BasketScreenWidget extends StatelessWidget {
                         positiveOnTap: () {
                           if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
                             if (state.supplierCount == 1) {
-                              Navigator.pop(context1);
                               paymentOptionPopup(state, context, bloc, isFromRemovePopUp: true);
                               //   bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: true, isFromDialog: false, paymentMethod: ''));
                             } else {
@@ -736,11 +735,11 @@ class BasketScreenWidget extends StatelessWidget {
               positiveTitle: AppLocalizations.of(context)!.pay_with_credit_card,
               positiveOnTap: () {
                 Navigator.pop(context);
-                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.creditCard));
+                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.creditCard,isFromRemovePopUp:isFromRemovePopUp));
               },
               positiveOnTap1: () {
                 Navigator.pop(context);
-                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.wallet));
+                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.wallet,isFromRemovePopUp: isFromRemovePopUp));
               },
               positiveOnTap2: () {
                 Navigator.pop(context);
@@ -749,17 +748,16 @@ class BasketScreenWidget extends StatelessWidget {
                     language: state.language,
                     text: state.bankTransferInfo,
                     function: () {
-                      bloc.add(BasketEvent.payWithBankTransferEvent(context: context));
+                      bloc.add(BasketEvent.payWithBankTransferEvent(context: context,isFromRemovePopUp:isFromRemovePopUp));
                     });
-                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.bankTransfer));
               },
-              /*positiveOnTap3: () {
+              positiveOnTap3: () {
                 Navigator.pop(context);
-                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck));
-              },*/
+                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck,isFromRemovePopUp: isFromRemovePopUp));
+              },
               positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
               positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
-             // positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
+              positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
             );
           } else {
             return CustomOneButtonDialog(
@@ -769,12 +767,12 @@ class BasketScreenWidget extends StatelessWidget {
               positiveTitle: AppLocalizations.of(context)!.pay_with_credit_card,
               positiveOnTap: () {
                 Navigator.pop(context);
-                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.creditCard));
+                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.creditCard,isFromRemovePopUp:isFromRemovePopUp));
                 //  Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
               },
               positiveOnTap1: () {
                 Navigator.pop(context);
-                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.bankTransfer));
+                bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.bankTransfer,isFromRemovePopUp:isFromRemovePopUp));
               },
               positiveTitle1: AppLocalizations.of(context)!.pay_with_bank_transfer,
             );
