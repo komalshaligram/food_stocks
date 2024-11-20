@@ -558,7 +558,7 @@
   "wallet" : "ארנק",
   "bank_transfer" : "העברה בנקאית",
   "credit_card": "כרטיס אשראי",
-  "bank_check" : "שיק",
+  "bank_check" : "תשלום בשיק",
   "payment_type" :"Payment Type"
 
 
