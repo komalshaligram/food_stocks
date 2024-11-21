@@ -92,7 +92,6 @@ class HomeScreenWidget extends StatelessWidget {
             body: FocusDetector(
               onFocusGained: () {
                 bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
-
               },
               child: SafeArea(
                 child: Stack(
@@ -292,7 +291,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                 SizedBox(
                                                   width: getScreenWidth(context),
                                                   height: getItemHeight(context, state.isSaleOn),
-                                                  child: state.isProductSaleShimmering ? CommonProductListShimmerWidget():AbsorbPointer(
+                                                  child: state.isProductSaleShimmering ? CommonProductListShimmerWidget(
+                                                  ):AbsorbPointer(
                                                     absorbing: state.isProductSaleShimmering,
                                                     child: ListView.builder(
                                                       itemCount: state.productSalesList.length,
@@ -300,8 +300,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                       scrollDirection: Axis.horizontal,
                                                       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                                       itemBuilder: (context, index) {
-                                                      printData("height____${getScreenHeight(context)}");
-                                                      printData("width____${getScreenWidth(context)}");
                                                         return CommonProductSaleItemWidget(
                                                             isSale: state.productSalesList[index].sale?.isSale,
                                                             isGuestUser: state.isGuestUser,

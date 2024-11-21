@@ -22,7 +22,14 @@ class AppConstants{
   static const double timeOutDuration = 18000;
   static const double tabletImageHeight = 130;
   static const double saleItemHeight = 370;
-  //static const double saleItemHeight = 300;
+  static const double bigTabItemHeight = 350;
+  static const double smallTabItemHeight = 260;
+  static const double bigTabImageHeight = 190;
+  static const double smallTabImageHeight = 125;
+  static const double bigTabImageWidth = 190;
+  static const double smallTabImageWidth = 160;
+  static const double normalImageWidth = 140;
+
 
   //padding
   static const double padding_5 = 5;

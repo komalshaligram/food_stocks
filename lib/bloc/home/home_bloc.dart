@@ -826,8 +826,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(pesachBannerShimmering: false, retryLoading: false));
           }
         } else if (event is _getPermissionList) {
-        printData('preferences.getSubUser()___${preferences.getSubUser()}');
-        printData('preferences.getSubUser()___${preferences.getCanAddToBasket()}');
           if (preferences.getSubUser()) {
             try {
               final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');

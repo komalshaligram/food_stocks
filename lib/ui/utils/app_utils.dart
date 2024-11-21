@@ -101,8 +101,8 @@ double getItemHeight(BuildContext context , bool isSaleOn){
 }
 
 double getItemWidth(BuildContext context ){
-  return getScreenWidth(context) > 700 ? 190 :
-  getScreenWidth(context) > 500 ? 160 : 140 ;
+  return getScreenHeight(context) > 1000 &&   getScreenWidth(context) > 700  ? 190 :
+  getScreenWidth(context) > 500  ? 160 : 140 ;
 }
 
 Widget isPesachLabelShow(bool isPesach,BuildContext context){
