@@ -198,7 +198,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                     onTap: imageOnTap,
                                     child: Image.network(
                                       "${AppUrlEndPoints.baseFileUrl}${productImages.first}",
-                                      height: 150,
+                                      height: getItemHeight( context, false) == 350.0 ? 200 :
+                                      getItemHeight(context, false) == 260.0 ? 180 : 150,
                                       fit: BoxFit.contain,
                                       loadingBuilder: (context, child, loadingProgress) {
                                         if (loadingProgress?.cumulativeBytesLoaded != loadingProgress?.expectedTotalBytes) {
@@ -220,7 +221,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           AppImagePath.imageNotAvailable5,
                                           fit: BoxFit.cover,
                                           // width: 90,
-                                          height: 150,
+                                          height: getItemHeight( context, false) == 350.0 ? 200 :
+                                          getItemHeight(context, false) == 260.0 ? 180 : 150,
                                         );
                                       },
                                     ),

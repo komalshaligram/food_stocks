@@ -47,11 +47,13 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Center(
+             Center(
                 child: CommonShimmerWidget(
                   child: Container(
-                    height: 150,
-                    width: 150,
+                    height: getItemHeight( context, false) == 350.0 ? 220 :
+                    getItemHeight(context, false) == 260.0 ? 200 : 150,
+                    width:  getItemHeight( context, false) == 350.0 ? 220 :
+                    getItemHeight(context, false) == 260.0 ? 200 : 150,
                     margin: const EdgeInsets.all(AppConstants.padding_10),
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
