@@ -35,10 +35,10 @@ enum SnackBarType {
 
 bool isTablet(BuildContext context) {
   bool isTablet = false;
-  if (MediaQuery.of(context).size.height < 800) {
-    isTablet = false;
+  if (MediaQuery.of(context).size.height > 800 && MediaQuery.of(context).size.height > 500) {
+    isTablet = true;
   } else {
-    return true;
+    return false;
   }
   return isTablet;
 }
@@ -92,6 +92,18 @@ Color getStatusColor(int statusNum){
        : AppConstants.productGridAspectRatio51: getScreenHeight(context) > 820
        ? AppConstants.productGridAspectRatio51:AppConstants.productGridAspectRatio51;
  }
+
+double getItemHeight(BuildContext context , bool isSaleOn){
+  return getScreenHeight(context) > 1000 &&   getScreenWidth(context) > 700 ? 350 :
+  getScreenHeight(context) < 1000 &&
+  getScreenHeight(context) > 800  && getScreenWidth(context) > 550  ? 260 : isSaleOn ? AppConstants.salesProductItemHeight :
+  AppConstants.withoutSaleItemHeight ;
+}
+
+double getItemWidth(BuildContext context ){
+  return getScreenWidth(context) > 700 ? 190 :
+  getScreenWidth(context) > 500 ? 160 : 140 ;
+}
 
 Widget isPesachLabelShow(bool isPesach,BuildContext context){
  if(isPesach){

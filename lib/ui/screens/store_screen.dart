@@ -298,7 +298,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   }),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height: state.isGuestUser ? 200 : AppConstants.salesProductItemHeight,
+                                               height: state.isGuestUser ? 200 :getItemHeight(context,state.isSaleOn),
                                                 child: state.isSaleShimmering
                                                     ? CommonProductListShimmerWidget()
                                                     : ListView.builder(
@@ -311,7 +311,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                               isSale: state.productSalesList[index].sale?.isSale,
                                                               isGuestUser: state.isGuestUser,
                                                               height: AppConstants.salesProductItemHeight,
-                                                              width: 140,
+                                                              width: getItemWidth(context),
                                                               productName: state.productSalesList[index].productName ?? '',
                                                               saleImage: state.productSalesList[index].mainImage ?? '',
                                                               title: state.productSalesList[index].name,
@@ -323,7 +323,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                               isPesach: state.productSalesList[index].isPesach,
                                                               onButtonTap: () {
                                                                 if (!state.isGuestUser) {
-                                                                  showProductDetails(isSaleOn: state.isSaleOn, context: state.context??context, productStock: state.productSalesList[index].productStock.toString(), productId: state.productSalesList[index].id ?? '');
+                                                                  showProductDetails(isSaleOn: state.isSaleOn, context: state.context ?? context, productStock: state.productSalesList[index].productStock.toString(), productId: state.productSalesList[index].id ?? '');
                                                                 } else {
                                                                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                                 }
@@ -349,7 +349,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                       }),
                                                   SizedBox(
                                                     width: getScreenWidth(context),
-                                                    height: state.isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+                                                    height: getItemHeight(context,state.isSaleOn),
                                                     child: state.isRecommendedShimmering
                                                         ? CommonProductListShimmerWidget()
                                                         : ListView.builder(
@@ -361,7 +361,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                                 isSale: state.recommendedProductsList[index].sale?.isSale,
                                                                 isGuestUser: state.isGuestUser,
                                                                 height: AppConstants.salesProductItemHeight,
-                                                                width: 140,
+                                                                width: getItemWidth(context),
                                                                 productName: state.recommendedProductsList[index].productName ?? '',
                                                                 saleImage: state.recommendedProductsList[index].mainImage ?? '',
                                                                 title: state.recommendedProductsList[index].name,
@@ -398,7 +398,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                       }),
                                                   SizedBox(
                                                     width: getScreenWidth(context),
-                                                    height: state.isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+                                                    height:  getItemHeight(context,state.isSaleOn),
                                                     child: state.isPreviousOrderShimmering
                                                         ? CommonProductListShimmerWidget()
                                                         : ListView.builder(
@@ -410,7 +410,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                                 isSale: state.previousOrderProductsList[index].sale?.isSale,
                                                                 isGuestUser: state.isGuestUser,
                                                                 height: AppConstants.salesProductItemHeight,
-                                                                width: 140,
+                                                                width: getItemWidth(context),
                                                                 productName: state.previousOrderProductsList[index].productName ?? '',
                                                                 saleImage: state.previousOrderProductsList[index].mainImage ?? '',
                                                                 title: state.previousOrderProductsList[index].name,
@@ -1149,7 +1149,7 @@ class StoreScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+          height: getItemHeight(context, isSaleOn),
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1159,7 +1159,7 @@ class StoreScreenWidget extends StatelessWidget {
                 isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
-                width: 140,
+                width: getItemWidth(context),
                 productName: relatedProductList.elementAt(i).productName ?? '',
                 saleImage: relatedProductList.elementAt(i).mainImage ?? '',
                 title: relatedProductList.elementAt(i).name,

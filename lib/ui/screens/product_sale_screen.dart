@@ -128,13 +128,13 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         physics: const NeverScrollableScrollPhysics(),
                                         padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
                                         gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
-                                            childAspectRatio: isTablet(context) ? 0.60 :0.48
+                                          childAspectRatio: getScreenHeight(context) > 1000 && getScreenWidth(context) > 700 ? 0.70 :
+                                          getScreenHeight(context) > 850 &&   getScreenHeight(context) <  1000 && getScreenWidth(context) > 550 ? 0.65 :
+                                          0.45,
                                         ),
                                         //getChildAspectRatio(context)),
                                         itemBuilder: (context, index) {
-                                          printData('screenheight+____${getScreenHeight(context).toString()}');
                                           return buildProductSaleGridViewItem(
-
                                             productStock: state.productSalesList[index].productStock.toString(),
                                             isPesach: state.productSalesList[index].isPesach ?? false,
                                             lowStock: state.productSalesList[index].lowStock ?? '',
@@ -399,7 +399,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: AppConstants.salesProductItemHeight,
+          height: getItemHeight(context, true),
           padding: const EdgeInsets.only(left: 10, right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -409,7 +409,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: AppConstants.salesProductItemHeight,
-                width: 140,
+                width: getItemWidth(context),
                 productName: relatedProductList.elementAt(i).productName ?? '' ,
                 saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
                 title: relatedProductList.elementAt(i).name ,

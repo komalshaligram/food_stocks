@@ -282,11 +282,10 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                       borderCoder: AppColors.lightBorderColor,
                       flexValue: 4,
                       title: AppLocalizations.of(context)!.due_date,
-                      value:
-                      orderDetailsList[index].paymentMethod == AppStrings.creditCard ? "-":
-                      orderDetailsList[index].dueDate
+                      value: orderDetailsList[index].paymentMethod == AppStrings.creditCard ? "-":
+                     ( orderDetailsList[index].dueDate?.isNotEmpty ?? false) ?  orderDetailsList[index].dueDate
                           ?.replaceRange(11, 16, '').replaceRange(6, 8, '') ??
-                          '-',
+                          '-' : "-",
                       titleColor: AppColors.blackColor,
                       valueColor: AppColors.blackColor,
                       valueTextSize: AppConstants.smallFont,

@@ -291,7 +291,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                     }),
                                                 SizedBox(
                                                   width: getScreenWidth(context),
-                                                  height: AppConstants.salesProductItemHeight,
+                                                  height: getItemHeight(context, state.isSaleOn),
                                                   child: state.isProductSaleShimmering ? CommonProductListShimmerWidget():AbsorbPointer(
                                                     absorbing: state.isProductSaleShimmering,
                                                     child: ListView.builder(
@@ -300,11 +300,13 @@ class HomeScreenWidget extends StatelessWidget {
                                                       scrollDirection: Axis.horizontal,
                                                       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                                       itemBuilder: (context, index) {
+                                                      printData("height____${getScreenHeight(context)}");
+                                                      printData("width____${getScreenWidth(context)}");
                                                         return CommonProductSaleItemWidget(
                                                             isSale: state.productSalesList[index].sale?.isSale,
                                                             isGuestUser: state.isGuestUser,
                                                             height: AppConstants.salesProductItemHeight,
-                                                            width: 140,
+                                                            width: getItemWidth(context),
                                                             productName: state.productSalesList[index].productName ?? '',
                                                             saleImage: state.productSalesList[index].mainImage ?? '',
                                                             title: state.productSalesList[index].name,
@@ -342,7 +344,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                     }),
                                                 SizedBox(
                                                   width: getScreenWidth(context),
-                                                  height: state.isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+                                                 height: getItemHeight(context, state.isSaleOn),
                                                   child: state.isShimmering?CommonProductListShimmerWidget():ListView.builder(
                                                       itemCount: state.recommendedProductsList.length,
                                                       shrinkWrap: true,
@@ -352,7 +354,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                           isSale: state.recommendedProductsList[index].sale?.isSale,
                                                           isGuestUser: state.isGuestUser,
                                                           height: AppConstants.salesProductItemHeight,
-                                                          width: 140,
+                                                          width: getItemWidth(context),
                                                           productName: state.recommendedProductsList[index].productName ?? '',
                                                           saleImage: state.recommendedProductsList[index].mainImage ?? '',
                                                           title: state.recommendedProductsList[index].name,
@@ -818,7 +820,7 @@ class HomeScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+         height: getItemHeight(context, isSaleOn),
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
           child: ListView.builder(
             controller: ScrollController(),
@@ -829,7 +831,7 @@ class HomeScreenWidget extends StatelessWidget {
                 isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: AppConstants.salesProductItemHeight,
-                width: 140,
+                width:  getItemWidth(context),
                 productName: relatedProductList.elementAt(i).productName ?? '',
                 saleImage: relatedProductList.elementAt(i).mainImage ?? '',
                 title: relatedProductList.elementAt(i).name,
