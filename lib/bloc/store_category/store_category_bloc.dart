@@ -366,7 +366,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 

@@ -92,11 +92,11 @@ class StoreScreenWidget extends StatelessWidget {
               if (!state.isAppOnMaintenance) {
                 bloc.add(StoreEvent.generalSettings(context: context, dialogContext: context, isRetryLoading: false));
               }
-              bloc.add(StoreEvent.getCompaniesListEvent(context: context));
-              bloc.add(StoreEvent.getSuppliersListEvent(context: context));
-              bloc.add(StoreEvent.getProductSalesListEvent(context: context));
-              bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
-              bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
+           //   bloc.add(StoreEvent.getCompaniesListEvent(context: context));
+           //   bloc.add(StoreEvent.getSuppliersListEvent(context: context));
+          //    bloc.add(StoreEvent.getProductSalesListEvent(context: context));
+            //  bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
+           //   bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
             },
             child: Scaffold(
               backgroundColor: AppColors.pageColor,

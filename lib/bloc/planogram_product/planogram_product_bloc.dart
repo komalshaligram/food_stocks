@@ -47,6 +47,8 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
   String _cartProductId = '';
   int _productQuantity = 0;
 
+
+
   PlanogramProductBloc() : super(PlanogramProductState.initial()) {
     on<PlanogramProductEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -72,7 +74,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-        try {
+          try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
           final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());

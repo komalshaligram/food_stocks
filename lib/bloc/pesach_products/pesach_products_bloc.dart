@@ -50,6 +50,7 @@ class PesachProductsBloc
   int _productQuantity = 0;
 
 
+
   PesachProductsBloc() : super(PesachProductsState.initial()) {
     on<PesachProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -164,6 +165,7 @@ class PesachProductsBloc
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
+
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -660,7 +662,7 @@ class PesachProductsBloc
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              if(state.productStockList[state.productListIndex][state.productStockUpdateIndex].productIsInCart){
+              if(!state.productStockList[state.productListIndex][state.productStockUpdateIndex].productIsInCart){
                 add(const PesachProductsEvent.setCartCountEvent());
               }
               Vibration.vibrate();
@@ -670,7 +672,7 @@ class PesachProductsBloc
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
-                    productIsInCart: false,
+                    productIsInCart: true,
                     quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                     productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                     totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,

@@ -966,18 +966,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     child: !isGuestUser
                         ? Image.network(
                       "${AppUrlEndPoints.baseFileUrl}${list[index].planogramproducts?[subIndex].mainImage}",
-                      height: getItemHeight(context, false) == AppConstants.bigTabItemHeight ? AppConstants.bigTabImageHeight:
-                      getItemHeight(context, false) == AppConstants.smallTabItemHeight ? AppConstants.smallTabItemHeight
-                          : 110,
+                      height: getItemHeight( context, false) == 260.0 ? 125 :
+                      getItemHeight(context, false) == 350.0 ? 190 : 110,
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress?.cumulativeBytesLoaded !=
                             loadingProgress?.expectedTotalBytes) {
                           return CommonShimmerWidget(
                             child: Container(
-                              height: getItemHeight(context, false) == AppConstants.bigTabItemHeight ? AppConstants.bigTabImageHeight:
-                              getItemHeight(context, false) == AppConstants.smallTabItemHeight ? AppConstants.smallTabItemHeight
-                                  : 110,
+                              height: getItemHeight( context, false) == 260.0 ? 125 :
+                              getItemHeight(context, false) == 350.0 ? 190 : 110,
                               width: 70,
                               decoration: BoxDecoration(
                                 color: AppColors.whiteColor,
