@@ -6,7 +6,6 @@ class AppUrls {
 }
 
 
-
 class AppUrlEndPoints {
  static const String baseUrl = 'https://api.foodstock.shtibel.com/api';
   ///prodUrl
