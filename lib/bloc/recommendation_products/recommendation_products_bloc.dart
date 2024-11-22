@@ -50,6 +50,7 @@ class RecommendationProductsBloc
   String _cartProductId = '';
   int _productQuantity = 0;
 
+
   RecommendationProductsBloc() : super(RecommendationProductsState.initial()) {
     on<RecommendationProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -669,7 +670,13 @@ class RecommendationProductsBloc
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              add(const RecommendationProductsEvent.setCartCountEvent());
+              if(!state
+                  .productStockList[state.productListIndex]
+              [state.productStockUpdateIndex].productIsInCart){
+                add(const RecommendationProductsEvent.setCartCountEvent());
+              }
+
+
               Vibration.vibrate();
            //   Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =

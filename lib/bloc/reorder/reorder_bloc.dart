@@ -49,6 +49,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
+
   ReorderBloc() : super(ReorderState.initial()) {
 
     on<ReorderEvent>((event, emit) async {
@@ -151,7 +152,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -684,7 +684,11 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              add(const ReorderEvent.setCartCountEvent());
+              if(!state
+                  .productStockList[state.productListIndex]
+              [state.productStockUpdateIndex].productIsInCart){
+                add(const ReorderEvent.setCartCountEvent());
+              }
               Vibration.vibrate();
           //    Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =

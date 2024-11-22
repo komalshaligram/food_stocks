@@ -48,6 +48,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
   String _cartProductId = '';
   int _productQuantity = 0;
 
+
   SupplierProductsBloc() : super(SupplierProductsState.initial()) {
     on<SupplierProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -480,7 +481,11 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              add(const SupplierProductsEvent.setCartCountEvent());
+              if(!state
+                  .productStockList[state.productListIndex]
+              [state.productStockUpdateIndex].productIsInCart){
+                add(const SupplierProductsEvent.setCartCountEvent());
+              }
               Vibration.vibrate();
              // Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);

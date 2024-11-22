@@ -42,6 +42,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
+  String _productId = '';
+  String _supplierId = "";
   ProductSaleBloc() : super(ProductSaleState.initial()) {
     on<ProductSaleEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -96,6 +98,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
+        _productId = '';
+        _supplierId = '';
 
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
@@ -390,13 +394,15 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              //  add(SupplierProductsEvent.setCartCountEvent());
+              if(!state.productStockList[state.productListIndex][state.productStockUpdateIndex].productIsInCart) {
+                add(ProductSaleEvent.setCartCountEvent());
+              }
               Vibration.vibrate();
               //  Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
-                productIsInCart: false,
+                productIsInCart: true,
                 quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                 productSupplierIds: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                 totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
