@@ -648,7 +648,7 @@ class ReorderScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+          height: getItemHeight(context, isSaleOn),
           padding: const EdgeInsets.only(left: 10, right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -658,7 +658,7 @@ class ReorderScreenWidget extends StatelessWidget {
                 isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: AppConstants.salesProductItemHeight,
-                width: 140,
+                width: getItemWidth(context),
                 productName: relatedProductList.elementAt(i).productName ?? '',
                 saleImage: relatedProductList.elementAt(i).mainImage ?? '',
                 title: relatedProductList.elementAt(i).name,

@@ -42,8 +42,8 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     required this.onButtonTap,
     required this.discountedPrice,
     this.isGuestUser = false,
-    this.imageHeight = 70,
-    this.imageWidth = 70,
+    this.imageHeight = 80,
+    this.imageWidth = 80,
     this.originalPrice = 0.0,
     this.lowStock = '',
     this.isPesach = false,
@@ -81,12 +81,16 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                         ? saleImage.isNotEmpty
                             ? CachedNetworkImage(
                                 imageUrl: "${AppUrlEndPoints.baseFileUrl}$saleImage",
-                                height: isTablet(context) ? 110 : imageHeight,
+                                height: getItemHeight(context, false) == 350.0 ? 190 :
+                                getItemHeight(context, false) == 260.0 ? 125 :
+                                imageHeight,
                                 fit: BoxFit.fitHeight,
                                 placeholder: (context, url) {
                                   return CommonShimmerWidget(
                                     child: Container(
-                                      height: isTablet(context) ? 110 : imageHeight,
+                                      height:getItemHeight(context, false) == 350.0 ? 190 :
+                                      getItemHeight(context, false) == 260.0 ? 125 :
+                                       imageHeight,
                                       width: 70,
                                       decoration: BoxDecoration(
                                         color: AppColors.whiteColor,
@@ -97,17 +101,21 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                                 },
                                 errorWidget: (context, error, stackTrace) {
                                   return Image.asset(AppImagePath.imageNotAvailable5,
-                                      height: isTablet(context) ? 110 : imageHeight, width: double.maxFinite, fit: BoxFit.cover);
+                                      height: getItemHeight( context, false) == 260.0 ? 125 :
+                                      getItemHeight(context, false) == 350.0 ? 190 : imageHeight,
+                                      width: 70, fit: BoxFit.cover);
                                 },
                               )
                             : Image.asset(
                                 AppImagePath.imageNotAvailable5,
-                                height: isTablet(context) ? 110 : imageHeight,
+                                height: getItemHeight( context, false) == 260.0 ? 125 :
+                                getItemHeight(context, false) == 350.0 ? 190 : imageHeight,
                                 width: 70,
                               )
                         : Image.asset(
                             AppImagePath.imageNotAvailable5,
-                            height: isTablet(context) ? 110 : imageHeight,
+                            height: getItemHeight( context, false) == 260.0 ? 125 :
+                            getItemHeight(context, false) == 350.0 ? 190 : imageHeight,
                             width: 70,
                           ),
                   ),

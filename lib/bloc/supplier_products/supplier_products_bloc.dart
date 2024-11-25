@@ -48,6 +48,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
   String _cartProductId = '';
   int _productQuantity = 0;
 
+
   SupplierProductsBloc() : super(SupplierProductsState.initial()) {
     on<SupplierProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -274,7 +275,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
                       : productStockList[productListIndex][0].note;
               emit(state.copyWith(productStockList: []));
 
-              emit(state.copyWith(productDetails: response.product ?? [], productStockList: productStockList, productStockUpdateIndex: productStockUpdateIndex, noteController: TextEditingController(text: note), productSupplierList: supplierList, productListIndex: productListIndex, isProductLoading: false));
+              emit(state.copyWith(productDetails: response.product ?? [], productStockList: productStockList, productStockUpdateIndex: productStockUpdateIndex, noteController: TextEditingController(text: note), productSupplierList: supplierList, productListIndex: productListIndex, /*isProductLoading: false*/));
               if (supplierList.isNotEmpty) {
                 bool isSupplierSelected = false;
                 for (var supplier in supplierList) {
@@ -483,7 +484,11 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              add(const SupplierProductsEvent.setCartCountEvent());
+              if(!state
+                  .productStockList[state.productListIndex]
+              [state.productStockUpdateIndex].productIsInCart){
+                add(const SupplierProductsEvent.setCartCountEvent());
+              }
               Vibration.vibrate();
              // Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
@@ -662,9 +667,9 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
                   )) ??
               []);
           productStockList[2].addAll(stockList);
-          emit(state.copyWith(relatedProductList: response.data ?? [], isRelatedShimmering: false, productStockList: productStockList));
+          emit(state.copyWith(relatedProductList: response.data ?? [], isRelatedShimmering: false, productStockList: productStockList,isProductLoading : false));
         } else {
-          emit(state.copyWith(isRelatedShimmering: false));
+          emit(state.copyWith(isRelatedShimmering: false,isProductLoading : false));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context),

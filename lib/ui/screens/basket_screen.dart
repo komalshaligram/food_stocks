@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -518,7 +520,7 @@ class BasketScreenWidget extends StatelessWidget {
             ),
             child: GestureDetector(
               onTap: () {
-                showProductDetails(isSaleOn: state.isSaleOn, context: state.context??context, cartProductId: state.cartItemList.data?.data?[index].id ?? '', productListIndex: 0, productStock: state.cartItemList.data?.data?[index].productStock.toString() ?? '0');
+                showProductDetails(isSaleOn: state.isSaleOn, context: Platform.isIOS ? (state.context??context): context, cartProductId: state.cartItemList.data?.data?[index].id ?? '', productListIndex: 0, productStock: state.cartItemList.data?.data?[index].productStock.toString() ?? '0');
               },
               child: Column(
                 children: [
@@ -995,7 +997,7 @@ class BasketScreenWidget extends StatelessWidget {
             ),
           ),
           Container(
-            height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+              height: getItemHeight(context, isSaleOn),
             padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -1005,7 +1007,7 @@ class BasketScreenWidget extends StatelessWidget {
                   isSale: state.relatedProductList.elementAt(i).sale?.isSale,
                   isGuestUser: false,
                   height: AppConstants.salesProductItemHeight,
-                  width: 140,
+                  width: getItemWidth(context),
                   productName: state.relatedProductList.elementAt(i).productName ?? '',
                   saleImage: state.relatedProductList.elementAt(i).mainImage ?? '',
                   title: state.relatedProductList.elementAt(i).name,
@@ -1017,7 +1019,7 @@ class BasketScreenWidget extends StatelessWidget {
                   isPesach: state.relatedProductList.elementAt(i).isPesach,
                   onButtonTap: () {
                     Navigator.pop(prevContext);
-                    showProductDetails(isSaleOn: isSaleOn, context: state.context??context, cartProductId: state.relatedProductList[i].id ?? '', isBarcode: false, productStock: state.relatedProductList[i].productStock.toString(), productListIndex: 1);
+                    showProductDetails(isSaleOn: isSaleOn, context: Platform.isIOS ? (state.context??context): context, cartProductId: state.relatedProductList[i].id ?? '', isBarcode: false, productStock: state.relatedProductList[i].productStock.toString(), productListIndex: 1);
                   },
                 );
               },

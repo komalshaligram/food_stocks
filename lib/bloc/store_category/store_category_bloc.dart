@@ -366,7 +366,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
@@ -531,7 +530,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
                 planoGramUpdateIndex: planoGramIndex,
-                isProductLoading: false));
+                /*isProductLoading: false*/
+            ));
             if (supplierList.isNotEmpty) {
               bool isSupplierSelected = false;
               for (var supplier in supplierList) {
@@ -1249,10 +1249,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               }) ?? [] );
           productStockList[3].addAll(stockList);
           emit(state.copyWith(
-              relatedProductList:response.data  ?? [],
+              relatedProductList:response.data  ?? [],isProductLoading: false,
               isRelatedShimmering: false,productStockList: productStockList));
         } else {
-          emit(state.copyWith(isRelatedShimmering: false));
+          emit(state.copyWith(isRelatedShimmering: false,isProductLoading: false,));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(

@@ -50,6 +50,7 @@ class RecommendationProductsBloc
   String _cartProductId = '';
   int _productQuantity = 0;
 
+
   RecommendationProductsBloc() : super(RecommendationProductsState.initial()) {
     on<RecommendationProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -302,7 +303,8 @@ class RecommendationProductsBloc
                 noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
                 productListIndex: productListIndex,
-                isProductLoading: false));
+             /*   isProductLoading: false*/
+            ));
             if (supplierList.isNotEmpty) {
               bool isSupplierSelected = false;
               for (var supplier in supplierList) {
@@ -671,7 +673,13 @@ class RecommendationProductsBloc
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              add(const RecommendationProductsEvent.setCartCountEvent());
+              if(!state
+                  .productStockList[state.productListIndex]
+              [state.productStockUpdateIndex].productIsInCart){
+                add(const RecommendationProductsEvent.setCartCountEvent());
+              }
+
+
               Vibration.vibrate();
            //   Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
@@ -967,10 +975,10 @@ class RecommendationProductsBloc
                   )) ?? []);
           productStockList[2].addAll(stockList);
           emit(state.copyWith(
-              relatedProductList:response.data ?? [],
+              relatedProductList:response.data ?? [],isProductLoading : false,
               isRelatedShimmering: false,productStockList: productStockList));
         } else {
-          emit(state.copyWith(isRelatedShimmering: false));
+          emit(state.copyWith(isRelatedShimmering: false,isProductLoading : false));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(

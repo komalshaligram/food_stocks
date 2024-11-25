@@ -58,6 +58,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
+  String _productId = '';
+  String _supplierId = "";
 
 
   StoreBloc() : super(StoreState.initial()) {
@@ -297,7 +299,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-
+        _productId = '';
+        _supplierId = '';
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false,));
           final res = await DioClient(event.context).post(
@@ -485,7 +488,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   productStockUpdateIndex: productStockUpdateIndex,
                   noteController: TextEditingController(text: note),
                   productSupplierList: supplierList,
-                  isProductLoading: false));
+                  /*isProductLoading: false*/
+              ));
               if (supplierList.isNotEmpty) {
                 bool isSupplierSelected = false;
                 for (var supplier in supplierList) {
@@ -737,7 +741,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             );
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              add(const StoreEvent.setCartCountEvent());
+              if(_productId == '' && _supplierId == ''){
+                add(const StoreEvent.setCartCountEvent());
+              }
+              _productId =  state.productStockList[state.productStockUpdateIndex].productId;
+              _supplierId = state.productStockList[state.productStockUpdateIndex].productSupplierIds;
 
               Vibration.vibrate();
               // Navigator.pop(event.context);
@@ -1042,10 +1050,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     )) ?? []);
 
             emit(state.copyWith(
-                relatedProductList:response.data ?? [],
+                relatedProductList:response.data ?? [], isProductLoading: false,
                 isRelatedShimmering: false,productStockList: productStockList));
           } else {
-            emit(state.copyWith(isRelatedShimmering: false));
+            emit(state.copyWith(isRelatedShimmering: false,isProductLoading: false,));
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.getLocalizedStrings(

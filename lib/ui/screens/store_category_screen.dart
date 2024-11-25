@@ -965,14 +965,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     child: !isGuestUser
                         ? Image.network(
                       "${AppUrlEndPoints.baseFileUrl}${list[index].planogramproducts?[subIndex].mainImage}",
-                      height: 70,
+                      height: getItemHeight( context, false) == 260.0 ? 125 :
+                      getItemHeight(context, false) == 350.0 ? 190 : 110,
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress?.cumulativeBytesLoaded !=
                             loadingProgress?.expectedTotalBytes) {
                           return CommonShimmerWidget(
                             child: Container(
-                              height: 70,
+                              height: getItemHeight( context, false) == 260.0 ? 125 :
+                              getItemHeight(context, false) == 350.0 ? 190 : 110,
                               width: 70,
                               decoration: BoxDecoration(
                                 color: AppColors.whiteColor,
@@ -988,8 +990,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       errorBuilder: (context, error, stackTrace) {
                         return Image.asset(
                             AppImagePath.imageNotAvailable5,
-                            height: 70,
-                            width: double.maxFinite,
+                            height: getItemHeight( context, false) == 260.0 ? 125 :
+                            getItemHeight(context, false) == 350.0 ? 190 : 110,
+                            width: 70,
                             fit: BoxFit.cover);
                       },
                     )
@@ -997,7 +1000,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       AppImagePath.imageNotAvailable5,
                       fit: BoxFit.cover,
                       width: 70,
-                      height: 70,
+                      height: getItemHeight( context, false) == 260.0 ? 125 :
+                      getItemHeight(context, false) == 350.0 ? 190 : 110,
                     ),
                   ),
                   5.height,
@@ -1325,7 +1329,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+          height: getItemHeight(context, isSaleOn),
           padding: const EdgeInsets.only(bottom:10,left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1335,7 +1339,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
-                width: 140,
+                width: getItemWidth(context),
                 productName: relatedProductList.elementAt(i).productName ?? '' ,
                 saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
                 title: relatedProductList.elementAt(i).name ,
@@ -1514,7 +1518,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         : ''),
                 5.height,
                 SizedBox(
-                height:  state.isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+                height:  getItemHeight(context, state.isSaleOn),
                   child: list.isEmpty
                       ? Center(
                     child: Text(

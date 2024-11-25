@@ -7,7 +7,7 @@ import 'common_shimmer_widget.dart';
 class CommonProductListShimmerWidget extends StatelessWidget {
   int itemCount;
   CommonProductListShimmerWidget({super.key,
-    this.itemCount = 6
+    this.itemCount = 6,
   });
 
   @override

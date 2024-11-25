@@ -101,6 +101,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         _cartProductId = '';
         _productQuantity = 0;
 
+
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
           final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
@@ -196,7 +197,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                       ? ''
                       : productStockList[productListIndex][0].note;
               emit(state.copyWith(productStockList: []));
-              emit(state.copyWith(productDetails: response.product ?? [], productStockList: productStockList, productStockUpdateIndex: productStockUpdateIndex, noteController: TextEditingController(text: note), productSupplierList: supplierList, productListIndex: productListIndex, isProductLoading: false));
+              emit(state.copyWith(productDetails: response.product ?? [], productStockList: productStockList, productStockUpdateIndex: productStockUpdateIndex, noteController: TextEditingController(text: note), productSupplierList: supplierList, productListIndex: productListIndex, /*isProductLoading: false*/));
               if (supplierList.isNotEmpty) {
                 bool isSupplierSelected = false;
                 for (var supplier in supplierList) {
@@ -394,13 +395,15 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              //  add(SupplierProductsEvent.setCartCountEvent());
+              if(!state.productStockList[state.productListIndex][state.productStockUpdateIndex].productIsInCart) {
+                add(ProductSaleEvent.setCartCountEvent());
+              }
               Vibration.vibrate();
               //  Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
-                productIsInCart: false,
+                productIsInCart: true,
                 quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                 productSupplierIds: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                 totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
@@ -448,9 +451,9 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                   )) ??
               []);
           productStockList[2].addAll(stockList);
-          emit(state.copyWith(relatedProductList: response.data ?? [], isRelatedShimmering: false, productStockList: productStockList));
+          emit(state.copyWith(relatedProductList: response.data ?? [], isRelatedShimmering: false, productStockList: productStockList,isProductLoading : false));
         } else {
-          emit(state.copyWith(isRelatedShimmering: false));
+          emit(state.copyWith(isRelatedShimmering: false , isProductLoading : false));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context),
