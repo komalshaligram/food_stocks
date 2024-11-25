@@ -313,7 +313,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
                 productListIndex: productListIndex,
-                isProductLoading: false));
+                /*isProductLoading: false*/));
             if (supplierList.isNotEmpty) {
               bool isSupplierSelected = false;
               for (var supplier in supplierList) {
@@ -984,10 +984,10 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   )) ?? []);
           productStockList[2].addAll(stockList);
           emit(state.copyWith(
-              relatedProductList:response.data ?? [],
+              relatedProductList:response.data ?? [],isProductLoading : false,
               isRelatedShimmering: false,productStockList: productStockList));
         } else {
-          emit(state.copyWith(isRelatedShimmering: false));
+          emit(state.copyWith(isRelatedShimmering: false,isProductLoading : false));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(
