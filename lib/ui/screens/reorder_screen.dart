@@ -77,74 +77,64 @@ class ReorderScreenWidget extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.isBasketScreenString: 'true'});
               },
-              child: NotificationListener<ScrollNotification>(
-                child: Stack(
-                  children: [
-                    Container(
-                      height: 50,
-                      width: 50,
-                      clipBehavior: Clip.hardEdge,
-                      decoration: BoxDecoration(border: Border.all(color: Colors.transparent, width: 1), gradient: AppColors.appMainGradientColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
-                      child: Center(
-                        child: SvgPicture.asset(
-                          AppImagePath.cart,
-                          height: 26,
-                          width: 26,
-                          fit: BoxFit.cover,
-                          colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),
-                        ),
+              child: Stack(
+                children: [
+                  Container(
+                    height: 50,
+                    width: 50,
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(border: Border.all(color: Colors.transparent, width: 1), gradient: AppColors.appMainGradientColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppImagePath.cart,
+                        height: 26,
+                        width: 26,
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),
                       ),
                     ),
-                    state.cartCount != 0
-                        ? Positioned(
-                            top: 5,
-                            right: context.rtl ? null : 0,
-                            left: context.rtl ? 0 : null,
-                            child: Stack(
-                              children: [
-                                Container(
-                                  height: 18,
-                                  width: 24,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.mainColor,
-                                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                                    border: Border.all(color: AppColors.whiteColor, width: 1),
-                                  ),
-                                  child: Text(
-                                    '${state.cartCount}',
-                                    style: AppStyles.rkRegularTextStyle(size: 10, color: AppColors.whiteColor),
-                                  ),
+                  ),
+                  state.cartCount != 0
+                      ? Positioned(
+                          top: 5,
+                          right: context.rtl ? null : 0,
+                          left: context.rtl ? 0 : null,
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: 18,
+                                width: 24,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: AppColors.mainColor,
+                                  borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                                  border: Border.all(color: AppColors.whiteColor, width: 1),
                                 ),
-                              ],
-                            ),
-                          )
-                        : 0.width,
-                    SizedBox(
-                      height: 50,
-                      width: 25,
-                      child: Visibility(
-                        visible: state.duringCelebration,
-                        child: IgnorePointer(
-                          child: Confetti(
-                            isStopped: !state.duringCelebration,
-                            snippingCount: 10,
-                            snipSize: 3.0,
-                            colors: [AppColors.mainColor],
+                                child: Text(
+                                  '${state.cartCount}',
+                                  style: AppStyles.rkRegularTextStyle(size: 10, color: AppColors.whiteColor),
+                                ),
+                              ),
+                            ],
                           ),
+                        )
+                      : 0.width,
+                  SizedBox(
+                    height: 50,
+                    width: 25,
+                    child: Visibility(
+                      visible: state.duringCelebration,
+                      child: IgnorePointer(
+                        child: Confetti(
+                          isStopped: !state.duringCelebration,
+                          snippingCount: 10,
+                          snipSize: 3.0,
+                          colors: [AppColors.mainColor],
                         ),
                       ),
                     ),
-                  ],
-                ),
-                onNotification: (notification) {
-                  if (!state.isBottomOfProducts) {
-                    context.read<ReorderBloc>().add(ReorderEvent.getPreviousOrderProductsEvent(context: context));
-                  } else {
-                    return false;
-                  }
-                  return true;
-                },
+                  ),
+                ],
               ),
             ),
             backgroundColor: AppColors.pageColor,
@@ -404,11 +394,14 @@ class ReorderScreenWidget extends StatelessWidget {
                     ],
                   ),
                   onNotification: (notification) {
-                    if (!state.isBottomOfProducts) {
-                      context.read<ReorderBloc>().add(ReorderEvent.getPreviousOrderProductsEvent(context: context));
-                    } else {
-                      return false;
-                    }
+          if (notification.metrics.pixels > (notification.metrics.maxScrollExtent - 400)) {
+            if (!state.isBottomOfProducts) {
+              context.read<ReorderBloc>().add(ReorderEvent
+                  .getPreviousOrderProductsEvent(context: context));
+            } else {
+              return false;
+            }
+          }
                     return true;
                   },
                 ),

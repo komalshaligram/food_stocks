@@ -588,15 +588,17 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                     ],
                   ),
                   onNotification: (notification) {
-                    if (!state.isBottomOfProducts) {
-                      context.read<SupplierProductsBloc>().add(
-                          SupplierProductsEvent
-                              .getSupplierProductsListEvent(
-                              context: context,
-                              searchType: state.searchType));
-                    } else {
-                      return false;
-                    }
+          if (notification.metrics.pixels > (notification.metrics.maxScrollExtent - 400)) {
+            if (!state.isBottomOfProducts) {
+              context.read<SupplierProductsBloc>().add(
+                  SupplierProductsEvent
+                      .getSupplierProductsListEvent(
+                      context: context,
+                      searchType: state.searchType));
+            } else {
+              return false;
+            }
+          }
                     return true;
                   },
                 ),

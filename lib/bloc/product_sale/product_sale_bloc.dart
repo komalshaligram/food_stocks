@@ -56,7 +56,6 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         }
         try {
           emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
-          printData('pagenum____${state.pageNum + 1}');
           final res = await DioClient(event.context).post(AppUrlEndPoints.getSaleProductsUrl, data: ProductSalesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.saleProductPageLimit, search: state.search).toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
@@ -67,8 +66,6 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             stockList.addAll(response.data?.map((saleProduct) => ProductStockModel(productId: saleProduct.id ?? '', maxQty: int.parse(saleProduct.sale?.saleMaxQuantity ?? '0'), stock: (saleProduct.productStock.toString()))) ?? []);
             productStockList[1].addAll(stockList);
             emit(state.copyWith(productSalesList: productSaleList, productStockList: productStockList, pageNum: state.pageNum + 1, isLoadMore: false, isShimmering: false));
-            printData('totalFilteredCount____${response.metaData?.totalFilteredCount }');
-            printData('productListlength____${state.productSalesList.length }');
             emit(state.copyWith(isBottomOfProducts: productSaleList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false));
           } else {
             emit(state.copyWith(isLoadMore: false));

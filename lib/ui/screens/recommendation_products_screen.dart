@@ -379,13 +379,18 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                     ],
                   ),
                   onNotification: (notification) {
-                    if (!state.isBottomOfProducts) {
-                      context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.getRecommendationProductsEvent(context: context));
-                    } else {
-                      return false;
-                    }
+          if (notification.metrics.pixels > (notification.metrics.maxScrollExtent - 400)) {
+            if (!state.isBottomOfProducts) {
+              context.read<RecommendationProductsBloc>().add(
+                  RecommendationProductsEvent.getRecommendationProductsEvent(
+                      context: context));
+            } else {
+              return false;
+            }
+          }
                     return true;
                   },
+
                 ),
               ),
             ),

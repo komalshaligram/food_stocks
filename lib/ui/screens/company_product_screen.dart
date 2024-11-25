@@ -608,16 +608,17 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                 ]
                             ),
                 onNotification: (notification) {
+        if (notification.metrics.pixels > (notification.metrics.maxScrollExtent - 400)) {
+          if (!state.isBottomOfProducts) {
+            context.read<CompanyProductsBloc>().add(
+                CompanyProductsEvent.getCompanyProductsListEvent(
+                    context: context));
+          } else {
+            return false;
+          }
+        }
+          return true;
 
-                    if (!state.isBottomOfProducts) {
-                      context.read<CompanyProductsBloc>().add(
-                          CompanyProductsEvent.getCompanyProductsListEvent(
-                              context: context));
-                    } else {
-                      return false;
-                    }
-
-                  return true;
                 },
               ),
           ),),
