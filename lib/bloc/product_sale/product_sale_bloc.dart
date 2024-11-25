@@ -42,8 +42,6 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-  String _productId = '';
-  String _supplierId = "";
   ProductSaleBloc() : super(ProductSaleState.initial()) {
     on<ProductSaleEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -98,8 +96,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-        _productId = '';
-        _supplierId = '';
+
 
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
