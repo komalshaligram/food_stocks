@@ -42,8 +42,6 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-  String _productId = '';
-  String _supplierId = "";
   ProductSaleBloc() : super(ProductSaleState.initial()) {
     on<ProductSaleEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -98,8 +96,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-        _productId = '';
-        _supplierId = '';
+
 
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
@@ -196,7 +193,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                       ? ''
                       : productStockList[productListIndex][0].note;
               emit(state.copyWith(productStockList: []));
-              emit(state.copyWith(productDetails: response.product ?? [], productStockList: productStockList, productStockUpdateIndex: productStockUpdateIndex, noteController: TextEditingController(text: note), productSupplierList: supplierList, productListIndex: productListIndex, isProductLoading: false));
+              emit(state.copyWith(productDetails: response.product ?? [], productStockList: productStockList, productStockUpdateIndex: productStockUpdateIndex, noteController: TextEditingController(text: note), productSupplierList: supplierList, productListIndex: productListIndex, /*isProductLoading: false*/));
               if (supplierList.isNotEmpty) {
                 bool isSupplierSelected = false;
                 for (var supplier in supplierList) {
@@ -450,9 +447,9 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                   )) ??
               []);
           productStockList[2].addAll(stockList);
-          emit(state.copyWith(relatedProductList: response.data ?? [], isRelatedShimmering: false, productStockList: productStockList));
+          emit(state.copyWith(relatedProductList: response.data ?? [], isRelatedShimmering: false, productStockList: productStockList,isProductLoading : false));
         } else {
-          emit(state.copyWith(isRelatedShimmering: false));
+          emit(state.copyWith(isRelatedShimmering: false , isProductLoading : false));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context),

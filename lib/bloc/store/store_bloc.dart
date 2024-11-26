@@ -488,7 +488,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   productStockUpdateIndex: productStockUpdateIndex,
                   noteController: TextEditingController(text: note),
                   productSupplierList: supplierList,
-                  isProductLoading: false));
+                  /*isProductLoading: false*/
+              ));
               if (supplierList.isNotEmpty) {
                 bool isSupplierSelected = false;
                 for (var supplier in supplierList) {
@@ -1049,10 +1050,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     )) ?? []);
 
             emit(state.copyWith(
-                relatedProductList:response.data ?? [],
+                relatedProductList:response.data ?? [], isProductLoading: false,
                 isRelatedShimmering: false,productStockList: productStockList));
           } else {
-            emit(state.copyWith(isRelatedShimmering: false));
+            emit(state.copyWith(isRelatedShimmering: false,isProductLoading: false,));
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.getLocalizedStrings(
