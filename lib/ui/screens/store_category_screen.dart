@@ -621,7 +621,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           bloc.add( const StoreCategoryEvent.changeCategoryExpansionEvent(isOpened: true));
                           bloc.add(StoreCategoryEvent.globalSearchEvent(context: context));
                         }
-
                       },
                       onSearchSubmit: (String search) {
                         Navigator.pushNamed(

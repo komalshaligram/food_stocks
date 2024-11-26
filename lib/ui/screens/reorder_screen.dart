@@ -165,232 +165,245 @@ class ReorderScreenWidget extends StatelessWidget {
                 bloc.add(ReorderEvent.getPermissionList(context: context));
               },
               child: SafeArea(
-                child: Stack(
-                  children: [
-                    SmartRefresher(
-                      enablePullDown: true,
-                      controller: state.refreshController,
-                      header: const RefreshWidget(),
-                      footer: CustomFooter(
-                        builder: (context, mode) => state.isGridView ? SupplierProductsScreenShimmerWidget() : StoreCategoryScreenSubcategoryShimmerWidget(),
-                      ),
-                      enablePullUp: !state.isBottomOfProducts,
-                      onRefresh: () {
-                        context.read<ReorderBloc>().add(ReorderEvent.refreshListEvent(context: context));
-                      },
-                      onLoading: () {
-                        context.read<ReorderBloc>().add(ReorderEvent.getPreviousOrderProductsEvent(context: context));
-                      },
-                      child: SingleChildScrollView(
-                        physics: state.previousOrderProductsList.isEmpty ? const NeverScrollableScrollPhysics() : null,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            100.height,
-                            state.isShimmering
-                                ? state.isGridView
-                                    ? SupplierProductsScreenShimmerWidget()
-                                    : StoreCategoryScreenSubcategoryShimmerWidget()
-                                : state.previousOrderProductsList.isEmpty
-                                    ? Container(
-                                        height: getScreenHeight(context) - 80,
-                                        width: getScreenWidth(context),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          AppLocalizations.of(context)!.no_data,
-                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
-                                        ),
-                                      )
-                                    : state.isGridView
-                                        ? GridView.builder(
-                                            itemCount: state.previousOrderProductsList.length,
-                                            shrinkWrap: true,
-                                            physics: const NeverScrollableScrollPhysics(),
-                                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context, state.isSaleOn)),
-                                            itemBuilder: (context, index) => CommonProductSaleItemWidget(
-                                                isSale: state.previousOrderProductsList[index].sale?.isSale ?? false,
-                                                isGuestUser: false,
-                                                height: AppConstants.salesProductItemHeight,
-                                                width: 140,
-                                                productName: state.previousOrderProductsList[index].productName ?? '',
-                                                saleImage: state.previousOrderProductsList[index].mainImage ?? '',
-                                                title: state.previousOrderProductsList[index].name,
-                                                description: parse(state.previousOrderProductsList[index].sale?.saleDescription).body?.text ?? '',
-                                                discountedPrice: double.parse(state.previousOrderProductsList[index].sale?.salePrice ?? ''),
-                                                originalPrice: state.previousOrderProductsList[index].productPrice,
-                                                productStock: state.previousOrderProductsList[index].productStock.toString(),
-                                                lowStock: state.previousOrderProductsList[index].lowStock ?? '',
-                                                isPesach: state.previousOrderProductsList[index].isPesach,
-                                                onButtonTap: () {
-                                                  showProductDetails(
-                                                    context: context,
-                                                    productId: state.previousOrderProductsList[index].id ?? '',
-                                                    productListIndex: 1,
-                                                    isBarcode: false,
-                                                    productStock: state.previousOrderProductsList[index].productStock.toString(),
-                                                    isSaleOn: state.isSaleOn,
-                                                  );
-                                                }))
-                                        : ListView.builder(
-                                            itemCount: state.previousOrderProductsList.length,
-                                            shrinkWrap: true,
-                                            physics: const NeverScrollableScrollPhysics(),
-                                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                            itemBuilder: (context, index) => CommonSaleListView(
-                                                context: context,
-                                                discountedPrice: double.parse(state.previousOrderProductsList[index].sale?.salePrice ?? ''),
-                                                isFromSale: state.previousOrderProductsList[index].sale?.isSale,
-                                                salesDesc: state.previousOrderProductsList[index].sale?.saleDescription,
-                                                isGuestUser: false,
-                                                isPesach: state.previousOrderProductsList[index].isPesach,
-                                                numberOfUnits: state.previousOrderProductsList[index].numberOfUnit.toString(),
-                                                lowStock: state.previousOrderProductsList[index].lowStock.toString(),
-                                                productStock: state.previousOrderProductsList[index].productStock.toString(),
-                                                productImage: state.previousOrderProductsList[index].mainImage ?? '',
-                                                productName: state.previousOrderProductsList[index].productName ?? '',
-                                                price: double.parse(state.previousOrderProductsList[index].productPrice.toString()),
-                                                onButtonTap: () {
-                                                  showProductDetails(
-                                                    productListIndex: 1,
-                                                    context: context,
-                                                    productId: state.previousOrderProductsList[index].id ?? '',
-                                                    productStock: state.previousOrderProductsList[index].productStock.toString(),
-                                                    isSaleOn: state.isSaleOn,
-                                                  );
-                                                })),
-                          ],
+                child: NotificationListener<ScrollNotification>(
+                  child: Stack(
+                    children: [
+                      SmartRefresher(
+                        enablePullDown: true,
+                        controller: state.refreshController,
+                        header: const RefreshWidget(),
+                        footer: CustomFooter(
+                          builder: (context, mode) => state.isGridView ? SupplierProductsScreenShimmerWidget() : StoreCategoryScreenSubcategoryShimmerWidget(),
                         ),
+                        enablePullUp: !state.isBottomOfProducts,
+                        onRefresh: () {
+                          context.read<ReorderBloc>().add(ReorderEvent.refreshListEvent(context: context));
+                        },
+                      /*  onLoading: () {
+                          context.read<ReorderBloc>().add(ReorderEvent.getPreviousOrderProductsEvent(context: context));
+                        },*/
+                        child: SingleChildScrollView(
+                          physics: state.previousOrderProductsList.isEmpty ? const NeverScrollableScrollPhysics() : null,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              100.height,
+                              state.isShimmering
+                                  ? state.isGridView
+                                      ? SupplierProductsScreenShimmerWidget()
+                                      : StoreCategoryScreenSubcategoryShimmerWidget()
+                                  : state.previousOrderProductsList.isEmpty
+                                      ? Container(
+                                          height: getScreenHeight(context) - 80,
+                                          width: getScreenWidth(context),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            AppLocalizations.of(context)!.no_data,
+                                            style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                                          ),
+                                        )
+                                      : state.isGridView
+                                          ? GridView.builder(
+                                              itemCount: state.previousOrderProductsList.length,
+                                              shrinkWrap: true,
+                                              physics: const NeverScrollableScrollPhysics(),
+                                              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context, state.isSaleOn)),
+                                              itemBuilder: (context, index) => CommonProductSaleItemWidget(
+                                                  isSale: state.previousOrderProductsList[index].sale?.isSale ?? false,
+                                                  isGuestUser: false,
+                                                  height: AppConstants.salesProductItemHeight,
+                                                  width: 140,
+                                                  productName: state.previousOrderProductsList[index].productName ?? '',
+                                                  saleImage: state.previousOrderProductsList[index].mainImage ?? '',
+                                                  title: state.previousOrderProductsList[index].name,
+                                                  description: parse(state.previousOrderProductsList[index].sale?.saleDescription).body?.text ?? '',
+                                                  discountedPrice: double.parse(state.previousOrderProductsList[index].sale?.salePrice ?? ''),
+                                                  originalPrice: state.previousOrderProductsList[index].productPrice,
+                                                  productStock: state.previousOrderProductsList[index].productStock.toString(),
+                                                  lowStock: state.previousOrderProductsList[index].lowStock ?? '',
+                                                  isPesach: state.previousOrderProductsList[index].isPesach,
+                                                  onButtonTap: () {
+                                                    showProductDetails(
+                                                      context: context,
+                                                      productId: state.previousOrderProductsList[index].id ?? '',
+                                                      productListIndex: 1,
+                                                      isBarcode: false,
+                                                      productStock: state.previousOrderProductsList[index].productStock.toString(),
+                                                      isSaleOn: state.isSaleOn,
+                                                    );
+                                                  }))
+                                          : ListView.builder(
+                                              itemCount: state.previousOrderProductsList.length,
+                                              shrinkWrap: true,
+                                              physics: const NeverScrollableScrollPhysics(),
+                                              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                              itemBuilder: (context, index) => CommonSaleListView(
+                                                  context: context,
+                                                  discountedPrice: double.parse(state.previousOrderProductsList[index].sale?.salePrice ?? ''),
+                                                  isFromSale: state.previousOrderProductsList[index].sale?.isSale,
+                                                  salesDesc: state.previousOrderProductsList[index].sale?.saleDescription,
+                                                  isGuestUser: false,
+                                                  isPesach: state.previousOrderProductsList[index].isPesach,
+                                                  numberOfUnits: state.previousOrderProductsList[index].numberOfUnit.toString(),
+                                                  lowStock: state.previousOrderProductsList[index].lowStock.toString(),
+                                                  productStock: state.previousOrderProductsList[index].productStock.toString(),
+                                                  productImage: state.previousOrderProductsList[index].mainImage ?? '',
+                                                  productName: state.previousOrderProductsList[index].productName ?? '',
+                                                  price: double.parse(state.previousOrderProductsList[index].productPrice.toString()),
+                                                  onButtonTap: () {
+                                                    showProductDetails(
+                                                      productListIndex: 1,
+                                                      context: context,
+                                                      productId: state.previousOrderProductsList[index].id ?? '',
+                                                      productStock: state.previousOrderProductsList[index].productStock.toString(),
+                                                      isSaleOn: state.isSaleOn,
+                                                    );
+                                                  })),
+                            ],
+                          ),
+                        ),
+                        // ),
                       ),
-                      // ),
-                    ),
-                    CommonSearchWidget(
-                      onCloseTap: () {
-                        bloc.add(const ReorderEvent.changeCategoryExpansion(isOpened: false));
-                      },
-                      isFilterTap: true,
-                      isCategoryExpand: state.isCategoryExpand,
-                      isSearching: state.isSearching,
-                      onFilterTap: () {
-                        bloc.add(const ReorderEvent.changeCategoryExpansion());
-                      },
-                      onSearchTap: () {
-                        if (state.searchController.text != '') {
-                          bloc.add(const ReorderEvent.changeCategoryExpansion(isOpened: true));
-                        }
-                      },
-                      onSearch: (String search) {
-                        if (search.length > 1) {
-                          bloc.add(const ReorderEvent.changeCategoryExpansion(isOpened: true));
-                          bloc.add(ReorderEvent.globalSearchEvent(context: context));
-                        }
-                      },
-                      onSearchSubmit: (String search) {
-                        // bloc.add(ReorderEvent.globalSearchEvent(context: context));
-                        Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
-                      },
-                      onOutSideTap: () {
-                        state.searchController.clear();
-                        bloc.add(const ReorderEvent.changeCategoryExpansion(isOpened: false));
-                      },
-                      onSearchItemTap: () {
-                        bloc.add(const ReorderEvent.changeCategoryExpansion());
-                      },
-                      controller: state.searchController,
-                      searchList: state.searchList,
-                      searchResultWidget: state.isSearching ? const SizedBox() :state.searchList.isEmpty
-                          ? Center(
-                              child: Text(
-                                AppLocalizations.of(context)!.search_result_not_found,
-                                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                      CommonSearchWidget(
+                        onCloseTap: () {
+                          bloc.add(const ReorderEvent.changeCategoryExpansion(isOpened: false));
+                        },
+                        isFilterTap: true,
+                        isCategoryExpand: state.isCategoryExpand,
+                        isSearching: state.isSearching,
+                        onFilterTap: () {
+                          bloc.add(const ReorderEvent.changeCategoryExpansion());
+                        },
+                        onSearchTap: () {
+                          if (state.searchController.text != '') {
+                            bloc.add(const ReorderEvent.changeCategoryExpansion(isOpened: true));
+                          }
+                        },
+                        onSearch: (String search) {
+                          if (search.length > 1) {
+                            bloc.add(const ReorderEvent.changeCategoryExpansion(isOpened: true));
+                            bloc.add(ReorderEvent.globalSearchEvent(context: context));
+                          }
+                        },
+                        onSearchSubmit: (String search) {
+                          // bloc.add(ReorderEvent.globalSearchEvent(context: context));
+                          Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                        },
+                        onOutSideTap: () {
+                          state.searchController.clear();
+                          bloc.add(const ReorderEvent.changeCategoryExpansion(isOpened: false));
+                        },
+                        onSearchItemTap: () {
+                          bloc.add(const ReorderEvent.changeCategoryExpansion());
+                        },
+                        controller: state.searchController,
+                        searchList: state.searchList,
+                        searchResultWidget: state.isSearching ? const SizedBox() :state.searchList.isEmpty
+                            ? Center(
+                                child: Text(
+                                  AppLocalizations.of(context)!.search_result_not_found,
+                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                                ),
+                              )
+                            : ListView.builder(
+                                itemCount: state.searchList.length,
+                                shrinkWrap: true,
+                                itemBuilder: (listViewContext, index) {
+                                  return SearchItemWidget(
+                                      isShowSeeAll: index==state.searchList.length?true:false,
+                                      salePrice: state.searchList[index].salePrice,
+                                      saleDesc: state.searchList[index].salesDesc,
+                                      isPesach: state.searchList[index].isPesach,
+                                      lowStock: state.searchList[index].lowStock.toString(),
+                                      numberOfUnits: state.searchList[index].numberOfUnits,
+                                      priceOfBox: state.searchList[index].priceOfBox,
+                                      productStock: state.searchList[index].productStock,
+                                      context: context,
+                                      isGuestUser: false,
+                                      searchName: state.searchList[index].name,
+                                      searchImage: state.searchList[index].image,
+                                      searchType: state.searchList[index].searchType,
+                                      isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
+                                      isLastItem: state.searchList.length - 1 == index,
+                                      isShowSearchLabel: index == 0
+                                          ? true
+                                          : state.searchList[index].searchType != state.searchList[index - 1].searchType
+                                              ? true
+                                              : false,
+                                      onSeeAllTap: () async {
+                                        if (state.searchList[index].searchType == SearchTypes.category) {
+                                          dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
+                                          if (searchResult != null) {
+                                            bloc.add(ReorderEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                          }
+                                        } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
+                                          dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].categoryId, AppStrings.categoryNameString: state.searchList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
+                                          if (searchResult != null) {
+                                            bloc.add(ReorderEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                          }
+                                        } else {
+                                          state.searchList[index].searchType == SearchTypes.company
+                                              ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
+                                              : state.searchList[index].searchType == SearchTypes.supplier
+                                                  ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                  : state.searchList[index].searchType == SearchTypes.sale
+                                                      ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                      : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                                        }
+                                      },
+                                      onTap: () async {
+                                        if (state.searchList[index].searchType == SearchTypes.subCategory) {
+                                          CustomSnackBar.showSnackBar(
+                                            context: context,
+                                            title: AppStrings.getLocalizedStrings('Oops! in progress', context),
+                                            type: SnackBarType.success,
+                                          );
+                                          return;
+                                        }
+                                        if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
+                                          showProductDetails(
+                                            context: context,
+                                            productStock: state.searchList[index].productStock.toString(),
+                                            productId: state.searchList[index].searchId,
+                                            isBarcode: true,
+                                            productListIndex: 0,
+                                            isSaleOn: state.isSaleOn,
+                                          );
+                                        } else if (state.searchList[index].searchType == SearchTypes.category) {
+                                          dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
+                                          if (searchResult != null) {
+                                            bloc.add(ReorderEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                          }
+                                        } else {
+                                          state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
+                                        }
+                                        bloc.add(const ReorderEvent.changeCategoryExpansion());
+                                      });
+                                },
                               ),
-                            )
-                          : ListView.builder(
-                              itemCount: state.searchList.length,
-                              shrinkWrap: true,
-                              itemBuilder: (listViewContext, index) {
-                                return SearchItemWidget(
-                                    isShowSeeAll: index==state.searchList.length?true:false,
-                                    salePrice: state.searchList[index].salePrice,
-                                    saleDesc: state.searchList[index].salesDesc,
-                                    isPesach: state.searchList[index].isPesach,
-                                    lowStock: state.searchList[index].lowStock.toString(),
-                                    numberOfUnits: state.searchList[index].numberOfUnits,
-                                    priceOfBox: state.searchList[index].priceOfBox,
-                                    productStock: state.searchList[index].productStock,
-                                    context: context,
-                                    isGuestUser: false,
-                                    searchName: state.searchList[index].name,
-                                    searchImage: state.searchList[index].image,
-                                    searchType: state.searchList[index].searchType,
-                                    isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
-                                    isLastItem: state.searchList.length - 1 == index,
-                                    isShowSearchLabel: index == 0
-                                        ? true
-                                        : state.searchList[index].searchType != state.searchList[index - 1].searchType
-                                            ? true
-                                            : false,
-                                    onSeeAllTap: () async {
-                                      if (state.searchList[index].searchType == SearchTypes.category) {
-                                        dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
-                                        if (searchResult != null) {
-                                          bloc.add(ReorderEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
-                                        }
-                                      } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
-                                        dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].categoryId, AppStrings.categoryNameString: state.searchList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
-                                        if (searchResult != null) {
-                                          bloc.add(ReorderEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
-                                        }
-                                      } else {
-                                        state.searchList[index].searchType == SearchTypes.company
-                                            ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
-                                            : state.searchList[index].searchType == SearchTypes.supplier
-                                                ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
-                                                : state.searchList[index].searchType == SearchTypes.sale
-                                                    ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
-                                                    : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
-                                      }
-                                    },
-                                    onTap: () async {
-                                      if (state.searchList[index].searchType == SearchTypes.subCategory) {
-                                        CustomSnackBar.showSnackBar(
-                                          context: context,
-                                          title: AppStrings.getLocalizedStrings('Oops! in progress', context),
-                                          type: SnackBarType.success,
-                                        );
-                                        return;
-                                      }
-                                      if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
-                                        showProductDetails(
-                                          context: context,
-                                          productStock: state.searchList[index].productStock.toString(),
-                                          productId: state.searchList[index].searchId,
-                                          isBarcode: true,
-                                          productListIndex: 0,
-                                          isSaleOn: state.isSaleOn,
-                                        );
-                                      } else if (state.searchList[index].searchType == SearchTypes.category) {
-                                        dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
-                                        if (searchResult != null) {
-                                          bloc.add(ReorderEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
-                                        }
-                                      } else {
-                                        state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
-                                      }
-                                      bloc.add(const ReorderEvent.changeCategoryExpansion());
-                                    });
-                              },
-                            ),
-                      onScanTap: () async {
-                        String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
-                        if (scanResult != '-1') {
-                          // -1 result for cancel scanning
-                          showProductDetails(context: context, productId: scanResult, isBarcode: true, productStock: '1', productListIndex: 0, isSaleOn: state.isSaleOn);
-                        }
-                      },
-                    ),
-                  ],
+                        onScanTap: () async {
+                          String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
+                          if (scanResult != '-1') {
+                            // -1 result for cancel scanning
+                            showProductDetails(context: context, productId: scanResult, isBarcode: true, productStock: '1', productListIndex: 0, isSaleOn: state.isSaleOn);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  onNotification: (notification) {
+          if (notification.metrics.pixels > (notification.metrics.maxScrollExtent - 400)) {
+            if (!state.isBottomOfProducts) {
+              context.read<ReorderBloc>().add(ReorderEvent
+                  .getPreviousOrderProductsEvent(context: context));
+            } else {
+              return false;
+            }
+          }
+                    return true;
+                  },
                 ),
               ),
             ),

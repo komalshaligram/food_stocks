@@ -78,6 +78,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         state.refreshController.loadComplete();
       } else if (event is _RefreshListEvent) {
         emit(state.copyWith(
+          isShimmering: true,
             pageNum: 0,
             productSalesList: [],
             productStockList: [

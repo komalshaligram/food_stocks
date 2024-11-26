@@ -312,7 +312,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   []);
 
             }
-            if(isSubCategoryString == '' && !state.isSubCategory ){
+            if(isSubCategoryString == '' && !state.isSubCategory){
               productStockList[2] = stockList;
             }
             else if(isSubCategoryString != '' && !state.isSubCategory ){

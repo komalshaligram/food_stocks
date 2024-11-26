@@ -85,7 +85,6 @@ class CompanyProductsBloc
           CompanyProductsResModel response =
               CompanyProductsResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-
             List<CompanyData> productList =
                 state.productList.toList(growable: true);
            List <List<ProductStockModel>> productStockList =
@@ -99,7 +98,6 @@ class CompanyProductsBloc
                         stock: product.product?.productStock.toString() ?? '0')) ?? [],
             );
             productStockList[1].addAll(stockList);
-
             emit(state.copyWith(
                 productList: productList,
                 productStockList: productStockList,
@@ -109,6 +107,8 @@ class CompanyProductsBloc
                 isRefreshingProduct: false,
               bottleDeposit: preferences.getBottleTax(),
             ));
+            printData('totalFilteredCount____${response.metaData?.totalFilteredCount }');
+            printData('productListlength____${state.productList.length }');
             emit(state.copyWith(
                 isBottomOfProducts: state.productList.length ==
                         (response.metaData?.totalFilteredCount ?? 0)
@@ -133,6 +133,7 @@ class CompanyProductsBloc
       } else if (event is _refreshListEvent) {
         add(CompanyProductsEvent.getPermissionList(context: event.context));
         emit(state.copyWith(
+           isShimmering: true,
             pageNum: 0,
             productList: [],
             productStockList: [
