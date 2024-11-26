@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:food_stock/data/model/res_model/get_messages_res_model/get_messages_res_model.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import '../../data/model/res_model/get_messages_res_model/get_messages_res_model.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,7 +41,7 @@ class MessageContentBloc
             ],
           );
           final response =
-              await DioClient(event.context).post(AppUrls.deleteMessageUrl,
+              await DioClient(event.context).post(AppUrlEndPoints.deleteMessageUrl,
                   data: reqMap,
                 );
 
@@ -76,7 +76,7 @@ class MessageContentBloc
             ],
           );
           final response = await DioClient(event.context).put(
-              path: AppUrls.updateMessageUrl,
+              path: AppUrlEndPoints.updateMessageUrl,
               data: reqMap.toJson(),
               options: Options(
                 headers: {

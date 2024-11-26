@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/product_category/product_category_bloc.dart';
+import '../../bloc/product_category/product_category_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/widget/common_marquee_widget.dart';
+import '../../ui/widget/common_marquee_widget.dart';
 
-import 'package:food_stock/ui/widget/product_category_screen_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/widget/product_category_screen_shimmer_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../routes/app_routes.dart';
@@ -210,7 +210,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_10), topRight: Radius.circular(AppConstants.radius_10)),
                 child: Image.network(
-                  "${AppUrls.baseFileUrl}$categoryImage",
+                  "${AppUrlEndPoints.baseFileUrl}$categoryImage",
                   fit: BoxFit.cover,
                   alignment: Alignment.center,
                   loadingBuilder: (context, child, loadingProgress) {

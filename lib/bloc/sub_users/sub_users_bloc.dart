@@ -46,7 +46,7 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
           );
 
           final res = await DioClient(event.context).post(
-            AppUrls.getAllSubUserUrl,
+            AppUrlEndPoints.getAllSubUserUrl,
             data: req,
           );
           GetSubUserResModel response = GetSubUserResModel.fromJson(res);
@@ -102,12 +102,12 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
         try {
           printData('clientId_____${preferences.getUserId()}');
           final res = await DioClient(event.context).post(
-              AppUrls.verifyClientUrl,
+              AppUrlEndPoints.verifyClientUrl,
               data: {AppStrings.clientIdString:preferences.getUserId()}
           );
           VerifyClientResModel response = VerifyClientResModel.fromJson(res);
           printData('verifyClient res_____$response');
-          printData('verifyClient url_____${AppUrls.baseUrl}${AppUrls.verifyClientUrl}');
+          printData('verifyClient url_____${AppUrlEndPoints.baseUrl}${AppUrlEndPoints.verifyClientUrl}');
           if (response.status == AppConstants.code_200) {
             if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
               Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);

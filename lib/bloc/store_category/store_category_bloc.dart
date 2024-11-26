@@ -1,16 +1,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/data/error/exceptions.dart';
-import 'package:food_stock/data/model/req_model/planogram_req_model/planogram_req_model.dart';
-import 'package:food_stock/data/model/req_model/product_subcategories_req_model/product_subcategories_req_model.dart';
-import 'package:food_stock/data/model/res_model/planogram_res_model/planogram_res_model.dart';
-import 'package:food_stock/data/model/res_model/product_subcategories_res_model/product_subcategories_res_model.dart';
-import 'package:food_stock/repository/dio_client.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import '../../data/error/exceptions.dart';
+import '../../data/model/req_model/planogram_req_model/planogram_req_model.dart';
+import '../../data/model/req_model/product_subcategories_req_model/product_subcategories_req_model.dart';
+import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart';
+import '../../data/model/res_model/product_subcategories_res_model/product_subcategories_res_model.dart';
+import '../../repository/dio_client.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -68,11 +68,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         ));
       }
       if (event is _changeCategoryExpansionEvent) {
-        if(event.isOpened == false ){
-          state.searchController.clear();
-          emit(state.copyWith(searchController: state.searchController));
+        if(event.isOpened == false){
+          emit(state.copyWith(searchList: []));
         }
-
         if (event.isOpened != null) {
           emit(state.copyWith(isCategoryExpand: event.isOpened ?? false,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false));
 
@@ -171,7 +169,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               state.subCategoryPageNum == 0 ? true : false,
               isLoadMore: state.subCategoryPageNum == 0 ? false : true));
           final res = await DioClient(event.context).post(
-              AppUrls.getSubCategoriesUrl,
+              AppUrlEndPoints.getSubCategoriesUrl,
               data: ProductSubcategoriesReqModel(
                   parentCategoryId: state.categoryId,
                   pageNum: state.subCategoryPageNum + 1,
@@ -274,7 +272,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             return value == null;
           });
           final res = await DioClient(event.context)
-              .post(AppUrls.getPlanogramProductsUrl, data: req);
+              .post(AppUrlEndPoints.getPlanogramProductsUrl, data: req);
           PlanogramResModel response = PlanogramResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             if(state.isSubCategory){
@@ -368,12 +366,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
           final res = await DioClient(event.context).post(
-              AppUrls.getProductDetailsUrl,
+              AppUrlEndPoints.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
 
           ProductDetailsResModel response =
@@ -419,7 +416,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             try {
 
               final res = await DioClient(event.context).post(
-                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+                  '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
                  );
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
               if (response.status == AppConstants.code_200) {
@@ -533,7 +530,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
                 planoGramUpdateIndex: planoGramIndex,
-                isProductLoading: false));
+                /*isProductLoading: false*/
+            ));
             if (supplierList.isNotEmpty) {
               bool isSupplierSelected = false;
               for (var supplier in supplierList) {
@@ -830,7 +828,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             SharedPreferencesHelper preferences = SharedPreferencesHelper(
                 prefs: await SharedPreferences.getInstance());
             final res = await DioClient(event.context).post(
-              '${AppUrls.updateCartProductUrl}${preferences.getCartId()}',
+              '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
               data: request,
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
@@ -930,7 +928,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 prefs: await SharedPreferences.getInstance());
 
             final res = await DioClient(event.context).post(
-                '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
+                '${AppUrlEndPoints.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
                 );
             InsertCartResModel response = InsertCartResModel.fromJson(res);
@@ -1020,7 +1018,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getGlobalSearchResultUrl,
+              AppUrlEndPoints.getGlobalSearchResultUrl,
               data: globalSearchReqModel.toJson());
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
           if (state.searchController.text.isEmpty) {
@@ -1128,10 +1126,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       else if(event is _getPlanogramByIdEvent){
         try {
           final res = await DioClient(event.context)
-              .get(path: '${AppUrls.getPlanogramByIdUrl}$categoryId');
+              .get(path: '${AppUrlEndPoints.getPlanogramByIdUrl}$categoryId');
 
 
-          printData('url_____${AppUrls.baseUrl}${AppUrls.getPlanogramByIdUrl}$categoryId');
+          printData('url_____${AppUrlEndPoints.baseUrl}${AppUrlEndPoints.getPlanogramByIdUrl}$categoryId');
 
           GetPlanogramByIdModel response = GetPlanogramByIdModel.fromJson(res);
 
@@ -1175,7 +1173,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             );
 
           final  res = await DioClient(event.context)
-                .post(AppUrls.getSubCategoryProductsUrl,
+                .post(AppUrlEndPoints.getSubCategoryProductsUrl,
                 data: getSubCategoriesProductReqModel
             );
 
@@ -1234,7 +1232,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       else if(event is _relatedProductsEvent){
         emit(state.copyWith(isRelatedShimmering:true));
         final res = await DioClient(event.context).post(
-            AppUrls.relatedProductsUrl,
+            AppUrlEndPoints.relatedProductsUrl,
             data: {AppStrings.mainProductIdString:event.productId});
         RelatedProductResModel response =
         RelatedProductResModel.fromJson(res);
@@ -1251,10 +1249,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               }) ?? [] );
           productStockList[3].addAll(stockList);
           emit(state.copyWith(
-              relatedProductList:response.data  ?? [],
+              relatedProductList:response.data  ?? [],isProductLoading: false,
               isRelatedShimmering: false,productStockList: productStockList));
         } else {
-          emit(state.copyWith(isRelatedShimmering: false));
+          emit(state.copyWith(isRelatedShimmering: false,isProductLoading: false,));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(
@@ -1271,7 +1269,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if(preferences.getSubUser() ){
           try {
             final res = await DioClient(event.context).get(
-                path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+                path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               var res = response.data?.permissions;
@@ -1313,7 +1311,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if(!preferences.getGuestUser()) {
           try {
             final res = await DioClient(event.context).post(
-                AppUrls.verifyClientUrl,
+                AppUrlEndPoints.verifyClientUrl,
                 data: {AppStrings.clientIdString: preferences.getUserId()}
             );
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);

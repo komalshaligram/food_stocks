@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/bloc/supplier_permission/supplier_permission_bloc.dart';
+import '../../bloc/supplier_permission/supplier_permission_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';

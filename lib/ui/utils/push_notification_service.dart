@@ -2,15 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:food_stock/main.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import '../../main.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 as flutter_local_notifications;
-import 'package:food_stock/data/storage/shared_preferences_helper.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -163,7 +163,6 @@ class PushNotificationService {
     await Future.delayed(const Duration(seconds: 1));
 
     String? fcmToken = '';
-    String? token = await FirebaseMessaging.instance.getAPNSToken();
 
     fcmToken = await FirebaseMessaging.instance.getToken();
 

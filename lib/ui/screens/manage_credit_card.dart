@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/manage_credit_card/manage_credit_card_bloc.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
+import '../../bloc/manage_credit_card/manage_credit_card_bloc.dart';
+import '../../ui/utils/app_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
-import 'package:food_stock/ui/widget/custom_button_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/utils/themes/app_img_path.dart';
+import '../../ui/widget/custom_button_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';

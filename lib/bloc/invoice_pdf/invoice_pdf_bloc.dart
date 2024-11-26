@@ -37,10 +37,10 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
 
            String filePath =
                '${dir.path}/${state.invoiceDetailsList.link?.split('/').last.split('.').first}_${DateTime.now().day}_${DateTime.now().month}_${DateTime.now().hour}_${DateTime.now().minute}${'.pdf'}';
-           printData( " download    ${AppUrls.baseFileUrl}${state.invoiceDetailsList.link}");
+           printData( " download    ${AppUrlEndPoints.baseFileUrl}${state.invoiceDetailsList.link}");
 
            await Dio().download(
-               "${AppUrls.baseFileUrl}${state.invoiceDetailsList.link}",
+               "${AppUrlEndPoints.baseFileUrl}${state.invoiceDetailsList.link}",
                filePath, onReceiveProgress: (received, total) {
              printData('rec:$received,total:$total');
              int progress = (received * 100) ~/ total;

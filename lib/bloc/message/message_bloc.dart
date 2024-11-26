@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:food_stock/data/model/req_model/get_messages_req_model/get_messages_req_model.dart';
-import 'package:food_stock/data/model/res_model/get_messages_res_model/get_messages_res_model.dart';
+import '../../data/model/req_model/get_messages_req_model/get_messages_req_model.dart';
+import '../../data/model/res_model/get_messages_res_model/get_messages_res_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,7 +41,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
               isLoadMore: state.pageNum == 0 ? false : true));
           final res = await DioClient(event.context).post(
               //AppUrls.getAllMessagesUrl,
-              AppUrls.getNotificationMessageUrl,
+              AppUrlEndPoints.getNotificationMessageUrl,
               data: GetMessagesReqModel(
                       pageNum: state.pageNum + 1,
                       pageLimit: AppConstants.messagePageLimit)
@@ -145,7 +145,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
             ],
           );
           final response =
-          await DioClient(event.context).post(AppUrls.deleteMessageUrl,
+          await DioClient(event.context).post(AppUrlEndPoints.deleteMessageUrl,
               data: reqMap,
             );
 

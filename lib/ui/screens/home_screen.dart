@@ -9,23 +9,23 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
-import 'package:food_stock/bloc/home/home_bloc.dart';
-import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_styles.dart';
+import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
+import '../../bloc/home/home_bloc.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_img_path.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/widget/common_product_details_widget.dart';
-import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
-import 'package:food_stock/ui/widget/custom_dialog.dart';
-import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
-import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/widget/common_product_details_widget.dart';
+import '../../ui/widget/common_product_sale_item_widget.dart';
+import '../../ui/widget/custom_dialog.dart';
+import '../../ui/widget/custom_text_icon_button_widget.dart';
+import '../../ui/widget/product_details_shimmer_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
@@ -35,7 +35,7 @@ import '../utils/themes/app_urls.dart';
 import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_product_list_widget.dart';
 import '../widget/common_search_widget.dart';
-import 'package:food_stock/ui/utils/push_notification_service.dart';
+import '../../ui/utils/push_notification_service.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/pesach_banner_shimmer.dart';
 import '../widget/search_item_widget.dart';
@@ -53,7 +53,10 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc()
-        ..add(HomeEvent.getProfileDetailsEvent(context: context)),
+        ..add(HomeEvent.getProfileDetailsEvent(context: context))
+     // ..add(HomeEvent.getRecommendationProductsListEvent(context:context))
+      ..add(HomeEvent.getProductSalesListEvent(context: context))
+      ..add(const HomeEvent.getPreferencesDataEvent()),
       child: HomeScreenWidget(isNavigation: isSubCategory),
     );
   }
@@ -124,7 +127,7 @@ class HomeScreenWidget extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(20),
                                       child: CachedNetworkImage(
                                         placeholder: (context, url) => const Center(child: CupertinoActivityIndicator()),
-                                        imageUrl: '${AppUrls.baseFileUrl}${state.userImageUrl}',
+                                        imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.userImageUrl}',
                                         fit: BoxFit.cover,
                                         errorWidget: (context, url, error) {
                                           return Container(
@@ -195,8 +198,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                   right: context.rtl ? null : 7,
                                                   left: context.rtl ? 7 : null,
                                                   child: Container(
-                                                    height: 18,
-                                                    width: 18,
+                                                    height: 22,
+                                                    width: 22,
                                                     decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, border: Border.all(color: AppColors.whiteColor, width: 1), shape: BoxShape.circle),
                                                     alignment: Alignment.center,
                                                     child: Text('${state.messageCount <= 99 ? state.messageCount : '99+'}', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.whiteColor)),
@@ -238,7 +241,6 @@ class HomeScreenWidget extends StatelessWidget {
                                     bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
                                     bloc.add(HomeEvent.getProductSalesListEvent(context: context));
                                     handleMessageOnBackground();
-
                                     bloc.add(const HomeEvent.getPreferencesDataEvent());
                                     bloc.add(HomeEvent.getMessageListEvent(context: context));
                                     bloc.add(HomeEvent.getCartCountEvent(context: context));
@@ -247,8 +249,6 @@ class HomeScreenWidget extends StatelessWidget {
                                       bloc.add(HomeEvent.generalSettings(context: context, dialogContext: context, isRetryLoading: false));
                                     }
                                     bloc.add(HomeEvent.getPermissionList(context: context));
-
-
                                     state.refreshController.refreshCompleted();
                                     state.refreshController.loadComplete();
                                   },
@@ -267,7 +267,7 @@ class HomeScreenWidget extends StatelessWidget {
                                               padding: const EdgeInsets.only(left: 8.0, right: 8),
                                               child: CachedNetworkImage(
                                                 placeholder: (context, url) => const PesachBannerShimmerWidget(),
-                                                imageUrl: '${AppUrls.baseFileUrl}${state.pesachBannerURL}',
+                                                imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.pesachBannerURL}',
                                                 errorWidget: (context, url, error) {
                                                   return Container(
                                                     color: AppColors.whiteColor,
@@ -290,8 +290,9 @@ class HomeScreenWidget extends StatelessWidget {
                                                     }),
                                                 SizedBox(
                                                   width: getScreenWidth(context),
-                                                  height: AppConstants.salesProductItemHeight,
-                                                  child: state.isProductSaleShimmering ?CommonProductListShimmerWidget():AbsorbPointer(
+                                                  height: getItemHeight(context, state.isSaleOn),
+                                                  child: state.isProductSaleShimmering ? CommonProductListShimmerWidget(
+                                                  ):AbsorbPointer(
                                                     absorbing: state.isProductSaleShimmering,
                                                     child: ListView.builder(
                                                       itemCount: state.productSalesList.length,
@@ -303,7 +304,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             isSale: state.productSalesList[index].sale?.isSale,
                                                             isGuestUser: state.isGuestUser,
                                                             height: AppConstants.salesProductItemHeight,
-                                                            width: 140,
+                                                            width: getItemWidth(context),
                                                             productName: state.productSalesList[index].productName ?? '',
                                                             saleImage: state.productSalesList[index].mainImage ?? '',
                                                             title: state.productSalesList[index].name,
@@ -315,7 +316,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             isPesach: state.productSalesList[index].isPesach,
                                                             onButtonTap: () {
                                                               if (!state.isGuestUser) {
-                                                                showProductDetails(isSaleOn: state.isSaleOn, productListIndex: 3, context: state.context??context, productId: state.productSalesList[index].id ?? '', productStock: state.productSalesList[index].productStock.toString());
+                                                                showProductDetails(isSaleOn: state.isSaleOn, productListIndex: 3, context: Platform.isIOS ? (state.context??context): context, productId: state.productSalesList[index].id ?? '', productStock: state.productSalesList[index].productStock.toString());
                                                               } else {
                                                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                               }
@@ -341,7 +342,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                     }),
                                                 SizedBox(
                                                   width: getScreenWidth(context),
-                                                  height: state.isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+                                                 height: getItemHeight(context, state.isSaleOn),
                                                   child: state.isShimmering?CommonProductListShimmerWidget():ListView.builder(
                                                       itemCount: state.recommendedProductsList.length,
                                                       shrinkWrap: true,
@@ -351,7 +352,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                           isSale: state.recommendedProductsList[index].sale?.isSale,
                                                           isGuestUser: state.isGuestUser,
                                                           height: AppConstants.salesProductItemHeight,
-                                                          width: 140,
+                                                          width: getItemWidth(context),
                                                           productName: state.recommendedProductsList[index].productName ?? '',
                                                           saleImage: state.recommendedProductsList[index].mainImage ?? '',
                                                           title: state.recommendedProductsList[index].name,
@@ -365,7 +366,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             if (!state.isGuestUser) {
                                                               showProductDetails(
                                                                 isSaleOn: state.isSaleOn,
-                                                                context: state.context??context,
+                                                                context: Platform.isIOS ? (state.context??context): context,
                                                                 productId: state.recommendedProductsList[index].id ?? '',
                                                                 productStock: (state.recommendedProductsList[index].productStock.toString()),
                                                                 productListIndex: 1,
@@ -464,6 +465,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
                                   },
                                   onOutSideTap: () {
+                                    state.searchController.clear();
                                     bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: false));
                                   },
                                   onSearchItemTap: () {
@@ -471,7 +473,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   },
                                   controller: state.searchController,
                                   searchList: state.searchList,
-                                  searchResultWidget: state.searchList.isEmpty
+                                  searchResultWidget:state.isSearching ? const SizedBox() : state.searchList.isEmpty
                                       ? Center(
                                     child: Text(
                                       AppLocalizations.of(context)!.search_result_not_found,
@@ -536,7 +538,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             }
                                             if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
 
-                                              showProductDetails(context: state.context??context, productId: state.searchList[index].searchId, isBarcode: true, productListIndex: 0, isSaleOn: state.isSaleOn, productStock: (state.searchList[index].productStock.toString()));
+                                              showProductDetails(context: Platform.isIOS ? (state.context??context): context, productId: state.searchList[index].searchId, isBarcode: true, productListIndex: 0, isSaleOn: state.isSaleOn, productStock: (state.searchList[index].productStock.toString()));
                                             } else if (state.searchList[index].searchType == SearchTypes.category) {
                                               dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
                                               if (searchResult != null) {
@@ -741,7 +743,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                       },
                                                       child: PhotoView(
                                                         imageProvider: NetworkImage(
-                                                          '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                          '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                         ),
                                                       ),
                                                     ),
@@ -816,7 +818,7 @@ class HomeScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+         height: getItemHeight(context, isSaleOn),
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
           child: ListView.builder(
             controller: ScrollController(),
@@ -827,7 +829,7 @@ class HomeScreenWidget extends StatelessWidget {
                 isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: AppConstants.salesProductItemHeight,
-                width: 140,
+                width:  getItemWidth(context),
                 productName: relatedProductList.elementAt(i).productName ?? '',
                 saleImage: relatedProductList.elementAt(i).mainImage ?? '',
                 title: relatedProductList.elementAt(i).name,

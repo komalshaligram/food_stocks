@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/widget/common_shimmer_widget.dart';
 import '../utils/themes/app_constants.dart';
 
 class SupplierScreenShimmerWidget extends StatelessWidget {

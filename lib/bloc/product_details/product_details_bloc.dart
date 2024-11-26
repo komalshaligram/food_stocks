@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 
-import 'package:food_stock/data/model/req_model/remove_issue/remove_issue_req_model.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import '../../data/model/req_model/remove_issue/remove_issue_req_model.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,9 +39,9 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
         emit(state.copyWith(isShimmering: true, isLoading: true, language: preferencesHelper.getAppLanguage(), isSubUserCreateDuplicateOrder: preferencesHelper.getCanDuplicateOrder(), isIncludedVat: preferencesHelper.getIsIncludedVat()));
         try {
           final res = await DioClient(event.context).get(
-            path: '${AppUrls.getOrderById}${preferencesHelper.getOrderId()}',
+            path: '${AppUrlEndPoints.getOrderById}${preferencesHelper.getOrderId()}',
           );
-          printData('GetOrderById url   = ${AppUrls.getOrderById}${event.orderId}');
+          printData('GetOrderById url   = ${AppUrlEndPoints.getOrderById}${event.orderId}');
    
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
        
@@ -109,7 +109,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
 
           try {
             final response = await DioClient(event.context).post(
-              '${AppUrls.createIssueUrl}${event.orderId}',
+              '${AppUrlEndPoints.createIssueUrl}${event.orderId}',
               data: reqMap,
             );
 
@@ -156,7 +156,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
 
         try {
           final response = await DioClient(event.context).post(
-            AppUrls.removeIssueUrl,
+            AppUrlEndPoints.removeIssueUrl,
             data: reqMap,
           );
 
@@ -181,7 +181,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
         emit(state.copyWith(isDuplicateOrderProcess: true));
         try {
           final response = await DioClient(event.context).post(
-            AppUrls.duplicateOrderUrl,
+            AppUrlEndPoints.duplicateOrderUrl,
             data: {AppStrings.orderIdString: event.orderId, AppStrings.cartIdString: preferencesHelper.getCartId()},
           );
 
@@ -208,7 +208,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
         emit(state.copyWith(isDuplicateOrderProcess: true));
         try {
           final res = await DioClient(event.context).post(
-            '${AppUrls.getAllCartUrl}${preferencesHelper.getCartId()}',
+            '${AppUrlEndPoints.getAllCartUrl}${preferencesHelper.getCartId()}',
           );
 
        
@@ -236,10 +236,10 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
       } else if (event is _getPermissionList) {
         if (preferencesHelper.getSubUser()) {
           try {
-            final res = await DioClient(event.context).get(path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+            final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
           
-            printData('AccountPermission url = ${AppUrls.baseUrl}${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+            printData('AccountPermission url = ${AppUrlEndPoints.baseUrl}${AppUrlEndPoints.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
             if (response.status == AppConstants.code_200) {
               var res = response.data?.permissions;
               preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);

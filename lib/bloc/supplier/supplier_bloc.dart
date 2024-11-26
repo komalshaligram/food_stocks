@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/data/model/req_model/suppliers_req_model/suppliers_req_model.dart';
+import '../../data/model/req_model/suppliers_req_model/suppliers_req_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -33,7 +33,7 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
           final res = await DioClient(event.context).post(
-              AppUrls.getSuppliersUrl,
+              AppUrlEndPoints.getSuppliersUrl,
               data: SuppliersReqModel(
                       pageNum: state.pageNum + 1,
                       pageLimit: AppConstants.supplierPageLimit,

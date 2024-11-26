@@ -2,28 +2,28 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/data/error/exceptions.dart';
-import 'package:food_stock/data/model/product_supplier_model/product_supplier_model.dart';
-import 'package:food_stock/data/model/req_model/company_req_model/company_req_model.dart';
-import 'package:food_stock/data/model/req_model/global_search_req_model/global_search_req_model.dart';
-import 'package:food_stock/data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
+import '../../data/error/exceptions.dart';
+import '../../data/model/product_supplier_model/product_supplier_model.dart';
+import '../../data/model/req_model/company_req_model/company_req_model.dart';
+import '../../data/model/req_model/global_search_req_model/global_search_req_model.dart';
+import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
     as insert;
-import 'package:food_stock/data/model/req_model/previous_order_products_req_model/previous_order_products_req_model.dart';
-import 'package:food_stock/data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
-import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
-import 'package:food_stock/data/model/req_model/recommendation_products_req_model/recommendation_products_req_model.dart';
-import 'package:food_stock/data/model/req_model/suppliers_req_model/suppliers_req_model.dart';
-import 'package:food_stock/data/model/res_model/company_res_model/company_res_model.dart';
-import 'package:food_stock/data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
-import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
-import 'package:food_stock/data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
-import 'package:food_stock/data/model/res_model/setting_res_model/setting_res_model.dart';
-import 'package:food_stock/data/model/search_model/search_model.dart';
-import 'package:food_stock/data/model/supplier_sale_model/supplier_sale_model.dart';
-import 'package:food_stock/data/storage/shared_preferences_helper.dart';
-import 'package:food_stock/repository/dio_client.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import '../../data/model/req_model/previous_order_products_req_model/previous_order_products_req_model.dart';
+import '../../data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
+import '../../data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
+import '../../data/model/req_model/recommendation_products_req_model/recommendation_products_req_model.dart';
+import '../../data/model/req_model/suppliers_req_model/suppliers_req_model.dart';
+import '../../data/model/res_model/company_res_model/company_res_model.dart';
+import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
+import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
+import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
+import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
+import '../../data/model/search_model/search_model.dart';
+import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
+import '../../data/storage/shared_preferences_helper.dart';
+import '../../repository/dio_client.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -58,6 +58,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
+  String _productId = '';
+  String _supplierId = "";
 
 
   StoreBloc() : super(StoreState.initial()) {
@@ -66,6 +68,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _changeCategoryExpansion) {
+        if(event.isOpened == false){
+          emit(state.copyWith(searchList: []));
+        }
         if(event.isOpened == false ){
           state.searchController.clear();
           emit(state.copyWith(searchController: state.searchController,search: '',));
@@ -83,7 +88,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         printData('supplier selection : ${state.isSelectSupplier}');
       }
       else if (event is _getProductCategoriesListEvent) {
-         printData('getGuestUser_____${preferencesHelper.getGuestUser()}');
         emit(state.copyWith(isGuestUser: preferencesHelper.getGuestUser(),
         isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(),
           isSaleOn: preferencesHelper.getShowSale(),
@@ -91,7 +95,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getProductCategoriesUrl,
+              AppUrlEndPoints.getProductCategoriesUrl,
               data: const ProductCategoriesReqModel(
                       pageNum: 1, pageLimit: 18)
                   .toJson());
@@ -139,7 +143,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         try {
           emit(state.copyWith(isShimmering: true,isSaleShimmering: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getSaleProductsUrl,
+              AppUrlEndPoints.getSaleProductsUrl,
               data: const ProductSalesReqModel(
                       pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
                   .toJson());
@@ -182,7 +186,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           try {
             emit(state.copyWith(isRecommendedShimmering: true));
             final res = await DioClient(event.context).post(
-                AppUrls.getRecommendationProductsUrl,
+                AppUrlEndPoints.getRecommendationProductsUrl,
                 data: const RecommendationProductsReqModel(
                     pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
                     .toJson(),);
@@ -228,7 +232,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getSuppliersUrl,
+              AppUrlEndPoints.getSuppliersUrl,
               data: const SuppliersReqModel(
                       pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
                   .toJson());
@@ -260,7 +264,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getCompaniesUrl,
+              AppUrlEndPoints.getCompaniesUrl,
               data: const CompanyReqModel(
                       pageNum: 1, pageLimit: AppConstants.companyPageLimit)
                   .toJson());
@@ -295,11 +299,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-
+        _productId = '';
+        _supplierId = '';
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false,));
           final res = await DioClient(event.context).post(
-              AppUrls.getProductDetailsUrl,
+              AppUrlEndPoints.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response =
               ProductDetailsResModel.fromJson(res);
@@ -345,7 +350,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 SharedPreferencesHelper preferences = SharedPreferencesHelper(
                     prefs: await SharedPreferences.getInstance());
                 final res = await DioClient(event.context).post(
-                    '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+                    '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
                     options: Options(headers: {
                       HttpHeaders.authorizationHeader:
                       'Bearer ${preferences.getAuthToken()}'
@@ -483,7 +488,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   productStockUpdateIndex: productStockUpdateIndex,
                   noteController: TextEditingController(text: note),
                   productSupplierList: supplierList,
-                  isProductLoading: false));
+                  /*isProductLoading: false*/
+              ));
               if (supplierList.isNotEmpty) {
                 bool isSupplierSelected = false;
                 for (var supplier in supplierList) {
@@ -688,7 +694,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             );
             SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
             final res = await DioClient(event.context).post(
-              '${AppUrls.updateCartProductUrl}${preferences.getCartId()}',
+              '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
               data: request,
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
@@ -730,12 +736,16 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             });
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
             final res = await DioClient(event.context).post(
-              '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
+              '${AppUrlEndPoints.insertProductInCartUrl}${preferencesHelper.getCartId()}',
               data: req,
             );
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              add(const StoreEvent.setCartCountEvent());
+              if(_productId == '' && _supplierId == ''){
+                add(const StoreEvent.setCartCountEvent());
+              }
+              _productId =  state.productStockList[state.productStockUpdateIndex].productId;
+              _supplierId = state.productStockList[state.productStockUpdateIndex].productSupplierIds;
 
               Vibration.vibrate();
               // Navigator.pop(event.context);
@@ -822,7 +832,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getGlobalSearchResultUrl,
+              AppUrlEndPoints.getGlobalSearchResultUrl,
               data: globalSearchReqModel.toJson());
 
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
@@ -975,7 +985,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               try {
                 emit(state.copyWith(isPreviousOrderShimmering: true));
                 final res = await DioClient(event.context).post(
-                  AppUrls.getPreviousOrderProductsUrl,
+                  AppUrlEndPoints.getPreviousOrderProductsUrl,
                   data: const PreviousOrderProductsReqModel(
                       pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
                       .toJson(),
@@ -1024,7 +1034,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         if(event.productId != ''){
           emit(state.copyWith(isRelatedShimmering:true));
           final res = await DioClient(event.context).post(
-              AppUrls.relatedProductsUrl,
+              AppUrlEndPoints.relatedProductsUrl,
               data: {AppStrings.mainProductIdString:event.productId});
           RelatedProductResModel response =
           RelatedProductResModel.fromJson(res);
@@ -1040,10 +1050,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     )) ?? []);
 
             emit(state.copyWith(
-                relatedProductList:response.data ?? [],
+                relatedProductList:response.data ?? [], isProductLoading: false,
                 isRelatedShimmering: false,productStockList: productStockList));
           } else {
-            emit(state.copyWith(isRelatedShimmering: false));
+            emit(state.copyWith(isRelatedShimmering: false,isProductLoading: false,));
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.getLocalizedStrings(
@@ -1064,7 +1074,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         try {
           emit(state.copyWith(pesachBannerShimmering: true,retryLoading: event.isRetryLoading));
 
-          final res = await DioClient(event.context).get(path: AppUrls.generalSettingUrl);
+          final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
           SettingResModel response = SettingResModel.fromJson(res);
           preferencesHelper.setBankTransferDetail(details: response.data?.taviliRivchitDetails?.bankTransferInfoText??'');
           if (response.status == AppConstants.code_200) {
@@ -1117,7 +1127,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           if (preferencesHelper.getSubUser()) {
             try {
               final res = await DioClient(event.context).get(
-                  path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper
+                  path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferencesHelper
                       .getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel
                   .fromJson(res);
@@ -1181,7 +1191,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           try {
 
             final res = await DioClient(event.context).post(
-                AppUrls.verifyClientUrl,
+                AppUrlEndPoints.verifyClientUrl,
                 data: {AppStrings.clientIdString: preferencesHelper.getUserId()}
             );
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);

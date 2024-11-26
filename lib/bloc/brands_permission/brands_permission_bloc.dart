@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/permission_model/permission_model.dart';
@@ -26,7 +26,7 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
           emit(state.copyWith(isShimmering: true , subUserId: event.subUserId));
           printData('subUserId____${event.subUserId}');
           final res = await DioClient(event.context).get(
-              path: '${AppUrls.getBrandPermissionUrl}${event.subUserId}');
+              path: '${AppUrlEndPoints.getBrandPermissionUrl}${event.subUserId}');
           BrandPermissionResModel response = BrandPermissionResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
 
@@ -118,7 +118,7 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
 
 
           final response = await DioClient(event.context).put(
-              path: '${AppUrls.updatePermissionUrl}${state.subUserId}',
+              path: '${AppUrlEndPoints.updatePermissionUrl}${state.subUserId}',
               data: updatePermissionReq);
 
           if (response[AppStrings.statusString] == AppConstants.code_200) {

@@ -1,17 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/bloc/supplier/supplier_bloc.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/widget/common_app_bar.dart';
+import '../../bloc/supplier/supplier_bloc.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_img_path.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/supplier_screen_shimmer_widget.dart';
+import '../../ui/widget/common_shimmer_widget.dart';
+import '../../ui/widget/supplier_screen_shimmer_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../utils/themes/app_styles.dart';
@@ -172,7 +172,7 @@ class SupplierScreenWidget extends StatelessWidget {
           children: [
             Expanded(
               child: supplierLogo.isNotEmpty ? CachedNetworkImage(
-                imageUrl: "${AppUrls.baseFileUrl}$supplierLogo",
+                imageUrl: "${AppUrlEndPoints.baseFileUrl}$supplierLogo",
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.center,
                 placeholder: (context, url) => CommonShimmerWidget(

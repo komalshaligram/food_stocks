@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_img_path.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -106,7 +106,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                             alignment: Alignment.center,
                             child: state.message.message?.messageImage != null && state.message.message?.messageImage != ''
                                 ? Image.network(
-                                    '${AppUrls.baseFileUrl}${state.message.message?.messageImage ?? ''}',
+                                    '${AppUrlEndPoints.baseFileUrl}${state.message.message?.messageImage ?? ''}',
                                     height: getScreenHeight(context),
                                     width: double.maxFinite,
                                     fit: BoxFit.contain,
@@ -165,7 +165,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                                         alignment: Alignment.center,
                                         child: state.message.message?.messageImage != null && state.message.message?.messageImage != ''
                                             ? Image.network(
-                                                '${AppUrls.baseFileUrl}${state.message.message?.messageImage ?? ''}',
+                                                '${AppUrlEndPoints.baseFileUrl}${state.message.message?.messageImage ?? ''}',
                                                 fit: BoxFit.contain,
                                                 loadingBuilder: (context, child, loadingProgress) {
                                                   if (loadingProgress == null) {

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -38,7 +38,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
           CreditCardReqModel reqMap = CreditCardReqModel(cardNum: state.creditCardNumberController.text.trim(), expDate_YY: state.validityController.text.trim(), expDate_MM: state.selectedMonth);
 
           final res = await DioClient(event.context).post(
-            AppUrls.updateCreditCardUrl + preferencesHelper.getUserId(),
+            AppUrlEndPoints.updateCreditCardUrl + preferencesHelper.getUserId(),
             data: reqMap,
           );
 
@@ -97,7 +97,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             return value == null;
           });
           final res = await DioClient(event.context).uploadFileProgressWithFormData(
-            path: AppUrls.termsConditionUrl,
+            path: AppUrlEndPoints.termsConditionUrl,
             formData: FormData.fromMap(
               {
                 AppStrings.userIdString: termsConditionReqModel.id,

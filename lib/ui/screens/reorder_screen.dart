@@ -3,13 +3,13 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/reorder/reorder_bloc.dart';
+import '../../bloc/reorder/reorder_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
-import 'package:food_stock/ui/widget/common_check_box_widget.dart';
-import 'package:food_stock/ui/widget/refresh_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import '../../ui/utils/themes/app_img_path.dart';
+import '../../ui/widget/common_check_box_widget.dart';
+import '../../ui/widget/refresh_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
@@ -291,6 +291,7 @@ class ReorderScreenWidget extends StatelessWidget {
                         Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
                       },
                       onOutSideTap: () {
+                        state.searchController.clear();
                         bloc.add(const ReorderEvent.changeCategoryExpansion(isOpened: false));
                       },
                       onSearchItemTap: () {
@@ -298,7 +299,7 @@ class ReorderScreenWidget extends StatelessWidget {
                       },
                       controller: state.searchController,
                       searchList: state.searchList,
-                      searchResultWidget: state.searchList.isEmpty
+                      searchResultWidget: state.isSearching ? const SizedBox() :state.searchList.isEmpty
                           ? Center(
                               child: Text(
                                 AppLocalizations.of(context)!.search_result_not_found,
@@ -426,7 +427,7 @@ class ReorderScreenWidget extends StatelessWidget {
         children: [
           Center(
             child: Image.network(
-              "${AppUrls.baseFileUrl}$productImage",
+              "${AppUrlEndPoints.baseFileUrl}$productImage",
               height: 70,
               fit: BoxFit.fitHeight,
               loadingBuilder: (context, child, loadingProgress) {
@@ -551,7 +552,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                                       },
                                                       child: PhotoView(
                                                         imageProvider: NetworkImage(
-                                                          '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                          '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                         ),
                                                       ),
                                                     ),
@@ -627,7 +628,7 @@ class ReorderScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+          height: getItemHeight(context, isSaleOn),
           padding: const EdgeInsets.only(left: 10, right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -637,7 +638,7 @@ class ReorderScreenWidget extends StatelessWidget {
                 isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: AppConstants.salesProductItemHeight,
-                width: 140,
+                width: getItemWidth(context),
                 productName: relatedProductList.elementAt(i).productName ?? '',
                 saleImage: relatedProductList.elementAt(i).mainImage ?? '',
                 title: relatedProductList.elementAt(i).name,

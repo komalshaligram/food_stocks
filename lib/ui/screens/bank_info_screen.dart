@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/data/model/req_model/terms_condition/terms_condition_req_model.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/bank_info/bank_info_bloc.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -16,7 +16,6 @@ import '../widget/common_drop_down_button.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
-
 
 class BankInfoRoute {
   static Widget get route => const BankInfoScreen();

@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -36,7 +36,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         try {
           LoginReqModel reqMap = LoginReqModel(contact: event.contactNumber, applicationName: AppStrings.appName);
           final res = await DioClient(event.context).post(
-            AppUrls.existingUserLoginUrl,
+            AppUrlEndPoints.existingUserLoginUrl,
             data: reqMap,
           );
 

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_colors.dart';
@@ -42,8 +42,8 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     required this.onButtonTap,
     required this.discountedPrice,
     this.isGuestUser = false,
-    this.imageHeight = 70,
-    this.imageWidth = 70,
+    this.imageHeight = 80,
+    this.imageWidth = 80,
     this.originalPrice = 0.0,
     this.lowStock = '',
     this.isPesach = false,
@@ -80,13 +80,17 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                     child: !isGuestUser
                         ? saleImage.isNotEmpty
                             ? CachedNetworkImage(
-                                imageUrl: "${AppUrls.baseFileUrl}$saleImage",
-                                height: imageHeight,
+                                imageUrl: "${AppUrlEndPoints.baseFileUrl}$saleImage",
+                                height: getItemHeight(context, false) == 350.0 ? 190 :
+                                getItemHeight(context, false) == 260.0 ? 125 :
+                                imageHeight,
                                 fit: BoxFit.fitHeight,
                                 placeholder: (context, url) {
                                   return CommonShimmerWidget(
                                     child: Container(
-                                      height: imageHeight,
+                                      height:getItemHeight(context, false) == 350.0 ? 190 :
+                                      getItemHeight(context, false) == 260.0 ? 125 :
+                                       imageHeight,
                                       width: 70,
                                       decoration: BoxDecoration(
                                         color: AppColors.whiteColor,
@@ -96,17 +100,22 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                                   );
                                 },
                                 errorWidget: (context, error, stackTrace) {
-                                  return Image.asset(AppImagePath.imageNotAvailable5, height: imageHeight, width: double.maxFinite, fit: BoxFit.cover);
+                                  return Image.asset(AppImagePath.imageNotAvailable5,
+                                      height: getItemHeight( context, false) == 260.0 ? 125 :
+                                      getItemHeight(context, false) == 350.0 ? 190 : imageHeight,
+                                      width: 70, fit: BoxFit.cover);
                                 },
                               )
                             : Image.asset(
                                 AppImagePath.imageNotAvailable5,
-                                height: imageHeight,
+                                height: getItemHeight( context, false) == 260.0 ? 125 :
+                                getItemHeight(context, false) == 350.0 ? 190 : imageHeight,
                                 width: 70,
                               )
                         : Image.asset(
                             AppImagePath.imageNotAvailable5,
-                            height: imageHeight,
+                            height: getItemHeight( context, false) == 260.0 ? 125 :
+                            getItemHeight(context, false) == 350.0 ? 190 : imageHeight,
                             width: 70,
                           ),
                   ),

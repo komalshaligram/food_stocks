@@ -3,15 +3,15 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/data/model/form_and_file_model/form_and_file_model.dart';
-import 'package:food_stock/data/model/res_model/file_update_res_model/file_update_res_model.dart';
-import 'package:food_stock/data/model/res_model/file_upload_res_model/file_upload_res_model.dart';
-import 'package:food_stock/data/model/res_model/files_res_model/files_res_model.dart';
-import 'package:food_stock/data/model/res_model/forms_res_model/forms_res_model.dart';
-import 'package:food_stock/data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
-import 'package:food_stock/data/storage/shared_preferences_helper.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import '../../data/model/form_and_file_model/form_and_file_model.dart';
+import '../../data/model/res_model/file_update_res_model/file_update_res_model.dart';
+import '../../data/model/res_model/file_upload_res_model/file_upload_res_model.dart';
+import '../../data/model/res_model/files_res_model/files_res_model.dart';
+import '../../data/model/res_model/forms_res_model/forms_res_model.dart';
+import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
+import '../../data/storage/shared_preferences_helper.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -41,7 +41,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       if (event is _getFormsListEvent) {
         emit(state.copyWith(isLoading: true, isShimmering: true, isUpdate: event.isUpdate, language: preferencesHelper.getAppLanguage()));
         try {
-          final res = await DioClient(event.context).get(path: AppUrls.formsListUrl);
+          final res = await DioClient(event.context).get(path: AppUrlEndPoints.formsListUrl);
           FormsResModel response = FormsResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             List<FormAndFileModel> formsList = state.formsAndFilesList.toList(growable: true);
@@ -61,7 +61,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             }
 
             try {
-              final res = await DioClient(event.context).get(path: AppUrls.filesListUrl);
+              final res = await DioClient(event.context).get(path: AppUrlEndPoints.filesListUrl);
               FilesResModel response = FilesResModel.fromJson(res);
               if (response.status == AppConstants.code_200) {
                 List<FormAndFileModel> filesList = state.formsAndFilesList.toList(growable: true);
@@ -80,7 +80,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     emit(state.copyWith(isShimmering: true));
                     SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
                     final res = await DioClient(event.context).post(
-                      AppUrls.getProfileDetailsUrl,
+                      AppUrlEndPoints.getProfileDetailsUrl,
                       data: {
                         AppStrings.idParamString: preferencesHelper.getUserId(),
                       },
@@ -133,7 +133,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       } else if (event is _getFilesListEvent) {
         emit(state.copyWith(isLoading: true));
         try {
-          final res = await DioClient(event.context).get(path: AppUrls.filesListUrl);
+          final res = await DioClient(event.context).get(path: AppUrlEndPoints.filesListUrl);
           FilesResModel response = FilesResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             List<FormAndFileModel> filesList = state.formsAndFilesList.toList(growable: true);
@@ -238,7 +238,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           try {
             emit(state.copyWith(isUploadLoading: true, uploadIndex: event.fileIndex));
             final res = await DioClient(event.context).uploadFileProgressWithFormData(
-              path: AppUrls.fileUploadUrl,
+              path: AppUrlEndPoints.fileUploadUrl,
               formData: formData,
             );
             FileUploadResModel response = FileUploadResModel.fromJson(res);
@@ -289,7 +289,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           }
 
           final res = await DioClient(event.context).post(
-            "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
+            "${AppUrlEndPoints.fileUpdateUrl}/${preferencesHelper.getUserId()}",
             data: formsAndFiles,
           );
 
@@ -350,7 +350,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           }
 
           final res = await DioClient(event.context).post(
-            "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
+            "${AppUrlEndPoints.fileUpdateUrl}/${preferencesHelper.getUserId()}",
             data: formsAndFiles,
           );
 
@@ -384,7 +384,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
 
           String filePath = '${dir.path}/${state.formsAndFilesList[event.fileIndex].url?.split('/').last.split('.').first}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(state.formsAndFilesList[event.fileIndex].url?.split('/').last ?? '')}';
 
-          await Dio().download("${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].url}", filePath, onReceiveProgress: (received, total) {
+          await Dio().download("${AppUrlEndPoints.baseFileUrl}${state.formsAndFilesList[event.fileIndex].url}", filePath, onReceiveProgress: (received, total) {
             int progress = (received * 100) ~/ total;
             emit(state.copyWith(downloadProgress: progress));
 
@@ -400,7 +400,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         if (state.isUpdate) {
           try {
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-            final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl, data: {AppStrings.idParamString: preferencesHelper.getUserId()});
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl, data: {AppStrings.idParamString: preferencesHelper.getUserId()});
             ProfileDetailsResModel response = ProfileDetailsResModel.fromJson(res);
             Map<String, dynamic> newModel = res['data']['clients'][0]['clientDetail'];
 
@@ -426,7 +426,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         emit(state.copyWith(isPdfPreview: true));
       } else if (event is _updateClientCreditEvent) {
         try {
-          final res = await DioClient(event.context).post(AppUrls.updateClientCredits + preferencesHelper.getUserId());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.updateClientCredits + preferencesHelper.getUserId());
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isApiLoading: false));
             Navigator.popUntil(event.context, (route) => route.name == RouteDefine.fileUploadScreen.name);

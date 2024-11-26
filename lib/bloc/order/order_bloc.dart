@@ -42,7 +42,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
             userId: preferencesHelper.getUserId()
           );
           final res = await DioClient(event.context).post(
-              AppUrls.getAllOrderUrl,
+              AppUrlEndPoints.getAllOrderUrl,
               data: reqMap.toJson(),
           );
 

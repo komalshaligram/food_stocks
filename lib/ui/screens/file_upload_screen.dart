@@ -6,11 +6,11 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:food_stock/ui/widget/file_upload_screen_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/widget/file_upload_screen_shimmer_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/file_upload/file_upload_bloc.dart';
@@ -617,7 +617,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                       width: double.maxFinite,
                     )
                         : CachedNetworkImage(
-                      imageUrl: "${AppUrls.baseFileUrl}$url",
+                      imageUrl: "${AppUrlEndPoints.baseFileUrl}$url",
                       fit: BoxFit.scaleDown,
                       alignment: Alignment.center,
                       placeholder: (context, url) => Center(

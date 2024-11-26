@@ -5,12 +5,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:food_stock/data/storage/shared_preferences_helper.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_styles.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../data/storage/shared_preferences_helper.dart';
+import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
@@ -35,10 +35,10 @@ enum SnackBarType {
 
 bool isTablet(BuildContext context) {
   bool isTablet = false;
-  if (MediaQuery.of(context).size.height < 700) {
-    isTablet = false;
+  if (MediaQuery.of(context).size.height > 800 && MediaQuery.of(context).size.height > 500) {
+    isTablet = true;
   } else {
-    return true;
+    return false;
   }
   return isTablet;
 }
@@ -92,6 +92,18 @@ Color getStatusColor(int statusNum){
        : AppConstants.productGridAspectRatio51: getScreenHeight(context) > 820
        ? AppConstants.productGridAspectRatio51:AppConstants.productGridAspectRatio51;
  }
+
+double getItemHeight(BuildContext context , bool isSaleOn){
+  return getScreenHeight(context) > 1000 &&   getScreenWidth(context) > 700 ? 350 :
+  getScreenHeight(context) < 1000 &&
+  getScreenHeight(context) > 800  && getScreenWidth(context) > 550  ? 260 : isSaleOn ? AppConstants.salesProductItemHeight :
+  AppConstants.withoutSaleItemHeight ;
+}
+
+double getItemWidth(BuildContext context ){
+  return getScreenHeight(context) > 1000 &&   getScreenWidth(context) > 700  ? 190 :
+  getScreenWidth(context) > 500  ? 160 : 140 ;
+}
 
 Widget isPesachLabelShow(bool isPesach,BuildContext context){
  if(isPesach){

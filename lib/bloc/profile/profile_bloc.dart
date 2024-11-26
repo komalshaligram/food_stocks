@@ -4,16 +4,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smartlook/flutter_smartlook.dart';
-import 'package:food_stock/data/model/req_model/profile_details_req_model/profile_details_req_model.dart'
+import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart'
     as req;
-import 'package:food_stock/data/model/res_model/business_type_model/business_type_model.dart';
-import 'package:food_stock/data/model/res_model/profile_details_res_model/profile_details_res_model.dart'
+import '../../data/model/res_model/business_type_model/business_type_model.dart';
+import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart'
     as resGet;
-import 'package:food_stock/data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart'
+import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart'
     as reqUpdate;
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -68,7 +68,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               emit(state.copyWith(isFileUploading: true,isUploadingProcess: true));
               final response =
                   await DioClient(event.context).uploadFileProgressWithFormData(
-                path: AppUrls.fileUploadUrl,
+                path: AppUrlEndPoints.fileUploadUrl,
                 formData: FormData.fromMap(
                   {
                     AppStrings.profileImageString: await MultipartFile.fromFile(
@@ -103,10 +103,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       else if (event is _DeleteAccountEvent) {
         try {
           final res = await DioClient(event.context).post(
-              '${AppUrls.deleteAccountUrl}${state.userId}');
+              '${AppUrlEndPoints.deleteAccountUrl}${state.userId}');
           if(res[AppStrings.statusString]==AppConstants.code_200){
             final response = await DioClient(event.context).put(
-                path: AppUrls.logOutUrl,
+                path: AppUrlEndPoints.logOutUrl,
                 data: {"userId": preferences.getUserId()});
 
             if (response[AppStrings.statusString] == AppConstants.code_200) {
@@ -137,7 +137,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         try {
           emit(state.copyWith(isShimmering: true,language: preferences.getAppLanguage()));
           final res = await DioClient(event.context)
-              .get(path: AppUrls.businessTypesUrl);
+              .get(path: AppUrlEndPoints.businessTypesUrl);
           BusinessTypeModel response = BusinessTypeModel.fromJson(res);
         List<ClientType> list = [];
         list.add(ClientType(businessType: AppLocalizations.of(event.context)!.type_of_business));
@@ -181,7 +181,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(state.copyWith(isUpdating: true));
           try {
             final res = await DioClient(event.context).post(
-                AppUrls.getProfileDetailsUrl,
+                AppUrlEndPoints.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson(),
               );
@@ -196,10 +196,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               }
 
               Smartlook.instance.user.setName(response.data?.clients?.first.clientDetail?.ownerName ?? '');
-
+              //preferences.setIsWalletApproved(walletApproved: response.data?.clients?.first.clientDetail?.isWalletApproved??false);
               preferences.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString()??'0');
               preferences.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
               preferences.setPaymentMethodTypes(methods:response.data?.clients?.first.clientDetail?.availablePaymentTypes??[]);
+              preferences.setAvailableAllPayment(isAvailableAllPayment: response.data?.clients?.first.clientDetail?.isAvailableAllPayments ?? false);
+
               emit(
                 state.copyWith(
                   isShimmering: false,
@@ -282,7 +284,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         try {
           emit(state.copyWith(isLoading: true));
           final res = await DioClient(event.context).post(
-              "${AppUrls.updateProfileDetailsUrl}/${preferences.getUserId()}",
+              "${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}",
               data:req,
             );
 
@@ -366,7 +368,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             return value == null;
           });
           final res = await DioClient(event.context).post(
-              "${AppUrls.updateProfileDetailsUrl}/${preferences.getUserId()}",
+              "${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}",
               data: req,
           );
           reqUpdate.ProfileDetailsUpdateResModel response =

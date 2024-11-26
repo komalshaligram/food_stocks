@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_smartlook/flutter_smartlook.dart';
-import 'package:food_stock/bloc/my_app/my_app_bloc.dart';
-import 'package:food_stock/data/services/my_behavior.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import '../../bloc/my_app/my_app_bloc.dart';
+import '../../data/services/my_behavior.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import 'package:provider/provider.dart';
 import '../../app_config.dart';
 

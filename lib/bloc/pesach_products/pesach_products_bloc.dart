@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:food_stock/data/error/exceptions.dart';
-import 'package:food_stock/data/model/res_model/pesach_products_res_model/pesach_products_res_model.dart';
-import 'package:food_stock/repository/dio_client.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import '../../data/error/exceptions.dart';
+import '../../data/model/res_model/pesach_products_res_model/pesach_products_res_model.dart';
+import '../../repository/dio_client.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -33,7 +33,7 @@ import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
+import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_strings.dart';
 
@@ -48,6 +48,7 @@ class PesachProductsBloc
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
+
 
 
   PesachProductsBloc() : super(PesachProductsState.initial()) {
@@ -94,7 +95,7 @@ class PesachProductsBloc
             emit(state.copyWith(searchType: event.searchType.toString()));
           }
           final res = await DioClient(event.context)
-              .post(AppUrls.getPlanogramAllProductUrl, data: req);
+              .post(AppUrlEndPoints.getPlanogramAllProductUrl, data: req);
           response =
               PesachProductsResModel.fromJson(res);
           emit(state.copyWith(searchType: event.searchType.toString()));
@@ -164,11 +165,12 @@ class PesachProductsBloc
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
+
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
           final res = await DioClient(event.context).post(
-              AppUrls.getProductDetailsUrl,
+              AppUrlEndPoints.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
 
           ProductDetailsResModel response =
@@ -198,7 +200,7 @@ class PesachProductsBloc
 
             try {
               final res = await DioClient(event.context).post(
-                '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+                '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
               );
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
               if (response.status == AppConstants.code_200) {
@@ -306,7 +308,8 @@ class PesachProductsBloc
                 productStockUpdateIndex: productStockUpdateIndex,
                 productSupplierList: supplierList,
                 productListIndex: productListIndex,
-                isProductLoading: false));
+                /*isProductLoading: false*/
+            ));
             if (supplierList.isNotEmpty) {
               bool isSupplierSelected = false;
               for (var supplier in supplierList) {
@@ -570,7 +573,7 @@ class PesachProductsBloc
             SharedPreferencesHelper preferences = SharedPreferencesHelper(
                 prefs: await SharedPreferences.getInstance());
             final res = await DioClient(event.context).post(
-              '${AppUrls.updateCartProductUrl}${preferences.getCartId()}',
+              '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
               data: request,
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
@@ -650,7 +653,7 @@ class PesachProductsBloc
                 prefs: await SharedPreferences.getInstance());
 
             final res = await DioClient(event.context).post(
-                '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
+                '${AppUrlEndPoints.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
                 options: Options(
                   headers: {
@@ -660,7 +663,7 @@ class PesachProductsBloc
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              if(state.productStockList[state.productListIndex][state.productStockUpdateIndex].productIsInCart){
+              if(!state.productStockList[state.productListIndex][state.productStockUpdateIndex].productIsInCart){
                 add(const PesachProductsEvent.setCartCountEvent());
               }
               Vibration.vibrate();
@@ -670,7 +673,7 @@ class PesachProductsBloc
               productStockList[state.productListIndex][state.productStockUpdateIndex] =
                   productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                     note: '',
-                    productIsInCart: false,
+                    productIsInCart: true,
                     quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                     productSupplierIds:  state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                     totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
@@ -728,6 +731,9 @@ class PesachProductsBloc
         emit(state.copyWith(isGridView: !state.isGridView));
       }
       else if (event is _changeCategoryExpansion) {
+        if(event.isOpened == false){
+          emit(state.copyWith(searchList: []));
+        }
         if (event.isOpened == false) {
           state.searchController.clear();
           emit(state.copyWith(searchController: state.searchController));
@@ -749,7 +755,7 @@ class PesachProductsBloc
           );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getGlobalSearchResultUrl,
+              AppUrlEndPoints.getGlobalSearchResultUrl,
               data: globalSearchReqModel.toJson());
 
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
@@ -894,7 +900,7 @@ class PesachProductsBloc
       else if (event is _relatedProductsEvent) {
         emit(state.copyWith(isRelatedShimmering: true));
         final res = await DioClient(event.context).post(
-            AppUrls.relatedProductsUrl,
+            AppUrlEndPoints.relatedProductsUrl,
             data: {AppStrings.mainProductIdString: event.productId});
         RelatedProductResModel response =
         RelatedProductResModel.fromJson(res);
@@ -911,10 +917,10 @@ class PesachProductsBloc
                   )) ?? [] );
           productStockList[2].addAll(stockList);
           emit(state.copyWith(
-              relatedProductList:response.data ?? [],
+              relatedProductList:response.data ?? [],isProductLoading : false,
               isRelatedShimmering: false,productStockList: productStockList));
         } else {
-          emit(state.copyWith(isRelatedShimmering: false));
+          emit(state.copyWith(isRelatedShimmering: false,isProductLoading : false,));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(
@@ -938,7 +944,7 @@ class PesachProductsBloc
           try {
 
             final res = await DioClient(event.context).get(
-                path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+                path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {
@@ -987,7 +993,7 @@ class PesachProductsBloc
         if (!preferences.getGuestUser() ) {
           try {
             final res = await DioClient(event.context).post(
-                AppUrls.verifyClientUrl,
+                AppUrlEndPoints.verifyClientUrl,
                 data: {AppStrings.clientIdString: preferences.getUserId()}
             );
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);

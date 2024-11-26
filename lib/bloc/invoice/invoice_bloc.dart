@@ -23,9 +23,6 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
     on<InvoiceEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
-
-
-
       if (event is _getInvoicesDataEvent) {
 
         if (state.isLoadMore) {
@@ -47,7 +44,7 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
 
           debugPrint('Invoices req = ${request.toJson()}');
           final res = await DioClient(event.context)
-              .post(AppUrls.clientInvoicesUrl,
+              .post(AppUrlEndPoints.clientInvoicesUrl,
               data: request.toJson(),
            );
           InvoicesResModel response =

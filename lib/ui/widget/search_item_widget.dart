@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:food_stock/ui/widget/custom_button_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/widget/custom_button_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../utils/app_utils.dart';
@@ -114,14 +114,14 @@ class SearchItemWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  height: 70,
-                  width: 50,
+                  height: getItemHeight(context, false) == 350 ? 120 : getItemHeight(context, false) == 260 ? 100 : 60,
+                  width: getItemWidth(context) == 190  ? 130  : getItemWidth(context) == 160  ? 100 : 50,
                   child: !isGuestUser
                       ? Image.network(
-                          '${AppUrls.baseFileUrl}$searchImage',
+                          '${AppUrlEndPoints.baseFileUrl}$searchImage',
                           fit: BoxFit.scaleDown,
-                          height: 60,
-                          width: 50,
+                         // height: getItemHeight(context, false) == 350 ? 80 : getItemHeight(context, false) == 260 ? 150 : 60, //60
+                        //  width: /*getItemWidth(context),*/  150 ,   //50
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) {
                               return child;
@@ -131,16 +131,16 @@ class SearchItemWidget extends StatelessWidget {
                           },
                           errorBuilder: (context, error, stackTrace) {
                             return searchType == SearchTypes.subCategory
-                                ? Image.asset(AppImagePath.imageNotAvailable5, height: 60, width: 50, fit: BoxFit.cover)
+                                ? Image.asset(AppImagePath.imageNotAvailable5, /*height: 60, width: 50,*/ fit: BoxFit.cover)
                                 : SvgPicture.asset(
                                     AppImagePath.splashLogo,
                                     fit: BoxFit.scaleDown,
-                                    width: 60,
-                                    height: 50,
+                                 //   width: 60,
+                                  //  height: 50,
                                   );
                           },
                         )
-                      : Image.asset(AppImagePath.imageNotAvailable5, height: 60, width: 50, fit: BoxFit.cover),
+                      : Image.asset(AppImagePath.imageNotAvailable5, /*height: 60, width: 50,*/ fit: BoxFit.cover),
                 ),
                 10.width,
                 Column(

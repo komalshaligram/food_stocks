@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/data/model/req_model/update_sub_user/update_sub_user_req_model.dart';
+import '../../data/model/req_model/update_sub_user/update_sub_user_req_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -54,7 +54,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             emit(state.copyWith(isFileUploading: true, isUploadingProcess: true));
             printData("image1 = ${croppedImage?.path ?? pickedFile.path}");
             final response = await DioClient(event.context).uploadFileProgressWithFormData(
-              path: AppUrls.fileUploadUrl,
+              path: AppUrlEndPoints.fileUploadUrl,
               formData: FormData.fromMap(
                 {AppStrings.profileImageString: await MultipartFile.fromFile(croppedImage?.path ?? pickedFile.path, contentType: MediaType('image', 'png'))},
               ),
@@ -96,12 +96,12 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
           });
 
           final res = await DioClient(event.context).post(
-            AppUrls.createSubUserUrl,
+            AppUrlEndPoints.createSubUserUrl,
             data: req,
           );
           printData('create subUser req = $req');
           printData('create subUser res = $res');
-          printData('url = ${AppUrls.createSubUserUrl}');
+          printData('url = ${AppUrlEndPoints.createSubUserUrl}');
           SubUserResModel response = SubUserResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
@@ -126,9 +126,9 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
           );
           printData('delete Account req= $req');
 
-          final res = await DioClient(event.context).post(AppUrls.deleteClientSubUserUrl, data: req);
+          final res = await DioClient(event.context).post(AppUrlEndPoints.deleteClientSubUserUrl, data: req);
 
-          printData('delete Account Url= ${AppUrls.deleteClientSubUserUrl}');
+          printData('delete Account Url= ${AppUrlEndPoints.deleteClientSubUserUrl}');
 
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isDeleteProcess: false));
@@ -165,9 +165,9 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
 
           printData('update subUser req  = $updateSubUserReq');
 
-          final response = await DioClient(event.context).put(path: '${AppUrls.updateSubUserUrl}', data: updateSubUserReq);
+          final response = await DioClient(event.context).put(path: '${AppUrlEndPoints.updateSubUserUrl}', data: updateSubUserReq);
 
-          printData('update subUser url  = ${AppUrls.baseUrl}${AppUrls.getAllSubUserUrl}');
+          printData('update subUser url  = ${AppUrlEndPoints.baseUrl}${AppUrlEndPoints.getAllSubUserUrl}');
           printData('update subUser response  = ${response}');
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false));
@@ -205,7 +205,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
           });
           printData('update  req = ${req}');
           final res = await DioClient(event.context).post(
-            AppUrls.updateSubUserUrl,
+            AppUrlEndPoints.updateSubUserUrl,
             data: req,
           );
 
@@ -242,13 +242,13 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             });
 
             final res = await DioClient(event.context).post(
-              AppUrls.getAllSubUserUrl,
+              AppUrlEndPoints.getAllSubUserUrl,
               data: getSubUserReq,
             );
 
             printData('subUser req = ${getSubUserReq}');
 
-            printData('url = ${AppUrls.baseUrl}${AppUrls.getAllSubUserUrl}');
+            printData('url = ${AppUrlEndPoints.baseUrl}${AppUrlEndPoints.getAllSubUserUrl}');
             GetSubUserResModel response = GetSubUserResModel.fromJson(res);
             printData('subUser res = ${response}');
 

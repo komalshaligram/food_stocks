@@ -6,21 +6,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/store_category/store_category_bloc.dart';
-import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_styles.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
-import 'package:food_stock/ui/widget/common_sale_listview.dart';
-import 'package:food_stock/ui/widget/common_search_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
+import '../../bloc/store_category/store_category_bloc.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_img_path.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/widget/common_product_sale_item_widget.dart';
+import '../../ui/widget/common_sale_listview.dart';
+import '../../ui/widget/common_search_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
+import '../../ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
@@ -617,9 +617,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
 
                       },
                       onSearch: (String search) {
-                        if(state.searchController.text != ''){
-                          bloc.add(
-                              StoreCategoryEvent.globalSearchEvent(context: context));
+                        if (search.length > 1) {
+                          bloc.add( const StoreCategoryEvent.changeCategoryExpansionEvent(isOpened: true));
+                          bloc.add(StoreCategoryEvent.globalSearchEvent(context: context));
                         }
 
                       },
@@ -633,10 +633,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             });
                       },
                       onSearchTap: () {
-                        bloc.add(const StoreCategoryEvent.changeCategoryExpansionEvent(
-                            isOpened: true));
+                  if (state.searchController.text.isNotEmpty) {
+                      bloc.add(const StoreCategoryEvent.changeCategoryExpansionEvent(
+                       isOpened: true));
+                 }
                       },
                       onOutSideTap: () {
+                        state.searchController.clear();
                         bloc.add(const StoreCategoryEvent.changeCategoryExpansionEvent(
                             isOpened: false));
                       },
@@ -646,7 +649,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       },
                       controller: state.searchController,
                       searchList: state.searchList,
-                      searchResultWidget: state.searchList.isEmpty
+                      searchResultWidget: state.isSearching ? const SizedBox() :state.searchList.isEmpty
                           ? Center(
                         child: Text(
                           AppLocalizations.of(context)!.search_result_not_found,
@@ -962,15 +965,17 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   Center(
                     child: !isGuestUser
                         ? Image.network(
-                      "${AppUrls.baseFileUrl}${list[index].planogramproducts?[subIndex].mainImage}",
-                      height: 70,
+                      "${AppUrlEndPoints.baseFileUrl}${list[index].planogramproducts?[subIndex].mainImage}",
+                      height: getItemHeight( context, false) == 260.0 ? 125 :
+                      getItemHeight(context, false) == 350.0 ? 190 : 110,
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress?.cumulativeBytesLoaded !=
                             loadingProgress?.expectedTotalBytes) {
                           return CommonShimmerWidget(
                             child: Container(
-                              height: 70,
+                              height: getItemHeight( context, false) == 260.0 ? 125 :
+                              getItemHeight(context, false) == 350.0 ? 190 : 110,
                               width: 70,
                               decoration: BoxDecoration(
                                 color: AppColors.whiteColor,
@@ -986,8 +991,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       errorBuilder: (context, error, stackTrace) {
                         return Image.asset(
                             AppImagePath.imageNotAvailable5,
-                            height: 70,
-                            width: double.maxFinite,
+                            height: getItemHeight( context, false) == 260.0 ? 125 :
+                            getItemHeight(context, false) == 350.0 ? 190 : 110,
+                            width: 70,
                             fit: BoxFit.cover);
                       },
                     )
@@ -995,7 +1001,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       AppImagePath.imageNotAvailable5,
                       fit: BoxFit.cover,
                       width: 70,
-                      height: 70,
+                      height: getItemHeight( context, false) == 260.0 ? 125 :
+                      getItemHeight(context, false) == 350.0 ? 190 : 110,
                     ),
                   ),
                   5.height,
@@ -1198,7 +1205,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               },
                                               child: PhotoView(
                                                 imageProvider: NetworkImage(
-                                                  '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                  '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                 ),
                                               ),
                                             ),
@@ -1323,7 +1330,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+          height: getItemHeight(context, isSaleOn),
           padding: const EdgeInsets.only(bottom:10,left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -1333,7 +1340,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
-                width: 140,
+                width: getItemWidth(context),
                 productName: relatedProductList.elementAt(i).productName ?? '' ,
                 saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
                 title: relatedProductList.elementAt(i).name ,
@@ -1512,7 +1519,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         : ''),
                 5.height,
                 SizedBox(
-                height:  state.isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+                height:  getItemHeight(context, state.isSaleOn),
                   child: list.isEmpty
                       ? Center(
                     child: Text(

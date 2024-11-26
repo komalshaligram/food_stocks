@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -39,7 +39,7 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
     else if (event is _getBusinessTypeEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
-          final res = await DioClient(event.context).get(path: AppUrls.getBusinessTypeUrl);
+          final res = await DioClient(event.context).get(path: AppUrlEndPoints.getBusinessTypeUrl);
           BusinessNameModel response = BusinessNameModel.fromJson(res);
           List<BusinessType> businessTypeList = [];
           businessTypeList.add(BusinessType(businessTypeName: AppLocalizations.of(event.context)!.type_of_business));
@@ -80,7 +80,7 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
         try {
           emit(state.copyWith(isShimmering: true));
           Map reqMap ={"agentCode":state.agentCodeController.text.trim()};
-          final res = await DioClient(event.context).post(AppUrls.verifyAgentUrl,data: reqMap);
+          final res = await DioClient(event.context).post(AppUrlEndPoints.verifyAgentUrl,data: reqMap);
 
           if(res[AppStrings.statusString]==AppConstants.code_200){
 

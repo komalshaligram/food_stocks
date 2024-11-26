@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,7 +35,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
+import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 part 'planogram_product_event.dart';
 
 part 'planogram_product_state.dart';
@@ -46,6 +46,8 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
+
+
 
   PlanogramProductBloc() : super(PlanogramProductState.initial()) {
     on<PlanogramProductEvent>((event, emit) async {
@@ -72,10 +74,10 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-        try {
+          try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
-          final res = await DioClient(event.context).post(AppUrls.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
 
           ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
 
@@ -105,7 +107,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
 
               emit(state.copyWith(productListIndex: productListIndex, productStockUpdateIndex: productStockUpdateIndex));
               try {
-                final res = await DioClient(event.context).post('${AppUrls.getAllCartUrl}${preferences.getCartId()}', options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
+                final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}', options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
                 GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                 if (response.status == AppConstants.code_200) {
                   response.data?.data?.forEach((cartProduct) {
@@ -174,7 +176,8 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                       : productStockList[productListIndex][0].note;
               emit(state.copyWith(productStockList: []));
 
-              emit(state.copyWith(productDetails: response.product ?? [], productStockList: productStockList, productStockUpdateIndex: productStockUpdateIndex, noteController: TextEditingController(text: note), productSupplierList: supplierList, productListIndex: productListIndex, isProductLoading: false));
+              emit(state.copyWith(productDetails: response.product ?? [], productStockList: productStockList, productStockUpdateIndex: productStockUpdateIndex, noteController: TextEditingController(text: note), productSupplierList: supplierList, productListIndex: productListIndex, /*isProductLoading: false*/
+              ));
               if (supplierList.isNotEmpty) {
                 bool isSupplierSelected = false;
                 for (var supplier in supplierList) {
@@ -324,7 +327,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             );
             SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
             final res = await DioClient(event.context).post(
-              '${AppUrls.updateCartProductUrl}${preferences.getCartId()}',
+              '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
               data: request,
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
@@ -371,7 +374,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
             final res = await DioClient(event.context).post(
-              '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
+              '${AppUrlEndPoints.insertProductInCartUrl}${preferencesHelper.getCartId()}',
               data: req,
             );
             InsertCartResModel response = InsertCartResModel.fromJson(res);
@@ -421,6 +424,9 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         preferences.setPlanogramProductGridListView(isPlanogramProductGrid: !state.isGridView);
         emit(state.copyWith(isGridView: !state.isGridView));
       } else if (event is _changeCategoryExpansion) {
+        if(event.isOpened == false){
+          emit(state.copyWith(searchList: []));
+        }
         if (event.isOpened == false) {
           state.searchController.clear();
           emit(state.copyWith(searchController: state.searchController));
@@ -435,7 +441,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         try {
           GlobalSearchReqModel globalSearchReqModel = GlobalSearchReqModel(search: state.searchController.text, sortField: AppStrings.sortFieldString, sortOrder: AppStrings.sortOrderString);
           emit(state.copyWith(isSearching: true));
-          final res = await DioClient(event.context).post(AppUrls.getGlobalSearchResultUrl, data: globalSearchReqModel.toJson());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getGlobalSearchResultUrl, data: globalSearchReqModel.toJson());
 
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
 
@@ -544,7 +550,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
       } else if (event is _getProductCategoriesListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
-          final res = await DioClient(event.context).post(AppUrls.getProductCategoriesUrl, data: const ProductCategoriesReqModel(pageNum: 1, pageLimit: 18).toJson());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getProductCategoriesUrl, data: const ProductCategoriesReqModel(pageNum: 1, pageLimit: 18).toJson());
           ProductCategoriesResModel response = ProductCategoriesResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
@@ -568,7 +574,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         }
       } else if (event is _relatedProductsEvent) {
         emit(state.copyWith(isRelatedShimmering: true));
-        final res = await DioClient(event.context).post(AppUrls.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
+        final res = await DioClient(event.context).post(AppUrlEndPoints.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
         RelatedProductResModel response = RelatedProductResModel.fromJson(res);
 
         if (response.status == AppConstants.code_200) {
@@ -580,9 +586,9 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                   )) ??
               []);
           productStockList[2].addAll(stockList);
-          emit(state.copyWith(relatedProductList: response.data ?? [], isRelatedShimmering: false, productStockList: productStockList));
+          emit(state.copyWith(relatedProductList: response.data ?? [], isRelatedShimmering: false, productStockList: productStockList,isProductLoading : false));
         } else {
-          emit(state.copyWith(isRelatedShimmering: false));
+          emit(state.copyWith(isRelatedShimmering: false, isProductLoading:false));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context),
@@ -594,7 +600,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
       } else if (event is _getPermissionList) {
         if (preferences.getSubUser()) {
           try {
-            final res = await DioClient(event.context).get(path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+            final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               var res = response.data?.permissions;
@@ -622,7 +628,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
       } else if (event is _userApproveEvent) {
         if (!preferences.getGuestUser()) {
           try {
-            final res = await DioClient(event.context).post(AppUrls.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
+            final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {

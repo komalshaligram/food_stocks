@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:food_stock/data/model/req_model/recommendation_products_req_model/recommendation_products_req_model.dart';
+import '../../data/model/req_model/recommendation_products_req_model/recommendation_products_req_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -36,7 +36,7 @@ import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
+import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 
 part 'recommendation_products_event.dart';
 
@@ -49,6 +49,7 @@ class RecommendationProductsBloc
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
+
 
   RecommendationProductsBloc() : super(RecommendationProductsState.initial()) {
     on<RecommendationProductsEvent>((event, emit) async {
@@ -77,7 +78,7 @@ class RecommendationProductsBloc
               );
 
           final res = await DioClient(event.context)
-              .post(AppUrls.getRecommendationProductsUrl,
+              .post(AppUrlEndPoints.getRecommendationProductsUrl,
                   data: request.toJson(),
                );
           RecommendationProductsResModel response =
@@ -147,7 +148,7 @@ class RecommendationProductsBloc
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
 
           final res = await DioClient(event.context).post(
-              AppUrls.getProductDetailsUrl,
+              AppUrlEndPoints.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
 
           ProductDetailsResModel response =
@@ -185,7 +186,7 @@ class RecommendationProductsBloc
             try {
 
               final res = await DioClient(event.context).post(
-                  '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+                  '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
                );
               GetAllCartResModel response = GetAllCartResModel.fromJson(res);
               if (response.status == AppConstants.code_200) {
@@ -300,7 +301,8 @@ class RecommendationProductsBloc
                 noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
                 productListIndex: productListIndex,
-                isProductLoading: false));
+             /*   isProductLoading: false*/
+            ));
             if (supplierList.isNotEmpty) {
               bool isSupplierSelected = false;
               for (var supplier in supplierList) {
@@ -579,7 +581,7 @@ class RecommendationProductsBloc
             SharedPreferencesHelper preferences = SharedPreferencesHelper(
                 prefs: await SharedPreferences.getInstance());
             final res = await DioClient(event.context).post(
-              '${AppUrls.updateCartProductUrl}${preferences.getCartId()}',
+              '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
               data: request,
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
@@ -659,7 +661,7 @@ class RecommendationProductsBloc
                 prefs: await SharedPreferences.getInstance());
 
             final res = await DioClient(event.context).post(
-                '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
+                '${AppUrlEndPoints.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
                 options: Options(
                   headers: {
@@ -669,7 +671,13 @@ class RecommendationProductsBloc
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              add(const RecommendationProductsEvent.setCartCountEvent());
+              if(!state
+                  .productStockList[state.productListIndex]
+              [state.productStockUpdateIndex].productIsInCart){
+                add(const RecommendationProductsEvent.setCartCountEvent());
+              }
+
+
               Vibration.vibrate();
            //   Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList =
@@ -734,6 +742,9 @@ class RecommendationProductsBloc
         emit(state.copyWith(isGridView: !state.isGridView));
       }
       else if (event is _changeCategoryExpansion) {
+        if(event.isOpened == false){
+          emit(state.copyWith(searchList: []));
+        }
         if(event.isOpened == false ){
           state.searchController.clear();
           emit(state.copyWith(searchController: state.searchController));
@@ -754,7 +765,7 @@ class RecommendationProductsBloc
           );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getGlobalSearchResultUrl,
+              AppUrlEndPoints.getGlobalSearchResultUrl,
               data: globalSearchReqModel.toJson());
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
 
@@ -900,7 +911,7 @@ class RecommendationProductsBloc
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getProductCategoriesUrl,
+              AppUrlEndPoints.getProductCategoriesUrl,
               data: const ProductCategoriesReqModel(
                   pageNum: 1, pageLimit: 18)
                   .toJson());
@@ -945,7 +956,7 @@ class RecommendationProductsBloc
       else if(event is _relatedProductsEvent){
         emit(state.copyWith(isRelatedShimmering:true));
         final res = await DioClient(event.context).post(
-            AppUrls.relatedProductsUrl,
+            AppUrlEndPoints.relatedProductsUrl,
             data: {AppStrings.mainProductIdString:event.productId});
         RelatedProductResModel response =
         RelatedProductResModel.fromJson(res);
@@ -962,10 +973,10 @@ class RecommendationProductsBloc
                   )) ?? []);
           productStockList[2].addAll(stockList);
           emit(state.copyWith(
-              relatedProductList:response.data ?? [],
+              relatedProductList:response.data ?? [],isProductLoading : false,
               isRelatedShimmering: false,productStockList: productStockList));
         } else {
-          emit(state.copyWith(isRelatedShimmering: false));
+          emit(state.copyWith(isRelatedShimmering: false,isProductLoading : false));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(
@@ -983,7 +994,7 @@ class RecommendationProductsBloc
           try {
 
             final res = await DioClient(event.context).get(
-                path: '${AppUrls.getAccountPermissionUrl}${preferences.getSubUserId()}');
+                path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               var res = response.data?.permissions;
@@ -1021,7 +1032,7 @@ class RecommendationProductsBloc
       else if(event is _userApproveEvent){
         try {
           final res = await DioClient(event.context).post(
-              AppUrls.verifyClientUrl,
+              AppUrlEndPoints.verifyClientUrl,
               data: {AppStrings.clientIdString:preferences.getUserId()}
           );
           VerifyClientResModel response = VerifyClientResModel.fromJson(res);

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:food_stock/bloc/order/order_bloc.dart';
-import 'package:food_stock/data/model/res_model/get_all_order_res_model/get_all_order_res_model.dart';
-import 'package:food_stock/ui/screens/product_details_screen.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/widget/common_order_content_widget.dart';
-
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../bloc/order/order_bloc.dart';
+import '../../data/model/res_model/get_all_order_res_model/get_all_order_res_model.dart';
+import '../../ui/screens/product_details_screen.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/widget/common_order_content_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -47,12 +46,9 @@ class OrderScreenWidget extends StatefulWidget {
 
 class _OrderScreenWidgetState extends State<OrderScreenWidget> {
 
-
-
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -206,6 +202,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -268,28 +265,30 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                     CommonOrderContentWidget(
                       backGroundColor: AppColors.iconBGColor,
                       borderCoder: AppColors.lightBorderColor,
-                      flexValue: 2,
-                      title: AppLocalizations.of(context)!.suppliers,
-                      value:
-                          orderDetailsList[index].suppliers.toString(),
-                      titleColor: AppColors.blackColor,
-                      valueColor: AppColors.blackColor,
-                      valueTextSize: AppConstants.smallFont,
-                    ),
-                    5.width,
-                    CommonOrderContentWidget(
-                      backGroundColor: AppColors.iconBGColor,
-                      borderCoder: AppColors.lightBorderColor,
                       flexValue: 4,
                       title: AppLocalizations.of(context)!.order_date,
                       value: orderDetailsList[index].createdAt
-                              ?.replaceRange(11, 16, '').replaceRange(6, 8, '') ??
+                          ?.replaceRange(11, 16, '').replaceRange(6, 8, '') ??
                           '',
                       titleColor: AppColors.blackColor,
                       valueColor: AppColors.blackColor,
                       valueTextSize: getScreenWidth(context) < 380
                           ? AppConstants.font_14
                           : AppConstants.smallFont,
+                    ),
+                    5.width,
+                    CommonOrderContentWidget(
+                      backGroundColor: AppColors.iconBGColor,
+                      borderCoder: AppColors.lightBorderColor,
+                      flexValue: 4,
+                      title: AppLocalizations.of(context)!.due_date,
+                      value: orderDetailsList[index].paymentMethod == AppStrings.creditCard ? "-":
+                     ( orderDetailsList[index].dueDate?.isNotEmpty ?? false) ?  orderDetailsList[index].dueDate
+                          ?.replaceRange(11, 16, '').replaceRange(6, 8, '') ??
+                          '-' : "-",
+                      titleColor: AppColors.blackColor,
+                      valueColor: AppColors.blackColor,
+                      valueTextSize: AppConstants.smallFont,
                     ),
                     5.width,
                     CommonOrderContentWidget(
@@ -306,9 +305,37 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                     ),
                   ],
                 ),
+                7.height,
+                RichText(
+                  text: TextSpan(
+                    text: '${AppLocalizations.of(context)!.payment_type} : ' ,
+                    style: TextStyle(
+                        color: AppColors.blackColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text:getType((orderDetailsList[index].paymentMethod.toString())) ?? '',
+                          style: TextStyle(
+                            color: AppColors.mainColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700,)),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
         );
+  }
+
+
+  String? getType(String type) {
+    if (type == AppStrings.wallet) {
+      return AppLocalizations.of(context)!.wallet;
+    } else if (type == AppStrings.creditCard) {
+      return AppLocalizations.of(context)!.credit_card;
+    } else if (type == AppStrings.bankTransfer) {
+      return AppLocalizations.of(context)!.bank_transfer;
+    } else if (type == AppStrings.bankCheck) {
+      return AppLocalizations.of(context)!.bank_check;
+    }
+    return '';
   }
 }

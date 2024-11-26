@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:food_stock/ui/widget/common_product_details_button.dart';
-import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/widget/common_product_details_button.dart';
+import '../../ui/widget/common_shimmer_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:html/parser.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
@@ -197,8 +197,9 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                 ? GestureDetector(
                                     onTap: imageOnTap,
                                     child: Image.network(
-                                      "${AppUrls.baseFileUrl}${productImages.first}",
-                                      height: 150,
+                                      "${AppUrlEndPoints.baseFileUrl}${productImages.first}",
+                                      height: getItemHeight( context, false) == 350.0 ? 200 :
+                                      getItemHeight(context, false) == 260.0 ? 180 : 150,
                                       fit: BoxFit.contain,
                                       loadingBuilder: (context, child, loadingProgress) {
                                         if (loadingProgress?.cumulativeBytesLoaded != loadingProgress?.expectedTotalBytes) {
@@ -220,7 +221,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           AppImagePath.imageNotAvailable5,
                                           fit: BoxFit.cover,
                                           // width: 90,
-                                          height: 150,
+                                          height: getItemHeight( context, false) == 350.0 ? 200 :
+                                          getItemHeight(context, false) == 260.0 ? 180 : 150,
                                         );
                                       },
                                     ),

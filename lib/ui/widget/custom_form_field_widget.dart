@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:food_stock/ui/utils/validation/auth_form_validation.dart';
+import '../../ui/utils/validation/auth_form_validation.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_styles.dart';
 

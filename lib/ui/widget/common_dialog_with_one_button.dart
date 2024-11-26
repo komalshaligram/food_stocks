@@ -1,10 +1,10 @@
 
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_styles.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/widget/sized_box_widget.dart';
 
 import '../utils/themes/app_strings.dart';
 
@@ -13,9 +13,11 @@ class CustomOneButtonDialog extends StatelessWidget {
   final void Function()? positiveOnTap;
   final void Function()? positiveOnTap1;
   final void Function()? positiveOnTap2;
+  final void Function()? positiveOnTap3;
   final String? positiveTitle;
   final String? positiveTitle1;
   final String? positiveTitle2;
+  final String? positiveTitle3;
   final String directionality;
   final double width;
   final String subTitle;
@@ -27,9 +29,11 @@ class CustomOneButtonDialog extends StatelessWidget {
     this.positiveOnTap,
     this.positiveOnTap1,
     this.positiveOnTap2,
+    this.positiveOnTap3,
     this.positiveTitle,
     this.positiveTitle1,
     this.positiveTitle2,
+    this.positiveTitle3,
     required this.directionality,
     this.width = double.maxFinite,
     this.subTitle = '',
@@ -78,6 +82,10 @@ class CustomOneButtonDialog extends StatelessWidget {
                10.height,
                positiveTitle2 != null
                    ? commonButton(positiveTitle:positiveTitle2 ?? '' ,width: width,positiveOnTap: positiveOnTap2)
+                   : 0.width,
+               10.height,
+               positiveTitle3 != null
+                   ? commonButton(positiveTitle:positiveTitle3 ?? '' ,width: width,positiveOnTap: positiveOnTap3)
                    : 0.width,
                10.height,
              ],

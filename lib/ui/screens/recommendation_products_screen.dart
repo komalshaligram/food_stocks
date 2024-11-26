@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/recommendation_products/recommendation_products_bloc.dart';
-import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
-import 'package:food_stock/ui/widget/refresh_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../bloc/recommendation_products/recommendation_products_bloc.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import '../../ui/widget/refresh_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
@@ -277,6 +277,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                         Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
                       },
                       onOutSideTap: () {
+                        state.searchController.clear();
                         bloc.add(const RecommendationProductsEvent.changeCategoryExpansion(isOpened: false));
                       },
                       onSearchItemTap: () {
@@ -284,7 +285,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       },
                       controller: state.searchController,
                       searchList: state.searchList,
-                      searchResultWidget: state.searchList.isEmpty
+                      searchResultWidget:state.isSearching ? const SizedBox() : state.searchList.isEmpty
                           ? Center(
                               child: Text(
                                 AppLocalizations.of(context)!.search_result_not_found,
@@ -454,7 +455,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                         },
                                                         child: PhotoView(
                                                           imageProvider: NetworkImage(
-                                                            '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                            '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                           ),
                                                         ),
                                                       ),
@@ -531,7 +532,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+        height: getItemHeight(context, isSaleOn),
           padding: const EdgeInsets.only(left: 10, right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -541,7 +542,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                 isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
-                width: 140,
+                width: getItemWidth(context),
                 productName: relatedProductList.elementAt(i).productName ?? '',
                 saleImage: relatedProductList.elementAt(i).mainImage ?? '',
                 title: relatedProductList.elementAt(i).name,

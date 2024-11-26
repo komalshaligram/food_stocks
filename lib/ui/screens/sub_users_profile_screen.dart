@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/widget/profile_screen_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../ui/widget/profile_screen_shimmer_widget.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/sub_users_profile/sub_users_profile_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';

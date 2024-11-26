@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -18,7 +18,7 @@ import '../../routes/app_routes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart' as res_get;
-import 'package:food_stock/data/model/req_model/profile_details_req_model/profile_details_req_model.dart' as req;
+import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart' as req;
 import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart' as req_update;
 
 part 'activity_time_event.dart';
@@ -49,7 +49,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           emit(state.copyWith(isShimmering: true));
           try {
             final res = await DioClient(event.context).post(
-              AppUrls.getProfileDetailsUrl,
+              AppUrlEndPoints.getProfileDetailsUrl,
               data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                   .toJson(),
             );
@@ -563,7 +563,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
 
               try {
                 final response1 = await DioClient(event.context).post(
-                    '${AppUrls.operationTimeUrl}/${preferences.getUserId()}',
+                    '${AppUrlEndPoints.operationTimeUrl}/${preferences.getUserId()}',
                     data: reqMap);
                 res.ActivityTimeResModel operationTimeResModel =
                 res.ActivityTimeResModel.fromJson(response1);
@@ -625,7 +625,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             printData("update after Model = $req");
             try {
               final res = await DioClient(event.context).post(
-                "${AppUrls.updateProfileDetailsUrl}/${preferences.getUserId()}",
+                "${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}",
                 data: req,
               );
               printData('operation update req _____$req');

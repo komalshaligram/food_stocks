@@ -5,14 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
-import 'package:food_stock/bloc/profile_menu/profile_menu_bloc.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_styles.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
+import '../../bloc/profile_menu/profile_menu_bloc.dart';
+import '../../routes/app_routes.dart';
+import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_urls.dart';
@@ -113,7 +113,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20),
                                     child: CachedNetworkImage(
                                       imageUrl:
-                                          '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                          '${AppUrlEndPoints.baseFileUrl}${state.UserImageUrl}',
                                       fit: BoxFit.fill,
                                       placeholder: (context, url) =>
                                           const CupertinoActivityIndicator(),

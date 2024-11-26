@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyCZyZXcdL4kHiVUUD9SMiETCG3SEYHIR6k</string>
+	<string>AIzaSyCJyetG0acNO9qYNt5ruJZPYHYyfvgH3Pc</string>
 	<key>GCM_SENDER_ID</key>
-	<string>229653257750</string>
+	<string>112885161410</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.foodstock</string>
+	<string>com.dev.workfinder</string>
 	<key>PROJECT_ID</key>
-	<string>foodstock-dev</string>
+	<string>workfinder-dev</string>
 	<key>STORAGE_BUCKET</key>
-	<string>foodstock-dev.appspot.com</string>
+	<string>workfinder-dev.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:229653257750:ios:719e4f2c51c73d887e5f37</string>
+	<string>1:112885161410:ios:c81d161bdc266433fa4a5b</string>
 </dict>
 </plist>

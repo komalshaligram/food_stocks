@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_date_range_picker/flutter_date_range_picker.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,7 +74,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             WalletRecordReqModel(userId: preferencesHelper.getUserId());
  
             final res = await DioClient(event.context).post(
-              AppUrls.walletRecordUrl,
+              AppUrlEndPoints.walletRecordUrl,
               data: reqMap,
             );
 
@@ -108,7 +108,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
         
             final res = await DioClient(event.context).post(
-              AppUrls.totalExpenseByYearUrl,
+              AppUrlEndPoints.totalExpenseByYearUrl,
               data: reqMap,
             );
 
@@ -190,7 +190,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
 
             final res = await DioClient(event.context).post(
-              AppUrls.getAllWalletTransactionUrl,
+              AppUrlEndPoints.getAllWalletTransactionUrl,
               data: reqMap,
             );
 
@@ -278,7 +278,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             );
 
             final res = await DioClient(event.context)
-                .post(AppUrls.exportWalletTransactionUrl, data: reqMap);
+                .post(AppUrlEndPoints.exportWalletTransactionUrl, data: reqMap);
 
 
             ExportWalletTransactionsResModel response =
@@ -338,7 +338,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
          
 
             final res = await DioClient(event.context).post(
-              AppUrls.getOrdersCountUrl,
+              AppUrlEndPoints.getOrdersCountUrl,
               data: reqMap,
             );
 
@@ -361,7 +361,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           if(preferencesHelper.getSubUser()){
             try {
               final res = await DioClient(event.context).get(
-                  path: '${AppUrls.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+                  path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
               if (response.status == AppConstants.code_200) {
                 var res = response.data?.permissions;
@@ -405,7 +405,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           try {
         
             final res = await DioClient(event.context).post(
-                AppUrls.verifyClientUrl,
+                AppUrlEndPoints.verifyClientUrl,
                 data: {AppStrings.clientIdString:preferencesHelper.getUserId()}
             );
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);

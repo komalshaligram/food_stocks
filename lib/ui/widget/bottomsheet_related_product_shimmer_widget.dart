@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import 'common_shimmer_widget.dart';
@@ -9,7 +10,7 @@ class RelatedProductShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 150,
+      height: getItemHeight( context, false),
       width: double.maxFinite - 50,
       child: ListView.builder(
         itemCount: 3,
@@ -18,8 +19,8 @@ class RelatedProductShimmerWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           return CommonShimmerWidget(
             child: Container(
-              height: 150,
-              width: 150,
+              height: getItemHeight( context, false),
+              width:   150,
               margin: const EdgeInsets.all(AppConstants.padding_10),
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,

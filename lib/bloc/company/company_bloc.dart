@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/data/model/res_model/company_res_model/company_res_model.dart';
+import '../../data/model/res_model/company_res_model/company_res_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,7 +40,7 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
           final res = await DioClient(event.context).post(
-              AppUrls.getCompaniesUrl,
+              AppUrlEndPoints.getCompaniesUrl,
               data: CompanyReqModel(
                       pageNum: state.pageNum + 1,
                       pageLimit: AppConstants.supplierPageLimit,

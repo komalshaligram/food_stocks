@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:food_stock/data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/error/exceptions.dart';
@@ -23,7 +23,7 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
       if (event is _getOrderByIdEvent) {
         try {
           final res = await DioClient(event.context).get(
-              path: '${AppUrls.getOrderById}${event.orderId}',
+              path: '${AppUrlEndPoints.getOrderById}${event.orderId}',
        );
 
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import '../../ui/utils/themes/app_urls.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../utils/themes/app_colors.dart';
@@ -29,7 +29,7 @@ class PreviewScreen extends StatelessWidget {
         ),
       ),
       body: SfPdfViewer.network(
-        '${AppUrls.baseFileUrl}${args?[AppStrings.privacyPolicyPdfString]}'
+        '${AppUrlEndPoints.baseFileUrl}${args?[AppStrings.privacyPolicyPdfString]}'
       ),
     );
   }

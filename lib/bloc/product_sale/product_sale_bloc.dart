@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import '../../data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -56,7 +56,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         }
         try {
           emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
-          final res = await DioClient(event.context).post(AppUrls.getSaleProductsUrl, data: ProductSalesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.saleProductPageLimit, search: state.search).toJson());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getSaleProductsUrl, data: ProductSalesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.saleProductPageLimit, search: state.search).toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             List<ProductSale> productSaleList = state.productSalesList.toList(growable: true);
@@ -97,9 +97,10 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         _cartProductId = '';
         _productQuantity = 0;
 
+
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
-          final res = await DioClient(event.context).post(AppUrls.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
@@ -126,7 +127,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
 
               emit(state.copyWith(productListIndex: productListIndex, productStockUpdateIndex: productStockUpdateIndex));
               try {
-                final res = await DioClient(event.context).post('${AppUrls.getAllCartUrl}${preferences.getCartId()}', options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
+                final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}', options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
                 GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                 if (response.status == AppConstants.code_200) {
                   response.data?.data?.forEach((cartProduct) {
@@ -192,7 +193,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                       ? ''
                       : productStockList[productListIndex][0].note;
               emit(state.copyWith(productStockList: []));
-              emit(state.copyWith(productDetails: response.product ?? [], productStockList: productStockList, productStockUpdateIndex: productStockUpdateIndex, noteController: TextEditingController(text: note), productSupplierList: supplierList, productListIndex: productListIndex, isProductLoading: false));
+              emit(state.copyWith(productDetails: response.product ?? [], productStockList: productStockList, productStockUpdateIndex: productStockUpdateIndex, noteController: TextEditingController(text: note), productSupplierList: supplierList, productListIndex: productListIndex, /*isProductLoading: false*/));
               if (supplierList.isNotEmpty) {
                 bool isSupplierSelected = false;
                 for (var supplier in supplierList) {
@@ -339,7 +340,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             );
             SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
             final res = await DioClient(event.context).post(
-              '${AppUrls.updateCartProductUrl}${preferences.getCartId()}',
+              '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
               data: request,
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
@@ -381,7 +382,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             });
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
-            final res = await DioClient(event.context).post('${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
+            final res = await DioClient(event.context).post('${AppUrlEndPoints.insertProductInCartUrl}${preferencesHelper.getCartId()}',
                 data: req,
                 options: Options(
                   headers: {
@@ -390,13 +391,15 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              //  add(SupplierProductsEvent.setCartCountEvent());
+              if(!state.productStockList[state.productListIndex][state.productStockUpdateIndex].productIsInCart) {
+                add(ProductSaleEvent.setCartCountEvent());
+              }
               Vibration.vibrate();
               //  Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
-                productIsInCart: false,
+                productIsInCart: true,
                 quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                 productSupplierIds: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                 totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
@@ -432,7 +435,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         emit(state.copyWith(search: event.search));
       } else if (event is _relatedProductsEvent) {
         emit(state.copyWith(isRelatedShimmering: true));
-        final res = await DioClient(event.context).post(AppUrls.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
+        final res = await DioClient(event.context).post(AppUrlEndPoints.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
         RelatedProductResModel response = RelatedProductResModel.fromJson(res);
 
         if (response.status == AppConstants.code_200) {
@@ -444,9 +447,9 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                   )) ??
               []);
           productStockList[2].addAll(stockList);
-          emit(state.copyWith(relatedProductList: response.data ?? [], isRelatedShimmering: false, productStockList: productStockList));
+          emit(state.copyWith(relatedProductList: response.data ?? [], isRelatedShimmering: false, productStockList: productStockList,isProductLoading : false));
         } else {
-          emit(state.copyWith(isRelatedShimmering: false));
+          emit(state.copyWith(isRelatedShimmering: false , isProductLoading : false));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context),
@@ -457,7 +460,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         emit(state.copyWith(relatedProductList: []));
       } else if (event is _userApproveEvent) {
         try {
-          final res = await DioClient(event.context).post(AppUrls.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
+          final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
           VerifyClientResModel response = VerifyClientResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             if (!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)) {

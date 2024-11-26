@@ -1,12 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/data/model/req_model/bank_info/bank_info_req_model.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
+import '../../data/model/req_model/bank_info/bank_info_req_model.dart';
 import '../../data/model/res_model/bank_detail_model/bank_detail_model.dart';
 import '../../data/model/res_model/terms_condition_res/terms_condition_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -15,6 +14,7 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/utils/themes/app_constants.dart';
 
 part 'bank_info_event.dart';
 part 'bank_info_state.dart';
@@ -34,7 +34,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).get(
-              path: AppUrls.getBankDetailUrl);
+              path: AppUrlEndPoints.getBankDetailUrl);
           BankDetailModel response = BankDetailModel.fromJson(res);
         
           if (response.status == AppConstants.code_200) {
@@ -90,7 +90,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           emit(state.copyWith(isApiShimmering: true,));
           final res =
           await DioClient(event.context).uploadFileProgressWithFormData(
-            path: AppUrls.termsConditionUrl,
+            path: AppUrlEndPoints.termsConditionUrl,
             formData: FormData.fromMap(
               {
                 AppStrings.userIdString : preferencesHelper.getUserId(),
@@ -163,7 +163,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           );
 
           final res = await DioClient(event.context).put(
-            path:AppUrls.addBankInfo,
+            path:AppUrlEndPoints.addBankInfo,
             data: reqMap.toJson(),
           );
 

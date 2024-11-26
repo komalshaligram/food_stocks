@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/company_products/company_products_bloc.dart';
-import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../bloc/company_products/company_products_bloc.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
@@ -240,7 +240,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                               lowStock: (state.productList[index].product?.lowStock.toString() ?? ''),
                                               height: AppConstants.relatedProductItemHeight,
                                               width:  140,
-                                              imageHeight: getScreenHeight(context) >= 1000 ? getScreenHeight(context) * 0.17 : 70,
                                               productStock: (state.productList[index].product?.productStock.toString() ?? '0'),
                                               saleImage: state.productList[index].product?.mainImage ??
                                                   '',
@@ -351,6 +350,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                 });
                         },
                         onOutSideTap: () {
+                          state.searchController.clear();
                           bloc.add(const CompanyProductsEvent.changeCategoryExpansion(
                               isOpened: false));
                         },
@@ -359,7 +359,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                         },
                         controller: state.searchController,
                         searchList: state.searchList,
-                        searchResultWidget: state.searchList.isEmpty
+                        searchResultWidget: state.isSearching ? const SizedBox() :state.searchList.isEmpty
                             ? Center(
                           child: Text(
                             AppLocalizations.of(context)!
@@ -645,7 +645,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
         children: [
           Center(
             child: Image.network(
-              "${AppUrls.baseFileUrl}$productImage",
+              "${AppUrlEndPoints.baseFileUrl}$productImage",
               height: 70,
               fit: BoxFit.fitHeight,
               loadingBuilder: (context, child, loadingProgress) {
@@ -819,7 +819,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                },
                                                child: PhotoView(
                                                  imageProvider: NetworkImage(
-                                                   '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                   '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                  ),
                                                ),
                                              ),
@@ -922,7 +922,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
            ),
          ),
          Container(
-           height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+           height: getItemHeight(context, isSaleOn),
            padding: const EdgeInsets.only(bottom:10,left: 10,right: 10),
            child: ListView.builder(
              scrollDirection: Axis.horizontal,
@@ -932,7 +932,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                  isSale: relatedProductList.elementAt(i).sale?.isSale,
                  isGuestUser: false,
                  height: AppConstants.salesProductItemHeight,
-                 width: 140,
+                 width: getItemWidth(context),
                  productName: relatedProductList.elementAt(i).productName ?? '' ,
                  saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
                  title: relatedProductList.elementAt(i).name ,

@@ -15,6 +15,9 @@ class ProductDetailsModel {
   String saleDesc;
   double? discountPrice;
   bool isSale;
+  String? supplierName;
 
-  ProductDetailsModel({this.isProductIssue = false, required this.mainImage, required this.productName, required this.totalPayment, required this.totalQuantity, this.isDelete = false, this.cartProductId = '', required this.scales, required this.weight, this.isProcess = false, this.lowStock = '', this.productStock = 0, required this.isPesach, required this.saleDesc, required this.discountPrice, this.isSale = false});
+  ProductDetailsModel({this.isProductIssue = false, required this.mainImage, required this.productName, required this.totalPayment, required this.totalQuantity, this.isDelete = false, this.cartProductId = '', required this.scales, required this.weight, this.isProcess = false, this.lowStock = '', this.productStock = 0, required this.isPesach, required this.saleDesc, required this.discountPrice, this.isSale = false,
+  this.supplierName = ''
+  });
 }

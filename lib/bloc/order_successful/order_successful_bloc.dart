@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -36,7 +36,7 @@ class OrderSuccessfulBloc
               WalletRecordReqModel(userId: preferencesHelper.getUserId());
     
           final res = await DioClient(event.context).post(
-            AppUrls.walletRecordUrl,
+            AppUrlEndPoints.walletRecordUrl,
             data: reqMap,
           );
 
@@ -82,7 +82,7 @@ class OrderSuccessfulBloc
 
 
           final res =
-          await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
+          await DioClient(event.context).post(AppUrlEndPoints.getOrdersCountUrl,
             data: reqMap,
           );
 

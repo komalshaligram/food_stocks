@@ -6,13 +6,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:food_stock/bloc/planogram_product/planogram_product_bloc.dart';
-import 'package:food_stock/data/model/res_model/planogram_res_model/planogram_res_model.dart';
-import 'package:food_stock/data/model/res_model/related_product_res_model/related_product_res_model.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/widget/common_sale_listview.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../bloc/planogram_product/planogram_product_bloc.dart';
+import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart';
+import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
+import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/widget/common_sale_listview.dart';
+import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
@@ -290,6 +290,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             });
                       },
                       onOutSideTap: () {
+                        state.searchController.clear();
                         bloc.add(const PlanogramProductEvent.changeCategoryExpansion(
                             isOpened: false));
                       },
@@ -298,7 +299,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                       },
                       controller: state.searchController,
                       searchList: state.searchList,
-                      searchResultWidget: state.searchList.isEmpty
+                      searchResultWidget: state.isSearching ? const SizedBox() :state.searchList.isEmpty
                           ? Center(
                         child: Text(
                           AppLocalizations.of(context)!
@@ -678,7 +679,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                               },
                                               child: PhotoView(
                                                 imageProvider: NetworkImage(
-                                                  '${AppUrls.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
+                                                  '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}',
                                                 ),
                                               ),
                                             ),
@@ -786,7 +787,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+        height: getItemHeight(context, isSaleOn),
           padding: const EdgeInsets.only(left: 10,right: 10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -796,7 +797,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                 isSale: relatedProductList.elementAt(i).sale?.isSale,
                 isGuestUser: false,
                 height: AppConstants.salesProductItemHeight,
-                width: 140,
+                width: getItemWidth(context),
                 productName: relatedProductList.elementAt(i).productName ?? '' ,
                 saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
                 title: relatedProductList.elementAt(i).name ,
