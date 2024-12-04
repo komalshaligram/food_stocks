@@ -30,8 +30,8 @@ class DioClient {
       : _dio = Dio(
           BaseOptions(
               baseUrl: AppUrlEndPoints.baseUrl,
-              connectTimeout: Duration(milliseconds: AppConstants.timeOutDuration.toInt()),
-              receiveTimeout: Duration(milliseconds: AppConstants.timeOutDuration.toInt()),
+              connectTimeout: Duration(minutes: 1),
+              receiveTimeout: Duration(minutes: 1),
               headers: {
                 HttpHeaders.acceptHeader: Headers.jsonContentType,
                 HttpHeaders.authorizationHeader: 'Bearer ',

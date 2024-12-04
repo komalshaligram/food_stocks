@@ -102,7 +102,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               }
 
               Smartlook.instance.user.setIdentifier((response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '');
-              Smartlook.instance.user.setEmail(response.data?.user?.email ?? '');
+              Smartlook.instance.user.setEmail(response.data?.user?.phoneNumber ?? '');
+             // Smartlook.instance.user.setEmail(response.data?.user?.email ?? '');
               Smartlook.instance.user.setName(response.data?.user?.clientDetail?.ownerName ?? '');
               if (response.data?.adminType == AppStrings.subUserString) {
                 var res = response.data?.subUserPermissions;

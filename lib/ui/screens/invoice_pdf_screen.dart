@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../ui/widget/sized_box_widget.dart';
@@ -69,13 +70,13 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                   if (Platform.isAndroid) {
                     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
                     AndroidDeviceInfo androidInfo =
-                        await deviceInfo.androidInfo;
+                    await deviceInfo.androidInfo;
                     if (androidInfo.version.sdkInt < 33) {
                       if (!statuses[Permission.storage]!.isGranted) {
                         CustomSnackBar.showSnackBar(
                             context: context,
                             title:
-                                AppLocalizations.of(context)!.storage_permission,
+                            AppLocalizations.of(context)!.storage_permission,
                             type: SnackBarType.failure);
                         return;
                       }
@@ -87,9 +88,10 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                     context
                         .read<InvoicePdfBloc>()
                         .add(InvoicePdfEvent.pdfDownloadEvent(
-                          context: context,
-                        ));
+                      context: context,
+                    ));
                   }
+                  // Share.share('${AppUrlEndPoints.baseFileUrl}${state.invoiceDetailsList.link}');
                 },
                 child: Icon(
                   Icons.download_outlined,
@@ -134,8 +136,8 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                         .toString(),
                                     titleColor: AppColors.mainColor,
                                     valueColor: AppColors.blackColor,
-                                    valueTextSize: AppConstants.font_12,
-                                    titleTextSize: AppConstants.font_12,
+                                    valueTextSize: AppConstants.smallFont,
+                                    titleTextSize: AppConstants.smallFont,
                                     columnPadding: 2,
                                     maxLine: 2,
                                     titleMaxLine: 2,
@@ -148,13 +150,13 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                     title:
                                         AppLocalizations.of(context)!.invoice_date,
                                     value: invoiceDetailsList.invoiceDate
-                                        .toString(),
+                                        .toString().replaceRange(10, 16, ''),
                                     titleColor: AppColors.mainColor,
                                     valueColor: AppColors.blackColor,
-                                    valueTextSize: AppConstants.font_12,
+                                    valueTextSize: AppConstants.smallFont,
                                     columnPadding: 2,
                                     maxLine: 2,
-                                    titleTextSize: AppConstants.font_12,
+                                    titleTextSize: AppConstants.smallFont,
                                     titleMaxLine: 2,
                                     valueTextWeight: FontWeight.w400),
                               ],
@@ -173,11 +175,11 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                         .toCapitalized(),
                                     titleColor: AppColors.mainColor,
                                     valueColor: AppColors.blackColor,
-                                    valueTextSize: AppConstants.font_12,
+                                    valueTextSize: AppConstants.smallFont,
                                     columnPadding: 2,
                                     maxLine: 2,
                                     titleMaxLine: 2,
-                                    titleTextSize: AppConstants.font_12,
+                                    titleTextSize: AppConstants.smallFont,
                                     valueTextWeight: FontWeight.w400),
                                 4.width,
                                 CommonOrderContentWidget(
@@ -191,10 +193,10 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                         .toCapitalized(),
                                     titleColor: AppColors.mainColor,
                                     valueColor: AppColors.blackColor,
-                                    valueTextSize: AppConstants.font_12,
+                                    valueTextSize: AppConstants.smallFont,
                                     columnPadding: 2,
                                     maxLine: 2,
-                                    titleTextSize: AppConstants.font_12,
+                                    titleTextSize: AppConstants.smallFont,
                                     titleMaxLine: 2,
                                     valueTextWeight: FontWeight.w400),
                               ],
@@ -214,12 +216,29 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                         local: AppStrings.hebrewLocal),
                                     titleColor: AppColors.mainColor,
                                     valueColor: AppColors.blackColor,
-                                    valueTextSize: AppConstants.font_12,
+                                    valueTextSize: AppConstants.smallFont,
                                     columnPadding: 2,
                                     maxLine: 2,
-                                    titleTextSize: AppConstants.font_12,
+                                    titleTextSize: AppConstants.smallFont,
                                     titleMaxLine: 2,
                                     valueTextWeight: FontWeight.w700),
+                                4.width,
+                                CommonOrderContentWidget(
+                                    backGroundColor: AppColors.iconBGColor,
+                                    borderCoder: AppColors.lightBorderColor,
+                                    flexValue: 2,
+                                    titleMaxLine: 2,
+                                    maxLine: 2,
+                                    title: AppLocalizations.of(context)!.due_date,
+                                    value: invoiceDetailsList.dueDate
+                                        .toString()
+                                        .replaceRange(10, 16, ''),
+                                    titleColor: AppColors.mainColor,
+                                    valueColor: AppColors.blackColor,
+                                    valueTextSize: AppConstants.smallFont,
+                                    titleTextSize: AppConstants.smallFont,
+                                    columnPadding: 2,
+                                    valueTextWeight: FontWeight.w400),
                               ],
                             ),
                           ],
@@ -240,36 +259,36 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                   ),
                   state.isDownloading
                       ? Container(
-                          height: getScreenHeight(context),
-                          width: getScreenWidth(context),
-                          color: const Color.fromARGB(20, 0, 0, 0),
-                          alignment: Alignment.center,
-                          child: Container(
-                            height: 80,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                color: AppColors.whiteColor,
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(AppConstants.radius_10))),
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CupertinoActivityIndicator(
-                                  color: AppColors.mainColor,
-                                  radius: AppConstants.radius_10,
-                                ),
-                                10.height,
-                                Text(
-                                  '${state.downloadProgress}%',
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.font_14,
-                                      color: AppColors.blackColor),
-                                )
-                              ],
-                            ),
+                    height: getScreenHeight(context),
+                    width: getScreenWidth(context),
+                    color: const Color.fromARGB(20, 0, 0, 0),
+                    alignment: Alignment.center,
+                    child: Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(AppConstants.radius_10))),
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CupertinoActivityIndicator(
+                            color: AppColors.mainColor,
+                            radius: AppConstants.radius_10,
                           ),
-                        )
+                          10.height,
+                          Text(
+                            '${state.downloadProgress}%',
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.font_14,
+                                color: AppColors.blackColor),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
                       : 0.width,
                 ],
               ),

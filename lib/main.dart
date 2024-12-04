@@ -15,8 +15,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
-
 @pragma('vm:entry-point')
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   printData("__________BackgroundHandler______");
@@ -32,6 +30,7 @@ void main() async {
     await Firebase.initializeApp();
     await PushNotificationService().setupInteractedMessage();
     await dotenv.load(fileName: '.env');
+
     if (Platform.isAndroid) {
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     }

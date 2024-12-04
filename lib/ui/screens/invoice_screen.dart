@@ -229,7 +229,7 @@ class InvoiceScreenWidget extends StatelessWidget {
                 CommonOrderContentWidget(
                     backGroundColor: AppColors.iconBGColor,
                     borderCoder: AppColors.lightBorderColor,
-                    flexValue: 3,
+                    flexValue: 2,
                     titleMaxLine: 2,
                     maxLine: 2,
                     title: AppLocalizations.of(context)!.invoice_type,
@@ -244,7 +244,7 @@ class InvoiceScreenWidget extends StatelessWidget {
                 CommonOrderContentWidget(
                     backGroundColor: AppColors.iconBGColor,
                     borderCoder: AppColors.lightBorderColor,
-                    flexValue: 3,
+                    flexValue: 2,
                     titleMaxLine: 2,
                     maxLine: 2,
                     title: AppLocalizations.of(context)!.due_date,

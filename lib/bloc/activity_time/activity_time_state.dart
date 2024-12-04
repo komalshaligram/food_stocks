@@ -1,6 +1,4 @@
-
 part of 'activity_time_bloc.dart';
-
 
 @freezed
 class ActivityTimeState with _$ActivityTimeState {
@@ -24,5 +22,4 @@ class ActivityTimeState with _$ActivityTimeState {
         isLoading: false,
         isShimmering: false,
       );
-
 }
