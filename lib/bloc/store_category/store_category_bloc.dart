@@ -110,7 +110,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             isBottomOfPlanoGrams: false,
             isBottomOfProducts: false,
             productStockList: [
-              [const ProductStockModel(productId: '')],
+              [ ProductStockModel(productId: '')],
               [],
               [],
               []
@@ -1018,7 +1018,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
-              AppUrlEndPoints.getGlobalSearchResultUrl,
+              AppUrlEndPoints.getPlanogramAllProductForSearchUrl,
               data: globalSearchReqModel.toJson());
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
           if (state.searchController.text.isEmpty) {

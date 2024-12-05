@@ -642,7 +642,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           try {
             GlobalSearchReqModel globalSearchReqModel = GlobalSearchReqModel(search: state.searchController.text, sortField: AppStrings.sortFieldString, sortOrder: AppStrings.sortOrderString);
             emit(state.copyWith(isSearching: true, bottlePrice: preferences.getBottleTax()));
-            final res = await DioClient(event.context).post(AppUrlEndPoints.getGlobalSearchResultUrl, data: globalSearchReqModel.toJson());
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getPlanogramAllProductForSearchUrl, data: globalSearchReqModel.toJson());
             GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
 
             if (state.searchController.text == '') {

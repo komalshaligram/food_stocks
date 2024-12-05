@@ -6,8 +6,8 @@ class AppUrls {
 }
 
 class AppUrlEndPoints {
- static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
-//  static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
+ //static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
+ static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
 
   ///devUrl
   //static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
@@ -55,7 +55,7 @@ class AppUrlEndPoints {
   // static const String getCompanyProductsUrl = '/v1/store/getBrandProducts';
   // static const String getRecommendationProductsUrl = '/v1/recommendation/products';
   //static const String getPreviousOrderProductsUrl = '/v1/recommendation/getPrevoiusOrderproducts';
-  static const String getGlobalSearchResultUrl = '/v1/store/globalSearch';
+  //static const String getGlobalSearchResultUrl = '/v1/store/globalSearch';
   static const String logOutUrl = '/v1/auth/logout';
   static const String deleteMessageUrl = '/v1/notifications/deleteNotifications';
   static const String updateMessageUrl = '/v1/notifications/seenNotification';
@@ -65,7 +65,7 @@ class AppUrlEndPoints {
   static const String otpVerifyUrl = '/v1/auth/otpVerification';
   // static const String getPlanogramAllProductUrl = '/v1/store/getAllProducts';
   static const String removeIssueUrl = '/v1/orders/issues/removeIssue';
-  static const String getPlanogramAllProductForSearchUrl = '/v1/products/getAllProducts';
+  //static const String getPlanogramAllProductForSearchUrl = '/v1/products/getAllProducts';
   static const String deleteAccountUrl = '/v1/clients/deleteAccount/';
   //  static const String relatedProductsUrl = '/v1/products/getRelatedProducts';
   // static const String getSubCategoryProductsUrl = '/v1/store/getsubCategoryProducts';
@@ -113,22 +113,23 @@ class AppUrlEndPoints {
 
   static const String getSupplierProductsUrl = '/v2/supplierProduct/getSupplierProducts';
   static const String walletRecordUrl = '/v2/walletTransaction/getWalletRecords';
-   static const String getPlanogramAllProductUrl = '/v2/store/getAllProducts';
-   static const String getRecommendationProductsUrl = '/v2/recommendation/products';
-   static const String relatedProductsUrl = '/v2/products/getRelatedProducts';
-   static const String getPreviousOrderProductsUrl = '/v2/recommendation/getPrevoiusOrderproducts';
-   static const String getCompanyProductsUrl = '/v2/store/getBrandProducts';
-   static const String getSubCategoryProductsUrl = '/v2/store/getsubCategoryProducts';
+ // static const String getPlanogramAllProductUrl = '/v2/store/getAllProducts';
+   //static const String getRecommendationProductsUrl = '/v2/recommendation/products';
+   //static const String relatedProductsUrl = '/v2/products/getRelatedProducts';
+   //static const String getPreviousOrderProductsUrl = '/v2/recommendation/getPrevoiusOrderproducts';
+  // static const String getCompanyProductsUrl = '/v2/store/getBrandProducts';
+  // static const String getSubCategoryProductsUrl = '/v2/store/getsubCategoryProducts';
   static const String existingUserLoginUrl = '/v2/auth/verifyContactAndSendOTP';
- static const String getSaleProductsUrl = '/v1/store/SaleProducts';
- static const String getPlanogramProductsUrl = '/v1/store/getPalnogramProducts';
+ //static const String getSaleProductsUrl = '/v1/store/SaleProducts';
+ //static const String getPlanogramProductsUrl = '/v1/store/getPalnogramProducts';
 
-  /*static const String getSaleProductsUrl = '/v3/products/getSaleProducts';
+  static const String getSaleProductsUrl = '/v3/products/getSaleProducts';
   static const String getPlanogramProductsUrl = '/v3/store/getPalnogramProducts';
   static const String getPlanogramAllProductUrl = '/v3/store/getAllProducts';
   static const String getCompanyProductsUrl = '/v3/store/getBrandProducts';
   static const String getRecommendationProductsUrl = '/v3/recommendation/products';
   static const String getPreviousOrderProductsUrl = '/v3/recommendation/getPrevoiusOrderproducts';
   static const String relatedProductsUrl = '/v3/products/getRelatedProducts';
-  static const String getSubCategoryProductsUrl = '/v3/store/getsubCategoryProducts';*/
+  static const String getSubCategoryProductsUrl = '/v3/store/getsubCategoryProducts';
+ static const String getPlanogramAllProductForSearchUrl = '/v3/products/getAllProducts';
 }

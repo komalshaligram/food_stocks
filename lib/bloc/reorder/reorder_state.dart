@@ -52,7 +52,7 @@ class ReorderState with _$ReorderState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-        productStockList: [[const ProductStockModel(productId: '')],[],[]],
+        productStockList: [[ ProductStockModel(productId: '')],[],[]],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,

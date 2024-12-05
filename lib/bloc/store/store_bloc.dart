@@ -832,7 +832,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
-              AppUrlEndPoints.getGlobalSearchResultUrl,
+              AppUrlEndPoints.getPlanogramAllProductForSearchUrl,
               data: globalSearchReqModel.toJson());
 
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);

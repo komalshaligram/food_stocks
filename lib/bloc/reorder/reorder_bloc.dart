@@ -781,7 +781,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
-              AppUrlEndPoints.getGlobalSearchResultUrl,
+              AppUrlEndPoints.getPlanogramAllProductForSearchUrl,
               data: globalSearchReqModel.toJson());
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
           if (state.searchController.text == '') {

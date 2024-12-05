@@ -50,7 +50,7 @@ class SupplierProductsState with _$SupplierProductsState {
       productDetails: [],
       productStockUpdateIndex: -1,
       productStockList: [
-        [const ProductStockModel(productId: '')],
+        [ ProductStockModel(productId: '')],
         [],
         []
       ],

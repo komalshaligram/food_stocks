@@ -441,7 +441,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         try {
           GlobalSearchReqModel globalSearchReqModel = GlobalSearchReqModel(search: state.searchController.text, sortField: AppStrings.sortFieldString, sortOrder: AppStrings.sortOrderString);
           emit(state.copyWith(isSearching: true));
-          final res = await DioClient(event.context).post(AppUrlEndPoints.getGlobalSearchResultUrl, data: globalSearchReqModel.toJson());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getPlanogramAllProductForSearchUrl, data: globalSearchReqModel.toJson());
 
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
 

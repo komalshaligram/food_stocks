@@ -63,7 +63,7 @@ class StoreState with _$StoreState {
       isProductLoading: false,
       productDetails: [],
       productStockUpdateIndex: -1,
-      productStockList: [const ProductStockModel(productId: '')],
+      productStockList: [ ProductStockModel(productId: '')],
       isSelectSupplier: false,
       productSupplierList: [],
       isCartCountChange: false,

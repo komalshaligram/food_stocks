@@ -120,7 +120,7 @@ class DioClient {
     printData('accessToken_____${res.data?.accessToken ?? ''}');
     Options requestOptions = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferencesHelper.getAuthToken()}'});
     requestOptions.headers = requestOptions.headers ?? {};
-    Response response;
+    var response;
     switch (type) {
       case "GET":
         response = await _dio.get(path, queryParameters: queryParams, options: requestOptions);
