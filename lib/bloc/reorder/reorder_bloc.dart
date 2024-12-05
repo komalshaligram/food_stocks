@@ -798,7 +798,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             //category search result
-            searchList.addAll(response.data?.categoryData
+            /*searchList.addAll(response.data?.categoryData
                 ?.map((category) =>
                 SearchModel(
                     searchId: category.id ?? '',
@@ -865,12 +865,12 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                       '',
                 ))
                 .toList() ??
-                []);
+                []);*/
             //supplier products result
-            searchList.addAll(response.data?.supplierProductData
+            searchList.addAll(response.data
                 ?.map((supplier) =>
                 SearchModel(
-                  searchId: supplier.productId ?? '',
+                  searchId: supplier.id ?? '',
                   name: supplier.productName ?? '',
                   searchType: SearchTypes.product,
                   image: supplier.mainImage ?? '',
