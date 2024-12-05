@@ -1039,7 +1039,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             //category search result
-            searchList.addAll(response.data?.categoryData
+            /*searchList.addAll(response.data?.categoryData
                 ?.map((category) => SearchModel(
                 searchId: category.id ?? '',
                 name: category.categoryName ?? '',
@@ -1082,11 +1082,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
                 image: sale.mainImage ?? ''))
                 .toList() ??
-                []);
+                []);*/
             //supplier products result
-            searchList.addAll(response.data?.supplierProductData
-                ?.map((supplier) => SearchModel(
-                searchId: supplier.productId ?? '',
+            searchList.addAll(response.data?.map((supplier) => SearchModel(
+                searchId: supplier.id ?? '',
                 isPesach: supplier.isPesach??false,
                 name: supplier.productName ?? '',
                 searchType: SearchTypes.product,

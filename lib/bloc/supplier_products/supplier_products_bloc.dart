@@ -562,7 +562,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             //category search result
-            searchList.addAll(response.data?.categoryData?.map((category) => SearchModel(searchId: category.id ?? '', name: category.categoryName ?? '', searchType: SearchTypes.category, isPesach: category.isPesach ?? false, image: category.categoryImage ?? '')).toList() ?? []);
+            /*searchList.addAll(response.data?.categoryData?.map((category) => SearchModel(searchId: category.id ?? '', name: category.categoryName ?? '', searchType: SearchTypes.category, isPesach: category.isPesach ?? false, image: category.categoryImage ?? '')).toList() ?? []);
             //subcategory search result
             searchList.addAll(response.data?.subCategoryData
                     ?.map((subCategory) => SearchModel(
@@ -611,11 +611,10 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
                           salesDesc: parse(sale.salesDescription ?? '').body?.text ?? '',
                         ))
                     .toList() ??
-                []);
+                []);*/
             //supplier products result
-            searchList.addAll(response.data?.supplierProductData
-                    ?.map((supplier) => SearchModel(
-                          searchId: supplier.productId ?? '',
+            searchList.addAll(response.data?.map((supplier) => SearchModel(
+                          searchId: supplier.id ?? '',
                           name: supplier.productName ?? '',
                           searchType: SearchTypes.product,
                           image: supplier.mainImage ?? '',
