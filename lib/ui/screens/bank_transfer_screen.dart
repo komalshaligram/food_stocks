@@ -20,13 +20,13 @@ class BankTransferScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => BankTransferBloc()..add(BankTransferEvent.getBankTransferInfoEvent(context: context)),
-      child:  BankTransferWidget(),
+      child:  const BankTransferWidget(),
     );
   }
 }
 
 class BankTransferWidget extends StatefulWidget {
-   BankTransferWidget({super.key});
+   const BankTransferWidget({super.key});
 
 
 

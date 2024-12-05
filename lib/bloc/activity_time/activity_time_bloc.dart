@@ -245,7 +245,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           temp.addAll(state.operationTimeList);
 
           String?  afterOpeningTime;
-          var afterStart;
+          DateTime afterStart;
 
           var shortVar = temp[event.rowIndex].monday;
 

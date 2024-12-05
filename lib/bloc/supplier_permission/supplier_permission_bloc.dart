@@ -70,9 +70,9 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
         List<PermissionModel>supplierPermissionList = state.supplierPermissionList.toList(growable: true);
         if(event.index == -1){
           bool isEnable = !state.isSelectAll;
-          supplierPermissionList.forEach((element) {
+          for (var element in supplierPermissionList) {
             element.isEnable = isEnable;
-          });
+          }
           emit(state.copyWith(supplierPermissionList: supplierPermissionList,isSelectAll:isEnable ));
         }
         else{
@@ -99,13 +99,13 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
           emit(state.copyWith(isUpdateProcess: true));
 
             List<SupplierPermission> updateSupplierPermission = [];
-          state.supplierPermissionList.forEach((element) {
+          for (var element in state.supplierPermissionList) {
             updateSupplierPermission.add(
                 SupplierPermission(
                   supplierId: element.supplierId,
                   isAllowed: element.isEnable
             ));
-          });
+          }
 
 
           UpdatePermissionModel req = UpdatePermissionModel(
@@ -129,13 +129,13 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
               data: updatePermissionReq);
 
           debugPrint('updatePermission url  = ${AppUrlEndPoints.baseUrl}${AppUrlEndPoints.updatePermissionUrl}');
-          debugPrint('updatePermission response  = ${response}');
+          debugPrint('updatePermission response  = $response');
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isUpdateProcess: false));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:  '${AppLocalizations.of(event.context)!.success_message}',
+                title:  AppLocalizations.of(event.context)!.success_message,
                 type: SnackBarType.success);
 
           } else {

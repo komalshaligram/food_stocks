@@ -110,7 +110,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             isBottomOfPlanoGrams: false,
             isBottomOfProducts: false,
             productStockList: [
-              [ProductStockModel(productId: '')],
+              [const ProductStockModel(productId: '')],
               [],
               [],
               []

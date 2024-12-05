@@ -140,7 +140,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
             }
           } catch (e) {
-            printData('err = ${e}');
+            printData('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         } else {

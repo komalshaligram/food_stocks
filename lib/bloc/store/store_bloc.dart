@@ -166,12 +166,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 isShimmering: false,isSaleShimmering:false));
           } else {
             emit(state.copyWith(isShimmering: false,isSaleShimmering:false));
-            CustomSnackBar.showSnackBar(
+            /*CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
                     AppLocalizations.of(event.context)!.something_is_wrong_try_again,
                 type: SnackBarType.failure,
-            );
+            );*/
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false,isSaleShimmering: false));
@@ -940,20 +940,20 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isSearching: false));
           }
         } on ServerException {
-          CustomSnackBar.showSnackBar(
+       /*   CustomSnackBar.showSnackBar(
             context: event.context,
             title:
                 AppLocalizations.of(event.context)!.something_is_wrong_try_again,
             type: SnackBarType.failure,
-          );
+          );*/
           emit(state.copyWith(isSearching: false));
         } catch (exc) {
-          CustomSnackBar.showSnackBar(
+        /*  CustomSnackBar.showSnackBar(
             context: event.context,
             title:
                 AppLocalizations.of(event.context)!.something_is_wrong_try_again,
             type: SnackBarType.failure,
-          );
+          );*/
           emit(state.copyWith(isSearching: false));
         }
       }

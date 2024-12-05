@@ -47,7 +47,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
        
 
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(orderBySupplierProduct: response.data?.ordersBySupplier?.first ?? const OrdersBySupplier(), orderData: response.data?.orderData?.first ?? OrderDatum(), isShimmering: false, isLoading: false, isRefresh: !state.isRefresh));
+            emit(state.copyWith(orderBySupplierProduct: response.data?.ordersBySupplier?.first ?? const OrdersBySupplier(), orderData: response.data?.orderData?.first ?? const OrderDatum(), isShimmering: false, isLoading: false, isRefresh: !state.isRefresh));
           } else {
             emit(state.copyWith(isShimmering: false, isLoading: false));
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
@@ -256,7 +256,6 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             } else {
               CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
             }
-          } on ServerException {
           } catch (e) {
             CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
           }

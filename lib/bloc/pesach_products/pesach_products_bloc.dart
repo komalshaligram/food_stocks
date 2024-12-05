@@ -976,8 +976,6 @@ class PesachProductsBloc
                   type: SnackBarType.failure);
 
             }
-          } on ServerException {
-
           } catch (e) {
             CustomSnackBar.showSnackBar(
                 context: event.context,

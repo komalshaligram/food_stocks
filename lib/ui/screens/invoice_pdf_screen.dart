@@ -5,7 +5,6 @@ import 'package:share_plus/share_plus.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../ui/widget/sized_box_widget.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../bloc/invoice_pdf/invoice_pdf_bloc.dart';
 import '../../data/model/res_model/invoices_res/invoices_res_model.dart';
@@ -16,8 +15,6 @@ import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'dart:io';
 
 class InvoicePdfRoute {
   static Widget get route => const InvoicePdfScreen();
@@ -64,7 +61,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
               },
               trailingWidget: GestureDetector(
                 onTap: () async {
-                  Map<Permission, PermissionStatus> statuses = await [
+                 /* Map<Permission, PermissionStatus> statuses = await [
                     Permission.storage,
                   ].request();
                   if (Platform.isAndroid) {
@@ -90,8 +87,8 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                         .add(InvoicePdfEvent.pdfDownloadEvent(
                       context: context,
                     ));
-                  }
-                  // Share.share('${AppUrlEndPoints.baseFileUrl}${state.invoiceDetailsList.link}');
+                  }*/
+                   Share.share('${AppUrlEndPoints.baseFileUrl}${state.invoiceDetailsList.link}');
                 },
                 child: Icon(
                   Icons.download_outlined,

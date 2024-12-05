@@ -64,7 +64,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             printData('img url = ${profileImageModel.filepath}');
             if (profileImageModel.filepath != '') {
               imgUrl = profileImageModel.filepath ?? '';
-              printData("image1 = ${imgUrl}\n${profileImageModel.filepath}");
+              printData("image1 = $imgUrl\n${profileImageModel.filepath}");
               emit(state.copyWith(
                 isUploadingProcess: false,
                 image: File(croppedImage?.path ?? pickedFile.path),
@@ -165,13 +165,13 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
 
           printData('update subUser req  = $updateSubUserReq');
 
-          final response = await DioClient(event.context).put(path: '${AppUrlEndPoints.updateSubUserUrl}', data: updateSubUserReq);
+          final response = await DioClient(event.context).put(path: AppUrlEndPoints.updateSubUserUrl, data: updateSubUserReq);
 
           printData('update subUser url  = ${AppUrlEndPoints.baseUrl}${AppUrlEndPoints.getAllSubUserUrl}');
-          printData('update subUser response  = ${response}');
+          printData('update subUser response  = $response');
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: '${AppLocalizations.of(event.context)!.success_message}', type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.success_message, type: SnackBarType.success);
           } else {
             emit(state.copyWith(isLoading: false));
           }
@@ -187,7 +187,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
           } else if (state.subUserProfileImage.contains(AppStrings.tempString)) {
             emit(state.copyWith(subUserProfileImage: '', image: File('')));
             await preferences.removeProfileImage();
-            CustomSnackBar.showSnackBar(context: event.context, title: '${AppLocalizations.of(event.context)!.removed_successfully}', type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.removed_successfully, type: SnackBarType.success);
             return;
           }
           emit(state.copyWith(isFileUploading: true));
@@ -203,7 +203,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             }
             return value == null;
           });
-          printData('update  req = ${req}');
+          printData('update  req = $req');
           final res = await DioClient(event.context).post(
             AppUrlEndPoints.updateSubUserUrl,
             data: req,
@@ -212,13 +212,13 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isFileUploading: false));
             emit(state.copyWith(subUserProfileImage: '', image: File('')));
-            CustomSnackBar.showSnackBar(context: event.context, title: '${AppLocalizations.of(event.context)!.removed_successfully}', type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.removed_successfully, type: SnackBarType.success);
           } else {
             emit(state.copyWith(isFileUploading: false));
           }
         } catch (e) {
           emit(state.copyWith(isFileUploading: false));
-          CustomSnackBar.showSnackBar(context: event.context, title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}', type: SnackBarType.failure);
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.something_is_wrong_try_again, type: SnackBarType.failure);
         }
       } else if (event is _getSubUserByIdEvent) {
         emit(state.copyWith(
@@ -246,11 +246,11 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
               data: getSubUserReq,
             );
 
-            printData('subUser req = ${getSubUserReq}');
+            printData('subUser req = $getSubUserReq');
 
             printData('url = ${AppUrlEndPoints.baseUrl}${AppUrlEndPoints.getAllSubUserUrl}');
             GetSubUserResModel response = GetSubUserResModel.fromJson(res);
-            printData('subUser res = ${response}');
+            printData('subUser res = $response');
 
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(

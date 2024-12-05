@@ -52,7 +52,7 @@ class PesachProductsState with _$PesachProductsState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-      productStockList: [[ProductStockModel(productId: '')],[],[]],
+      productStockList: [[const ProductStockModel(productId: '')],[],[]],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,

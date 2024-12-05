@@ -393,7 +393,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               if(!state.productStockList[state.productListIndex][state.productStockUpdateIndex].productIsInCart) {
-                add(ProductSaleEvent.setCartCountEvent());
+                add(const ProductSaleEvent.setCartCountEvent());
               }
               Vibration.vibrate();
               //  Navigator.pop(event.context);

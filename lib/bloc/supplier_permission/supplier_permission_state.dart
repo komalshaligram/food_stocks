@@ -12,7 +12,7 @@ class SupplierPermissionState with _$SupplierPermissionState{
     required String subUserId,
   }) = _SupplierPermissionState;
 
-  factory SupplierPermissionState.initial() => SupplierPermissionState(
+  factory SupplierPermissionState.initial() => const SupplierPermissionState(
       isShimmering: false,
       supplierPermissionList : [],
       isRefresh: false,

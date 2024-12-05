@@ -47,7 +47,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
       productDetails: [],
       productStockUpdateIndex: -1,
       productStockList: [
-        [ProductStockModel(productId: '')],
+        [const ProductStockModel(productId: '')],
         [],
         []
       ],

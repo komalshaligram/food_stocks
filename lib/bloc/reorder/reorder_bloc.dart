@@ -895,22 +895,22 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             emit(state.copyWith(isSearching: false));
           }
         } on ServerException {
-          CustomSnackBar.showSnackBar(
+        /*  CustomSnackBar.showSnackBar(
             context: event.context,
             title:
             AppLocalizations.of(event.context)!
                 .something_is_wrong_try_again,
             type: SnackBarType.failure,
-          );
+          );*/
           emit(state.copyWith(isSearching: false));
         } catch (exc) {
-          CustomSnackBar.showSnackBar(
+        /*  CustomSnackBar.showSnackBar(
             context: event.context,
             title:
             AppLocalizations.of(event.context)!
                 .something_is_wrong_try_again,
             type: SnackBarType.failure,
-          );
+          );*/
           emit(state.copyWith(isSearching: false));
         }
       }
@@ -1036,8 +1036,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                       event.context),
                   type: SnackBarType.failure);
             }
-          } on ServerException {
-
           } catch (e) {
             CustomSnackBar.showSnackBar(
                 context: event.context,

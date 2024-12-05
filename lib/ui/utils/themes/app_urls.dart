@@ -1,15 +1,15 @@
 class AppUrls {
- static String baseURL = "";
- static String imageBaseURL = "";
- static String subscriptionURL = "";
- static bool isProduction = false;
+  static String baseURL = "";
+  static String imageBaseURL = "";
+  static String subscriptionURL = "";
+  static bool isProduction = false;
 }
 
-
-
 class AppUrlEndPoints {
-// static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
-static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///devUrl
+ static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
+//  static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
+
+  ///devUrl
   //static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
   static const String baseFileUrl = 'https://foodstock-buckets.s3.il-central-1.amazonaws.com/';
   //static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
@@ -26,11 +26,11 @@ static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///dev
   static const String cityListUrl = '/v1/settings/Cities';
   static const String getProductCategoriesUrl = '/v1/store/getCategories';
   static const String getProductSalesUrl = '/v1/sales/getSales';
-  static const String getSaleProductsUrl = '/v1/store/SaleProducts';
+
   static const String getSuppliersUrl = '/v1/suppliers/getSupplier';
   // static const String getSupplierProductsUrl = '/v1/supplierProduct/getSupplierProducts';
   // static const String getProductDetailsUrl = '/v1/store/ProductDetail';
-  static const String getPlanogramProductsUrl = '/v1/store/getPalnogramProducts';
+
   //static const String createOrderUrl = '/v1/orders/createOrder';
   // static const String getAllOrderUrl = '/v1/orders/getAllOrders';
   // static const String getAllCartUrl = '/v1/cart/listingCartProducts/';
@@ -101,20 +101,34 @@ static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; ///dev
   static const String registrationUrl = '/v2/clients/createClient';
   static const String createOrderUrl = '/v2/orders/createOrder';
   static const String getAllOrderUrl = '/v2/orders/getAllOrders';
-  static const String relatedProductsUrl = '/v2/products/getRelatedProducts';
+
   static const String getAllCartUrl = '/v2/cart/listingCartProducts/';
   static const String listingCartProductsSupplierUrl = '/v2/cart/listingCartProductsSupplier/';
   static const String getProfileDetailsUrl = '/v2/admin/getAllClients';
   static const String getPlanogramByIdUrl = '/v2/planograms/getPlanogram/';
-  static const String getRecommendationProductsUrl = '/v2/recommendation/products';
-  static const String getPreviousOrderProductsUrl = '/v2/recommendation/getPrevoiusOrderproducts';
+
   static const String getProductDetailsUrl = '/v2/store/ProductDetail';
   static const String getSubCategoriesUrl = '/v2/store/getSubCategories';
   static const String getCompaniesUrl = '/v2/store/getBrand';
-  static const String getCompanyProductsUrl = '/v2/store/getBrandProducts';
-  static const String getSubCategoryProductsUrl = '/v2/store/getsubCategoryProducts';
+
   static const String getSupplierProductsUrl = '/v2/supplierProduct/getSupplierProducts';
   static const String walletRecordUrl = '/v2/walletTransaction/getWalletRecords';
-  static const String getPlanogramAllProductUrl = '/v2/store/getAllProducts';
+   static const String getPlanogramAllProductUrl = '/v2/store/getAllProducts';
+   static const String getRecommendationProductsUrl = '/v2/recommendation/products';
+   static const String relatedProductsUrl = '/v2/products/getRelatedProducts';
+   static const String getPreviousOrderProductsUrl = '/v2/recommendation/getPrevoiusOrderproducts';
+   static const String getCompanyProductsUrl = '/v2/store/getBrandProducts';
+   static const String getSubCategoryProductsUrl = '/v2/store/getsubCategoryProducts';
   static const String existingUserLoginUrl = '/v2/auth/verifyContactAndSendOTP';
+ static const String getSaleProductsUrl = '/v1/store/SaleProducts';
+ static const String getPlanogramProductsUrl = '/v1/store/getPalnogramProducts';
+
+  /*static const String getSaleProductsUrl = '/v3/products/getSaleProducts';
+  static const String getPlanogramProductsUrl = '/v3/store/getPalnogramProducts';
+  static const String getPlanogramAllProductUrl = '/v3/store/getAllProducts';
+  static const String getCompanyProductsUrl = '/v3/store/getBrandProducts';
+  static const String getRecommendationProductsUrl = '/v3/recommendation/products';
+  static const String getPreviousOrderProductsUrl = '/v3/recommendation/getPrevoiusOrderproducts';
+  static const String relatedProductsUrl = '/v3/products/getRelatedProducts';
+  static const String getSubCategoryProductsUrl = '/v3/store/getsubCategoryProducts';*/
 }

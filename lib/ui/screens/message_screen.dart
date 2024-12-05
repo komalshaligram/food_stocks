@@ -173,6 +173,7 @@ class MessageScreenWidget extends StatelessWidget {
                                               },
                                             );
                                           }
+                                          return null;
                                         },
                                         child: messageListItem(
                                         index: index,

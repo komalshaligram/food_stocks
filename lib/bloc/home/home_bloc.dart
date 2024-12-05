@@ -273,11 +273,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             } else {
               add(HomeEvent.getRecommendationProductsListEvent(context: event.context));
               emit(state.copyWith(isProductSaleShimmering: false,allShimmering: false,));
-              CustomSnackBar.showSnackBar(
+             /* CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
                 type: SnackBarType.failure,
-              );
+              );*/
             }
           } on ServerException {
             add(HomeEvent.getRecommendationProductsListEvent(context: event.context));
@@ -584,7 +584,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 if (!state.isAppOnMaintenance) {
                   add(HomeEvent.generalSettings(context: event.context, dialogContext: event.context, isRetryLoading: false));
                 }
-                add(HomeEvent.getPreferencesDataEvent());
+                add(const HomeEvent.getPreferencesDataEvent());
                 add(HomeEvent.getCartCountEvent(context: event.context));
                 add(HomeEvent.getMessageListEvent(context: event.context));
                 add(HomeEvent.getOrderCountEvent(context: event.context));
@@ -728,18 +728,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(state.copyWith(isSearching: false));
             }
           } on ServerException {
-            CustomSnackBar.showSnackBar(
+       /*     CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
               type: SnackBarType.failure,
-            );
+            );*/
             emit(state.copyWith(isSearching: false));
           } catch (exc) {
-            CustomSnackBar.showSnackBar(
+           /* CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
               type: SnackBarType.failure,
-            );
+            );*/
             emit(state.copyWith(isSearching: false));
           }
         } else if (event is _updateGlobalSearchEvent) {

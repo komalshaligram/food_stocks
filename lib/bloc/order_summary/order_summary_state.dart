@@ -12,7 +12,7 @@ class OrderSummaryState with _$OrderSummaryState {
     required String language,
 }) = _OrderSummaryState;
 
-  factory OrderSummaryState.initial() => OrderSummaryState(
+  factory OrderSummaryState.initial() => const OrderSummaryState(
  orderSummaryList: CartProductsSupplierResModel(),
     isLoading: false,
     isShimmering: false,

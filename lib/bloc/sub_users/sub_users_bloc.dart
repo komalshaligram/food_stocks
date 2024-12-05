@@ -120,7 +120,7 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
                   event.context, RouteDefine.subUsersProfileScreen.name);
             }
           }
-        } on ServerException {}
+        }
         catch (e) {
           printData('catch____$e');
         }

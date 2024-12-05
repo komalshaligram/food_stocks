@@ -50,7 +50,7 @@ class CompanyProductsState with _$CompanyProductsState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-      productStockList: [[ProductStockModel(productId: '')],[],[]],
+      productStockList: [[const ProductStockModel(productId: '')],[],[]],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,

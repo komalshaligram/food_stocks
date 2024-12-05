@@ -13,7 +13,7 @@ class OtpState with _$OtpState {
 
   }) = _OtpState;
 
-  factory OtpState.initial() =>  OtpState(
+  factory OtpState.initial() =>  const OtpState(
       otpTimer: 0,
       otp: '',
       isLoading: false,
