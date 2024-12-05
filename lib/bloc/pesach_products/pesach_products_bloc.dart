@@ -755,7 +755,7 @@ class PesachProductsBloc
           );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
-              AppUrlEndPoints.getGlobalSearchResultUrl,
+              AppUrlEndPoints.getPlanogramAllProductForSearchUrl,
               data: globalSearchReqModel.toJson());
 
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
@@ -976,8 +976,6 @@ class PesachProductsBloc
                   type: SnackBarType.failure);
 
             }
-          } on ServerException {
-
           } catch (e) {
             CustomSnackBar.showSnackBar(
                 context: event.context,

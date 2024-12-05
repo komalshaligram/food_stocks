@@ -30,8 +30,8 @@ class DioClient {
       : _dio = Dio(
           BaseOptions(
               baseUrl: AppUrlEndPoints.baseUrl,
-              connectTimeout: Duration(milliseconds: AppConstants.timeOutDuration.toInt()),
-              receiveTimeout: Duration(milliseconds: AppConstants.timeOutDuration.toInt()),
+              connectTimeout: const Duration(minutes: 1),
+              receiveTimeout: const Duration(minutes: 1),
               headers: {
                 HttpHeaders.acceptHeader: Headers.jsonContentType,
                 HttpHeaders.authorizationHeader: 'Bearer ',
@@ -330,8 +330,8 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
       );
 
     case DioExceptionType.receiveTimeout:
-      CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.receive_timed_out, type: SnackBarType.failure);
-      return ErrorEntity(code: -1, message: AppLocalizations.of(context)!.receive_timed_out);
+    //  CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.receive_timed_out, type: SnackBarType.failure);
+      return ErrorEntity(code: -1, message: AppLocalizations.of(context!)!.receive_timed_out);
 
     case DioExceptionType.badCertificate:
       CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.bad_ssl_certificates, type: SnackBarType.failure);

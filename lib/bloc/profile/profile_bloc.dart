@@ -395,11 +395,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           }
         } catch (e) {
           emit(state.copyWith(isFileUploading: false));
-          CustomSnackBar.showSnackBar(
+        /*  CustomSnackBar.showSnackBar(
               context: event.context,
               title:
                   AppLocalizations.of(event.context)!.something_is_wrong_try_again,
-              type: SnackBarType.failure);
+              type: SnackBarType.failure);*/
         }
       }
     });

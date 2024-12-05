@@ -43,7 +43,6 @@ class PushNotificationService {
       }
     }
 
-
     FirebaseMessaging.onMessageOpenedApp.listen(
           (RemoteMessage message) async {
         debugPrint('_____Here at onMessageOpenedApp....$message');

@@ -8,7 +8,7 @@ class OrderDetailsState with _$OrderDetailsState {
     required GetOrderByIdModel orderByIdList,
   }) = _OrderDetailsState;
 
-  factory OrderDetailsState.initial() => OrderDetailsState(
+  factory OrderDetailsState.initial() => const OrderDetailsState(
     orderByIdList: GetOrderByIdModel()
 
   );

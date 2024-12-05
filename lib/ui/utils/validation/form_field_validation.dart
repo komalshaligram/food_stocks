@@ -38,6 +38,7 @@ class FormFieldValidation {
     if (agentCode.length != 6) {
       return AppLocalizations.of(context)!.agent_code_length_error;
     }
+    return null;
   }
 
   String? businessNameField(String value,BuildContext context) {

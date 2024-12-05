@@ -3,7 +3,6 @@
 
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
 
 part 'pesach_products_res_model.freezed.dart';
 part 'pesach_products_res_model.g.dart';

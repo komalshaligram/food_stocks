@@ -113,12 +113,14 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           list = [...state.basketProductList];
 
           try {
+            debugPrint('listIndex: ${state.productStockUpdateIndex}');
             if (state.productStockList[0][state.productStockUpdateIndex].maxQty > 0) {
-              if (event.productWeight > state.productStockList[event.listIndex][state.productStockUpdateIndex].maxQty) {
+              if (event.productWeight > state.productStockList[0][state.productStockUpdateIndex].maxQty) {
                 CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
                 return;
               }
             }
+
             list[event.listIndex].isProcess = true;
             emit(state.copyWith(
               isLoading: true,

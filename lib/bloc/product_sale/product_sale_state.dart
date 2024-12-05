@@ -41,7 +41,7 @@ class ProductSaleState with _$ProductSaleState {
         isProductLoading: false,
         productStockUpdateIndex: -1,
       productStockList: [
-        [ProductStockModel(productId: '')],
+        [ ProductStockModel(productId: '')],
         [],
         []
       ],

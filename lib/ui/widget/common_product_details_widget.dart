@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../ui/widget/common_product_details_button.dart';
@@ -58,7 +57,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           GestureDetector(
-            onVerticalDragDown: (detail){
+            /*onVerticalDragDown: (detail){
 
             },
             onVerticalDragStart: (detail){
@@ -75,7 +74,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
               if(isFromBasketScreen){
                 onCloseTap();
               }
-            },
+            },*/
             child: Column(
               children: [
                 Row(

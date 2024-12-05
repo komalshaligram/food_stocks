@@ -46,6 +46,15 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
     WidgetsBinding.instance.addObserver(this);
    smartLook.start();
    smartLook.preferences.setProjectKey(dotenv.env['SMART_LOOK_KEY']!);
+    //smartLook.log.enableLogging();
+    smartLook.sensitivity.changeWidgetClassSensitivity(
+      classType: TextField,
+      isSensitive: false,
+    );
+    smartLook.sensitivity.changeWidgetClassSensitivity(
+      classType: TextFormField,
+      isSensitive: false,
+    );
     super.initState();
   }
 

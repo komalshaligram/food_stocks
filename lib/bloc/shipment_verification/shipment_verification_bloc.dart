@@ -106,7 +106,7 @@ class ShipmentVerificationBloc
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
-                    '${AppLocalizations.of(event.context)!.signature_missing}',
+                    AppLocalizations.of(event.context)!.signature_missing,
                 type: SnackBarType.failure);
           }
         }

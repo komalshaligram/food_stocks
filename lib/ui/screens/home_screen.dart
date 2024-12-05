@@ -366,7 +366,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             if (!state.isGuestUser) {
                                                               showProductDetails(
                                                                 isSaleOn: state.isSaleOn,
-                                                                context: Platform.isIOS ? (state.context??context): context,
+                                                                context:  context,
                                                                 productId: state.recommendedProductsList[index].id ?? '',
                                                                 productStock: (state.recommendedProductsList[index].productStock.toString()),
                                                                 productListIndex: 1,

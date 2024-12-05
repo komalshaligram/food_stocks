@@ -11,6 +11,7 @@ import '../../data/model/res_model/invoices_res/invoices_res_model.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
+
 part 'invoice_pdf_state.dart';
 part 'invoice_pdf_event.dart';
 part 'invoice_pdf_bloc.freezed.dart';
@@ -25,6 +26,7 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
        else if(event is _pdfDownloadEvent){
          try {
            emit(state.copyWith(isDownloading: true));
+
            Directory? dir;
            if (defaultTargetPlatform == TargetPlatform.android) {
              dir = Directory('/storage/emulated/0/Documents');
@@ -52,7 +54,8 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
                title:
                AppLocalizations.of(event.context)!.downloaded_successfully,
                type: SnackBarType.success);
-           emit(state.copyWith(downloadProgress: 0, isDownloading: false));
+
+           emit(state.copyWith(isDownloading: false));
 
          } catch (e) {
            emit(state.copyWith(isDownloading: false));
@@ -60,9 +63,9 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
                context: event.context,
                title: AppLocalizations.of(event.context)!.failed_download,
                type: SnackBarType.failure);
-         }
+         }}
        }
 
-    });
+    );
   }
 }

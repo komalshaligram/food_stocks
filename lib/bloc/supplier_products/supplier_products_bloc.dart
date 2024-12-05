@@ -61,7 +61,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
         printData('supplier id = ${state.supplierId}, search = ${state.search}');
       } else if (event is _getSupplierProductsListEvent) {
         emit(state.copyWith(isGuestUser: preferences.getGuestUser(), isSubUserAddToBasket: preferences.getCanAddToBasket(), isGridView: preferences.getSupplierProductGrid(), bottleDeposit: preferences.getBottleTax(), isIncludedVat: preferences.getIsIncludedVat(), isSaleOn: preferences.getShowSale(), search: event.searchType));
-        printData('serch____${state.search}');
+
         if (state.isLoadMore) {
           return;
         }
@@ -144,6 +144,8 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
             printData('new product list len = ${productList.length}');
             printData('new product stock list len = ${productStockList.length}');
             productStockList[1].addAll(stockList);
+            printData('productSupplierProductsList___${state.productSupplierList.length}');
+            printData('totalFilteredCount___${response.metaData?.totalFilteredCount}');
             emit(state.copyWith(productList: productList, productStockList: productStockList, pageNum: state.pageNum + 1, isShimmering: false, isLoadMore: false));
             emit(state.copyWith(isBottomOfProducts: state.productList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false));
           } else {
@@ -158,6 +160,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
       } else if (event is _refreshListEvent) {
         add(SupplierProductsEvent.getPermissionList(context: event.context));
         emit(state.copyWith(
+            isShimmering: true,
             pageNum: 0,
             productList: [],
             productStockList: [
@@ -547,7 +550,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
         try {
           GlobalSearchReqModel globalSearchReqModel = GlobalSearchReqModel(search: state.searchController.text, sortField: AppStrings.sortFieldString, sortOrder: AppStrings.sortOrderString);
           emit(state.copyWith(isSearching: true));
-          final res = await DioClient(event.context).post(AppUrlEndPoints.getGlobalSearchResultUrl, data: globalSearchReqModel.toJson());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getPlanogramAllProductForSearchUrl, data: globalSearchReqModel.toJson());
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];

@@ -99,7 +99,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             req_update.ProfileDetailsUpdateResModel response = req_update.ProfileDetailsUpdateResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(isLoading: false));
-              Smartlook.instance.user.setEmail(response.data?.client?.email ?? '');
+              Smartlook.instance.user.setEmail(response.data?.client?.phoneNumber ?? '');
+              //Smartlook.instance.user.setEmail(response.data?.client?.email ?? '');
               preferencesHelper.setEmailId(userEmailId: response.data?.client?.email ?? '');
               if (!preferencesHelper.getSubUser()) {
                 preferencesHelper.setUserName(name: response.data?.client?.clientDetail?.ownerName ?? '');
@@ -184,7 +185,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 }
               }
               Smartlook.instance.user.setIdentifier(profileResModel.data?.client?.clientData?.id ?? '');
-              Smartlook.instance.user.setEmail(profileResModel.data?.client?.clientData?.email ?? '');
+              Smartlook.instance.user.setEmail(response.data?.client?.phoneNumber ?? '');
+             // Smartlook.instance.user.setEmail(profileResModel.data?.client?.clientData?.email ?? '');
               Smartlook.instance.user.setName(profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');
               if (!preferencesHelper.getSubUser()) {
                 preferencesHelper.setUserName(name: profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');

@@ -48,7 +48,7 @@ class BasketState with _$BasketState {
       required bool updatePaymentMethod}) = _BasketState;
 
   //don't add const here
-  factory BasketState.initial() =>  BasketState(
+  factory BasketState.initial() =>  const BasketState(
       cartItemList: GetAllCartResModel(),
       context:null,
       isShimmering: false,

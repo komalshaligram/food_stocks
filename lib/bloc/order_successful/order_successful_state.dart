@@ -15,7 +15,7 @@ class OrderSuccessfulState with _$OrderSuccessfulState {
   }) = _OrderSuccessfulState;
 
   factory OrderSuccessfulState.initial() =>
-      OrderSuccessfulState(
+      const OrderSuccessfulState(
         balance: 0,
         lastMonthExpense: 0,
         orderThisMonth: 0,

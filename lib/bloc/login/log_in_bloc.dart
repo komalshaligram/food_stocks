@@ -50,7 +50,6 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
               preferencesHelper.setUserId(id: response.user?.id ?? '');
               preferencesHelper.setPhoneNumber(userPhoneNumber: event.contactNumber);
             }
-           // Navigator.pushNamed(event.context, RouteDefine.otpScreen.name, arguments: {AppStrings.contactString: event.contactNumber, AppStrings.isRegisterString: state.isRegister});
             Navigator.pushNamed(event.context, RouteDefine.otpScreen.name, arguments: {AppStrings.contactString: event.contactNumber, AppStrings.isRegisterString: !(response.data?.isUserExists??false)});
             emit(state.copyWith(isLoading: false));
           } else if (response.status == AppConstants.code_403) {

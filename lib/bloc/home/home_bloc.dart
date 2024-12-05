@@ -255,7 +255,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         } else if (event is _getProductSalesListEvent) {
           try {
-            emit(state.copyWith(isProductSaleShimmering: true , allShimmering: true));
+            emit(state.copyWith(isProductSaleShimmering: true ));
             final res = await DioClient(event.context).post(AppUrlEndPoints.getSaleProductsUrl, data: const ProductSalesReqModel(pageNum: 1, pageLimit: AppConstants.defaultPageLimit).toJson());
             ProductSalesResModel response = ProductSalesResModel.fromJson(res);
 
@@ -273,11 +273,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             } else {
               add(HomeEvent.getRecommendationProductsListEvent(context: event.context));
               emit(state.copyWith(isProductSaleShimmering: false,allShimmering: false,));
-              CustomSnackBar.showSnackBar(
+             /* CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
                 type: SnackBarType.failure,
-              );
+              );*/
             }
           } on ServerException {
             add(HomeEvent.getRecommendationProductsListEvent(context: event.context));
@@ -574,7 +574,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
               if (phoneNumber == '' || phoneNumber == null) {
                 Smartlook.instance.user.setIdentifier(preferences.getUserId());
-                Smartlook.instance.user.setEmail(preferences.getEmailId());
+                Smartlook.instance.user.setEmail(preferences.getPhoneNumber());
                 Smartlook.instance.user.setName(preferences.getUserName());
                 Smartlook.instance.user.properties.putString(AppStrings.userBusinessName, value: preferences.getBusinessName());
                 Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: preferences.getPhoneNumber());
@@ -584,7 +584,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 if (!state.isAppOnMaintenance) {
                   add(HomeEvent.generalSettings(context: event.context, dialogContext: event.context, isRetryLoading: false));
                 }
-                add(HomeEvent.getPreferencesDataEvent());
+                add(const HomeEvent.getPreferencesDataEvent());
                 add(HomeEvent.getCartCountEvent(context: event.context));
                 add(HomeEvent.getMessageListEvent(context: event.context));
                 add(HomeEvent.getOrderCountEvent(context: event.context));
@@ -596,7 +596,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         } else if (event is _getRecommendationProductsListEvent) {
           try {
-            emit(state.copyWith(isShimmering: true,));
+            emit(state.copyWith(isShimmering: true));
             final res = await DioClient(event.context).post(
               AppUrlEndPoints.getRecommendationProductsUrl,
               data: const RecommendationProductsReqModel(pageNum: 1, pageLimit: AppConstants.defaultPageLimit).toJson(),
@@ -616,7 +616,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(state.copyWith(recommendedProductsList: response.data ?? [], productStockList: productStockList, isShimmering: false,
               ));
             } else {
-              emit(state.copyWith(isShimmering: false,));
+              emit(state.copyWith(isShimmering: false,allShimmering: false));
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
@@ -642,7 +642,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           try {
             GlobalSearchReqModel globalSearchReqModel = GlobalSearchReqModel(search: state.searchController.text, sortField: AppStrings.sortFieldString, sortOrder: AppStrings.sortOrderString);
             emit(state.copyWith(isSearching: true, bottlePrice: preferences.getBottleTax()));
-            final res = await DioClient(event.context).post(AppUrlEndPoints.getGlobalSearchResultUrl, data: globalSearchReqModel.toJson());
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getPlanogramAllProductForSearchUrl, data: globalSearchReqModel.toJson());
             GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
 
             if (state.searchController.text == '') {
@@ -728,18 +728,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(state.copyWith(isSearching: false));
             }
           } on ServerException {
-            CustomSnackBar.showSnackBar(
+       /*     CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
               type: SnackBarType.failure,
-            );
+            );*/
             emit(state.copyWith(isSearching: false));
           } catch (exc) {
-            CustomSnackBar.showSnackBar(
+           /* CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
               type: SnackBarType.failure,
-            );
+            );*/
             emit(state.copyWith(isSearching: false));
           }
         } else if (event is _updateGlobalSearchEvent) {

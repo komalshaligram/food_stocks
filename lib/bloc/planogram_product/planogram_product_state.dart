@@ -45,7 +45,7 @@ class PlanogramProductState with _$PlanogramProductState {
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-      productStockList: [[ProductStockModel(productId: '')],[],[]],
+      productStockList: [[ ProductStockModel(productId: '')],[],[]],
         isSelectSupplier: false,
         productSupplierList: [],
         isCartCountChange: false,

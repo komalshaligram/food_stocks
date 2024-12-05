@@ -110,7 +110,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             isBottomOfPlanoGrams: false,
             isBottomOfProducts: false,
             productStockList: [
-              [ProductStockModel(productId: '')],
+              [ ProductStockModel(productId: '')],
               [],
               [],
               []
@@ -312,7 +312,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   []);
 
             }
-            if(isSubCategoryString == '' && !state.isSubCategory ){
+            if(isSubCategoryString == '' && !state.isSubCategory){
               productStockList[2] = stockList;
             }
             else if(isSubCategoryString != '' && !state.isSubCategory ){
@@ -1018,7 +1018,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
-              AppUrlEndPoints.getGlobalSearchResultUrl,
+              AppUrlEndPoints.getPlanogramAllProductForSearchUrl,
               data: globalSearchReqModel.toJson());
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
           if (state.searchController.text.isEmpty) {

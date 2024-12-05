@@ -10,7 +10,7 @@ class MessageContentState with _$MessageContentState {
     required bool isLoading,
   }) = _MessageContentState;
 
-  factory MessageContentState.initial() => MessageContentState(
+  factory MessageContentState.initial() => const MessageContentState(
         message: MessageData(),
     isReadMore: false,
     isPreview: false,

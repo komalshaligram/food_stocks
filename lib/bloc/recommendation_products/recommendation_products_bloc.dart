@@ -103,6 +103,7 @@ class RecommendationProductsBloc
                 pageNum: state.pageNum + 1,
                 isShimmering: false,
                 isLoadMore: false));
+
             emit(state.copyWith(
                 isBottomOfProducts: state.recommendationProductsList.length ==
                         (response.metaData?.totalFilteredCount ?? 0)
@@ -127,6 +128,7 @@ class RecommendationProductsBloc
       else if (event is _refreshListEvent) {
         add(RecommendationProductsEvent.getPermissionList(context: event.context));
         emit(state.copyWith(
+          isShimmering: true,
             pageNum: 0,
             recommendationProductsList: [],
             productStockList: [
@@ -765,7 +767,7 @@ class RecommendationProductsBloc
           );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
-              AppUrlEndPoints.getGlobalSearchResultUrl,
+              AppUrlEndPoints.getPlanogramAllProductForSearchUrl,
               data: globalSearchReqModel.toJson());
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
 

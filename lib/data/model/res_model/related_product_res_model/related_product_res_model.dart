@@ -21,14 +21,6 @@ class RelatedProductDatum with _$RelatedProductDatum {
     String? numberOfUnit,
     @JsonKey(name: "itemsWeight")
     String? itemsWeight,
-    @JsonKey(name: "totalWeightCardboard")
-    String? totalWeightCardboard,
-    @JsonKey(name: "totalWeightSurface")
-    String? totalWeightSurface,
-    @JsonKey(name: "createdAt")
-    String? createdAt,
-    @JsonKey(name: "updatedAt")
-    String? updatedAt,
     @JsonKey(name: "isBottle")
     bool? isBottle,
     @JsonKey(name: "totalWeight")
@@ -43,10 +35,6 @@ class RelatedProductDatum with _$RelatedProductDatum {
     String? brandId,
     @JsonKey(name: "brandLogo")
     String? brandLogo,
-    @JsonKey(name: "manufactureName")
-    String? manufactureName,
-    @JsonKey(name: "healthAndLifestye")
-    String? healthAndLifestye,
     @JsonKey(name: "productDescription")
     String? productDescription,
     @JsonKey(name: "component")
@@ -65,10 +53,6 @@ class RelatedProductDatum with _$RelatedProductDatum {
     bool? isPesach,
     @JsonKey(name: "nmMashlim")
     String? nmMashlim,
-    @JsonKey(name: "createdBy")
-    String? createdBy,
-    @JsonKey(name: "updatedBy")
-    String? updatedBy,
     @JsonKey(name: "categories")
     String? categories,
     @JsonKey(name: "subcategories")

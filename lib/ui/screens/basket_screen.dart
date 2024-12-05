@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -507,6 +506,7 @@ class BasketScreenWidget extends StatelessWidget {
                 },
               );
             }
+            return null;
           },
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
@@ -520,7 +520,7 @@ class BasketScreenWidget extends StatelessWidget {
             ),
             child: GestureDetector(
               onTap: () {
-                showProductDetails(isSaleOn: state.isSaleOn, context: Platform.isIOS ? (state.context??context): context, cartProductId: state.cartItemList.data?.data?[index].id ?? '', productListIndex: 0, productStock: state.cartItemList.data?.data?[index].productStock.toString() ?? '0');
+                showProductDetails(isSaleOn: state.isSaleOn, context: /*Platform.isIOS ? (state.context??context): */context, cartProductId: state.cartItemList.data?.data?[index].id ?? '', productListIndex: 0, productStock: state.cartItemList.data?.data?[index].productStock.toString() ?? '0');
               },
               child: Column(
                 children: [
@@ -856,114 +856,105 @@ class BasketScreenWidget extends StatelessWidget {
                   builder: (blocContext, state) {
                     return AbsorbPointer(
                       absorbing: state.isLoading ? true : false,
-                      child: GestureDetector(
-                        onVerticalDragStart: (dragDetails) {},
-                        onVerticalDragDown: (dragDetails){},
-                        onVerticalDragUpdate: (dragDetails) {
-                          debugPrint("hereree");
-                          Navigator.pop(context);
-                          context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(context: state.context??context));
-                        },
-                        onVerticalDragEnd: (endDetails) {},
-                        child: Container(
-                          height: getScreenHeight(context1),
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(AppConstants.radius_30),
-                              topRight: Radius.circular(AppConstants.radius_30),
-                            ),
-                            color: AppColors.whiteColor,
+                      child: Container(
+                        height: getScreenHeight(context1),
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(AppConstants.radius_30),
+                            topRight: Radius.circular(AppConstants.radius_30),
                           ),
-                          child: state.isProductLoading
-                              ? const ProductDetailsShimmerWidget()
-                              : state.productDetails.isEmpty
-                                  ? NoDataBottomSheet(dialogContext: context)
-                                  : SingleChildScrollView(
-                                      controller: ModalScrollController.of(context1),
-                                      child: Column(
-                                        children: [
-                                          CommonProductDetailsWidget(
-                                            isFromBasketScreen: true,
-                                            isIncludedVat: state.isIncludedVat,
-                                            productDetails: state.productDetails,
-                                            isSubUserAddToBasket: state.isSubUserAddToBasket,
-                                            bottleTax: state.bottleTax,
-                                            totalBottleDeposit: (state.bottleTax * (state.productDetails.first.numberOfUnit ?? 1).toDouble() * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
-                                            isBottle: (state.productDetails.first.isBottle ?? false),
-                                            addToOrderTap: () {
-                                              FocusManager.instance.primaryFocus?.unfocus();
-                                              context.read<BasketBloc>().add(BasketEvent.addToCartProductEvent(
-                                                    context: context1,
-                                                    productId: cartProductId,
-                                                  ));
-                                            },
-                                            isLoading: state.isLoading,
-                                            imageOnTap: () {
-                                              showDialog(
-                                                context: context,
-                                                builder: (dialogContext) {
-                                                  return Stack(
-                                                    children: [
-                                                      SizedBox(
-                                                        height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
-                                                        width: getScreenWidth(context),
-                                                        child: GestureDetector(
-                                                          onVerticalDragStart: (dragDetails) {},
-                                                          onVerticalDragUpdate: (dragDetails) {},
-                                                          onVerticalDragEnd: (endDetails) {
-                                                            Navigator.pop(dialogContext);
-                                                          },
-                                                          child: PhotoView(
-                                                            imageProvider: NetworkImage(
-                                                              '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.productImageIndex].mainImage}',
-                                                            ),
+                          color: AppColors.whiteColor,
+                        ),
+                        child: state.isProductLoading
+                            ? const ProductDetailsShimmerWidget()
+                            : state.productDetails.isEmpty
+                                ? NoDataBottomSheet(dialogContext: context)
+                                : SingleChildScrollView(
+                                    controller: ModalScrollController.of(context1),
+                                    child: Column(
+                                      children: [
+                                        CommonProductDetailsWidget(
+                                          isFromBasketScreen: true,
+                                          isIncludedVat: state.isIncludedVat,
+                                          productDetails: state.productDetails,
+                                          isSubUserAddToBasket: state.isSubUserAddToBasket,
+                                          bottleTax: state.bottleTax,
+                                          totalBottleDeposit: (state.bottleTax * (state.productDetails.first.numberOfUnit ?? 1).toDouble() * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
+                                          isBottle: (state.productDetails.first.isBottle ?? false),
+                                          addToOrderTap: () {
+                                            FocusManager.instance.primaryFocus?.unfocus();
+                                            context.read<BasketBloc>().add(BasketEvent.addToCartProductEvent(
+                                                  context: context1,
+                                                  productId: cartProductId,
+                                                ));
+                                          },
+                                          isLoading: state.isLoading,
+                                          imageOnTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (dialogContext) {
+                                                return Stack(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
+                                                      width: getScreenWidth(context),
+                                                      child: GestureDetector(
+                                                        onVerticalDragStart: (dragDetails) {},
+                                                        onVerticalDragUpdate: (dragDetails) {},
+                                                        onVerticalDragEnd: (endDetails) {
+                                                          Navigator.pop(dialogContext);
+                                                        },
+                                                        child: PhotoView(
+                                                          imageProvider: NetworkImage(
+                                                            '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.productImageIndex].mainImage}',
                                                           ),
                                                         ),
                                                       ),
-                                                      GestureDetector(
-                                                          onTap: () {
-                                                            Navigator.pop(dialogContext);
-                                                          },
-                                                          child: const Padding(
-                                                            padding: EdgeInsets.only(top: 10.0),
-                                                            child: Icon(
-                                                              Icons.close,
-                                                              color: Colors.white,
-                                                            ),
-                                                          )),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            },
-                                            context: context,
-                                            productImages: [state.productDetails.first.mainImage ?? ''],
-                                            productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
-                                            productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
-                                            productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
-                                            scrollController: scrollController,
-                                            productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                                            onQuantityChanged: (quantity) {
-                                              context.read<BasketBloc>().add(BasketEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
-                                            },
-                                            onQuantityIncreaseTap: () {
-                                              context.read<BasketBloc>().add(BasketEvent.increaseQuantityOfProduct(context: context1));
-                                            },
-                                            onQuantityDecreaseTap: () {
-                                              if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
-                                                context.read<BasketBloc>().add(BasketEvent.decreaseQuantityOfProduct(context: context1));
-                                              }
-                                            },
-                                            onCloseTap: () {
-                                              Navigator.pop(context);
-                                              context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(context: state.context??context));
-                                            },
-                                          ),
-                                          state.relatedProductList.isEmpty ? 0.height : relatedProductWidget(context, state, context1, isSaleOn),
-                                        ],
-                                      ),
+                                                    ),
+                                                    GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.pop(dialogContext);
+                                                        },
+                                                        child: const Padding(
+                                                          padding: EdgeInsets.only(top: 10.0),
+                                                          child: Icon(
+                                                            Icons.close,
+                                                            color: Colors.white,
+                                                          ),
+                                                        )),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          context: context,
+                                          productImages: [state.productDetails.first.mainImage ?? ''],
+                                          productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
+                                          productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
+                                          productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
+                                          scrollController: scrollController,
+                                          productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
+                                          onQuantityChanged: (quantity) {
+                                            context.read<BasketBloc>().add(BasketEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
+                                          },
+                                          onQuantityIncreaseTap: () {
+                                            context.read<BasketBloc>().add(BasketEvent.increaseQuantityOfProduct(context: context1));
+                                          },
+                                          onQuantityDecreaseTap: () {
+                                            if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                              context.read<BasketBloc>().add(BasketEvent.decreaseQuantityOfProduct(context: context1));
+                                            }
+                                          },
+                                          onCloseTap: () {
+
+                                            context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(context: context));
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                        state.relatedProductList.isEmpty ? 0.height : relatedProductWidget(context, state, context1, isSaleOn),
+                                      ],
                                     ),
-                        ),
+                                  ),
                       ),
                     );
                   },
@@ -1019,7 +1010,7 @@ class BasketScreenWidget extends StatelessWidget {
                   isPesach: state.relatedProductList.elementAt(i).isPesach,
                   onButtonTap: () {
                     Navigator.pop(prevContext);
-                    showProductDetails(isSaleOn: isSaleOn, context: Platform.isIOS ? (state.context??context): context, cartProductId: state.relatedProductList[i].id ?? '', isBarcode: false, productStock: state.relatedProductList[i].productStock.toString(), productListIndex: 1);
+                    showProductDetails(isSaleOn: isSaleOn, context:/* Platform.isIOS ? (state.context??context):*/ context, cartProductId: state.relatedProductList[i].id ?? '', isBarcode: false, productStock: state.relatedProductList[i].productStock.toString(), productListIndex: 1);
                   },
                 );
               },

@@ -71,7 +71,7 @@ class HomeState with _$HomeState {
       productDetails: [],
       productStockUpdateIndex: -1,
       productStockList: [
-        [ProductStockModel(productId: '')],
+        [ ProductStockModel(productId: '')],
         [],
         [],
         []
