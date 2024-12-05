@@ -20,6 +20,7 @@ import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
@@ -858,13 +859,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                    },);
                                },
                                context: context,
-
-
                                productImages: [
-                                 state.productDetails.first.mainImage ??
-                                     ''
-                               ],
-
+                                 state.productDetails.first.mainImage ?? ''],
                                productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
                                productPrice: state
                                    .productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][
@@ -901,6 +897,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                  Navigator.pop(context);
                                  },
                              ),
+                             state.isRelatedShimmering?
+                             const RelatedProductShimmerWidget():
                              state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context,isSaleOn)
                            ],
                          ),

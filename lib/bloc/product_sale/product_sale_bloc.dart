@@ -141,9 +141,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                   });
                 }
               } on ServerException {}
-              if (response.product!.isNotEmpty) {
-                add(ProductSaleEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
-              }
+              emit(state.copyWith(isProductLoading: false,productDetails: response.product??[]));
               if ((event.isBarcode)) {
                 productStockList[0][0] = productStockList[0][0].copyWith(
                   quantity: _productQuantity,
@@ -153,7 +151,9 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 );
                 emit(state.copyWith(productStockList: productStockList));
               }
-
+              if (response.product!.isNotEmpty) {
+                add(ProductSaleEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+              }
               List<ProductSupplierModel> supplierList = [];
 
               supplierList.addAll(response.product?.first.supplierSales?.map((supplier) {

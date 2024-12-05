@@ -221,9 +221,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
                   printData('1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-              if (response.product!.isNotEmpty) {
-                add(SupplierProductsEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
-              }
+              emit(state.copyWith(isProductLoading: false,productDetails: response.product??[]));
               if ((event.isBarcode)) {
                 productStockList[0][0] = productStockList[0][0].copyWith(
                   quantity: _productQuantity,
@@ -235,7 +233,9 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
               }
 
               List<ProductSupplierModel> supplierList = [];
-
+              if (response.product!.isNotEmpty) {
+                add(SupplierProductsEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+              }
               supplierList.addAll(response.product?.first.supplierSales?.map((supplier) {
                     return ProductSupplierModel(
                       supplierId: supplier.supplierId ?? '',

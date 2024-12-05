@@ -49,8 +49,6 @@ class PesachProductsBloc
   String _cartProductId = '';
   int _productQuantity = 0;
 
-
-
   PesachProductsBloc() : super(PesachProductsState.initial()) {
     on<PesachProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -196,7 +194,7 @@ class PesachProductsBloc
               productStock.productId == event.productId);
             }
 
-            emit(state.copyWith(productListIndex:productListIndex,productStockUpdateIndex:productStockUpdateIndex));
+            emit(state.copyWith(productListIndex:productListIndex,productStockUpdateIndex:productStockUpdateIndex,));
 
             try {
               final res = await DioClient(event.context).post(
@@ -218,9 +216,9 @@ class PesachProductsBloc
 
               }
             } on ServerException {}
-            if(response.product!.isNotEmpty){
-              add(PesachProductsEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
-            }
+            emit(state.copyWith(isProductLoading: false,productDetails: response.product??[]));
+
+
             if (event.isBarcode) {
               productStockList[0][0] =  productStockList[0][0]
                   .copyWith(
@@ -235,7 +233,9 @@ class PesachProductsBloc
               emit(state.copyWith(productStockList: productStockList));
 
             }
-
+            if(response.product!.isNotEmpty){
+              add(PesachProductsEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+            }
 
             List<ProductSupplierModel> supplierList = [];
 

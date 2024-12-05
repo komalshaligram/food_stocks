@@ -325,7 +325,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
 
-
               productStockList[productStockList
                   .indexOf(productStockList.last)] = productStockList[
               productStockList.indexOf(productStockList.last)]
@@ -343,8 +342,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                           .toString() ?? '')
               );
 
-              emit(state.copyWith(productStockList: productStockList));
-
+              emit(state.copyWith(productStockList: productStockList,));
 
               try {
                 SharedPreferencesHelper preferences = SharedPreferencesHelper(
@@ -377,10 +375,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-              if (response.product!.isNotEmpty) {
-                add(StoreEvent.relatedProductsEvent(context: event.context,
-                    productId: response.product?.first.id ?? ''));
-              }
+              emit(state.copyWith(productDetails: response.product??[],isProductLoading:false ));
 
               if ((event.isBarcode ?? false)) {
                 List<ProductStockModel> productStockList =
@@ -399,8 +394,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   productSupplierIds: '',
                   note: '',
                   productIsInCart: true,
-
-
                 );
 
                 emit(state.copyWith(productStockList: productStockList));
@@ -490,6 +483,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   productSupplierList: supplierList,
                   /*isProductLoading: false*/
               ));
+              if (response.product!.isNotEmpty) {
+                add(StoreEvent.relatedProductsEvent(context: event.context,
+                    productId: response.product?.first.id ?? ''));
+              }
+
               if (supplierList.isNotEmpty) {
                 bool isSupplierSelected = false;
                 for (var supplier in supplierList) {

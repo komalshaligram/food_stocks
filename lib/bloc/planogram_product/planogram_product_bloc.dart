@@ -121,9 +121,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                   printData('1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-              if (response.product!.isNotEmpty) {
-                add(PlanogramProductEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
-              }
+             emit(state.copyWith(productDetails: response.product??[],isProductLoading: false));
               if ((event.isBarcode)) {
                 productStockList[0][0] = productStockList[0][0].copyWith(
                   quantity: _productQuantity,
@@ -134,7 +132,9 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
 
                 emit(state.copyWith(productStockList: productStockList));
               }
-
+              if (response.product!.isNotEmpty) {
+                add(PlanogramProductEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+              }
               List<ProductSupplierModel> supplierList = [];
 
               supplierList.addAll(response.product?.first.supplierSales?.map((supplier) {

@@ -23,6 +23,7 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_sale_item_widget.dart';
@@ -746,6 +747,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                               },
                               onCloseTap: (){Navigator.pop(context);},
                             ),
+                            state.isRelatedShimmering?
+                            const RelatedProductShimmerWidget():
                             state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList,context,isSaleOn)
                           ],
                         ),

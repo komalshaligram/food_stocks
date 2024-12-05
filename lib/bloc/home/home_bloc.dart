@@ -152,14 +152,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         return;
                       }
                     });
+
                   }
                 } on ServerException {}
-                if (response.product!.isNotEmpty) {
-                  add(HomeEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
-                }
-                else{
-                  emit(state.copyWith(isProductLoading: false));
-                }
+                emit(state.copyWith(isProductLoading: false,productDetails: response.product??[]));
+
                 if (event.isBarcode) {
                   productStockList[0][0] = productStockList[0][0].copyWith(
                     quantity: _productQuantity,
@@ -207,6 +204,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 emit(state.copyWith(productStockList: []));
 
                 emit(state.copyWith(productDetails: response.product ?? [], productStockList: productStockList, productStockUpdateIndex: productStockUpdateIndex, productSupplierList: supplierList, productListIndex: productListIndex, ));
+                if (response.product!.isNotEmpty) {
+                  add(HomeEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+                }
+                else{
+                  emit(state.copyWith(isProductLoading: false));
+                }
                 if (supplierList.isNotEmpty) {
                   bool isSupplierSelected = false;
                   for (var supplier in supplierList) {

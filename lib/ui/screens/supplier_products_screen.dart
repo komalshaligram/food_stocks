@@ -24,6 +24,7 @@ import '../../routes/app_routes.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
+import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
@@ -903,6 +904,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                         },
                                         onCloseTap: (){Navigator.pop(context);},
                                       ),
+                                      state.isRelatedShimmering?
+                                      const RelatedProductShimmerWidget():
                                       state.relatedProductList.isEmpty
                                           ? 0.width
                                           : relatedProductWidget(
