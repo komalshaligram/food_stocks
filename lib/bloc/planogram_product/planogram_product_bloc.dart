@@ -121,9 +121,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                   printData('1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-              if (response.product!.isNotEmpty) {
-                add(PlanogramProductEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
-              }
+             emit(state.copyWith(productDetails: response.product??[],isProductLoading: false));
               if ((event.isBarcode)) {
                 productStockList[0][0] = productStockList[0][0].copyWith(
                   quantity: _productQuantity,
@@ -134,7 +132,9 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
 
                 emit(state.copyWith(productStockList: productStockList));
               }
-
+              if (response.product!.isNotEmpty) {
+                add(PlanogramProductEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+              }
               List<ProductSupplierModel> supplierList = [];
 
               supplierList.addAll(response.product?.first.supplierSales?.map((supplier) {
@@ -455,7 +455,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             //category search result
-            searchList.addAll(response.data?.categoryData?.map((category) => SearchModel(searchId: category.id ?? '', name: category.categoryName ?? '', searchType: SearchTypes.category, isPesach: category.isPesach ?? false, image: category.categoryImage ?? '')).toList() ?? []);
+            /*searchList.addAll(response.data?.categoryData?.map((category) => SearchModel(searchId: category.id ?? '', name: category.categoryName ?? '', searchType: SearchTypes.category, isPesach: category.isPesach ?? false, image: category.categoryImage ?? '')).toList() ?? []);
             //subcategory search result
             searchList.addAll(response.data?.subCategoryData
                     ?.map((subCategory) => SearchModel(
@@ -503,11 +503,11 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                           salesDesc: parse(sale.salesDescription ?? '').body?.text ?? '',
                         ))
                     .toList() ??
-                []);
+                []);*/
             //supplier products result
-            searchList.addAll(response.data?.supplierProductData
+            searchList.addAll(response.data
                     ?.map((supplier) => SearchModel(
-                          searchId: supplier.productId ?? '',
+                          searchId: supplier.id ?? '',
                           name: supplier.productName ?? '',
                           searchType: SearchTypes.product,
                           image: supplier.mainImage ?? '',

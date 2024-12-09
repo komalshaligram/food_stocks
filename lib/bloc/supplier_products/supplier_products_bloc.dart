@@ -221,9 +221,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
                   printData('1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
-              if (response.product!.isNotEmpty) {
-                add(SupplierProductsEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
-              }
+              emit(state.copyWith(isProductLoading: false,productDetails: response.product??[]));
               if ((event.isBarcode)) {
                 productStockList[0][0] = productStockList[0][0].copyWith(
                   quantity: _productQuantity,
@@ -235,7 +233,9 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
               }
 
               List<ProductSupplierModel> supplierList = [];
-
+              if (response.product!.isNotEmpty) {
+                add(SupplierProductsEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
+              }
               supplierList.addAll(response.product?.first.supplierSales?.map((supplier) {
                     return ProductSupplierModel(
                       supplierId: supplier.supplierId ?? '',
@@ -562,7 +562,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             //category search result
-            searchList.addAll(response.data?.categoryData?.map((category) => SearchModel(searchId: category.id ?? '', name: category.categoryName ?? '', searchType: SearchTypes.category, isPesach: category.isPesach ?? false, image: category.categoryImage ?? '')).toList() ?? []);
+            /*searchList.addAll(response.data?.categoryData?.map((category) => SearchModel(searchId: category.id ?? '', name: category.categoryName ?? '', searchType: SearchTypes.category, isPesach: category.isPesach ?? false, image: category.categoryImage ?? '')).toList() ?? []);
             //subcategory search result
             searchList.addAll(response.data?.subCategoryData
                     ?.map((subCategory) => SearchModel(
@@ -611,11 +611,10 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
                           salesDesc: parse(sale.salesDescription ?? '').body?.text ?? '',
                         ))
                     .toList() ??
-                []);
+                []);*/
             //supplier products result
-            searchList.addAll(response.data?.supplierProductData
-                    ?.map((supplier) => SearchModel(
-                          searchId: supplier.productId ?? '',
+            searchList.addAll(response.data?.map((supplier) => SearchModel(
+                          searchId: supplier.id ?? '',
                           name: supplier.productName ?? '',
                           searchType: SearchTypes.product,
                           image: supplier.mainImage ?? '',

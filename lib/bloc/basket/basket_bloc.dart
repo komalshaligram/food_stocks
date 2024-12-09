@@ -66,7 +66,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               List<ProductDetailsModel> temp = [];
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               if (productStockList.isNotEmpty) {
-                productStockList.elementAt(0).clear();
+                productStockList[0]= [];
               }
 
               List<ProductStockModel> stockList = [];
@@ -647,7 +647,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       stock: (product.productStock.toString()),
                     )) ??
                 []);
-            productStockList[1].addAll(stockList);
+            productStockList[1] = [...productStockList[1],...stockList];
 
             emit(state.copyWith(relatedProductList: response.data ?? [], isRelatedShimmering: false, productStockList: productStockList));
           } else {

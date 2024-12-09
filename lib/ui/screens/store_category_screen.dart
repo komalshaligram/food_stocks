@@ -27,6 +27,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
+import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
@@ -662,7 +663,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (listViewContext, index) {
                           return SearchItemWidget(
-                              isShowSeeAll: index==state.searchList.length?true:false,
+                              isShowSeeAll: index==state.searchList.length -1 ?true:false,
                               salePrice: state.searchList[index].salePrice,
                               saleDesc: state.searchList[index].salesDesc,
                               isPesach: state.searchList[index].isPesach,
@@ -1291,6 +1292,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               onCloseTap: (){Navigator.pop(context);},
                             ),
                             0.height,
+                            state.isRelatedShimmering?
+                            const RelatedProductShimmerWidget():
                             state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context,isSaleOn)
                           ],
                         ),

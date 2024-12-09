@@ -32,6 +32,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_product_list_widget.dart';
 import '../widget/common_search_widget.dart';
@@ -783,6 +784,8 @@ class HomeScreenWidget extends StatelessWidget {
                                           }
                                         },   onCloseTap: (){Navigator.pop(context);},
                                       ),
+                                      state.isRelatedShimmering?
+                                      const RelatedProductShimmerWidget():
                                       state.relatedProductList.isEmpty ? 0.height : relatedProductWidget(context1, state.relatedProductList, context, scrollController, isSaleOn),
                                     ],
                                   ),

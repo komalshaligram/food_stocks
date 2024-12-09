@@ -23,6 +23,7 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_drop_down_button.dart';
 import '../widget/common_product_button_widget.dart';
@@ -607,6 +608,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                         },
                                         onCloseTap: (){Navigator.pop(context);},
                                       ),
+                                      state.isRelatedShimmering?
+                                      const RelatedProductShimmerWidget():
                                       state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn)
                                     ],
                                   ),
