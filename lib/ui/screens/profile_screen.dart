@@ -180,11 +180,11 @@ class ProfileScreenWidget extends StatelessWidget {
                                   7.height,
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!
-                                        .name_of_owner,
+                                        .owner_first_name,
                                   ),
                                   CustomFormField(
                                     context: context,
-                                    controller: state.ownerNameController,
+                                    controller: state.ownerFirstNameController,
                                     inputFormat: [
                                       LengthLimitingTextInputFormatter(20)
                                     ],
@@ -192,7 +192,24 @@ class ProfileScreenWidget extends StatelessWidget {
                                     hint: "",
                                     fillColor: Colors.transparent,
                                     textInputAction: TextInputAction.next,
-                                    validator: AppStrings.ownerNameValString,
+                                    validator: AppStrings.ownerFirstNameValString,
+                                  ),
+                                  7.height,
+                                  CustomContainerWidget(
+                                    name: AppLocalizations.of(context)!
+                                        .owner_last_name,
+                                  ),
+                                  CustomFormField(
+                                    context: context,
+                                    controller: state.ownerLastNameController,
+                                    inputFormat: [
+                                      LengthLimitingTextInputFormatter(20)
+                                    ],
+                                    keyboardType: TextInputType.text,
+                                    hint: "",
+                                    fillColor: Colors.transparent,
+                                    textInputAction: TextInputAction.next,
+                                    validator: AppStrings.ownerFirstNameValString,
                                   ),
                                   7.height,
                                   CustomContainerWidget(

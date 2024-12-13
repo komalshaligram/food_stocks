@@ -26,26 +26,39 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       TermsConditionReqModel termsConditionReqModel = const TermsConditionReqModel();
+      List<String > ownerList = [];
+      List<BusinessType> businessTypeList = [];
+      ownerList.add('Please select number of Owner');
+      ownerList.add('1');
+      ownerList.add('2');
       if(event is _selectAgentEvent){
-        emit(state.copyWith(agent: event.agent));
+        emit(state.copyWith(agent: event.agent,ownerList: state.ownerList));
+      }
+      else if(event is _getArgumentEvent){
+        debugPrint("owner:${event.owner}");
+        emit(state.copyWith(owner: event.owner,));
       }
     else if(event is _selectBusinessTypeEvent){
         for (var element in state.businessTypeList) {
           if (element.businessTypeName == event.business) {
-            emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false));
+            debugPrint('element.haveMultiple${element.haveMultiple}');
+            emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false,ownerList: state.ownerList));
           }
         }
+      }  else if(event is _selectOwnerNoEvent){
+        emit(state.copyWith(owner: state.haveMultiple? event.owner:'1'));
       }
+
     else if (event is _getBusinessTypeEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).get(path: AppUrlEndPoints.getBusinessTypeUrl);
           BusinessNameModel response = BusinessNameModel.fromJson(res);
-          List<BusinessType> businessTypeList = [];
+
           businessTypeList.add(BusinessType(businessTypeName: AppLocalizations.of(event.context)!.type_of_business));
-          businessTypeList.addAll(response.data?.businessType ?? []);
+          businessTypeList.addAll(response.data?.businessType?.reversed ?? []);
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(isShimmering: false, businessTypeList: businessTypeList, business: businessTypeList.first.businessTypeName.toString(), haveMultiple: response.data?.businessType?.first.haveMultiple ?? false));
+            emit(state.copyWith(isShimmering: false, businessTypeList: businessTypeList, business: businessTypeList.first.businessTypeName.toString(), haveMultiple: response.data?.businessType?.reversed.first.haveMultiple ?? false));
           } else {
             emit(state.copyWith(isShimmering: false));
           }
@@ -56,9 +69,7 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
         }
       }
     else if (event is _navigateToNextScreenEvent) {
-
-        printData('business___${state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).businessTypeName}');
-        termsConditionReqModel = TermsConditionReqModel(
+       termsConditionReqModel = TermsConditionReqModel(
           id: preferencesHelper.getUserId(),
           businessTypeId: state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id,
           owner1FullName: state.owner1NameController.text.trim(),
@@ -76,6 +87,9 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
         );
         Navigator.pushNamed(event.context, RouteDefine.wayOfPaymentScreen.name, arguments: {AppStrings.termsConditionParamString: termsConditionReqModel});
       }
+    else if(event is _getAgentEvent){
+
+      }
     else if(event is _verifyAgentEvent){
         try {
           emit(state.copyWith(isShimmering: true));
@@ -85,9 +99,10 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           if(res[AppStrings.statusString]==AppConstants.code_200){
 
             emit(state.copyWith(isShimmering: false));
-            add(FormDataEvent.navigateToNextScreenEvent(context: event.context));
-          }else{
+            Navigator.pushNamed(event.context, RouteDefine.owner1FormScreen.name,arguments: {AppStrings.owner:state.owner,AppStrings.isFreelancer:state.haveMultiple,
+            AppStrings.businessTypeIdString:state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id});
 
+          }else{
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(

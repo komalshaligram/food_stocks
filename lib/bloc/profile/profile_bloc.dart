@@ -160,7 +160,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           clientDetail: ClientDetail(
             bussinessId: int.tryParse(state.businessIdController.text) ?? 0,
             bussinessName: state.businessNameController.text.trim(),
-            ownerName: state.ownerNameController.text.trim(),
+            ownerName: "${state.ownerFirstNameController.text.trim()} ${state.ownerLastNameController.text.trim()}",
             clientTypeId: state.businessTypeList.firstWhere((businessType) =>
                     businessType.businessType == state.selectedBusinessType)
                 .id,
@@ -222,7 +222,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   businessIdController: TextEditingController(
                       text:
                           response.data?.clients?.first.clientDetail?.bussinessId.toString()),
-                  ownerNameController: TextEditingController(
+                  ownerFirstNameController: TextEditingController(
+                      text: response
+                          .data?.clients?.first.clientDetail?.ownerName),
+                  ownerLastNameController: TextEditingController(
                       text: response
                           .data?.clients?.first.clientDetail?.ownerName),
                   israelIdController: TextEditingController(
@@ -261,7 +264,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 .id,
             bussinessId: int.tryParse(state.businessIdController.text) ?? 0,
             bussinessName: state.businessNameController.text,
-            ownerName: state.ownerNameController.text,
+            ownerName: state.ownerFirstNameController.text,
+
             israelId: state.israelIdController.text,
           ),
         );
@@ -294,7 +298,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             emit(state.copyWith(UserImageUrl: response.data?.client?.profileImage.toString() ?? ''));
 
             if(!preferences.getSubUser()){
-              preferences.setUserName(name: state.ownerNameController.text);
+              preferences.setUserName(name: state.ownerFirstNameController.text + state.ownerLastNameController.text);
               preferences.setUserImageUrl(imageUrl: response.data?.client?.profileImage.toString() ?? '');
               emit(state.copyWith(UserImageUrl: response.data?.client?.profileImage.toString() ?? ''));
             }

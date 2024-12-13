@@ -6,7 +6,7 @@ class AppUrls {
 }
 
 class AppUrlEndPoints {
-// static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
+ //static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
  static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
 
   ///devUrl
@@ -113,15 +113,15 @@ class AppUrlEndPoints {
 
   static const String getSupplierProductsUrl = '/v2/supplierProduct/getSupplierProducts';
   static const String walletRecordUrl = '/v2/walletTransaction/getWalletRecords';
- // static const String getPlanogramAllProductUrl = '/v2/store/getAllProducts';
-   //static const String getRecommendationProductsUrl = '/v2/recommendation/products';
-   //static const String relatedProductsUrl = '/v2/products/getRelatedProducts';
-   //static const String getPreviousOrderProductsUrl = '/v2/recommendation/getPrevoiusOrderproducts';
+  // static const String getPlanogramAllProductUrl = '/v2/store/getAllProducts';
+  //static const String getRecommendationProductsUrl = '/v2/recommendation/products';
+  //static const String relatedProductsUrl = '/v2/products/getRelatedProducts';
+  //static const String getPreviousOrderProductsUrl = '/v2/recommendation/getPrevoiusOrderproducts';
   // static const String getCompanyProductsUrl = '/v2/store/getBrandProducts';
   // static const String getSubCategoryProductsUrl = '/v2/store/getsubCategoryProducts';
   static const String existingUserLoginUrl = '/v2/auth/verifyContactAndSendOTP';
- //static const String getSaleProductsUrl = '/v1/store/SaleProducts';
- //static const String getPlanogramProductsUrl = '/v1/store/getPalnogramProducts';
+  //static const String getSaleProductsUrl = '/v1/store/SaleProducts';
+  //static const String getPlanogramProductsUrl = '/v1/store/getPalnogramProducts';
 
   static const String getSaleProductsUrl = '/v3/products/getSaleProducts';
   static const String getPlanogramProductsUrl = '/v3/store/getPalnogramProducts';
@@ -131,5 +131,5 @@ class AppUrlEndPoints {
   static const String getPreviousOrderProductsUrl = '/v3/recommendation/getPrevoiusOrderproducts';
   static const String relatedProductsUrl = '/v3/products/getRelatedProducts';
   static const String getSubCategoryProductsUrl = '/v3/store/getsubCategoryProducts';
- static const String getPlanogramAllProductForSearchUrl = '/v3/products/getAllProducts';
+  static const String getPlanogramAllProductForSearchUrl = '/v3/products/getAllProducts';
 }

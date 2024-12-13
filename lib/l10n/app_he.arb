@@ -554,15 +554,15 @@
   "pay_with_bank_check": "תשלום בשיק",
   "due_date" : "תאריך לתשלום",
   "paid" : "שולם",
-  "pending" : "ממתין לתשלום",
   "wallet" : "ארנק",
   "bank_transfer" : "העברה בנקאית",
-  "credit_card": "כרטיס אשראי",
   "bank_check" : "שיק",
   "payment_type" :"שיטת תשלום",
   "copy": "העתק",
-  "copied": "הועתק"
-
+  "copied": "הועתק",
+  "select_number_of_owners" : "Select Number of Owners",
+  "owner_first_name": "Owner first Name",
+  "owner_last_name": "Owner last Name"
 
 
 }

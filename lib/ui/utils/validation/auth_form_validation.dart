@@ -32,6 +32,9 @@ class AuthFormValidation {
       case AppStrings.ownerName2ValString:
         return formFieldValidation.owner2NameField(value,context);
 
+      case AppStrings.ownerFirstNameValString:
+        return formFieldValidation.ownerFirstNameField(value,context);
+
       case AppStrings.idValString:
         return formFieldValidation.idField(value,context);
 

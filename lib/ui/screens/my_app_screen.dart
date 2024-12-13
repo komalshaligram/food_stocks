@@ -69,7 +69,7 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LocaleProvider()..setAppLocale(),
+      create: (context) => LocaleProvider()..setAppLocale(locale: const Locale(AppStrings.englishLocal)),
       builder: (context, child) {
         return SmartlookRecordingWidget(
           child: MaterialApp(
@@ -84,8 +84,9 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
                 textSelectionTheme: TextSelectionThemeData(
                   cursorColor: AppColors.mainColor,
                   selectionColor: AppColors.mainColor,
-                  selectionHandleColor: const Color(0xffcefad0),
+                  selectionHandleColor:AppColors.mainColor,
                 ),
+
                 primarySwatch: Colors.green,
                 canvasColor: Colors.white,
                 cardColor: AppColors.whiteColor,

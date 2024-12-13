@@ -67,7 +67,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         } catch (e) {
           emit(state.copyWith(isShimmering: false));
         }
-      } else if (event is _registrationApiEvent) {
+      }
+      else if (event is _registrationApiEvent) {
         if (state.isUpdate) {
           ProfileModel updatedProfileModel = ProfileModel(
             cityId: state.cityListResModel?.data?.cities?.firstWhere((city) => city.cityName == state.selectCity).id,

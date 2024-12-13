@@ -36,6 +36,8 @@ import '../ui/screens/file_upload_screen.dart';
 import '../ui/screens/order_details_screen.dart';
 import '../ui/screens/order_successful_screen.dart';
 import '../ui/screens/order_summary_screen.dart';
+import '../ui/screens/owner1_form_screen.dart';
+import '../ui/screens/owner2_form_screen.dart';
 import '../ui/screens/preview_screen.dart';
 import '../ui/screens/privacy_policy_screen.dart';
 import '../ui/screens/product_details_screen.dart';
@@ -104,7 +106,9 @@ enum RouteDefine {
   wayOfPaymentScreen,
   creditCardDetailsScreen,
   manageCreditCardScreen,
-  bankTransferScreen
+  bankTransferScreen,
+  owner1FormScreen,
+  owner2FormScreen
 
 }
 
@@ -166,6 +170,8 @@ class AppRouting {
       RouteDefine.creditCardDetailsScreen.name: (_) => CreditCardDetailsRoute.route,
       RouteDefine.manageCreditCardScreen.name: (_) => ManageCreditCardRoute.route,
       RouteDefine.bankTransferScreen.name: (_) => BankTransferScreenRoute.route,
+      RouteDefine.owner1FormScreen.name: (_) => Owner1FormRoute.route,
+      RouteDefine.owner2FormScreen.name: (_) => Owner2FormRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

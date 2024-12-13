@@ -51,6 +51,7 @@ class SplashScreenWidget extends StatelessWidget {
           getVersion(preferencesHelper);
 
           printData('${preferencesHelper.getUserLoggedIn()}');
+
           if (preferencesHelper.getUserLoggedIn()) {
             Navigator.pushReplacementNamed(
                 context, RouteDefine.bottomNavScreen.name, arguments: {
