@@ -68,8 +68,11 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
         if (state.isBottomOfProducts) {
           return;
         }
+        if (state.isProgress) {
+          return;
+        }
         try {
-          emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
+          emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true,isProgress:true));
           SupplierProductsReqModel request = SupplierProductsReqModel(supplierId: state.supplierId, pageLimit: AppConstants.supplierProductPageLimit, pageNum: state.pageNum + 1, onlySearch: false, search: state.searchArg.isNotEmpty ? state.searchArg : '', sortOrder: AppStrings.sortOrderString, sortField: AppStrings.sortFieldString);
 
           Map<String, dynamic> req = request.toJson();
@@ -109,8 +112,8 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
             productStockList[1].addAll(stockList);
             printData('new product list len = ${productList.length}');
             printData('new product stock list len = ${productStockList.length}');
-            emit(state.copyWith(productList: productList, productStockList: productStockList, pageNum: state.pageNum + 1, isShimmering: false, isLoadMore: false));
-            emit(state.copyWith(isBottomOfProducts: state.productList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false));
+            emit(state.copyWith(productList: productList, productStockList: productStockList, pageNum: state.pageNum + 1, isShimmering: false, isLoadMore: false,isProgress: false));
+            emit(state.copyWith(isBottomOfProducts: state.productList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false,isProgress: false));
           } else {
             emit(state.copyWith(isLoadMore: false));
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);

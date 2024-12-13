@@ -35,9 +35,13 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
         if (state.isShimmering) {
           return;
         }
+        if (state.isProgress) {
+          return;
+        }
         try {
           emit(state.copyWith(
               isShimmering: state.pageNum == 0 ? true : false,
+              isProgress : true,
               isLoadMore: state.pageNum == 0 ? false : true));
           final res = await DioClient(event.context).post(
               AppUrlEndPoints.getCompaniesUrl,
@@ -55,13 +59,14 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
                 companiesList: companiesList,
                 pageNum: state.pageNum + 1,
                 isLoadMore: false,
+                isProgress : false,
                 isBottomOfCompanies: state.companiesList.length ==
                     (response.data?.totalRecords ?? 0)
                     ? true
                     : false,
                 isShimmering: false));
           } else {
-            emit(state.copyWith(isLoadMore: false));
+            emit(state.copyWith(isLoadMore: false, isProgress : false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -71,7 +76,7 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
                 type: SnackBarType.success);
           }
         } on ServerException {
-          emit(state.copyWith(isLoadMore: false));
+          emit(state.copyWith(isLoadMore: false,isProgress: false));
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
@@ -79,8 +84,11 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
         emit(state.copyWith(search: event.search));
       } else if (event is _refreshListEvent) {
         emit(state.copyWith(
-            pageNum: 0, companiesList: [], isBottomOfCompanies: false));
-        add(CompanyEvent.getCompaniesListEvent(context: event.context));
+            pageNum: 0, companiesList: [], isBottomOfCompanies: false,isProgress: false));
+        if(!state.isProgress){
+          add(CompanyEvent.getCompaniesListEvent(context: event.context));
+        }
+
       }
     });
   }

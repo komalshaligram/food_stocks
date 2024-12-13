@@ -37,6 +37,7 @@ class SupplierProductsState with _$SupplierProductsState {
     required bool isSubUserAddToBasket,
     required bool isIncludedVat,
     required bool isSaleOn,
+    required bool isProgress,
 
   }) = _SupplierProductsState;
 
@@ -56,6 +57,7 @@ class SupplierProductsState with _$SupplierProductsState {
       ],
       pageNum: 0,
       isLoadMore: false,
+      isProgress:false,
       isBottomOfProducts: false,
       isSelectSupplier: false,
       productSupplierList: [],
