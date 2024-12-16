@@ -37,7 +37,7 @@ class Owner2FormBloc extends Bloc<Owner2FormEvent, Owner2FormState> {
          guarantee1FullName: state.termsConditionReqModel.guarantee1FullName,
          guarantee1IsraelId: state.termsConditionReqModel.guarantee1IsraelId,
          guarantee1Address: state.termsConditionReqModel.guarantee1Address,
-         guarantee1PhoneNumber: termsConditionReqModel.guarantee1PhoneNumber,
+         guarantee1PhoneNumber: state.termsConditionReqModel.guarantee1PhoneNumber,
          owner1FullName: state.termsConditionReqModel.owner1FullName,
          owner1IsraelId: state.termsConditionReqModel.owner1IsraelId,
           owner2FullName: state.owner2NameController.text.trim(),

@@ -100,7 +100,6 @@ class Owner2FormScreenWidget extends StatelessWidget {
                               10.height,
                               CustomContainerWidget(
                                 name: AppLocalizations.of(context)!.owner2_full_name,
-
                               ),
                               CustomFormField(
                                 context: context,
@@ -109,7 +108,7 @@ class Owner2FormScreenWidget extends StatelessWidget {
                                 hint: "",
                                 fillColor: Colors.transparent,
                                 textInputAction: TextInputAction.next,
-                                validator: '',
+                                validator: AppStrings.ownerName2ValString,
                                 onChangeValue: (t) {
                                   ownerName = t;
                                 },
@@ -117,7 +116,6 @@ class Owner2FormScreenWidget extends StatelessWidget {
                               7.height,
                               CustomContainerWidget(
                                 name: AppLocalizations.of(context)!.owner_2_israel_id,
-
                               ),
                               CustomFormField(
                                 context: context,
@@ -134,7 +132,6 @@ class Owner2FormScreenWidget extends StatelessWidget {
                               7.height,
                               CustomContainerWidget(
                                 name: AppLocalizations.of(context)!.guarantee_2_full_name,
-
                               ),
                               CustomFormField(
                                 context: context,

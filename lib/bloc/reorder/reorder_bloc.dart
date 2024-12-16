@@ -66,9 +66,12 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         if (state.isBottomOfProducts) {
           return;
         }
+        if (state.isProgress) {
+          return;
+        }
         try {
           emit(state.copyWith(
-              
+             isProgress:state.pageNum == 0 ? true : false,
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
           PreviousOrderProductsReqModel request = PreviousOrderProductsReqModel(
@@ -112,6 +115,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 previousOrderProductsList: previousOrderProductsList,
                 productStockList: productStockList,
                 pageNum: state.pageNum + 1,
+                isProgress:false,
                 isShimmering: false,
                 isLoadMore: false));
             printData('previousOrder___${state.previousOrderProductsList.length}');
@@ -141,6 +145,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         emit(state.copyWith(
           isShimmering: true,
             pageNum: 0,
+            isProgress: false,
             previousOrderProductsList: [],
             productStockList: [
               state.productStockList[0],
@@ -148,7 +153,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               [],
             ],
             isBottomOfProducts: false));
-        add(ReorderEvent.getPreviousOrderProductsEvent(context: event.context));
+        if(!state.isProgress) {
+          add(ReorderEvent.getPreviousOrderProductsEvent(context: event.context));
+        }
       }
       else if (event is _getProductDetailsEvent) {
         add(const ReorderEvent.removeRelatedProductEvent());

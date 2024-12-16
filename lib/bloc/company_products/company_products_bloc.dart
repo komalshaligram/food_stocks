@@ -68,9 +68,13 @@ class CompanyProductsBloc
         if (state.isBottomOfProducts) {
           return;
         }
+        if(state.isProgress){
+          return;
+        }
         try {
           emit(state.copyWith(
             isRefreshingProduct: true,
+              isProgress :true,
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
           CompanyProductsReqModel request = CompanyProductsReqModel(
@@ -105,6 +109,7 @@ class CompanyProductsBloc
                 isShimmering: false,
                 isLoadMore: false,
                 isRefreshingProduct: false,
+              isProgress : false,
               bottleDeposit: preferences.getBottleTax(),
             ));
             printData('totalFilteredCount____${response.metaData?.totalFilteredCount }');
@@ -115,7 +120,7 @@ class CompanyProductsBloc
                     ? true
                     : false));
           } else {
-            emit(state.copyWith(isLoadMore: false,isShimmering: false,isRefreshingProduct: false));
+            emit(state.copyWith(isLoadMore: false,isShimmering: false,isRefreshingProduct: false, isProgress :false,));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -125,7 +130,7 @@ class CompanyProductsBloc
                 type: SnackBarType.failure);
           }
         } on ServerException {
-          emit(state.copyWith(isLoadMore: false,isRefreshingProduct: false));
+          emit(state.copyWith(isLoadMore: false,isRefreshingProduct: false, isProgress :false,));
         }
 
         state.refreshController.refreshCompleted();
@@ -135,6 +140,7 @@ class CompanyProductsBloc
         emit(state.copyWith(
            isShimmering: true,
             pageNum: 0,
+            isProgress : false,
             productList: [],
             productStockList: [
               state.productStockList[0],
@@ -142,8 +148,10 @@ class CompanyProductsBloc
               [],
             ],
             isBottomOfProducts: false));
+        if(!state.isProgress){
         add(CompanyProductsEvent.getCompanyProductsListEvent(
             context: event.context));
+        }
       }
       else if (event is _getProductDetailsEvent) {
         add(const CompanyProductsEvent.removeRelatedProductEvent());

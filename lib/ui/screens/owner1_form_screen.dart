@@ -190,11 +190,7 @@ class Owner1FormScreenWidget extends StatelessWidget {
                                       if (_formKey.currentState!.validate()) {
                                         bool success = validation(state, context);
                                         if (success) {
-                                          if (state.owner == '1') {
-                                            bloc.add(Owner1FormEvent.navigateToNextScreenEvent(context: context));
-                                          } else {
-                                            Navigator.pushNamed(context, RouteDefine.owner2FormScreen.name);
-                                          }
+                                          bloc.add(Owner1FormEvent.navigateToNextScreenEvent(context: context));
                                         }
                                       }
                                     } else {
