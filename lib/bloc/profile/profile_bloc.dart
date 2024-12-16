@@ -159,8 +159,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           profileImage: state.UserImageUrl,
           clientDetail: ClientDetail(
             bussinessId: int.tryParse(state.businessIdController.text) ?? 0,
-            bussinessName: state.businessNameController.text.trim(),
-            ownerName: "${state.ownerFirstNameController.text.trim()} ${state.ownerLastNameController.text.trim()}",
+            bussinessName: state.businessNameController.text.toString(),
+            ownerFirstName: state.ownerFirstNameController.text.toString(),
+            ownerLastName: state.ownerLastNameController.text.toString(),
             clientTypeId: state.businessTypeList.firstWhere((businessType) =>
                     businessType.businessType == state.selectedBusinessType)
                 .id,
@@ -264,8 +265,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 .id,
             bussinessId: int.tryParse(state.businessIdController.text) ?? 0,
             bussinessName: state.businessNameController.text,
-            ownerName: state.ownerFirstNameController.text,
-
+            ownerFirstName: state.ownerFirstNameController.text,
+ownerLastName: state.ownerLastNameController.text,
             israelId: state.israelIdController.text,
           ),
         );

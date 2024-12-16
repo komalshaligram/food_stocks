@@ -139,7 +139,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               address: state.streetNumberController.text.trim(),
               email: state.emailController.text,
               clientDetail: ClientDetail(
-                ownerName: profileModel.clientDetail?.ownerName,
+                ownerFirstName: profileModel.clientDetail?.ownerFirstName,
+                ownerLastName: profileModel.clientDetail?.ownerLastName,
                 clientTypeId: profileModel.clientDetail?.clientTypeId,
                 bussinessName: profileModel.clientDetail?.bussinessName,
                 bussinessId: profileModel.clientDetail?.bussinessId,
