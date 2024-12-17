@@ -69,7 +69,7 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LocaleProvider()..setAppLocale(locale: const Locale(AppStrings.englishLocal)),
+      create: (context) => LocaleProvider()..setAppLocale(),
       builder: (context, child) {
         return SmartlookRecordingWidget(
           child: MaterialApp(
