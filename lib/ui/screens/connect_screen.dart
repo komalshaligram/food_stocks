@@ -76,14 +76,14 @@ class ConnectScreenWidget extends StatelessWidget {
                     },
                   ),
                   20.height,
-                 Platform.isIOS?GestureDetector(
+                /* Platform.isIOS?GestureDetector(
                       onTap: (){
                         bloc.add(ConnectEvent.logInAsGuest(context: context));
                       },
                       child: Text(AppLocalizations.of(context)!.login_as_guest,style: TextStyle(color: AppColors.mainColor,
                       fontSize: AppConstants.mediumFont
                       )
-                        ,)):0.width,
+                        ,)):0.width,*/
                 ],
               ),
             ),

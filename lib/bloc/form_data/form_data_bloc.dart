@@ -42,7 +42,7 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
         for (var element in state.businessTypeList) {
           if (element.businessTypeName == event.business) {
             debugPrint('element.haveMultiple${element.haveMultiple}');
-            emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false,ownerList: state.ownerList));
+            emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false,ownerList: state.ownerList,owner: state.ownerList.first));
           }
         }
       }  else if(event is _selectOwnerNoEvent){
@@ -92,6 +92,7 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
       }
     else if(event is _verifyAgentEvent){
         try {
+
           emit(state.copyWith(isShimmering: true));
           Map reqMap ={"agentCode":state.agentCodeController.text.trim()};
           final res = await DioClient(event.context).post(AppUrlEndPoints.verifyAgentUrl,data: reqMap);
