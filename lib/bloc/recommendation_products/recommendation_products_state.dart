@@ -35,6 +35,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
     required bool isSubUserAddToBasket,
     required bool isIncludedVat,
     required bool isSaleOn,
+    required bool isProgress
 
     
   }) = _RecommendationProductsState;
@@ -75,7 +76,8 @@ class RecommendationProductsState with _$RecommendationProductsState {
       bottleDeposit: 0,
     isSubUserAddToBasket: false,
       isIncludedVat : false,
-      isSaleOn : false
+      isSaleOn : false,
+      isProgress:false
     
     
 

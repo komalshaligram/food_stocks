@@ -216,13 +216,10 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     },
                                     bGColor: AppColors.mainColor,
                                   ) :const SizedBox(),
-
-
                                   15.height,
                                 ],
                               ),
                             )
-
                           ],
                         ),
                       ),

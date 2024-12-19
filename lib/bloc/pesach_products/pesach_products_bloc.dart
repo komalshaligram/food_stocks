@@ -68,15 +68,20 @@ class PesachProductsBloc
         if (state.isBottomOfProducts) {
           return;
         }
+        if (state.isProgress) {
+          return;
+        }
         try {
           emit(state.copyWith(
               isShimmering: state.pageNum == 0 ? true : false,
+              isProgress :true,
               isLoadMore: state.pageNum == 0 ? false : true));
           PesachProductReqModel request = PesachProductReqModel(
               pageLimit: AppConstants.supplierProductPageLimit,
               pageNum: state.pageNum + 1,
               onlySearch: false,
               isPesach : true,
+
             sortField: AppStrings.sortFieldString,
             sortOrder: AppStrings.sortOrderString
           );
@@ -116,19 +121,20 @@ class PesachProductsBloc
             productStockList[1].addAll(stockList);
 
             emit(state.copyWith(
-                
                 productList: productList,
                 productStockList: productStockList,
                 pageNum: state.pageNum + 1,
                 isShimmering: false,
+                isProgress :false,
                 isLoadMore: false));
             emit(state.copyWith(
+
                 isBottomOfProducts: state.productList.length ==
                     (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
           } else {
-            emit(state.copyWith(isLoadMore: false));
+            emit(state.copyWith(isLoadMore: false, isProgress :false,));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -138,7 +144,7 @@ class PesachProductsBloc
                 type: SnackBarType.failure);
           }
         } on ServerException {
-          emit(state.copyWith(isLoadMore: false));
+          emit(state.copyWith(isLoadMore: false, isProgress :false,));
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
@@ -148,6 +154,7 @@ class PesachProductsBloc
         add(PesachProductsEvent.getPermissionList(context: event.context));
         emit(state.copyWith(
             pageNum: 0,
+            isProgress :false,
             productList: [],
             productStockList: [
               state.productStockList[0],
@@ -155,8 +162,11 @@ class PesachProductsBloc
               [],
             ],
             isBottomOfProducts: false));
-        add(PesachProductsEvent.getSupplierProductsListEvent(
-            context: event.context, searchType: state.searchType));
+        if(!state.isProgress){
+          add(PesachProductsEvent.getSupplierProductsListEvent(
+              context: event.context, searchType: state.searchType));
+        }
+
       }
       else if (event is _getProductDetailsEvent) {
         add(const PesachProductsEvent.removeRelatedProductEvent());

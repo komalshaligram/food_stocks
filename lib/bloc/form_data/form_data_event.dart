@@ -14,4 +14,8 @@ class FormDataEvent with _$FormDataEvent {
   _navigateToNextScreenEvent;
   factory FormDataEvent.verifyAgentEvent({required BuildContext context}) =
   _verifyAgentEvent;
+  factory FormDataEvent.selectOwnerNoEvent({required String owner}) =
+  _selectOwnerNoEvent;
+  factory FormDataEvent.getArgumentEvent({required String owner,required String businessTypeId,required bool isFreelancer}) =
+  _getArgumentEvent;
 }

@@ -66,10 +66,12 @@ class RecommendationProductsBloc
         if (state.isBottomOfProducts) {
           return;
         }
+        if(state.isProgress && !state.isBottomOfProducts){
+          return;
+        }
         try {
           emit(state.copyWith(
-              
-              isShimmering: state.pageNum == 0 ? true : false,
+              isShimmering: state.pageNum == 0 ? true : false,isProgress:true,
               isLoadMore: state.pageNum == 0 ? false : true));
           RecommendationProductsReqModel request =
               RecommendationProductsReqModel(
@@ -102,6 +104,7 @@ class RecommendationProductsBloc
                 productStockList: productStockList,
                 pageNum: state.pageNum + 1,
                 isShimmering: false,
+                isProgress:false,
                 isLoadMore: false));
 
             emit(state.copyWith(
@@ -110,7 +113,7 @@ class RecommendationProductsBloc
                     ? true
                     : false));
           } else {
-            emit(state.copyWith(isLoadMore: false));
+            emit(state.copyWith(isLoadMore: false, isProgress :false,));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -119,7 +122,7 @@ class RecommendationProductsBloc
                 type: SnackBarType.failure);
           }
         } on ServerException {
-          emit(state.copyWith(isLoadMore: false));
+          emit(state.copyWith(isLoadMore: false, isProgress :false,));
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
@@ -130,6 +133,7 @@ class RecommendationProductsBloc
         emit(state.copyWith(
           isShimmering: true,
             pageNum: 0,
+            isProgress :false,
             recommendationProductsList: [],
             productStockList: [
               state.productStockList[0],
@@ -137,8 +141,11 @@ class RecommendationProductsBloc
               [],
             ],
             isBottomOfProducts: false));
-        add(RecommendationProductsEvent.getRecommendationProductsEvent(
-            context: event.context));
+        if(!state.isProgress){
+          add(RecommendationProductsEvent.getRecommendationProductsEvent(
+              context: event.context));
+        }
+
       }
       else if (event is _getProductDetailsEvent) {
         add(const RecommendationProductsEvent.removeRelatedProductEvent());

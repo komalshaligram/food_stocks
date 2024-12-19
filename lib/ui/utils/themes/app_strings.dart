@@ -112,6 +112,7 @@ class AppStrings {
   //validation strings
   static const businessNameValString = 'businessNameVal';
   static const hpValString = 'hpVal';
+  static const ownerFirstNameValString = 'ownerFirstNameVal';
   static const ownerNameValString = 'ownerNameVal';
   static const ownerName2ValString = 'ownerName2Val';
   static const idValString = 'idVal';
@@ -163,6 +164,8 @@ class AppStrings {
   static const isPopString = 'isPop';
   static const isPaymentFail = 'isPaymentFail';
   static const isFromRegFlow = 'isFromRegFlow';
+  static const owner = 'owner';
+  static const isFreelancer = 'isFreelancer';
 
   //payment types
  static const wallet = 'wallet';

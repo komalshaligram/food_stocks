@@ -28,6 +28,7 @@ class ProductSaleState with _$ProductSaleState {
     required int productListIndex,
     required bool isIncludedVat,
     required bool isSaleOn,
+    required bool isProgress
 
    
   }) = _ProductSaleState;
@@ -61,7 +62,8 @@ class ProductSaleState with _$ProductSaleState {
       isGridView : true,
     productListIndex: -1,
       isIncludedVat : false,
-      isSaleOn : false
+      isSaleOn : false,
+      isProgress:false
     
       );
 }

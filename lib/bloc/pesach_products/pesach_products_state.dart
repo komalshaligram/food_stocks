@@ -38,6 +38,7 @@ class PesachProductsState with _$PesachProductsState {
     required bool isSubUserAddToBasket,
     required bool isIncludedVat,
     required bool isSaleOn,
+    required bool isProgress,
 
 
   }) = _PesachProductsState;
@@ -46,6 +47,7 @@ class PesachProductsState with _$PesachProductsState {
     supplierId: '',
         search: '',
       bottleDeposit:0.0,
+      isProgress:false,
         productList: [],
         isShimmering: false,
         isLoading: false,

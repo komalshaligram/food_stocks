@@ -42,6 +42,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
+
   ProductSaleBloc() : super(ProductSaleState.initial()) {
     on<ProductSaleEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -54,8 +55,11 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         if (state.isBottomOfProducts) {
           return;
         }
+        if(state.isProgress){
+          return;
+        }
         try {
-          emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
+          emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true,isProgress: true));
           final res = await DioClient(event.context).post(AppUrlEndPoints.getSaleProductsUrl, data: ProductSalesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.saleProductPageLimit, search: state.search).toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
@@ -65,21 +69,23 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
             stockList.addAll(response.data?.map((saleProduct) => ProductStockModel(productId: saleProduct.id ?? '', maxQty: int.parse(saleProduct.sale?.saleMaxQuantity ?? '0'), stock: (saleProduct.productStock.toString()))) ?? []);
             productStockList[1].addAll(stockList);
-            emit(state.copyWith(productSalesList: productSaleList, productStockList: productStockList, pageNum: state.pageNum + 1, isLoadMore: false, isShimmering: false));
+            emit(state.copyWith(productSalesList: productSaleList, productStockList: productStockList, pageNum: state.pageNum + 1, isLoadMore: false, isShimmering: false,isProgress:false));
             emit(state.copyWith(isBottomOfProducts: productSaleList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false));
           } else {
-            emit(state.copyWith(isLoadMore: false));
+            emit(state.copyWith(isLoadMore: false, isProgress :false,));
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context), type: SnackBarType.failure);
           }
+
+          state.refreshController.refreshCompleted();
+          state.refreshController.loadComplete();
         } on ServerException {
-          emit(state.copyWith(isLoadMore: false));
+          emit(state.copyWith(isLoadMore: false, isProgress :false,));
         }
-        state.refreshController.refreshCompleted();
-        state.refreshController.loadComplete();
       } else if (event is _RefreshListEvent) {
         emit(state.copyWith(
-          isShimmering: true,
+         // isShimmering: true,
             pageNum: 0,
+            isProgress:false,
             productSalesList: [],
             productStockList: [
               state.productStockList[0],
@@ -87,7 +93,9 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               [],
             ],
             isBottomOfProducts: false));
-        add(ProductSaleEvent.getProductSalesListEvent(context: event.context));
+        if(!state.isProgress){
+          add(ProductSaleEvent.getProductSalesListEvent(context: event.context));
+        }
       } else if (event is _getGridListView) {
         preferences.setSalesProductGridListView(isSalesProductGrid: !state.isGridView);
         emit(state.copyWith(isGridView: !state.isGridView));

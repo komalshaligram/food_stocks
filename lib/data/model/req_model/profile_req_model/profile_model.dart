@@ -39,6 +39,8 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "bussinessId") int? bussinessId,
     @JsonKey(name: "bussinessName") String? bussinessName,
     @JsonKey(name: "ownerName") String? ownerName,
+    @JsonKey(name: "ownerFirstName") String? ownerFirstName,
+    @JsonKey(name: "ownerLastName") String? ownerLastName,
     @JsonKey(name: "clientTypeId") String? clientTypeId,
     @JsonKey(name: "israelId") String? israelId,
     @JsonKey(name: "tokenId") String? tokenId,

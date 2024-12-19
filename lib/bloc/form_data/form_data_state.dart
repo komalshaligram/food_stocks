@@ -26,6 +26,9 @@ class FormDataState with _$FormDataState{
     required bool haveMultiple,
     required bool isUpdate,
     required String language,
+    required List<String> ownerList,
+    required String owner,
+
   }) = _FormDataState;
 
   factory FormDataState.initial()=>  FormDataState(
@@ -50,6 +53,8 @@ class FormDataState with _$FormDataState{
     isAgentListShimmering: false,
     isUpdate: false,
     language: AppStrings.hebrewString,
+      ownerList :['1','2'],
+      owner:'1',
     agentCodeController: TextEditingController()
   );
 

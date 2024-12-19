@@ -84,8 +84,9 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
                 textSelectionTheme: TextSelectionThemeData(
                   cursorColor: AppColors.mainColor,
                   selectionColor: AppColors.mainColor,
-                  selectionHandleColor: const Color(0xffcefad0),
+                  selectionHandleColor:AppColors.mainColor,
                 ),
+
                 primarySwatch: Colors.green,
                 canvasColor: Colors.white,
                 cardColor: AppColors.whiteColor,

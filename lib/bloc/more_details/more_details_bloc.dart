@@ -67,7 +67,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         } catch (e) {
           emit(state.copyWith(isShimmering: false));
         }
-      } else if (event is _registrationApiEvent) {
+      }
+      else if (event is _registrationApiEvent) {
         if (state.isUpdate) {
           ProfileModel updatedProfileModel = ProfileModel(
             cityId: state.cityListResModel?.data?.cities?.firstWhere((city) => city.cityName == state.selectCity).id,
@@ -138,7 +139,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               address: state.streetNumberController.text.trim(),
               email: state.emailController.text,
               clientDetail: ClientDetail(
-                ownerName: profileModel.clientDetail?.ownerName,
+                ownerName: '${profileModel.clientDetail!.ownerFirstName} ${profileModel.clientDetail?.ownerLastName}',
+                ownerFirstName: profileModel.clientDetail?.ownerFirstName,
+                ownerLastName: profileModel.clientDetail?.ownerLastName,
                 clientTypeId: profileModel.clientDetail?.clientTypeId,
                 bussinessName: profileModel.clientDetail?.bussinessName,
                 bussinessId: profileModel.clientDetail?.bussinessId,

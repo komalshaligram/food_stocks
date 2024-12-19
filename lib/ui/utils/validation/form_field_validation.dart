@@ -76,6 +76,15 @@ class FormFieldValidation {
     return null;
   }
 
+  String? ownerFirstNameField(String value,BuildContext context) {
+    RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
+    if (value.isEmpty) {
+      return AppLocalizations.of(context)!.please_enter_owner_name;
+    } else if (regex.hasMatch(value)) {
+      return AppLocalizations.of(context)!.please_enter_alphabets_only;
+    }
+    return null;
+  }
 
   String? owner2NameField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
