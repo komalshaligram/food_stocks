@@ -37,6 +37,7 @@ samples, guidance on mobile development, and a full API reference.
 - pdf_page_view : comment KeyboardListener
 
 - Reference the following commands to get started:
+- 
   📦 To create a new release use: "shorebird release".
 - shorebird release android --flavor prod
 - shorebird release ios --flavor stag
