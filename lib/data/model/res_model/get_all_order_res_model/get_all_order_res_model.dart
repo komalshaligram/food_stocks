@@ -45,6 +45,8 @@ class Datum with _$Datum {
     int? products,
     @JsonKey(name: "suppliers")
     int? suppliers,
+    @JsonKey(name: "supplierName")
+    String? supplierName,
     @JsonKey(name: "isIssue")
     String? isIssue,
     String? comaxInvoicePrice,

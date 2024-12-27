@@ -336,7 +336,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
             if (productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds.isEmpty) {
               return;
             }
-            if (productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty != -1) {
+            if (productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty != 0) {
               if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity >= productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty) {
                 CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
                 return;

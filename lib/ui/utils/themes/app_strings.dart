@@ -203,6 +203,7 @@ class AppStrings {
   static const messageIdListString = 'messageIdList';
   static const isReadMoreString = 'isReadMore';
   static const invoiceListString = 'invoiceListString';
+  static const showPreviousBtn = 'showPreviousBtn';
 
 
   static const textIdProof = 'צילום תעודת זהות';

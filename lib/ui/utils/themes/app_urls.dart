@@ -7,7 +7,7 @@ class AppUrls {
 
 class AppUrlEndPoints {
  //static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
-static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
+  static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
 
   ///devUrl
   //static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
@@ -103,7 +103,7 @@ static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
   static const String getAllOrderUrl = '/v2/orders/getAllOrders';
 
   static const String getAllCartUrl = '/v2/cart/listingCartProducts/';
-  static const String listingCartProductsSupplierUrl = '/v2/cart/listingCartProductsSupplier/';
+ // static const String listingCartProductsSupplierUrl = '/v2/cart/listingCartProductsSupplier/';
   static const String getProfileDetailsUrl = '/v2/admin/getAllClients';
   static const String getPlanogramByIdUrl = '/v2/planograms/getPlanogram/';
 
@@ -132,4 +132,7 @@ static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
   static const String relatedProductsUrl = '/v3/products/getRelatedProducts';
   static const String getSubCategoryProductsUrl = '/v3/store/getsubCategoryProducts';
   static const String getPlanogramAllProductForSearchUrl = '/v3/products/getAllProducts';
+  //static const String getListingCartProductsSupplier = 'v1/cart/listingCartProductsSupplier/65e5d2aefa8171f2d34bc0c3';
+  static const String listingCartProductsSupplierUrl = '/v1/cart/listingCartProductsSupplier/';
+  static const String getSupplierPaymentTypesUrl = '/v1/suppliers/getSupplierPaymentTypes/';
 }

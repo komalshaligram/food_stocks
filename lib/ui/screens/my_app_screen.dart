@@ -51,10 +51,6 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
       classType: TextField,
       isSensitive: false,
     );
-    smartLook.sensitivity.changeWidgetClassSensitivity(
-      classType: TextFormField,
-      isSensitive: false,
-    );
     super.initState();
   }
 

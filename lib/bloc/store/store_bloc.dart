@@ -572,7 +572,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               return;
             }
              if(productStockList[state.productStockUpdateIndex]
-                 .maxQty!=-1){
+                 .maxQty!=0){
                if (productStockList[state.productStockUpdateIndex]
                    .quantity >=
                    productStockList[state.productStockUpdateIndex]

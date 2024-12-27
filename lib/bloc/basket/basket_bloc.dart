@@ -7,8 +7,10 @@ import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart' as insert;
 import '../../data/model/req_model/order_send_req_model/order_send_req_model.dart' as order;
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
+import '../../data/model/res_model/cart_product_supplier/cart_products_supplier_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
+import '../../data/model/res_model/supplier_payment_type_res_model/supplier_payment_type_res_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_constants.dart';
@@ -68,6 +70,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               if (productStockList.isNotEmpty) {
                 productStockList[0]= [];
               }
+              add(BasketEvent.getSupplierPaymentTypeEvent(context: event.context, id:response.data?.data?.first.suppliers?.first.id??'', index: 0));
 
               List<ProductStockModel> stockList = [];
               stockList.addAll(response.data?.data?.map((product) => ProductStockModel(
@@ -90,8 +93,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
               await preferencesHelper.setCartCount(count: temp.isEmpty ? preferencesHelper.getCartCount() : temp.length);
 
+          debugPrint('IDdddddddd:${response.data?.cart?.first.id}');
               emit(state.copyWith(isAnimation: true));
-
               emit(state.copyWith(
                 vatPercentage: response.data!.vatPercentage?.toDouble() ?? 0.0,
                 bottleQty: response.data?.cart?.first.bottleQuantities,
@@ -100,6 +103,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 productStockList: productStockList,
                 totalPayment: response.data?.cart?.first.totalAmount!.toDouble() ?? 0,
                 supplierCount: response.data?.cart?.first.suppliers ?? 1,
+                supplierId: response.data?.data?.first.suppliers?.first.id??'',
                 isAnimation: false,
               ));
             } else {
@@ -462,7 +466,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               if (productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds.isEmpty) {
                 return;
               }
-              if (productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty != -1) {
+              if (productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty != 0) {
                 if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity >= productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty) {
                   CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
                   return;
@@ -731,7 +735,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               preferencesHelper.setIsSaleOn(isSaleOn: response.data?.isSaleOn ?? false);
               preferencesHelper.setIsIncludedVat(isIncludedVat: (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false);
               preferencesHelper.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
-              preferencesHelper.setBankTransferDetail(details: response.data?.taviliRivchitDetails?.bankTransferInfoText ?? '');
+              //preferencesHelper.setBankTransferDetail(details: response.data?.taviliRivchitDetails?.bankTransferInfoText ?? '');
               preferencesHelper.setIsAppOnMaintenance(isAppOnMaintenance: response.data?.isAppOnMaintenance ?? false);
 
               emit(state.copyWith(language: preferencesHelper.getAppLanguage(), isIncludedVat: preferencesHelper.getIsIncludedVat(), isSaleOn: preferencesHelper.getShowSale(), retryLoading: false, bankTransferInfo: preferencesHelper.getBankTransferDetail(), isAppOnMaintenance: preferencesHelper.getAppOnMaintenance()));
@@ -739,6 +743,20 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           } catch (e) {
             CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
           }
+        }
+        else if (event is _getSupplierPaymentTypeEvent) {
+          try {
+            final res = await DioClient(event.context).get(
+              path: '${AppUrlEndPoints.getSupplierPaymentTypesUrl}${event.id}',
+            );
+            SupplierPaymentTypeResModel response = SupplierPaymentTypeResModel.fromJson(res);
+            if (response.status == AppConstants.code_200) {
+              preferencesHelper.setBankTransferDetail(details: response.data!.paymentDetails?.bankTransferPopupText  ?? '');
+              emit(state.copyWith(paymentTypesList: response.data?.paymentDetails?.paymentTypes ?? [], bankTransferInfo: response.data!.paymentDetails?.bankTransferPopupText ?? '', ));
+            } else {
+              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            }
+          } on ServerException {}
         }
       }
     });

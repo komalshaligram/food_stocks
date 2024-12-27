@@ -58,7 +58,9 @@ class Invoice with _$Invoice {
     String? paymentStatus,
     String? invoiceDate,
     String? invoiceType,
-    String? dueDate
+    String? dueDate,
+    String? supplierName
+
   }) = _Invoice;
 
   factory Invoice.fromJson(Map<String, dynamic> json) => _$InvoiceFromJson(json);

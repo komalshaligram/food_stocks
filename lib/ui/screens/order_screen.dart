@@ -214,6 +214,19 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                           color: AppColors.blackColor,
                           fontWeight: FontWeight.bold),
                     ),
+                    5.width,
+                    Expanded(
+                      child: Center(
+                        child: Text(orderDetailsList[index].supplierName.toString(),
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
+                              color: AppColors.mainColor,
+                              fontWeight: FontWeight.normal),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                    ),
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.all(

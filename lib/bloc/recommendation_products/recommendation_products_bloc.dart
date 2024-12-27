@@ -395,7 +395,7 @@ class RecommendationProductsBloc
             }
             if(productStockList[state.productListIndex]
             [state.productStockUpdateIndex]
-                .maxQty!=-1){
+                .maxQty!=0){
               if (productStockList[state.productListIndex]
               [state.productStockUpdateIndex]
                   .quantity >=

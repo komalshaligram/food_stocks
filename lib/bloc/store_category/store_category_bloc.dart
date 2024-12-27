@@ -612,7 +612,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             }
             if(productStockList[state.planoGramUpdateIndex]
             [state.productStockUpdateIndex]
-                .maxQty!=-1){
+                .maxQty!=0){
               if (productStockList[state.planoGramUpdateIndex]
               [state.productStockUpdateIndex]
                   .quantity >=

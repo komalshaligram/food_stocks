@@ -28,6 +28,7 @@ class Data with _$Data {
     Client? client,
     @JsonKey(name: "authToken")
     AuthToken? authToken,
+
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -52,11 +53,12 @@ class Client with _$Client {
     ClientData? clientData,
     @JsonKey(name: "cartId")
     String? cartId,
+    @JsonKey(name: "wallet")
+    String? wallet,
   }) = _Client;
 
   factory Client.fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
 }
-
 @freezed
 class ClientData with _$ClientData {
   const factory ClientData({
@@ -64,10 +66,6 @@ class ClientData with _$ClientData {
     String? email,
     @JsonKey(name: "password")
     dynamic password,
-    @JsonKey(name: "firstName")
-    String? firstName,
-    @JsonKey(name: "lastName")
-    String? lastName,
     @JsonKey(name: "phoneNumber")
     String? phoneNumber,
     @JsonKey(name: "address")
@@ -78,29 +76,28 @@ class ClientData with _$ClientData {
     String? contactName,
     @JsonKey(name: "statusId")
     String? statusId,
-    @JsonKey(name: "logo")
-    String? logo,
     @JsonKey(name: "profileImage")
     String? profileImage,
-    @JsonKey(name: "adminTypeId")
-    String? adminTypeId,
+
     @JsonKey(name: "clientDetail")
     ClientDetail? clientDetail,
     @JsonKey(name: "isDeleted")
     bool? isDeleted,
+    @JsonKey(name: "userNumber")
+    int? userNumber,
+    @JsonKey(name: "isClientFormEmailSend")
+    bool? isClientFormEmailSend,
+    @JsonKey(name: "applicationPermission")
+    List<String>? applicationPermission,
+    @JsonKey(name: "isMonthlyCreditAdded")
+    bool? isMonthlyCreditAdded,
     @JsonKey(name: "_id")
     String? id,
-    @JsonKey(name: "createdAt")
-    String? createdAt,
-    @JsonKey(name: "updatedAt")
-    String? updatedAt,
-    @JsonKey(name: "__v")
-    int? v,
+
   }) = _ClientData;
 
   factory ClientData.fromJson(Map<String, dynamic> json) => _$ClientDataFromJson(json);
 }
-
 @freezed
 class ClientDetail with _$ClientDetail {
   const factory ClientDetail({
@@ -108,34 +105,26 @@ class ClientDetail with _$ClientDetail {
     int? bussinessId,
     @JsonKey(name: "bussinessName")
     String? bussinessName,
-    @JsonKey(name: "ownerName")
-    String? ownerName,
     @JsonKey(name: "ownerFirstName")
     String? ownerFirstName,
     @JsonKey(name: "ownerLastName")
     String? ownerLastName,
+    @JsonKey(name: "ownerName")
+    String? ownerName,
     @JsonKey(name: "clientTypeId")
     String? clientTypeId,
     @JsonKey(name: "israelId")
     String? israelId,
     @JsonKey(name: "tokenId")
     String? tokenId,
-    @JsonKey(name: "fax")
-    String? fax,
     @JsonKey(name: "lastSeen")
     String? lastSeen,
     @JsonKey(name: "applicationVersion")
     String? applicationVersion,
     @JsonKey(name: "deviceType")
     String? deviceType,
-    @JsonKey(name: "operationTime")
-    List<dynamic>? operationTime,
-    @JsonKey(name: "_id")
-    String? id,
-    @JsonKey(name: "createdAt")
-    String? createdAt,
-    @JsonKey(name: "updatedAt")
-    String? updatedAt,
+
+
   }) = _ClientDetail;
 
   factory ClientDetail.fromJson(Map<String, dynamic> json) => _$ClientDetailFromJson(json);

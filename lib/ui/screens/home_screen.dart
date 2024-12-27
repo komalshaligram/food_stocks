@@ -317,7 +317,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             isPesach: state.productSalesList[index].isPesach,
                                                             onButtonTap: () {
                                                               if (!state.isGuestUser) {
-                                                                showProductDetails(isSaleOn: state.isSaleOn, productListIndex: 3, context: Platform.isIOS ? (state.context??context): context, productId: state.productSalesList[index].id ?? '', productStock: state.productSalesList[index].productStock.toString());
+                                                                showProductDetails(isSaleOn: state.isSaleOn, productListIndex: 3, context: /*Platform.isIOS ? (state.context??context): */context, productId: state.productSalesList[index].id ?? '', productStock: state.productSalesList[index].productStock.toString());
                                                               } else {
                                                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                               }

@@ -27,7 +27,7 @@ class Data with _$Data {
     @JsonKey(name: "cart")
     List<Cart>? cart,
     @JsonKey(name: "data")
-    List<Datum>? data,
+    List<CartProductDataResModel>? data,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -46,8 +46,8 @@ class Cart with _$Cart {
 }
 
 @freezed
-class Datum with _$Datum {
-  const factory Datum({
+class CartProductDataResModel with _$CartProductDataResModel {
+  const factory CartProductDataResModel({
     @JsonKey(name: "_id")
     String? id,
     @JsonKey(name: "suppliers")
@@ -57,12 +57,18 @@ class Datum with _$Datum {
     @JsonKey(name: "productDetails")
     List<ProductDetail>? productDetails,
     @JsonKey(name: "totalQuantity")
-    int? totalQuantity,
+    String? totalQuantity,
     @JsonKey(name: "totalAmount")
-    double? totalAmount,
-  }) = _Datum;
+    String? totalAmount,
+    @JsonKey(name: "notMinimumOrder")
+    bool? notMinimumOrder,
+    @JsonKey(name: "totalSavings")
+    String? totalSavings,
+    bool? isProcess
 
-  factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
+  }) = _CartProductDataResModel;
+
+  factory CartProductDataResModel.fromJson(Map<String, dynamic> json) => _$CartProductDataResModelFromJson(json);
 }
 
 @freezed

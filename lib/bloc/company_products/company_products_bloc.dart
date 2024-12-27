@@ -396,9 +396,7 @@ class CompanyProductsBloc
               return;
             }
             if (productStockList[state.productListIndex]
-            [state.productStockUpdateIndex]
-                .maxQty !=
-                -1) {
+            [state.productStockUpdateIndex].maxQty != 0) {
               if (productStockList[state.productListIndex]
               [state.productStockUpdateIndex]
                   .quantity >=

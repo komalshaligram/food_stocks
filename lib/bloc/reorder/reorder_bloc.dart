@@ -404,7 +404,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               return;
             }
             if(productStockList[state.productListIndex][state.productStockUpdateIndex]
-                .maxQty!=-1){
+                .maxQty!=0){
               if (productStockList[state.productListIndex][state.productStockUpdateIndex]
                   .quantity >=
                   productStockList[state.productListIndex][state.productStockUpdateIndex]
