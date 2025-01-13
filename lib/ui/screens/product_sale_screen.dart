@@ -296,14 +296,11 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                   CommonProductDetailsWidget(
                                     isIncludedVat: state.isIncludedVat,
                                     productDetails: state.productDetails,
-
                                     isSubUserAddToBasket: state.isSubUserAddToBasket,
                                     bottleTax: state.bottleDeposit,
                                     totalBottleDeposit: (state.bottleDeposit * (state.productDetails.first.numberOfUnit  ?? 1).toDouble()* state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
                                     isBottle:(state.productDetails.first.isBottle ?? false),
-
                                     isLoading: state.isLoading,
-
                                     addToOrderTap: () {
                                       context.read<ProductSaleBloc>().add(ProductSaleEvent.addToCartProductEvent(context: context1,productId: productId));
                                     },

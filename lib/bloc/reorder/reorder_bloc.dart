@@ -97,7 +97,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             List<ProductStockModel> stockList = [];
             stockList.addAll(response.previousProductData?.map(
                     (reorder) => ProductStockModel(
-                      maxQty: (reorder.sale?.isSale ?? false) ? int.parse(reorder.sale?.saleMaxQuantity ?? '-1') : -1,
+                      maxQty: (reorder.sale?.isSale ?? false) ? int.parse(reorder.sale?.saleMaxQuantity ?? '0') : 0,
                         productId: reorder.id ?? '',
                         stock: reorder.productStock.toString())) ??
                 []);
@@ -194,7 +194,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
                 stock: (response.product?.first.supplierSales?.first.productStock.toString()  ?? '0'),
-                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
+                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
               );
             }
             else{
@@ -235,7 +235,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
                 stock: (response.product?.first.supplierSales?.first.productStock.toString()  ?? '0'),
-                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
+                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
               );
 
               emit(state.copyWith(productStockList: productStockList));
@@ -253,7 +253,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 double.parse(supplier.productPrice ?? ''),
                 quantity: _productQuantity,
                 stock: supplier.productStock.toString(),
-                maxQty:(response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? ''):-1,
+                maxQty:(response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0'):0,
                 selectedIndex: (supplier.supplierId ) ==
                     state
                         .productStockList[productListIndex]
@@ -404,7 +404,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               return;
             }
             if(productStockList[state.productListIndex][state.productStockUpdateIndex]
-                .maxQty!=-1){
+                .maxQty!=0 ){
               if (productStockList[state.productListIndex][state.productStockUpdateIndex]
                   .quantity >=
                   productStockList[state.productListIndex][state.productStockUpdateIndex]

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../data/model/res_model/supplier_payment_type_res_model/supplier_payment_type_res_model.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,51 +26,37 @@ part 'order_summary_bloc.freezed.dart';
 class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
   OrderSummaryBloc() : super(OrderSummaryState.initial()) {
     on<OrderSummaryEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       printData('cart id =  ${preferencesHelper.getCartId()}');
 
       if (event is _getDataEvent) {
-        emit(state.copyWith(
-            CartItemList: event.cartItemList,
-            language: preferencesHelper.getAppLanguage()));
+        emit(state.copyWith(cartItemList: event.cartItemList, language: preferencesHelper.getAppLanguage()));
         try {
           final res = await DioClient(event.context).post(
             '${AppUrlEndPoints.listingCartProductsSupplierUrl}${preferencesHelper.getCartId()}',
           );
-          CartProductsSupplierResModel response =
-              CartProductsSupplierResModel.fromJson(res);
+          CartProductsSupplierResModel response = CartProductsSupplierResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(orderSummaryList: response));
+            emit(state.copyWith(orderSummaryList: response, tempList: response.data?.data ?? []));
           } else {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
           }
         } on ServerException {}
       }
 
       if (event is _orderSendEvent) {
         List<Product> productReqMap = [];
-        emit(state.copyWith(isLoading: true));
 
-        state.CartItemList.data?.data?.forEach((element) {
-          productReqMap.add(Product(
-            supplierId: element.suppliers?.first.id ?? '',
-            productId: element.productDetails?.id ?? '',
-            quantity: element.totalQuantity,
-          saleId: element.id,
-
-          ));
-        });
+        productReqMap.add(Product(saleId: state.cartItemList.data?.data?[state.index].id, productId: state.cartItemList.data?.data?[state.index].productDetails?.id, quantity: int.parse(state.cartItemList.data?.data![state.index].totalQuantity.toString() ?? '0'), supplierId: state.cartItemList.data?.data?[state.index].suppliers?.first.id));
+        debugPrint(productReqMap.toSet().toString());
+        List<CartProductDataResModel> tempList = [];
+        tempList = [...state.tempList];
+        tempList[state.index] = tempList[state.index].copyWith(isProcess: true);
+        emit(state.copyWith(isLoading: true, showPopUp: false, cartItemList: state.cartItemList, tempList: tempList));
 
         try {
-          OrderSendReqModel reqMap = OrderSendReqModel(products: productReqMap,paymentMethod: preferencesHelper.getPaymentMethod());
+          OrderSendReqModel reqMap = OrderSendReqModel(products: productReqMap, paymentMethod: event.paymentMethod.isNotEmpty ? event.paymentMethod : preferencesHelper.getPaymentMethod());
           final res = await DioClient(event.context).post(
             AppUrlEndPoints.createOrderUrl,
             data: reqMap,
@@ -79,38 +66,70 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
 
           if (response.status == AppConstants.code_201) {
             try {
-              final res = await DioClient(event.context).post(
-                '${AppUrlEndPoints.clearCartUrl}${preferencesHelper.getCartId()}',
-              );
-              if (res[AppStrings.statusString] == AppConstants.code_201) {
-                preferencesHelper.setCartCount(count: 0);
-                Navigator.pushNamed(
-                    event.context, RouteDefine.orderSuccessfulScreen.name);
+              tempList[state.index] = tempList[state.index].copyWith(isProcess: false);
+              tempList.removeAt(state.index);
+              emit(state.copyWith(tempList: tempList));
+              if (tempList.isEmpty) {
+                final res = await DioClient(event.context).post(
+                  '${AppUrlEndPoints.clearCartUrl}${preferencesHelper.getCartId()}',
+                );
+                if (res[AppStrings.statusString] == AppConstants.code_201) {
+                  preferencesHelper.setCartCount(count: 0);
+                  Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name, arguments: {AppStrings.showPreviousBtn: false});
+                }
+              } else {
+                final res = await DioClient(event.context).post(
+                  '${AppUrlEndPoints.getAllCartUrl}${preferencesHelper.getCartId()}',
+                );
+                GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+                emit(state.copyWith(cartItemList: response));
+                Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name, arguments: {AppStrings.showPreviousBtn: true});
               }
             } on ServerException {}
           } else if (response.status == AppConstants.code_403) {
-           CustomSnackBar.showSnackBar(
-                context: event.context,
-             title: AppStrings.getLocalizedStrings(
-                 response.message?.toLocalization() ??
-                     response.message!,
-                 event.context),
-                type: SnackBarType.failure,
-           );
-            emit(state.copyWith(isLoading: false));
-          } else {
+            tempList[state.index] = tempList[state.index].copyWith(isProcess: false);
             CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.failure);
-            emit(state.copyWith(isLoading: false));
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.failure,
+            );
+            emit(state.copyWith(isLoading: false, tempList: tempList));
+          } else {
+            tempList[state.index] = tempList[state.index].copyWith(isProcess: false);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            emit(state.copyWith(isLoading: false, tempList: tempList));
           }
         } on ServerException {
-          emit(state.copyWith(isLoading: false));
+          tempList[state.index] = tempList[state.index].copyWith(isProcess: false);
+          emit(state.copyWith(isLoading: false, tempList: tempList));
         }
+      } else if (event is _payWithBankTransferEvent) {
+        add(OrderSummaryEvent.orderSendEvent(context: event.context, paymentMethod: AppStrings.bankTransfer, failPayment: false));
+      } else if (event is _getSupplierPaymentTypeEvent) {
+        try {
+          List<CartProductDataResModel> tempList = [];
+          tempList = [...state.tempList];
+          if (tempList.isEmpty) {
+            tempList = [...state.orderSummaryList.data?.data ?? []];
+          }
+
+          tempList[event.index] = tempList[event.index].copyWith(isProcess: true);
+
+          emit(state.copyWith(tempList: tempList, showPopUp: false));
+          final res = await DioClient(event.context).get(
+            path: '${AppUrlEndPoints.getSupplierPaymentTypesUrl}${event.id}',
+          );
+          SupplierPaymentTypeResModel response = SupplierPaymentTypeResModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            tempList[event.index] = tempList[event.index].copyWith(isProcess: false);
+
+            emit(state.copyWith(paymentTypesList: response.data?.paymentDetails?.paymentTypes ?? [], bankTransferInfo: response.data!.paymentDetails?.bankTransferPopupText ?? '', tempList: tempList, isDialogOpen: true, orderSummaryList: state.orderSummaryList, showPopUp: true, isLoading: false, index: event.index));
+          } else {
+            tempList[state.index] = tempList[state.index].copyWith(isProcess: false);
+            emit(state.copyWith(isLoading: false, tempList: tempList));
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+          }
+        } on ServerException {}
       }
     });
   }

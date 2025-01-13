@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,82 +24,16 @@ part 'order_successful_state.dart';
 
 part 'order_successful_bloc.freezed.dart';
 
-class OrderSuccessfulBloc
-    extends Bloc<OrderSuccessfulEvent, OrderSuccessfulState> {
-
+class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulState> {
   OrderSuccessfulBloc() : super(OrderSuccessfulState.initial()) {
     on<OrderSuccessfulEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-          prefs: await SharedPreferences.getInstance());
-      if (event is _getWalletRecordEvent) {
-
-        try {
-          WalletRecordReqModel reqMap =
-              WalletRecordReqModel(userId: preferencesHelper.getUserId());
-    
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.walletRecordUrl,
-            data: reqMap,
-          );
-
-
-          WalletRecordResModel response = WalletRecordResModel.fromJson(res);
-
-
-          if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(
-                thisMonthExpense: response.data?.currentMonth?.totalExpenses?.toDouble() ?? 0,
-                lastMonthExpense: response.data?.previousMonth?.totalExpenses?.toDouble() ?? 0,
-                balance: response.data?.balanceAmount?.toDouble() ?? 0,
-                totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
-                expensePercentage : double.parse(response.data?.currentMonth!.expensePercentage ?? '')
-            ));
-          } else {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.failure);
-          }
-        } on ServerException {}
+      if (event is _getDataEvent) {
+        emit(state.copyWith(seePreviousBtn: event.showPreviousBtn));
       }
 
-      if(event is _getOrderCountEvent){
-        emit(state.copyWith(isSubUserCanSeeWallet:preferencesHelper.getCanSeeWallet()));
-        try {
-          int daysInMonth(DateTime date) => DateTimeRange(
-              start: DateTime(date.year, date.month, 1),
-              end: DateTime(date.year, date.month + 1))
-              .duration
-              .inDays;
-
-          var now = DateTime.now();
-
-          GetOrderCountReqModel reqMap = GetOrderCountReqModel(
-            startDate: DateTime(now.year, now.month, 1),
-            endDate: DateTime(now.year, now.month, daysInMonth(DateTime.now())),
-          );
-
-
-          final res =
-          await DioClient(event.context).post(AppUrlEndPoints.getOrdersCountUrl,
-            data: reqMap,
-          );
-
-          GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
-
-          if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(orderThisMonth: response.data!.toInt()));
-          }
-        } on ServerException {}
-      }
-
-      if(event is _celebrationEvent){
-
+      if (event is _celebrationEvent) {
         await Future.delayed(const Duration(milliseconds: 2000));
-          emit(state.copyWith(duringCelebration:false ));
+        emit(state.copyWith(duringCelebration: false));
       }
     });
   }

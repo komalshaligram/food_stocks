@@ -55,7 +55,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
       if (event is _getPlanogramProductsEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
         List<ProductStockModel> stockList = [];
-        stockList = event.planogram.planogramproducts?.map((product) => ProductStockModel(productId: product.id ?? '', maxQty: (product.sale?.isSale ?? false) ? int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : -1, stock: product.productStock.toString())).toList() ?? [];
+        stockList = event.planogram.planogramproducts?.map((product) => ProductStockModel(productId: product.id ?? '', maxQty: (product.sale?.isSale ?? false) ? int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : 0, stock: product.productStock.toString())).toList() ?? [];
         productStockList[1].addAll(stockList);
 
         emit(state.copyWith(
@@ -99,7 +99,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '',
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
-                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
+                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
                 );
               } else {
                 productStockUpdateIndex = state.productStockList[productListIndex].indexWhere((productStock) => productStock.productId == event.productId);
@@ -127,7 +127,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '',
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
-                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
+                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
                 );
 
                 emit(state.copyWith(productStockList: productStockList));
@@ -144,7 +144,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                       basePrice: double.parse(supplier.productPrice ?? ''),
                       quantity: _productQuantity,
                       stock: supplier.productStock.toString(),
-                      maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '') : -1,
+                      maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0') : 0,
                       selectedIndex: (supplier.supplierId) == state.productStockList[productListIndex][productStockUpdateIndex].productSupplierIds
                           ? !supplier.saleProduct!.contains(
                               supplier.saleProduct?.firstWhere(
@@ -235,7 +235,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             if (productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds.isEmpty) {
               return;
             }
-            if (productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty != -1) {
+            if (productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty != 0) {
               if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity >= productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty) {
                 CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
                 return;

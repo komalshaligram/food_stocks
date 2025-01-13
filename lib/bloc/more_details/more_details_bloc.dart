@@ -188,7 +188,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 }
               }
               Smartlook.instance.user.setIdentifier(profileResModel.data?.client?.clientData?.id ?? '');
-              Smartlook.instance.user.setEmail(response.data?.client?.phoneNumber ?? '');
+              Smartlook.instance.user.setEmail(profileResModel.data?.client?.clientData?.phoneNumber.toString() ?? '');
              // Smartlook.instance.user.setEmail(profileResModel.data?.client?.clientData?.email ?? '');
               Smartlook.instance.user.setName(profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');
               if (!preferencesHelper.getSubUser()) {

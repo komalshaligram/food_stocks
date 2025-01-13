@@ -26,7 +26,7 @@ class BasketEvent with _$BasketEvent {
 
   const factory BasketEvent.clearCartEvent({required BuildContext context}) = _clearCartEvent;
 
-  const factory BasketEvent.payWithBankTransferEvent({required BuildContext context,required bool isFromRemovePopUp}) = _payWithBankTransferEvent;
+  const factory BasketEvent.payWithBankTransferEvent({required BuildContext context,required bool isFromRemovePopUp,required String id}) = _payWithBankTransferEvent;
   const factory BasketEvent.setCartCountEvent({required bool isClearCart}) = _setCartCountEvent;
   const factory BasketEvent.updateImageIndexEvent({required int index}) = _updateImageIndexEvent;
   const factory BasketEvent.orderSendEvent({required BuildContext context, required bool failPayment,required bool isFromDialog,required String paymentMethod,required bool isFromRemovePopUp}) = _orderSendEvent;
@@ -52,4 +52,6 @@ class BasketEvent with _$BasketEvent {
   const factory BasketEvent.generalSettings({required BuildContext context, required BuildContext dialogContext, required bool isRetryLoading}) = _generalSettings;
 
   const factory BasketEvent.updateMaintenanceEvent({required BuildContext context}) = _updateMaintenanceEvent;
+  const factory BasketEvent.getSupplierPaymentTypeEvent({required BuildContext context, required String id,required int index}) = _getSupplierPaymentTypeEvent;
+
 }

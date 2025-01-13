@@ -238,6 +238,26 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                     valueTextWeight: FontWeight.w400),
                               ],
                             ),
+                            5.height,
+                            Row(
+                              children: [
+                                CommonOrderContentWidget(
+                                    backGroundColor: AppColors.iconBGColor,
+                                    borderCoder: AppColors.lightBorderColor,
+                                    flexValue: 2,
+                                    titleMaxLine: 2,
+                                    maxLine: 2,
+                                    title: AppLocalizations.of(context)!.supplier_name,
+                                    value: invoiceDetailsList.supplierName??'',
+                                    titleColor: AppColors.mainColor,
+                                    valueColor: AppColors.blackColor,
+                                    valueTextSize: AppConstants.smallFont,
+                                    titleTextSize: AppConstants.smallFont,
+                                    columnPadding: 2,
+                                    valueTextWeight: FontWeight.w400),
+
+                              ],
+                            ),
                           ],
                         ),
                       ),

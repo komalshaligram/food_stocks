@@ -4,24 +4,14 @@ part of 'order_successful_bloc.dart';
 @freezed
 class OrderSuccessfulState with _$OrderSuccessfulState {
   const factory OrderSuccessfulState({
-    required double totalCredit,
-    required double thisMonthExpense,
-    required double lastMonthExpense,
-    required int orderThisMonth,
-    required double balance,
-    required double expensePercentage,
+    required bool seePreviousBtn,
     required bool duringCelebration,
     required bool isSubUserCanSeeWallet,
   }) = _OrderSuccessfulState;
 
   factory OrderSuccessfulState.initial() =>
       const OrderSuccessfulState(
-        balance: 0,
-        lastMonthExpense: 0,
-        orderThisMonth: 0,
-        thisMonthExpense: 0,
-        totalCredit: 0,
-        expensePercentage: 0,
+        seePreviousBtn : false,
         duringCelebration: true,
         isSubUserCanSeeWallet: false
       );

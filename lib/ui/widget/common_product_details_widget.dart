@@ -56,106 +56,86 @@ class CommonProductDetailsWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          GestureDetector(
-            /*onVerticalDragDown: (detail){
-
-            },
-            onVerticalDragStart: (detail){
-              if(isFromBasketScreen){
-                onCloseTap();
-              }
-            },
-            onVerticalDragEnd: (detail){
-              if(isFromBasketScreen){
-                onCloseTap();
-              }
-            },
-            onVerticalDragUpdate: (dragDetails) {
-              if(isFromBasketScreen){
-                onCloseTap();
-              }
-            },*/
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Expanded(child: 0.width),
-                    Expanded(
-                      flex: 4,
-                      child: Text(
-                        productDetails.first.productName ?? '',
-                        style: AppStyles.rkBoldTextStyle(
-                          size: AppConstants.normalFont,
-                          color: AppColors.blackColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        textAlign: TextAlign.center,
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(child: 0.width),
+                  Expanded(
+                    flex: 4,
+                    child: Text(
+                      productDetails.first.productName ?? '',
+                      style: AppStyles.rkBoldTextStyle(
+                        size: AppConstants.normalFont,
+                        color: AppColors.blackColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: isFromBasketScreen?onCloseTap:(){
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.close,
+                        size: 36,
+                        color: AppColors.blackColor,
                       ),
                     ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: isFromBasketScreen?onCloseTap:(){
-                          Navigator.pop(context);
-                        },
-                        child: Icon(
-                          Icons.close,
-                          size: 36,
-                          color: AppColors.blackColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                5.height,
-                Text(
-                  '${productDetails.first.numberOfUnit.toString()} ${AppLocalizations.of(context)!.unit_in_box} ',
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    (productDetails.first.sale?.isSale ?? false)
-                        ? Text.rich(
-                            TextSpan(
-                              text: isIncludedVat ? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} (${AppLocalizations.of(context)?.price_includes_vat}):' : '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}: ',
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: '${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)} ',
-                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor).copyWith(decoration: TextDecoration.lineThrough),
-                                ),
-                                TextSpan(
-                                  text: ' ${AppLocalizations.of(context)?.currency}${double.parse(productDetails.first.sale?.salePrice ?? '').toStringAsFixed(2)}',
-                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.redColor),
-                                ),
-                              ],
-                            ),
-                          )
-                        : Text(
-                            isIncludedVat ? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)} (${AppLocalizations.of(context)?.price_includes_vat})' : '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
-                            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
+                  ),
+                ],
+              ),
+              5.height,
+              Text(
+                '${productDetails.first.numberOfUnit.toString()} ${AppLocalizations.of(context)!.unit_in_box} ',
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  (productDetails.first.sale?.isSale ?? false)
+                      ? Text.rich(
+                          TextSpan(
+                            text: isIncludedVat ? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} (${AppLocalizations.of(context)?.price_includes_vat}):' : '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}: ',
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: '${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)} ',
+                                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor).copyWith(decoration: TextDecoration.lineThrough),
+                              ),
+                              TextSpan(
+                                text: ' ${AppLocalizations.of(context)?.currency}${double.parse(productDetails.first.sale?.salePrice ?? '').toStringAsFixed(2)}',
+                                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.redColor),
+                              ),
+                            ],
                           ),
-                  ],
-                ),
-                productDetails.first.sale?.saleDescription != '' ? 8.height : 0.height,
-                productDetails.first.sale?.saleDescription != ''
-                    ? Container(
-                        width: getScreenWidth(context) - 50,
-                        padding: const EdgeInsets.all(3),
-                        margin: EdgeInsets.zero,
-                        decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
-                        child: Text(
-                          "${parse(productDetails.first.sale?.saleDescription).body?.text}",
-                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.w500),
-                          maxLines: 3,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
+                        )
+                      : Text(
+                          isIncludedVat ? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)} (${AppLocalizations.of(context)?.price_includes_vat})' : '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
+                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
                         ),
-                      )
-                    : 0.width,
-              ],
-            ),
+                ],
+              ),
+              productDetails.first.sale?.saleDescription != '' ? 8.height : 0.height,
+              productDetails.first.sale?.saleDescription != ''
+                  ? Container(
+                      width: getScreenWidth(context) - 50,
+                      padding: const EdgeInsets.all(3),
+                      margin: EdgeInsets.zero,
+                      decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                      child: Text(
+                        "${parse(productDetails.first.sale?.saleDescription).body?.text}",
+                        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.w500),
+                        maxLines: 3,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )
+                  : 0.width,
+            ],
           ),
           Column(
             mainAxisSize: MainAxisSize.min,
@@ -445,7 +425,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       ),
                                     )
                                   : 0.height,
-                              (productDetails.first.sale?.isSale ?? false)
+                              (productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMaxQuantity!='0'
                                   ? Container(
                                       alignment: Alignment.centerRight,
                                       margin: const EdgeInsets.only(top: 3),

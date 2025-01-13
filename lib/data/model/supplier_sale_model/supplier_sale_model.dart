@@ -14,7 +14,7 @@ class SupplierSaleModel with _$SupplierSaleModel {
     @Default('') String saleDescription,
     @Default(0) int quantity,
     @Default(0) int productStock,
-    @Default(-1) int maxQty,
+    @Default(0) int maxQty,
     @Default(0) int minQty,
     // @Default(false) bool isSelected,
   }) = _SupplierSaleModel;

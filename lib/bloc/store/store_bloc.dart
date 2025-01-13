@@ -199,7 +199,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               ProductStockModel barcodeStock = productStockList.removeLast();
               productStockList.addAll(response.data?.map(
                       (recommendationProduct) => ProductStockModel(
-                        maxQty: (recommendationProduct.sale?.isSale ?? false) ? int.parse(recommendationProduct.sale?.saleMaxQuantity ?? '') : -1,
+                        maxQty: (recommendationProduct.sale?.isSale ?? false) ? int.parse(recommendationProduct.sale?.saleMaxQuantity ?? '0') : 0,
                       productId: recommendationProduct.id ?? '',
                       stock: recommendationProduct.productStock.toString())) ?? []);
               productStockList.add(barcodeStock);
@@ -331,7 +331,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   .copyWith(
                   quantity: _productQuantity,
                   maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(
-                      response.product?.first.sale?.saleMaxQuantity ?? '-1') : -1,
+                      response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
                   productId: response.product?.first.id ?? '',
                   stock: (response.product?.first.supplierSales?.first
                       .productStock.toString() ?? ''),
@@ -386,7 +386,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     .copyWith(
                   quantity: _productQuantity,
                   maxQty: (response.product?.first.sale?.isSale ?? false)? int.parse(
-                     ( response.product?.first.sale?.saleMaxQuantity ?? '')) : -1,
+                     ( response.product?.first.sale?.saleMaxQuantity ?? '0')) : 0,
                   productId: response.product?.first.id ?? '',
                   stock: (response.product?.first.supplierSales?.first
                       .productStock.toString() ?? '0'),
@@ -409,8 +409,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     companyName: supplier.supplierCompanyName ?? '',
                     maxQty: (response.product?.first.sale?.isSale ?? false)
                         ? int.parse(
-                        response.product?.first.sale?.saleMaxQuantity.toString() ?? '')
-                        : -1,
+                        response.product?.first.sale?.saleMaxQuantity.toString() ?? '0')
+                        : 0,
                     basePrice: double.parse(supplier.productPrice ?? ''),
                     stock: supplier.productStock.toString(),
                     quantity: _productQuantity,
@@ -572,7 +572,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               return;
             }
              if(productStockList[state.productStockUpdateIndex]
-                 .maxQty!=-1){
+                 .maxQty!=0){
                if (productStockList[state.productStockUpdateIndex]
                    .quantity >=
                    productStockList[state.productStockUpdateIndex]

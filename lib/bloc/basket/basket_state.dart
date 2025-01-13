@@ -45,6 +45,7 @@ class BasketState with _$BasketState {
           required String errorString,
           required BuildContext? context,
           required List<String> paymentTypesList,
+          required String supplierId,
       required bool updatePaymentMethod}) = _BasketState;
 
   //don't add const here
@@ -94,5 +95,6 @@ class BasketState with _$BasketState {
       isPaymentFail: true,
       isAllPaymentAvailable: false,
       errorString:'',
+      supplierId:'',
       updatePaymentMethod: false);
 }

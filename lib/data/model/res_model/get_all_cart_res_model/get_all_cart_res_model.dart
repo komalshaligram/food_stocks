@@ -80,6 +80,7 @@ class Datum with _$Datum {
     String? note,
     @JsonKey(name: "lowStock")
     String? lowStock,
+    bool? isProcess
   }) = _Datum;
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);

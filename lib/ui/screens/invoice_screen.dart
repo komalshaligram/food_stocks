@@ -105,9 +105,11 @@ class InvoiceScreenWidget extends StatelessWidget {
                         invoiceNumber: state
                             .invoiceDetailsList[index].invoiceNumber
                             .toString(),
-                        invoiceStatue: state
+                        invoiceStatus: state
                             .invoiceDetailsList[index].paymentStatus
-                            .toString(),
+                            .toString()
+                            .toCapitalized(),
+                        supplierName : state.invoiceDetailsList[index].supplierName??'',
                       dueDate:state
                           .invoiceDetailsList[index].dueDate
                           .toString()
@@ -129,11 +131,12 @@ class InvoiceScreenWidget extends StatelessWidget {
     required String invoiceDate,
     required String invoiceType,
     required String invoicePrice,
-    required String invoiceStatue,
+    required String invoiceStatus,
     required String invoiceNumber,
     required String dueDate,
     required List<Invoice>invoicesList,
     required int index,
+    required String supplierName
   }) {
     return GestureDetector(
       onTap: (){
@@ -199,7 +202,7 @@ class InvoiceScreenWidget extends StatelessWidget {
                     titleMaxLine: 2,
                     maxLine: 2,
                     title: AppLocalizations.of(context)!.invoice_status,
-                    value: getType(invoiceStatue.toString(), context).toString(),
+                    value: invoiceStatus.toString(),
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextSize: AppConstants.smallFont,
@@ -257,7 +260,25 @@ class InvoiceScreenWidget extends StatelessWidget {
                     valueTextWeight: FontWeight.w400),
               ],
             ),
-
+            5.height,
+            Row(
+              children: [
+                CommonOrderContentWidget(
+                    backGroundColor: AppColors.iconBGColor,
+                    borderCoder: AppColors.lightBorderColor,
+                    flexValue: 2,
+                    titleMaxLine: 2,
+                    maxLine: 2,
+                    title: AppLocalizations.of(context)!.supplier_name,
+                    value: supplierName,
+                    titleColor: AppColors.mainColor,
+                    valueColor: AppColors.blackColor,
+                    valueTextSize: AppConstants.smallFont,
+                    titleTextSize: AppConstants.smallFont,
+                    columnPadding: 2,
+                    valueTextWeight: FontWeight.w400),
+              ],
+            ),
           ],
         ),
       ),

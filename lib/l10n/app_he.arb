@@ -547,7 +547,7 @@
   "confirm_minimum_box": ", אתה בטוח שאתה לא רוצה את מחיר המבצע ?",
   "credit_card_payment_failed": "תשלום בכרטיס אשראי נכשל",
   "my_invoices" : "החשבוניות שלי",
-  "savings_for_sales": "Savings for sales",
+  "savings_for_sales": "חיסכון במבצעים",
   "not_minimum_order": "Not minimum order",
   "show_all_results": "הצג את כל התוצאות ",
   "bank_transfer_information": "פרטי חשבון להעברה בנקאית",
@@ -562,7 +562,8 @@
   "copied": "הועתק",
   "select_number_of_owners" : "בחר מספר בעלים",
   "owner_first_name": "שם פרטי של הבעלים",
-  "owner_last_name": "שם משפחה של הבעלים"
+  "owner_last_name": "שם משפחה של הבעלים",
+  "back_to_order": "חזרה לרשימת ההזמנות"
 
 
 }

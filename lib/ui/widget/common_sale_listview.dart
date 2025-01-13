@@ -163,7 +163,8 @@ class CommonSaleListView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        salesDesc!.isNotEmpty ? Container(
+                        if (salesDesc!.isNotEmpty) Container(
+                          width: MediaQuery.of(context).size.width/1.5,
                           padding: const EdgeInsets.all(3),
                           margin: EdgeInsets.zero,
                           decoration: BoxDecoration(
@@ -177,11 +178,11 @@ class CommonSaleListView extends StatelessWidget {
                                 size: AppConstants.font_12,
                                 color: AppColors.whiteColor,
                                 fontWeight: FontWeight.w500),
-                            maxLines: 3,
+                            maxLines: 4,
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                           ),
-                        ) : 0.width,
+                        ) else 0.width,
                         !isGuestUser ? numberOfUnits != '0' && price != 0.0
                             ? isFromSale! ? Text.rich(TextSpan(
                           text: '${AppLocalizations

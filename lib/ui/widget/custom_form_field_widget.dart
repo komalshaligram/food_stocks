@@ -94,10 +94,10 @@ class CustomFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: ThemeData(
-        textSelectionTheme: const TextSelectionThemeData(
-          cursorColor: Colors.white,
-          selectionColor: Colors.white,
-          selectionHandleColor: Colors.white,
+        textSelectionTheme:  TextSelectionThemeData(
+          cursorColor: AppColors.mainColor,
+          selectionColor: AppColors.mainColor,
+          selectionHandleColor: AppColors.mainColor,
         ),
       ),
       child: TextFormField(

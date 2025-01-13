@@ -6,15 +6,12 @@ import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_styles.dart';
 import '../../ui/widget/sized_box_widget.dart';
-import '../../ui/widget/wallet_screen_shimmer_widget.dart';
 import '../../bloc/order_successful/order_successful_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
-import '../widget/balance_indicator.dart';
 import '../widget/confetti.dart';
-import '../widget/dashboard_stats_widget.dart';
 
 
 class OrderSuccessfulRoute {
@@ -26,9 +23,11 @@ class OrderSuccessfulScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+    ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => OrderSuccessfulBloc()..add(OrderSuccessfulEvent.getOrderCountEvent(context: context))
-      ..add(OrderSuccessfulEvent.getWalletRecordEvent(context: context))..add(const OrderSuccessfulEvent.celebrationEvent()),
+      create: (context) => OrderSuccessfulBloc()..add(OrderSuccessfulEvent.getDataEvent(context: context,showPreviousBtn:  args?[AppStrings.showPreviousBtn]??false))
+        ..add(const OrderSuccessfulEvent.celebrationEvent()),
       child: const OrderSuccessfulScreenWidget(),
     );
   }
@@ -70,8 +69,10 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                           horizontal: AppConstants.padding_10,
                           vertical: AppConstants.padding_50),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          state.orderThisMonth < 0 ? const WalletScreenShimmerWidget() : Container(
+                           Container(
                             width: double.maxFinite,
                             decoration: BoxDecoration(
                               color: AppColors.whiteColor,
@@ -102,131 +103,57 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                             ),
                           ),
                           20.height,
-                          state.isSubUserCanSeeWallet ? Container(
-                            width: getScreenWidth(context),
-                            clipBehavior: Clip.hardEdge,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: AppConstants.padding_10,
-                                horizontal: AppConstants.padding_10),
-                            decoration: BoxDecoration(
-                                color: AppColors.whiteColor,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: AppColors.shadowColor.withOpacity(0.15),
-                                      blurRadius: AppConstants.blur_10)
-                                ],
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10.0))),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .balance_status,
-                                          style:
-                                          AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.smallFont,
-                                            color: AppColors.blackColor,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        6.height,
-                                        BalanceIndicator(
-                                            pendingBalance: formatNumber(
-                                                value: state.balance.toString(),local: AppStrings.hebrewLocal),
-                                            expense:
-                                            state.expensePercentage.round(),
-                                            totalBalance: 100),
-                                        6.height,
-                                        Directionality(
-                                          textDirection: TextDirection.rtl,
-                                          child: Text(
-                                            formatNumber( value: state.balance.toString(),local: AppStrings.hebrewLocal),
-                                            style: AppStyles.rkRegularTextStyle(
-                                                size: AppConstants.font_14,
-                                                fontWeight: FontWeight.bold,
-                                                color: AppColors.blackColor),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ],
-                                    )),
-                                5.width,
-                                Expanded(
-                                  flex: 3,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Flexible(
-                                            child: DashBoardStatsWidget(
-                                                fontSize:  AppConstants.font_14,
-                                                context: context,
-                                                image: AppImagePath.credits,
-                                                title: AppLocalizations.of(
-                                                    context)!.total_credit,
-                                                value: formatNumber(value: state.totalCredit.toString() ,local: AppStrings.hebrewLocal)),
-                                          ),
-                                          10.width,
-                                          Flexible(
-                                            child: DashBoardStatsWidget(
-                                                fontSize:  AppConstants.font_14,
-                                                context: context,
-                                                image: AppImagePath.expense,
-                                                title: AppLocalizations.of(
-                                                    context)!
-                                                    .this_months_expenses,
-                                                value:
-                                                formatNumber(value: state.thisMonthExpense.toString() ,local: AppStrings.hebrewLocal)),
-
-                                          ),
-                                        ],
-                                      ),
-                                      10.height,
-                                      Row(
-                                        children: [
-                                          Flexible(
-                                            child: DashBoardStatsWidget(
-                                                fontSize:  AppConstants.font_14,
-                                                context: context,
-                                                image: AppImagePath.orders,
-                                                title: AppLocalizations.of(
-                                                    context)!
-                                                    .this_months_orders,
-                                                value: state.orderThisMonth.toString()),
-                                          ),
-                                          10.width,
-                                          Flexible(
-                                            child: DashBoardStatsWidget(
-                                                fontSize:  AppConstants.font_14,
-                                                context: context,
-                                                image: AppImagePath.expense,
-                                                title: AppLocalizations.of(
-                                                    context)!
-                                                    .last_months_expenses,
-                                                value:
-                                                formatNumber(value: state.lastMonthExpense.toString(),local:AppStrings.hebrewLocal)),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ) : 0.width,
                           const Expanded(
                             flex: 5,
                             child: SizedBox(
                             ),
                           ),
+                          state.seePreviousBtn?GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                  left: 50,
+                                  right: 50,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.whiteColor.withOpacity(0.95),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: AppColors.shadowColor.withOpacity(0.20),
+                                        blurRadius: AppConstants.blur_10),
+                                  ],
+                                  borderRadius:
+                                  const BorderRadius.all(Radius.circular(AppConstants.radius_40)),
+                                ),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: AppConstants.padding_5,
+                                      horizontal: AppConstants.padding_5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(AppConstants.radius_40),
+                                    color: AppColors.whiteColor,
+                                  ),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(AppConstants.padding_10),
+                                    height: AppConstants.containerHeight_60,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.navSelectedColor,
+                                        borderRadius:
+                                        BorderRadius.circular(AppConstants.radius_40)),
+                                    child: Text(
+                                      AppLocalizations.of(context)!.back_to_order,
+                                      style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.normalFont,
+                                        color: AppColors.whiteColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )):0.height,
+                          20.height,
                           GestureDetector(
                               onTap: () {
                                 Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
@@ -291,7 +218,6 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                 ],
               ),
             ),
-
           ),
         );
       },
