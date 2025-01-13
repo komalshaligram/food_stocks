@@ -112,7 +112,7 @@ class PesachProductsBloc
             List<ProductStockModel>stockList = [];
             stockList.addAll(response.data?.map((product) {
               return ProductStockModel(
-                  maxQty:(product.sale?.isSale ?? false) ?  int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : -1,
+                  maxQty:(product.sale?.isSale ?? false) ?  int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : 0,
                   productId:product.id ?? '',
                   stock:product.productStock.toString());
             }) ??
@@ -235,7 +235,7 @@ class PesachProductsBloc
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
                 stock: (response.product?.first.supplierSales?.first.productStock.toString()  ?? '0'),
-                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
+                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
                 productSaleId: '',
                 productSupplierIds: '',
               );
@@ -257,7 +257,7 @@ class PesachProductsBloc
               double.parse(supplier.productPrice ?? ''),
               quantity: _productQuantity,
               stock: supplier.productStock.toString(),
-                maxQty:(response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? ''):-1,
+                maxQty:(response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0'):0,
                 selectedIndex: (supplier.supplierId ) ==
                   state
                       .productStockList[productListIndex]

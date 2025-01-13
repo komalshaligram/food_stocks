@@ -106,7 +106,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
             List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
             List<ProductStockModel> stockList = [];
             stockList.addAll(response.data?.map((product) {
-                  return ProductStockModel(maxQty: (product.sale?.isSale ?? false) ? int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : -1, productId: event.searchType == SearchTypes.product.toString() ? product.id ?? '' : product.productId ?? '', stock: event.searchType == SearchTypes.product.toString() ? product.productStock.toString() : (product.productStock.toString()));
+                  return ProductStockModel(maxQty: (product.sale?.isSale ?? false) ? int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : 0, productId: event.searchType == SearchTypes.product.toString() ? product.id ?? '' : product.productId ?? '', stock: event.searchType == SearchTypes.product.toString() ? product.productStock.toString() : (product.productStock.toString()));
                 }) ??
                 []);
             productStockList[1].addAll(stockList);
@@ -143,7 +143,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
             productList.addAll(response.data ?? []);
             List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
             List<ProductStockModel> stockList = [];
-            stockList.addAll(response.data?.map((product) => ProductStockModel(maxQty: product.sale!.isSale ? int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : -1, productId: product.productId ?? '', stock: (product.productStock.toString()))) ?? []);
+            stockList.addAll(response.data?.map((product) => ProductStockModel(maxQty: product.sale!.isSale ? int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : 0, productId: product.productId ?? '', stock: (product.productStock.toString()))) ?? []);
             printData('new product list len = ${productList.length}');
             printData('new product stock list len = ${productStockList.length}');
             productStockList[1].addAll(stockList);
@@ -203,7 +203,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '',
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
-                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
+                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
                 );
               } else {
                 productStockUpdateIndex = state.productStockList[productListIndex].indexWhere((productStock) => productStock.productId == event.productId);
@@ -230,7 +230,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '',
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
-                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
+                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
                 );
                 emit(state.copyWith(productStockList: productStockList));
               }
@@ -246,7 +246,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
                       basePrice: double.parse(supplier.productPrice ?? ''),
                       quantity: _productQuantity,
                       stock: supplier.productStock.toString(),
-                      maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '') : -1,
+                      maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0') : 0,
                       selectedIndex: (supplier.supplierId) == state.productStockList[productListIndex][productStockUpdateIndex].productSupplierIds
                           ? !supplier.saleProduct!.contains(
                                     supplier.saleProduct?.firstWhere(

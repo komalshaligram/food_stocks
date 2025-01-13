@@ -366,7 +366,14 @@ class OrderSummaryScreenWidget extends StatelessWidget {
               },
               positiveOnTap1: () {
                 Navigator.pop(context);
-                bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: false,  paymentMethod: AppStrings.bankTransfer,));
+                bankTransferDialog(
+                    context: context1,
+                    language: state.language,
+                    text: state.bankTransferInfo,
+                    function: () {
+                      bloc.add(OrderSummaryEvent.payWithBankTransferEvent(context: context,isFromRemovePopUp:isFromRemovePopUp));
+                    });
+             //   bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: false,  paymentMethod: AppStrings.bankTransfer,));
               },
               positiveTitle1: AppLocalizations.of(context)!.pay_with_bank_transfer,
             );

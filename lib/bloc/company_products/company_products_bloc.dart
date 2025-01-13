@@ -98,7 +98,7 @@ class CompanyProductsBloc
             stockList.addAll(response.data?.map((product) =>
                     ProductStockModel(
                         productId: product.productId ?? '',
-                        maxQty: (product.product?.sale?.isSale ?? false) ? int.parse(product.product?.sale?.saleMaxQuantity ?? '0') : -1,
+                        maxQty: (product.product?.sale?.isSale ?? false) ? int.parse(product.product?.sale?.saleMaxQuantity ?? '0') : 0,
                         stock: product.product?.productStock.toString() ?? '0')) ?? [],
             );
             productStockList[1].addAll(stockList);
@@ -187,7 +187,7 @@ class CompanyProductsBloc
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
                 stock: (response.product?.first.supplierSales?.first.productStock.toString()  ?? '0'),
-                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
+                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
               );
             }
             else{
@@ -231,7 +231,7 @@ class CompanyProductsBloc
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
                 stock: (response.product?.first.supplierSales?.first.productStock.toString()  ?? '0'),
-                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
+                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
               );
 
               emit(state.copyWith(productStockList: productStockList));
@@ -247,7 +247,7 @@ class CompanyProductsBloc
                 double.parse(supplier.productPrice ?? ''),
                 quantity: _productQuantity,
                 stock: supplier.productStock.toString(),
-                maxQty:(response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? ''):-1,
+                maxQty:(response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0'):0,
                 selectedIndex: (supplier.supplierId ) ==
                     state
                         .productStockList[productListIndex]

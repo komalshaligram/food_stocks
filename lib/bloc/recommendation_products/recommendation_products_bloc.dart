@@ -95,7 +95,7 @@ class RecommendationProductsBloc
             stockList.addAll(response.data?.map(
                     (recommendationProduct) => ProductStockModel(
                         productId: recommendationProduct.id ?? '',
-                        maxQty: (recommendationProduct.sale?.isSale ?? false) ? int.parse(recommendationProduct.sale?.saleMaxQuantity ?? '0') : -1,
+                        maxQty: (recommendationProduct.sale?.isSale ?? false) ? int.parse(recommendationProduct.sale?.saleMaxQuantity ?? '0') : 0,
                         stock: recommendationProduct.productStock.toString())) ??
                 []);
             productStockList[1].addAll(stockList);
@@ -182,7 +182,7 @@ class RecommendationProductsBloc
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
                 stock: (response.product?.first.supplierSales?.first.productStock.toString()  ?? '0'),
-                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
+                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
                   totalPrice: double.parse(response.product?.first.supplierSales?.first.productPrice.toString() ?? '0'
               ));
             }
@@ -225,7 +225,7 @@ class RecommendationProductsBloc
                 quantity: _productQuantity,
                 productId: response.product?.first.id ?? '',
                 stock: (response.product?.first.supplierSales?.first.productStock.toString()  ?? '0'),
-                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : -1,
+                maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
               );
               emit(state.copyWith(productStockList: productStockList));
             }
@@ -240,7 +240,7 @@ class RecommendationProductsBloc
                 double.parse(supplier.productPrice ?? ''),
                 quantity: _productQuantity,
                 stock: supplier.productStock.toString(),
-                maxQty:(response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? ''):-1,
+                maxQty:(response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0'):0,
                 selectedIndex: (supplier.supplierId ) ==
                     state
                         .productStockList[productListIndex]

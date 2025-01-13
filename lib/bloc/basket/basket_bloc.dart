@@ -74,7 +74,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
               List<ProductStockModel> stockList = [];
               stockList.addAll(response.data?.data?.map((product) => ProductStockModel(
-                        maxQty: (product.sale?.isSale ?? false) ? int.parse(product.sale?.saleMaxQuantity.toString() ?? '-1') : -1,
+                        maxQty: (product.sale?.isSale ?? false) ? int.parse(product.sale?.saleMaxQuantity.toString() ?? '0') : 0,
                         quantity: product.totalQuantity ?? 0,
                         productId: product.id ?? '',
                         cartProductId: product.cartProductId ?? '',
@@ -93,7 +93,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
               await preferencesHelper.setCartCount(count: temp.isEmpty ? preferencesHelper.getCartCount() : temp.length);
 
-          debugPrint('IDdddddddd:${response.data?.cart?.first.id}');
+          debugPrint('IDdddddddd:${response.data?.cart?.first.suppliers}');
               emit(state.copyWith(isAnimation: true));
               emit(state.copyWith(
                 vatPercentage: response.data!.vatPercentage?.toDouble() ?? 0.0,
@@ -365,7 +365,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   add(BasketEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
                 }
                 if ((event.isBarcode)) {
-                  productStockList[0][0] = productStockList[0][0].copyWith(quantity: _productQuantity, maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '') : -1, productId: response.product?.first.id ?? '', stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? ''));
+                  productStockList[0][0] = productStockList[0][0].copyWith(quantity: _productQuantity, maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0, productId: response.product?.first.id ?? '', stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? ''));
 
                   emit(state.copyWith(productStockList: productStockList));
                 }
@@ -379,7 +379,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         basePrice: double.parse(supplier.productPrice ?? ''),
                         quantity: _productQuantity,
                         stock: supplier.productStock.toString(),
-                        maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '') : -1,
+                        maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0') : 0,
                         selectedIndex: (supplier.supplierId) == state.productStockList[productListIndex][productStockUpdateIndex].productSupplierIds
                             ? !supplier.saleProduct!.contains(
                                 supplier.saleProduct?.firstWhere(

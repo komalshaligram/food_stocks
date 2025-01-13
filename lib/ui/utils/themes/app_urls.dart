@@ -6,8 +6,8 @@ class AppUrls {
 }
 
 class AppUrlEndPoints {
- //static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
-  static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
+ static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
+ // static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
 
   ///devUrl
   //static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
@@ -26,11 +26,9 @@ class AppUrlEndPoints {
   static const String cityListUrl = '/v1/settings/Cities';
   static const String getProductCategoriesUrl = '/v1/store/getCategories';
   static const String getProductSalesUrl = '/v1/sales/getSales';
-
   static const String getSuppliersUrl = '/v1/suppliers/getSupplier';
   // static const String getSupplierProductsUrl = '/v1/supplierProduct/getSupplierProducts';
   // static const String getProductDetailsUrl = '/v1/store/ProductDetail';
-
   //static const String createOrderUrl = '/v1/orders/createOrder';
   // static const String getAllOrderUrl = '/v1/orders/getAllOrders';
   // static const String getAllCartUrl = '/v1/cart/listingCartProducts/';
@@ -91,7 +89,6 @@ class AppUrlEndPoints {
   //  static const String deleteCreditCardUrl = '/v1/clients/delete-credit-card-details';
   // static const String bdiUrl = '/v1/clients/checkBdi'; //getting payment options
   //static const String updateClientCredits = '/v1/clients/updateClientCredits/'; //navigation after successful registration
-
   static const String updateCreditCardUrl = '/v2/clients/update-credit-card-details/';
   static const String deleteCreditCardUrl = '/v2/clients/delete-credit-card-details';
   static const String verifyAgentUrl = '/v2/clients/verifyAgent';
@@ -101,12 +98,10 @@ class AppUrlEndPoints {
   static const String registrationUrl = '/v2/clients/createClient';
   static const String createOrderUrl = '/v2/orders/createOrder';
   static const String getAllOrderUrl = '/v2/orders/getAllOrders';
-
   static const String getAllCartUrl = '/v2/cart/listingCartProducts/';
  // static const String listingCartProductsSupplierUrl = '/v2/cart/listingCartProductsSupplier/';
   static const String getProfileDetailsUrl = '/v2/admin/getAllClients';
   static const String getPlanogramByIdUrl = '/v2/planograms/getPlanogram/';
-
   static const String getProductDetailsUrl = '/v2/store/ProductDetail';
   static const String getSubCategoriesUrl = '/v2/store/getSubCategories';
   static const String getCompaniesUrl = '/v2/store/getBrand';
