@@ -72,21 +72,22 @@ class CustomOneButtonDialog extends StatelessWidget {
            Column(
              children: [
                positiveTitle != null
-                   ? commonButton(positiveTitle:positiveTitle ?? '' ,width: width,positiveOnTap: positiveOnTap)
-                   : 0.width,
-               10.height,
+                   ? Padding(padding: const EdgeInsets.only(bottom: 10),child: commonButton(positiveTitle:positiveTitle ?? '' ,width: width,positiveOnTap: positiveOnTap),)
+                   : 0.height,
+             //  10.height,
                positiveTitle1 != null
-                   ? commonButton(positiveTitle:positiveTitle1 ?? '' ,width: width,positiveOnTap: positiveOnTap1)
-                   : 0.width,
-               10.height,
+                   ?
+               Padding(padding:const EdgeInsets.only(bottom: 10),child: commonButton(positiveTitle:positiveTitle1 ?? '' ,width: width,positiveOnTap: positiveOnTap1),)
+                   : 0.height,
+              // 10.height,
                positiveTitle2 != null
-                   ? commonButton(positiveTitle:positiveTitle2 ?? '' ,width: width,positiveOnTap: positiveOnTap2)
-                   : 0.width,
-               10.height,
+                   ? Padding(padding:const EdgeInsets.only(bottom: 10), child: commonButton(positiveTitle:positiveTitle2 ?? '' ,width: width,positiveOnTap: positiveOnTap2))
+                   : 0.height,
+               //10.height,
                positiveTitle3 != null
-                   ? commonButton(positiveTitle:positiveTitle3 ?? '' ,width: width,positiveOnTap: positiveOnTap3)
-                   : 0.width,
-               10.height,
+                   ? Padding(padding:const EdgeInsets.only(bottom: 10), child: commonButton(positiveTitle:positiveTitle3 ?? '' ,width: width,positiveOnTap: positiveOnTap3),)
+                   : 0.height,
+               //10.height,
              ],
            ),
         ],
