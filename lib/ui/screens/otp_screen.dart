@@ -100,6 +100,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                               color: Colors.black)),
                     ),
                     30.height,
+
                     Padding(
                       padding: EdgeInsets.only(
                           left: getScreenWidth(context) * 0.09,
