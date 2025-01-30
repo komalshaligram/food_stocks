@@ -61,33 +61,6 @@ class InvoicePdfScreenWidget extends StatelessWidget {
               },
               trailingWidget: GestureDetector(
                 onTap: () async {
-                 /* Map<Permission, PermissionStatus> statuses = await [
-                    Permission.storage,
-                  ].request();
-                  if (Platform.isAndroid) {
-                    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                    AndroidDeviceInfo androidInfo =
-                    await deviceInfo.androidInfo;
-                    if (androidInfo.version.sdkInt < 33) {
-                      if (!statuses[Permission.storage]!.isGranted) {
-                        CustomSnackBar.showSnackBar(
-                            context: context,
-                            title:
-                            AppLocalizations.of(context)!.storage_permission,
-                            type: SnackBarType.failure);
-                        return;
-                      }
-                    }
-                  } else {
-                    //for ios permission
-                  }
-                  if (invoiceDetailsList.link?.isNotEmpty ?? false) {
-                    context
-                        .read<InvoicePdfBloc>()
-                        .add(InvoicePdfEvent.pdfDownloadEvent(
-                      context: context,
-                    ));
-                  }*/
                    Share.share('${AppUrlEndPoints.baseFileUrl}${state.invoiceDetailsList.link}');
                 },
                 child: Icon(
