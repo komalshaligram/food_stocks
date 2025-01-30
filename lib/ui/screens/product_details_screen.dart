@@ -1246,7 +1246,7 @@ class _ProductDetailsScreenWidgetState
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        /*  Radio(
+                          Radio(
                           value: value,
                           fillColor: WidgetStateColor.resolveWith(
                             (states) => AppColors.greyColor,
@@ -1258,7 +1258,7 @@ class _ProductDetailsScreenWidgetState
                             bloc.add(ProductDetailsEvent.radioButtonEvent(
                                 selectRadioTile: val!));
                           },
-                        ),*/
+                        ),
                         value == 3
                             ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

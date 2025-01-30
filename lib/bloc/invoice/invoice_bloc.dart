@@ -50,7 +50,7 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
           InvoicesResModel response =
           InvoicesResModel.fromJson(res);
           debugPrint('Invoices res = ${response.data}');
-          if (response.status == 200) {
+          if (response.status == AppConstants.code_200) {
             List<Invoice> invoiceDetailsList =
             state.invoiceDetailsList.toList(growable: true);
             invoiceDetailsList.addAll(response.data?.invoices ?? []);
