@@ -1,16 +1,8 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:path_provider/path_provider.dart';
 import '../../data/model/res_model/invoices_res/invoices_res_model.dart';
-import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_urls.dart';
-
 
 part 'invoice_pdf_state.dart';
 part 'invoice_pdf_event.dart';
@@ -23,49 +15,7 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
        if(event is _getArgumentEvent){
          emit(state.copyWith(invoiceDetailsList: event.invoiceDetailsList));
        }
-       else if(event is _pdfDownloadEvent){
-         try {
-           emit(state.copyWith(isDownloading: true));
-
-           Directory? dir;
-           if (defaultTargetPlatform == TargetPlatform.android) {
-             dir = Directory('/storage/emulated/0/Documents');
-             printData('dir = ${await dir.stat()}');
-             // return;
-           } else {
-             dir = await getApplicationDocumentsDirectory();
-           }
-           printData('path______${state.invoiceDetailsList.link?.split('/').last.split('.').first}');
-
-           String filePath =
-               '${dir.path}/${state.invoiceDetailsList.link?.split('/').last.split('.').first}_${DateTime.now().day}_${DateTime.now().month}_${DateTime.now().hour}_${DateTime.now().minute}${'.pdf'}';
-           printData( " download    ${AppUrlEndPoints.baseFileUrl}${state.invoiceDetailsList.link}");
-
-           await Dio().download(
-               "${AppUrlEndPoints.baseFileUrl}${state.invoiceDetailsList.link}",
-               filePath, onReceiveProgress: (received, total) {
-             printData('rec:$received,total:$total');
-             int progress = (received * 100) ~/ total;
-             emit(state.copyWith(downloadProgress: progress));
-             printData('download progress = ${state.downloadProgress}');
-           });
-           CustomSnackBar.showSnackBar(
-               context: event.context,
-               title:
-               AppLocalizations.of(event.context)!.downloaded_successfully,
-               type: SnackBarType.success);
-
-           emit(state.copyWith(isDownloading: false));
-
-         } catch (e) {
-           emit(state.copyWith(isDownloading: false));
-           CustomSnackBar.showSnackBar(
-               context: event.context,
-               title: AppLocalizations.of(event.context)!.failed_download,
-               type: SnackBarType.failure);
-         }}
        }
-
     );
   }
 }
