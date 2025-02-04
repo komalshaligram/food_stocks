@@ -565,5 +565,30 @@
   "select_number_of_owners" : "Select Number of Owners",
   "owner_first_name": "Owner first Name",
     "owner_last_name": "Owner last Name",
-  "back_to_order": "Back to Orders"
+  "back_to_order": "Back to Orders",
+  "returns": "Returns",
+  "enter_product_barcode": "Enter the product barcode",
+  "scan_return_product": "Scan return product",
+  "product_return_info": "Product return info",
+  "no_of_unit_for_return": "Number of units for return?",
+  "why_return_product": "Why do you want to return the product?",
+  "add_proof_img": "Add proof images",
+  "add_notes": "Add your notes here",
+  "new_return": "New Return",
+  "product_defective": "The product is defective",
+  "product_expiration_date_issue": "The product has expiration date issue",
+  "wrong_product": "Wrong product",
+  "product_return_list": "Product return list",
+  "add_another_product": "Add another product",
+  "send_the_request": "Send the request",
+  "open_refund_invoice": "Open refund invoice",
+  "product_does_not_exist": "The product doesn't exist in the system",
+  "date_sent": "Date Sent:",
+  "total_refund": "Total Refund:"
+
+
+
+
+
+
 }

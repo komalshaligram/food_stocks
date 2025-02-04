@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:focus_detector/focus_detector.dart';
+import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import '../../ui/widget/sized_box_widget.dart';
@@ -35,6 +36,7 @@ class ProductDetailsScreen extends StatelessWidget {
   bool isNavigateToProductDetailString;
   OrdersBySupplier productData;
   OrderDatum orderData;
+  List<StatusData> statusList;
 
   ProductDetailsScreen(
       {super.key,
@@ -43,6 +45,7 @@ class ProductDetailsScreen extends StatelessWidget {
       this.isNavigateToProductDetailString = false,
       this.productData = const OrdersBySupplier(),
       this.orderData = const OrderDatum(),
+        this.statusList=const <StatusData>[],
       this.issue = ''});
 
   @override
@@ -61,6 +64,7 @@ class ProductDetailsScreen extends StatelessWidget {
       child: ProductDetailsScreenWidget(
         orderId: orderId,
         orderNumber: orderNumber,
+        statusList: statusList,
       ),
     );
   }
@@ -69,11 +73,12 @@ class ProductDetailsScreen extends StatelessWidget {
 class ProductDetailsScreenWidget extends StatefulWidget {
   final String orderId;
   final String orderNumber;
-
+  final List<StatusData> statusList;
   const ProductDetailsScreenWidget({
     super.key,
     required this.orderId,
     required this.orderNumber,
+    required this.statusList
   });
 
   @override
@@ -205,17 +210,15 @@ class _ProductDetailsScreenWidgetState
                                         color: AppColors.blackColor,
                                       ),
                                     ),
-                                    Text(
-                                      state.orderData.orderstatus
-                                          ?.statusName
-                                          ?.toTitleCase() ??
-                                          '',
+                                    state.orderData.orderstatus!=null? Text(
+                                        getStatus(widget.statusList,  state.orderData.orderstatus
+                                            ?.statusName??'', state.language).toTitleCase(),
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
-                                          color: getStatusColor(state.orderData.orderstatus
-                                              ?.orderStatusNumber??0),
+                                          color: getStatusColor(widget.statusList,state.orderData.orderstatus?.statusName??''),
                                           fontWeight: FontWeight.w700),
-                                    )
+                                    ):0.width
+
                                   ],
                                 ),
                                 7.height,

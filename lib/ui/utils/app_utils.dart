@@ -1,9 +1,12 @@
-
 import 'dart:io';
 import 'dart:math';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
@@ -48,7 +51,7 @@ String maskCreditCardNumber(String cardNumber) {
   var requiredMask = 'X' * (16 - firstDigits.length);
   var maskedString = requiredMask + lastDigits;
   var maskedCardNumberWithSpaces = maskedString.replaceAllMapped(RegExp(r'.{4}'), (match) => '${match.group(0)}-');
-  return maskedCardNumberWithSpaces.toString().substring(0,maskedCardNumberWithSpaces.length-1);
+  return maskedCardNumberWithSpaces.toString().substring(0, maskedCardNumberWithSpaces.length - 1);
 }
 
 String formatExpiryDate(String text) {
@@ -66,63 +69,80 @@ String formatExpiryDate(String text) {
 }
 
 Future<String> getBottleTax() async {
-  SharedPreferencesHelper preferencesHelper =
-  SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-  var value =  preferencesHelper.getBottleTax().toString();
-   return Future.value(value.toString());
+  SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+  var value = preferencesHelper.getBottleTax().toString();
+  return Future.value(value.toString());
 }
 
-Color getStatusColor(int statusNum){
-  if(statusNum == AppConstants.onTheWayStatus){
-    return AppColors.blueColor;
-  }else if(statusNum == AppConstants.deliveryStatus){
+Color getStatusColor(List<StatusData> statusList, String status) {
+  if(status.isEmpty){
     return AppColors.mainColor;
-  }else if(statusNum == AppConstants.cancelStatus){
-    return AppColors.redColor;
+  }
+  String color = statusList.where((e) => e.statusNameKey == status).first.statusColor ?? '';
+  final hexCode = color.replaceAll('#', '');
+  return Color(int.parse('FF$hexCode', radix: 16));
+}
+
+String getStatus(List<StatusData> statusList, String currentStatus,String language){
+  String status = '';
+  if(currentStatus.isEmpty) {
+    return status;
+  }
+  if(language==AppStrings.hebrewString){
+    status = statusList.where((e) => e.statusNameKey == currentStatus).first.statusNameHebrew ?? '';
   }else{
-    return AppColors.orangeColor;
+    status = statusList.where((e) => e.statusNameKey == currentStatus).first.statusNameEnglish ?? '';
+  }
+  return status;
+}
+
+double getChildAspectRatio(BuildContext context, bool isSaleOn) {
+  return !isSaleOn
+      ? AppConstants.productGridAspectRatio8
+      : Platform.isAndroid
+          ? getScreenHeight(context) > 900
+              ? AppConstants.productGridAspectRatio9
+              : getScreenHeight(context) > 820 && getScreenHeight(context) < 900
+                  ? AppConstants.productGridAspectRatio51
+                  : AppConstants.productGridAspectRatio51
+          : getScreenHeight(context) > 820
+              ? AppConstants.productGridAspectRatio51
+              : AppConstants.productGridAspectRatio51;
+}
+
+double getItemHeight(BuildContext context, bool isSaleOn) {
+  return getScreenHeight(context) > 1000 && getScreenWidth(context) > 700
+      ? 350
+      : getScreenHeight(context) < 1000 && getScreenHeight(context) > 800 && getScreenWidth(context) > 550
+          ? 260
+          : isSaleOn
+              ? AppConstants.salesProductItemHeight
+              : AppConstants.withoutSaleItemHeight;
+}
+
+double getItemWidth(BuildContext context) {
+  return getScreenHeight(context) > 1000 && getScreenWidth(context) > 700
+      ? 190
+      : getScreenWidth(context) > 500
+          ? 160
+          : 140;
+}
+
+Widget isPesachLabelShow(bool isPesach, BuildContext context) {
+  if (isPesach) {
+    return Container(
+        padding: const EdgeInsets.only(left: 5, right: 5),
+        decoration: BoxDecoration(color: AppColors.pesachBGColor, border: Border.all(color: AppColors.pesachBGColor), borderRadius: const BorderRadius.all(Radius.circular(10))),
+        child: Text(
+          AppLocalizations.of(context)!.pesach,
+          style: AppStyles.rkRegularTextStyle(
+            size: AppConstants.font_13,
+          ),
+        ));
+  } else {
+    return 0.height;
   }
 }
-
- double getChildAspectRatio(BuildContext context , bool isSaleOn){
-  return !isSaleOn ? AppConstants.productGridAspectRatio8 : Platform.isAndroid? getScreenHeight(context) > 900
-       ? AppConstants.productGridAspectRatio9 :getScreenHeight(context) >  820
-      && getScreenHeight(context) <  900? AppConstants.productGridAspectRatio51
-       : AppConstants.productGridAspectRatio51: getScreenHeight(context) > 820
-       ? AppConstants.productGridAspectRatio51:AppConstants.productGridAspectRatio51;
- }
-
-double getItemHeight(BuildContext context , bool isSaleOn){
-  return getScreenHeight(context) > 1000 &&   getScreenWidth(context) > 700 ? 350 :
-  getScreenHeight(context) < 1000 &&
-  getScreenHeight(context) > 800  && getScreenWidth(context) > 550  ? 260 : isSaleOn ? AppConstants.salesProductItemHeight :
-  AppConstants.withoutSaleItemHeight ;
-}
-
-double getItemWidth(BuildContext context ){
-  return getScreenHeight(context) > 1000 &&   getScreenWidth(context) > 700  ? 190 :
-  getScreenWidth(context) > 500  ? 160 : 140 ;
-}
-
-Widget isPesachLabelShow(bool isPesach,BuildContext context){
- if(isPesach){
-   return Container(
-       padding: const EdgeInsets.only(left: 5,right: 5),
-       decoration: BoxDecoration(
-           color: AppColors.pesachBGColor,
-           border: Border.all(color: AppColors.pesachBGColor),
-           borderRadius: const BorderRadius.all(Radius.circular(10))
-       ),
-       child: Text(AppLocalizations.of(context)!.pesach,
-         style: AppStyles.rkRegularTextStyle(
-             size: AppConstants.font_13,
-             ),
-       ));
- }else{
-   return 0.height;
- }
-}
-
 
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
@@ -135,28 +155,21 @@ class CustomSnackBar {
       trailing: Container(),
       title,
       context,
-      backgroundColor: type == SnackBarType.success
-          ? AppColors.mainColor.withOpacity(0.85)
-          : AppColors.redColor.withOpacity(0.85),
+      backgroundColor: type == SnackBarType.success ? AppColors.mainColor.withOpacity(0.85) : AppColors.redColor.withOpacity(0.85),
       toastBorderRadius: 8.0,
       toastPosition: GFToastPosition.TOP,
-      textStyle: AppStyles.rkRegularTextStyle(
-          size: AppConstants.smallFont,
-          color: AppColors.whiteColor,
-          fontWeight: FontWeight.w400),
+      textStyle: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400),
     );
   }
 }
 
-
-printData(String? message){
- // if(kDebugMode){
-    debugPrint(message??'');
- // }
+printData(String? message) {
+  // if(kDebugMode){
+  debugPrint(message ?? '');
+  // }
 }
 
-customShowUpdateDialog(
-    BuildContext context, String directionality, String storeUrl) {
+customShowUpdateDialog(BuildContext context, String directionality, String storeUrl) {
   return showDialog(
     barrierDismissible: false,
     context: context,
@@ -164,9 +177,7 @@ customShowUpdateDialog(
       return PopScope(
         canPop: false,
         child: AlertDialog(
-          title: Text(AppLocalizations.of(context)!.new_version_app_update,
-              style: AppStyles.rkRegularTextStyle(
-                  color: AppColors.blackColor, size: AppConstants.mediumFont)),
+          title: Text(AppLocalizations.of(context)!.new_version_app_update, style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.mediumFont)),
           actions: [
             Align(
               alignment: Alignment.center,
@@ -178,13 +189,10 @@ customShowUpdateDialog(
                   padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                   alignment: Alignment.center,
                   width: AppConstants.containerHeight_80,
-                  decoration: BoxDecoration(
-                      gradient: AppColors.appMainGradientColor,
-                      borderRadius: BorderRadius.circular(8.0)),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(8.0)),
                   child: Text(
                     AppLocalizations.of(context)!.update,
-                    style: AppStyles.rkRegularTextStyle(
-                        color: AppColors.whiteColor, size: AppConstants.font_14),
+                    style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.font_14),
                   ),
                 ),
               ),
@@ -199,13 +207,13 @@ customShowUpdateDialog(
 Future<void> _launchUrl(String storeUrl) async {
   Uri url = Uri.parse(storeUrl);
 
-    try {
-      launchUrl(url);
-    } on PlatformException catch (e) {
-      printData(e.toString());
-    } finally {
-      launchUrl(url);
-    }
+  try {
+    launchUrl(url);
+  } on PlatformException catch (e) {
+    printData(e.toString());
+  } finally {
+    launchUrl(url);
+  }
 }
 
 bool isValidIsraeliID(String id) {
@@ -225,29 +233,13 @@ bool isValidIsraeliID(String id) {
   return sum % 10 == 0;
 }
 
-
-Future<CroppedFile?> cropImage(
-    {required String path,
-    CropStyle shape = CropStyle.rectangle,
-    int quality = 100,
-    bool? isLogoCrop = false}) async {
+Future<CroppedFile?> cropImage({required String path, CropStyle shape = CropStyle.rectangle, int quality = 100, bool? isLogoCrop = false}) async {
   return await ImageCropper().cropImage(
     sourcePath: path,
     cropStyle: shape,
     compressQuality: quality,
     uiSettings: [
-      AndroidUiSettings(
-          activeControlsWidgetColor: AppColors.mainColor,
-          cropFrameColor: AppColors.greyColor,
-          initAspectRatio: isLogoCrop ?? false
-              ? CropAspectRatioPreset.ratio16x9
-              : CropAspectRatioPreset.square,
-          hideBottomControls: true,
-          showCropGrid: false,
-          lockAspectRatio: false,
-          toolbarColor: AppColors.blackColor,
-          toolbarTitle: AppStrings.cropImageString,
-          toolbarWidgetColor: AppColors.whiteColor),
+      AndroidUiSettings(activeControlsWidgetColor: AppColors.mainColor, cropFrameColor: AppColors.greyColor, initAspectRatio: isLogoCrop ?? false ? CropAspectRatioPreset.ratio16x9 : CropAspectRatioPreset.square, hideBottomControls: true, showCropGrid: false, lockAspectRatio: false, toolbarColor: AppColors.blackColor, toolbarTitle: AppStrings.cropImageString, toolbarWidgetColor: AppColors.whiteColor),
       IOSUiSettings(
         title: AppStrings.cropImageString,
         aspectRatioLockEnabled: true,
@@ -273,11 +265,44 @@ String getFileSizeString({required int bytes, int decimals = 0}) {
   return ((bytes / pow(1024, i)).toStringAsFixed(decimals)) + suffixList[i];
 }
 
+Future<XFile?> openImagePicker(ImageSource source) async {
+  try {
+    if (Platform.isAndroid) {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      if (androidInfo.version.sdkInt < 30) {
+        if (source == ImageSource.camera) {
+          if (await Permission.camera.isPermanentlyDenied) {
+            return null;
+          }
+          if (!(await Permission.camera.request().isGranted)) {
+            return null;
+          }
+        } else {
+          if (await Permission.photos.isPermanentlyDenied) {
+            return null;
+          }
+          if (!(await Permission.photos.request().isGranted)) {
+            return null;
+          }
+        }
+      }
+    } else {
+//for ios permission handling
+    }
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedImage = await picker.pickImage(source: source);
+    return pickedImage;
+  } on PlatformException {
+    return null;
+  } catch (err) {}
+  return null;
+}
+
 Future<String> scanBarcodeOrQRCode({required BuildContext context, required String cancelText, required ScanMode scanMode}) async {
   String barcodeSOrQRScanRes;
   try {
-    barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode(
-        '#ff20BF6B', cancelText, true, scanMode);
+    barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode('#ff20BF6B', cancelText, true, scanMode);
     printData(barcodeSOrQRScanRes);
   } on PlatformException {
     barcodeSOrQRScanRes = 'Failed to get platform version.';
@@ -293,10 +318,8 @@ bool isRTLContent({required BuildContext context}) {
 }
 
 extension RTLExtension on BuildContext {
-  bool get rtl =>
-      [const Locale(AppStrings.hebrewString)].contains(Localizations.localeOf(this)) ? true : false;
+  bool get rtl => [const Locale(AppStrings.hebrewString)].contains(Localizations.localeOf(this)) ? true : false;
 }
-
 
 String splitNumber(String price) {
   var splitPrice = price.split(".");
@@ -308,16 +331,11 @@ String splitNumber(String price) {
 }
 
 extension StringCasingExtension on String {
-  String toCapitalized() =>
-      length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
+  String toCapitalized() => length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
 
-  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
-      .split(' ')
-      .map((str) => str.toCapitalized())
-      .join(' ');
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
 
-  String toLocalization() =>
-      contains('.') ? split('.')[1].toLowerCase() : this;
+  String toLocalization() => contains('.') ? split('.')[1].toLowerCase() : this;
 }
 
 String formatNumber({required String value, required String local}) {
@@ -328,47 +346,33 @@ String formatNumber({required String value, required String local}) {
   return result1;
 }
 
-String formatNumberForWallet({required String value, required String local,required BuildContext context}) {
-
+String formatNumberForWallet({required String value, required String local, required BuildContext context}) {
   String result = (NumberFormat.compactSimpleCurrency(
     locale: local,
     decimalDigits: 1,
   ).format(double.parse(value)));
 
-  String result1 =value.split('.')[0]+ AppLocalizations.of(context)!.currency;
+  String result1 = value.split('.')[0] + AppLocalizations.of(context)!.currency;
 
   return result1;
 }
 
-double vatCalculation(
-    {required double price,
-    required double vat,
-    double qty = 0,
-    double deposit = 0}) {
-  double result = price +
-      ((price * vat) / 100) +
-      (qty * deposit) +
-      ((qty * deposit * vat) / 100);
+double vatCalculation({required double price, required double vat, double qty = 0, double deposit = 0}) {
+  double result = price + ((price * vat) / 100) + (qty * deposit) + ((qty * deposit * vat) / 100);
   return result;
 }
 
-double totalVatAmountCalculation(
-    {required double price,
-    required double vat,
-    double qty = 0,
-    double deposit = 0}) {
+double totalVatAmountCalculation({required double price, required double vat, double qty = 0, double deposit = 0}) {
   double result = ((price * vat) / 100) + ((qty * deposit * vat) / 100);
   return result;
 }
 
-double bottleDepositCalculation(
-    { double units =1, required double deposit,required double qty}) {
+double bottleDepositCalculation({double units = 1, required double deposit, required double qty}) {
   double result = qty * deposit * units;
   return result;
 }
 
-double bottleDepositCalculationWithVat(
-    {  required double deposit,required double qty, double vatPercentage = 1}) {
-  double result = (qty * deposit) + ((qty * deposit * vatPercentage)/100) ;
+double bottleDepositCalculationWithVat({required double deposit, required double qty, double vatPercentage = 1}) {
+  double result = (qty * deposit) + ((qty * deposit * vatPercentage) / 100);
   return result;
 }

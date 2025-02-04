@@ -1,0 +1,13 @@
+part of 'return_bloc.dart';
+
+@freezed
+class ReturnEvent with _$ReturnEvent {
+    factory ReturnEvent.getReturnListEvent({required BuildContext context}) =
+      _getReturnListEvent;
+    factory ReturnEvent.openScannerEvent({required BuildContext context}) =
+    _openScannerEvent;
+    factory ReturnEvent.deleteEvent({required BuildContext context}) =
+    _deleteEvent;
+    factory ReturnEvent.scanProductEvent({required BuildContext context,required String barCode}) =
+    _scanProductEvent;
+}

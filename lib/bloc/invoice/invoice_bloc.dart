@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/invoices/invoices_req_model.dart';
 import '../../data/model/res_model/invoices_res/invoices_res_model.dart';
+import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
@@ -32,7 +33,11 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
           return;
         }
         try {
+          final String statusData = preferences.getPaymentStatusInfo();
+          final List<StatusData> statusList = StatusData.decode(statusData);
           emit(state.copyWith(
+              statusList:statusList,
+              language: preferences.getAppLanguage(),
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
           InvoicesReqModel request =

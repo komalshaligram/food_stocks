@@ -1,6 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
+import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -17,8 +20,10 @@ part 'order_details_state.dart';
 part 'order_details_bloc.freezed.dart';
 
 class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
+
   OrderDetailsBloc() : super(OrderDetailsState.initial()) {
     on<OrderDetailsEvent>((event, emit) async {
+      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getOrderByIdEvent) {
         try {
@@ -28,6 +33,9 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
 
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
 
+          final String statusData = preferencesHelper.getOrderStatusInfo();
+          final List<StatusData> statusList = StatusData.decode(statusData);
+          emit(state.copyWith(statusData: statusList,language: preferencesHelper.getAppLanguage()));
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(orderByIdList: response));
 

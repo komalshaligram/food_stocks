@@ -563,7 +563,26 @@
   "select_number_of_owners" : "בחר מספר בעלים",
   "owner_first_name": "שם פרטי של הבעלים",
   "owner_last_name": "שם משפחה של הבעלים",
-  "back_to_order": "חזרה לרשימת ההזמנות"
+  "back_to_order": "חזרה לרשימת ההזמנות",
+  "returns": "חזרות",
+  "enter_product_barcode": "הוסף את הברקוד של המוצר",
+  "scan_return_product": "סרוק את המוצר לחזרה",
+  "product_return_info": "נתוני מוצר לחזרה",
+  "no_of_unit_for_return": "מספר יחידות לחזרה?",
+  "why_return_product": "למה אתה רוצה להחזיר את המוצר?",
+  "add_proof_img": "העלה תמונות להוכחה",
+  "add_notes": "הוסף הערות",
+  "new_return": "החזרות חדשות",
+  "product_defective": "המוצר פגום",
+  "product_expiration_date_issue": "בעיית תאריך תפוגה למוצר",
+  "wrong_product": "מוצר לא נכון",
+  "product_return_list": "רשימת מוצרים לבקשת חזרה",
+  "add_another_product": "הוסף עוד מוצר לחזרה",
+  "send_the_request": "Send the request",
+  "open_refund_invoice" : "הצג חשבונית זיכוי",
+  "product_does_not_exist": "המוצר לא קיים במערכת",
+  "date_sent": "תאריך שליחה:",
+  "total_refund": "סה”כ זיכוי:"
 
 
 }

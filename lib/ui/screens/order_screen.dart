@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/order/order_bloc.dart';
 import '../../data/model/res_model/get_all_order_res_model/get_all_order_res_model.dart';
 import '../../ui/screens/product_details_screen.dart';
@@ -115,6 +116,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                                           verticalOffset: 44.0,
                                           child: FadeInAnimation(
                                             child: orderListItem(
+                                              state: state,
                                                 index: index, context: context,orderDetailsList : state.orderDetailsList),
                                           ),
                                         ),
@@ -142,7 +144,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
     );
   }
 
-  Widget orderListItem({required int index, required BuildContext context, required List<Datum> orderDetailsList}) {
+  Widget orderListItem({required OrderState state,required int index, required BuildContext context, required List<Datum> orderDetailsList}) {
         return GestureDetector(
           onTap: () async {
             SharedPreferencesHelper preferencesHelper =
@@ -163,6 +165,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>
                         ProductDetailsScreen(
+                          statusList: state.statusList,
                       orderNumber:
                           orderDetailsList[index].orderNumber ?? '',
                       orderId: orderDetailsList[index].id ?? '',
@@ -309,11 +312,9 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                       borderCoder: AppColors.lightBorderColor,
                       flexValue: 4,
                       title: AppLocalizations.of(context)!.order_status,
-                      value: orderDetailsList[index].status?.statusName
-                              ?.toTitleCase() ??
-                          '',
+                      value: getStatus(state.statusList, orderDetailsList[index].status?.statusName??'', state.language).toTitleCase(),
                       titleColor: AppColors.blackColor,
-                      valueColor: getStatusColor(orderDetailsList[index].status?.orderStatusNo??0),
+                      valueColor: getStatusColor(state.statusList,orderDetailsList[index].status?.statusName??'0'),
                       valueTextSize: AppConstants.smallFont,
                     ),
                   ],

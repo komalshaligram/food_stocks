@@ -101,7 +101,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                               AnimationConfiguration.staggeredList(
                                   duration: const Duration(seconds: 1),
                                   position: index,
-                                  child: SlideAnimation(child: orderListItem(index: index, context: context, orderByIdList : state.orderByIdList))),
+                                  child: SlideAnimation(child: orderListItem(index: index, context: context, orderByIdList : state.orderByIdList,state: state))),
                         ),
                     ),
               ),
@@ -112,12 +112,13 @@ class OrderDetailsScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget orderListItem({required int index, required BuildContext context, required GetOrderByIdModel orderByIdList}) {
+  Widget orderListItem({required int index, required BuildContext context, required GetOrderByIdModel orderByIdList,required OrderDetailsState state}) {
         return GestureDetector(
           onTap: () {
             Navigator.push(context,   PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(orderNumber: orderNumber,orderId: orderId,isNavigateToProductDetailString: false,
               productData: orderByIdList.data!.ordersBySupplier![index],
+              statusList:state.statusData,
             ),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(0.0, 1.0);
@@ -163,13 +164,11 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                     orderByIdList.data!.ordersBySupplier![index]
-                          .deliverStatus!.statusName!
-                          .toTitleCase(),
+                      getStatus(state.statusData, orderByIdList.data?.ordersBySupplier?[index]
+                          .deliverStatus?.statusName??'', state.language).toTitleCase(),
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
-                           color: getStatusColor(orderByIdList.data!.ordersBySupplier![index]
-                               .deliverStatus?.orderStatusNumber??0),
+                           color: getStatusColor(state.statusData,orderByIdList.data!.ordersBySupplier?[index].deliverStatus?.statusName??''),
                           fontWeight: FontWeight.w700),
                     )
                   ],

@@ -63,7 +63,11 @@ class SharedPreferencesHelper {
   static const String availableAllPayment = 'availableAllPayment';
   static const String paymentMethods = 'paymentMethods';
   static const String isWalletApproved ='isWalletApproved';
-
+  static const String canSeeReturns = 'canSeeReturns';
+  static const String orderStatusDetail = 'orderStatusDetail';
+  static const String statusDetail = 'statusDetail';
+  static const String paymentStatusDetail = 'paymentStatusDetail';
+  static const String returnStatusDetail = 'returnStatusDetail';
 
   final SharedPreferences prefs;
 
@@ -122,7 +126,11 @@ class SharedPreferencesHelper {
       await prefs.remove(paymentMethodCount);
       await prefs.remove(availableAllPayment);
       await prefs.remove(paymentMethods);
-
+      await prefs.remove(canSeeReturns);
+      await prefs.remove(orderStatusDetail);
+      await prefs.remove(statusDetail);
+      await prefs.remove(paymentStatusDetail);
+      await prefs.remove(returnStatusDetail);
 
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
@@ -153,6 +161,18 @@ class SharedPreferencesHelper {
     await prefs.setString(userId, id);
   }
 
+  Future<void> setOrderStatusInfo({required String statusData}) async {
+    await prefs.setString(orderStatusDetail, statusData);
+  }
+  Future<void> setStatusInfo({required String statusData}) async {
+    await prefs.setString(statusDetail, statusData);
+  }
+  Future<void> setPaymentStatusInfo({required String statusData}) async {
+    await prefs.setString(paymentStatusDetail, statusData);
+  }
+  Future<void> setReturnStatusInfo({required String statusData}) async {
+    await prefs.setString(returnStatusDetail, statusData);
+  }
   Future<void> setAppVersion({required String version}) async {
     await prefs.setString(appVersion, version);
   }
@@ -346,6 +366,10 @@ class SharedPreferencesHelper {
     await prefs.setStringList(paymentMethods, methods);
   }
 
+  Future<void> setCanSeeReturns({required bool isCanSeeReturns}) async {
+    await prefs.setBool(canSeeReturns, isCanSeeReturns);
+  }
+
 
   String getAppLanguage() {
     return prefs.getString(lang) ?? AppStrings.hebrewString;
@@ -366,6 +390,18 @@ class SharedPreferencesHelper {
     return prefs.getString(fcmToken) ?? '';
   }
 
+  String getOrderStatusInfo() {
+    return prefs.getString(orderStatusDetail) ?? '';
+  }
+  String getStatusInfo() {
+    return prefs.getString(statusDetail) ?? '';
+  }
+  String getPaymentStatusInfo() {
+    return prefs.getString(paymentStatusDetail) ?? '';
+  }
+  String getReturnStatusInfo() {
+    return prefs.getString(returnStatusDetail) ?? '';
+  }
   String getRefreshToken() {
     return prefs.getString(refreshToken) ?? '';
   }
@@ -533,7 +569,9 @@ class SharedPreferencesHelper {
  String getBankTransferDetail()  {
     return prefs.getString(bankTransferDetail)??'';
   }
-
+  bool getCanSeeReturns()  {
+    return prefs.getBool(canSeeReturns)??false;
+  }
   bool getCanManageSubUser() {
     return prefs.getBool(manageSubUser) ?? true;
   }

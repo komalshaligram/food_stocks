@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/screens/scan_return_product_screen.dart';
 import '../../ui/screens/manage_credit_card.dart';
 
 import '../../ui/screens/bottom_nav_screen.dart';
@@ -28,6 +29,7 @@ import '../ui/screens/categories_permission_screen.dart';
 import '../ui/screens/company_product_screen.dart';
 import '../ui/screens/company_screen.dart';
 import '../ui/screens/connect_screen.dart';
+import '../ui/screens/create_product_return_list.dart';
 import '../ui/screens/credit_card_details_screen.dart';
 import '../ui/screens/form_data_screen.dart';
 import '../ui/screens/invoice_pdf_screen.dart';
@@ -41,8 +43,10 @@ import '../ui/screens/owner2_form_screen.dart';
 import '../ui/screens/preview_screen.dart';
 import '../ui/screens/privacy_policy_screen.dart';
 import '../ui/screens/product_details_screen.dart';
+import '../ui/screens/product_return_info_screen.dart';
 import '../ui/screens/profile_screen.dart';
 import '../ui/screens/more_details_screen.dart';
+import '../ui/screens/return_list_screen.dart';
 import '../ui/screens/shipment_verification_screen.dart';
 import '../ui/screens/store_screen.dart';
 import '../ui/screens/sub_users_profile_screen.dart';
@@ -108,7 +112,11 @@ enum RouteDefine {
   manageCreditCardScreen,
   bankTransferScreen,
   owner1FormScreen,
-  owner2FormScreen
+  owner2FormScreen,
+  returnListScreen,
+  scanReturnProduct,
+productReturnInfoScreen,
+  createProductReturnListScreen
 
 }
 
@@ -172,6 +180,10 @@ class AppRouting {
       RouteDefine.bankTransferScreen.name: (_) => BankTransferScreenRoute.route,
       RouteDefine.owner1FormScreen.name: (_) => Owner1FormRoute.route,
       RouteDefine.owner2FormScreen.name: (_) => Owner2FormRoute.route,
+      RouteDefine.returnListScreen.name:(_)=>ReturnListRoute.route,
+      RouteDefine.scanReturnProduct.name:(_)=>ScanReturnProductRoute.route,
+      RouteDefine.productReturnInfoScreen.name:(_)=>ProductReturnInfoRoute.route,
+    RouteDefine.createProductReturnListScreen.name:(_)=>CreateProductReturnListRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

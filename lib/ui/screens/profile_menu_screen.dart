@@ -31,7 +31,8 @@ class ProfileMenuScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => ProfileMenuBloc()
         ..add(const ProfileMenuEvent.getAppLanguage())
-        ..add(const ProfileMenuEvent.getPreferenceDataEvent()),
+        ..add(const ProfileMenuEvent.getPreferenceDataEvent())
+      ..add( ProfileMenuEvent.getStatusInfoEvent(context: context)),
       child: const ProfileMenuScreenWidget(),
     );
   }
@@ -177,13 +178,25 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                         RouteDefine.orderScreen.name,
                                       );
                                     }) : 0.width,
-                              state.isCanSeeInvoices ?  profileMenuTiles(
+                                state.isCanSeeInvoices ?  profileMenuTiles(
                                     title:
                                     AppLocalizations.of(context)!.my_invoices,
                                     onTap: () {
                                       Navigator.pushNamed(
                                         context,
                                         RouteDefine.invoiceScreen.name,
+                                      );
+                                    })
+                                  : 0.width,
+
+
+                                state.isCanSeeInvoices ?  profileMenuTiles(
+                                    title:
+                                    AppLocalizations.of(context)!.returns,
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        RouteDefine.returnListScreen.name,
                                       );
                                     }) : 0.width,
                                state.isSubUserUpdateBusinessInfo ?  profileMenuTiles(

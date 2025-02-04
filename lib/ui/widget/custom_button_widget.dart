@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_styles.dart';
@@ -51,7 +52,17 @@ class CustomButtonWidget extends StatelessWidget {
             ? CupertinoActivityIndicator(
                 color: loadingColor,
               )
-            : Text(
+            : iconWidget!=null?Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            iconWidget!,
+            5.width,
+            Text(
+              buttonText.toUpperCase(),
+              style: AppStyles.rkRegularTextStyle(size: fontSize, color: fontColors),
+            ),
+          ],
+        ):Text(
                 buttonText.toUpperCase(),
                 style: AppStyles.rkRegularTextStyle(size: fontSize, color: fontColors),
               ),

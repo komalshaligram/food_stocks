@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import '../../data/error/exceptions.dart';
+import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_constants.dart';
@@ -38,7 +41,11 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           emit(state.copyWith(applicationVersion: packageInfo.version, buildNumber: packageInfo.buildNumber));
 
-          emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl(), language: preferences.getAppLanguage(), isSubUserSeeOrder: preferences.getCanSeeOrder(), isSubUserCanManageSubUser: preferences.getCanManageSubUser(), isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(), isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(), isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(), isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(), isCanSeeInvoices: preferences.getCanSeeInvoices()));
+          emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl(), language: preferences.getAppLanguage(), isSubUserSeeOrder: preferences.getCanSeeOrder(),
+              isSubUserCanManageSubUser: preferences.getCanManageSubUser(), isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(),
+              isSubUserSeeReturns: preferences.getCanSeeReturns(),
+              isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(), isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(),
+              isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(), isCanSeeInvoices: preferences.getCanSeeInvoices()));
           emit(state.copyWith(UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
           emit(state.copyWith(userName: preferences.getUserName()));
         } else if (event is _getAppLanguage) {
@@ -122,6 +129,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
                 preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices ?? false);
+                preferences.setCanSeeReturns(isCanSeeReturns: res?.canSeeReturns ?? false);
                 emit(state.copyWith(isSubUserSeeOrder: preferences.getCanSeeOrder(), isSubUserCanManageSubUser: preferences.getCanManageSubUser(), isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(), isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(), isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(), isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(), isAccountPermissionShimmering: false, isCanSeeInvoices: preferences.getCanSeeInvoices()));
               } else {
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
@@ -132,7 +140,26 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
           }
         } else if (event is _updateMaintenanceEvent) {
           emit(state.copyWith(isDialogOpen: true));
-        } else if (event is _generalSettings) {
+        } else if(event is _getStatusInfoEvent){
+          try{
+            final res = await DioClient(event.context).get(path: AppUrlEndPoints.getStatusInfoUrl);
+            StatusInfoResModel response = StatusInfoResModel.fromJson(res);
+            if (response.status == AppConstants.code_200) {
+              String encodedStatus = json.encode(response.data?.status);
+              preferences.setStatusInfo(statusData:encodedStatus);
+              String encodedReturnStatus = json.encode(response.data?.returnStatus);
+              preferences.setReturnStatusInfo(statusData:encodedReturnStatus);
+              String encodedPaymentStatus = json.encode(response.data?.paymentStatus);
+              preferences.setPaymentStatusInfo(statusData:encodedPaymentStatus);
+              String encodedOrderStatus = json.encode(response.data?.orderStatus);
+              preferences.setOrderStatusInfo(statusData:encodedOrderStatus);
+            }
+          }catch(e){
+            CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
+          }
+        }
+
+        else if (event is _generalSettings) {
           try {
             emit(state.copyWith(retryLoading: event.isRetryLoading));
 

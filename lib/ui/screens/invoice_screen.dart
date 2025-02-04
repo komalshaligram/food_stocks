@@ -105,10 +105,9 @@ class InvoiceScreenWidget extends StatelessWidget {
                         invoiceNumber: state
                             .invoiceDetailsList[index].invoiceNumber
                             .toString(),
-                        invoiceStatus: state
+                        invoiceStatus: state.statusList.isNotEmpty?getStatus(state.statusList,  state
                             .invoiceDetailsList[index].paymentStatus
-                            .toString()
-                            .toCapitalized(),
+                            .toString(), state.language).toCapitalized():'',
                         supplierName : state.invoiceDetailsList[index].supplierName??'',
                       dueDate:state
                           .invoiceDetailsList[index].dueDate
@@ -121,9 +120,6 @@ class InvoiceScreenWidget extends StatelessWidget {
         );
       },
     );
-
-
-
   }
 
   Widget invoiceList({
@@ -251,7 +247,7 @@ class InvoiceScreenWidget extends StatelessWidget {
                     titleMaxLine: 2,
                     maxLine: 2,
                     title: AppLocalizations.of(context)!.due_date,
-                    value: dueDate.replaceRange(10, 16, ''),
+                    value: dueDate.isNotEmpty?dueDate.replaceRange(10, 16, ''):'',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextSize: AppConstants.smallFont,

@@ -27,4 +27,7 @@ class ProfileMenuEvent with _$ProfileMenuEvent {
 
   const factory ProfileMenuEvent.updateMaintenanceEvent(
       {required BuildContext context}) = _updateMaintenanceEvent;
+
+  const factory ProfileMenuEvent.getStatusInfoEvent(
+      {required BuildContext context}) = _getStatusInfoEvent;
 }

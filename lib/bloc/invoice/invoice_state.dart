@@ -10,6 +10,8 @@ class InvoiceState with _$InvoiceState{
     required bool isBottomOfProducts,
     required RefreshController refreshController,
     required int pageNum,
+    required List<StatusData> statusList,
+    required String language
   }) = _InvoiceState;
 
   factory InvoiceState.initial() =>  InvoiceState(
@@ -18,7 +20,9 @@ class InvoiceState with _$InvoiceState{
     isBottomOfProducts: false,
     isLoadMore: false,
     refreshController: RefreshController(),
-      pageNum: 0
+      pageNum: 0,
+      statusList:[],
+      language:''
   );
 
 }

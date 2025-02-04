@@ -200,9 +200,9 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                     titleMaxLine: 2,
                                     maxLine: 2,
                                     title: AppLocalizations.of(context)!.due_date,
-                                    value: invoiceDetailsList.dueDate
+                                    value: invoiceDetailsList.dueDate!.isNotEmpty?invoiceDetailsList.dueDate
                                         .toString()
-                                        .replaceRange(10, 16, ''),
+                                        .replaceRange(10, 16, ''):'',
                                     titleColor: AppColors.mainColor,
                                     valueColor: AppColors.blackColor,
                                     valueTextSize: AppConstants.smallFont,

@@ -10,6 +10,8 @@ class OrderState with _$OrderState {
     required List<Datum> orderDetailsList,
     required bool isBottomOfProducts,
     required RefreshController refreshController,
+    required List<StatusData> statusList,
+    required String language,
 
   }) = _OrderState;
 
@@ -17,9 +19,11 @@ class OrderState with _$OrderState {
         orderList: GetAllOrderResModel(),
         isShimmering: false,
         isLoadMore: false,
+    language:'',
         pageNum: 0,
         orderDetailsList: [],
         isBottomOfProducts: false,
+        statusList: <StatusData>[],
         refreshController: RefreshController(),
 
       );

@@ -68,6 +68,7 @@ class AppStrings {
   static const planogramSortFieldString = 'planogramName';
   static const orderNumberString = 'orderNumber';
   static const signatureString = 'signature';
+  static const returnImagesString = 'returnimages';
   static const cartProductIdString = 'cartProductId';
   static const categoryIdString = 'catregoryId';
   static const categoryNameString = 'catregoryName';

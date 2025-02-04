@@ -1,12 +1,7 @@
-
-
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 
 part 'activity_time_req_model.freezed.dart';
 part 'activity_time_req_model.g.dart';
-
-
 
 @freezed
 class ActivityTimeReqModel with _$ActivityTimeReqModel {
