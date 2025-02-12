@@ -67,6 +67,10 @@ class Return with _$Return {
     String? rivchitInvoiceNumber,
     @JsonKey(name: "createdAt")
     String? createdAt,
+    @JsonKey(name: "productCount")
+    int? productCount,
+    @JsonKey(name: "productUnit")
+    int? productUnit,
     @JsonKey(name: "clientName")
     String? clientName,
     @JsonKey(name: "businessName")
@@ -75,6 +79,7 @@ class Return with _$Return {
     String? rivchitId,
     @JsonKey(name: "subUserName")
     String? subUserName,
+    String? rivchitInvoiceLink
   }) = _Return;
 
   factory Return.fromJson(Map<String, dynamic> json) => _$ReturnFromJson(json);

@@ -4,13 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/create_return_req_model/create_return_req_model.dart';
+import 'package:food_stock/data/model/res_model/get_return_by_id_res_model/get_return_by_id_res_model.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/error/exceptions.dart';
+import '../../data/model/res_model/create_return_res_model/create_return_res_model.dart';
 import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -29,43 +30,143 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
     on<ProductReturnInfoEvent>((event, emit) async {
       String imgUrl = '';
       Map map = {};
+      List<ReturnProducts> productList =[];
+      List<String> imgList = [];
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getArgumentEvent) {
         map = event.arguments;
         List<RadioModel> tempList = [];
-        RadioModel model = RadioModel(id: 1,text: AppLocalizations.of(event.context)!.product_defective);
-        RadioModel model1 = RadioModel(id: 2,text: AppLocalizations.of(event.context)!.product_expiration_date_issue);
-        RadioModel model2 = RadioModel(id: 3,text: AppLocalizations.of(event.context)!.wrong_product);
+        RadioModel model = RadioModel(id: 1, text: AppLocalizations.of(event.context)!.product_defective);
+        RadioModel model1 = RadioModel(id: 2, text: AppLocalizations.of(event.context)!.product_expiration_date_issue);
+        RadioModel model2 = RadioModel(id: 3, text: AppLocalizations.of(event.context)!.wrong_product);
         tempList.add(model);
         tempList.add(model1);
         tempList.add(model2);
-
-        printData("arguments : ${event.arguments}");
-        if(map.isNotEmpty){
-          emit(state.copyWith(radioList: tempList,totalQty: map['numberOfUnit'],productName: map['productName'],productImg:map['mainImage']!=null?AppUrlEndPoints.baseFileUrl+map['mainImage']:''));
+        if (map[AppStrings.idString] != null) {
+          try {
+            emit(state.copyWith(isShimmer: true));
+            final response = await DioClient(event.context).get(
+              path: AppUrlEndPoints.getReturnByIdUrl + map[AppStrings.idString],
+            );
+            GetReturnByIdResModel res = GetReturnByIdResModel.fromJson(response);
+            if (res.status == AppConstants.code_200) {
+              int index = tempList.indexWhere((e) => e.text.toLowerCase() == res.data?.returnProducts?.first.reasonToReturn?.toLowerCase()).toInt();
+              emit(state.copyWith(
+                  language: preferencesHelper.getAppLanguage(),
+                  radioList: tempList,
+                  selectedRadioTile: index + 1,
+                  reason: res.data?.returnProducts?.first.reasonToReturn ?? '',
+                  productName: res.data?.returnProducts?.first.productName ?? '',
+                  productImg: '${res.data?.returnProducts!.first.productImg}' ?? '',
+                  productQty: res.data?.returnProducts?.first.totalUnits ?? 0,
+                  proofImagesList: res.data?.returnProducts?.first.proofImages ?? [],
+                  barCode: res.data?.returnProducts?.first.barcode ?? '',
+                  updateId: map[AppStrings.idString],
+                  isShimmer: false,
+                  statusId: res.data?.returnStatusId ?? '',
+                  addNoteController: TextEditingController(
+                    text: res.data?.returnProducts?.first.notes,
+                  )));
+              if (state.proofImagesList.isNotEmpty) {
+                printData("length:${state.proofImagesList.length}");
+                emit(state.copyWith(
+                  proofFile: File(AppUrlEndPoints.baseFileUrl + state.proofImagesList[0]),
+                  proofFile1: File(state.proofImagesList.length > 1 ? (AppUrlEndPoints.baseFileUrl + state.proofImagesList[1]) : ''),
+                  proofFile2: File(state.proofImagesList.length > 2 ? (AppUrlEndPoints.baseFileUrl + state.proofImagesList[2]) : ''),
+                ));
+              }
+            }
+          } catch (e) {
+            CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
+          }
+        } else {
+          if (map.isNotEmpty) {
+            emit(state.copyWith(language: preferencesHelper.getAppLanguage(),
+                radioList: tempList, barCode: map['qrcode'], totalQty: map['numberOfUnit'],
+                productName: map['productName'], productImg: map['mainImage'] != null ? AppUrlEndPoints.baseFileUrl + map['mainImage'] : ''));
+          }
         }
-
-
-        emit(state.copyWith(language: preferencesHelper.getAppLanguage(),));
-      }else if(event is _navigateReturnEvent){
-        ReturnProducts products = ReturnProducts(productName: state.productName,units: state.productQty,proofImages: [],notes: state.addNoteController.text.toString(),
-        barcode: map['qrcode'],isApproved: false,totalRefund: 0,reason: '',productImg:state.productImg,);
-
-        Navigator.pushNamed(event.context, RouteDefine.createProductReturnListScreen.name,arguments: products);
-      }
-
-      else if (event is _deleteEvent) {
+      } else if (event is _navigateReturnEvent) {
+        if (state.productQty != 0) {
+          if (state.selectedRadioTile != 0) {
+            if (state.proofFile.path.isNotEmpty) {
+              if (state.updateId.isNotEmpty) {
+                try {
+                  CreateReturnReqModel reqModel = CreateReturnReqModel(applicationName: AppStrings.appName, clientId: preferencesHelper.getUserId(), returnStatusId: state.statusId, returnProducts: [ReturnProducts(productImage: state.productImg, productName: state.productName, reasonToReturn: state.reason, isApproved: false, barcode: state.barCode, notes: state.addNoteController.text, proofImages: state.proofImagesList, totalUnits: state.productQty, totalRefund: 0)], subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null);
+                  final res = await DioClient(event.context).post(
+                    AppUrlEndPoints.updateReturnUrl + state.updateId,
+                    data: reqModel.toJson(),
+                  );
+                  CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
+                  if (resModel.status == AppConstants.code_201) {
+                    emit(state.copyWith(isLoading: false));
+                    Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
+                  } else {
+                    CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(resModel.message?.toLocalization() ?? resModel.message!, event.context), type: SnackBarType.failure);
+                  }
+                } catch (e) {
+                  CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
+                }
+                return;
+              }
+              ReturnProducts products = ReturnProducts(
+                productName: state.productName,
+                totalUnits: state.productQty,
+                proofImages: state.proofImagesList,
+                notes: state.addNoteController.text.toString(),
+                barcode: state.barCode,
+                isApproved: false,
+                totalRefund: 0,
+                reasonToReturn: state.reason,
+                productImage: state.productImg,
+              );
+              productList.add(products);
+              Navigator.pushNamed(event.context, RouteDefine.createProductReturnListScreen.name,arguments: productList);
+            } else {
+              CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.add_one_proof_img, type: SnackBarType.failure);
+            }
+          } else {
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.select_one_option, type: SnackBarType.failure);
+          }
+        } else {
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.enter_units, type: SnackBarType.failure);
+        }
+      } else if (event is _deleteEvent) {
+        preferencesHelper.setReturnProductList(returnList: '');
+        Navigator.pop(event.context);
       } else if (event is _pickDocumentEvent) {
         XFile? image = await openImagePicker(event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (image != null) {
-          if (event.value == 1) {
-            emit(state.copyWith(proofFile: File(image.path)));
-          } else if (event.value == 2) {
-            emit(state.copyWith(proofFile1: File(image.path)));
-          } else if (event.value == 3) {
-            emit(state.copyWith(proofFile2: File(image.path)));
+          CroppedFile? croppedImage = await cropImage(path: image.path, shape: CropStyle.circle, quality: AppConstants.fileQuality);
+          if (croppedImage?.path.isEmpty ?? true) {
+            return;
           }
-          // profileFile.value = File(image.path);
+          String imageSize = getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await image.length());
+
+          if (int.parse(imageSize.split(' ').first) == 0) {
+            return;
+          }
+          imgList.addAll(state.proofImagesList);
+          final response = await DioClient(event.context).uploadFileProgressWithFormData(
+            path: AppUrlEndPoints.fileUploadUrl,
+            formData: FormData.fromMap(
+              {AppStrings.returnImagesString: await MultipartFile.fromFile(croppedImage?.path ?? image.path, contentType: MediaType('image', 'png'))},
+            ),
+          );
+          FileUploadModel signModel = FileUploadModel.fromJson(response);
+          if (signModel.filepath != '') {
+            imgUrl = '${signModel.filepath}' ?? '';
+          }
+
+          imgList.add(imgUrl);
+          if (event.value == 1) {
+            emit(state.copyWith(proofFile: File(croppedImage?.path ?? image.path)));
+          } else if (event.value == 2) {
+            emit(state.copyWith(proofFile1: File(croppedImage?.path ?? image.path)));
+          } else if (event.value == 3) {
+            emit(state.copyWith(proofFile2: File(croppedImage?.path ?? image.path)));
+          }
+          emit(state.copyWith(proofImagesList: imgList));
         }
       } else if (event is _deleteFileEvent) {
         if (event.index == 1) {
@@ -75,57 +176,30 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         } else if (event.index == 3) {
           emit(state.copyWith(proofFile2: File('')));
         }
-      }
-      else if (event is _productIncrementEvent) {
-        if (event.productQuantity < state.totalQty) {
+      } else if (event is _productIncrementEvent) {
+        if (state.updateId.isEmpty) {
+          if (event.productQuantity < state.totalQty) {
+            emit(state.copyWith(
+              productQty: event.productQuantity.round() + 1,
+            ));
+          } else {
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.missing_quantity_not_more_than_original, type: SnackBarType.failure);
+          }
+        } else {
           emit(state.copyWith(
             productQty: event.productQuantity.round() + 1,
           ));
         }
-      else {
-          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.missing_quantity_not_more_than_original, type: SnackBarType.failure);
-      }
       } else if (event is _productDecrementEvent) {
         if (event.productQuantity >= 1) {
-          emit(state.copyWith(productQty: event.productQuantity.round() - 1,));
+          emit(state.copyWith(
+            productQty: event.productQuantity.round() - 1,
+          ));
         }
-      }else if (event is _radioButtonEvent) {
-        emit(state.copyWith(selectedRadioTile: event.selectRadioTile,reason: event.reason));
-      }else if(event is _uploadProofImagesEvent){
-        try {
-
-          if(state.proofFile!=null){
-            CroppedFile? croppedImage = await cropImage(path: state.proofFile.path, shape: CropStyle.circle, quality: AppConstants.fileQuality);
-            if (croppedImage?.path.isEmpty ?? true) {
-              return;
-            }
-            String imageSize = getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await state.proofFile.length());
-
-            if (int.parse(imageSize.split(' ').first) == 0) {
-              return;
-            }
-            final response =
-            await DioClient(event.context).uploadFileProgressWithFormData(
-              path: AppUrlEndPoints.fileUploadUrl,
-              formData: FormData.fromMap(
-                {
-                  AppStrings.returnImagesString: await MultipartFile.fromFile(
-                      croppedImage?.path ?? state.proofFile.path,
-                      contentType: MediaType('image', 'png'))
-                },
-              ),
-            );
-            FileUploadModel signModel = FileUploadModel.fromJson(response);
-            if (signModel.filepath != '') {
-              imgUrl = signModel.filepath ?? '';
-            }
-            List<String> imgList = [];
-            imgList.add(imgUrl);
-            emit(state.copyWith(proofImagesList:imgList));
-          }
-
-        } on ServerException {}
+      } else if (event is _radioButtonEvent) {
+        emit(state.copyWith(selectedRadioTile: event.selectRadioTile, reason: event.reason));
       }
+
     });
   }
 }

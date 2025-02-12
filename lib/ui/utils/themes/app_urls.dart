@@ -1,9 +1,4 @@
-class AppUrls {
-  static String baseURL = "";
-  static String imageBaseURL = "";
-  static String subscriptionURL = "";
-  static bool isProduction = false;
-}
+
 
 class AppUrlEndPoints {
 // static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
@@ -133,4 +128,6 @@ class AppUrlEndPoints {
   static const String createReturnUrl = '/v1/return/createReturn';
   static const String getReturnListUrl = '/v1/return/getClientReturn';
   static const String getStatusInfoUrl = '/v1/settings/get-all-status-info';
+  static const String getReturnByIdUrl = '/v1/return/getClientReturnById/';
+  static const String updateReturnUrl = '/v1/return/updateReturn/';
 }

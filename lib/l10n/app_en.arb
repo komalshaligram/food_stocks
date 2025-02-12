@@ -584,11 +584,8 @@
   "open_refund_invoice": "Open refund invoice",
   "product_does_not_exist": "The product doesn't exist in the system",
   "date_sent": "Date Sent:",
-  "total_refund": "Total Refund:"
-
-
-
-
-
-
+  "total_refund": "Total Refund:",
+  "enter_units": "please enter the units",
+  "select_one_option": "please select one of the options",
+  "add_one_proof_img": "You must add at least one proof image"
 }

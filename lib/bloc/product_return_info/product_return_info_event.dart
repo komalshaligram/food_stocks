@@ -32,5 +32,5 @@ class ProductReturnInfoEvent with _$ProductReturnInfoEvent {
       required int selectRadioTile,
       required String reason
     }) = _radioButtonEvent;
-    const factory ProductReturnInfoEvent.uploadProofImagesEvent({required BuildContext context, required int id})=_uploadProofImagesEvent;
+
 }

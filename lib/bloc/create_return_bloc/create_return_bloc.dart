@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -9,6 +11,7 @@ import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/req_model/create_return_req_model/create_return_req_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
+import '../../data/model/res_model/create_return_res_model/create_return_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -28,23 +31,41 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
     on<CreateReturnEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if(event is _getReturnListEvent) {
-       ReturnProducts map = event.product;
+
        List<ReturnProducts> tempList = [];
-       if(state.returnProductList.isNotEmpty){
-         tempList.addAll(state.returnProductList);
+       if(preferencesHelper.getReturnList().isNotEmpty){
+         List<dynamic> jsonList = jsonDecode(preferencesHelper.getReturnList());
+         tempList = jsonList.map((json) => ReturnProducts.fromJson(json)).toList();
        }
-       tempList.add(map);
-        printData('arguments1:${map}');
+       tempList.addAll(event.product);
+       String jsonString = jsonEncode(tempList.map((e) => e.toJson()).toList());
+       preferencesHelper.setReturnProductList(returnList: jsonString);
         emit(state.copyWith(language: preferencesHelper.getAppLanguage(),returnProductList: tempList));
-/*        await Future.delayed(const Duration(seconds: 1));
-        emit(state.copyWith(isAnimate: true));
-        await Future.delayed(const Duration(seconds: 2));
-        emit(state.copyWith(isRedirected: true));*/
+      }else if(event is _navigateToAddProductEvent){
+        emit(state.copyWith(returnProductList: state.returnProductList));
+        Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name);
+      }else if(event is _createReturnEvent){
+        emit(state.copyWith(isLoading: true));
+        try{
+          CreateReturnReqModel reqModel = CreateReturnReqModel(applicationName: AppStrings.appName,clientId: preferencesHelper.getUserId(),
 
-      }else if(event is _getArgumentsEvent){
-        emit(state.copyWith(language: preferencesHelper.getAppLanguage(),));
+              returnProducts: state.returnProductList,subUserId: preferencesHelper.getSubUserId().isNotEmpty?preferencesHelper.getSubUserId():null);
+          final res = await DioClient(event.context).post(
+            AppUrlEndPoints.createReturnUrl,
+            data: reqModel.toJson(),
+          );
+          CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
+          if(resModel.status == AppConstants.code_201){
+            preferencesHelper.setReturnProductList(returnList: '');
+            emit(state.copyWith(isLoading: false));
+              Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
+          }
+        }catch(e){
+
+        }
+      }else if(event is _deleteEvent){
+        Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
       }
-
     });
   }
 }

@@ -7,7 +7,7 @@ import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart' as insert;
 import '../../data/model/req_model/order_send_req_model/order_send_req_model.dart' as order;
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
-import '../../data/model/res_model/cart_product_supplier/cart_products_supplier_res_model.dart';
+
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/supplier_payment_type_res_model/supplier_payment_type_res_model.dart';

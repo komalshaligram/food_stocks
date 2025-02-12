@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:food_stock/bloc/return/return_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import 'package:food_stock/ui/widget/common_pdf_viewer.dart';
 import 'package:food_stock/ui/widget/order_summary_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/res_model/get_return_list_res_model/get_return_list_res_model.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
@@ -13,7 +15,6 @@ import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/common_app_bar.dart';
-import '../widget/refresh_widget.dart';
 
 class ReturnListRoute {
   static Widget get route => const ReturnListScreen();
@@ -115,7 +116,11 @@ class ReturnListWidget extends StatelessWidget {
 
   Widget returnListItem({required int index, required BuildContext context, required List<Return> list, required ReturnState state}) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if( list[index].returnStatusNumber!=2){
+          Navigator.pushNamed(context, RouteDefine.productReturnInfoScreen.name,arguments: {AppStrings.idString:list[index].id});
+        }
+      },
       child: Container(
         margin: const EdgeInsets.all(AppConstants.padding_10),
         padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_10),
@@ -137,17 +142,17 @@ class ReturnListWidget extends StatelessWidget {
             ),
             2.height,
             Text(
-              list[index].returnNumber.toString()+" "+AppLocalizations.of(context)!.products,
+              "${list[index].productCount} ${AppLocalizations.of(context)!.products}",
               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, fontWeight: FontWeight.w400),
             ),
             2.height,
             Text(
-              list[index].returnNumber.toString()+" "+AppLocalizations.of(context)!.units,
+              "${list[index].productUnit} ${AppLocalizations.of(context)!.units}",
               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, fontWeight: FontWeight.w400),
             ),
             2.height,
             list[index].totalPayment!='0'?Text(
-             AppLocalizations.of(context)!.total_refund+" "+list[index].totalPayment.toString(),
+             "${AppLocalizations.of(context)!.total_refund} ${list[index].totalPayment}",
               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, fontWeight: FontWeight.bold),
             ):0.height,
             5.height,
@@ -164,11 +169,20 @@ class ReturnListWidget extends StatelessWidget {
                 ),
                 8.width,
                  Expanded(
-                  child: list[index].returnStatusNumber==2?Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 5),
-                    decoration: BoxDecoration( borderRadius: BorderRadius.circular(8.0),gradient: AppColors.appMainGradientColor),
-                    child: Text(AppLocalizations.of(context)!.open_refund_invoice,style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14,color: AppColors.whiteColor),),
+                  child: list[index].returnStatusNumber==2?InkWell(
+                    onTap: (){
+                      if(list[index].rivchitInvoiceLink!.isEmpty){
+                        return;
+                      }
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => CommonPdfViewer(url:'${AppUrlEndPoints.baseFileUrl}${list[index].rivchitInvoiceLink}'??'')));
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 5),
+                      decoration: BoxDecoration( borderRadius: BorderRadius.circular(8.0),gradient: AppColors.appMainGradientColor),
+                      child: Text(AppLocalizations.of(context)!.open_refund_invoice,style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14,color: AppColors.whiteColor),),
+                    ),
                   ):0.height,
                 )
               ],

@@ -8,7 +8,6 @@ import 'package:food_stock/ui/widget/file_selection_option_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -18,6 +17,7 @@ import '../widget/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_form_field_widget.dart';
+import '../widget/product_return_info_shimmer_widget.dart';
 
 class ProductReturnInfoRoute {
   static Widget get route => const ProductReturnInfoScreen();
@@ -73,7 +73,7 @@ class ReturnListWidget extends StatelessWidget {
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_15),
-                child: Column(
+                child: state.isShimmer?const ProductReturnShimmerWidget():Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
@@ -224,8 +224,31 @@ class ReturnListWidget extends StatelessWidget {
                                 color: AppColors.whiteColor,
                               ),
                               alignment: Alignment.center,
-                              child: state.proofFile.existsSync()
-                                  ? Image.file(
+                              child: state.proofFile.path.contains("https")?
+                              Image.network(
+                                state.proofFile.path,
+
+                                loadingBuilder: (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Center(
+                                      child: SizedBox(
+                                        width: AppConstants.containerHeight_80,
+                                        height: AppConstants.containerHeight_80,
+                                        child: CupertinoActivityIndicator(
+                                          color: AppColors.blackColor,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+                                },
+                              )
+                          :state.proofFile.existsSync()
+                                ?Image.file(
                                       state.proofFile,
                                       fit: BoxFit.cover,
                                       height: 120,
@@ -249,7 +272,29 @@ class ReturnListWidget extends StatelessWidget {
                                 color: AppColors.whiteColor,
                               ),
                               alignment: Alignment.center,
-                              child: state.proofFile1.existsSync()
+                              child: state.proofFile1.path.contains("https")?
+                              Image.network(
+                                state.proofFile1.path,
+                                loadingBuilder: (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Center(
+                                      child: SizedBox(
+                                        width: AppConstants.containerHeight_80,
+                                        height: AppConstants.containerHeight_80,
+                                        child: CupertinoActivityIndicator(
+                                          color: AppColors.blackColor,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+                                },
+                              ):state.proofFile1.existsSync()
+
                                   ? Image.file(
                                       state.proofFile1,
                                       fit: BoxFit.cover,
@@ -274,7 +319,29 @@ class ReturnListWidget extends StatelessWidget {
                                 color: AppColors.whiteColor,
                               ),
                               alignment: Alignment.center,
-                              child: state.proofFile2.existsSync()
+                              child:state.proofFile2.path.contains("https")?
+                              Image.network(
+                                state.proofFile2.path,
+
+                                loadingBuilder: (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Center(
+                                      child: SizedBox(
+                                        width: AppConstants.containerHeight_80,
+                                        height: AppConstants.containerHeight_80,
+                                        child: CupertinoActivityIndicator(
+                                          color: AppColors.blackColor,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+                                },
+                              ):state.proofFile2.existsSync()
                                   ? Image.file(
                                       state.proofFile2,
                                       fit: BoxFit.cover,
@@ -332,6 +399,7 @@ class ReturnListWidget extends StatelessWidget {
   radioList(ProductReturnInfoState state){
     return ListView.builder(
         shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context,index){
       return radioWidget(state.radioList[index].id, state.radioList[index].text, context, state.selectedRadioTile);
     },itemCount:state.radioList.length );
@@ -356,9 +424,12 @@ class ReturnListWidget extends StatelessWidget {
                 Navigator.pop(context1);
               },
               positiveOnTap: () async {
+
                 bloc.add(ProductReturnInfoEvent.deleteEvent(
                   context: context,
                 ));
+
+                Navigator.pop(context);
               },
             );
           },

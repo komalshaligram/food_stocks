@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -16,7 +17,6 @@ import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
-import '../widget/refresh_widget.dart';
 
 class CreateProductReturnListRoute {
   static Widget get route => const CreateProductReturnListScreen();
@@ -27,10 +27,10 @@ class CreateProductReturnListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   ReturnProducts? args =
-    ModalRoute.of(context)?.settings.arguments as ReturnProducts?;
+   List<ReturnProducts>? args =
+    ModalRoute.of(context)?.settings.arguments as  List<ReturnProducts>?;
     return BlocProvider(
-      create: (context) => CreateReturnBloc()..add(CreateReturnEvent.getReturnListEvent(product: args??const ReturnProducts())),
+      create: (context) => CreateReturnBloc()..add(CreateReturnEvent.getReturnListEvent(product: args??[])),
       child: const CreateProductReturnListWidget(),
     );
   }
@@ -73,11 +73,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                    /*  state.isShimmering
-                    ? const OrderSummaryScreenShimmerWidget(
-                  itemCount: 10,
-                )
-                    :*/ state.returnProductList.isNotEmpty
+                state.returnProductList.isNotEmpty
                     ?
                 Expanded(
                   child: AnimationLimiter(
@@ -98,7 +94,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
                     ),
                   ),
                 ): SizedBox(
-                  height: getScreenHeight(context) * 0.8,
+                  height: getScreenHeight(context) * 0.5,
                   child: Center(
                       child: Text(
                         AppLocalizations.of(context)!.no_data,
@@ -118,15 +114,16 @@ class CreateProductReturnListWidget extends StatelessWidget {
                         buttonText: AppLocalizations.of(context)!.add_another_product,
                         isLoading: false,
                         onPressed: () {
-                          Navigator.pushNamed(context, RouteDefine.scanReturnProduct.name);
+                         context.read<CreateReturnBloc>().add(CreateReturnEvent.navigateToAddProductEvent(context: context));
                         },
                       ),
                       12.height,
                       state.returnProductList.isNotEmpty
                           ? CustomButtonWidget(
                         buttonText: AppLocalizations.of(context)!.send_the_request,
-                    //    isLoading: state.isDeleteLoading,
+                      isLoading: state.isLoading,
                         onPressed: () {
+                          context.read<CreateReturnBloc>().add(CreateReturnEvent.createReturnEvent(context: context));
                     //      bloc.add(ManageCreditCardEvent.deleteCreditCardEvent(context: context));
                         },
                       ):0.height,
@@ -152,6 +149,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
           builder: (context, state) {
             CreateReturnBloc bloc = context.read<CreateReturnBloc>();
             return CommonAlertDialog(
+
               directionality: state.language,
               title: AppLocalizations.of(context)!.delete,
               subTitle: AppLocalizations.of(context)!.are_you_sure,
@@ -160,10 +158,13 @@ class CreateProductReturnListWidget extends StatelessWidget {
               negativeOnTap: () {
                 Navigator.pop(context1);
               },
+
               positiveOnTap: () async {
+
                 bloc.add(CreateReturnEvent.deleteEvent(
                   context: context,
                 ));
+                Navigator.pop(context);
               },
             );
           },
@@ -188,22 +189,51 @@ class CreateProductReturnListWidget extends StatelessWidget {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
+            list[index].productImage!.isNotEmpty
+                ? Image.network(
+              list[index].productImage??'',
+              width: 100,
+              height: 100,
+              fit: BoxFit.contain,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                } else {
+                  return Center(
+                    child: SizedBox(
+                      width: AppConstants.containerHeight_80,
+                      height: AppConstants.containerHeight_80,
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.blackColor,
+                      ),
+                    ),
+                  );
+                }
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+              },
+            )
+                : Image.asset(
               AppImagePath.imageNotAvailable5,
+              fit: BoxFit.cover,
               width: AppConstants.containerHeight_80,
               height: AppConstants.containerHeight_80,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(list[index].productName??'',style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont),),
-                3.height,
-                Text('${list[index].units.toString()??''} Units',style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont),),
-                3.height,
-                Text(list[index].reason.toString(),style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont),),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(list[index].productName??'',style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont),maxLines: 2,overflow: TextOverflow.ellipsis,),
+                  3.height,
+                  Text('${list[index].totalUnits.toString()??''} Units',style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14),),
+                  3.height,
+                  Text(list[index].reasonToReturn.toString(),style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14),maxLines: 2,overflow: TextOverflow.ellipsis,),
+                ],
+              ),
             )
 
           ],

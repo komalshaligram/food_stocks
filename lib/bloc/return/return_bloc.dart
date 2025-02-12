@@ -65,8 +65,6 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
             if(response.product!.isEmpty){
               CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.product_does_not_exist, type: SnackBarType.failure);
             }else{
-              Map detailMap = {'name':response.product?.first.productName,'img':response.product?.first.mainImage };
-
               Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name,arguments: response.product?.first.toJson());
             }
           } else {

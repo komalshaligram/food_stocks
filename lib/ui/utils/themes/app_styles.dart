@@ -34,7 +34,7 @@ class AppStyles {
   static TextStyle rkBoldTextStyle(
       {Color color = Colors.black,
       required double size,
-      FontWeight fontWeight = FontWeight.normal}) {
+      FontWeight fontWeight = FontWeight.bold}) {
     return TextStyle(
       fontFamily: _fontFamily,
       color: color,

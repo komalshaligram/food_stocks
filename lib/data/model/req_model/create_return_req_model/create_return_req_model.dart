@@ -9,7 +9,8 @@ class CreateReturnReqModel with _$CreateReturnReqModel {
     List<ReturnProducts>? returnProducts,
     String? applicationName,
     String? clientId,
-    String? subUserId,
+    String? returnStatusId,
+    required dynamic subUserId,
   }) = _CreateReturnReqModel;
 
   factory CreateReturnReqModel.fromJson(Map<String, dynamic> json) => _$CreateReturnReqModelFromJson(json);
@@ -21,12 +22,12 @@ class ReturnProducts with _$ReturnProducts {
     List<String>? proofImages,
     int? totalRefund,
     bool? isApproved,
-    int? units,
+    int? totalUnits,
     String? productName,
     String? barcode,
-    String? reason,
+    String? reasonToReturn,
     String? notes,
-    String? productImg
+    String? productImage
   }) = _ReturnProducts;
 
   factory ReturnProducts.fromJson(Map<String, dynamic> json) => _$ReturnProductsFromJson(json);

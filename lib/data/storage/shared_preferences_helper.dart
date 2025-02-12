@@ -30,7 +30,7 @@ class SharedPreferencesHelper {
   static const String supplierProductGrid = 'isSupplierProductGrid';
   static const String planogramProductGrid = 'isPlanogramProductGrid';
   static const String recommendationProductGrid = 'isrecommendationProductGrid';
-  static const String salesProductGrid ='isSalesproductGrid';
+  static const String salesProductGrid = 'isSalesproductGrid';
   static const String reorderProductGrid = 'isReorderProductGrid';
   static const String subUser = 'isSubUser';
   static const String companyName = 'companyName';
@@ -57,17 +57,18 @@ class SharedPreferencesHelper {
   static const String manageSubUser = 'manageSubUser';
   static const String subUserId = 'subUserId';
   static const String canSeeInvoices = 'canSeeInvoices';
-  static const String appOnMaintenance= 'isAppOnMaintenance';
+  static const String appOnMaintenance = 'isAppOnMaintenance';
   static const String paymentMethod = 'selectedPaymentMethod';
   static const String paymentMethodCount = 'paymentMethodCount';
   static const String availableAllPayment = 'availableAllPayment';
   static const String paymentMethods = 'paymentMethods';
-  static const String isWalletApproved ='isWalletApproved';
+  static const String isWalletApproved = 'isWalletApproved';
   static const String canSeeReturns = 'canSeeReturns';
   static const String orderStatusDetail = 'orderStatusDetail';
   static const String statusDetail = 'statusDetail';
   static const String paymentStatusDetail = 'paymentStatusDetail';
   static const String returnStatusDetail = 'returnStatusDetail';
+  static const String productReturnList = 'productReturnList';
 
   final SharedPreferences prefs;
 
@@ -106,7 +107,6 @@ class SharedPreferencesHelper {
       await prefs.remove(logo);
       await prefs.remove(isWalletApproved);
 
-
       await prefs.remove(accountAdmin);
       await prefs.remove(seeWallet);
       await prefs.remove(createOrder);
@@ -131,11 +131,10 @@ class SharedPreferencesHelper {
       await prefs.remove(statusDetail);
       await prefs.remove(paymentStatusDetail);
       await prefs.remove(returnStatusDetail);
-
+      await prefs.remove(productReturnList);
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
   }
-
 
   Future<void> setPaymentMethod({required String method}) async {
     await prefs.setString(paymentMethod, method);
@@ -161,18 +160,26 @@ class SharedPreferencesHelper {
     await prefs.setString(userId, id);
   }
 
+  Future<void> setReturnProductList({required String returnList}) async {
+    await prefs.setString(productReturnList, returnList);
+  }
+
   Future<void> setOrderStatusInfo({required String statusData}) async {
     await prefs.setString(orderStatusDetail, statusData);
   }
+
   Future<void> setStatusInfo({required String statusData}) async {
     await prefs.setString(statusDetail, statusData);
   }
+
   Future<void> setPaymentStatusInfo({required String statusData}) async {
     await prefs.setString(paymentStatusDetail, statusData);
   }
+
   Future<void> setReturnStatusInfo({required String statusData}) async {
     await prefs.setString(returnStatusDetail, statusData);
   }
+
   Future<void> setAppVersion({required String version}) async {
     await prefs.setString(appVersion, version);
   }
@@ -224,6 +231,7 @@ class SharedPreferencesHelper {
   Future<void> setIsAppOnMaintenance({required bool isAppOnMaintenance}) async {
     await prefs.setBool(appOnMaintenance, isAppOnMaintenance);
   }
+
   Future<void> setIsWalletApproved({required bool walletApproved}) async {
     await prefs.setBool(isWalletApproved, walletApproved);
   }
@@ -231,36 +239,47 @@ class SharedPreferencesHelper {
   Future<void> setOrderId({required String productOrderId}) async {
     await prefs.setString(orderId, productOrderId);
   }
+
   Future<void> setIsGridView({required bool isGridView}) async {
     await prefs.setBool(gridView, isGridView);
   }
+
   Future<void> setBottleTax({required double bottleDeposit}) async {
     await prefs.setDouble(bottleTax, bottleDeposit);
   }
+
   Future<void> setBankTransferDetail({required String details}) async {
     await prefs.setString(bankTransferDetail, details);
   }
+
   Future<void> setIsGuestUser({bool isGuestUser = false}) async {
     await prefs.setBool(guestUser, isGuestUser);
   }
+
   Future<void> setEmailId({required String userEmailId}) async {
     await prefs.setString(emailId, userEmailId);
   }
+
   Future<void> setCompanyGridListView({required bool isCompanyProductGrid}) async {
     await prefs.setBool(companyProductGrid, isCompanyProductGrid);
   }
+
   Future<void> setSupplierProductGridListView({required bool isSupplierProductGrid}) async {
     await prefs.setBool(supplierProductGrid, isSupplierProductGrid);
   }
+
   Future<void> setPlanogramProductGridListView({required bool isPlanogramProductGrid}) async {
     await prefs.setBool(planogramProductGrid, isPlanogramProductGrid);
   }
+
   Future<void> setReorderProductGridListView({required bool isReorderProductGrid}) async {
     await prefs.setBool(reorderProductGrid, isReorderProductGrid);
   }
+
   Future<void> setRecommendationProductGridListView({required bool isRecommendationProductGrid}) async {
     await prefs.setBool(recommendationProductGrid, isRecommendationProductGrid);
   }
+
   Future<void> setSalesProductGridListView({required bool isSalesProductGrid}) async {
     await prefs.setBool(salesProductGrid, isSalesProductGrid);
   }
@@ -280,21 +299,27 @@ class SharedPreferencesHelper {
   Future<void> setIsSaleOn({required bool isSaleOn}) async {
     await prefs.setBool(saleOn, isSaleOn);
   }
+
   Future<void> setCity({required String city}) async {
     await prefs.setString(userCity, city);
   }
+
   Future<void> setStreetName({required String streetName}) async {
     await prefs.setString(userStreetName, streetName);
   }
+
   Future<void> setStreetNumber({required String streetNumber}) async {
     await prefs.setString(userStreetNumber, streetNumber);
   }
+
   Future<void> setFaxNumber({required String faxNumber}) async {
     await prefs.setString(fax, faxNumber);
   }
+
   Future<void> setZipCode({required String zipCode}) async {
     await prefs.setString(zip, zipCode);
   }
+
   Future<void> setUserLogo({required String logoImage}) async {
     await prefs.setString(logo, logoImage);
   }
@@ -345,7 +370,6 @@ class SharedPreferencesHelper {
     await prefs.setBool(updateTimeInfo, isUpdateTimeInfo);
   }
 
-
   Future<void> setCanSeeFormsFiles({required bool isSeeFormsFiles}) async {
     await prefs.setBool(seeFormsFiles, isSeeFormsFiles);
   }
@@ -370,6 +394,9 @@ class SharedPreferencesHelper {
     await prefs.setBool(canSeeReturns, isCanSeeReturns);
   }
 
+  String getReturnList() {
+    return prefs.getString(productReturnList) ?? '';
+  }
 
   String getAppLanguage() {
     return prefs.getString(lang) ?? AppStrings.hebrewString;
@@ -378,6 +405,7 @@ class SharedPreferencesHelper {
   bool getUserLoggedIn() {
     return prefs.getBool(userLoggedIn) ?? false;
   }
+
   bool getWalletApproved() {
     return prefs.getBool(isWalletApproved) ?? false;
   }
@@ -393,15 +421,19 @@ class SharedPreferencesHelper {
   String getOrderStatusInfo() {
     return prefs.getString(orderStatusDetail) ?? '';
   }
+
   String getStatusInfo() {
     return prefs.getString(statusDetail) ?? '';
   }
+
   String getPaymentStatusInfo() {
     return prefs.getString(paymentStatusDetail) ?? '';
   }
+
   String getReturnStatusInfo() {
     return prefs.getString(returnStatusDetail) ?? '';
   }
+
   String getRefreshToken() {
     return prefs.getString(refreshToken) ?? '';
   }
@@ -445,12 +477,15 @@ class SharedPreferencesHelper {
   double getBottleTax() {
     return prefs.getDouble(bottleTax) ?? 0.0;
   }
+
   String getWalletId() {
     return prefs.getString(walletId) ?? '';
   }
+
   String getApiUrl() {
     return prefs.getString(reqApiUrl) ?? '';
   }
+
   String getRqPram() {
     return prefs.getString(apiPram) ?? '';
   }
@@ -458,30 +493,39 @@ class SharedPreferencesHelper {
   String getOrderId() {
     return prefs.getString(orderId) ?? '';
   }
+
   bool getIsGridView() {
     return prefs.getBool(gridView) ?? true;
   }
+
   String getEmailId() {
     return prefs.getString(emailId) ?? '';
   }
+
   bool getGuestUser() {
     return prefs.getBool(guestUser) ?? false;
   }
+
   bool getCompanyProductGrid() {
     return prefs.getBool(companyProductGrid) ?? true;
   }
+
   bool getSupplierProductGrid() {
     return prefs.getBool(supplierProductGrid) ?? true;
   }
+
   bool getPlanogramProductGrid() {
     return prefs.getBool(planogramProductGrid) ?? true;
   }
+
   bool getRecommendationProductGrid() {
     return prefs.getBool(recommendationProductGrid) ?? true;
   }
+
   bool getSalesProductGrid() {
     return prefs.getBool(salesProductGrid) ?? true;
   }
+
   bool getReorderProductGrid() {
     return prefs.getBool(reorderProductGrid) ?? true;
   }
@@ -505,26 +549,32 @@ class SharedPreferencesHelper {
   String getCity() {
     return prefs.getString(userCity) ?? '';
   }
+
   String getStreetName() {
     return prefs.getString(userStreetName) ?? '';
   }
+
   String getStreetNumber() {
     return prefs.getString(userStreetNumber) ?? '';
   }
+
   String getFax() {
     return prefs.getString(fax) ?? '';
   }
+
   String getZip() {
     return prefs.getString(zip) ?? '';
   }
+
   String getLogo() {
     return prefs.getString(logo) ?? '';
   }
+
   List<String> getPaymentMethodTypes() {
     return prefs.getStringList(paymentMethods) ?? [];
   }
-  //permission
 
+  //permission
   bool getCanAccountAdmin() {
     return prefs.getBool(accountAdmin) ?? true;
   }
@@ -560,18 +610,23 @@ class SharedPreferencesHelper {
   bool getCanUpdateAdditionalInfo() {
     return prefs.getBool(updateAdditionalInfo) ?? true;
   }
+
   bool getCanUpdateTimeInfo() {
     return prefs.getBool(updateTimeInfo) ?? true;
   }
+
   bool getCanSeeFormsFiles() {
     return prefs.getBool(seeFormsFiles) ?? true;
   }
- String getBankTransferDetail()  {
-    return prefs.getString(bankTransferDetail)??'';
+
+  String getBankTransferDetail() {
+    return prefs.getString(bankTransferDetail) ?? '';
   }
-  bool getCanSeeReturns()  {
-    return prefs.getBool(canSeeReturns)??false;
+
+  bool getCanSeeReturns() {
+    return prefs.getBool(canSeeReturns) ?? false;
   }
+
   bool getCanManageSubUser() {
     return prefs.getBool(manageSubUser) ?? true;
   }
@@ -591,9 +646,11 @@ class SharedPreferencesHelper {
   String getPaymentMethod() {
     return prefs.getString(paymentMethod) ?? '';
   }
+
   String getPaymentMethodCount() {
     return prefs.getString(paymentMethodCount) ?? '1';
   }
+
   bool getAvailablePayment() {
     return prefs.getBool(availableAllPayment) ?? false;
   }

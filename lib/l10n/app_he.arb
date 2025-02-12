@@ -582,7 +582,8 @@
   "open_refund_invoice" : "הצג חשבונית זיכוי",
   "product_does_not_exist": "המוצר לא קיים במערכת",
   "date_sent": "תאריך שליחה:",
-  "total_refund": "סה”כ זיכוי:"
-
-
+  "total_refund": "סה”כ זיכוי:",
+  "enter_units": "אנא הזן מספר יחידות",
+  "select_one_option": "אנא בחר אחת מהאפשרויות",
+  "add_one_proof_img": "אתה צריך להעלות לפחות תמונת הוכחה אחת"
 }
