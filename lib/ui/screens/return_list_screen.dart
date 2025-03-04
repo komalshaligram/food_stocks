@@ -39,6 +39,8 @@ class ReturnListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ReturnBloc, ReturnState>(
       builder: (context, state) {
+        ReturnBloc bloc = context.read<ReturnBloc>();
+
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
@@ -52,7 +54,7 @@ class ReturnListWidget extends StatelessWidget {
               },
               trailingWidget: InkWell(
                 onTap: (){
-                  Navigator.pushNamed(context,RouteDefine.scanReturnProduct.name);
+                  bloc.add(ReturnEvent.newRequestEvent(context: context));
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 8),
@@ -118,7 +120,7 @@ class ReturnListWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if( list[index].returnStatusNumber!=2){
-          Navigator.pushNamed(context, RouteDefine.productReturnInfoScreen.name,arguments: {AppStrings.idString:list[index].id});
+          Navigator.pushNamed(context, RouteDefine.createProductReturnListScreen.name,arguments: {AppStrings.idString:list[index].id,AppStrings.isUpdateParamString:true});
         }
       },
       child: Container(

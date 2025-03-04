@@ -2,13 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:food_stock/bloc/return/return_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/data/model/req_model/create_return_req_model/create_return_req_model.dart';
+import 'package:food_stock/data/model/req_model/create_return_req_model/create_return_req_model.dart' as req;
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/custom_button_widget.dart';
+import 'package:food_stock/ui/widget/order_summary_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../bloc/create_return_bloc/create_return_bloc.dart';
+import '../../data/model/res_model/get_return_by_id_res_model/get_return_by_id_res_model.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
@@ -27,10 +28,9 @@ class CreateProductReturnListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   List<ReturnProducts>? args =
-    ModalRoute.of(context)?.settings.arguments as  List<ReturnProducts>?;
+    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => CreateReturnBloc()..add(CreateReturnEvent.getReturnListEvent(product: args??[])),
+      create: (context) => CreateReturnBloc()..add(CreateReturnEvent.getReturnListEvent(product: args?? {}, context: context)),
       child: const CreateProductReturnListWidget(),
     );
   }
@@ -73,6 +73,8 @@ class CreateProductReturnListWidget extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                state.isShimmer?
+                    const Expanded(child: OrderSummaryScreenShimmerWidget(containerHeight: 100,)):
                 state.returnProductList.isNotEmpty
                     ?
                 Expanded(
@@ -87,7 +89,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
                         child: SlideAnimation(
                           verticalOffset: 44.0,
                           child: FadeInAnimation(
-                            child: returnListItem(index: index, context: context, list: state.returnProductList),
+                            child: returnListItem(index: index, context: context, list: state.returnProductList,returnId: state.returnId??''),
                           ),
                         ),
                       ),
@@ -109,21 +111,27 @@ class CreateProductReturnListWidget extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      CustomButtonWidget(
+                      state.returnId.isEmpty?CustomButtonWidget(
                         iconWidget: Icon(Icons.add,color: AppColors.whiteColor,),
                         buttonText: AppLocalizations.of(context)!.add_another_product,
                         isLoading: false,
                         onPressed: () {
                          context.read<CreateReturnBloc>().add(CreateReturnEvent.navigateToAddProductEvent(context: context));
                         },
-                      ),
+                      ):0.width,
                       12.height,
                       state.returnProductList.isNotEmpty
                           ? CustomButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.send_the_request,
+                        buttonText: state.returnId.isEmpty?
+                        AppLocalizations.of(context)!.send_the_request
+                            :AppLocalizations.of(context)!.save,
                       isLoading: state.isLoading,
                         onPressed: () {
-                          context.read<CreateReturnBloc>().add(CreateReturnEvent.createReturnEvent(context: context));
+                          if(state.returnId.isEmpty){
+                            context.read<CreateReturnBloc>().add(CreateReturnEvent.createReturnEvent(context: context));
+                          }else {
+                            context.read<CreateReturnBloc>().add(CreateReturnEvent.updateReturnEvent(context: context));
+                          }
                     //      bloc.add(ManageCreditCardEvent.deleteCreditCardEvent(context: context));
                         },
                       ):0.height,
@@ -149,7 +157,6 @@ class CreateProductReturnListWidget extends StatelessWidget {
           builder: (context, state) {
             CreateReturnBloc bloc = context.read<CreateReturnBloc>();
             return CommonAlertDialog(
-
               directionality: state.language,
               title: AppLocalizations.of(context)!.delete,
               subTitle: AppLocalizations.of(context)!.are_you_sure,
@@ -158,11 +165,9 @@ class CreateProductReturnListWidget extends StatelessWidget {
               negativeOnTap: () {
                 Navigator.pop(context1);
               },
-
               positiveOnTap: () async {
-
                 bloc.add(CreateReturnEvent.deleteEvent(
-                  context: context,
+                  context: context1,
                 ));
                 Navigator.pop(context);
               },
@@ -174,9 +179,11 @@ class CreateProductReturnListWidget extends StatelessWidget {
   }
 
 
-  Widget returnListItem({required int index, required BuildContext context, required List<ReturnProducts> list}) {
+  Widget returnListItem({required int index, required BuildContext context, required List<ReturnProduct> list,String? returnId}) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        context.read<CreateReturnBloc>().add(CreateReturnEvent.detailReturnEvent(context: context,index: index));
+      },
       child: Container(
         margin: const EdgeInsets.all(AppConstants.padding_10),
         padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_10),
@@ -192,9 +199,9 @@ class CreateProductReturnListWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            list[index].productImage!.isNotEmpty
+            list[index].productImg!.isNotEmpty
                 ? Image.network(
-              list[index].productImage??'',
+              list[index].productImg??'',
               width: 100,
               height: 100,
               fit: BoxFit.contain,

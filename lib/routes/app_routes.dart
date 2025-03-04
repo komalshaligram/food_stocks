@@ -116,9 +116,8 @@ enum RouteDefine {
   owner2FormScreen,
   returnListScreen,
   scanReturnProduct,
-productReturnInfoScreen,
+  productReturnInfoScreen,
   createProductReturnListScreen,
-
 
 }
 

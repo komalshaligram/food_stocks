@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:food_stock/data/model/req_model/create_return_req_model/create_return_req_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
@@ -27,8 +28,9 @@ class ScanReturnProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     return BlocProvider(
-      create: (context) => ReturnBloc()..add(ReturnEvent.openScannerEvent(context: context)),
+      create: (context) => ReturnBloc()..add(ReturnEvent.getArgumentEvent(context: context, list: args??{})),
       child: const ScanReturnProduct(),
     );
   }
@@ -52,69 +54,67 @@ class ScanReturnProduct extends StatelessWidget {
           },
         ),
       ),
-      body: BlocBuilder<ReturnBloc, ReturnState>(
-    builder: (context, state) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: InkWell(
-              onTap: () {
-               bloc.add(ReturnEvent.openScannerEvent(context: context));
-              },
-              child: Center(
-                child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: SvgPicture.asset(
-                      AppImagePath.scan,
-                      height: 80,
-                    )),
+      body: BlocBuilder<ReturnBloc, ReturnState>(builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  bloc.add(ReturnEvent.openScannerEvent(context: context));
+                },
+                child: Center(
+                  child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: SvgPicture.asset(
+                        AppImagePath.scan,
+                        height: 80,
+                      )),
+                ),
               ),
             ),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height / 3.5,
-            padding: EdgeInsets.all(20),
-            color: AppColors.greyColor.withOpacity(0.2),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(AppLocalizations.of(context)!.enter_product_barcode, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black)),
-                10.height,
-                CustomFormField(
-                  inputFormat: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  context: context,
-                  controller: state.barCodeController,
-                  keyboardType: TextInputType.phone,
-                  hint: '',
-                  fillColor: AppColors.whiteColor,
-                  textInputAction: TextInputAction.done,
-                  validator: '',
-                ),
-                30.height,
-                CustomButtonWidget(
-                  buttonText: AppLocalizations.of(context)!.next,
-                  bGColor: AppColors.mainColor,
-                   isLoading: state.isLoading,
-                  onPressed: () {
-                    bloc.add(ReturnEvent.scanProductEvent(context: context,barCode: state.barCodeController.text));
-                  },
-                  fontColors: AppColors.whiteColor,
-                ),
-                30.height,
-              ],
+            Container(
+              height: MediaQuery.of(context).size.height / 3.5,
+              padding: const EdgeInsets.all(20),
+              color: AppColors.greyColor.withOpacity(0.2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(AppLocalizations.of(context)!.enter_product_barcode, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black)),
+                  10.height,
+                  CustomFormField(
+                    inputFormat: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    context: context,
+                    controller: state.barCodeController,
+                    keyboardType: TextInputType.phone,
+                    hint: '',
+                    fillColor: AppColors.whiteColor,
+                    textInputAction: TextInputAction.done,
+                    validator: '',
+                  ),
+                  30.height,
+                  CustomButtonWidget(
+                    buttonText: AppLocalizations.of(context)!.next,
+                    bGColor: AppColors.mainColor,
+                    isLoading: state.isLoading,
+                    onPressed: () {
+                      bloc.add(ReturnEvent.scanProductEvent(context: context, barCode: state.barCodeController.text));
+                    },
+                    fontColors: AppColors.whiteColor,
+                  ),
+                  30.height,
+                ],
+              ),
             ),
-          ),
-        ],
-      );
-    }
-      ),
+          ],
+        );
+      }),
     );
   }
 }

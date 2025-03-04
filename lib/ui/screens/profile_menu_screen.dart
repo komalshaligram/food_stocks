@@ -189,8 +189,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     })
                                   : 0.width,
 
-
-                                state.isCanSeeInvoices ?  profileMenuTiles(
+                                state.isSubUserSeeReturns ?  profileMenuTiles(
                                     title:
                                     AppLocalizations.of(context)!.returns,
                                     onTap: () {

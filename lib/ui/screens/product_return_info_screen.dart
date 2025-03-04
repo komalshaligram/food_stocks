@@ -54,7 +54,7 @@ class ReturnListWidget extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
               },
-              trailingWidget: InkWell(
+              trailingWidget: state.updateId.isNotEmpty?InkWell(
                 onTap: () {
                   deleteProductDialog(context: context);
                 },
@@ -66,7 +66,7 @@ class ReturnListWidget extends StatelessWidget {
                     style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor),
                   ),
                 ),
-              ),
+              ):0.width,
             ),
           ),
           body: SafeArea(
@@ -227,7 +227,6 @@ class ReturnListWidget extends StatelessWidget {
                               child: state.proofFile.path.contains("https")?
                               Image.network(
                                 state.proofFile.path,
-
                                 loadingBuilder: (context, child, loadingProgress) {
                                   if (loadingProgress == null) {
                                     return child;
@@ -404,6 +403,7 @@ class ReturnListWidget extends StatelessWidget {
       return radioWidget(state.radioList[index].id, state.radioList[index].text, context, state.selectedRadioTile);
     },itemCount:state.radioList.length );
   }
+
   void deleteProductDialog({
     required BuildContext context,
   }) {

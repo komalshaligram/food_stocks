@@ -615,6 +615,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
               preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
               preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
               preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices ?? false);
+              preferences.setCanSeeReturns(isCanSeeReturns: res?.returns ?? false);
               emit(state.copyWith(
                 isSubUserAddToBasket: res?.canAddToCart ?? false,
               ));

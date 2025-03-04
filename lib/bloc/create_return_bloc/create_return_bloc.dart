@@ -2,17 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/error/exceptions.dart';
-import '../../data/model/product_stock_model/product_stock_model.dart';
-import '../../data/model/req_model/create_return_req_model/create_return_req_model.dart';
-import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
+import '../../data/model/req_model/create_return_req_model/create_return_req_model.dart' as req;
+import '../../data/model/req_model/delete_return_req/delete_return_req.dart';
 import '../../data/model/res_model/create_return_res_model/create_return_res_model.dart';
-import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
+import '../../data/model/res_model/get_return_by_id_res_model/get_return_by_id_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
@@ -25,46 +22,102 @@ part 'create_return_state.dart';
 part 'create_return_event.dart';
 part 'create_return_bloc.freezed.dart';
 
-
 class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
   CreateReturnBloc() : super(CreateReturnState.initial()) {
     on<CreateReturnEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      if(event is _getReturnListEvent) {
+      if (event is _getReturnListEvent) {
+        Map map = event.product;
+        if (map[AppStrings.isUpdateParamString]) {
+          List<ReturnProduct> tempList = [];
+          try {
+            emit(state.copyWith(isShimmer: true));
+            final response = await DioClient(event.context).get(
+              path: AppUrlEndPoints.getReturnByIdUrl + map[AppStrings.idString],
+            );
+            GetReturnByIdResModel res = GetReturnByIdResModel.fromJson(response);
+            tempList.addAll(res.data?.returnProducts ?? []);
+            emit(state.copyWith(isShimmer: false, returnProductList: tempList, returnId: map[AppStrings.idString]));
+          } catch (e) {
+            CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
+          }
+        } else {
+          List<ReturnProduct> tempList = [];
+          final List<req.ReturnProduct> myList = map['list'] as List<req.ReturnProduct>;
+          printData('list :${myList}');
+          for (int i = 0; i < myList.length; i++) {
+            tempList.add(ReturnProduct(totalRefund: myList[i].totalRefund, proofImages: myList[i].proofImages, notes: myList[i].notes, productName: myList[i].productName, productImg: myList[i].productImage, barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
+          }
 
-       List<ReturnProducts> tempList = [];
-       if(preferencesHelper.getReturnList().isNotEmpty){
-         List<dynamic> jsonList = jsonDecode(preferencesHelper.getReturnList());
-         tempList = jsonList.map((json) => ReturnProducts.fromJson(json)).toList();
-       }
-       tempList.addAll(event.product);
-       String jsonString = jsonEncode(tempList.map((e) => e.toJson()).toList());
-       preferencesHelper.setReturnProductList(returnList: jsonString);
-        emit(state.copyWith(language: preferencesHelper.getAppLanguage(),returnProductList: tempList));
-      }else if(event is _navigateToAddProductEvent){
+          String jsonString = jsonEncode(tempList.map((e) => e.toJson()).toList());
+          preferencesHelper.setReturnProductList(returnList: jsonString);
+          emit(state.copyWith(language: preferencesHelper.getAppLanguage(), returnProductList: tempList,returnId: ''));
+        }
+      } else if (event is _navigateToAddProductEvent) {
         emit(state.copyWith(returnProductList: state.returnProductList));
-        Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name);
-      }else if(event is _createReturnEvent){
+        Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name,arguments: {'list':state.returnProductList});
+      } else if (event is _createReturnEvent) {
         emit(state.copyWith(isLoading: true));
-        try{
-          CreateReturnReqModel reqModel = CreateReturnReqModel(applicationName: AppStrings.appName,clientId: preferencesHelper.getUserId(),
-
-              returnProducts: state.returnProductList,subUserId: preferencesHelper.getSubUserId().isNotEmpty?preferencesHelper.getSubUserId():null);
+        try {
+          List<req.ReturnProduct> list = [];
+          for (int i = 0; i < state.returnProductList.length; i++) {
+            list.add(req.ReturnProduct(totalRefund: state.returnProductList[i].totalRefund, proofImages: state.returnProductList[i].proofImages, notes: state.returnProductList[i].notes, productName: state.returnProductList[i].productName, productImage: state.returnProductList[i].productImg, barcode: state.returnProductList[i].barcode, totalUnits: state.returnProductList[i].totalUnits, isApproved: state.returnProductList[i].isApproved, reasonToReturn: state.returnProductList[i].reasonToReturn));
+          }
+          req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(applicationName: AppStrings.appName, clientId: preferencesHelper.getUserId(), returnProducts: list, subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null);
           final res = await DioClient(event.context).post(
             AppUrlEndPoints.createReturnUrl,
             data: reqModel.toJson(),
           );
           CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
-          if(resModel.status == AppConstants.code_201){
+          if (resModel.status == AppConstants.code_201) {
             preferencesHelper.setReturnProductList(returnList: '');
             emit(state.copyWith(isLoading: false));
-              Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
-          }
-        }catch(e){
+            Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
+          }else{
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
 
+            emit(state.copyWith(isLoading: false));
+          }
+        } catch (e) {}
+      } else if (event is _deleteEvent) {
+        DeleteReturnReq req = DeleteReturnReq(ids: [state.returnId ?? '']);
+        try {
+          final res = await DioClient(event.context).post(
+            AppUrlEndPoints.deleteReturnUrl,
+            data: req.toJson(),
+          );
+          if (res[AppStrings.statusString] == AppConstants.code_200) {
+            Navigator.pop(event.context);
+            //Navigator.popUntil(event.context, (route)=> route.name == RouteDefine.returnListScreen.name);
+          } else {
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
+          }
+          printData('req:${req.toJson()}');
+        } catch (e) {
+          CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
         }
-      }else if(event is _deleteEvent){
-        Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
+      } else if (event is _updateReturnEvent) {
+        emit(state.copyWith(isLoading: true));
+        try {
+          List<req.ReturnProduct> list = [];
+          for (int i = 0; i < state.returnProductList.length; i++) {
+            list.add(req.ReturnProduct(totalRefund: state.returnProductList[i].totalRefund, proofImages: state.returnProductList[i].proofImages, notes: state.returnProductList[i].notes, productName: state.returnProductList[i].productName, productImage: state.returnProductList[i].productImg, barcode: state.returnProductList[i].barcode, totalUnits: state.returnProductList[i].totalUnits, isApproved: state.returnProductList[i].isApproved, reasonToReturn: state.returnProductList[i].reasonToReturn));
+          }
+          req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(applicationName: AppStrings.appName, clientId: preferencesHelper.getUserId(), returnProducts: list, subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null, returnStatusId: state.returnId ?? '');
+          final res = await DioClient(event.context).post(
+            AppUrlEndPoints.updateReturnUrl+state.returnId,
+            data: reqModel.toJson(),
+          );
+          CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
+          if (resModel.status == AppConstants.code_201) {
+            preferencesHelper.setReturnProductList(returnList: '');
+            emit(state.copyWith(isLoading: false));
+            Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
+          }
+        } catch (e) {}
+      } else if (event is _detailReturnEvent) {
+        var result = Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': state.returnProductList, 'index': event.index});
+        printData('result:$result');
       }
     });
   }

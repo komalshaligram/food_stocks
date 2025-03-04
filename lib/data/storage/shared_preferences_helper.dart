@@ -624,7 +624,7 @@ class SharedPreferencesHelper {
   }
 
   bool getCanSeeReturns() {
-    return prefs.getBool(canSeeReturns) ?? false;
+    return prefs.getBool(canSeeReturns) ?? true;
   }
 
   bool getCanManageSubUser() {

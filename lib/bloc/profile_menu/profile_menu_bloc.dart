@@ -39,15 +39,12 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
       } else {
         if (event is _getPreferenceDataEvent) {
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
-          emit(state.copyWith(applicationVersion: packageInfo.version, buildNumber: packageInfo.buildNumber));
 
-          emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl(), language: preferences.getAppLanguage(), isSubUserSeeOrder: preferences.getCanSeeOrder(),
+          emit(state.copyWith(applicationVersion: packageInfo.version, buildNumber: packageInfo.buildNumber,UserImageUrl: preferences.getUserImageUrl(), language: preferences.getAppLanguage(), isSubUserSeeOrder: preferences.getCanSeeOrder(),
               isSubUserCanManageSubUser: preferences.getCanManageSubUser(), isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(),
               isSubUserSeeReturns: preferences.getCanSeeReturns(),
               isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(), isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(),
-              isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(), isCanSeeInvoices: preferences.getCanSeeInvoices()));
-          emit(state.copyWith(UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
-          emit(state.copyWith(userName: preferences.getUserName()));
+              isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(), isCanSeeInvoices: preferences.getCanSeeInvoices(),userName: preferences.getUserName(),UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
         } else if (event is _getAppLanguage) {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
           String appLang = preferencesHelper.getAppLanguage();
@@ -129,8 +126,11 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
                 preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices ?? false);
-                preferences.setCanSeeReturns(isCanSeeReturns: res?.canSeeReturns ?? false);
-                emit(state.copyWith(isSubUserSeeOrder: preferences.getCanSeeOrder(), isSubUserCanManageSubUser: preferences.getCanManageSubUser(), isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(), isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(), isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(), isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(), isAccountPermissionShimmering: false, isCanSeeInvoices: preferences.getCanSeeInvoices()));
+                preferences.setCanSeeReturns(isCanSeeReturns: res?.returns ?? false);
+                emit(state.copyWith(isSubUserSeeOrder: preferences.getCanSeeOrder(), isSubUserCanManageSubUser: preferences.getCanManageSubUser(), isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(),
+                    isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(), isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(),
+                    isSubUserSeeReturns :preferences.getCanSeeReturns(),
+                    isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(), isAccountPermissionShimmering: false, isCanSeeInvoices: preferences.getCanSeeInvoices()));
               } else {
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }

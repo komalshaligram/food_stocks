@@ -1,7 +1,7 @@
 
 
 class AppUrlEndPoints {
-// static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
+//static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
   static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
 
   ///devUrl
@@ -130,4 +130,5 @@ class AppUrlEndPoints {
   static const String getStatusInfoUrl = '/v1/settings/get-all-status-info';
   static const String getReturnByIdUrl = '/v1/return/getClientReturnById/';
   static const String updateReturnUrl = '/v1/return/updateReturn/';
+  static const String deleteReturnUrl = '/v1/return/deleteReturn';
 }

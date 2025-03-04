@@ -19,13 +19,15 @@ class ProductReturnInfoState with _$ProductReturnInfoState {
     required bool isShimmer,
     required String updateId,
     required String statusId,
-    required List<ReturnProducts> returnProductList,
+    required List<ReturnProduct> returnProductList,
+    required List<String> returnIdList,
+    required int mainIndex,
     required TextEditingController addNoteController}) = _ProductReturnInfoState;
 
   factory ProductReturnInfoState.initial() => ProductReturnInfoState(proofFile: File(''), proofFile1: File(''),isLoading:false,barCode:'',
       proofFile2: File(''), addNoteController: TextEditingController(),noOfUnits: '1',productImg: '',productName: '',reason:'',radioList:[],
-      returnProductList: [], productQty: 1, language: AppStrings.hebrewString,totalQty:1,selectedRadioTile:0,proofImagesList:[],
-      isShimmer:false,updateId:'',statusId: '');
+      returnProductList: [], productQty: 1, language: AppStrings.hebrewString,totalQty:1,selectedRadioTile:0,proofImagesList:[],returnIdList:[],
+      isShimmer:false,updateId:'',statusId: '',mainIndex: -1);
 }
 
 class RadioModel{

@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyBHy_P6fJBseLtyjFLEWZjUmwP-omf91HQ</string>
+	<string>AIzaSyCZyZXcdL4kHiVUUD9SMiETCG3SEYHIR6k</string>
 	<key>GCM_SENDER_ID</key>
-	<string>161924063637</string>
+	<string>229653257750</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.tavili.salle</string>
+	<string>com.foodstock</string>
 	<key>PROJECT_ID</key>
-	<string>salletavili-dev</string>
+	<string>foodstock-dev</string>
 	<key>STORAGE_BUCKET</key>
-	<string>salletavili-dev.firebasestorage.app</string>
+	<string>foodstock-dev.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:161924063637:ios:00d878d0dd32e3579a169c</string>
+	<string>1:229653257750:ios:719e4f2c51c73d887e5f37</string>
 </dict>
 </plist>

@@ -381,6 +381,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms  ?? false);
                 preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers  ?? false);
                 preferencesHelper.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices  ?? false);
+                preferencesHelper.setCanSeeReturns(isCanSeeReturns: res?.returns ?? false);
                 emit(state.copyWith(isAccountPermissionShimmering: false));
               } else {
                 CustomSnackBar.showSnackBar(

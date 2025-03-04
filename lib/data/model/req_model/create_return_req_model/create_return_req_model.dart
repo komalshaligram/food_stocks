@@ -6,7 +6,8 @@ part 'create_return_req_model.g.dart';
 @freezed
 class CreateReturnReqModel with _$CreateReturnReqModel {
   const factory CreateReturnReqModel({
-    List<ReturnProducts>? returnProducts,
+    @JsonKey(name:"returnProducts")
+    List<ReturnProduct>? returnProducts,
     String? applicationName,
     String? clientId,
     String? returnStatusId,
@@ -17,8 +18,8 @@ class CreateReturnReqModel with _$CreateReturnReqModel {
 }
 
 @freezed
-class ReturnProducts with _$ReturnProducts {
-  const factory ReturnProducts({
+class ReturnProduct with _$ReturnProduct {
+  const factory ReturnProduct({
     List<String>? proofImages,
     int? totalRefund,
     bool? isApproved,
@@ -28,7 +29,7 @@ class ReturnProducts with _$ReturnProducts {
     String? reasonToReturn,
     String? notes,
     String? productImage
-  }) = _ReturnProducts;
+  }) = _ReturnProduct;
 
-  factory ReturnProducts.fromJson(Map<String, dynamic> json) => _$ReturnProductsFromJson(json);
+  factory ReturnProduct.fromJson(Map<String, dynamic> json) => _$ReturnProductFromJson(json);
 }

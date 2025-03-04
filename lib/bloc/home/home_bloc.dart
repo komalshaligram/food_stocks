@@ -870,6 +870,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
                 preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices ?? false);
+                preferences.setCanSeeReturns(isCanSeeReturns: res?.returns ?? false);
                 printData('home___${res?.canAddToCart}');
                 emit(state.copyWith(
                   isAccountPermissionShimmering: false,

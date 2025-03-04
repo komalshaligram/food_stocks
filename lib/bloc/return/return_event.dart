@@ -10,4 +10,8 @@ class ReturnEvent with _$ReturnEvent {
     _deleteEvent;
     factory ReturnEvent.scanProductEvent({required BuildContext context,required String barCode}) =
     _scanProductEvent;
+    factory ReturnEvent.newRequestEvent({required BuildContext context}) =
+    _newRequestEvent;
+    factory ReturnEvent.getArgumentEvent({required BuildContext context,required dynamic list}) =
+    _getArgumentEvent;
 }

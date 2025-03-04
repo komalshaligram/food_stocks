@@ -17,64 +17,35 @@ part 'account_permission_event.dart';
 part 'account_permission_state.dart';
 part 'account_permission_bloc.freezed.dart';
 
-
 class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissionState> {
   AccountPermissionBloc() : super(AccountPermissionState.initial()) {
     on<AccountPermissionEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-          prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
-      if(event is _getPermissionList){
+      if (event is _getPermissionList) {
         try {
-          emit(state.copyWith(isShimmering: true , subUserId: event.subUserId));
-          final res = await DioClient(event.context).get(
-              path: '${AppUrlEndPoints.getAccountPermissionUrl}${event.subUserId}');
+          emit(state.copyWith(isShimmering: true, subUserId: event.subUserId));
+          final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${event.subUserId}');
           AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            List<PermissionModel>permissionList = [];
+            List<PermissionModel> permissionList = [];
             permissionList = [
-              PermissionModel(title: AppLocalizations.of(event.context)!.account_admin,
-              isEnable: response.data?.permissions?.accountAdmin ?? false
-              ),
-              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_wallet,
-                  isEnable: response.data?.permissions?.canSeeWallet ?? false
-              ),
-              PermissionModel(title: AppLocalizations.of(event.context)!.can_add_basket,
-                  isEnable: response.data?.permissions?.canAddToCart ?? false
-              ),
-              PermissionModel(title: AppLocalizations.of(event.context)!.can_create_order,
-                  isEnable: response.data?.permissions?.canCreateOrder ?? false
-              ),
-              PermissionModel(title: AppLocalizations.of(event.context)!.see_order,
-                  isEnable: response.data?.permissions?.canSeeOrders ?? false
-              ),
-              PermissionModel(title: AppLocalizations.of(event.context)!.can_approve_order,
-                  isEnable: response.data?.permissions?.canApproveOrders ?? false
-              ),
-              PermissionModel(title: AppLocalizations.of(event.context)!.can_duplicate_order,
-                  isEnable: response.data?.permissions?.canDuplicateOrders ?? false
-              ),
-              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_update_business_info,
-                  isEnable: response.data?.permissions?.canSeeAndUpdateBusinessInfo ?? false
-              ),
-              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_update_additional_info,
-                  isEnable: response.data?.permissions?.canSeeAndUpdateAdditionalInfo ?? false
-              ),
-              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_update_times_info,
-                  isEnable: response.data?.permissions?.canSeeAndUpdateTimesInfo ?? false
-              ),
-              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_files_forms,
-                  isEnable: response.data?.permissions?.canSeeFileAndForms ?? false
-              ),
-              PermissionModel(title: AppLocalizations.of(event.context)!.can_manage_sub_users,
-                  isEnable: response.data?.permissions?.canManageSubUsers ?? false
-              ),
-              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_invoices,
-                  isEnable: response.data?.permissions?.canSeeInvoices ?? false
-              ),
-
+              PermissionModel(title: AppLocalizations.of(event.context)!.account_admin, isEnable: response.data?.permissions?.accountAdmin ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_wallet, isEnable: response.data?.permissions?.canSeeWallet ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_add_basket, isEnable: response.data?.permissions?.canAddToCart ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_create_order, isEnable: response.data?.permissions?.canCreateOrder ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.see_order, isEnable: response.data?.permissions?.canSeeOrders ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_approve_order, isEnable: response.data?.permissions?.canApproveOrders ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_duplicate_order, isEnable: response.data?.permissions?.canDuplicateOrders ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_update_business_info, isEnable: response.data?.permissions?.canSeeAndUpdateBusinessInfo ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_update_additional_info, isEnable: response.data?.permissions?.canSeeAndUpdateAdditionalInfo ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_update_times_info, isEnable: response.data?.permissions?.canSeeAndUpdateTimesInfo ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_files_forms, isEnable: response.data?.permissions?.canSeeFileAndForms ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_manage_sub_users, isEnable: response.data?.permissions?.canManageSubUsers ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_see_invoices, isEnable: response.data?.permissions?.canSeeInvoices ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.returns, isEnable: response.data?.permissions?.returns ?? false),
             ];
-            emit(state.copyWith(isShimmering:false,permissionList: permissionList));
+            emit(state.copyWith(isShimmering: false, permissionList: permissionList));
           } else {
             emit(state.copyWith(isShimmering: false));
           }
@@ -83,35 +54,31 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
-      }
-
-      else if(event is _switchButtonEvent){
-        List<PermissionModel>permissionList = state.permissionList.toList(growable: true);
-        permissionList[event.index].isEnable =  !permissionList[event.index].isEnable;
-        emit(state.copyWith(permissionList: permissionList,isRefresh: !state.isRefresh));
-      }
-
-      else if(event is _updateAccountPermissionEvent){
+      } else if (event is _switchButtonEvent) {
+        List<PermissionModel> permissionList = state.permissionList.toList(growable: true);
+        permissionList[event.index].isEnable = !permissionList[event.index].isEnable;
+        emit(state.copyWith(permissionList: permissionList, isRefresh: !state.isRefresh));
+      } else if (event is _updateAccountPermissionEvent) {
         try {
           emit(state.copyWith(isUpdateProcess: true));
 
           UpdatePermissionModel req = UpdatePermissionModel(
-            accountPermissions: AccountPermissions(
-              accountAdmin: state.permissionList[0].isEnable,
-              canSeeWallet: state.permissionList[1].isEnable,
-              canAddToCart: state.permissionList[2].isEnable,
-              canCreateOrder: state.permissionList[3].isEnable,
-              canSeeOrders: state.permissionList[4].isEnable,
-              canApproveOrders: state.permissionList[5].isEnable,
-              canDuplicateOrders: state.permissionList[6].isEnable,
-              canSeeAndUpdateBusinessInfo: state.permissionList[7].isEnable,
-              canSeeAndUpdateAdditionalInfo: state.permissionList[8].isEnable,
-              canSeeAndUpdateTimesInfo: state.permissionList[9].isEnable,
-              canSeeFileAndForms: state.permissionList[10].isEnable,
-              canManageSubUsers: state.permissionList[11].isEnable,
-              canSeeInvoices: state.permissionList[12].isEnable,
-            )
-          );
+              accountPermissions: AccountPermissions(
+            accountAdmin: state.permissionList[0].isEnable,
+            canSeeWallet: state.permissionList[1].isEnable,
+            canAddToCart: state.permissionList[2].isEnable,
+            canCreateOrder: state.permissionList[3].isEnable,
+            canSeeOrders: state.permissionList[4].isEnable,
+            canApproveOrders: state.permissionList[5].isEnable,
+            canDuplicateOrders: state.permissionList[6].isEnable,
+            canSeeAndUpdateBusinessInfo: state.permissionList[7].isEnable,
+            canSeeAndUpdateAdditionalInfo: state.permissionList[8].isEnable,
+            canSeeAndUpdateTimesInfo: state.permissionList[9].isEnable,
+            canSeeFileAndForms: state.permissionList[10].isEnable,
+            canManageSubUsers: state.permissionList[11].isEnable,
+            canSeeInvoices: state.permissionList[12].isEnable,
+            returns: state.permissionList[13].isEnable,
+          ));
 
           Map<String, dynamic> updatePermissionReq = req.toJson();
 
@@ -122,41 +89,34 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
             return value == null;
           });
 
+          final response = await DioClient(event.context).put(path: '${AppUrlEndPoints.updatePermissionUrl}${state.subUserId}', data: updatePermissionReq);
 
-
-          final response = await DioClient(event.context).put(
-              path: '${AppUrlEndPoints.updatePermissionUrl}${state.subUserId}',
-              data: updatePermissionReq);
-
-            if (response[AppStrings.statusString] == AppConstants.code_200) {
-              if(preferencesHelper.getSubUser()){
-                preferencesHelper.setAccountAdmin(isAccountAdmin: state.permissionList[0].isEnable);
-                preferencesHelper.setCanSeeWallet(isSeeWallet: state.permissionList[1].isEnable);
-                preferencesHelper.setCanAddBasket(isAddBasket: state.permissionList[2].isEnable);
-                preferencesHelper.setCanCreateOrder(isCreateOrder: state.permissionList[3].isEnable);
-                preferencesHelper.setCanSeeOrder(isSeeOrder: state.permissionList[4].isEnable);
-                preferencesHelper.setCanApproveOrder(isApproveOrder: state.permissionList[5].isEnable);
-                preferencesHelper.setCanDuplicateOrder(isDuplicateOrder: state.permissionList[6].isEnable);
-                preferencesHelper.setCanUpdateBusinessInfo(isUpdateBusinessInfo: state.permissionList[7].isEnable);
-                preferencesHelper.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: state.permissionList[8].isEnable);
-                preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: state.permissionList[9].isEnable);
-                preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: state.permissionList[10].isEnable);
-                preferencesHelper.setManageSubUser(isManageSubUser:state.permissionList[11].isEnable);
-                preferencesHelper.setCanSeeInvoices(isCanSeeInvoices:state.permissionList[12].isEnable);
-              }
-              emit(state.copyWith(isUpdateProcess: false));
-              Navigator.pop(event.context);
-             CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title:  AppLocalizations.of(event.context)!.success_message,
-                  type: SnackBarType.success);
-            } else {
-              emit(state.copyWith(isUpdateProcess: false));
+          if (response[AppStrings.statusString] == AppConstants.code_200) {
+            if (preferencesHelper.getSubUser()) {
+              preferencesHelper.setAccountAdmin(isAccountAdmin: state.permissionList[0].isEnable);
+              preferencesHelper.setCanSeeWallet(isSeeWallet: state.permissionList[1].isEnable);
+              preferencesHelper.setCanAddBasket(isAddBasket: state.permissionList[2].isEnable);
+              preferencesHelper.setCanCreateOrder(isCreateOrder: state.permissionList[3].isEnable);
+              preferencesHelper.setCanSeeOrder(isSeeOrder: state.permissionList[4].isEnable);
+              preferencesHelper.setCanApproveOrder(isApproveOrder: state.permissionList[5].isEnable);
+              preferencesHelper.setCanDuplicateOrder(isDuplicateOrder: state.permissionList[6].isEnable);
+              preferencesHelper.setCanUpdateBusinessInfo(isUpdateBusinessInfo: state.permissionList[7].isEnable);
+              preferencesHelper.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: state.permissionList[8].isEnable);
+              preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: state.permissionList[9].isEnable);
+              preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: state.permissionList[10].isEnable);
+              preferencesHelper.setManageSubUser(isManageSubUser: state.permissionList[11].isEnable);
+              preferencesHelper.setCanSeeInvoices(isCanSeeInvoices: state.permissionList[12].isEnable);
+              preferencesHelper.setCanSeeReturns(isCanSeeReturns: state.permissionList[13].isEnable);
             }
+            emit(state.copyWith(isUpdateProcess: false));
+            Navigator.pop(event.context);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.success_message, type: SnackBarType.success);
+          } else {
+            emit(state.copyWith(isUpdateProcess: false));
+          }
         } on ServerException {
           emit(state.copyWith(isUpdateProcess: false));
-        }
-        catch(e){
+        } catch (e) {
           emit(state.copyWith(isUpdateProcess: false));
         }
       }
