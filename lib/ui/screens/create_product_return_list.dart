@@ -167,9 +167,9 @@ class CreateProductReturnListWidget extends StatelessWidget {
               },
               positiveOnTap: () async {
                 bloc.add(CreateReturnEvent.deleteEvent(
-                  context: context1,
+                  context: context,
                 ));
-                Navigator.pop(context);
+                Navigator.pop(context1);
               },
             );
           },

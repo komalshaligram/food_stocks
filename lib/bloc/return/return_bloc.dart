@@ -32,13 +32,14 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
       if (event is _getArgumentEvent) {
         map = event.list;
         List<ReturnProduct> tempList = [];
-        final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
-        printData('list :${myList}');
-        if (myList.isNotEmpty) {
-          for (int i = 0; i < myList.length; i++) {
-            tempList.add(ReturnProduct(totalRefund: myList[i].totalRefund, proofImages: myList[i].proofImages, notes: myList[i].notes, productName: myList[i].productName, productImg: myList[i].productImg, barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
+        if(map['list']!=null){
+          final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
+          if (myList.isNotEmpty) {
+            for (int i = 0; i < myList.length; i++) {
+              tempList.add(ReturnProduct(totalRefund: myList[i].totalRefund, proofImages: myList[i].proofImages, notes: myList[i].notes, productName: myList[i].productName, productImg: myList[i].productImg, barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
+            }
+            emit(state.copyWith(returnProductList: tempList));
           }
-          emit(state.copyWith(returnProductList: tempList));
         }
         add(ReturnEvent.getReturnListEvent(context: event.context));
       } else if (event is _getReturnListEvent) {
@@ -60,7 +61,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         } on ServerException {}
       } else if (event is _newRequestEvent) {
         preferencesHelper.setReturnProductList(returnList: '');
-        Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {'list': []});
+        Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {'list': <ReturnProduct>[]});
       } else if (event is _openScannerEvent) {
         String scanResult = await scanBarcodeOrQRCode(context: event.context, cancelText: AppLocalizations.of(event.context)!.cancel, scanMode: ScanMode.BARCODE);
         if (scanResult != '-1') {
@@ -73,7 +74,6 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
           emit(state.copyWith(isLoading: true));
           final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.barCode).toJson());
           ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
-          printData('GetProductDetails_____$response');
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false, barCodeController: TextEditingController(text: event.barCode)));
             if (response.product!.isEmpty) {
@@ -82,7 +82,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
               if (state.returnProductList.isNotEmpty) {
                 List<ReturnProduct> list = [];
                 for (int i = 0; i < response.product!.length; i++) {
-                  list.add(ReturnProduct());
+                  list.add(const ReturnProduct());
                 }
                 list.addAll(state.returnProductList);
                 Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': state.returnProductList, 'data': response.product?.first.toJson()});

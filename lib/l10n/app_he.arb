@@ -586,5 +586,6 @@
   "enter_units": "אנא הזן מספר יחידות",
   "select_one_option": "אנא בחר אחת מהאפשרויות",
   "add_one_proof_img": "אתה צריך להעלות לפחות תמונת הוכחה אחת",
-  "return_not_found": "return not found."
+  "return_not_found": "return not found.",
+  "return_deleted": "Return deleted successfully."
 }

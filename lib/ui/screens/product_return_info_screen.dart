@@ -54,7 +54,7 @@ class ReturnListWidget extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
               },
-              trailingWidget: state.updateId.isNotEmpty?InkWell(
+              trailingWidget: state.mainIndex!=-1?InkWell(
                 onTap: () {
                   deleteProductDialog(context: context);
                 },
@@ -424,7 +424,6 @@ class ReturnListWidget extends StatelessWidget {
                 Navigator.pop(context1);
               },
               positiveOnTap: () async {
-
                 bloc.add(ProductReturnInfoEvent.deleteEvent(
                   context: context,
                 ));

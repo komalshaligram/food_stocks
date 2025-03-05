@@ -30,7 +30,6 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
     on<ProductReturnInfoEvent>((event, emit) async {
       String imgUrl = '';
       Map map = {};
-
       List<String> imgList = [];
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getArgumentEvent) {
@@ -42,67 +41,31 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         tempList.add(model);
         tempList.add(model1);
         tempList.add(model2);
-        emit(state.copyWith(language: preferencesHelper.getAppLanguage(), radioList: tempList,));
-        if (map[AppStrings.idString] != null) {
-          try {
-            emit(state.copyWith(isShimmer: true));
-            final response = await DioClient(event.context).get(
-              path: AppUrlEndPoints.getReturnByIdUrl + map[AppStrings.idString],
-            );
-            GetReturnByIdResModel res = GetReturnByIdResModel.fromJson(response);
-            if (res.status == AppConstants.code_200) {
-              int index = tempList.indexWhere((e) => e.text.toLowerCase() == res.data?.returnProducts?.first.reasonToReturn?.toLowerCase()).toInt();
-              emit(state.copyWith(
-                  language: preferencesHelper.getAppLanguage(),
-                  radioList: tempList,
-                  selectedRadioTile: index + 1,
-                  reason: res.data?.returnProducts?.first.reasonToReturn ?? '',
-                  productName: res.data?.returnProducts?.first.productName ?? '',
-                  productImg: '${res.data?.returnProducts!.first.productImg}' ?? '',
-                  productQty: res.data?.returnProducts?.first.totalUnits ?? 0,
-                  proofImagesList: res.data?.returnProducts?.first.proofImages ?? [],
-                  barCode: res.data?.returnProducts?.first.barcode ?? '',
-                  updateId: map[AppStrings.idString],
-                  isShimmer: false,
-                  statusId: res.data?.returnStatusId ?? '',
-                  addNoteController: TextEditingController(
-                    text: res.data?.returnProducts?.first.notes,
-                  )));
-              if (state.proofImagesList.isNotEmpty) {
-                printData("length:${state.proofImagesList.length}");
-                emit(state.copyWith(
-                  proofFile: File(AppUrlEndPoints.baseFileUrl + state.proofImagesList[0]),
-                  proofFile1: File(state.proofImagesList.length > 1 ? (AppUrlEndPoints.baseFileUrl + state.proofImagesList[1]) : ''),
-                  proofFile2: File(state.proofImagesList.length > 2 ? (AppUrlEndPoints.baseFileUrl + state.proofImagesList[2]) : ''),
-                ));
-              }
-            }
-          } catch (e) {
-            CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
+        if (map.isNotEmpty) {
+          if (map['data'] != null) {
+            emit(state.copyWith(barCode: map['data']['qrcode'], totalQty: map['data']['numberOfUnit'], productName: map['data']['productName'], productImg: map['data']['mainImage'] != null ? AppUrlEndPoints.baseFileUrl + map['data']['mainImage'] : '',language: preferencesHelper.getAppLanguage(),
+              radioList: tempList,));
           }
-        } else {
-          if (map.isNotEmpty) {
-            if(map['list']!=null){
-              List<ReturnProduct> tempProductList = [];
-              final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
-              printData('list :${myList}');
-              for (int i = 0; i < myList.length; i++) {
-                tempProductList.add(ReturnProduct(totalRefund: myList[i].totalRefund, proofImages: myList[i].proofImages, notes: myList[i].notes, productName: myList[i].productName, productImg: myList[i].productImg, barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
-              }
-              int index = map['index']??0;
-              int radioIndex = tempList.indexWhere((e) => e.text.toLowerCase() == tempProductList[index].reasonToReturn?.toLowerCase()).toInt();
-
-              emit(state.copyWith(selectedRadioTile: radioIndex+1,returnProductList:tempProductList,barCode: tempProductList.elementAt(index).barcode??'',totalQty:tempProductList.elementAt(index).totalUnits??0,
-              productName: tempProductList.elementAt(index).productName??'',productImg: (tempProductList.elementAt(index).productImg??''),mainIndex:index,
-                  proofImagesList: tempProductList.elementAt(index).proofImages??[],reason: tempProductList.elementAt(index).reasonToReturn??'',addNoteController: TextEditingController(text: tempProductList.elementAt(index).notes??'')));
+          if (map['list'] != null) {
+            List<ReturnProduct> tempProductList = [];
+            final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
+            printData('list :${myList}');
+            for (int i = 0; i < myList.length; i++) {
+              tempProductList.add(ReturnProduct(totalRefund: myList[i].totalRefund, proofImages: myList[i].proofImages, notes: myList[i].notes, productName: myList[i].productName, productImg: myList[i].productImg, barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
+            }
+            int index = map['index'] ?? 0;
+            int radioIndex = tempList.indexWhere((e) => e.text.toLowerCase() == tempProductList[index].reasonToReturn?.toLowerCase()).toInt();
+            if (map['data'] == null) {
+              emit(state.copyWith(selectedRadioTile: radioIndex + 1, returnProductList: tempProductList, barCode: tempProductList.elementAt(index).barcode ?? '', totalQty: tempProductList.elementAt(index).totalUnits ?? 0, productName: tempProductList.elementAt(index).productName ?? '', productImg: (tempProductList.elementAt(index).productImg ?? ''), mainIndex: index, productQty: tempProductList[index].totalUnits ?? 0, proofImagesList: tempProductList.elementAt(index).proofImages ?? [], reason: tempProductList.elementAt(index).reasonToReturn ?? '', addNoteController: TextEditingController(text: tempProductList.elementAt(index).notes ?? '')));
               emit(state.copyWith(
+                language: preferencesHelper.getAppLanguage(),
+                radioList: tempList,
                 proofFile: File(AppUrlEndPoints.baseFileUrl + state.proofImagesList[0]),
                 proofFile1: File(state.proofImagesList.length > 1 ? (AppUrlEndPoints.baseFileUrl + state.proofImagesList[1]) : ''),
                 proofFile2: File(state.proofImagesList.length > 2 ? (AppUrlEndPoints.baseFileUrl + state.proofImagesList[2]) : ''),
               ));
-            }
-            if(map['data']!=null){
-              emit(state.copyWith( barCode: map['data']['qrcode'], totalQty: map['data']['numberOfUnit'], productName: map['data']['productName'], productImg: map['data']['mainImage'] != null ? AppUrlEndPoints.baseFileUrl + map['data']['mainImage'] : ''));
+            }else{
+              emit(state.copyWith(returnProductList: tempProductList));
             }
           }
         }
@@ -110,26 +73,6 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         if (state.productQty != 0) {
           if (state.selectedRadioTile != 0) {
             if (state.proofFile.path.isNotEmpty) {
-              if (state.updateId.isNotEmpty) {
-                /*try {
-                  CreateReturnReqModel reqModel = CreateReturnReqModel(applicationName: AppStrings.appName, clientId: preferencesHelper.getUserId(), returnStatusId: state.statusId, returnProducts: [ReturnProducts(productImage: state.productImg, productName: state.productName, reasonToReturn: state.reason, isApproved: false, barcode: state.barCode, notes: state.addNoteController.text, proofImages: state.proofImagesList, totalUnits: state.productQty, totalRefund: 0)], subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null);
-                  final res = await DioClient(event.context).post(
-                    AppUrlEndPoints.updateReturnUrl + state.updateId,
-                    data: reqModel.toJson(),
-                  );
-                  CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
-                  if (resModel.status == AppConstants.code_201) {
-                    emit(state.copyWith(isLoading: false));
-                    Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
-                  } else {
-                    CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(resModel.message?.toLocalization() ?? resModel.message!, event.context), type: SnackBarType.failure);
-                  }
-                } catch (e) {
-                  CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
-                }*/
-                // return;
-              }
-
               ReturnProduct products = ReturnProduct(
                 productName: state.productName,
                 totalUnits: state.productQty,
@@ -141,20 +84,20 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
                 reasonToReturn: state.reason,
                 productImg: state.productImg,
               );
-            //  productList.add(products);
-              if(state.mainIndex!=-1){
-                List<ReturnProduct> returnList = state.returnProductList;
-                //state.returnProductList
-                state.returnProductList[state.mainIndex]=products;
-                Navigator.pop(event.context,state.returnProductList);
+              if (state.mainIndex != -1) {
+                List<ReturnProduct> returnList = [];
+                returnList.addAll(state.returnProductList);
+                emit(state.copyWith(returnProductList: []));
+                returnList.removeAt(state.mainIndex);
+                returnList.insert(state.mainIndex, products);
+                Navigator.pop(event.context, returnList);
                 return;
-              }else{
-                state.returnProductList.add(products);
-              }
-              if (state.updateId.isNotEmpty) {
-               // Navigator.pop(event.context, productList);
               } else {
-                Navigator.pushNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {'list':state.returnProductList,AppStrings.isUpdateParamString:false});
+                List<ReturnProduct> returnList = [];
+                returnList.addAll(state.returnProductList);
+                returnList.add(products);
+                emit(state.copyWith(returnProductList: returnList));
+                Navigator.pushNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {'list': state.returnProductList, AppStrings.isUpdateParamString: false});
               }
             } else {
               CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.add_one_proof_img, type: SnackBarType.failure);
@@ -166,24 +109,10 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
           CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.enter_units, type: SnackBarType.failure);
         }
       } else if (event is _deleteEvent) {
-        state.returnProductList.removeAt(state.mainIndex);
-        Navigator.pop(event.context,state.returnProductList);
-/*
-        DeleteReturnReq req = DeleteReturnReq(ids: [state.updateId]);
-        try {
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.deleteReturnUrl,
-            data: req.toJson(),
-          );
-          if (res[AppStrings.statusString] == AppConstants.code_200) {
-            Navigator.pop(event.context);
-          } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
-          }
-          printData('req:${req.toJson()}');
-        } catch (e) {
-          CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
-        }*/
+        List<ReturnProduct> list = [];
+        list.addAll(state.returnProductList);
+        list.removeAt(state.mainIndex);
+        Navigator.pop(event.context, list);
       } else if (event is _pickDocumentEvent) {
         XFile? image = await openImagePicker(event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (image != null) {

@@ -588,5 +588,6 @@
   "enter_units": "please enter the units",
   "select_one_option": "please select one of the options",
   "add_one_proof_img": "You must add at least one proof image",
-  "return_not_found": "return not found."
+  "return_not_found": "Return not found.",
+  "return_deleted": "Return deleted successfully."
 }

@@ -115,7 +115,7 @@ class AppUrlEndPoints {
 
   static const String getSaleProductsUrl = '/v3/products/getSaleProducts';
   static const String getPlanogramProductsUrl = '/v3/store/getPalnogramProducts';
-  static const String getPlanogramAllProductUrl = '/v3/store/getAllProducts';
+  static const String getPlanogramAllProductUrl = '/v1/store/getAllProducts';
   static const String getCompanyProductsUrl = '/v3/store/getBrandProducts';
   static const String getRecommendationProductsUrl = '/v3/recommendation/products';
   static const String getPreviousOrderProductsUrl = '/v3/recommendation/getPrevoiusOrderproducts';

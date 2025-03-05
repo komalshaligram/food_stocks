@@ -491,6 +491,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.credit_card_payment_failed;
       case 'returnnotfound' :
         return AppLocalizations.of(context)!.return_not_found;
+      case 'returndeletedsuccessfully' :
+        return AppLocalizations.of(context)!.return_deleted;
     }
     return key;
   }

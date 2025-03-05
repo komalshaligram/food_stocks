@@ -43,15 +43,16 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
           }
         } else {
           List<ReturnProduct> tempList = [];
-          final List<req.ReturnProduct> myList = map['list'] as List<req.ReturnProduct>;
+          final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
+         /*
           printData('list :${myList}');
           for (int i = 0; i < myList.length; i++) {
             tempList.add(ReturnProduct(totalRefund: myList[i].totalRefund, proofImages: myList[i].proofImages, notes: myList[i].notes, productName: myList[i].productName, productImg: myList[i].productImage, barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
           }
 
           String jsonString = jsonEncode(tempList.map((e) => e.toJson()).toList());
-          preferencesHelper.setReturnProductList(returnList: jsonString);
-          emit(state.copyWith(language: preferencesHelper.getAppLanguage(), returnProductList: tempList,returnId: ''));
+          preferencesHelper.setReturnProductList(returnList: jsonString);*/
+          emit(state.copyWith(language: preferencesHelper.getAppLanguage(), returnProductList: myList,returnId: ''));
         }
       } else if (event is _navigateToAddProductEvent) {
         emit(state.copyWith(returnProductList: state.returnProductList));
@@ -80,22 +81,28 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
           }
         } catch (e) {}
       } else if (event is _deleteEvent) {
-        DeleteReturnReq req = DeleteReturnReq(ids: [state.returnId ?? '']);
-        try {
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.deleteReturnUrl,
-            data: req.toJson(),
-          );
-          if (res[AppStrings.statusString] == AppConstants.code_200) {
-            Navigator.pop(event.context);
-            //Navigator.popUntil(event.context, (route)=> route.name == RouteDefine.returnListScreen.name);
-          } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
+        if(state.returnId.isNotEmpty){
+          DeleteReturnReq req = DeleteReturnReq(ids: [state.returnId ?? '']);
+          try {
+            final res = await DioClient(event.context).post(
+              AppUrlEndPoints.deleteReturnUrl,
+              data: req.toJson(),
+            );
+            if (res[AppStrings.statusString] == AppConstants.code_200) {
+              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
+              // Navigator.pop(event.context);
+              //Navigator.popUntil(event.context, (route)=> route.name == RouteDefine.returnListScreen.name);
+            } else {
+              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
+            }
+          } catch (e) {
+            CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
           }
-          printData('req:${req.toJson()}');
-        } catch (e) {
-          CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
+        }else{
+          emit(state.copyWith(returnProductList: []));
+          Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
         }
+
       } else if (event is _updateReturnEvent) {
         emit(state.copyWith(isLoading: true));
         try {
@@ -116,7 +123,14 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
           }
         } catch (e) {}
       } else if (event is _detailReturnEvent) {
-        var result = Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': state.returnProductList, 'index': event.index});
+        final result = await Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': state.returnProductList, 'index': event.index});
+        if(result!=null){
+          emit(state.copyWith(returnProductList: []));
+          List<ReturnProduct> list = [];
+          list.addAll(result as List<ReturnProduct>);
+          printData('update:${list.length}');
+          emit(state.copyWith(returnProductList: list));
+        }
         printData('result:$result');
       }
     });

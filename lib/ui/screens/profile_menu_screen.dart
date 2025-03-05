@@ -188,7 +188,6 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                       );
                                     })
                                   : 0.width,
-
                                 state.isSubUserSeeReturns ?  profileMenuTiles(
                                     title:
                                     AppLocalizations.of(context)!.returns,

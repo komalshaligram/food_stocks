@@ -134,10 +134,9 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
 
           emit(state.copyWith(isShimmering: true));
 
-          final res = await DioClient(event.context).post(AppUrlEndPoints.getPlanogramAllProductUrl, data: planogramReqModel);
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getPlanogramAllProductForSearchUrl, data: planogramReqModel);
           SupplierProductsResModel response = SupplierProductsResModel.fromJson(res);
           printData('product categories = ${response.data!.length.toString()}');
-          printData('getPlanogramAllProductUrl = ${AppUrlEndPoints.baseUrl}${AppUrlEndPoints.getPlanogramAllProductUrl}');
           if (response.status == AppConstants.code_200) {
             List<SupplierProductsData> productList = state.productList.toList(growable: true);
             productList.addAll(response.data ?? []);

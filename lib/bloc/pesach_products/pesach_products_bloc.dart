@@ -98,7 +98,7 @@ class PesachProductsBloc
             emit(state.copyWith(searchType: event.searchType.toString()));
           }
           final res = await DioClient(event.context)
-              .post(AppUrlEndPoints.getPlanogramAllProductUrl, data: req);
+              .post(AppUrlEndPoints.getPlanogramAllProductForSearchUrl, data: req);
           response =
               PesachProductsResModel.fromJson(res);
           emit(state.copyWith(searchType: event.searchType.toString()));

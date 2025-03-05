@@ -13,12 +13,13 @@ import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_styles.dart';
 import '../../ui/widget/sized_box_widget.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:another_flushbar/flushbar.dart';
+
 
 double getScreenHeight(BuildContext context) {
   final screenHeight = MediaQuery.of(context).size.height;
@@ -151,15 +152,15 @@ class CustomSnackBar {
     required String title,
     required SnackBarType type,
   }) {
-    GFToast.showToast(
-      trailing: Container(),
-      title,
-      context,
+    Flushbar(
       backgroundColor: type == SnackBarType.success ? AppColors.mainColor.withOpacity(0.85) : AppColors.redColor.withOpacity(0.85),
-      toastBorderRadius: 8.0,
-      toastPosition: GFToastPosition.TOP,
-      textStyle: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400),
-    );
+      messageText: Text(title,style:  AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400)),
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(20),
+      borderRadius: BorderRadius.circular(15),
+      duration: const Duration(seconds: 1),
+      flushbarPosition: FlushbarPosition.TOP,
+    ).show(context);
   }
 }
 
