@@ -20,7 +20,6 @@ part 'order_details_state.dart';
 part 'order_details_bloc.freezed.dart';
 
 class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
-
   OrderDetailsBloc() : super(OrderDetailsState.initial()) {
     on<OrderDetailsEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -28,29 +27,22 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
       if (event is _getOrderByIdEvent) {
         try {
           final res = await DioClient(event.context).get(
-              path: '${AppUrlEndPoints.getOrderById}${event.orderId}',
-       );
+            path: '${AppUrlEndPoints.getOrderById}${event.orderId}',
+          );
 
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
 
           final String statusData = preferencesHelper.getOrderStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
-          emit(state.copyWith(statusData: statusList,language: preferencesHelper.getAppLanguage()));
+          emit(state.copyWith(statusData: statusList, language: preferencesHelper.getAppLanguage()));
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(orderByIdList: response));
-
           } else {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
                 type: SnackBarType.failure);
           }
         } on ServerException {}
       }
     });
   }
-
 }

@@ -18,13 +18,14 @@ import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-part 'create_return_state.dart';
-part 'create_return_event.dart';
-part 'create_return_bloc.freezed.dart';
+part 'return_summary_state.dart';
+part 'return_summary_event.dart';
+part 'return_summary_bloc.freezed.dart';
 
-class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
-  CreateReturnBloc() : super(CreateReturnState.initial()) {
-    on<CreateReturnEvent>((event, emit) async {
+
+class ReturnSummaryBloc extends Bloc<ReturnSummaryEvent, ReturnSummaryState> {
+  ReturnSummaryBloc() : super(ReturnSummaryState.initial()) {
+    on<ReturnSummaryEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getReturnListEvent) {
         Map map = event.product;
@@ -102,7 +103,7 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
             );
             if (res[AppStrings.statusString] == AppConstants.code_200) {
               emit(state.copyWith(returnProductList: []));
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(context: event.context, title:AppLocalizations.of(event.context)!.return_deleted, type: SnackBarType.failure);
               Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
             } else {
               CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);

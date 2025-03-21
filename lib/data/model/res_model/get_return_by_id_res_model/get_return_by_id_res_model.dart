@@ -69,7 +69,8 @@ class Data with _$Data {
     int? totalRefund,
     @JsonKey(name: "subUserName")
     String? subUserName,
-
+    String? supplierId,
+    String? supplierName,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -95,7 +96,8 @@ class ReturnProduct with _$ReturnProduct {
     String? reasonToReturn,
     @JsonKey(name: "productImage")
     String? productImg,
-    bool? isDeleted
+   String? supplierId,
+    String? supplierName,
   }) = _ReturnProduct;
 
   factory ReturnProduct.fromJson(Map<String, dynamic> json) => _$ReturnProductFromJson(json);

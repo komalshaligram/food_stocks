@@ -6,7 +6,10 @@ class CreateReturnState with _$CreateReturnState {
     required List<ReturnProduct> returnProductList,
     required String returnId,
     required bool isShimmer,
+    required Map<String?,List<ReturnProduct>> supplierWiseMap,
+    required String supplierId,
     required bool isLoading, required String language, required TextEditingController barCodeController}) = _CreateReturnState;
 
-  factory CreateReturnState.initial() => CreateReturnState(isRedirected: false,isShimmer:false, isLoading: false, language: '',returnProductList:[], barCodeController: TextEditingController(),returnId:'');
+  factory CreateReturnState.initial() => CreateReturnState(supplierWiseMap:{},isRedirected: false,isShimmer:false,
+      supplierId:'',isLoading: false, language: '',returnProductList:[], barCodeController: TextEditingController(),returnId:'');
 }

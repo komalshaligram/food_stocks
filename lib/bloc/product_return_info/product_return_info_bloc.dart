@@ -44,23 +44,25 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         if (map.isNotEmpty) {
           if (map['data'] != null) {
             emit(state.copyWith(barCode: map['data']['qrcode'], totalQty: map['data']['numberOfUnit'], productName: map['data']['productName'], productImg: map['data']['mainImage'] != null ? AppUrlEndPoints.baseFileUrl + map['data']['mainImage'] : '',language: preferencesHelper.getAppLanguage(),
-              radioList: tempList,));
+              radioList: tempList,supplierId: map['data']['supplierId']??'',supplierName: map['data']['supplierName']));
           }
           if (map['list'] != null) {
             List<ReturnProduct> tempProductList = [];
             final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
             printData('list :${myList}');
             for (int i = 0; i < myList.length; i++) {
-              tempProductList.add(ReturnProduct(totalRefund: myList[i].totalRefund, proofImages: myList[i].proofImages, notes: myList[i].notes, productName: myList[i].productName, productImg: myList[i].productImg, barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
+              tempProductList.add(ReturnProduct(supplierName:myList[i].supplierName,totalRefund: myList[i].totalRefund, supplierId: myList[i].supplierId,proofImages: myList[i].proofImages, notes: myList[i].notes, productName: myList[i].productName, productImg: myList[i].productImg, barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
             }
             int index = map['index'] ?? 0;
             int radioIndex = tempList.indexWhere((e) => e.text.toLowerCase() == tempProductList[index].reasonToReturn?.toLowerCase()).toInt();
             if (map['data'] == null) {
-              emit(state.copyWith(selectedRadioTile: radioIndex + 1, returnProductList: tempProductList, barCode: tempProductList.elementAt(index).barcode ?? '', totalQty: tempProductList.elementAt(index).totalUnits ?? 0, productName: tempProductList.elementAt(index).productName ?? '', productImg: (tempProductList.elementAt(index).productImg ?? ''), mainIndex: index, productQty: tempProductList[index].totalUnits ?? 0, proofImagesList: tempProductList.elementAt(index).proofImages ?? [], reason: tempProductList.elementAt(index).reasonToReturn ?? '', addNoteController: TextEditingController(text: tempProductList.elementAt(index).notes ?? '')));
+              emit(state.copyWith(selectedRadioTile: radioIndex + 1,
+                  supplierName: tempProductList.elementAt(index).supplierName??'',
+                  supplierId: tempProductList.elementAt(index).supplierId??'', returnProductList: tempProductList, barCode: tempProductList.elementAt(index).barcode ?? '', totalQty: tempProductList.elementAt(index).totalUnits ?? 0, productName: tempProductList.elementAt(index).productName ?? '', productImg: (tempProductList.elementAt(index).productImg ?? ''), mainIndex: index, productQty: tempProductList[index].totalUnits ?? 0, proofImagesList: tempProductList.elementAt(index).proofImages ?? [], reason: tempProductList.elementAt(index).reasonToReturn ?? '', addNoteController: TextEditingController(text: tempProductList.elementAt(index).notes ?? '')));
               emit(state.copyWith(
                 language: preferencesHelper.getAppLanguage(),
                 radioList: tempList,
-                proofFile: File(AppUrlEndPoints.baseFileUrl + state.proofImagesList[0]),
+                proofFile: File(state.proofImagesList.isNotEmpty?AppUrlEndPoints.baseFileUrl + state.proofImagesList[0]:''),
                 proofFile1: File(state.proofImagesList.length > 1 ? (AppUrlEndPoints.baseFileUrl + state.proofImagesList[1]) : ''),
                 proofFile2: File(state.proofImagesList.length > 2 ? (AppUrlEndPoints.baseFileUrl + state.proofImagesList[2]) : ''),
               ));
@@ -83,6 +85,8 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
                 totalRefund: 0,
                 reasonToReturn: state.reason,
                 productImg: state.productImg,
+                supplierName: state.supplierName,
+                supplierId: state.supplierId
               );
               if (state.mainIndex != -1) {
                 List<ReturnProduct> returnList = [];
@@ -112,11 +116,18 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         List<ReturnProduct> list = [];
         list.addAll(state.returnProductList);
         list.removeAt(state.mainIndex);
-        Navigator.pop(event.context, list);
+        if(list.isNotEmpty){
+          Navigator.pop(event.context, list);
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.record_deleted_successfully, type: SnackBarType.success);
+        }else{
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.record_deleted_successfully, type: SnackBarType.success);
+          Navigator.pop(event.context, list);
+          Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
+        }
       } else if (event is _pickDocumentEvent) {
         XFile? image = await openImagePicker(event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (image != null) {
-          CroppedFile? croppedImage = await cropImage(path: image.path, shape: CropStyle.circle, quality: AppConstants.fileQuality);
+          CroppedFile? croppedImage = await cropImage(path: image.path, shape: CropStyle.rectangle, quality: AppConstants.fileQuality);
           if (croppedImage?.path.isEmpty ?? true) {
             return;
           }
@@ -159,13 +170,6 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
           emit(state.copyWith(
             productQty: event.productQuantity.round() + 1,
           ));
-          /*if (event.productQuantity < state.totalQty) {
-            emit(state.copyWith(
-              productQty: event.productQuantity.round() + 1,
-            ));
-          } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.missing_quantity_not_more_than_original, type: SnackBarType.failure);
-          }*/
         } else {
           emit(state.copyWith(
             productQty: event.productQuantity.round() + 1,

@@ -11,6 +11,7 @@ class CreateReturnReqModel with _$CreateReturnReqModel {
     String? applicationName,
     String? clientId,
     String? returnStatusId,
+    String? supplierId,
     required dynamic subUserId,
   }) = _CreateReturnReqModel;
 

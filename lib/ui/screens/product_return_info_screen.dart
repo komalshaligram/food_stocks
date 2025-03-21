@@ -427,7 +427,6 @@ class ReturnListWidget extends StatelessWidget {
                 bloc.add(ProductReturnInfoEvent.deleteEvent(
                   context: context,
                 ));
-
                 Navigator.pop(context);
               },
             );

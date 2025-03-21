@@ -109,7 +109,7 @@ class _ProductDetailsScreenWidgetState
               preferredSize:const Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 bgColor: AppColors.pageColor,
-                title: widget.orderNumber.toString(),
+                title:'',
                 iconData: Icons.arrow_back_ios_sharp,
                 trailingWidget: Row(
                   children: [

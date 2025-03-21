@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/screens/return_summary_screen.dart';
 import 'package:food_stock/ui/screens/scan_return_product_screen.dart';
 import 'package:food_stock/ui/widget/common_pdf_viewer.dart';
 import '../../ui/screens/manage_credit_card.dart';
@@ -118,6 +119,7 @@ enum RouteDefine {
   scanReturnProduct,
   productReturnInfoScreen,
   createProductReturnListScreen,
+  returnSummaryScreen
 
 }
 
@@ -185,6 +187,7 @@ class AppRouting {
       RouteDefine.scanReturnProduct.name:(_)=>ScanReturnProductRoute.route,
       RouteDefine.productReturnInfoScreen.name:(_)=>ProductReturnInfoRoute.route,
       RouteDefine.createProductReturnListScreen.name:(_)=>CreateProductReturnListRoute.route,
+      RouteDefine.returnSummaryScreen.name:(_)=>ReturnSummaryRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

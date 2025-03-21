@@ -8,10 +8,12 @@ class CreateReturnEvent with _$CreateReturnEvent {
     _deleteEvent;
     factory CreateReturnEvent.navigateToAddProductEvent({required BuildContext context}) =
     _navigateToAddProductEvent;
-    factory CreateReturnEvent.createReturnEvent({required BuildContext context}) =
+    factory CreateReturnEvent.createReturnEvent({required BuildContext context,required String supplierId}) =
     _createReturnEvent;
     factory CreateReturnEvent.updateReturnEvent({required BuildContext context}) =
     _updateReturnEvent;
     factory CreateReturnEvent.detailReturnEvent({required BuildContext context, required int index}) =
     _detailReturnEvent;
+    factory CreateReturnEvent.getSummaryListEvent({required BuildContext context, required dynamic list}) =
+    _getSummaryListEvent;
 }

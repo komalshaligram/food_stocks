@@ -493,6 +493,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.return_not_found;
       case 'returndeletedsuccessfully' :
         return AppLocalizations.of(context)!.return_deleted;
+      case 'returncreatedsuccessfully' :
+        return AppLocalizations.of(context)!.return_created_success;
     }
     return key;
   }

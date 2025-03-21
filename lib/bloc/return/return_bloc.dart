@@ -36,7 +36,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
           final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
           if (myList.isNotEmpty) {
             for (int i = 0; i < myList.length; i++) {
-              tempList.add(ReturnProduct(totalRefund: myList[i].totalRefund, proofImages: myList[i].proofImages, notes: myList[i].notes, productName: myList[i].productName, productImg: myList[i].productImg, barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
+              tempList.add(ReturnProduct(totalRefund: myList[i].totalRefund,supplierName:myList[i].supplierName,supplierId: myList[i].supplierId, proofImages: myList[i].proofImages, notes: myList[i].notes, productName: myList[i].productName, productImg: myList[i].productImg, barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
             }
             emit(state.copyWith(returnProductList: tempList));
           }

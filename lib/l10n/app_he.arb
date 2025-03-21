@@ -578,7 +578,7 @@
   "wrong_product": "מוצר לא נכון",
   "product_return_list": "רשימת מוצרים לבקשת חזרה",
   "add_another_product": "הוסף עוד מוצר לחזרה",
-  "send_the_request": "Send the request",
+  "send_the_request": "שלח את הבקשה",
   "open_refund_invoice" : "הצג חשבונית זיכוי",
   "product_does_not_exist": "המוצר לא קיים במערכת",
   "date_sent": "תאריך שליחה:",
@@ -586,6 +586,8 @@
   "enter_units": "אנא הזן מספר יחידות",
   "select_one_option": "אנא בחר אחת מהאפשרויות",
   "add_one_proof_img": "אתה צריך להעלות לפחות תמונת הוכחה אחת",
-  "return_not_found": "return not found.",
-  "return_deleted": "Return deleted successfully."
+  "return_not_found": "חזרה לא קיימת",
+  "return_deleted": "חזרה נמחקה בהצלחה",
+  "return_summary": "Return Summary",
+  "return_created_success" : "Return created successfully."
 }
