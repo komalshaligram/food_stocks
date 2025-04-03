@@ -12,12 +12,12 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_img_path.dart';
-import '../utils/themes/app_strings.dart';
-import '../utils/themes/app_styles.dart';
-import '../utils/themes/app_urls.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_img_path.dart';
+import '../utils/constants/app_strings.dart';
+import '../utils/constants/app_styles.dart';
+import '../utils/constants/app_urls.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';

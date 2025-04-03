@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../ui/utils/themes/app_colors.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/utils/constants/app_colors.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_styles.dart';
 
 class CommonProductButtonWidget extends StatelessWidget {
   final String title;

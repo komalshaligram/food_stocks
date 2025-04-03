@@ -4,7 +4,7 @@ import '../../data/model/bottom_nav_model/bottom_nav_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/constants/app_strings.dart';
 
 part 'bottom_nav_event.dart';
 part 'bottom_nav_state.dart';

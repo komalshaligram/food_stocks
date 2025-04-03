@@ -4,11 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
-import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/constants/app_colors.dart';
+import '../../ui/utils/constants/app_constants.dart';
 
-import '../../ui/utils/themes/app_strings.dart';
-import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/utils/constants/app_strings.dart';
+import '../../ui/utils/constants/app_styles.dart';
 import '../../ui/widget/profile_screen_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 

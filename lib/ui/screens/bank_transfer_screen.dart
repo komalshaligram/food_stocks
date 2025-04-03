@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/bank_transfer/bank_transfer_bloc.dart';
 import '../../ui/utils/app_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_styles.dart';
 
 
 class BankTransferScreenRoute {

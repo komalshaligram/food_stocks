@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_styles.dart';
 
 class CommonPaginationEndWidget extends StatelessWidget {
   final String pageEndText;

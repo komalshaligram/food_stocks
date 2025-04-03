@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
 
 class RefreshWidget extends StatelessWidget {
   const RefreshWidget({super.key});

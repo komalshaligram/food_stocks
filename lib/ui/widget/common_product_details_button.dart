@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/app_utils.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
 import 'common_product_button_widget.dart';
 
 class CommonProductDetailsButton extends StatelessWidget {

@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/app_utils.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_styles.dart';
 
 class NoDataBottomSheet extends StatelessWidget {
   const NoDataBottomSheet({super.key,required this.dialogContext});

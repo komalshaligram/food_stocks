@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_date_range_picker/flutter_date_range_picker.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_strings.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,7 +28,7 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/utils/constants/app_urls.dart';
 import '../bottom_nav/bottom_nav_bloc.dart';
 
 

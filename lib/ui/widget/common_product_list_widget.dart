@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
 import 'common_shimmer_widget.dart';
 
 class CommonProductListShimmerWidget extends StatelessWidget {

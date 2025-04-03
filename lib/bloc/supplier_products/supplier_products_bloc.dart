@@ -9,8 +9,8 @@ import '../../data/model/req_model/supplier_products_req_model/supplier_products
 import '../../data/model/res_model/supplier_products_res_model/supplier_products_res_model.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -37,7 +37,7 @@ import '../../data/storage/shared_preferences_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import '../../routes/app_routes.dart';
-import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/constants/app_strings.dart';
 
 part 'supplier_products_event.dart';
 part 'supplier_products_state.dart';

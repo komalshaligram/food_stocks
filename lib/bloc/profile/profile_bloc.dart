@@ -9,8 +9,8 @@ import '../../data/model/res_model/business_type_model/business_type_model.dart'
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart' as resGet;
 import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart' as reqUpdate;
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_strings.dart';
-import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/utils/constants/app_strings.dart';
+import '../../ui/utils/constants/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -22,7 +22,7 @@ import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
-import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/constants/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'profile_bloc.freezed.dart';

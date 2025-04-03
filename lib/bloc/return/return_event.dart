@@ -14,4 +14,6 @@ class ReturnEvent with _$ReturnEvent {
     _newRequestEvent;
     factory ReturnEvent.getArgumentEvent({required BuildContext context,required dynamic list}) =
     _getArgumentEvent;
+     factory ReturnEvent.refreshListEvent({required BuildContext context}) =
+    _refreshListEvent;
 }

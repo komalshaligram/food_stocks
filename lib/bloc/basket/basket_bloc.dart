@@ -13,7 +13,7 @@ import '../../data/model/res_model/product_details_res_model/product_details_res
 import '../../data/model/res_model/supplier_payment_type_res_model/supplier_payment_type_res_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/constants/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,8 +31,8 @@ import '../../data/model/res_model/verify_client_res_model/verify_client_res_mod
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
-import '../../ui/utils/themes/app_strings.dart';
-import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/utils/constants/app_strings.dart';
+import '../../ui/utils/constants/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../bottom_nav/bottom_nav_bloc.dart';
 

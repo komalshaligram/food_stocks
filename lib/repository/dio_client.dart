@@ -9,15 +9,15 @@ import 'package:flutter/material.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 
 import '../../ui/widget/no_internet_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/model/res_model/refresh_token/refresh_token_model.dart';
 import '../data/services/locale_provider.dart';
-import '../ui/utils/themes/app_urls.dart';
+import '../ui/utils/constants/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DioClient {
@@ -154,8 +154,10 @@ class DioClient {
       await preferencesHelper.setUserLoggedIn();
       printData('Token Expired = ${response.data}');
       await Provider.of<LocaleProvider>(_context, listen: false).setAppLocale(locale: const Locale(AppStrings.hebrewString));
-      Navigator.popUntil(_context, (route) => route.name == RouteDefine.bottomNavScreen.name);
-      Navigator.pushNamed(_context, RouteDefine.connectScreen.name);
+     /* Navigator.popUntil(_context, (route) => route.name == RouteDefine.bottomNavScreen.name);
+      Navigator.pushNamed(_context, RouteDefine.connectScreen.name);*/
+      Navigator.pushNamedAndRemoveUntil(_context, RouteDefine.connectScreen.name, (Route route) => route.isFirst);
+
       ScaffoldMessenger.of(_context).hideCurrentSnackBar();
       CustomSnackBar.showSnackBar(context: _context, title: AppLocalizations.of(_context)!.logged_out_successfully, type: SnackBarType.success);
     }

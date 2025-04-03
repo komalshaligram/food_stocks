@@ -7,10 +7,10 @@ import '../../ui/utils/app_utils.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../bloc/privacy_policy/privacy_policy_bloc.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_strings.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_strings.dart';
+import '../utils/constants/app_styles.dart';
 import '../widget/custom_button_widget.dart';
 
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/constants/app_colors.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import '../utils/app_utils.dart';
-import '../utils/themes/app_constants.dart';
+import '../utils/constants/app_constants.dart';
 
 class ProfileScreenShimmerWidget extends StatelessWidget {
    final bool isProfileImage;

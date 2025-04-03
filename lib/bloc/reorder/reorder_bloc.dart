@@ -34,9 +34,9 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_strings.dart';
-import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_strings.dart';
+import '../../ui/utils/constants/app_urls.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 
 part 'reorder_event.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import '../../ui/utils/themes/app_colors.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/utils/constants/app_colors.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_styles.dart';
 
 class CustomButtonWidget extends StatelessWidget {
   final String buttonText;

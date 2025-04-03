@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/utils/constants/app_urls.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_strings.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_strings.dart';
+import '../utils/constants/app_styles.dart';
 
 class PreviewScreenRoute {
   static Widget get route =>  const PreviewScreen();

@@ -20,15 +20,17 @@ class CreateReturnResModel with _$CreateReturnResModel {
     @JsonKey(name: "message")
     String? message,
     @JsonKey(name: "data")
-    Data? data,
+    List<Datum>? data,
   }) = _CreateReturnResModel;
 
   factory CreateReturnResModel.fromJson(Map<String, dynamic> json) => _$CreateReturnResModelFromJson(json);
 }
 
 @freezed
-class Data with _$Data {
-  const factory Data({
+class Datum with _$Datum {
+  const factory Datum({
+    @JsonKey(name: "_id")
+    String? id,
     @JsonKey(name: "returnNumber")
     int? returnNumber,
     @JsonKey(name: "returnStatusId")
@@ -41,31 +43,85 @@ class Data with _$Data {
     String? applicationName,
     @JsonKey(name: "clientId")
     String? clientId,
+    @JsonKey(name: "orderId")
+    dynamic orderId,
     @JsonKey(name: "subUserId")
     dynamic subUserId,
+    @JsonKey(name: "supplierId")
+    String? supplierId,
     @JsonKey(name: "totalPayment")
-    int? totalPayment,
+    double? totalPayment,
     @JsonKey(name: "invoiceDate")
     dynamic invoiceDate,
+    @JsonKey(name: "requestDate")
+    DateTime? requestDate,
     @JsonKey(name: "rivchitInvoiceLink")
     String? rivchitInvoiceLink,
     @JsonKey(name: "rivchitInvoiceNumber")
     dynamic rivchitInvoiceNumber,
+    @JsonKey(name: "rivchitInvoiceAmount")
+    int? rivchitInvoiceAmount,
     @JsonKey(name: "referenceRivchitInvoiceId")
-    dynamic referenceRivchitInvoiceId,
+    int? referenceRivchitInvoiceId,
     @JsonKey(name: "referenceSupplierInvoiceId")
-    dynamic referenceSupplierInvoiceId,
+    int? referenceSupplierInvoiceId,
     @JsonKey(name: "errorMessage")
     List<dynamic>? errorMessage,
-    @JsonKey(name: "_id")
-    String? id,
+    @JsonKey(name: "isDeleted")
+    bool? isDeleted,
     @JsonKey(name: "createdAt")
-    String? createdAt,
+    DateTime? createdAt,
     @JsonKey(name: "updatedAt")
-    String? updatedAt,
+    DateTime? updatedAt,
     @JsonKey(name: "__v")
     int? v,
-  }) = _Data;
+    @JsonKey(name: "returnproducts")
+    List<Returnproduct>? returnproducts,
+  }) = _Datum;
 
-  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
+  factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
+}
+
+@freezed
+class Returnproduct with _$Returnproduct {
+  const factory Returnproduct({
+    @JsonKey(name: "_id")
+    String? id,
+    @JsonKey(name: "returnId")
+    String? returnId,
+    @JsonKey(name: "clientId")
+    String? clientId,
+    @JsonKey(name: "productId")
+    String? productId,
+    @JsonKey(name: "productName")
+    String? productName,
+    @JsonKey(name: "barcode")
+    String? barcode,
+    @JsonKey(name: "reasonToReturn")
+    String? reasonToReturn,
+    @JsonKey(name: "notes")
+    String? notes,
+    @JsonKey(name: "totalUnits")
+    int? totalUnits,
+    @JsonKey(name: "totalRefund")
+    double? totalRefund,
+    @JsonKey(name: "isApproved")
+    bool? isApproved,
+    @JsonKey(name: "proofImages")
+    List<String>? proofImages,
+    @JsonKey(name: "productImage")
+    String? productImage,
+    @JsonKey(name: "createdAt")
+    DateTime? createdAt,
+    @JsonKey(name: "updatedAt")
+    DateTime? updatedAt,
+    @JsonKey(name: "__v")
+    int? v,
+    @JsonKey(name: "supplierId")
+    String? supplierId,
+    @JsonKey(name: "supplierName")
+    String? supplierName,
+  }) = _Returnproduct;
+
+  factory Returnproduct.fromJson(Map<String, dynamic> json) => _$ReturnproductFromJson(json);
 }

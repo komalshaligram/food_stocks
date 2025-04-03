@@ -495,6 +495,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.return_deleted;
       case 'returncreatedsuccessfully' :
         return AppLocalizations.of(context)!.return_created_success;
+      case 'returnupdatedsuccessfully' :
+        return AppLocalizations.of(context)!.return_created_success;
     }
     return key;
   }

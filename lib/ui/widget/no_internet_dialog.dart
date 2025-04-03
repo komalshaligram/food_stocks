@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../ui/utils/themes/app_colors.dart';
-import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/constants/app_colors.dart';
+import '../../ui/utils/constants/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/utils/constants/app_styles.dart';
 
 class NoInternetDialog extends StatelessWidget {
   final void Function()? positiveOnTap;

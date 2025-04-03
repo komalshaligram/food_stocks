@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_img_path.dart';
-import '../../ui/utils/themes/app_styles.dart';
-import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/utils/constants/app_colors.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_img_path.dart';
+import '../../ui/utils/constants/app_styles.dart';
+import '../../ui/utils/constants/app_urls.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
@@ -113,7 +113,7 @@ class CommonSaleListView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: getScreenWidth(context) / 2.5,
+                          width: getScreenWidth(context) / 1.5,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,

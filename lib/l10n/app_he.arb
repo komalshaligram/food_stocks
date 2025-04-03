@@ -582,12 +582,14 @@
   "open_refund_invoice" : "הצג חשבונית זיכוי",
   "product_does_not_exist": "המוצר לא קיים במערכת",
   "date_sent": "תאריך שליחה:",
+  "date_approved": "תאריך אישור:",
   "total_refund": "סה”כ זיכוי:",
   "enter_units": "אנא הזן מספר יחידות",
   "select_one_option": "אנא בחר אחת מהאפשרויות",
   "add_one_proof_img": "אתה צריך להעלות לפחות תמונת הוכחה אחת",
   "return_not_found": "חזרה לא קיימת",
   "return_deleted": "חזרה נמחקה בהצלחה",
-  "return_summary": "Return Summary",
-  "return_created_success" : "Return created successfully."
+  "return_summary": "נתוני חזרה",
+  "return_created_success" : "החזרה נוצרה בהצלחה",
+  "click_to_scan": "לחץ כאן לסריקת ברקוד של המוצר"
 }

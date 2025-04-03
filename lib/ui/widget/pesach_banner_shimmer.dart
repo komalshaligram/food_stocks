@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/app_utils.dart';
-import '../utils/themes/app_colors.dart';
+import '../utils/constants/app_colors.dart';
 import 'common_shimmer_widget.dart';
 
 class PesachBannerShimmerWidget extends StatelessWidget {

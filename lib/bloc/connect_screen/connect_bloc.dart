@@ -5,7 +5,7 @@ import '../../routes/app_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/constants/app_strings.dart';
 
 part 'connect_event.dart';
 part 'connect_state.dart';

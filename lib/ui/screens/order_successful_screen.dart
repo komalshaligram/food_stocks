@@ -2,15 +2,15 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/utils/constants/app_colors.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_styles.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/order_successful/order_successful_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../routes/app_routes.dart';
-import '../utils/themes/app_img_path.dart';
-import '../utils/themes/app_strings.dart';
+import '../utils/constants/app_img_path.dart';
+import '../utils/constants/app_strings.dart';
 import '../widget/confetti.dart';
 
 

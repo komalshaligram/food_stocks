@@ -4,18 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/supplier/supplier_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_img_path.dart';
-import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/constants/app_colors.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_img_path.dart';
+import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
 import '../../ui/widget/supplier_screen_shimmer_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../utils/themes/app_styles.dart';
-import '../utils/themes/app_urls.dart';
+import '../utils/constants/app_styles.dart';
+import '../utils/constants/app_urls.dart';
 import '../widget/refresh_widget.dart';
 
 class SupplierRoute {

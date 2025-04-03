@@ -32,5 +32,8 @@ class ProductReturnInfoEvent with _$ProductReturnInfoEvent {
       required int selectRadioTile,
       required String reason
     }) = _radioButtonEvent;
-
+    factory ProductReturnInfoEvent.createReturnEvent({required BuildContext context,required String supplierId}) =
+    _createReturnEvent;
+    factory ProductReturnInfoEvent.updateReturnEvent({required BuildContext context}) =
+    _updateReturnEvent;
 }

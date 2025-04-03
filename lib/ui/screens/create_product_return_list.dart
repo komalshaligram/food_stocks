@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/widget/custom_button_widget.dart';
-import 'package:food_stock/ui/widget/order_summary_screen_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '/routes/app_routes.dart';
+import '/ui/widget/custom_button_widget.dart';
+import '/ui/widget/order_summary_screen_shimmer_widget.dart';
+import '/ui/widget/sized_box_widget.dart';
 import '../../bloc/create_return_bloc/create_return_bloc.dart';
 import '../../data/model/res_model/get_return_by_id_res_model/get_return_by_id_res_model.dart';
 import '../utils/app_utils.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_img_path.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_img_path.dart';
+import '../utils/constants/app_styles.dart';
 import '../widget/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
 
@@ -42,112 +42,107 @@ class CreateProductReturnListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<CreateReturnBloc>();
     return BlocBuilder<CreateReturnBloc, CreateReturnState>(
-
       builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.pageColor,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
-            child: CommonAppBar(
-              bgColor: AppColors.pageColor,
-              title: AppLocalizations.of(context)!.product_return_list,
-              iconData: Icons.arrow_back_ios_sharp,
-              onTap: () {
-                Navigator.pop(context);
-              },
-              trailingWidget: state.returnProductList.isNotEmpty
-                  ? InkWell(
-                      onTap: () {
-                        deleteProductDialog(context: context);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                        decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(5.0)),
-                        child: Text(
-                          AppLocalizations.of(context)!.delete,
-                          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor),
-                        ),
-                      ),
-                    )
-                  : 0.height,
+        return PopScope(
+          canPop: false,
+          child: Scaffold(
+            backgroundColor: AppColors.pageColor,
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+              child: CommonAppBar(
+                bgColor: AppColors.pageColor,
+                title: AppLocalizations.of(context)!.product_return_list,
+                iconData: Icons.arrow_back_ios_sharp,
+                onTap: () {
+                  //Navigator.pop(context);
+                  Navigator.pushNamedAndRemoveUntil(context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
+                },
+                trailingWidget: state.returnProductList.isNotEmpty
+                    ? InkWell(
+                  onTap: () {
+                    deleteProductDialog(context: context);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                    decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(5.0)),
+                    child: Text(
+                      AppLocalizations.of(context)!.delete,
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor),
+                    ),
+                  ),
+                )
+                    : 0.height,
+              ),
             ),
-          ),
-          body: SafeArea(
-            child: state.isShimmer
-                ? const Expanded(
-                    child: OrderSummaryScreenShimmerWidget(
-                    containerHeight: 100,
-                  ))
-                : state.returnProductList.isNotEmpty
-                    ? Column(mainAxisSize: MainAxisSize.max, children: [
-                        Expanded(
-                          child: AnimationLimiter(
-                            child: ListView.builder(
-                              itemCount: state.returnProductList.length,
-                              shrinkWrap: true,
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
-                                duration: const Duration(seconds: 1),
-                                position: index,
-                                child: SlideAnimation(
-                                  verticalOffset: 44.0,
-                                  child: FadeInAnimation(
-                                    child: returnListItem(index: index, context: context, state: state),
-                                  ),
-                                ),
-                              ),
-                            ),
+            body: SafeArea(
+              child: state.isShimmer
+                  ? const OrderSummaryScreenShimmerWidget(
+                containerHeight: 100,)
+                  : state.returnProductList.isNotEmpty
+                  ? Column(mainAxisSize: MainAxisSize.max, children: [
+                Expanded(
+                  child: AnimationLimiter(
+                    child: ListView.builder(
+                      itemCount: state.returnProductList.length,
+                      shrinkWrap: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
+                        duration: const Duration(seconds: 1),
+                        position: index,
+                        child: SlideAnimation(
+                          verticalOffset: 44.0,
+                          child: FadeInAnimation(
+                            child: returnListItem(index: index, context: context, state: state),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(AppConstants.padding_15),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              state.returnId.isEmpty
-                                  ? CustomButtonWidget(
-                                      iconWidget: Icon(
-                                        Icons.add,
-                                        color: AppColors.whiteColor,
-                                      ),
-                                      buttonText: AppLocalizations.of(context)!.add_another_product,
-                                      isLoading: false,
-                                      onPressed: () {
-                                        bloc.add(CreateReturnEvent.navigateToAddProductEvent(context: context));
-                                      },
-                                    )
-                                  : 0.width,
-                              12.height,
-                              state.returnProductList.isNotEmpty
-                                  ? CustomButtonWidget(
-                                      buttonText: state.returnId.isEmpty ? AppLocalizations.of(context)!.send_the_request : AppLocalizations.of(context)!.save,
-                                      isLoading: state.isLoading,
-                                      onPressed: () {
-                                        final supplierWiseMap = groupBy(state.returnProductList, (ReturnProduct products)=> products.supplierId);
-                                        if(supplierWiseMap.length==1){
-                                          if(state.returnId.isEmpty){
-                                            bloc.add(CreateReturnEvent.createReturnEvent(context: context,supplierId: state.returnProductList.first.supplierId.toString()));
-                                          }else {
-                                           bloc.add(CreateReturnEvent.updateReturnEvent(context: context));
-                                          }
-                                        }else{
-                                          Navigator.pushNamed(context, RouteDefine.returnSummaryScreen.name,arguments: {'list':state.returnProductList});
-                                        }
-                                      },
-                                    )
-                                  : 0.height,
-                            ],
-                          ),
-                        )
-                      ])
-                    : SizedBox(
-                        height: getScreenHeight(context) * 0.5,
-                        child: Center(
-                            child: Text(
-                          AppLocalizations.of(context)!.no_data,
-                          style: AppStyles.pVRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w400),
-                        )),
                       ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(AppConstants.padding_15),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      !state.isFromPending?CustomButtonWidget(
+                        iconWidget: Icon(
+                          Icons.add,
+                          color: AppColors.whiteColor,
+                        ),
+                        buttonText: AppLocalizations.of(context)!.add_another_product,
+                        isLoading: false,
+                        onPressed: () {
+                          bloc.add(CreateReturnEvent.navigateToAddProductEvent(context: context));
+                        },
+                      ):0.height,
+                      12.height,
+                      state.returnProductList.isNotEmpty
+                          ? CustomButtonWidget(
+                        buttonText: state.returnId.isEmpty ? AppLocalizations.of(context)!.send_the_request : AppLocalizations.of(context)!.save,
+                        isLoading: state.isLoading,
+                        onPressed: () async {
+                          final supplierWiseMap = groupBy(state.returnProductList, (ReturnProduct products)=> products.supplierId);
+                          if(supplierWiseMap.length==1){
+                            bloc.add(CreateReturnEvent.updateReturnEvent(context: context,));
+                          }else{
+                            bloc.add(CreateReturnEvent.navigateSummaryListEvent(context: context));
+                          }
+                        },
+                      )
+                          : 0.height,
+                    ],
+                  ),
+                )
+              ])
+                  : SizedBox(
+                height: getScreenHeight(context) * 0.5,
+                child: Center(
+                    child: Text(
+                      AppLocalizations.of(context)!.no_data,
+                      style: AppStyles.pVRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                    )),
+              ),
+            ),
           ),
         );
       },
@@ -209,34 +204,34 @@ class CreateProductReturnListWidget extends StatelessWidget {
             state.returnProductList[index].productImg!.isNotEmpty
                 ? Image.network(
               state.returnProductList[index].productImg ?? '',
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.contain,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return Center(
-                          child: SizedBox(
-                            width: AppConstants.containerHeight_80,
-                            height: AppConstants.containerHeight_80,
-                            child: CupertinoActivityIndicator(
-                              color: AppColors.blackColor,
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
-                    },
-                  )
+              width: 100,
+              height: 100,
+              fit: BoxFit.contain,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                } else {
+                  return Center(
+                    child: SizedBox(
+                      width: AppConstants.containerHeight_80,
+                      height: AppConstants.containerHeight_80,
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.blackColor,
+                      ),
+                    ),
+                  );
+                }
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+              },
+            )
                 : Image.asset(
-                    AppImagePath.imageNotAvailable5,
-                    fit: BoxFit.cover,
-                    width: AppConstants.containerHeight_80,
-                    height: AppConstants.containerHeight_80,
-                  ),
+              AppImagePath.imageNotAvailable5,
+              fit: BoxFit.cover,
+              width: AppConstants.containerHeight_80,
+              height: AppConstants.containerHeight_80,
+            ),
             4.width,
             Expanded(
               child: Column(

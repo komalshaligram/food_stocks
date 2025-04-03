@@ -8,9 +8,9 @@ import '../../data/error/exceptions.dart';
 import '../../data/model/res_model/suppliers_res_model/suppliers_res_model.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_strings.dart';
-import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_strings.dart';
+import '../../ui/utils/constants/app_urls.dart';
 
 part 'supplier_event.dart';
 

@@ -6,10 +6,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/widget/order_summary_screen_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_strings.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_strings.dart';
+import '../utils/constants/app_styles.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/custom_button_widget.dart';
 

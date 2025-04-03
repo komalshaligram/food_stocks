@@ -3,8 +3,8 @@ import '../../ui/widget/common_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 
 import '../utils/app_utils.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
 
 class MoreDetailsScreenShimmerWidget extends StatelessWidget {
   const MoreDetailsScreenShimmerWidget({super.key});

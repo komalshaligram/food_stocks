@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/widget/sized_box_widget.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_styles.dart';
 
 class DashBoardStatsWidget extends StatelessWidget {
   final BuildContext context;

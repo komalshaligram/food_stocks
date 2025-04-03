@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:food_stock/data/model/req_model/create_return_req_model/create_return_req_model.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
+import 'package:food_stock/ui/utils/constants/app_img_path.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-
 import '../../bloc/return/return_bloc.dart';
-import '../utils/app_utils.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_strings.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_styles.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -65,14 +59,18 @@ class ScanReturnProduct extends StatelessWidget {
                   bloc.add(ReturnEvent.openScannerEvent(context: context));
                 },
                 child: Center(
-                  child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: SvgPicture.asset(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
                         AppImagePath.scan,
                         height: 80,
-                      )),
+                      ),
+                      8.height,
+                      Text(AppLocalizations.of(context)!.click_to_scan, style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.greyColor,fontWeight: FontWeight.w400))
+                    ],
+                  ),
                 ),
               ),
             ),

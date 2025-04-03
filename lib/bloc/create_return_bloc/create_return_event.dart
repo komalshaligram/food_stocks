@@ -16,4 +16,6 @@ class CreateReturnEvent with _$CreateReturnEvent {
     _detailReturnEvent;
     factory CreateReturnEvent.getSummaryListEvent({required BuildContext context, required dynamic list}) =
     _getSummaryListEvent;
+    factory CreateReturnEvent.navigateSummaryListEvent({required BuildContext context}) =
+    _navigateSummaryListEvent;
 }

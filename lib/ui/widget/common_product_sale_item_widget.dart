@@ -4,11 +4,11 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_img_path.dart';
-import '../utils/themes/app_styles.dart';
-import '../utils/themes/app_urls.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_img_path.dart';
+import '../utils/constants/app_styles.dart';
+import '../utils/constants/app_urls.dart';
 import 'common_product_button_widget.dart';
 import 'common_shimmer_widget.dart';
 

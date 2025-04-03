@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
-import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/constants/app_colors.dart';
+import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
 
 class QuestionAndAnswerScreenShimmerWidget extends StatelessWidget {

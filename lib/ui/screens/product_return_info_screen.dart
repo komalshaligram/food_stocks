@@ -3,16 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/bloc/product_return_info/product_return_info_bloc.dart';
-import 'package:food_stock/ui/widget/file_selection_option_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '/bloc/product_return_info/product_return_info_bloc.dart';
+import '/ui/widget/file_selection_option_widget.dart';
+import '/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../utils/app_utils.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_img_path.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_img_path.dart';
+import '../utils/constants/app_styles.dart';
 import '../widget/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/custom_button_widget.dart';
@@ -88,35 +88,35 @@ class ReturnListWidget extends StatelessWidget {
                           children: [
                             state.productImg != ''
                                 ? Image.network(
-                                    state.productImg,
-                                    width: 100,
-                                    height: 100,
-                                    fit: BoxFit.contain,
-                                    loadingBuilder: (context, child, loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      } else {
-                                        return Center(
-                                          child: SizedBox(
-                                            width: AppConstants.containerHeight_80,
-                                            height: AppConstants.containerHeight_80,
-                                            child: CupertinoActivityIndicator(
-                                              color: AppColors.blackColor,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
-                                    },
-                                  )
+                              state.productImg,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.contain,
+                              loadingBuilder: (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return Center(
+                                    child: SizedBox(
+                                      width: AppConstants.containerHeight_80,
+                                      height: AppConstants.containerHeight_80,
+                                      child: CupertinoActivityIndicator(
+                                        color: AppColors.blackColor,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+                              },
+                            )
                                 : Image.asset(
-                                    AppImagePath.imageNotAvailable5,
-                                    fit: BoxFit.cover,
-                                    width: AppConstants.containerHeight_80,
-                                    height: AppConstants.containerHeight_80,
-                                  ),
+                              AppImagePath.imageNotAvailable5,
+                              fit: BoxFit.cover,
+                              width: AppConstants.containerHeight_80,
+                              height: AppConstants.containerHeight_80,
+                            ),
                             10.width,
                             Expanded(
                               child: Text(
@@ -246,17 +246,17 @@ class ReturnListWidget extends StatelessWidget {
                                   return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
                                 },
                               )
-                          :state.proofFile.existsSync()
-                                ?Image.file(
-                                      state.proofFile,
-                                      fit: BoxFit.cover,
-                                      height: 120,
-                                      width: 120,
-                                    )
+                                  :state.proofFile.existsSync()
+                                  ?Image.file(
+                                state.proofFile,
+                                fit: BoxFit.cover,
+                                height: 120,
+                                width: 120,
+                              )
                                   : const Icon(
-                                      Icons.add,
-                                      size: 60,
-                                    ),
+                                Icons.add,
+                                size: 60,
+                              ),
                             ),
                           ),
                           8.width,
@@ -295,15 +295,15 @@ class ReturnListWidget extends StatelessWidget {
                               ):state.proofFile1.existsSync()
 
                                   ? Image.file(
-                                      state.proofFile1,
-                                      fit: BoxFit.cover,
-                                      height: 120,
-                                      width: 120,
-                                    )
+                                state.proofFile1,
+                                fit: BoxFit.cover,
+                                height: 120,
+                                width: 120,
+                              )
                                   : const Icon(
-                                      Icons.add,
-                                      size: 60,
-                                    ),
+                                Icons.add,
+                                size: 60,
+                              ),
                             ),
                           ),
                           8.width,
@@ -342,15 +342,15 @@ class ReturnListWidget extends StatelessWidget {
                                 },
                               ):state.proofFile2.existsSync()
                                   ? Image.file(
-                                      state.proofFile2,
-                                      fit: BoxFit.cover,
-                                      height: 120,
-                                      width: 120,
-                                    )
+                                state.proofFile2,
+                                fit: BoxFit.cover,
+                                height: 120,
+                                width: 120,
+                              )
                                   : const Icon(
-                                      Icons.add,
-                                      size: 60,
-                                    ),
+                                Icons.add,
+                                size: 60,
+                              ),
                             ),
                           ),
                         ],
@@ -400,8 +400,8 @@ class ReturnListWidget extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context,index){
-      return radioWidget(state.radioList[index].id, state.radioList[index].text, context, state.selectedRadioTile);
-    },itemCount:state.radioList.length );
+          return radioWidget(state.radioList[index].id, state.radioList[index].text, context, state.selectedRadioTile);
+        },itemCount:state.radioList.length );
   }
 
   void deleteProductDialog({
@@ -412,7 +412,7 @@ class ReturnListWidget extends StatelessWidget {
       builder: (context1) => BlocProvider.value(
         value: context.read<ProductReturnInfoBloc>(),
         child: BlocBuilder<ProductReturnInfoBloc, ProductReturnInfoState>(
-          builder: (context, state) {
+          builder: (c, state) {
             ProductReturnInfoBloc bloc = context.read<ProductReturnInfoBloc>();
             return CommonAlertDialog(
               directionality: state.language,
@@ -421,13 +421,13 @@ class ReturnListWidget extends StatelessWidget {
               positiveTitle: AppLocalizations.of(context)!.yes,
               negativeTitle: AppLocalizations.of(context)!.no,
               negativeOnTap: () {
-                Navigator.pop(context1);
+                Navigator.pop(c);
               },
               positiveOnTap: () async {
                 bloc.add(ProductReturnInfoEvent.deleteEvent(
                   context: context,
                 ));
-                Navigator.pop(context);
+                Navigator.pop(c);
               },
             );
           },
@@ -435,7 +435,6 @@ class ReturnListWidget extends StatelessWidget {
       ),
     );
   }
-
   Widget radioWidget(int value, String text, BuildContext context, int radioValue) {
     return Card(
       margin: const EdgeInsets.only(top: AppConstants.padding_10, bottom: AppConstants.padding_5),
@@ -445,7 +444,7 @@ class ReturnListWidget extends StatelessWidget {
           Radio(
             value: value,
             fillColor: WidgetStateColor.resolveWith(
-              (states) => AppColors.mainColor,
+                  (states) => AppColors.mainColor,
             ),
             groupValue: radioValue,
             onChanged: (val) {
@@ -470,56 +469,56 @@ class ReturnListWidget extends StatelessWidget {
     return showModalBottomSheet(
         context: context,
         builder: (context1) => Container(
-              decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: const BorderRadius.only(topRight: Radius.circular(AppConstants.radius_20), topLeft: Radius.circular(AppConstants.radius_20)),
+          decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            borderRadius: const BorderRadius.only(topRight: Radius.circular(AppConstants.radius_20), topLeft: Radius.circular(AppConstants.radius_20)),
+          ),
+          clipBehavior: Clip.hardEdge,
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_30, vertical: AppConstants.padding_20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.upload_photo,
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w600),
               ),
-              clipBehavior: Clip.hardEdge,
-              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_30, vertical: AppConstants.padding_20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.upload_photo,
-                    style: AppStyles.rkRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w600),
-                  ),
-                  30.height,
-                  FileSelectionOptionWidget(
-                      title: AppLocalizations.of(context)!.camera,
-                      icon: Icons.camera_alt_rounded,
-                      onTap: () {
-                        cameraEvent(context: context, index: index);
-                      }),
-                  file.existsSync()
-                      ? FileSelectionOptionWidget(
-                          title: AppLocalizations.of(context)!.delete,
-                          icon: Icons.delete,
-                          lastItem: true,
-                          iconColor: Colors.red,
-                          onTap: () async {
-                            Navigator.pop(context);
-                            showDialog(
-                              context: context,
-                              builder: (context2) => CommonAlertDialog(
-                                directionality: language,
-                                title: AppLocalizations.of(context)!.remove,
-                                subTitle: AppLocalizations.of(context)!.are_you_sure,
-                                positiveTitle: AppLocalizations.of(context)!.yes,
-                                negativeTitle: AppLocalizations.of(context)!.no,
-                                negativeOnTap: () {
-                                  Navigator.pop(context2);
-                                },
-                                positiveOnTap: () async {
-                                  context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.deleteFileEvent(context: context, index: index));
-                                  Navigator.pop(context2);
-                                },
-                              ),
-                            );
-                          })
-                      : 0.height
-                ],
-              ),
-            ),
+              30.height,
+              FileSelectionOptionWidget(
+                  title: AppLocalizations.of(context)!.camera,
+                  icon: Icons.camera_alt_rounded,
+                  onTap: () {
+                    cameraEvent(context: context, index: index);
+                  }),
+              file.existsSync()
+                  ? FileSelectionOptionWidget(
+                  title: AppLocalizations.of(context)!.delete,
+                  icon: Icons.delete,
+                  lastItem: true,
+                  iconColor: Colors.red,
+                  onTap: () async {
+                    Navigator.pop(context);
+                    showDialog(
+                      context: context,
+                      builder: (context2) => CommonAlertDialog(
+                        directionality: language,
+                        title: AppLocalizations.of(context)!.remove,
+                        subTitle: AppLocalizations.of(context)!.are_you_sure,
+                        positiveTitle: AppLocalizations.of(context)!.yes,
+                        negativeTitle: AppLocalizations.of(context)!.no,
+                        negativeOnTap: () {
+                          Navigator.pop(context2);
+                        },
+                        positiveOnTap: () async {
+                          context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.deleteFileEvent(context: context, index: index));
+                          Navigator.pop(context2);
+                        },
+                      ),
+                    );
+                  })
+                  : 0.height
+            ],
+          ),
+        ),
         backgroundColor: Colors.transparent);
   }
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../ui/utils/validation/auth_form_validation.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_styles.dart';
 
 class CustomFormField extends StatelessWidget {
   CustomFormField({

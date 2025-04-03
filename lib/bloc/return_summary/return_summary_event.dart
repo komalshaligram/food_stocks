@@ -10,7 +10,7 @@ class ReturnSummaryEvent with _$ReturnSummaryEvent {
     _navigateToAddProductEvent;
     factory ReturnSummaryEvent.createReturnEvent({required BuildContext context,required String supplierId}) =
     _createReturnEvent;
-    factory ReturnSummaryEvent.updateReturnEvent({required BuildContext context}) =
+    factory ReturnSummaryEvent.updateReturnEvent({required BuildContext context,required String supplierId}) =
     _updateReturnEvent;
     factory ReturnSummaryEvent.detailReturnEvent({required BuildContext context, required int index}) =
     _detailReturnEvent;

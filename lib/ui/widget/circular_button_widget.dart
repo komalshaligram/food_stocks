@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../ui/utils/themes/app_strings.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
+import '../../ui/utils/constants/app_strings.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
 
 class CircularButtonWidget extends StatelessWidget {
 

@@ -10,8 +10,8 @@ class CreateReturnReqModel with _$CreateReturnReqModel {
     List<ReturnProduct>? returnProducts,
     String? applicationName,
     String? clientId,
-    String? returnStatusId,
     String? supplierId,
+    bool? isDraft,
     required dynamic subUserId,
   }) = _CreateReturnReqModel;
 
@@ -29,7 +29,8 @@ class ReturnProduct with _$ReturnProduct {
     String? barcode,
     String? reasonToReturn,
     String? notes,
-    String? productImage
+    String? productImage,
+    String? supplierId
   }) = _ReturnProduct;
 
   factory ReturnProduct.fromJson(Map<String, dynamic> json) => _$ReturnProductFromJson(json);

@@ -8,10 +8,10 @@ import '../../data/model/search_model/search_model.dart';
 import '../../ui/widget/sized_box_widget.dart';
 
 import '../utils/app_utils.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_img_path.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_img_path.dart';
+import '../utils/constants/app_styles.dart';
 
 class CommonSearchWidget extends StatelessWidget {
   final bool isCategoryExpand;

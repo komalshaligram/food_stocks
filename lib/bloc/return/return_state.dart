@@ -6,8 +6,14 @@ class ReturnState with _$ReturnState {
     required List<Return> returnList,
     required List<StatusData> statusList,
     required List<ReturnProduct> returnProductList,
+    required bool isBottomOfProducts,
+    required RefreshController refreshController,
+    required int pageNum,
+    required bool isLoadMore,
+    required bool isFromPending,
     required String language, required TextEditingController barCodeController}) = _ReturnState;
 
-  factory ReturnState.initial() => ReturnState(isRedirected: false, returnProductList:[],isLoading: false,
+  factory ReturnState.initial() => ReturnState(isRedirected: false, returnProductList:[],isLoading: false,  isBottomOfProducts: false,
+      refreshController: RefreshController(),isLoadMore:false,pageNum: 0,isFromPending:false,
       language: '',returnList: [],statusList: [], barCodeController: TextEditingController());
 }

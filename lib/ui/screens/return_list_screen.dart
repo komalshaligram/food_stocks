@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:food_stock/bloc/return/return_bloc.dart';
+import '/bloc/return/return_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:food_stock/ui/widget/common_pdf_viewer.dart';
-import 'package:food_stock/ui/widget/order_summary_screen_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '/ui/utils/constants/app_strings.dart';
+import '/ui/utils/constants/app_urls.dart';
+import '/ui/widget/common_pdf_viewer.dart';
+import '/ui/widget/order_summary_screen_shimmer_widget.dart';
+import '/ui/widget/sized_box_widget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/res_model/get_return_list_res_model/get_return_list_res_model.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_styles.dart';
 import '../widget/common_app_bar.dart';
+import '../widget/refresh_widget.dart';
 
 class ReturnListRoute {
   static Widget get route => const ReturnListScreen();
@@ -68,46 +70,66 @@ class ReturnListWidget extends StatelessWidget {
             ),
           ),
           body: SafeArea(
-            child: SingleChildScrollView(
+            child: SmartRefresher(
+              enablePullDown: true,
+              controller: state.refreshController,
+              header: const RefreshWidget(),
+              footer: CustomFooter(
+                  builder: (context, mode) => const OrderSummaryScreenShimmerWidget(
+                    itemCount: 2,
+                  )),
+              enablePullUp: !state.isBottomOfProducts,
+              onRefresh: () {
+                context
+                    .read<ReturnBloc>()
+                    .add(ReturnEvent.refreshListEvent(context: context));
+              },
+              onLoading: () {
+                context
+                    .read<ReturnBloc>()
+                    .add(ReturnEvent.getReturnListEvent(context: context));
+              },
+              child: SingleChildScrollView(
                 physics: state.returnList.isEmpty
-                  ? const NeverScrollableScrollPhysics()
-                  : null,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                         state.isLoading
-                      ? const OrderSummaryScreenShimmerWidget(containerHeight: 100,)
-                      : state.returnList.isNotEmpty
-                      ?
-                  AnimationLimiter(
-                    child: ListView.builder(
-                      itemCount:state.returnList.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
-                        duration: const Duration(seconds: 1),
-                        position: index,
-                        child: SlideAnimation(
-                          verticalOffset: 44.0,
-                          child: FadeInAnimation(
-                            child: returnListItem(index: index, context: context, list: state.returnList,state: state),
+                    ? const NeverScrollableScrollPhysics()
+                    : null,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    state.isLoading
+                        ? const OrderSummaryScreenShimmerWidget(containerHeight: 100,)
+                        : state.returnList.isNotEmpty
+                        ?
+                    AnimationLimiter(
+                      child: ListView.builder(
+                        itemCount:state.returnList.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
+                          duration: const Duration(seconds: 1),
+                          position: index,
+                          child: SlideAnimation(
+                            verticalOffset: 44.0,
+                            child: FadeInAnimation(
+                              child: returnListItem(index: index, context: context, list: state.returnList,state: state),
+                            ),
                           ),
                         ),
                       ),
+                    )
+                        : SizedBox(
+                      height: getScreenHeight(context) * 0.8,
+                      child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.no_data,
+                            style: AppStyles.pVRegularTextStyle(
+                                size: AppConstants.normalFont,
+                                color: AppColors.blackColor,
+                                fontWeight: FontWeight.w400),
+                          )),
                     ),
-                  )
-                 : SizedBox(
-                    height: getScreenHeight(context) * 0.8,
-                    child: Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.no_data,
-                          style: AppStyles.pVRegularTextStyle(
-                              size: AppConstants.normalFont,
-                              color: AppColors.blackColor,
-                              fontWeight: FontWeight.w400),
-                        )),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -120,7 +142,8 @@ class ReturnListWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if( list[index].returnStatusNumber!=2){
-          Navigator.pushNamed(context, RouteDefine.createProductReturnListScreen.name,arguments: {AppStrings.idString:list[index].id,AppStrings.isUpdateParamString:true});
+          Navigator.pushNamed(context, RouteDefine.createProductReturnListScreen.name,
+              arguments: {AppStrings.idString:list[index].id,AppStrings.isUpdateParamString:true,'status':list[index].returnStatusNumber.toString().contains('1')?true:false});
         }
       },
       child: Container(
@@ -137,11 +160,11 @@ class ReturnListWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            8.height,
-            Text(
-              '${AppLocalizations.of(context)?.date_sent} ${list[index].createdAt}',
+            list[index].returnStatusNumber!=4? Text(
+              list[index].returnStatusNumber!=2?'${AppLocalizations.of(context)?.date_sent} ${list[index].createdAt}':
+              '${AppLocalizations.of(context)?.date_approved} ${list[index].invoiceDate}',
               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, fontWeight: FontWeight.w400),
-            ),
+            ):0.height,
             2.height,
             Text(
               "${list[index].productCount} ${AppLocalizations.of(context)!.products}",
@@ -153,8 +176,8 @@ class ReturnListWidget extends StatelessWidget {
               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, fontWeight: FontWeight.w400),
             ),
             2.height,
-            list[index].totalPayment!='0'?Text(
-             "${AppLocalizations.of(context)!.total_refund} ${list[index].totalPayment}",
+            list[index].returnStatusNumber==2?Text(
+              "${AppLocalizations.of(context)!.total_refund} ${list[index].totalPayment}",
               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, fontWeight: FontWeight.bold),
             ):0.height,
             5.height,
@@ -170,7 +193,7 @@ class ReturnListWidget extends StatelessWidget {
                   ),
                 ),
                 8.width,
-                 Expanded(
+                Expanded(
                   child: list[index].returnStatusNumber==2?InkWell(
                     onTap: (){
                       if(list[index].rivchitInvoiceLink!.isEmpty){

@@ -8,10 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
-import '../../ui/utils/themes/app_colors.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_strings.dart';
-import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/utils/constants/app_colors.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_strings.dart';
+import '../../ui/utils/constants/app_styles.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +19,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:another_flushbar/flushbar.dart';
+
+import 'constants/app_strings.dart';
 
 
 double getScreenHeight(BuildContext context) {

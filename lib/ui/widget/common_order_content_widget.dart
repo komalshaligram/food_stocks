@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/widget/sized_box_widget.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_styles.dart';
 
 class CommonOrderContentWidget extends StatelessWidget {
   final String title;

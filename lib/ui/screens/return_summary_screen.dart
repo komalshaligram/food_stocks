@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:food_stock/bloc/create_return_bloc/create_return_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/widget/custom_button_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '/ui/utils/app_utils.dart';
+import '/ui/widget/custom_button_widget.dart';
+import '/ui/widget/sized_box_widget.dart';
 import '../../bloc/return_summary/return_summary_bloc.dart';
-import '../../bloc/return_summary/return_summary_bloc.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_styles.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
@@ -49,7 +47,7 @@ class ReturnSummaryScreenWidget extends StatelessWidget {
               title: AppLocalizations.of(context)!.return_summary,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(context,state.returnProductList);
               },
             ),
           ),
@@ -60,20 +58,19 @@ class ReturnSummaryScreenWidget extends StatelessWidget {
                 state.isShimmer
                     ? const Expanded(child: OrderSummaryScreenShimmerWidget())
                     : Expanded(
-                        child: AnimationLimiter(
-                          child: SizedBox(
-                            height: 200,
-                            child: ListView(
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-                              children: state.supplierWiseMap.keys.map((supplierId) {
-                                printData('supplierId:${supplierId}');
-                                return orderListItem(context: context, bloc: bloc, supplierId: supplierId ?? '');
-                              }).toList(),
-                            ),
-                          ),
-                        ),
+                  child: AnimationLimiter(
+                    child: SizedBox(
+                      height: 200,
+                      child: ListView(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+                        children: state.supplierWiseMap.keys.map((supplierId) {
+                          return orderListItem(context: context, bloc: bloc, supplierId: supplierId ?? '');
+                        }).toList(),
                       ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -103,7 +100,7 @@ class ReturnSummaryScreenWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  supplierId,
+                  state.supplierWiseMap[supplierId]!.first.supplierName.toString(),
                   style: AppStyles.rkRegularTextStyle(
                     size: AppConstants.font_14,
                     color: AppColors.blackColor,
@@ -128,7 +125,7 @@ class ReturnSummaryScreenWidget extends StatelessWidget {
                   height: 40,
                   isLoading: false,
                   onPressed: () {
-                    bloc.add(ReturnSummaryEvent.createReturnEvent(context: context, supplierId: supplierId));
+                    bloc.add(ReturnSummaryEvent.updateReturnEvent(context: context, supplierId: supplierId));
                   },
                   fontColors: AppColors.whiteColor,
                 ),

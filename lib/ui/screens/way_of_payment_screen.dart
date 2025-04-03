@@ -6,10 +6,10 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/way_of_payment/way_of_payment_bloc.dart';
 import '../../routes/app_routes.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_strings.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_strings.dart';
+import '../utils/constants/app_styles.dart';
 import '../widget/custom_button_widget.dart';
 
 class WayOfPaymentRoute {

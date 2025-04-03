@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
 
-import '../utils/themes/app_constants.dart';
+import '../utils/constants/app_constants.dart';
 
 class ProductSaleScreenShimmerWidget extends StatelessWidget {
   const ProductSaleScreenShimmerWidget({super.key});

@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/constants/app_colors.dart';
 
-import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/connect_screen/connect_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_img_path.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_img_path.dart';
 import '../widget/custom_button_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

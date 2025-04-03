@@ -96,8 +96,10 @@ class ReturnProduct with _$ReturnProduct {
     String? reasonToReturn,
     @JsonKey(name: "productImage")
     String? productImg,
+    String? returnId,
    String? supplierId,
     String? supplierName,
+
   }) = _ReturnProduct;
 
   factory ReturnProduct.fromJson(Map<String, dynamic> json) => _$ReturnProductFromJson(json);

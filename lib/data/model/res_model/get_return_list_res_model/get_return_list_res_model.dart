@@ -36,7 +36,7 @@ class Data with _$Data {
     @JsonKey(name: "totalPages")
     int? totalPages,
     @JsonKey(name: "currentPage")
-    String? currentPage,
+    int? currentPage,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -65,7 +65,7 @@ class Return with _$Return {
     dynamic invoiceDate,
     @JsonKey(name: "rivchitInvoiceNumber")
     String? rivchitInvoiceNumber,
-    @JsonKey(name: "createdAt")
+    @JsonKey(name: "requestDate")
     String? createdAt,
     @JsonKey(name: "productCount")
     int? productCount,

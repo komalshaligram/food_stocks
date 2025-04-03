@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import '../../main.dart';
 import '../../routes/app_routes.dart';
-import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/constants/app_strings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';

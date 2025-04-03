@@ -5,8 +5,8 @@ import 'package:flutter_smartlook/flutter_smartlook.dart';
 import '../../data/model/res_model/login_otp_res_model/login_otp_res_model.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -18,7 +18,7 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/constants/app_strings.dart';
 import 'dart:io';
 part 'otp_event.dart';
 
@@ -120,11 +120,14 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
               }
               emit(state.copyWith(isLoading: false));
-              Navigator.popUntil(event.context, (route) => route.name == RouteDefine.connectScreen.name);
+            /*  Navigator.popUntil(event.context, (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                 event.context,
                 RouteDefine.bottomNavScreen.name,
-              );
+
+              );*/
+              Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.bottomNavScreen.name, (Route route) => route.isFirst);
+
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),

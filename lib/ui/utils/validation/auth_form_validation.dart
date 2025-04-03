@@ -1,7 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
 
+import '../constants/app_strings.dart';
 import 'form_field_validation.dart';
 
 class AuthFormValidation {

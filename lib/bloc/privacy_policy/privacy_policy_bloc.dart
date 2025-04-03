@@ -17,12 +17,12 @@ import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../../data/model/res_model/terms_condition_res/terms_condition_res_model.dart';
 import '../../repository/dio_client.dart';
-import '../../ui/utils/themes/app_colors.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_strings.dart';
-import '../../ui/utils/themes/app_styles.dart';
+import '../../ui/utils/constants/app_colors.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_strings.dart';
+import '../../ui/utils/constants/app_styles.dart';
 import 'package:http_parser/http_parser.dart';
-import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/utils/constants/app_urls.dart';
 import 'package:bloc/src/bloc.dart';
 
 

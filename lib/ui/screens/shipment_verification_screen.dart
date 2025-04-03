@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import '../../bloc/shipment_verification/shipment_verification_bloc.dart';
 import '../utils/app_utils.dart';
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_img_path.dart';
-import '../utils/themes/app_styles.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_img_path.dart';
+import '../utils/constants/app_styles.dart';
 import '../widget/circular_button_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
@@ -214,11 +214,11 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                         textInputAction: TextInputAction.done,
                         validator: AppStrings.surfaceValString,
                       ),
-                      10.height,
+                      8.height,
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: AppConstants.padding_5,
-                            horizontal: AppConstants.padding_15),
+                            horizontal: 0),
                         child: Text(
                           AppLocalizations.of(context)!.signature,
                           style: AppStyles.rkRegularTextStyle(

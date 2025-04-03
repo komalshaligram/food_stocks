@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/data/model/res_model/get_return_list_res_model/get_return_list_res_model.dart';
+import '/data/model/res_model/get_return_list_res_model/get_return_list_res_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
-import '../../data/model/req_model/create_return_req_model/create_return_req_model.dart' as req;
+import '../../data/model/req_model/get_all_order_req_model/get_all_order_req_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/res_model/get_return_by_id_res_model/get_return_by_id_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
@@ -16,9 +17,9 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_strings.dart';
-import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_strings.dart';
+import '../../ui/utils/constants/app_urls.dart';
 
 part 'return_state.dart';
 part 'return_event.dart';
@@ -36,29 +37,50 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
           final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
           if (myList.isNotEmpty) {
             for (int i = 0; i < myList.length; i++) {
-              tempList.add(ReturnProduct(totalRefund: myList[i].totalRefund,supplierName:myList[i].supplierName,supplierId: myList[i].supplierId, proofImages: myList[i].proofImages, notes: myList[i].notes, productName: myList[i].productName, productImg: myList[i].productImg, barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
+              tempList.add(ReturnProduct(totalRefund: myList[i].totalRefund,
+                  supplierName:myList[i].supplierName,supplierId: myList[i].supplierId,
+                  proofImages: myList[i].proofImages, notes: myList[i].notes,
+                  productName: myList[i].productName, productImg: myList[i].productImg, returnId: myList[i].returnId,
+                  barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
             }
-            emit(state.copyWith(returnProductList: tempList));
+            emit(state.copyWith(returnProductList: tempList,isFromPending:map['status']));
           }
         }
         add(ReturnEvent.getReturnListEvent(context: event.context));
       } else if (event is _getReturnListEvent) {
         final String statusData = preferencesHelper.getReturnStatusInfo();
         final List<StatusData> statusList = StatusData.decode(statusData);
-        emit(state.copyWith(language: preferencesHelper.getAppLanguage(), isLoading: true, statusList: statusList));
+        if (state.isLoadMore) {
+          return;
+        }
+        if (state.isBottomOfProducts) {
+          return;
+        }
+        emit(state.copyWith(language: preferencesHelper.getAppLanguage(), isLoading:  state.pageNum == 0 ? true : false, statusList: statusList,isLoadMore: state.pageNum == 0 ? false : true));
         try {
-          Map reqMap = {"pageNum": "1", "pageLimit": "20"};
+          GetAllOrderReqModel reqMap = GetAllOrderReqModel(pageNum: state.pageNum + 1, pageLimit:AppConstants.orderPageLimit);
           final res = await DioClient(event.context).post(AppUrlEndPoints.getReturnListUrl, data: reqMap);
           GetReturnListResModel response = GetReturnListResModel.fromJson(res);
-          printData('GetProductDetails_____$response');
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(isLoading: false, returnList: response.data?.returns ?? []));
+            List<Return> orderList = state.returnList.toList(growable: true);
+            if ((response.data?.totalRecords ?? 1) > state.returnList.length) {
+              orderList.addAll(response.data?.returns?? []);
+              emit(state.copyWith(isLoading: false, returnList: orderList,pageNum: state.pageNum + 1, isLoadMore: false));
+              emit(state.copyWith(isBottomOfProducts: response.data?.returns?.length == (response.data?.totalRecords ?? 0) ? true : false));
+            } else {
+              emit(state.copyWith(isLoading: false, isLoadMore: false));
+            }
           } else {
-            emit(state.copyWith(isLoading: false));
+            emit(state.copyWith(isLoading: false,isLoadMore: false));
             Navigator.pop(event.context);
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context),
+                type: SnackBarType.failure);
           }
-        } on ServerException {}
+        } on ServerException {
+          emit(state.copyWith(isLoading: false,isLoadMore: false));
+        }
+        state.refreshController.refreshCompleted();
+        state.refreshController.loadComplete();
       } else if (event is _newRequestEvent) {
         preferencesHelper.setReturnProductList(returnList: '');
         Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {'list': <ReturnProduct>[]});
@@ -79,16 +101,14 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
             if (response.product!.isEmpty) {
               CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.product_does_not_exist, type: SnackBarType.failure);
             } else {
-              if (state.returnProductList.isNotEmpty) {
                 List<ReturnProduct> list = [];
                 for (int i = 0; i < response.product!.length; i++) {
-                  list.add(const ReturnProduct());
+                  list.add(ReturnProduct(productName: response.product![i].productName,productImg: '${AppUrlEndPoints.baseFileUrl}${response.product![i].mainImage}',
+                      returnId: state.returnProductList.isNotEmpty?state.returnProductList.first.returnId??'':'',
+                  supplierName:response.product![i].supplierName,supplierId: response.product![i].supplierId,barcode: response.product![i].qrcode));
                 }
                 list.addAll(state.returnProductList);
-                Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': state.returnProductList, 'data': response.product?.first.toJson()});
-              } else {
-                Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'data': response.product?.first.toJson()});
-              }
+              Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': list,'status':state.isFromPending});
             }
           } else {
             emit(state.copyWith(isLoading: false));
@@ -98,6 +118,9 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         } on ServerException {
           Navigator.pop(event.context);
         }
+      }else if (event is _refreshListEvent) {
+        emit(state.copyWith(pageNum: 0, returnList: [], isBottomOfProducts: false));
+        add(ReturnEvent.getReturnListEvent(context: event.context));
       }
     });
   }

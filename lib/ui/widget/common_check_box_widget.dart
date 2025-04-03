@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../utils/themes/app_colors.dart';
-import '../utils/themes/app_constants.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
 
 class CommonCheckBox extends StatelessWidget {
   final void Function(bool?)? onChanged;

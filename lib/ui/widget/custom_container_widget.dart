@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_styles.dart';
-import '../utils/themes/app_colors.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_styles.dart';
+import '../utils/constants/app_colors.dart';
 
 class CustomContainerWidget extends StatelessWidget {
   final String name;
