@@ -1,8 +1,8 @@
 
 
 class AppUrlEndPoints {
-//static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
-  static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
+static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
+  // static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
 
   ///devUrl
   //static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl

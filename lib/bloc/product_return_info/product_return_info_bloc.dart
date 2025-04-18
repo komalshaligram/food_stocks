@@ -282,7 +282,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
               }
             }
             emit(state.copyWith(returnProductList: list, isShimmer: false, returnId: resModel.data!.first.id.toString()));
-            Navigator.pushNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {'list': state.returnProductList, AppStrings.isUpdateParamString: false,'status':false});
+            Navigator.pushNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {'list': state.returnProductList, AppStrings.isUpdateParamString: false,'status':state.isFromPending});
           } else {
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
             emit(state.copyWith(isShimmer: false));

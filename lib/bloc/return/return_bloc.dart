@@ -43,7 +43,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
                   productName: myList[i].productName, productImg: myList[i].productImg, returnId: myList[i].returnId,
                   barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
             }
-            emit(state.copyWith(returnProductList: tempList,isFromPending:map['status']));
+            emit(state.copyWith(returnProductList: tempList));
           }
         }
         add(ReturnEvent.getReturnListEvent(context: event.context));
@@ -101,14 +101,20 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
             if (response.product!.isEmpty) {
               CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.product_does_not_exist, type: SnackBarType.failure);
             } else {
+            //  if (state.returnProductList.isNotEmpty) {
                 List<ReturnProduct> list = [];
+
                 for (int i = 0; i < response.product!.length; i++) {
                   list.add(ReturnProduct(productName: response.product![i].productName,productImg: '${AppUrlEndPoints.baseFileUrl}${response.product![i].mainImage}',
                       returnId: state.returnProductList.isNotEmpty?state.returnProductList.first.returnId??'':'',
                   supplierName:response.product![i].supplierName,supplierId: response.product![i].supplierId,barcode: response.product![i].qrcode));
                 }
                 list.addAll(state.returnProductList);
-              Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': list,'status':state.isFromPending});
+               // Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': list, /*'data': response.product?.first.toJson()*/});
+            //  } else {
+                //Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'data': response.product?.first.toJson()});
+             // }
+              Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': list, /*'data': response.product?.first.toJson()*/});
             }
           } else {
             emit(state.copyWith(isLoading: false));

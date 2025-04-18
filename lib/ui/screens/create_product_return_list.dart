@@ -54,8 +54,8 @@ class CreateProductReturnListWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.product_return_list,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  //Navigator.pop(context);
-                  Navigator.pushNamedAndRemoveUntil(context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
+                  Navigator.pop(context);
+                 // Navigator.pushNamedAndRemoveUntil(context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
                 },
                 trailingWidget: state.returnProductList.isNotEmpty
                     ? InkWell(
@@ -116,7 +116,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
                         },
                       ):0.height,
                       12.height,
-                      state.returnProductList.isNotEmpty
+                      !state.isFromPending?   state.returnProductList.isNotEmpty
                           ? CustomButtonWidget(
                         buttonText: state.returnId.isEmpty ? AppLocalizations.of(context)!.send_the_request : AppLocalizations.of(context)!.save,
                         isLoading: state.isLoading,
@@ -129,7 +129,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
                           }
                         },
                       )
-                          : 0.height,
+                          : 0.height:0.height,
                     ],
                   ),
                 )

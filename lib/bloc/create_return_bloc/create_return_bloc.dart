@@ -48,10 +48,10 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
           }
         } else {
           final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
-          emit(state.copyWith(language: preferencesHelper.getAppLanguage(), returnProductList: myList,returnId: ''));
+          emit(state.copyWith(language: preferencesHelper.getAppLanguage(), returnProductList: myList,returnId: '',isFromPending: map['status']));
         }
       } else if (event is _navigateToAddProductEvent) {
-      //  emit(state.copyWith(returnProductList: state.returnProductList));
+        //  emit(state.copyWith(returnProductList: state.returnProductList));
         Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name,arguments: {'list':state.returnProductList,'status':state.isFromPending});
       } else if (event is _deleteEvent) {
         if (state.returnId.isNotEmpty) {
@@ -121,8 +121,8 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
                 reasonToReturn: state.returnProductList[i].reasonToReturn,supplierId:state.returnProductList[i].supplierId ));
           }
           req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(applicationName: AppStrings.appName,supplierId: state.returnProductList.first.supplierId,isDraft: false,
-              clientId: preferencesHelper.getUserId(), returnProducts: list, subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null,
-              );
+            clientId: preferencesHelper.getUserId(), returnProducts: list, subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null,
+          );
           final res = await DioClient(event.context).post(
             '${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId??state.returnId}',
             data: reqModel.toJson(),

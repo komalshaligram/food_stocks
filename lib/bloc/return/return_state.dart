@@ -10,10 +10,9 @@ class ReturnState with _$ReturnState {
     required RefreshController refreshController,
     required int pageNum,
     required bool isLoadMore,
-    required bool isFromPending,
     required String language, required TextEditingController barCodeController}) = _ReturnState;
 
   factory ReturnState.initial() => ReturnState(isRedirected: false, returnProductList:[],isLoading: false,  isBottomOfProducts: false,
-      refreshController: RefreshController(),isLoadMore:false,pageNum: 0,isFromPending:false,
+      refreshController: RefreshController(),isLoadMore:false,pageNum: 0,
       language: '',returnList: [],statusList: [], barCodeController: TextEditingController());
 }

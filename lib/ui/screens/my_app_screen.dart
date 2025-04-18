@@ -15,7 +15,6 @@ import '../../app_config.dart';
 import '../../data/services/locale_provider.dart';
 import '../../main.dart';
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -35,8 +34,10 @@ class MyAppWidget extends StatefulWidget {
   State<MyAppWidget> createState() => _MyAppWidgetState();
 }
 
-class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
+class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
+
   final Smartlook smartLook = Smartlook.instance;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -44,9 +45,8 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
     WidgetsBinding.instance.addObserver(this);
-   smartLook.start();
-   smartLook.preferences.setProjectKey(dotenv.env['SMART_LOOK_KEY']!);
-    //smartLook.log.enableLogging();
+    smartLook.start();
+    smartLook.preferences.setProjectKey(dotenv.env['SMART_LOOK_KEY']!);
     smartLook.sensitivity.changeWidgetClassSensitivity(
       classType: TextField,
       isSensitive: false,
@@ -56,7 +56,7 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if(state == AppLifecycleState.resumed){
+    if (state == AppLifecycleState.resumed) {
       context.read<MyAppBloc>().add(MyAppEvent.updateProfileDetailsEvent(context: context));
     }
   }
@@ -68,30 +68,30 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver{
       builder: (context, child) {
         return SmartlookRecordingWidget(
           child: MaterialApp(
-              navigatorKey: navigatorKey,
-              debugShowCheckedModeBanner: false,
-              locale: Provider.of<LocaleProvider>(context).locale,
-              title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
-              initialRoute: RouteDefine.splashScreen.name,
-              supportedLocales: AppLocalizations.supportedLocales,
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              theme: ThemeData(
-                textSelectionTheme: TextSelectionThemeData(
-                  cursorColor: AppColors.mainColor,
-                  selectionColor: AppColors.mainColor,
-                  selectionHandleColor:AppColors.mainColor,
-                ),
-                primarySwatch: Colors.green,
-                canvasColor: Colors.white,
-                cardColor: AppColors.whiteColor,
-                snackBarTheme: SnackBarThemeData(
-                  backgroundColor: AppColors.mainColor,
-                  actionTextColor: AppColors.textColor,
-                ),
+            navigatorKey: navigatorKey,
+            debugShowCheckedModeBanner: false,
+            locale: Provider.of<LocaleProvider>(context).locale,
+            title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
+            initialRoute: RouteDefine.splashScreen.name,
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            theme: ThemeData(
+              textSelectionTheme: TextSelectionThemeData(
+                cursorColor: AppColors.mainColor,
+                selectionColor: AppColors.mainColor,
+                selectionHandleColor: AppColors.mainColor,
               ),
-              scrollBehavior: MyBehavior(),
-              onGenerateRoute: AppRouting.generateRoute,
+              primarySwatch: Colors.green,
+              canvasColor: Colors.white,
+              cardColor: AppColors.whiteColor,
+              snackBarTheme: SnackBarThemeData(
+                backgroundColor: AppColors.mainColor,
+                actionTextColor: AppColors.textColor,
+              ),
             ),
+            scrollBehavior: MyBehavior(),
+            onGenerateRoute: AppRouting.generateRoute,
+          ),
         );
       },
     );
