@@ -38,10 +38,14 @@ class ProductDetailsScreen extends StatelessWidget {
   OrderDatum orderData;
   List<StatusData> statusList;
 
-  ProductDetailsScreen({super.key, this.orderId = '', this.orderNumber = '', this.isNavigateToProductDetailString = false, this.productData = const OrdersBySupplier(), this.orderData = const OrderDatum(), this.statusList = const <StatusData>[], this.issue = ''});
+  ProductDetailsScreen({super.key, this.orderId = '', this.orderNumber = '', this.isNavigateToProductDetailString = false,
+    this.productData = const OrdersBySupplier(), this.orderData = const OrderDatum(), this.statusList = const <StatusData>[], this.issue = ''});
 
   @override
   Widget build(BuildContext context) {
+
+      printData("check my order id ${orderId}");
+
     return BlocProvider(
       create: (context) => ProductDetailsBloc()
         ..add(isNavigateToProductDetailString
@@ -164,7 +168,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            state.orderBySupplierProduct.supplierName?.toString() ?? '',
+                                             state.orderBySupplierProduct.supplierName?.toString() ?? '',
                                             style: AppStyles.rkRegularTextStyle(
                                               size: AppConstants.font_14,
                                               color: AppColors.blackColor,
@@ -320,6 +324,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                           AppStrings.supplierIdString: state.orderBySupplierProduct.id,
                           AppStrings.supplierOrderNumberString: state.orderBySupplierProduct.supplierOrderNumber ?? 0,
                           AppStrings.orderStatusNo: state.orderData.orderstatus?.orderStatusNumber ?? 2,
+                          AppStrings.deliveryDateString: state.orderBySupplierProduct.orderDeliveryDate,
+                          AppStrings.supplierOrderNumberString : state.orderData.orderNumber
                         });
                       },
                       buttonText: AppLocalizations.of(context)!.next,

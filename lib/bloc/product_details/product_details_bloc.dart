@@ -34,6 +34,8 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
     on<ProductDetailsEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
+      printData("check here ");
+
       if (event is _getOrderByIdEvent) {
 
         emit(state.copyWith(isShimmering: true, isLoading: true, language: preferencesHelper.getAppLanguage(), isSubUserCreateDuplicateOrder: preferencesHelper.getCanDuplicateOrder(), isIncludedVat: preferencesHelper.getIsIncludedVat()));
@@ -61,7 +63,8 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
       }
 
       if (event is _getProductDataEvent) {
-        emit(state.copyWith(orderBySupplierProduct: event.orderBySupplierProduct, orderData: event.orderData, language: preferencesHelper.getAppLanguage()));
+        emit(state.copyWith(orderBySupplierProduct: event.orderBySupplierProduct, orderData: event.orderData, language: preferencesHelper.getAppLanguage(), isSubUserCreateDuplicateOrder: preferencesHelper.getCanDuplicateOrder()),
+            );
       } else if (event is _productProblemEvent) {
         List<int> index = [];
         bool isAllCheck = false;

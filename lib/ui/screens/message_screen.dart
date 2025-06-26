@@ -28,8 +28,7 @@ class MessageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => MessageBloc()
-        ..add(MessageEvent.getMessageListEvent(context: context)),
+      create: (context) => MessageBloc()..add(MessageEvent.getMessageListEvent(context: context)),
       child: const MessageScreenWidget(),
     );
   }
@@ -68,24 +67,19 @@ class MessageScreenWidget extends StatelessWidget {
                 ),
               ),
               body: SafeArea(
-                child:
-                    SmartRefresher(
+                child: SmartRefresher(
                   enablePullDown: true,
                   controller: state.refreshController,
                   header: const RefreshWidget(),
                   footer: CustomFooter(
-                    builder: (context, mode) =>
-                        const QuestionAndAnswerScreenShimmerWidget(),
+                    builder: (context, mode) => const QuestionAndAnswerScreenShimmerWidget(),
                   ),
                   enablePullUp: !state.isBottomOfMessage,
                   onRefresh: () {
-                    context
-                        .read<MessageBloc>()
-                        .add(MessageEvent.refreshListEvent(context: context));
+                    context.read<MessageBloc>().add(MessageEvent.refreshListEvent(context: context));
                   },
                   onLoading: () {
-                    context.read<MessageBloc>().add(
-                        MessageEvent.getMessageListEvent(context: context));
+                    context.read<MessageBloc>().add(MessageEvent.getMessageListEvent(context: context));
                   },
                   child: SingleChildScrollView(
                     child: Column(
@@ -99,40 +93,30 @@ class MessageScreenWidget extends StatelessWidget {
                                     alignment: Alignment.center,
                                     child: Text(
                                       AppLocalizations.of(context)!.messages_not_found,
-                                      style: AppStyles.pVRegularTextStyle(
-                                          size: AppConstants.font_26,
-                                          color: AppColors.blackColor),
+                                      style: AppStyles.pVRegularTextStyle(size: AppConstants.font_26, color: AppColors.blackColor),
                                     ),
                                   )
                                 : ListView.builder(
                                     itemCount: state.messageList.length,
                                     shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_10),
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
                                     itemBuilder: (context, index) {
                                       return Dismissible(
                                         key: Key(state.messageList.toString()),
                                         direction: DismissDirection.startToEnd,
                                         background: Container(
-                                          alignment: state.language == AppStrings.englishString
-                                              ? Alignment.centerLeft
-                                              : Alignment.centerRight,
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: AppConstants.padding_5,
-                                              horizontal: AppConstants.padding_10),
+                                          alignment: state.language == AppStrings.englishString ? Alignment.centerLeft : Alignment.centerRight,
+                                          margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
                                           decoration: BoxDecoration(
                                             color: AppColors.redColor,
-                                            borderRadius:
-                                            const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                                           ),
                                           child: Padding(
                                             padding: const EdgeInsets.all(12),
                                             child: SvgPicture.asset(
                                               AppImagePath.delete,
-                                              colorFilter: ColorFilter.mode(
-                                                  AppColors.whiteColor, BlendMode.srcIn),
+                                              colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),
                                               height: 30,
                                               width: 30,
                                             ),
@@ -148,25 +132,19 @@ class MessageScreenWidget extends StatelessWidget {
                                                   child: BlocBuilder<MessageBloc, MessageState>(
                                                     builder: (context, state) {
                                                       return AbsorbPointer(
-                                                        absorbing: state.isRemoveProcess ? true : false,
-                                                        child: CustomDialog(
-                                                          title: AppLocalizations.of(context)!.are_you_sure,
-                                                          directionality: state.language,
-                                                          positiveTitle:AppLocalizations.of(context)!.yes,
-                                                          negativeTitle: AppLocalizations.of(context)!.no,
-                                                          positiveOnTap: (){
-                                                            bloc.add(MessageEvent.messageDeleteEvent(
-                                                                messageId: state.messageList[index].id.toString(),
-                                                                context: context,
-                                                                dialogContext: context1
-                                                            )
-                                                            );
-                                                          },
-                                                          negativeOnTap: (){
-                                                            Navigator.pop(context1);
-                                                          },
-                                                        )
-                                                      );
+                                                          absorbing: state.isRemoveProcess ? true : false,
+                                                          child: CustomDialog(
+                                                            title: AppLocalizations.of(context)!.are_you_sure,
+                                                            directionality: state.language,
+                                                            positiveTitle: AppLocalizations.of(context)!.yes,
+                                                            negativeTitle: AppLocalizations.of(context)!.no,
+                                                            positiveOnTap: () {
+                                                              bloc.add(MessageEvent.messageDeleteEvent(messageId: state.messageList[index].id.toString(), context: context, dialogContext: context1));
+                                                            },
+                                                            negativeOnTap: () {
+                                                              Navigator.pop(context1);
+                                                            },
+                                                          ));
                                                     },
                                                   ),
                                                 );
@@ -176,56 +154,24 @@ class MessageScreenWidget extends StatelessWidget {
                                           return null;
                                         },
                                         child: messageListItem(
-                                        index: index,
-                                        context: context,
-                                        title: state.messageList[index].message
-                                                ?.title ??
-                                            '',
-                                        content: parse(state.messageList[index]
-                                                        .message?.body ??
-                                                    '')
-                                                .body
-                                                ?.text ??
-                                            '',
-                                        dateTime: state
-                                                .messageList[index].updatedAt
-                                                ?.replaceRange(16, 19, '') ??
-                                            '',
-                                        onTap: () async {
-                                          dynamic messageNewData =
-                                              await Navigator.pushNamed(
-                                                  context,
-                                                  RouteDefine
-                                                      .messageContentScreen.name,
-                                                  arguments: {
-                                                AppStrings.messageDataString:
-                                                    state.messageList[index],
-                                                AppStrings.messageIdString:
-                                                    state.messageList[index].id
-                                              });
-                                          context.read<MessageBloc>().add(
-                                              MessageEvent.removeOrUpdateMessageEvent(
-                                                  messageId: messageNewData[
-                                                      AppStrings.messageIdString],
-                                                  isRead: messageNewData[
-                                                      AppStrings
-                                                          .messageReadString],
-                                                  isDelete: messageNewData[
-                                                      AppStrings
-                                                          .messageDeleteString]));
-                                        },
-                                        isRead: state.messageList[index].isRead ??
-                                            false,
-                                                                              ),
+                                          index: index,
+                                          context: context,
+                                          title: state.messageList[index].message?.title ?? '',
+                                          content: parse(state.messageList[index].message?.body ?? '').body?.text ?? '',
+                                          dateTime: state.messageList[index].updatedAt?.replaceRange(16, 19, '') ?? '',
+                                          onTap: () async {
+                                            dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {AppStrings.messageDataString: state.messageList[index], AppStrings.messageIdString: state.messageList[index].id});
+                                            context.read<MessageBloc>().add(MessageEvent.removeOrUpdateMessageEvent(messageId: messageNewData[AppStrings.messageIdString], isRead: messageNewData[AppStrings.messageReadString], isDelete: messageNewData[AppStrings.messageDeleteString]));
+                                          },
+                                          isRead: state.messageList[index].isRead ?? false,
+                                        ),
                                       );
                                     },
                                   ),
-
                       ],
                     ),
                   ),
                 ),
-
               ),
             ),
           );
@@ -246,20 +192,13 @@ class MessageScreenWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
-        borderRadius:
-            const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         boxShadow: [
-          BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.15),
-              blurRadius: AppConstants.blur_10),
+          BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
         ],
       ),
-      margin: const EdgeInsets.symmetric(
-          horizontal: AppConstants.padding_10,
-          vertical: AppConstants.padding_5),
-      padding: const EdgeInsets.symmetric(
-          vertical: AppConstants.padding_10,
-          horizontal: AppConstants.padding_10),
+      margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
+      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
       child: InkWell(
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
@@ -273,9 +212,7 @@ class MessageScreenWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: isRead ? Colors.transparent : AppColors.mainColor,
               ),
-              margin: EdgeInsets.only(
-                  left: context.rtl ? AppConstants.padding_10 : 0,
-                  right: context.rtl ? 0 : AppConstants.padding_10),
+              margin: EdgeInsets.only(left: context.rtl ? AppConstants.padding_10 : 0, right: context.rtl ? 0 : AppConstants.padding_10),
             ),
             Expanded(
               child: Column(
@@ -284,26 +221,19 @@ class MessageScreenWidget extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.smallFont,
-                        color: AppColors.blackColor,
-                        fontWeight: FontWeight.w500),
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w500),
                   ),
                   5.height,
                   Text(
                     content,
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_12,
-                        color: AppColors.blackColor),
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   5.height,
                   Text(
                     dateTime,
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_10,
-                        color: AppColors.textColor),
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.textColor),
                   ),
                 ],
               ),

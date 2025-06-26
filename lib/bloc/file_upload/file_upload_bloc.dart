@@ -306,7 +306,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 );
               } else {
                 emit(state.copyWith(isApiLoading: false));
-                Navigator.pop(event.context);
+               // Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppLocalizations.of(event.context)!.updated_successfully,

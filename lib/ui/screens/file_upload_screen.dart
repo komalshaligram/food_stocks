@@ -34,18 +34,11 @@ class FileUploadScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
 
     return BlocProvider(
-      create: (context) => FileUploadBloc()
-
-        ..add(FileUploadEvent.getFormsListEvent(
-            context: context,
-            isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
-                ? true
-                : false)),
-      child:  const FileUploadScreenWidget(),
+      create: (context) => FileUploadBloc()..add(FileUploadEvent.getFormsListEvent(context: context, isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false)),
+      child: const FileUploadScreenWidget(),
     );
   }
 }
@@ -56,19 +49,16 @@ class FileUploadScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     FileUploadBloc bloc = context.read<FileUploadBloc>();
     return BlocListener<FileUploadBloc, FileUploadState>(
-      listener: (context, state) {
-
-      },
+      listener: (context, state) {},
       child: BlocBuilder<FileUploadBloc, FileUploadState>(
         builder: (context, state) {
           printData('formsAndFilesList___${state.formsAndFilesList}');
           return WillPopScope(
             onWillPop: () async {
-              SharedPreferencesHelper preferencesHelper =
-              SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-              if(!preferencesHelper.getUserLoggedIn() || state.isUpdate){
+              SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+              if (!preferencesHelper.getUserLoggedIn() || state.isUpdate) {
                 return Future.value(true);
-              }else{
+              } else {
                 return Future.value(false);
               }
             },
@@ -81,18 +71,13 @@ class FileUploadScreenWidget extends StatelessWidget {
                 titleSpacing: 0,
                 leadingWidth: 60,
                 title: Align(
-                  alignment: context.rtl?Alignment.centerRight:Alignment.centerLeft,
-                  child: Text(AppLocalizations.of(context)!.files,
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.smallFont,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.blackColor)),
+                  alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+                  child: Text(AppLocalizations.of(context)!.files, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, fontWeight: FontWeight.w400, color: AppColors.blackColor)),
                 ),
                 leading: GestureDetector(
                     onTap: () async {
-                      SharedPreferencesHelper preferencesHelper =
-                      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                      if(!preferencesHelper.getUserLoggedIn() || state.isUpdate){
+                      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+                      if (!preferencesHelper.getUserLoggedIn() || state.isUpdate) {
                         Navigator.pop(context);
                       }
                     },
@@ -106,157 +91,116 @@ class FileUploadScreenWidget extends StatelessWidget {
                   state.isShimmering
                       ? const FileUploadScreenShimmerWidget()
                       : SafeArea(
-                    child: state.isLoading
-                        ? SizedBox(
-                      height: getScreenHeight(context),
-                      child: Center(
-                        child: CupertinoActivityIndicator(
-                          color: AppColors.mainColor,
-                        ),
-                      ),
-                    )
-                        : SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_20),
-                        child: Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                          children: [
-                            state.formsAndFilesList.isEmpty
-                                ? SizedBox(
-                              height:
-                              getScreenHeight(context),
-                              width: getScreenWidth(context),
-                              child: Center(
-                                child: Text(
-                                  AppLocalizations.of(context)!.forms_Files_not_available,
-                                  style: AppStyles
-                                      .rkRegularTextStyle(
-                                      size: AppConstants
-                                          .normalFont,
-                                      color: AppColors
-                                          .textColor),
+                          child: state.isLoading
+                              ? SizedBox(
+                                  height: getScreenHeight(context),
+                                  child: Center(
+                                    child: CupertinoActivityIndicator(
+                                      color: AppColors.mainColor,
+                                    ),
+                                  ),
+                                )
+                              : SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        state.formsAndFilesList.isEmpty
+                                            ? SizedBox(
+                                                height: getScreenHeight(context),
+                                                width: getScreenWidth(context),
+                                                child: Center(
+                                                  child: Text(
+                                                    AppLocalizations.of(context)!.forms_Files_not_available,
+                                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.normalFont, color: AppColors.textColor),
+                                                  ),
+                                                ),
+                                              )
+                                            : ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: state.formsAndFilesList.length,
+                                                physics: const NeverScrollableScrollPhysics(),
+                                                itemBuilder: (context, index) {
+                                                  return buildFormsAndFilesUploadFields(isForm: state.formsAndFilesList[index].isForm ?? false, updateState: state.isUpdate, directionality: state.language, fileIndex: index, context: context, fileName: state.formsAndFilesList[index].name ?? '', url: state.formsAndFilesList[index].url ?? '', localUrl: state.formsAndFilesList[index].localUrl ?? '', isUploading: state.isUploadLoading, uploadIndex: state.uploadIndex, isDownloadable: state.formsAndFilesList[index].isForm ?? false, isRemoveProcess: state.isRemoveProcess);
+                                                },
+                                              ),
+                                        SizedBox(
+                                          height: getScreenHeight(context) * 0.05,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              !state.isUpdate
+                                                  ?
+                                              CustomButtonWidget(
+                                                      buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
+                                                      fontColors: AppColors.whiteColor,
+                                                      isLoading: state.isApiLoading,
+                                                      onPressed: state.isApiLoading
+                                                          ? null
+                                                          : () {
+                                                              if (state.formsAndFilesList[1].url != null) {
+                                                                bloc.add(FileUploadEvent.uploadApiEvent(context: context));
+                                                              } else {
+                                                                CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.upload_document, type: SnackBarType.failure);
+                                                              }
+                                                            },
+                                                      bGColor: AppColors.mainColor,
+                                                    ) : const IgnorePointer(),
+                                                  // : CustomButtonWidget(
+                                                  //     buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
+                                                  //     fontColors: AppColors.whiteColor,
+                                                  //     isLoading: state.isApiLoading,
+                                                  //     onPressed: state.isApiLoading
+                                                  //         ? null
+                                                  //         : () {
+                                                  //             if (state.formsAndFilesList[1].url != null) {
+                                                  //               bloc.add(FileUploadEvent.uploadApiEvent(context: context));
+                                                  //             } else {
+                                                  //               CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.upload_document, type: SnackBarType.failure);
+                                                  //             }
+                                                  //             // bloc.add(FileUploadEvent.uploadApiEvent(context: context));
+                                                  //           },
+                                                  //     bGColor: AppColors.mainColor,
+                                                  //   ),
+                                              15.height,
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            )
-                                :  ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: state
-                                  .formsAndFilesList.length,
-                              physics:
-                              const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return buildFormsAndFilesUploadFields(
-                                    isForm: state
-                                        .formsAndFilesList[
-                                    index]
-                                        .isForm ?? false,
-                                    updateState : state.isUpdate,
-                                    directionality : state.language,
-                                    fileIndex: index,
-                                    context: context,
-
-                                    fileName: state
-                                        .formsAndFilesList[
-                                    index]
-                                        .name ??
-                                        '',
-                                    url: state
-                                        .formsAndFilesList[
-                                    index]
-                                        .url ??
-                                        '',
-                                    localUrl: state
-                                        .formsAndFilesList[
-                                    index]
-                                        .localUrl ??
-                                        '',
-                                    isUploading:
-                                    state.isUploadLoading,
-                                    uploadIndex:
-                                    state.uploadIndex,
-                                    isDownloadable: state
-                                        .formsAndFilesList[
-                                    index]
-                                        .isForm ??
-                                        false,
-                                    isRemoveProcess : state.isRemoveProcess
-                                );
-                              },
-                            ),
-                            SizedBox(
-                              height: getScreenHeight(context) * 0.05,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  !state.isUpdate ? CustomButtonWidget(
-                                    buttonText: AppLocalizations.of(context)!
-                                        .next
-                                        .toUpperCase(),
-                                    fontColors: AppColors.whiteColor,
-                                    isLoading: state.isApiLoading,
-                                    onPressed: state.isApiLoading
-                                        ? null
-                                        : () {
-                                      if(state.formsAndFilesList[1].url != null
-                                      ){
-                                        bloc.add(FileUploadEvent
-                                            .uploadApiEvent(
-                                            context: context));
-                                      }
-                                      else{
-                                        CustomSnackBar.showSnackBar(
-                                            context:context,
-                                            title: AppLocalizations.of(context)!.upload_document,
-                                            type: SnackBarType.failure);
-                                      }
-                                    },
-                                    bGColor: AppColors.mainColor,
-                                  ) :const SizedBox(),
-                                  15.height,
-                                ],
-                              ),
-                            )
-                          ],
                         ),
-                      ),
-                    ),
-                  ),
                   state.isDownloading
                       ? Container(
-                    height: getScreenHeight(context),
-                    width: getScreenWidth(context),
-                    color: const Color.fromARGB(20, 0, 0, 0),
-                    alignment: Alignment.center,
-                    child: Container(
-                      height: 80,
-                      width: 80,
-                      decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(AppConstants.radius_10))),
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CupertinoActivityIndicator(
-                            color: AppColors.blackColor,
-                            radius: AppConstants.radius_10,
+                          height: getScreenHeight(context),
+                          width: getScreenWidth(context),
+                          color: const Color.fromARGB(20, 0, 0, 0),
+                          alignment: Alignment.center,
+                          child: Container(
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CupertinoActivityIndicator(
+                                  color: AppColors.blackColor,
+                                  radius: AppConstants.radius_10,
+                                ),
+                                10.height,
+                                Text(
+                                  '${state.downloadProgress}%',
+                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
+                                )
+                              ],
+                            ),
                           ),
-                          10.height,
-                          Text(
-                            '${state.downloadProgress}%',
-                            style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.font_14,
-                                color: AppColors.blackColor),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
+                        )
                       : 0.width,
                 ],
               ),
@@ -276,7 +220,9 @@ class FileUploadScreenWidget extends StatelessWidget {
     required bool isUploading,
     required int uploadIndex,
     required String localUrl,
-    required bool isRemoveProcess, required String directionality, required bool updateState,
+    required bool isRemoveProcess,
+    required String directionality,
+    required bool updateState,
     required bool isForm,
   }) {
     return Container(
@@ -291,70 +237,47 @@ class FileUploadScreenWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            fileName ==AppStrings.textIdProof? RichText(
-                  text: TextSpan(
-                    text: fileName.toTitleCase(),
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.smallFont,
-                        color: AppColors.textColor,
-                        fontWeight: FontWeight.w400
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text:
-                          ' * ',
-                          style:
-                          AppStyles.rkRegularTextStyle(
-                              color:
-                              AppColors.redColor,
-                              size:
-                              AppConstants.smallFont,
-                              fontWeight:
-                              FontWeight.w400)),
-                    ],
-                  ),
-                ):
-                Text(
-                 fileName.toTitleCase(),
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.smallFont,
-                      color: AppColors.textColor,
-                      fontWeight: FontWeight.w400),
-                ),
+                fileName == AppStrings.textIdProof
+                    ? RichText(
+                        text: TextSpan(
+                          text: fileName.toTitleCase(),
+                          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor, fontWeight: FontWeight.w400),
+                          children: <TextSpan>[
+                            TextSpan(text: ' * ', style: AppStyles.rkRegularTextStyle(color: AppColors.redColor, size: AppConstants.smallFont, fontWeight: FontWeight.w400)),
+                          ],
+                        ),
+                      )
+                    : Text(
+                        fileName.toTitleCase(),
+                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor, fontWeight: FontWeight.w400),
+                      ),
                 isDownloadable /* && url.isNotEmpty*/
                     ? ButtonWidget(
-                  buttonText: AppLocalizations.of(context)!.download,
-                  fontSize: AppConstants.smallFont,
-                  radius: AppConstants.radius_5,
-                  bGColor: AppColors.blueColor,
-                  onPressed: () async {
-                    Map<Permission, PermissionStatus> statuses = await [
-                      Permission.storage,
-                    ].request();
-                    if (Platform.isAndroid) {
-                      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                      AndroidDeviceInfo androidInfo =
-                      await deviceInfo.androidInfo;
+                        buttonText: AppLocalizations.of(context)!.download,
+                        fontSize: AppConstants.smallFont,
+                        radius: AppConstants.radius_5,
+                        bGColor: AppColors.blueColor,
+                        onPressed: () async {
+                          Map<Permission, PermissionStatus> statuses = await [
+                            Permission.storage,
+                          ].request();
+                          if (Platform.isAndroid) {
+                            DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                            AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
 
-                      if (androidInfo.version.sdkInt < 33) {
-                        if (!statuses[Permission.storage]!.isGranted) {
-                          CustomSnackBar.showSnackBar(
-                              context: context,
-                              title:
-                              AppLocalizations.of(context)!.storage_permission,
-                              type: SnackBarType.failure);
-                          return;
-                        }
-                      }
-                    } else {
-                      //for ios permission
-                    }
-                    context.read<FileUploadBloc>().add(
-                        FileUploadEvent.downloadFileEvent(
-                            context: context, fileIndex: fileIndex));
-                  },
-                  fontColors: AppColors.whiteColor,
-                )
+                            if (androidInfo.version.sdkInt < 33) {
+                              if (!statuses[Permission.storage]!.isGranted) {
+                                CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.storage_permission, type: SnackBarType.failure);
+                                return;
+                              }
+                            }
+                          } else {
+                            //for ios permission
+                          }
+                          context.read<FileUploadBloc>().add(FileUploadEvent.downloadFileEvent(context: context, fileIndex: fileIndex));
+                        },
+                        fontColors: AppColors.whiteColor,
+                      )
                     : 0.height,
               ],
             ),
@@ -373,296 +296,216 @@ class FileUploadScreenWidget extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     if (isUploading) {
-                      CustomSnackBar.showSnackBar(
-                          context: context,
-                          title: AppLocalizations.of(context)!.wait_while_uploading,
-                          type: SnackBarType.failure);
+                      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.wait_while_uploading, type: SnackBarType.failure);
                       return;
                     }
-                    if(isForm){
-                      if(url.isNotEmpty){
-                        Navigator.pushNamed(context, RouteDefine.previewScreen.name,
-                            arguments: {
-                              AppStrings.privacyPolicyPdfString : url,
-                              AppStrings.clientFormString : fileName,
-                            }
-                        );
+                    if (isForm) {
+                      if (url.isNotEmpty) {
+                        Navigator.pushNamed(context, RouteDefine.previewScreen.name, arguments: {
+                          AppStrings.privacyPolicyPdfString: url,
+                          AppStrings.clientFormString: fileName,
+                        });
                       }
-
                     }
-                    if(!updateState){
+                    if (isDownloadable) { //!isDownloadable
                       showModalBottomSheet(
                           context: context,
                           builder: (context1) => Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: const BorderRadius.only(
-                                  topRight:
-                                  Radius.circular(AppConstants.radius_20),
-                                  topLeft: Radius.circular(
-                                      AppConstants.radius_20)),
-                            ),
-                            clipBehavior: Clip.hardEdge,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: AppConstants.padding_30,
-                                vertical: AppConstants.padding_20),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context)!.upload_photo,
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.normalFont,
-                                      color: AppColors.blackColor,
-                                      fontWeight: FontWeight.w600),
+                                decoration: BoxDecoration(
+                                  color: AppColors.whiteColor,
+                                  borderRadius: const BorderRadius.only(topRight: Radius.circular(AppConstants.radius_20), topLeft: Radius.circular(AppConstants.radius_20)),
                                 ),
-                                30.height,
-                                FileSelectionOptionWidget(
-                                    title:
-                                    AppLocalizations.of(context)!.camera,
-                                    icon: Icons.camera_alt_rounded,
-                                    onTap: () async {
-                                      Map<Permission, PermissionStatus>
-                                      statuses = await [
-                                        Permission.camera,
-                                      ].request();
-                                      if (Platform.isAndroid) {
-                                        if (!statuses[Permission.camera]!
-                                            .isGranted) {
+                                clipBehavior: Clip.hardEdge,
+                                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_30, vertical: AppConstants.padding_20),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)!.upload_photo,
+                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w600),
+                                    ),
+                                    30.height,
+                                    FileSelectionOptionWidget(
+                                        title: AppLocalizations.of(context)!.camera,
+                                        icon: Icons.camera_alt_rounded,
+                                        onTap: () async {
+                                          Map<Permission, PermissionStatus> statuses = await [
+                                            Permission.camera,
+                                          ].request();
+                                          if (Platform.isAndroid) {
+                                            if (!statuses[Permission.camera]!.isGranted) {
+                                              Navigator.pop(context);
+                                              CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.camera_permission, type: SnackBarType.failure);
+                                              return;
+                                            }
+                                          } else if (Platform.isIOS) {
+                                            // Navigator.pop(context);
+                                          }
+                                          context.read<FileUploadBloc>().add(FileUploadEvent.pickDocumentEvent(context: context, isFromCamera: true, fileIndex: fileIndex, isDocument: false));
+                                          Navigator.pop(context1);
+                                        }),
+                                    FileSelectionOptionWidget(
+                                        title: AppLocalizations.of(context)!.gallery,
+                                        icon: Icons.photo,
+                                        onTap: () async {
+                                          Map<Permission, PermissionStatus> statuses = await [
+                                            Permission.storage,
+                                          ].request();
+                                          if (Platform.isAndroid) {
+                                            DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                                            AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+                                            if (androidInfo.version.sdkInt < 33) {
+                                              if (!statuses[Permission.storage]!.isGranted) {
+                                                Navigator.pop(context);
+                                                CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.storage_permission, type: SnackBarType.failure);
+                                                return;
+                                              }
+                                            }
+                                          } else if (Platform.isIOS) {
+                                            // Navigator.pop(context);
+                                          }
+                                          context.read<FileUploadBloc>().add(FileUploadEvent.pickDocumentEvent(context: context, isFromCamera: false, fileIndex: fileIndex, isDocument: false));
+                                          Navigator.pop(context1);
+                                        }),
+                                    FileSelectionOptionWidget(
+                                        title: AppLocalizations.of(context)!.document,
+                                        icon: Icons.file_open_rounded,
+                                        lastItem: url.isEmpty ? true : false,
+                                        onTap: () async {
+                                          Map<Permission, PermissionStatus> statuses = await [
+                                            Permission.storage,
+                                          ].request();
+                                          if (Platform.isAndroid) {
+                                            DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                                            AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+                                            if (androidInfo.version.sdkInt < 33) {
+                                              if (!statuses[Permission.storage]!.isGranted) {
+                                                Navigator.pop(context);
+                                                CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.storage_permission, type: SnackBarType.failure);
+                                                return;
+                                              }
+                                            }
+                                          } else if (Platform.isIOS) {
+                                            // Navigator.pop(context);
+                                          }
+                                          context.read<FileUploadBloc>().add(FileUploadEvent.pickDocumentEvent(context: context, isFromCamera: false, fileIndex: fileIndex, isDocument: true));
                                           Navigator.pop(context);
-                                          CustomSnackBar.showSnackBar(
-                                              context: context,
-                                              title:
-                                              AppLocalizations.of(context)!.camera_permission,
-                                              type: SnackBarType.failure);
-                                          return;
-                                        }
-                                      } else if (Platform.isIOS) {
-                                        // Navigator.pop(context);
-                                      }
-                                      context.read<FileUploadBloc>().add(
-                                          FileUploadEvent.pickDocumentEvent(
-                                              context: context,
-                                              isFromCamera: true,
-                                              fileIndex: fileIndex,
-                                              isDocument: false));
-                                      Navigator.pop(context1);
-                                    }),
-                                FileSelectionOptionWidget(
-                                    title:
-                                    AppLocalizations.of(context)!.gallery,
-                                    icon: Icons.photo,
-                                    onTap: () async {
-                                      Map<Permission, PermissionStatus>
-                                      statuses = await [
-                                        Permission.storage,
-                                      ].request();
-                                      if (Platform.isAndroid) {
-                                        DeviceInfoPlugin deviceInfo =
-                                        DeviceInfoPlugin();
-                                        AndroidDeviceInfo androidInfo =
-                                        await deviceInfo.androidInfo;
-                                        if (androidInfo.version.sdkInt < 33) {
-                                          if (!statuses[Permission.storage]!
-                                              .isGranted) {
-                                            Navigator.pop(context);
-                                            CustomSnackBar.showSnackBar(
+                                        }),
+                                    url.isEmpty
+                                        ? 0.width
+                                        : FileSelectionOptionWidget(
+                                            title: AppLocalizations.of(context)!.remove,
+                                            icon: Icons.delete,
+                                            iconColor: AppColors.redColor,
+                                            lastItem: true,
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                              showDialog(
                                                 context: context,
-                                                title:
-                                                AppLocalizations.of(context)!.storage_permission,
-                                                type: SnackBarType.failure);
-                                            return;
-                                          }
-                                        }
-                                      } else if (Platform.isIOS) {
-                                        // Navigator.pop(context);
-                                      }
-                                      context.read<FileUploadBloc>().add(
-                                          FileUploadEvent.pickDocumentEvent(
-                                              context: context,
-                                              isFromCamera: false,
-                                              fileIndex: fileIndex,
-                                              isDocument: false));
-                                      Navigator.pop(context1);
-                                    }),
-                                FileSelectionOptionWidget(
-                                    title: AppLocalizations.of(context)!.document,
-                                    icon: Icons.file_open_rounded,
-                                    lastItem: url.isEmpty ? true : false,
-                                    onTap: () async {
-                                      Map<Permission, PermissionStatus>
-                                      statuses = await [
-                                        Permission.storage,
-                                      ].request();
-                                      if (Platform.isAndroid) {
-                                        DeviceInfoPlugin deviceInfo =
-                                        DeviceInfoPlugin();
-                                        AndroidDeviceInfo androidInfo =
-                                        await deviceInfo.androidInfo;
-                                        if (androidInfo.version.sdkInt < 33) {
-                                          if (!statuses[Permission.storage]!
-                                              .isGranted) {
-                                            Navigator.pop(context);
-                                            CustomSnackBar.showSnackBar(
-                                                context: context,
-                                                title:
-                                                AppLocalizations.of(context)!.storage_permission,
-                                                type: SnackBarType.failure);
-                                            return;
-                                          }
-                                        }
-                                      } else if (Platform.isIOS) {
-                                        // Navigator.pop(context);
-                                      }
-                                      context.read<FileUploadBloc>().add(
-                                          FileUploadEvent.pickDocumentEvent(
-                                              context: context,
-                                              isFromCamera: false,
-                                              fileIndex: fileIndex,
-                                              isDocument: true));
-                                      Navigator.pop(context);
-                                    }),
-                                url.isEmpty
-                                    ? 0.width
-                                    : FileSelectionOptionWidget(
-                                    title: AppLocalizations.of(context)!
-                                        .remove,
-                                    icon: Icons.delete,
-                                    iconColor: AppColors.redColor,
-                                    lastItem: true,
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                      showDialog(
-                                        context: context,
-                                        builder: (context2) =>
-                                            CommonAlertDialog(
-                                              directionality: directionality,
-                                              title: AppLocalizations.of(context)!.remove,
-                                              subTitle: AppLocalizations.of(context)!.are_you_sure,
-                                              positiveTitle: AppLocalizations.of(context)!.yes,
-                                              negativeTitle: AppLocalizations.of(context)!.no,
-                                              negativeOnTap: () {
-                                                Navigator.pop(context2);
-                                              },
-                                              positiveOnTap: () async {
-                                                context
-                                                    .read<FileUploadBloc>()
-                                                    .add(FileUploadEvent
-                                                    .deleteFileEvent(
-                                                    context: context,
-                                                    index:
-                                                    fileIndex));
-                                                Navigator.pop(context2);
-                                              },
-                                            ),
-                                      );
-                                    }),
-                              ],
-                            ),
-                          ),
+                                                builder: (context2) => CommonAlertDialog(
+                                                  directionality: directionality,
+                                                  title: AppLocalizations.of(context)!.remove,
+                                                  subTitle: AppLocalizations.of(context)!.are_you_sure,
+                                                  positiveTitle: AppLocalizations.of(context)!.yes,
+                                                  negativeTitle: AppLocalizations.of(context)!.no,
+                                                  negativeOnTap: () {
+                                                    Navigator.pop(context2);
+                                                  },
+                                                  positiveOnTap: () async {
+                                                    context.read<FileUploadBloc>().add(FileUploadEvent.deleteFileEvent(context: context, index: fileIndex));
+                                                    Navigator.pop(context2);
+                                                  },
+                                                ),
+                                              );
+                                            }),
+                                  ],
+                                ),
+                              ),
                           backgroundColor: Colors.transparent);
                     }
                   },
                   child: (isUploading && uploadIndex == fileIndex) || (isRemoveProcess && uploadIndex == fileIndex)
                       ? Container(
-                    height: 150,
-                    color: AppColors.whiteColor,
-                    width: getScreenWidth(context),
-                    alignment: Alignment.center,
-                    child: const CupertinoActivityIndicator(),
-                  )
-                      : url.isNotEmpty
-                      ? Container(
-                    height: 150,
-                    color: AppColors.whiteColor,
-                    width: getScreenWidth(context),
-                    alignment: Alignment.center,
-                    child: url.split('.').last.contains('pdf') ||
-                        url.split('.').last.contains('doc') ||
-                        url.split('.').last.contains('docx')
-                        ? Column(
-                      mainAxisAlignment:
-                      MainAxisAlignment.center,
-                      children: [
-                        Transform(
+                          height: 150,
+                          color: AppColors.whiteColor,
+                          width: getScreenWidth(context),
                           alignment: Alignment.center,
-                          transform: Matrix4.rotationY(
-                              context.rtl ? pi : 0),
-                          child: Icon(
-                            Icons.file_copy_outlined,
-                            color: AppColors.blueColor,
-                            size: 30,
-                          ),
-                        ),
-                        5.height,
-                        Text(
-                          "${url.split('.').first.split('/').last}.${url.split('.').last}",
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.font_14,
-                              color: AppColors.textColor,
-                              fontWeight: FontWeight.w400),
-                          textAlign: TextAlign.center,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    )
-                        :  !updateState
-                        ? Image.file(
-                      File(localUrl),
-                      fit: BoxFit.cover,
-                      width: double.maxFinite,
-                    )
-                        : CachedNetworkImage(
-                      imageUrl: "${AppUrlEndPoints.baseFileUrl}$url",
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.center,
-                      placeholder: (context, url) => Center(
-                        child:
-                        CupertinoActivityIndicator(
-                          color: AppColors.blackColor,
-                        ),
-                      ),
-                      errorWidget: (context, url, error) {
-
-                        return Center(
-                          child: Text(
-                            AppStrings.failedToLoadString,
-                            style: AppStyles
-                                .rkRegularTextStyle(
-                                size: AppConstants
-                                    .smallFont,
-                                color: AppColors
-                                    .textColor),
-                          ),
-                        );
-                      },
-                    ),
-
-                  )
-                      : Container(
-                    height: 150,
-                    color: AppColors.whiteColor,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.camera_alt_rounded,
-                          color: AppColors.blueColor,
-                          size: 30,
-                        ),
-                        Text(
-                          AppLocalizations.of(context)!.upload_photo,
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.font_14,
-                              color: AppColors.textColor,
-                              fontWeight: FontWeight.w400),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
+                          child: const CupertinoActivityIndicator(),
+                        )
+                      : url.isNotEmpty
+                          ? Container(
+                              height: 150,
+                              color: AppColors.whiteColor,
+                              width: getScreenWidth(context),
+                              alignment: Alignment.center,
+                              child: url.split('.').last.contains('pdf') || url.split('.').last.contains('doc') || url.split('.').last.contains('docx')
+                                  ? Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Transform(
+                                          alignment: Alignment.center,
+                                          transform: Matrix4.rotationY(context.rtl ? pi : 0),
+                                          child: Icon(
+                                            Icons.file_copy_outlined,
+                                            color: AppColors.blueColor,
+                                            size: 30,
+                                          ),
+                                        ),
+                                        5.height,
+                                        Text(
+                                          "${url.split('.').first.split('/').last}.${url.split('.').last}",
+                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.textColor, fontWeight: FontWeight.w400),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    )
+                                  : !updateState
+                                      ? Image.file(
+                                          File(localUrl),
+                                          fit: BoxFit.cover,
+                                          width: double.maxFinite,
+                                        )
+                                      : CachedNetworkImage(
+                                          imageUrl: "${AppUrlEndPoints.baseFileUrl}$url",
+                                          fit: BoxFit.scaleDown,
+                                          alignment: Alignment.center,
+                                          placeholder: (context, url) => Center(
+                                            child: CupertinoActivityIndicator(
+                                              color: AppColors.blackColor,
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) {
+                                            return Center(
+                                              child: Text(
+                                                AppStrings.failedToLoadString,
+                                                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                            )
+                          : Container(
+                              height: 150,
+                              color: AppColors.whiteColor,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.camera_alt_rounded,
+                                    color: AppColors.blueColor,
+                                    size: 30,
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)!.upload_photo,
+                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.textColor, fontWeight: FontWeight.w400),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
                 ),
               ],
             ),

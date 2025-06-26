@@ -22,7 +22,7 @@ class BasketEvent with _$BasketEvent {
     required bool isFromDelete,
   }) = _removeCartProductEvent;
 
-  const factory BasketEvent.getAllCartEvent({required BuildContext context}) = _getAllCartEvent;
+  const factory BasketEvent.getAllCartEvent({required BuildContext context, required bool isFromUpdate} ) = _getAllCartEvent;
 
   const factory BasketEvent.clearCartEvent({required BuildContext context}) = _clearCartEvent;
 
@@ -53,5 +53,7 @@ class BasketEvent with _$BasketEvent {
 
   const factory BasketEvent.updateMaintenanceEvent({required BuildContext context}) = _updateMaintenanceEvent;
   const factory BasketEvent.getSupplierPaymentTypeEvent({required BuildContext context, required String id,required int index}) = _getSupplierPaymentTypeEvent;
+
+
 
 }

@@ -46,7 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "add_proof_img": MessageLookupByLibrary.simpleMessage("העלה תמונות להוכחה"),
     "add_text": MessageLookupByLibrary.simpleMessage("פרט"),
     "add_to_order": MessageLookupByLibrary.simpleMessage("הוסף להזמנה"),
-    "address": MessageLookupByLibrary.simpleMessage("מכולת חיים"),
+    "address": MessageLookupByLibrary.simpleMessage("כתובת העסק"),
     "admin_type_already_exist": MessageLookupByLibrary.simpleMessage(
       "סוג מנהל קיים כבר",
     ),
@@ -189,7 +189,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cities_not_available": MessageLookupByLibrary.simpleMessage(
       "אין את רשימת הערים",
     ),
-    "city": MessageLookupByLibrary.simpleMessage("עיר / ישוב"),
+    "city": MessageLookupByLibrary.simpleMessage("עיר / עיר של העסק"),
     "clear": MessageLookupByLibrary.simpleMessage("clear"),
     "click_to_scan": MessageLookupByLibrary.simpleMessage(
       "לחץ כאן לסריקת ברקוד של המוצר",
@@ -197,6 +197,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "client_details_not_found": MessageLookupByLibrary.simpleMessage(
       "לא נמצאו נתנים עבור הלקוח",
     ),
+    "client_form_details": MessageLookupByLibrary.simpleMessage("פרטי לקוח"),
+    "client_info": MessageLookupByLibrary.simpleMessage("פרטי לקוח"),
     "close": MessageLookupByLibrary.simpleMessage("סגור"),
     "collection_from_bank_account": MessageLookupByLibrary.simpleMessage(
       "גבייה מחשבון בנק לפי תנאי התשלום שנקבעו",
@@ -226,6 +228,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "copied": MessageLookupByLibrary.simpleMessage("הועתק"),
     "copy": MessageLookupByLibrary.simpleMessage("העתק"),
+    "countdown": MessageLookupByLibrary.simpleMessage(
+      "שעות ליצירת הזמנות נוספות ללא הגבלה מינימלית לספק Tavili.",
+    ),
     "credit_card": MessageLookupByLibrary.simpleMessage("גבייה בכרטיס אשראי"),
     "credit_card_details": MessageLookupByLibrary.simpleMessage(
       "פרטי כרטיס אשראי",
@@ -528,6 +533,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "my_basket": MessageLookupByLibrary.simpleMessage("הסל שלי"),
     "my_invoices": MessageLookupByLibrary.simpleMessage("החשבוניות שלי"),
     "my_orders": MessageLookupByLibrary.simpleMessage("ההזמנות שלי"),
+    "my_refunds": MessageLookupByLibrary.simpleMessage("ההחזרים שלי"),
     "name_of_bank": MessageLookupByLibrary.simpleMessage("שם בנק"),
     "name_of_owner": MessageLookupByLibrary.simpleMessage("שם בעלים"),
     "new_order": MessageLookupByLibrary.simpleMessage("הזמנה חדשה"),
@@ -608,7 +614,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "ההזמנה נשלחה בהצלחה",
     ),
     "order_sign_dialog": MessageLookupByLibrary.simpleMessage(
-      "קיימות הזמנות שלא חתמת עליהם, אנא עבור על רשימת ההזמנות ואשר שקיבלת אותם.",
+      "לא ניתן לשדר הזמנה בגלל שיש הזמנות שקיבלת ולא חתמת עליהם\nאנא עבור על רשימת ההזמנות שלך ואשר שקיבלת אותם\nלאחר שתאשר תוכל לשדר את ההזמנה\nתודה !",
     ),
     "order_status": MessageLookupByLibrary.simpleMessage("סטטוס הזמנה"),
     "order_summary": MessageLookupByLibrary.simpleMessage("סיכום הזמנה"),
@@ -1190,6 +1196,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "you_can_not_update_order": MessageLookupByLibrary.simpleMessage(
       "קוד ספק לא חוקי",
     ),
+    "you_have": MessageLookupByLibrary.simpleMessage("יש לך "),
     "you_have_reached_maximum_quantity": MessageLookupByLibrary.simpleMessage(
       "הגעת לכמות המקסימלית",
     ),

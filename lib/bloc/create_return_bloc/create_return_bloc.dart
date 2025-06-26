@@ -36,23 +36,20 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
             );
             GetReturnByIdResModel res = GetReturnByIdResModel.fromJson(response);
             tempList.addAll(res.data?.returnProducts ?? []);
-            for(int i =0;i<tempList.length;i++){
-              tempList[i]= ReturnProduct(supplierId: tempList[i].supplierId,productImg: tempList[i].productImg,productName: tempList[i].productName,
-                  proofImages: tempList[i].proofImages,notes: tempList[i].notes,barcode: tempList[i].barcode,reasonToReturn: tempList[i].reasonToReturn,
-                  totalUnits: tempList[i].totalUnits,supplierName: tempList[i].supplierName,returnId:res.data?.id??'');
+            for (int i = 0; i < tempList.length; i++) {
+              tempList[i] = ReturnProduct(supplierId: tempList[i].supplierId, productImg: tempList[i].productImg, productName: tempList[i].productName, proofImages: tempList[i].proofImages, notes: tempList[i].notes, barcode: tempList[i].barcode, reasonToReturn: tempList[i].reasonToReturn, totalUnits: tempList[i].totalUnits, supplierName: tempList[i].supplierName, returnId: res.data?.id ?? '');
             }
-            emit(state.copyWith(isShimmer: false, returnProductList: tempList, returnId: map[AppStrings.idString],supplierId: res.data?.supplierId??'',
-                language: preferencesHelper.getAppLanguage(),isFromPending: map['status']));
+            emit(state.copyWith(isShimmer: false, returnProductList: tempList, returnId: map[AppStrings.idString], supplierId: res.data?.supplierId ?? '', language: preferencesHelper.getAppLanguage(), isFromPending: map['status']));
           } catch (e) {
             CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
           }
         } else {
           final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
-          emit(state.copyWith(language: preferencesHelper.getAppLanguage(), returnProductList: myList,returnId: '',isFromPending: map['status']));
+          emit(state.copyWith(language: preferencesHelper.getAppLanguage(), returnProductList: myList, returnId: '', isFromPending: map['status']));
         }
       } else if (event is _navigateToAddProductEvent) {
         //  emit(state.copyWith(returnProductList: state.returnProductList));
-        Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name,arguments: {'list':state.returnProductList,'status':state.isFromPending});
+        Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {'list': state.returnProductList, 'status': state.isFromPending});
       } else if (event is _deleteEvent) {
         if (state.returnId.isNotEmpty) {
           DeleteReturnReq req = DeleteReturnReq(ids: [state.returnId]);
@@ -75,14 +72,13 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
                 Navigator.pushNamedAndRemoveUntil(
                   event.context,
                   RouteDefine.returnListScreen.name,
-                      (Route route) => route.isFirst,
+                  (Route route) => route.isFirst,
                 );
               });
             } else {
               CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString()
-                    .toLocalization(), event.context),
+                title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
                 type: SnackBarType.failure,
               );
             }
@@ -106,41 +102,42 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
             Navigator.pushNamedAndRemoveUntil(
               event.context,
               RouteDefine.returnListScreen.name,
-                  (Route route) => route.isFirst,
+              (Route route) => route.isFirst,
             );
           });
         }
       } else if (event is _updateReturnEvent) {
+        printData("check here click");
         emit(state.copyWith(isLoading: true));
         try {
           List<req.ReturnProduct> list = [];
           for (int i = 0; i < state.returnProductList.length; i++) {
-            list.add(req.ReturnProduct(totalRefund: state.returnProductList[i].totalRefund, proofImages: state.returnProductList[i].proofImages,
-                notes: state.returnProductList[i].notes, productName: state.returnProductList[i].productName, productImage: state.returnProductList[i].productImg,
-                barcode: state.returnProductList[i].barcode, totalUnits: state.returnProductList[i].totalUnits, isApproved: state.returnProductList[i].isApproved,
-                reasonToReturn: state.returnProductList[i].reasonToReturn,supplierId:state.returnProductList[i].supplierId ));
+            list.add(req.ReturnProduct(totalRefund: state.returnProductList[i].totalRefund, proofImages: state.returnProductList[i].proofImages, notes: state.returnProductList[i].notes, productName: state.returnProductList[i].productName, productImage: state.returnProductList[i].productImg, barcode: state.returnProductList[i].barcode, totalUnits: state.returnProductList[i].totalUnits, isApproved: state.returnProductList[i].isApproved, reasonToReturn: state.returnProductList[i].reasonToReturn, supplierId: state.returnProductList[i].supplierId));
           }
-          req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(applicationName: AppStrings.appName,supplierId: state.returnProductList.first.supplierId,isDraft: false,
-            clientId: preferencesHelper.getUserId(), returnProducts: list, subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null,
+          req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(
+            applicationName: AppStrings.appName,
+            supplierId: state.returnProductList.first.supplierId,
+            isDraft: false,
+            clientId: preferencesHelper.getUserId(),
+            returnProducts: list,
+            subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null,
           );
           final res = await DioClient(event.context).post(
-            '${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId??state.returnId}',
+            '${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId ?? state.returnId}',
             data: reqModel.toJson(),
           );
           CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
           if (resModel.status == AppConstants.code_201) {
-
             emit(state.copyWith(isLoading: false));
             Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
-          }else{
+          } else {
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.failure);
             emit(state.copyWith(isShimmer: false));
           }
         } catch (e) {}
-      }
-      else if (event is _detailReturnEvent) {
-        final result = await Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': state.returnProductList, 'index': event.index,'status':state.isFromPending});
-        if(result!=null){
+      } else if (event is _detailReturnEvent) {
+        final result = await Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': state.returnProductList, 'index': event.index, 'status': state.isFromPending});
+        if (result != null) {
           emit(state.copyWith(returnProductList: []));
           List<ReturnProduct> list = [];
           list.addAll(result as List<ReturnProduct>);
@@ -148,16 +145,16 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
           emit(state.copyWith(returnProductList: list));
         }
         printData('result:$result');
-      }else if(event is _getSummaryListEvent){
+      } else if (event is _getSummaryListEvent) {
         Map map = event.list;
-        if(map['list']!=null){
-          final supplierWiseMap = groupBy(map['list'], (ReturnProduct products)=> products.supplierId);
-          emit(state.copyWith(supplierWiseMap:supplierWiseMap,returnProductList: map['list']));
+        if (map['list'] != null) {
+          final supplierWiseMap = groupBy(map['list'], (ReturnProduct products) => products.supplierId);
+          emit(state.copyWith(supplierWiseMap: supplierWiseMap, returnProductList: map['list']));
         }
-      }else if(event is _navigateSummaryListEvent){
-        final result = await Navigator.pushNamed(event.context, RouteDefine.returnSummaryScreen.name,arguments: {'list':state.returnProductList});
-        if(result!=null){
-          List<ReturnProduct> list =[];
+      } else if (event is _navigateSummaryListEvent) {
+        final result = await Navigator.pushNamed(event.context, RouteDefine.returnSummaryScreen.name, arguments: {'list': state.returnProductList});
+        if (result != null) {
+          List<ReturnProduct> list = [];
           list.addAll(result as Iterable<ReturnProduct>);
           emit(state.copyWith(returnProductList: list));
           debugPrint("result:$list");

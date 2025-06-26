@@ -78,14 +78,14 @@ class BottomNavScreenWidget extends StatelessWidget {
               bottomNavigationBar: Container(
                 decoration: BoxDecoration(color: Colors.transparent, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)]),
                 child: CurvedNavigationBar(
-                  mainColor: AppColors.mainColor,
-                  notificationColor: AppColors.notificationColor,
-                  screenWidth: getScreenWidth(context),
+                  // mainColor: AppColors.mainColor,
+                  // notificationColor: AppColors.notificationColor,
+                  // screenWidth: getScreenWidth(context),
                   key: _bottomNavigationKey,
                   index: state.index == 4 && !state.isSubUserSeeWallet ? (state.index - 1) : state.index,
                   height: 65.0,
-                  cartCount: state.cartCount,
-                  isRTL: context.rtl,
+                  // cartCount: state.cartCount,
+                  // isRTL: context.rtl,
                   items: state.isSubUserSeeWallet
                       ? [
                           navItem(
@@ -197,13 +197,13 @@ class BottomNavScreenWidget extends StatelessWidget {
           index: state.index,
           children: state.isSubUserSeeWallet
               ? [
-                  HomeScreen(isSubCategory: 'false'),
+                  HomeScreen(isSubCategory: 'false',),
                   const StoreScreen(),
                   const BasketScreen(),
                   const WalletScreen(),
                   const ProfileMenuScreen(),
                 ]
-              : [HomeScreen(isSubCategory: 'false'), const StoreScreen(), const BasketScreen(), const ProfileMenuScreen()]),
+              : [HomeScreen(isSubCategory: 'false', ), const StoreScreen(), const BasketScreen(), const ProfileMenuScreen()]),
     );
   }
 

@@ -67,6 +67,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
+      printData("i am here");
+
       if (event is _changeCategoryExpansion) {
         if(event.isOpened == false){
           emit(state.copyWith(searchList: []));
@@ -127,7 +129,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       response.message!,
                   event.context),
                 type: SnackBarType.success,
-
             );
           }
         } on ServerException {
@@ -342,6 +343,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                           .toString() ?? '')
               );
 
+              printData("check here my data ${productStockList}");
+
               emit(state.copyWith(productStockList: productStockList,));
 
               try {
@@ -368,11 +371,22 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       _cartProductId = cartProduct.cartProductId ?? '';
                       _productQuantity = cartProduct.totalQuantity  ?? 0;
 
+                      final updatedList = [...state.productStockList];
+
+                      final updatedProduct = updatedList[state.productStockUpdateIndex]
+                          .copyWith(quantity: _productQuantity);
+
+                      updatedList[state.productStockUpdateIndex] = updatedProduct;
+
+                      emit(state.copyWith(productStockList: updatedList));
+
                       return;
                     }
                   });
                   printData(
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
+
+
                 }
               } on ServerException {}
               emit(state.copyWith(productDetails: response.product??[],isProductLoading:false ));
@@ -397,6 +411,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 );
 
                 emit(state.copyWith(productStockList: productStockList));
+
                 productStockUpdateIndex =
                     productStockList.indexOf(productStockList.last);
               }
@@ -681,6 +696,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         }
 
         if (_isProductInCart) {
+
+
           try {
             emit(state.copyWith(isLoading: true));
             UpdateCartReqModel request = UpdateCartReqModel(
@@ -976,7 +993,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             searchList: searchList, searchController: TextEditingController()));
       }
 
-
           else  if (event is _getPreviousOrderProductsListEvent) {
 
             if(!preferencesHelper.getGuestUser()){
@@ -1016,7 +1032,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                             response.message!,
                         event.context),
                     type: SnackBarType.failure,
-
                   );
                 }
               } on ServerException {
@@ -1025,7 +1040,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 emit(state.copyWith(isShimmering: false,isPreviousOrderShimmering:false));
               }
             }
-
             }
 
       else if(event is _relatedProductsEvent){
@@ -1181,13 +1195,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   type: SnackBarType.failure);
             }
           }
-
       }
 
       else if(event is _userApproveEvent){
         if(!preferencesHelper.getGuestUser()) {
           try {
-
             final res = await DioClient(event.context).post(
                 AppUrlEndPoints.verifyClientUrl,
                 data: {AppStrings.clientIdString: preferencesHelper.getUserId()}
@@ -1213,7 +1225,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           }
         }
       }
-
     });
   }
 }

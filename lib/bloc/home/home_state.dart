@@ -57,6 +57,7 @@ class HomeState with _$HomeState {
     required bool retryLoading,
     required BuildContext? context,
     required RefreshController refreshController,
+    @Default(false) bool isOpenDialog,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(

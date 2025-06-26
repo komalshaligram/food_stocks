@@ -1025,6 +1025,9 @@ class StoreScreenWidget extends StatelessWidget {
                 value: context.read<StoreBloc>(),
                 child: BlocBuilder<StoreBloc, StoreState>(
                   builder: (blocContext, state) {
+
+                    printData("my data ${state.productStockList}");
+
                     return Container(
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.only(
@@ -1101,7 +1104,7 @@ class StoreScreenWidget extends StatelessWidget {
                                         productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productStockUpdateIndex].totalPrice * state.productStockList[state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
                                         productStock: (state.productStockList[state.productStockUpdateIndex].stock.toString()),
                                         scrollController: scrollController,
-                                        productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
+                                        productQuantity:  state.productStockList[state.productStockUpdateIndex].quantity,
                                         onQuantityChanged: (quantity) {
                                           context.read<StoreBloc>().add(StoreEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
                                         },

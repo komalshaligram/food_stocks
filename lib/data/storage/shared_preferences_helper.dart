@@ -11,6 +11,7 @@ class SharedPreferencesHelper {
   static const String userImage = "userImage";
   static const String userCompanyLogo = "companyLogo";
   static const String userCartCount = "cartCount";
+  static const String orderSuccessMessage = "ordersuccessMessage";
   static const String userMessageCount = "messageCount";
   static const String appVersion = 'appVersion';
   static const String fcmToken = 'fcmToken';
@@ -202,6 +203,10 @@ class SharedPreferencesHelper {
 
   Future<void> setCartCount({required int count}) async {
     await prefs.setInt(userCartCount, count);
+  }
+
+  Future<void> setMessage({required String message}) async {
+    await prefs.setString(orderSuccessMessage, message);
   }
 
   Future<void> setMessageCount({required int count}) async {
@@ -461,6 +466,10 @@ class SharedPreferencesHelper {
   int getCartCount() {
     return prefs.getInt(userCartCount) ?? 0;
   }
+  String getMessage() {
+    return prefs.getString(orderSuccessMessage) ?? '';
+  }
+
 
   int getMessageCount() {
     return prefs.getInt(userMessageCount) ?? 0;

@@ -28,6 +28,7 @@ import '../ui/screens/bank_transfer_screen.dart';
 import '../ui/screens/basket_screen.dart';
 import '../ui/screens/brands_permission_screen.dart';
 import '../ui/screens/categories_permission_screen.dart';
+import '../ui/screens/client_form_details_screen.dart';
 import '../ui/screens/company_product_screen.dart';
 import '../ui/screens/company_screen.dart';
 import '../ui/screens/connect_screen.dart';
@@ -57,6 +58,7 @@ import '../ui/screens/supplier_permission_screen.dart';
 import '../ui/screens/supplier_screen.dart';
 import '../ui/screens/wallet_screen.dart';
 import '../ui/screens/way_of_payment_screen.dart';
+import '../ui/screens/client_form_details_screen.dart';
 
 enum RouteDefine {
   ///ADD NAME OF ROUTE SCREEN
@@ -119,8 +121,8 @@ enum RouteDefine {
   scanReturnProduct,
   productReturnInfoScreen,
   createProductReturnListScreen,
-  returnSummaryScreen
-
+  returnSummaryScreen,
+  clientFormDetailsScreen
 }
 
 class AppRouting {
@@ -188,6 +190,7 @@ class AppRouting {
       RouteDefine.productReturnInfoScreen.name:(_)=>ProductReturnInfoRoute.route,
       RouteDefine.createProductReturnListScreen.name:(_)=>CreateProductReturnListRoute.route,
       RouteDefine.returnSummaryScreen.name:(_)=>ReturnSummaryRoute.route,
+      RouteDefine.clientFormDetailsScreen.name:(_)=>ClientFormDetailsRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

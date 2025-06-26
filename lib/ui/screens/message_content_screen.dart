@@ -251,11 +251,15 @@ class MessageContentScreenWidget extends StatelessWidget {
     required String id,
   }) {
     if (subPage == '') {
+      printData("check name ${mainPage}");
       if (mainPage == 'companyScreen') {
         Navigator.pushNamed(navigatorKey.currentState!.context, RouteDefine.companyScreen.name, arguments: {AppStrings.companyIdString: id});
       }
       if (mainPage == 'saleScreen') {
         Navigator.pushNamed(navigatorKey.currentState!.context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.companyIdString: id});
+      }
+      if (mainPage == 'orderScreen') {
+        Navigator.pushNamed(navigatorKey.currentState!.context, RouteDefine.orderScreen.name, arguments: {AppStrings.companyIdString: id});
       }
       if (mainPage == 'supplierScreen') {
         Navigator.pushNamed(navigatorKey.currentState!.context, RouteDefine.supplierScreen.name, arguments: {AppStrings.companyIdString: id});
@@ -275,7 +279,7 @@ class MessageContentScreenWidget extends StatelessWidget {
           AppStrings.companyIdString: id,
           AppStrings.isSubCategory: 'false',
         });
-      } else if (subPage == 'saleProductScreen') {
+      } else if (subPage == ' ̰saleProductScreen') {
         Navigator.pushNamed(navigatorKey.currentState!.context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.companyIdString: id});
       }
     }

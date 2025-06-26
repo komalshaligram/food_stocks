@@ -96,6 +96,12 @@ class PushNotificationService {
         Navigator.pushNamed(navigatorKey.currentState!.context,
           RouteDefine.productSaleScreen.name,);
       }
+
+      if (mainPage == 'orderScreen') {
+        Navigator.pushNamed(navigatorKey.currentState!.context,
+          RouteDefine.orderScreen.name,);
+      }
+
       if (mainPage == 'supplierScreen') {
         Navigator.pushNamed(navigatorKey.currentState!.context,
             RouteDefine.supplierScreen.name,

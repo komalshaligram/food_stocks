@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz_unsafe.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../data/model/res_model/supplier_payment_type_res_model/supplier_payment_type_res_model.dart';
@@ -48,8 +49,13 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
       if (event is _orderSendEvent) {
         List<Product> productReqMap = [];
 
-        productReqMap.add(Product(saleId: state.cartItemList.data?.data?[state.index].id, productId: state.cartItemList.data?.data?[state.index].productDetails?.id, quantity: int.parse(state.cartItemList.data?.data![state.index].totalQuantity.toString() ?? '0'), supplierId: state.cartItemList.data?.data?[state.index].suppliers?.first.id));
-        debugPrint(productReqMap.toSet().toString());
+        // saleId: state.tempList[state.index].sales?.id,
+        state.tempList[state.index].productDetails?.forEach((product) {
+          productReqMap.add(Product(productId: product.id, supplierId: state.tempList[state.index].suppliers?.id, quantity: int.parse(state.tempList[state.index].totalQuantity.toString() ?? '0')));
+        });
+
+        // productReqMap.add(Product(saleId: state.cartItemList.data?.data?[state.index].id, productId: state.cartItemList.data?.data?[state.index].productDetails?.id, quantity: int.parse(state.cartItemList.data?.data![state.index].totalQuantity.toString() ?? '0'), supplierId: state.cartItemList.data?.data?[state.index].suppliers?.first.id));
+        printData("check req ${productReqMap.toString()}");
         List<CartProductDataResModel> tempList = [];
         tempList = [...state.tempList];
         tempList[state.index] = tempList[state.index].copyWith(isProcess: true);
@@ -116,6 +122,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           tempList[event.index] = tempList[event.index].copyWith(isProcess: true);
 
           emit(state.copyWith(tempList: tempList, showPopUp: false));
+          printData("check id ${event.id}");
           final res = await DioClient(event.context).get(
             path: '${AppUrlEndPoints.getSupplierPaymentTypesUrl}${event.id}',
           );

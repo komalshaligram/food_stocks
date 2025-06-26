@@ -21,6 +21,7 @@ class CustomOneButtonDialog extends StatelessWidget {
   final double width;
   final String subTitle;
   final bool isLoading;
+  final String paymentType;
 
   const CustomOneButtonDialog({
     super.key,
@@ -37,6 +38,7 @@ class CustomOneButtonDialog extends StatelessWidget {
     this.width = double.maxFinite,
     this.subTitle = '',
     this.isLoading = false,
+    this.paymentType = '',
   });
 
   @override
@@ -72,19 +74,23 @@ class CustomOneButtonDialog extends StatelessWidget {
            Column(
              children: [
                positiveTitle != null
+                   // && paymentType == 'creditCard'
                    ? Padding(padding: const EdgeInsets.only(bottom: 10),child: commonButton(positiveTitle:positiveTitle ?? '' ,width: width,positiveOnTap: positiveOnTap),)
                    : 0.height,
              //  10.height,
                positiveTitle1 != null
+                   // && paymentType == 'wallet'
                    ?
                Padding(padding:const EdgeInsets.only(bottom: 10),child: commonButton(positiveTitle:positiveTitle1 ?? '' ,width: width,positiveOnTap: positiveOnTap1),)
                    : 0.height,
               // 10.height,
                positiveTitle2 != null
+                   // && paymentType == 'bankTransfer'
                    ? Padding(padding:const EdgeInsets.only(bottom: 10), child: commonButton(positiveTitle:positiveTitle2 ?? '' ,width: width,positiveOnTap: positiveOnTap2))
                    : 0.height,
                //10.height,
                positiveTitle3 != null
+                   // && paymentType == 'bankTransfer'
                    ? Padding(padding:const EdgeInsets.only(bottom: 10), child: commonButton(positiveTitle:positiveTitle3 ?? '' ,width: width,positiveOnTap: positiveOnTap3),)
                    : 0.height,
                //10.height,

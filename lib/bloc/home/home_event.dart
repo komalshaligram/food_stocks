@@ -82,6 +82,7 @@ class HomeEvent with _$HomeEvent {
 
   const factory HomeEvent.getProfileDetailsEvent({
     required BuildContext context,
+    required bool isDialog
 }) = _getProfileDetailsEvent;
 
   const factory HomeEvent.getRecommendationProductsListEvent(

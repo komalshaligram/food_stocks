@@ -1,8 +1,10 @@
 
 
 class AppUrlEndPoints {
-static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl
-  // static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api';
+static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl live
+//   static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; // local
+
+  // static const String baseUrl = 'http://192.168.3.75:3000/api'; // local 75 yash 45 harshit
 
   ///devUrl
   //static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
@@ -15,6 +17,7 @@ static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUr
   static const String businessTypesUrl = '/v1/settings/ClientTypes';
   // static const String getProfileDetailsUrl = '/v1/admin/getAllClients';
   static const String updateProfileDetailsUrl = '/v1/clients/updateClient';
+  static const String updateClientInfoDetailsUrl = '/v1/admin/updateClient';
   static const String formsListUrl = '/v1/settings/ClientForms';
   static const String filesListUrl = '/v1/settings/ClientFiles';
   static const String operationTimeUrl = '/v1/clients/operationTime';
@@ -131,4 +134,5 @@ static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUr
   static const String getReturnByIdUrl = '/v1/return/getClientReturnById/';
   static const String updateReturnUrl = '/v1/return/updateReturn/';
   static const String deleteReturnUrl = '/v1/return/deleteReturn';
+  static const String getLatestOnthewayOrderUrl = '/v2/orders/get-latest-ontheway-order/';
 }

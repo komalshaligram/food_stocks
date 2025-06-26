@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
+import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,13 +49,16 @@ class HomeRoute {
 
 class HomeScreen extends StatelessWidget {
   String isSubCategory;
+
   HomeScreen({super.key, this.isSubCategory = ''});
 
   @override
   Widget build(BuildContext context) {
+
+
     return BlocProvider(
       create: (context) => HomeBloc()
-        ..add(HomeEvent.getProfileDetailsEvent(context: context))
+        ..add(HomeEvent.getProfileDetailsEvent(context: context, isDialog: true))
      // ..add(HomeEvent.getRecommendationProductsListEvent(context:context))
       ..add(HomeEvent.getProductSalesListEvent(context: context))
       ..add(const HomeEvent.getPreferencesDataEvent()),
@@ -87,493 +91,500 @@ class HomeScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: AppColors.pageColor,
-            body: FocusDetector(
-              onFocusGained: () {
-                bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
-              },
-              child: SafeArea(
-                child: Stack(
-                  children: [
-                    AbsorbPointer(
-                      absorbing: state.allShimmering,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: AppConstants.padding_5,
-                              left: AppConstants.padding_10,
-                              right: AppConstants.padding_10,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: state.isSubUserSeeWallet ? 4 : 3, context: context));
-                                  },
-                                  child: Container(
-                                    height: 60,
-                                    width: 60,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: AppColors.whiteColor, width: 0.5),
-                                      boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)],
-                                      shape: BoxShape.circle,
-                                    ),
-                                    clipBehavior: Clip.hardEdge,
-                                    child: state.userImageUrl.isNotEmpty
-                                        ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: CachedNetworkImage(
-                                        placeholder: (context, url) => const Center(child: CupertinoActivityIndicator()),
-                                        imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.userImageUrl}',
-                                        fit: BoxFit.cover,
-                                        errorWidget: (context, url, error) {
-                                          return Container(
-                                            color: AppColors.whiteColor,
-                                          );
-                                        },
-                                      ),
-                                    )
-                                        : Container(
-                                      decoration: BoxDecoration(border: Border.all(color: AppColors.whiteColor, width: 5), borderRadius: BorderRadius.circular(40)),
-                                      child: SvgPicture.asset(
-                                        AppImagePath.placeholderProfile,
-                                        width: 80,
-                                        height: 80,
-                                        fit: BoxFit.scaleDown,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SvgPicture.asset(
-                                  AppImagePath.splashLogo,
-                                  fit: BoxFit.cover,
-                                  width: 100,
-                                  height: 100,
-                                ),
-                                Container(
-                                  height: 60,
-                                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                                  decoration: BoxDecoration(color: AppColors.whiteColor, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.3), blurRadius: AppConstants.blur_10)], borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
-                                  clipBehavior: Clip.hardEdge,
-                                  alignment: Alignment.center,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        height: 54,
-                                        width: 54,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.iconBGColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                                        ),
-                                        child: InkWell(
-                                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                                          onTap: () async {
-                                            dynamic messageResult = await Navigator.pushNamed(context, RouteDefine.messageScreen.name);
-                                            if (messageResult != null) {
-                                              bloc.add(HomeEvent.updateMessageListEvent(messageIdList: messageResult[AppStrings.messageIdListString] ?? ''));
-                                            }
-                                          },
-                                          child: Stack(
-                                            fit: StackFit.expand,
-                                            children: [
-                                              Transform(
-                                                alignment: Alignment.center,
-                                                transform: Matrix4.rotationY(context.rtl ? pi : 0),
-                                                child: SvgPicture.asset(
-                                                  AppImagePath.message,
-                                                  height: 26,
-                                                  width: 24,
-                                                  fit: BoxFit.scaleDown,
-                                                ),
-                                              ),
-                                              state.messageCount <= 0
-                                                  ? 0.width
-                                                  : Positioned(
-                                                  top: 8,
-                                                  right: context.rtl ? null : 7,
-                                                  left: context.rtl ? 7 : null,
-                                                  child: Container(
-                                                    height: 22,
-                                                    width: 22,
-                                                    decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, border: Border.all(color: AppColors.whiteColor, width: 1), shape: BoxShape.circle),
-                                                    alignment: Alignment.center,
-                                                    child: Text('${state.messageCount <= 99 ? state.messageCount : '99+'}', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.whiteColor)),
-                                                  ))
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Stack(
-                              children: [
-                                SmartRefresher(
-                                  enablePullDown: true,
-                                  controller: state.refreshController,
-                                  header: CustomHeader(
-                                    refreshStyle: RefreshStyle.Behind,
-                                    builder: (c, m) {
-                                      return Container(
-                                        height: 30,
-                                        width: 30,
-                                        margin: const EdgeInsets.only(top: 90, bottom: 30),
-                                        decoration: BoxDecoration(boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)], color: AppColors.whiteColor, shape: BoxShape.circle),
-                                        child: CupertinoActivityIndicator(
-                                          color: AppColors.mainColor,
-                                          radius: 10,
-                                        ),
-                                      );
+          return WillPopScope(
+            onWillPop: () async {
+              SystemNavigator.pop();
+              return true;
+            },
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              backgroundColor: AppColors.pageColor,
+              body: FocusDetector(
+                onFocusGained: () {
+                 bloc.add(HomeEvent.getProfileDetailsEvent(context: context, isDialog: false));
+
+                },
+                child: SafeArea(
+                  child: Stack(
+                    children: [
+                      AbsorbPointer(
+                        absorbing: state.allShimmering,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: AppConstants.padding_5,
+                                left: AppConstants.padding_10,
+                                right: AppConstants.padding_10,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: state.isSubUserSeeWallet ? 4 : 3, context: context));
                                     },
+                                    child: Container(
+                                      height: 60,
+                                      width: 60,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: AppColors.whiteColor, width: 0.5),
+                                        boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)],
+                                        shape: BoxShape.circle,
+                                      ),
+                                      clipBehavior: Clip.hardEdge,
+                                      child: state.userImageUrl.isNotEmpty
+                                          ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: CachedNetworkImage(
+                                          placeholder: (context, url) => const Center(child: CupertinoActivityIndicator()),
+                                          imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.userImageUrl}',
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) {
+                                            return Container(
+                                              color: AppColors.whiteColor,
+                                            );
+                                          },
+                                        ),
+                                      )
+                                          : Container(
+                                        decoration: BoxDecoration(border: Border.all(color: AppColors.whiteColor, width: 5), borderRadius: BorderRadius.circular(40)),
+                                        child: SvgPicture.asset(
+                                          AppImagePath.placeholderProfile,
+                                          width: 80,
+                                          height: 80,
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  onRefresh: () {
-                                    bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
-                                    bloc.add(HomeEvent.userApproveEvent(context: context));
-                                    bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
-                                    bloc.add(HomeEvent.getProductSalesListEvent(context: context));
-                                    handleMessageOnBackground();
-                                    bloc.add(const HomeEvent.getPreferencesDataEvent());
-                                    bloc.add(HomeEvent.getMessageListEvent(context: context));
-                                    bloc.add(HomeEvent.getCartCountEvent(context: context));
-                                    bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
-                                    if (!state.isAppOnMaintenance) {
-                                      bloc.add(HomeEvent.generalSettings(context: context, dialogContext: context, isRetryLoading: false));
-                                    }
-                                    bloc.add(HomeEvent.getPermissionList(context: context));
-                                    state.refreshController.refreshCompleted();
-                                    state.refreshController.loadComplete();
-                                  },
-                                  child: SingleChildScrollView(
-                                    child: Column(
+                                  SvgPicture.asset(
+                                    AppImagePath.splashLogo,
+                                    fit: BoxFit.cover,
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                                  Container(
+                                    height: 60,
+                                    padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                    decoration: BoxDecoration(color: AppColors.whiteColor, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.3), blurRadius: AppConstants.blur_10)], borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
+                                    clipBehavior: Clip.hardEdge,
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        80.height,
-                                        state.pesachBannerShimmering && state.pesachBannerURL.isEmpty
-                                            ? const PesachBannerShimmerWidget()
-                                            : state.showPesachBanner && state.pesachBannerURL.isNotEmpty
-                                            ? InkWell(
-                                            onTap: () {
-                                              Navigator.pushNamed(context, RouteDefine.pesachScreen.name);
+                                        Container(
+                                          height: 54,
+                                          width: 54,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.iconBGColor,
+                                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                                          ),
+                                          child: InkWell(
+                                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                                            onTap: () async {
+                                              dynamic messageResult = await Navigator.pushNamed(context, RouteDefine.messageScreen.name);
+                                              if (messageResult != null) {
+                                                bloc.add(HomeEvent.updateMessageListEvent(messageIdList: messageResult[AppStrings.messageIdListString] ?? ''));
+                                              }
                                             },
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(left: 8.0, right: 8),
-                                              child: CachedNetworkImage(
-                                                placeholder: (context, url) => const PesachBannerShimmerWidget(),
-                                                imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.pesachBannerURL}',
-                                                errorWidget: (context, url, error) {
-                                                  return Container(
-                                                    color: AppColors.whiteColor,
-                                                  );
-                                                },
-                                              ),
-                                            ))
-                                            : 0.width,
-                                        10.height,
-                                        AnimatedCrossFade(
-                                            firstChild: getScreenWidth(context).width,
-                                            secondChild: Column(
+                                            child: Stack(
+                                              fit: StackFit.expand,
                                               children: [
-                                                buildListTitles(
-                                                    context: context,
-                                                    title: AppLocalizations.of(context)!.sales,
-                                                    subTitle: AppLocalizations.of(context)!.all_sales,
-                                                    onTap: () {
-                                                      Navigator.pushNamed(context, RouteDefine.productSaleScreen.name);
-                                                    }),
-                                                SizedBox(
-                                                  width: getScreenWidth(context),
-                                                  height: getItemHeight(context, state.isSaleOn),
-                                                  child: state.isProductSaleShimmering ? CommonProductListShimmerWidget(
-                                                  ):AbsorbPointer(
-                                                    absorbing: state.isProductSaleShimmering,
-                                                    child: ListView.builder(
-                                                      itemCount: state.productSalesList.length,
-                                                      shrinkWrap: true,
-                                                      scrollDirection: Axis.horizontal,
-                                                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                                      itemBuilder: (context, index) {
-                                                        return CommonProductSaleItemWidget(
-                                                            isSale: state.productSalesList[index].sale?.isSale,
-                                                            isGuestUser: state.isGuestUser,
-                                                            height: AppConstants.salesProductItemHeight,
-                                                            width: getItemWidth(context),
-                                                            productName: state.productSalesList[index].productName ?? '',
-                                                            saleImage: state.productSalesList[index].mainImage ?? '',
-                                                            title: state.productSalesList[index].name,
-                                                            description: parse(state.productSalesList[index].sale?.saleDescription).body?.text ?? '',
-                                                            discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ""),
-                                                            originalPrice: state.productSalesList[index].productPrice,
-                                                            productStock: state.productSalesList[index].productStock.toString(),
-                                                            lowStock: state.productSalesList[index].lowStock ?? '',
-                                                            isPesach: state.productSalesList[index].isPesach,
-                                                            onButtonTap: () {
-                                                              if (!state.isGuestUser) {
-                                                                showProductDetails(isSaleOn: state.isSaleOn, productListIndex: 3, context: /*Platform.isIOS ? (state.context??context): */context, productId: state.productSalesList[index].id ?? '', productStock: state.productSalesList[index].productStock.toString());
-                                                              } else {
-                                                                Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                                              }
-                                                            });
-                                                      },
-                                                    ),
+                                                Transform(
+                                                  alignment: Alignment.center,
+                                                  transform: Matrix4.rotationY(context.rtl ? pi : 0),
+                                                  child: SvgPicture.asset(
+                                                    AppImagePath.message,
+                                                    height: 26,
+                                                    width: 24,
+                                                    fit: BoxFit.scaleDown,
                                                   ),
                                                 ),
+                                                state.messageCount <= 0
+                                                    ? 0.width
+                                                    : Positioned(
+                                                    top: 8,
+                                                    right: context.rtl ? null : 7,
+                                                    left: context.rtl ? 7 : null,
+                                                    child: Container(
+                                                      height: 22,
+                                                      width: 22,
+                                                      decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, border: Border.all(color: AppColors.whiteColor, width: 1), shape: BoxShape.circle),
+                                                      alignment: Alignment.center,
+                                                      child: Text('${state.messageCount <= 99 ? state.messageCount : '99+'}', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.whiteColor)),
+                                                    ))
                                               ],
                                             ),
-                                            crossFadeState: state.productSalesList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                            duration: const Duration(milliseconds: 300)),
-                                        AnimatedCrossFade(
-                                            firstChild: getScreenWidth(context).width,
-                                            secondChild: Column(
-                                              children: [
-                                                buildListTitles(
-                                                    context: context,
-                                                    title: AppLocalizations.of(context)!.recommended_for_you,
-                                                    subTitle: AppLocalizations.of(context)!.more,
-                                                    onTap: () {
-                                                      Navigator.pushNamed(context, RouteDefine.recommendationProductsScreen.name);
-                                                    }),
-                                                SizedBox(
-                                                  width: getScreenWidth(context),
-                                                 height: getItemHeight(context, state.isSaleOn),
-                                                  child: state.isShimmering?CommonProductListShimmerWidget():ListView.builder(
-                                                      itemCount: state.recommendedProductsList.length,
-                                                      shrinkWrap: true,
-                                                      scrollDirection: Axis.horizontal,
-                                                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                                      itemBuilder: (context, index) => CommonProductSaleItemWidget(
-                                                          isSale: state.recommendedProductsList[index].sale?.isSale,
-                                                          isGuestUser: state.isGuestUser,
-                                                          height: AppConstants.salesProductItemHeight,
-                                                          width: getItemWidth(context),
-                                                          productName: state.recommendedProductsList[index].productName ?? '',
-                                                          saleImage: state.recommendedProductsList[index].mainImage ?? '',
-                                                          title: state.recommendedProductsList[index].name,
-                                                          description: parse(state.recommendedProductsList[index].sale?.saleDescription).body?.text ?? '',
-                                                          discountedPrice: double.parse(state.recommendedProductsList[index].sale?.salePrice ?? '0'),
-                                                          originalPrice: state.recommendedProductsList[index].productPrice,
-                                                          productStock: state.recommendedProductsList[index].productStock.toString(),
-                                                          lowStock: state.recommendedProductsList[index].lowStock ?? '',
-                                                          isPesach: state.recommendedProductsList[index].isPesach,
-                                                          onButtonTap: () {
-                                                            if (!state.isGuestUser) {
-                                                              showProductDetails(
-                                                                isSaleOn: state.isSaleOn,
-                                                                context:  context,
-                                                                productId: state.recommendedProductsList[index].id ?? '',
-                                                                productStock: (state.recommendedProductsList[index].productStock.toString()),
-                                                                productListIndex: 1,
-                                                              );
-                                                            } else {
-                                                              Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                                            }
-                                                          })),
-                                                ),
-                                              ],
-                                            ),
-                                            crossFadeState: state.recommendedProductsList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                            duration: const Duration(milliseconds: 300)),
-                                        state.cartCount == 0
-                                            ? CustomTextIconButtonWidget(
-                                          width: double.maxFinite,
-                                          title: AppLocalizations.of(context)!.new_order,
-                                          onPressed: () {
-                                            context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 1, context: context));
-                                          },
-                                          svgImage: AppImagePath.add,
-                                        )
-                                            : CustomTextIconButtonWidget(
-                                          width: double.maxFinite,
-                                          title: AppLocalizations.of(context)!.my_basket,
-                                          onPressed: () {
-                                            context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 2, context: context));
-                                          },
-                                          svgImage: AppImagePath.cart,
-                                          cartCount: state.cartCount,
+                                          ),
                                         ),
-                                        30.height,
-                                        state.messageList.isEmpty
-                                            ? 0.width
-                                            : Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            titleRowWidget(
-                                                context: context,
-                                                title: AppLocalizations.of(context)!.messages,
-                                                allContentTitle: AppLocalizations.of(context)!.all_messages,
-                                                onTap: () {
-                                                  Navigator.pushNamed(context, RouteDefine.messageScreen.name);
-                                                }),
-                                            10.height,
-                                            ListView.builder(
-                                              itemCount: state.messageList.length > 1 ? 2 : 1,
-                                              physics: const NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              itemBuilder: (context, index) => messageListItem(
-                                                  context: context,
-                                                  title: state.messageList[index].message?.title ?? '',
-                                                  content: parse(state.messageList[index].message?.body ?? '').body?.text ?? '',
-                                                  dateTime: state.messageList[index].updatedAt?.replaceRange(11, 19, '') ?? '',
-                                                  onTap: () async {
-                                                    dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {
-                                                      AppStrings.messageDataString: state.messageList[index],
-                                                      AppStrings.messageIdString: state.messageList[index].id,
-                                                      AppStrings.isReadMoreString: true,
-                                                    });
-                                                    if (messageNewData != null) {
-                                                      context.read<HomeBloc>().add(HomeEvent.removeOrUpdateMessageEvent(messageId: messageNewData[AppStrings.messageIdString], isRead: messageNewData[AppStrings.messageReadString], isDelete: messageNewData[AppStrings.messageDeleteString]));
-                                                    }
-                                                  }),
-                                            ),
-                                          ],
-                                        ),
-                                        AppConstants.bottomNavSpace.height,
-                                        //dashboard stats
                                       ],
                                     ),
                                   ),
-                                ),
-                                CommonSearchWidget(
-                                  isFilterTap: true,
-                                  isCategoryExpand: state.isCategoryExpand,
-                                  isSearching: state.isSearching,
-                                  onFilterTap: () {
-                                    bloc.add(const HomeEvent.changeCategoryExpansion());
-                                  },
-                                  onCloseTap: () {
-                                    bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: false));
-                                  },
-                                  onSearchTap: () {
-                                    if (state.searchController.text.isNotEmpty) {
-                                      bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: true));
-                                    }
-                                  },
-                                  onSearch: (String search) {
-                                    if (search.length > 1) {
-                                      bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: true));
-                                      bloc.add(HomeEvent.globalSearchEvent(context: context));
-                                    }
-                                  },
-                                  onSearchSubmit: (String search) {
-                                    Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
-                                  },
-                                  onOutSideTap: () {
-                                    state.searchController.clear();
-                                    bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: false));
-                                  },
-                                  onSearchItemTap: () {
-                                    bloc.add(const HomeEvent.changeCategoryExpansion());
-                                  },
-                                  controller: state.searchController,
-                                  searchList: state.searchList,
-                                  searchResultWidget:state.isSearching ? const SizedBox() : state.searchList.isEmpty
-                                      ? Center(
-                                    child: Text(
-                                      AppLocalizations.of(context)!.search_result_not_found,
-                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Stack(
+                                children: [
+                                  SmartRefresher(
+                                    enablePullDown: true,
+                                    controller: state.refreshController,
+                                    header: CustomHeader(
+                                      refreshStyle: RefreshStyle.Behind,
+                                      builder: (c, m) {
+                                        return Container(
+                                          height: 30,
+                                          width: 30,
+                                          margin: const EdgeInsets.only(top: 90, bottom: 30),
+                                          decoration: BoxDecoration(boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)], color: AppColors.whiteColor, shape: BoxShape.circle),
+                                          child: CupertinoActivityIndicator(
+                                            color: AppColors.mainColor,
+                                            radius: 10,
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  )
-                                      : ListView.builder(
-                                    itemCount: state.searchList.length,
-                                    shrinkWrap: true,
-                                    itemBuilder: (listViewContext, index) {
-                                      return SearchItemWidget(
-                                          isShowSeeAll: index==state.searchList.length-1?true:false,
-                                          isGuestUser: state.isGuestUser,
-                                          priceOfBox: state.searchList[index].priceOfBox,
-                                          salePrice: state.searchList[index].salePrice,
-                                          saleDesc: state.searchList[index].salesDesc,
-                                          isPesach: state.searchList[index].isPesach,
-                                          lowStock: state.searchList[index].lowStock.toString(),
-                                          numberOfUnits: state.searchList[index].numberOfUnits,
-                                          productStock: state.searchList[index].productStock.toString(),
-                                          context: context,
-                                          searchName: state.searchList[index].name,
-                                          searchImage: state.searchList[index].image,
-                                          searchType: state.searchList[index].searchType,
-                                          isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
-                                          isLastItem: state.searchList.length - 1 == index,
-                                          isShowSearchLabel: index == 0
-                                              ? true
-                                              : state.searchList[index].searchType != state.searchList[index - 1].searchType
-                                              ? true
-                                              : false,
-                                          onSeeAllTap: () async {
-                                            printData("searchType: ${state.searchList[index].searchType}");
-                                            if (state.searchList[index].searchType == SearchTypes.category) {
-                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
-                                              if (searchResult != null) {
-                                                bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                    onRefresh: () {
+                                      bloc.add(HomeEvent.getProfileDetailsEvent(context: context, isDialog: false));
+                                      bloc.add(HomeEvent.userApproveEvent(context: context));
+                                      bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
+                                      bloc.add(HomeEvent.getProductSalesListEvent(context: context));
+                                      handleMessageOnBackground();
+                                      bloc.add(const HomeEvent.getPreferencesDataEvent());
+                                      bloc.add(HomeEvent.getMessageListEvent(context: context));
+                                      bloc.add(HomeEvent.getCartCountEvent(context: context));
+                                      bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
+                                      if (!state.isAppOnMaintenance) {
+                                        bloc.add(HomeEvent.generalSettings(context: context, dialogContext: context, isRetryLoading: false));
+                                      }
+                                      bloc.add(HomeEvent.getPermissionList(context: context));
+                                      state.refreshController.refreshCompleted();
+                                      state.refreshController.loadComplete();
+                                    },
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        children: [
+                                          80.height,
+                                          state.pesachBannerShimmering && state.pesachBannerURL.isEmpty
+                                              ? const PesachBannerShimmerWidget()
+                                              : state.showPesachBanner && state.pesachBannerURL.isNotEmpty
+                                              ? InkWell(
+                                              onTap: () {
+                                                Navigator.pushNamed(context, RouteDefine.pesachScreen.name);
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(left: 8.0, right: 8),
+                                                child: CachedNetworkImage(
+                                                  placeholder: (context, url) => const PesachBannerShimmerWidget(),
+                                                  imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.pesachBannerURL}',
+                                                  errorWidget: (context, url, error) {
+                                                    return Container(
+                                                      color: AppColors.whiteColor,
+                                                    );
+                                                  },
+                                                ),
+                                              ))
+                                              : 0.width,
+                                          10.height,
+                                          AnimatedCrossFade(
+                                              firstChild: getScreenWidth(context).width,
+                                              secondChild: Column(
+                                                children: [
+                                                  buildListTitles(
+                                                      context: context,
+                                                      title: AppLocalizations.of(context)!.sales,
+                                                      subTitle: AppLocalizations.of(context)!.all_sales,
+                                                      onTap: () {
+                                                        Navigator.pushNamed(context, RouteDefine.productSaleScreen.name);
+                                                      }),
+                                                  SizedBox(
+                                                    width: getScreenWidth(context),
+                                                    height: getItemHeight(context, state.isSaleOn),
+                                                    child: state.isProductSaleShimmering ? CommonProductListShimmerWidget(
+                                                    ):AbsorbPointer(
+                                                      absorbing: state.isProductSaleShimmering,
+                                                      child: ListView.builder(
+                                                        itemCount: state.productSalesList.length,
+                                                        shrinkWrap: true,
+                                                        scrollDirection: Axis.horizontal,
+                                                        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                        itemBuilder: (context, index) {
+                                                          return CommonProductSaleItemWidget(
+                                                              isSale: state.productSalesList[index].sale?.isSale,
+                                                              isGuestUser: state.isGuestUser,
+                                                              height: AppConstants.salesProductItemHeight,
+                                                              width: getItemWidth(context),
+                                                              productName: state.productSalesList[index].productName ?? '',
+                                                              saleImage: state.productSalesList[index].mainImage ?? '',
+                                                              title: state.productSalesList[index].name,
+                                                              description: parse(state.productSalesList[index].sale?.saleDescription).body?.text ?? '',
+                                                              discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ""),
+                                                              originalPrice: state.productSalesList[index].productPrice,
+                                                              productStock: state.productSalesList[index].productStock.toString(),
+                                                              lowStock: state.productSalesList[index].lowStock ?? '',
+                                                              isPesach: state.productSalesList[index].isPesach,
+                                                              onButtonTap: () {
+                                                                if (!state.isGuestUser) {
+                                                                  showProductDetails(isSaleOn: state.isSaleOn, productListIndex: 3, context: /*Platform.isIOS ? (state.context??context): */context, productId: state.productSalesList[index].id ?? '', productStock: state.productSalesList[index].productStock.toString());
+                                                                } else {
+                                                                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                                }
+                                                              });
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              crossFadeState: state.productSalesList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                              duration: const Duration(milliseconds: 300)),
+                                          AnimatedCrossFade(
+                                              firstChild: getScreenWidth(context).width,
+                                              secondChild: Column(
+                                                children: [
+                                                  buildListTitles(
+                                                      context: context,
+                                                      title: AppLocalizations.of(context)!.recommended_for_you,
+                                                      subTitle: AppLocalizations.of(context)!.more,
+                                                      onTap: () {
+                                                        Navigator.pushNamed(context, RouteDefine.recommendationProductsScreen.name);
+                                                      }),
+                                                  SizedBox(
+                                                    width: getScreenWidth(context),
+                                                   height: getItemHeight(context, state.isSaleOn),
+                                                    child: state.isShimmering?CommonProductListShimmerWidget():ListView.builder(
+                                                        itemCount: state.recommendedProductsList.length,
+                                                        shrinkWrap: true,
+                                                        scrollDirection: Axis.horizontal,
+                                                        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                        itemBuilder: (context, index) => CommonProductSaleItemWidget(
+                                                            isSale: state.recommendedProductsList[index].sale?.isSale,
+                                                            isGuestUser: state.isGuestUser,
+                                                            height: AppConstants.salesProductItemHeight,
+                                                            width: getItemWidth(context),
+                                                            productName: state.recommendedProductsList[index].productName ?? '',
+                                                            saleImage: state.recommendedProductsList[index].mainImage ?? '',
+                                                            title: state.recommendedProductsList[index].name,
+                                                            description: parse(state.recommendedProductsList[index].sale?.saleDescription).body?.text ?? '',
+                                                            discountedPrice: double.parse(state.recommendedProductsList[index].sale?.salePrice ?? '0'),
+                                                            originalPrice: state.recommendedProductsList[index].productPrice,
+                                                            productStock: state.recommendedProductsList[index].productStock.toString(),
+                                                            lowStock: state.recommendedProductsList[index].lowStock ?? '',
+                                                            isPesach: state.recommendedProductsList[index].isPesach,
+                                                            onButtonTap: () {
+                                                              if (!state.isGuestUser) {
+                                                                showProductDetails(
+                                                                  isSaleOn: state.isSaleOn,
+                                                                  context:  context,
+                                                                  productId: state.recommendedProductsList[index].id ?? '',
+                                                                  productStock: (state.recommendedProductsList[index].productStock.toString()),
+                                                                  productListIndex: 1,
+                                                                );
+                                                              } else {
+                                                                Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                              }
+                                                            })),
+                                                  ),
+                                                ],
+                                              ),
+                                              crossFadeState: state.recommendedProductsList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                              duration: const Duration(milliseconds: 300)),
+                                          state.cartCount == 0
+                                              ? CustomTextIconButtonWidget(
+                                            width: double.maxFinite,
+                                            title: AppLocalizations.of(context)!.new_order,
+                                            onPressed: () {
+                                              context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 1, context: context));
+                                            },
+                                            svgImage: AppImagePath.add,
+                                          )
+                                              : CustomTextIconButtonWidget(
+                                            width: double.maxFinite,
+                                            title: AppLocalizations.of(context)!.my_basket,
+                                            onPressed: () {
+                                              context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 2, context: context));
+                                            },
+                                            svgImage: AppImagePath.cart,
+                                            cartCount: state.cartCount,
+                                          ),
+                                          30.height,
+                                          state.messageList.isEmpty
+                                              ? 0.width
+                                              : Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              titleRowWidget(
+                                                  context: context,
+                                                  title: AppLocalizations.of(context)!.messages,
+                                                  allContentTitle: AppLocalizations.of(context)!.all_messages,
+                                                  onTap: () {
+                                                    Navigator.pushNamed(context, RouteDefine.messageScreen.name);
+                                                  }),
+                                              10.height,
+                                              ListView.builder(
+                                                itemCount: state.messageList.length > 1 ? 2 : 1,
+                                                physics: const NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                itemBuilder: (context, index) => messageListItem(
+                                                    context: context,
+                                                    title: state.messageList[index].message?.title ?? '',
+                                                    content: parse(state.messageList[index].message?.body ?? '').body?.text ?? '',
+                                                    dateTime: state.messageList[index].updatedAt?.replaceRange(11, 19, '') ?? '',
+                                                    onTap: () async {
+                                                      dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {
+                                                        AppStrings.messageDataString: state.messageList[index],
+                                                        AppStrings.messageIdString: state.messageList[index].id,
+                                                        AppStrings.isReadMoreString: true,
+                                                      });
+                                                      if (messageNewData != null) {
+                                                        context.read<HomeBloc>().add(HomeEvent.removeOrUpdateMessageEvent(messageId: messageNewData[AppStrings.messageIdString], isRead: messageNewData[AppStrings.messageReadString], isDelete: messageNewData[AppStrings.messageDeleteString]));
+                                                      }
+                                                    }),
+                                              ),
+                                            ],
+                                          ),
+                                          AppConstants.bottomNavSpace.height,
+                                          //dashboard stats
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  CommonSearchWidget(
+                                    isFilterTap: true,
+                                    isCategoryExpand: state.isCategoryExpand,
+                                    isSearching: state.isSearching,
+                                    onFilterTap: () {
+                                      bloc.add(const HomeEvent.changeCategoryExpansion());
+                                    },
+                                    onCloseTap: () {
+                                      bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: false));
+                                    },
+                                    onSearchTap: () {
+                                      if (state.searchController.text.isNotEmpty) {
+                                        bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: true));
+                                      }
+                                    },
+                                    onSearch: (String search) {
+                                      if (search.length > 1) {
+                                        bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: true));
+                                        bloc.add(HomeEvent.globalSearchEvent(context: context));
+                                      }
+                                    },
+                                    onSearchSubmit: (String search) {
+                                      Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                                    },
+                                    onOutSideTap: () {
+                                      state.searchController.clear();
+                                      bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: false));
+                                    },
+                                    onSearchItemTap: () {
+                                      bloc.add(const HomeEvent.changeCategoryExpansion());
+                                    },
+                                    controller: state.searchController,
+                                    searchList: state.searchList,
+                                    searchResultWidget:state.isSearching ? const SizedBox() : state.searchList.isEmpty
+                                        ? Center(
+                                      child: Text(
+                                        AppLocalizations.of(context)!.search_result_not_found,
+                                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                                      ),
+                                    )
+                                        : ListView.builder(
+                                      itemCount: state.searchList.length,
+                                      shrinkWrap: true,
+                                      itemBuilder: (listViewContext, index) {
+                                        return SearchItemWidget(
+                                            isShowSeeAll: index==state.searchList.length-1?true:false,
+                                            isGuestUser: state.isGuestUser,
+                                            priceOfBox: state.searchList[index].priceOfBox,
+                                            salePrice: state.searchList[index].salePrice,
+                                            saleDesc: state.searchList[index].salesDesc,
+                                            isPesach: state.searchList[index].isPesach,
+                                            lowStock: state.searchList[index].lowStock.toString(),
+                                            numberOfUnits: state.searchList[index].numberOfUnits,
+                                            productStock: state.searchList[index].productStock.toString(),
+                                            context: context,
+                                            searchName: state.searchList[index].name,
+                                            searchImage: state.searchList[index].image,
+                                            searchType: state.searchList[index].searchType,
+                                            isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
+                                            isLastItem: state.searchList.length - 1 == index,
+                                            isShowSearchLabel: index == 0
+                                                ? true
+                                                : state.searchList[index].searchType != state.searchList[index - 1].searchType
+                                                ? true
+                                                : false,
+                                            onSeeAllTap: () async {
+                                              printData("searchType: ${state.searchList[index].searchType}");
+                                              if (state.searchList[index].searchType == SearchTypes.category) {
+                                                dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
+                                                if (searchResult != null) {
+                                                  bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                                }
+                                              } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
+                                                dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].categoryId, AppStrings.categoryNameString: state.searchList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
+                                                if (searchResult != null) {
+                                                  bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                                }
+                                              } else {
+                                                state.searchList[index].searchType == SearchTypes.company
+                                                    ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                    : state.searchList[index].searchType == SearchTypes.supplier
+                                                    ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                    : state.searchList[index].searchType == SearchTypes.sale
+                                                    ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                    : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
                                               }
-                                            } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
-                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].categoryId, AppStrings.categoryNameString: state.searchList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
-                                              if (searchResult != null) {
-                                                bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                            },
+                                            onTap: () async {
+                                              if (state.searchList[index].searchType == SearchTypes.subCategory) {
+                                                CustomSnackBar.showSnackBar(
+                                                  context: context,
+                                                  title: AppStrings.getLocalizedStrings('Oops! in progress', context),
+                                                  type: SnackBarType.success,
+                                                );
+                                                return;
                                               }
-                                            } else {
-                                              state.searchList[index].searchType == SearchTypes.company
-                                                  ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
-                                                  : state.searchList[index].searchType == SearchTypes.supplier
-                                                  ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
-                                                  : state.searchList[index].searchType == SearchTypes.sale
-                                                  ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
-                                                  : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
-                                            }
-                                          },
-                                          onTap: () async {
-                                            if (state.searchList[index].searchType == SearchTypes.subCategory) {
-                                              CustomSnackBar.showSnackBar(
-                                                context: context,
-                                                title: AppStrings.getLocalizedStrings('Oops! in progress', context),
-                                                type: SnackBarType.success,
-                                              );
-                                              return;
-                                            }
-                                            if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
+                                              if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
 
-                                              showProductDetails(context: Platform.isIOS ? (state.context??context): context, productId: state.searchList[index].searchId, isBarcode: true, productListIndex: 0, isSaleOn: state.isSaleOn, productStock: (state.searchList[index].productStock.toString()));
-                                            } else if (state.searchList[index].searchType == SearchTypes.category) {
-                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
-                                              if (searchResult != null) {
-                                                bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                                showProductDetails(context: Platform.isIOS ? (state.context??context): context, productId: state.searchList[index].searchId, isBarcode: true, productListIndex: 0, isSaleOn: state.isSaleOn, productStock: (state.searchList[index].productStock.toString()));
+                                              } else if (state.searchList[index].searchType == SearchTypes.category) {
+                                                dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
+                                                if (searchResult != null) {
+                                                  bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                                }
+                                              } else {
+                                                state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
                                               }
-                                            } else {
-                                              state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
-                                            }
-                                            bloc.add(const HomeEvent.changeCategoryExpansion());
-                                          });
+                                              bloc.add(const HomeEvent.changeCategoryExpansion());
+                                            });
+                                      },
+                                    ),
+                                    onScanTap: () async {
+                                      String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
+                                      if (scanResult != '-1') {
+                                        // -1 result for cancel scanning
+                                        printData('result = $scanResult');
+                                        showProductDetails(context: context, productId: scanResult, isBarcode: true, productStock: '1', productListIndex: 0, isSaleOn: state.isSaleOn);
+                                      }
                                     },
                                   ),
-                                  onScanTap: () async {
-                                    String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
-                                    if (scanResult != '-1') {
-                                      // -1 result for cancel scanning
-                                      printData('result = $scanResult');
-                                      showProductDetails(context: context, productId: scanResult, isBarcode: true, productStock: '1', productListIndex: 0, isSaleOn: state.isSaleOn);
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    state.allShimmering?Center(
-                      child: SizedBox(
-                          height: 120,
-                          width: 120,
-                          child: CupertinoActivityIndicator(color: AppColors.mainColor,radius: 20,)),
-                    ):0.height
-                  ],
+                      state.allShimmering?Center(
+                        child: SizedBox(
+                            height: 120,
+                            width: 120,
+                            child: CupertinoActivityIndicator(color: AppColors.mainColor,radius: 20,)),
+                      ):0.height
+                    ],
+                  ),
                 ),
               ),
             ),

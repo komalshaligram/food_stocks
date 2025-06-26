@@ -32,6 +32,10 @@ class Data with _$Data {
     String? id,
     @JsonKey(name: "statusId")
     String? statusId,
+    @JsonKey(name: "textHebrew")
+    String? textHebrew,
+    @JsonKey(name: "text")
+    String? text,
     @JsonKey(name: "totalAmount")
     SurfaceWeight? totalAmount,
     @JsonKey(name: "totalWeight")

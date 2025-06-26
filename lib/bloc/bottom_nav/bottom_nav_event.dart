@@ -15,4 +15,6 @@ class BottomNavEvent with _$BottomNavEvent {
 
   const factory BottomNavEvent.seeWalletPermissionUpdateEvent({required BuildContext context}) = _seeWalletPermissionUpdateEvent;
   const factory BottomNavEvent.getPreferencesDataEvent({required BuildContext context}) = _getPreferencesDataEvent;
+
+  const factory BottomNavEvent.setDialogOpen({required bool isOpen}) = _SetDialogOpenEvent;
 }

@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
 import '../../req_model/activity_time/activity_time_req_model.dart';
+import '../business_name_model/business_name_model.dart';
 
 part 'profile_details_res_model.freezed.dart';
 part 'profile_details_res_model.g.dart';
@@ -52,6 +53,7 @@ class Client with _$Client {
     @JsonKey(name: "profileImage") String? profileImage,
     @JsonKey(name: "adminTypeId") String? adminTypeId,
     @JsonKey(name: "clientDetail") ClientDetail? clientDetail,
+    @JsonKey(name: "supplierCustomerDetails")  List<SupplierCustomerDetails>? supplierCustomerDetails,
     @JsonKey(name: "roleDetails") RoleDetails? roleDetails,
     @JsonKey(name: "city") City? city,
     @JsonKey(name: "status") Status? status,
@@ -95,6 +97,24 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "clientTypes") List<ClientType>? clientTypes,
     @JsonKey(name: "totalExpense") String? totalExpense,
     @JsonKey(name: "expenseByMonth") String? expenseByMonth,
+    @JsonKey(name: "accountNumber") String? accountNumber,
+    @JsonKey(name: "branchNumber") String? branchNumber,
+    @JsonKey(name: "owner1FullName") String? owner1FullName,
+    @JsonKey(name: "owner1IsraelId") String? owner1IsraelId,
+    @JsonKey(name: "guarantee1FullName") String? guarantee1FullName,
+    @JsonKey(name: "guarantee1IsraelId") String? guarantee1IsraelId,
+    @JsonKey(name: "guarantee1Address") String? guarantee1Address,
+    @JsonKey(name: "guarantee1PhoneNumber") String? guarantee1PhoneNumber,
+    @JsonKey(name: "owner2FullName") String? owner2FullName,
+    @JsonKey(name: "owner2IsraelId") String? owner2IsraelId,
+    @JsonKey(name: "guarantee2FullName") String? guarantee2FullName,
+    @JsonKey(name: "guarantee2IsraelId") String? guarantee2IsraelId,
+    @JsonKey(name: "guarantee2Address") String? guarantee2Address,
+    @JsonKey(name: "guarantee2PhoneNumber") String? guarantee2PhoneNumber,
+    @JsonKey(name: "owner1Signature") String? owner1Signature,
+    @JsonKey(name: "owner2Signature") String? owner2Signature,
+    @JsonKey(name: "guarantee1Signature") String? guarantee1Signature,
+    @JsonKey(name: "guarantee2Signature") String? guarantee2Signature,
     CreditCard? creditCard,
     @JsonKey(name: "availablePaymentTypes")
     required List<String> availablePaymentTypes,
@@ -105,11 +125,43 @@ class ClientDetail with _$ClientDetail {
     String? zip,
     @JsonKey(name: "isAvailableAllPayments")
     bool? isAvailableAllPayments,
+    @JsonKey(name: "bank") Bank? bank,
+    @JsonKey(name: "agent") Agent? agent,
+
     //bool? isWalletApproved
   }) = _ClientDetail;
 
   factory ClientDetail.fromJson(Map<String, dynamic> json) =>
       _$ClientDetailFromJson(json);
+}
+
+@freezed
+class SupplierCustomerDetails with _$SupplierCustomerDetails {
+  const factory SupplierCustomerDetails({
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "clientId") String? clientId,
+    @JsonKey(name: "supplierId") String? supplierId,
+    @JsonKey(name: "createdAt") String? createdAt,
+    @JsonKey(name: "isAllowed") bool? isAllowed,
+    @JsonKey(name: "isDeleted") bool? isDeleted,
+    @JsonKey(name: "supplierCustomerName") String? supplierCustomerName,
+    @JsonKey(name: "supplierCustomerNumber") int? supplierCustomerNumber,
+    @JsonKey(name: "updatedAt") String? updatedAt,
+    @JsonKey(name: "customerComaxId") String? customerComaxId,
+    @JsonKey(name: "customerRivchitId") int? customerRivchitId,
+    @JsonKey(name: "customerCreditcardToken") String? customerCreditcardToken,
+    @JsonKey(name: "costumerStatusName") String? costumerStatusName,
+    @JsonKey(name: "costumerStatusNumber") dynamic costumerStatusNumber,
+    @JsonKey(name: "supplierContactName") String? supplierContactName,
+    @JsonKey(name: "lastOrderAboveMinimumAt") String? lastOrderAboveMinimumAt,
+    @JsonKey(name: "allowOrdersWithoutMinimum") bool? allowOrdersWithoutMinimum,
+    @JsonKey(name: "noMinimumOrderHours") int? noMinimumOrderHours,
+    @JsonKey(name: "textHebrew") String? textHebrew,
+    @JsonKey(name: "text") String? text,
+  }) = _SupplierCustomerDetails;
+
+  factory SupplierCustomerDetails.fromJson(Map<String, dynamic> json) =>
+      _$SupplierCustomerDetailsFromJson(json);
 }
 
 @freezed
@@ -123,6 +175,7 @@ class ClientType with _$ClientType {
   factory ClientType.fromJson(Map<String, dynamic> json) =>
       _$ClientTypeFromJson(json);
 }
+
 
 @freezed
 class CreditCard with _$CreditCard {
@@ -153,4 +206,31 @@ class Status with _$Status {
   }) = _Status;
 
   factory Status.fromJson(Map<String, dynamic> json) => _$StatusFromJson(json);
+}
+
+@freezed
+class Bank with _$Bank {
+  const factory Bank({
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "bankName") String? bankName,
+    @JsonKey(name: "bankNumber") String? bankNumber,
+    @JsonKey(name: "bankIncrementalNumber") int? bankIncrementalNumber,
+}) = _Bank;
+
+factory Bank.fromJson(Map<String, dynamic> json) =>
+_$BankFromJson(json);
+}
+
+@freezed
+class Agent with _$Agent {
+  const factory Agent({
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "agentName") String? agentName,
+    @JsonKey(name: "agentPhoneNumber") String? agentPhoneNumber,
+    @JsonKey(name: "agentNumber") int? agentNumber,
+    @JsonKey(name: "agentCode") String? agentCode,
+  }) = _Agent;
+
+  factory Agent.fromJson(Map<String, dynamic> json) =>
+      _$AgentFromJson(json);
 }

@@ -41,6 +41,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             emailController: TextEditingController(text: preferencesHelper.getEmailId()),
             zipController: TextEditingController(text: preferencesHelper.getZip()),
             selectCity: preferencesHelper.getCity(),
+
           ));
         }
         profileModel = event.profileModel;

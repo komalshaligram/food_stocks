@@ -27,6 +27,7 @@ class ProductCategoryBloc
     on<ProductCategoryEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+
       if (event is _getProductCategoriesListEvent) {
         if (state.isLoadMore) {
           return;

@@ -48,6 +48,8 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
   void initState() {
     super.initState();
     player.play(AssetSource(AppStrings.successSound));
+
+
   }
 
   @override
@@ -98,7 +100,19 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                       color: AppColors.blackColor,
                                       fontWeight: FontWeight.w700),
                                 ),
-                                10.height,
+                                70.height,
+
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  child: Text(
+                                    context.read<OrderSuccessfulBloc>().message,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_17,
+                                        color: AppColors.greyColor,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                ),
+                                50.height,
                               ],
                             ),
                           ),

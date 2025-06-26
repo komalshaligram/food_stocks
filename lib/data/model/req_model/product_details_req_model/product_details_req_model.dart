@@ -19,6 +19,7 @@ String productDetailsReqModelToJson(ProductDetailsReqModel data) =>
 class ProductDetailsReqModel with _$ProductDetailsReqModel {
   const factory ProductDetailsReqModel({
     @JsonKey(name: "params") String? params,
+    @JsonKey(name: "isReturn") bool? isReturn,
   }) = _ProductDetailsReqModel;
 
   factory ProductDetailsReqModel.fromJson(Map<String, dynamic> json) =>

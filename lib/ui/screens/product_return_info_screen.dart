@@ -428,6 +428,7 @@ class ReturnListWidget extends StatelessWidget {
                   context: context,
                 ));
                 Navigator.pop(c);
+                Navigator.pop(context);
               },
             );
           },

@@ -16,7 +16,6 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$BottomNavEvent {
-  BuildContext get context => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int index, BuildContext context) changePage,
@@ -27,6 +26,7 @@ mixin _$BottomNavEvent {
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
     required TResult Function(BuildContext context) getPreferencesDataEvent,
+    required TResult Function(bool isOpen) setDialogOpen,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -38,6 +38,7 @@ mixin _$BottomNavEvent {
         navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
+    TResult? Function(bool isOpen)? setDialogOpen,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -49,6 +50,7 @@ mixin _$BottomNavEvent {
         navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
+    TResult Function(bool isOpen)? setDialogOpen,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -62,6 +64,7 @@ mixin _$BottomNavEvent {
         seeWalletPermissionUpdateEvent,
     required TResult Function(_getPreferencesDataEvent value)
         getPreferencesDataEvent,
+    required TResult Function(_SetDialogOpenEvent value) setDialogOpen,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -73,6 +76,7 @@ mixin _$BottomNavEvent {
     TResult? Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult? Function(_SetDialogOpenEvent value)? setDialogOpen,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -84,12 +88,9 @@ mixin _$BottomNavEvent {
     TResult Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult Function(_SetDialogOpenEvent value)? setDialogOpen,
     required TResult orElse(),
   }) =>
-      throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $BottomNavEventCopyWith<BottomNavEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -98,8 +99,6 @@ abstract class $BottomNavEventCopyWith<$Res> {
   factory $BottomNavEventCopyWith(
           BottomNavEvent value, $Res Function(BottomNavEvent) then) =
       _$BottomNavEventCopyWithImpl<$Res, BottomNavEvent>;
-  @useResult
-  $Res call({BuildContext context});
 }
 
 /// @nodoc
@@ -111,28 +110,13 @@ class _$BottomNavEventCopyWithImpl<$Res, $Val extends BottomNavEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? context = null,
-  }) {
-    return _then(_value.copyWith(
-      context: null == context
-          ? _value.context
-          : context // ignore: cast_nullable_to_non_nullable
-              as BuildContext,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$ChangePageEventImplCopyWith<$Res>
-    implements $BottomNavEventCopyWith<$Res> {
+abstract class _$$ChangePageEventImplCopyWith<$Res> {
   factory _$$ChangePageEventImplCopyWith(_$ChangePageEventImpl value,
           $Res Function(_$ChangePageEventImpl) then) =
       __$$ChangePageEventImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({int index, BuildContext context});
 }
@@ -209,6 +193,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
     required TResult Function(BuildContext context) getPreferencesDataEvent,
+    required TResult Function(bool isOpen) setDialogOpen,
   }) {
     return changePage(index, context);
   }
@@ -223,6 +208,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
         navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
+    TResult? Function(bool isOpen)? setDialogOpen,
   }) {
     return changePage?.call(index, context);
   }
@@ -237,6 +223,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
         navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
+    TResult Function(bool isOpen)? setDialogOpen,
     required TResult orElse(),
   }) {
     if (changePage != null) {
@@ -256,6 +243,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
         seeWalletPermissionUpdateEvent,
     required TResult Function(_getPreferencesDataEvent value)
         getPreferencesDataEvent,
+    required TResult Function(_SetDialogOpenEvent value) setDialogOpen,
   }) {
     return changePage(this);
   }
@@ -270,6 +258,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult? Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult? Function(_SetDialogOpenEvent value)? setDialogOpen,
   }) {
     return changePage?.call(this);
   }
@@ -284,6 +273,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult Function(_SetDialogOpenEvent value)? setDialogOpen,
     required TResult orElse(),
   }) {
     if (changePage != null) {
@@ -299,21 +289,17 @@ abstract class _ChangePageEvent implements BottomNavEvent {
       required final BuildContext context}) = _$ChangePageEventImpl;
 
   int get index;
-  @override
   BuildContext get context;
-  @override
   @JsonKey(ignore: true)
   _$$ChangePageEventImplCopyWith<_$ChangePageEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$UpdateCartCountEventImplCopyWith<$Res>
-    implements $BottomNavEventCopyWith<$Res> {
+abstract class _$$UpdateCartCountEventImplCopyWith<$Res> {
   factory _$$UpdateCartCountEventImplCopyWith(_$UpdateCartCountEventImpl value,
           $Res Function(_$UpdateCartCountEventImpl) then) =
       __$$UpdateCartCountEventImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({BuildContext context});
 }
@@ -383,6 +369,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
     required TResult Function(BuildContext context) getPreferencesDataEvent,
+    required TResult Function(bool isOpen) setDialogOpen,
   }) {
     return updateCartCountEvent(context);
   }
@@ -397,6 +384,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
         navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
+    TResult? Function(bool isOpen)? setDialogOpen,
   }) {
     return updateCartCountEvent?.call(context);
   }
@@ -411,6 +399,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
         navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
+    TResult Function(bool isOpen)? setDialogOpen,
     required TResult orElse(),
   }) {
     if (updateCartCountEvent != null) {
@@ -430,6 +419,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
         seeWalletPermissionUpdateEvent,
     required TResult Function(_getPreferencesDataEvent value)
         getPreferencesDataEvent,
+    required TResult Function(_SetDialogOpenEvent value) setDialogOpen,
   }) {
     return updateCartCountEvent(this);
   }
@@ -444,6 +434,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult? Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult? Function(_SetDialogOpenEvent value)? setDialogOpen,
   }) {
     return updateCartCountEvent?.call(this);
   }
@@ -458,6 +449,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult Function(_SetDialogOpenEvent value)? setDialogOpen,
     required TResult orElse(),
   }) {
     if (updateCartCountEvent != null) {
@@ -471,22 +463,18 @@ abstract class _UpdateCartCountEvent implements BottomNavEvent {
   const factory _UpdateCartCountEvent({required final BuildContext context}) =
       _$UpdateCartCountEventImpl;
 
-  @override
   BuildContext get context;
-  @override
   @JsonKey(ignore: true)
   _$$UpdateCartCountEventImplCopyWith<_$UpdateCartCountEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$NavigateToStoreScreenEventImplCopyWith<$Res>
-    implements $BottomNavEventCopyWith<$Res> {
+abstract class _$$NavigateToStoreScreenEventImplCopyWith<$Res> {
   factory _$$NavigateToStoreScreenEventImplCopyWith(
           _$NavigateToStoreScreenEventImpl value,
           $Res Function(_$NavigateToStoreScreenEventImpl) then) =
       __$$NavigateToStoreScreenEventImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({BuildContext context, String storeScreen, String basketScreen});
 }
@@ -578,6 +566,7 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
     required TResult Function(BuildContext context) getPreferencesDataEvent,
+    required TResult Function(bool isOpen) setDialogOpen,
   }) {
     return navigateToStoreScreenEvent(context, storeScreen, basketScreen);
   }
@@ -592,6 +581,7 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
         navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
+    TResult? Function(bool isOpen)? setDialogOpen,
   }) {
     return navigateToStoreScreenEvent?.call(context, storeScreen, basketScreen);
   }
@@ -606,6 +596,7 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
         navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
+    TResult Function(bool isOpen)? setDialogOpen,
     required TResult orElse(),
   }) {
     if (navigateToStoreScreenEvent != null) {
@@ -625,6 +616,7 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
         seeWalletPermissionUpdateEvent,
     required TResult Function(_getPreferencesDataEvent value)
         getPreferencesDataEvent,
+    required TResult Function(_SetDialogOpenEvent value) setDialogOpen,
   }) {
     return navigateToStoreScreenEvent(this);
   }
@@ -639,6 +631,7 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     TResult? Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult? Function(_SetDialogOpenEvent value)? setDialogOpen,
   }) {
     return navigateToStoreScreenEvent?.call(this);
   }
@@ -653,6 +646,7 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     TResult Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult Function(_SetDialogOpenEvent value)? setDialogOpen,
     required TResult orElse(),
   }) {
     if (navigateToStoreScreenEvent != null) {
@@ -668,24 +662,20 @@ abstract class _NavigateToStoreScreenEvent implements BottomNavEvent {
       required final String storeScreen,
       required final String basketScreen}) = _$NavigateToStoreScreenEventImpl;
 
-  @override
   BuildContext get context;
   String get storeScreen;
   String get basketScreen;
-  @override
   @JsonKey(ignore: true)
   _$$NavigateToStoreScreenEventImplCopyWith<_$NavigateToStoreScreenEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$seeWalletPermissionUpdateEventImplCopyWith<$Res>
-    implements $BottomNavEventCopyWith<$Res> {
+abstract class _$$seeWalletPermissionUpdateEventImplCopyWith<$Res> {
   factory _$$seeWalletPermissionUpdateEventImplCopyWith(
           _$seeWalletPermissionUpdateEventImpl value,
           $Res Function(_$seeWalletPermissionUpdateEventImpl) then) =
       __$$seeWalletPermissionUpdateEventImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({BuildContext context});
 }
@@ -758,6 +748,7 @@ class _$seeWalletPermissionUpdateEventImpl
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
     required TResult Function(BuildContext context) getPreferencesDataEvent,
+    required TResult Function(bool isOpen) setDialogOpen,
   }) {
     return seeWalletPermissionUpdateEvent(context);
   }
@@ -772,6 +763,7 @@ class _$seeWalletPermissionUpdateEventImpl
         navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
+    TResult? Function(bool isOpen)? setDialogOpen,
   }) {
     return seeWalletPermissionUpdateEvent?.call(context);
   }
@@ -786,6 +778,7 @@ class _$seeWalletPermissionUpdateEventImpl
         navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
+    TResult Function(bool isOpen)? setDialogOpen,
     required TResult orElse(),
   }) {
     if (seeWalletPermissionUpdateEvent != null) {
@@ -805,6 +798,7 @@ class _$seeWalletPermissionUpdateEventImpl
         seeWalletPermissionUpdateEvent,
     required TResult Function(_getPreferencesDataEvent value)
         getPreferencesDataEvent,
+    required TResult Function(_SetDialogOpenEvent value) setDialogOpen,
   }) {
     return seeWalletPermissionUpdateEvent(this);
   }
@@ -819,6 +813,7 @@ class _$seeWalletPermissionUpdateEventImpl
     TResult? Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult? Function(_SetDialogOpenEvent value)? setDialogOpen,
   }) {
     return seeWalletPermissionUpdateEvent?.call(this);
   }
@@ -833,6 +828,7 @@ class _$seeWalletPermissionUpdateEventImpl
     TResult Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult Function(_SetDialogOpenEvent value)? setDialogOpen,
     required TResult orElse(),
   }) {
     if (seeWalletPermissionUpdateEvent != null) {
@@ -847,9 +843,7 @@ abstract class _seeWalletPermissionUpdateEvent implements BottomNavEvent {
           {required final BuildContext context}) =
       _$seeWalletPermissionUpdateEventImpl;
 
-  @override
   BuildContext get context;
-  @override
   @JsonKey(ignore: true)
   _$$seeWalletPermissionUpdateEventImplCopyWith<
           _$seeWalletPermissionUpdateEventImpl>
@@ -857,13 +851,11 @@ abstract class _seeWalletPermissionUpdateEvent implements BottomNavEvent {
 }
 
 /// @nodoc
-abstract class _$$getPreferencesDataEventImplCopyWith<$Res>
-    implements $BottomNavEventCopyWith<$Res> {
+abstract class _$$getPreferencesDataEventImplCopyWith<$Res> {
   factory _$$getPreferencesDataEventImplCopyWith(
           _$getPreferencesDataEventImpl value,
           $Res Function(_$getPreferencesDataEventImpl) then) =
       __$$getPreferencesDataEventImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({BuildContext context});
 }
@@ -933,6 +925,7 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
     required TResult Function(BuildContext context) getPreferencesDataEvent,
+    required TResult Function(bool isOpen) setDialogOpen,
   }) {
     return getPreferencesDataEvent(context);
   }
@@ -947,6 +940,7 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
         navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
+    TResult? Function(bool isOpen)? setDialogOpen,
   }) {
     return getPreferencesDataEvent?.call(context);
   }
@@ -961,6 +955,7 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
         navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
+    TResult Function(bool isOpen)? setDialogOpen,
     required TResult orElse(),
   }) {
     if (getPreferencesDataEvent != null) {
@@ -980,6 +975,7 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
         seeWalletPermissionUpdateEvent,
     required TResult Function(_getPreferencesDataEvent value)
         getPreferencesDataEvent,
+    required TResult Function(_SetDialogOpenEvent value) setDialogOpen,
   }) {
     return getPreferencesDataEvent(this);
   }
@@ -994,6 +990,7 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
     TResult? Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult? Function(_SetDialogOpenEvent value)? setDialogOpen,
   }) {
     return getPreferencesDataEvent?.call(this);
   }
@@ -1008,6 +1005,7 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
     TResult Function(_seeWalletPermissionUpdateEvent value)?
         seeWalletPermissionUpdateEvent,
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult Function(_SetDialogOpenEvent value)? setDialogOpen,
     required TResult orElse(),
   }) {
     if (getPreferencesDataEvent != null) {
@@ -1021,12 +1019,183 @@ abstract class _getPreferencesDataEvent implements BottomNavEvent {
   const factory _getPreferencesDataEvent(
       {required final BuildContext context}) = _$getPreferencesDataEventImpl;
 
-  @override
   BuildContext get context;
-  @override
   @JsonKey(ignore: true)
   _$$getPreferencesDataEventImplCopyWith<_$getPreferencesDataEventImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$SetDialogOpenEventImplCopyWith<$Res> {
+  factory _$$SetDialogOpenEventImplCopyWith(_$SetDialogOpenEventImpl value,
+          $Res Function(_$SetDialogOpenEventImpl) then) =
+      __$$SetDialogOpenEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({bool isOpen});
+}
+
+/// @nodoc
+class __$$SetDialogOpenEventImplCopyWithImpl<$Res>
+    extends _$BottomNavEventCopyWithImpl<$Res, _$SetDialogOpenEventImpl>
+    implements _$$SetDialogOpenEventImplCopyWith<$Res> {
+  __$$SetDialogOpenEventImplCopyWithImpl(_$SetDialogOpenEventImpl _value,
+      $Res Function(_$SetDialogOpenEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? isOpen = null,
+  }) {
+    return _then(_$SetDialogOpenEventImpl(
+      isOpen: null == isOpen
+          ? _value.isOpen
+          : isOpen // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SetDialogOpenEventImpl implements _SetDialogOpenEvent {
+  const _$SetDialogOpenEventImpl({required this.isOpen});
+
+  @override
+  final bool isOpen;
+
+  @override
+  String toString() {
+    return 'BottomNavEvent.setDialogOpen(isOpen: $isOpen)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SetDialogOpenEventImpl &&
+            (identical(other.isOpen, isOpen) || other.isOpen == isOpen));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, isOpen);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SetDialogOpenEventImplCopyWith<_$SetDialogOpenEventImpl> get copyWith =>
+      __$$SetDialogOpenEventImplCopyWithImpl<_$SetDialogOpenEventImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int index, BuildContext context) changePage,
+    required TResult Function(BuildContext context) updateCartCountEvent,
+    required TResult Function(
+            BuildContext context, String storeScreen, String basketScreen)
+        navigateToStoreScreenEvent,
+    required TResult Function(BuildContext context)
+        seeWalletPermissionUpdateEvent,
+    required TResult Function(BuildContext context) getPreferencesDataEvent,
+    required TResult Function(bool isOpen) setDialogOpen,
+  }) {
+    return setDialogOpen(isOpen);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int index, BuildContext context)? changePage,
+    TResult? Function(BuildContext context)? updateCartCountEvent,
+    TResult? Function(
+            BuildContext context, String storeScreen, String basketScreen)?
+        navigateToStoreScreenEvent,
+    TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
+    TResult? Function(BuildContext context)? getPreferencesDataEvent,
+    TResult? Function(bool isOpen)? setDialogOpen,
+  }) {
+    return setDialogOpen?.call(isOpen);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int index, BuildContext context)? changePage,
+    TResult Function(BuildContext context)? updateCartCountEvent,
+    TResult Function(
+            BuildContext context, String storeScreen, String basketScreen)?
+        navigateToStoreScreenEvent,
+    TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
+    TResult Function(BuildContext context)? getPreferencesDataEvent,
+    TResult Function(bool isOpen)? setDialogOpen,
+    required TResult orElse(),
+  }) {
+    if (setDialogOpen != null) {
+      return setDialogOpen(isOpen);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ChangePageEvent value) changePage,
+    required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
+    required TResult Function(_NavigateToStoreScreenEvent value)
+        navigateToStoreScreenEvent,
+    required TResult Function(_seeWalletPermissionUpdateEvent value)
+        seeWalletPermissionUpdateEvent,
+    required TResult Function(_getPreferencesDataEvent value)
+        getPreferencesDataEvent,
+    required TResult Function(_SetDialogOpenEvent value) setDialogOpen,
+  }) {
+    return setDialogOpen(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ChangePageEvent value)? changePage,
+    TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
+    TResult? Function(_NavigateToStoreScreenEvent value)?
+        navigateToStoreScreenEvent,
+    TResult? Function(_seeWalletPermissionUpdateEvent value)?
+        seeWalletPermissionUpdateEvent,
+    TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult? Function(_SetDialogOpenEvent value)? setDialogOpen,
+  }) {
+    return setDialogOpen?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ChangePageEvent value)? changePage,
+    TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
+    TResult Function(_NavigateToStoreScreenEvent value)?
+        navigateToStoreScreenEvent,
+    TResult Function(_seeWalletPermissionUpdateEvent value)?
+        seeWalletPermissionUpdateEvent,
+    TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult Function(_SetDialogOpenEvent value)? setDialogOpen,
+    required TResult orElse(),
+  }) {
+    if (setDialogOpen != null) {
+      return setDialogOpen(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _SetDialogOpenEvent implements BottomNavEvent {
+  const factory _SetDialogOpenEvent({required final bool isOpen}) =
+      _$SetDialogOpenEventImpl;
+
+  bool get isOpen;
+  @JsonKey(ignore: true)
+  _$$SetDialogOpenEventImplCopyWith<_$SetDialogOpenEventImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc

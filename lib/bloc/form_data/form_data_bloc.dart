@@ -19,37 +19,33 @@ part 'form_data_event.dart';
 part 'form_data_state.dart';
 part 'form_data_bloc.freezed.dart';
 
-
 class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
   FormDataBloc() : super(FormDataState.initial()) {
     on<FormDataEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       TermsConditionReqModel termsConditionReqModel = const TermsConditionReqModel();
-      List<String > ownerList = [];
+      List<String> ownerList = [];
       List<BusinessType> businessTypeList = [];
       ownerList.add('Please select number of Owner');
       ownerList.add('1');
       ownerList.add('2');
-      if(event is _selectAgentEvent){
-        emit(state.copyWith(agent: event.agent,ownerList: state.ownerList));
-      }
-      else if(event is _getArgumentEvent){
+      if (event is _selectAgentEvent) {
+        emit(state.copyWith(agent: event.agent, ownerList: state.ownerList));
+      } else if (event is _getArgumentEvent) {
         debugPrint("owner:${event.owner}");
-        emit(state.copyWith(owner: event.owner,));
-      }
-    else if(event is _selectBusinessTypeEvent){
+        emit(state.copyWith(
+          owner: event.owner,
+        ));
+      } else if (event is _selectBusinessTypeEvent) {
         for (var element in state.businessTypeList) {
           if (element.businessTypeName == event.business) {
             debugPrint('element.haveMultiple${element.haveMultiple}');
-            emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false,ownerList: state.ownerList,owner: state.ownerList.first));
+            emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false, ownerList: state.ownerList, owner: state.ownerList.first));
           }
         }
-      }  else if(event is _selectOwnerNoEvent){
-        emit(state.copyWith(owner: state.haveMultiple? event.owner:'1'));
-      }
-
-    else if (event is _getBusinessTypeEvent) {
+      } else if (event is _selectOwnerNoEvent) {
+        emit(state.copyWith(owner: state.haveMultiple ? event.owner : '1'));
+      } else if (event is _getBusinessTypeEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).get(path: AppUrlEndPoints.getBusinessTypeUrl);
@@ -67,9 +63,8 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
-      }
-    else if (event is _navigateToNextScreenEvent) {
-       termsConditionReqModel = TermsConditionReqModel(
+      } else if (event is _navigateToNextScreenEvent) {
+        termsConditionReqModel = TermsConditionReqModel(
           id: preferencesHelper.getUserId(),
           businessTypeId: state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id,
           owner1FullName: state.owner1NameController.text.trim(),
@@ -86,30 +81,18 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           guarantee2PhoneNumber: state.guarantee2PhoneController.text.trim(),
         );
         Navigator.pushNamed(event.context, RouteDefine.wayOfPaymentScreen.name, arguments: {AppStrings.termsConditionParamString: termsConditionReqModel});
-      }
-    else if(event is _getAgentEvent){
-
-      }
-    else if(event is _verifyAgentEvent){
+      } else if (event is _getAgentEvent) {
+      } else if (event is _verifyAgentEvent) {
         try {
-
           emit(state.copyWith(isShimmering: true));
-          Map reqMap ={"agentCode":state.agentCodeController.text.trim()};
-          final res = await DioClient(event.context).post(AppUrlEndPoints.verifyAgentUrl,data: reqMap);
+          Map reqMap = {"agentCode": state.agentCodeController.text.trim()};
+          final res = await DioClient(event.context).post(AppUrlEndPoints.verifyAgentUrl, data: reqMap);
 
-          if(res[AppStrings.statusString]==AppConstants.code_200){
-
+          if (res[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isShimmering: false));
-            Navigator.pushNamed(event.context, RouteDefine.owner1FormScreen.name,arguments: {AppStrings.owner:state.owner,AppStrings.isFreelancer:state.haveMultiple,
-            AppStrings.businessTypeIdString:state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id});
-
-          }else{
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    res['message'].toString().toLocalization(),
-                    event.context),
-                type: SnackBarType.failure);
+            Navigator.pushNamed(event.context, RouteDefine.owner1FormScreen.name, arguments: {AppStrings.owner: state.owner, AppStrings.isFreelancer: state.haveMultiple, AppStrings.businessTypeIdString: state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id});
+          } else {
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res['message'].toString().toLocalization(), event.context), type: SnackBarType.failure);
 
             emit(state.copyWith(isShimmering: false));
           }
@@ -118,7 +101,6 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
-
       }
     });
   }

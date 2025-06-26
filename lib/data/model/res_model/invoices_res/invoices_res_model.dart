@@ -29,6 +29,18 @@ class InvoicesResModel with _$InvoicesResModel {
 @freezed
 class Data with _$Data {
   const factory Data({
+    @JsonKey(name: "orderInvoices")
+    InvoiceGroup? orderInvoices,
+    @JsonKey(name: "refundInvoices")
+    InvoiceGroup? refundInvoices,
+  }) = _Data;
+
+  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
+}
+
+@freezed
+class InvoiceGroup with _$InvoiceGroup {
+  const factory InvoiceGroup({
     @JsonKey(name: "invoices")
     List<Invoice>? invoices,
     @JsonKey(name: "totalRecords")
@@ -37,10 +49,10 @@ class Data with _$Data {
     int? totalPages,
     @JsonKey(name: "currentPage")
     int? currentPage,
+  }) = _InvoiceGroup;
 
-  }) = _Data;
-
-  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
+  factory InvoiceGroup.fromJson(Map<String, dynamic> json) =>
+      _$InvoiceGroupFromJson(json);
 }
 
 @freezed

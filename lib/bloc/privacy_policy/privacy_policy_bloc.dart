@@ -25,11 +25,9 @@ import 'package:http_parser/http_parser.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import 'package:bloc/src/bloc.dart';
 
-
 part 'privacy_policy_state.dart';
 part 'privacy_policy_event.dart';
 part 'privacy_policy_bloc.freezed.dart';
-
 
 class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
   final GlobalKey<SfSignaturePadState> _signaturePadKey = GlobalKey();
@@ -48,12 +46,11 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     on<PrivacyPolicyEvent>((event, emit) async {
       if (event is _getPdfDataEvent) {
         termsConditionReqModel = event.termsConditionReqModel;
-        emit(state.copyWith(isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false,isGuarantee1Available: (termsConditionReqModel.guarantee1FullName!='')?true:false));
+        emit(state.copyWith(isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false, isGuarantee1Available: (termsConditionReqModel.guarantee1FullName != '') ? true : false));
         emit(state.copyWith(pdfPath: base64Decode(event.pdfData)));
       } else if (event is _navigationEvent) {
-
         try {
-          Map<String, dynamic> reqMap ={};
+          Map<String, dynamic> reqMap = {};
           reqMap = {
             AppStrings.userIdString: termsConditionReqModel.id,
             AppStrings.businessTypeIdString: termsConditionReqModel.businessTypeId,
@@ -70,15 +67,17 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
             AppStrings.guarantee2AddressString: termsConditionReqModel.guarantee2Address != '' ? termsConditionReqModel.guarantee2Address : '',
             AppStrings.guarantee2PhoneNumberString: termsConditionReqModel.guarantee2PhoneNumber != '' ? termsConditionReqModel.guarantee2PhoneNumber : '',
             AppStrings.paymentType: termsConditionReqModel.paymentType,
-
             AppStrings.accountNumberString: termsConditionReqModel.accountNumber,
             AppStrings.owner1SignatureString: await MultipartFile.fromFile(owner1Signature, contentType: MediaType('image', 'png')),
             AppStrings.owner2SignatureString: owner2Signature != '' ? await MultipartFile.fromFile(owner2Signature, contentType: MediaType('image', 'png')) : '',
-            AppStrings.guarantee1SignatureString: guarantee1Signature!=''?await MultipartFile.fromFile(guarantee1Signature, contentType: MediaType('image', 'png')):'',
+            AppStrings.guarantee1SignatureString: guarantee1Signature != '' ? await MultipartFile.fromFile(guarantee1Signature, contentType: MediaType('image', 'png')) : '',
             AppStrings.guarantee2SignatureString: guarantee2Signature != '' ? await MultipartFile.fromFile(guarantee2Signature, contentType: MediaType('image', 'png')) : '',
           };
-          if(termsConditionReqModel.paymentType!=AppStrings.creditCard){
-            reqMap.addAll({AppStrings.bankIdString : termsConditionReqModel.bankId, AppStrings.branchNumberString: termsConditionReqModel.branchNumber,});
+          if (termsConditionReqModel.paymentType != AppStrings.creditCard) {
+            reqMap.addAll({
+              AppStrings.bankIdString: termsConditionReqModel.bankId,
+              AppStrings.branchNumberString: termsConditionReqModel.branchNumber,
+            });
           }
 
           emit(state.copyWith(isShimmering: true));
@@ -107,8 +106,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     });
   }
 
-  Future<void> showCustomSignaturePadDialog(
-      BuildContext context , String fieldName , String signaturePadName) async {
+  Future<void> showCustomSignaturePadDialog(BuildContext context, String fieldName, String signaturePadName) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -143,21 +141,24 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
                 isSign = false;
                 _signaturePadKey.currentState!.clear();
               },
-              child: Text(AppLocalizations.of(context)!.remove,
+              child: Text(
+                AppLocalizations.of(context)!.remove,
                 style: AppStyles.rkRegularTextStyle(
                   size: AppConstants.smallFont,
                   color: AppColors.redColor,
-                ),),
+                ),
+              ),
             ),
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
-                if(isSign){
-                  saveSignature(context , fieldName);
+                if (isSign) {
+                  saveSignature(context, fieldName);
                   isSign = false;
                 }
               },
-              child: Text(AppLocalizations.of(context)!.save,
+              child: Text(
+                AppLocalizations.of(context)!.save,
                 style: AppStyles.rkRegularTextStyle(
                   size: AppConstants.smallFont,
                   color: AppColors.mainColor,
@@ -170,55 +171,36 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     );
   }
 
+  void saveSignature(BuildContext context, String fieldName) async {
+    ui.Image tempImage = await _signaturePadKey.currentState!.toImage();
 
-  void saveSignature(
-      BuildContext context , String fieldName) async {
-    ui.Image tempImage =
-    await _signaturePadKey.currentState!.toImage();
-
-
-    var data = await tempImage.toByteData(
-        format: ui.ImageByteFormat.png);
+    var data = await tempImage.toByteData(format: ui.ImageByteFormat.png);
 
     final imageInUnit8List = (data!.buffer.asUint8List());
-     directory = (await getApplicationDocumentsDirectory()).path; // to get path of the file
+    directory = (await getApplicationDocumentsDirectory()).path; // to get path of the file
     var path = '$directory/$fieldName.png';
     imagePath = await File(path).writeAsBytes(imageInUnit8List);
 
-     if(fieldName == AppStrings.owner1SignatureString){
+    if (fieldName == AppStrings.owner1SignatureString) {
       owner1Signature = imagePath.path;
-    }
-    else if(fieldName == AppStrings.owner2SignatureString){
+    } else if (fieldName == AppStrings.owner2SignatureString) {
       owner2Signature = imagePath.path;
-    }
-   else if(fieldName == AppStrings.guarantee1SignatureString){
+    } else if (fieldName == AppStrings.guarantee1SignatureString) {
       guarantee1Signature = imagePath.path;
-    }
-   else if(fieldName == AppStrings.guarantee2SignatureString){
+    } else if (fieldName == AppStrings.guarantee2SignatureString) {
       guarantee2Signature = imagePath.path;
     }
 
-    if(state.isOwner2Available ){
-
-      if(owner1Signature != '' &&  owner2Signature != ''
-          && guarantee1Signature != '' && guarantee2Signature !=''){
+    if (state.isOwner2Available) {
+      if (owner1Signature != '' && owner2Signature != '' && guarantee1Signature != '' && guarantee2Signature != '') {
         emit(state.copyWith(isNextEnable: true));
       }
-    }
-    else if(owner1Signature != '' ){
-      if(state.isGuarantee1Available && guarantee1Signature == ''){
+    } else if (owner1Signature != '') {
+      if (state.isGuarantee1Available && guarantee1Signature == '') {
         emit(state.copyWith(isNextEnable: false));
-      }else{
+      } else {
         emit(state.copyWith(isNextEnable: true));
       }
-
     }
-
-
-
-
-
-
   }
-
 }

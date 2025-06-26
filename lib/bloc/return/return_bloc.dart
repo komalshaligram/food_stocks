@@ -58,7 +58,12 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         }
         emit(state.copyWith(language: preferencesHelper.getAppLanguage(), isLoading:  state.pageNum == 0 ? true : false, statusList: statusList,isLoadMore: state.pageNum == 0 ? false : true));
         try {
-          GetAllOrderReqModel reqMap = GetAllOrderReqModel(pageNum: state.pageNum + 1, pageLimit:AppConstants.orderPageLimit);
+          GetAllOrderReqModel reqMap = GetAllOrderReqModel(pageNum: state.pageNum + 1, pageLimit:AppConstants.orderPageLimit, userId :preferencesHelper.getUserId());
+
+          printData("request ${reqMap}");
+
+          printData("check clientid ${preferencesHelper.getUserId()}");
+          // userId :preferencesHelper.getUserId()
           final res = await DioClient(event.context).post(AppUrlEndPoints.getReturnListUrl, data: reqMap);
           GetReturnListResModel response = GetReturnListResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
@@ -94,8 +99,10 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
       } else if (event is _scanProductEvent) {
         try {
           emit(state.copyWith(isLoading: true));
-          final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.barCode).toJson());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.barCode, isReturn: true).toJson());
           ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
+
+          printData("check res ${response}");
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false, barCodeController: TextEditingController(text: event.barCode)));
             if (response.product!.isEmpty) {

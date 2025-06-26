@@ -97,4 +97,10 @@ class BasketState with _$BasketState {
       errorString:'',
       supplierId:'',
       updatePaymentMethod: false);
+
+
+
+
+
+
 }

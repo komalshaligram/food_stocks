@@ -1,10 +1,9 @@
 part of 'form_data_bloc.dart';
 
 @freezed
-class FormDataState with _$FormDataState{
-
+class FormDataState with _$FormDataState {
   const factory FormDataState({
-  required List<Agent> agentList,
+    required List<Agent> agentList,
     required String agent,
     required List<BusinessType> businessTypeList,
     required String business,
@@ -28,34 +27,32 @@ class FormDataState with _$FormDataState{
     required String language,
     required List<String> ownerList,
     required String owner,
-
   }) = _FormDataState;
 
-  factory FormDataState.initial()=>  FormDataState(
-    agentList: [],
-    agent: '',
-    business: '',
-    businessTypeList: [],
-    guarantee1addressController: TextEditingController(),
-    guarantee1idController: TextEditingController(),
-    guarantee1NameController: TextEditingController(),
-    guarantee1PhoneController: TextEditingController(),
-    guarantee2addressController: TextEditingController(),
-    guarantee2idController: TextEditingController(),
-    guarantee2NameController: TextEditingController(),
-    guarantee2PhoneController: TextEditingController(),
-    owner1israelIdController: TextEditingController(),
-    owner1NameController: TextEditingController(),
-    owner2israelIdController: TextEditingController(),
-    owner2NameController: TextEditingController(),
-    isShimmering: false,
-    haveMultiple: false,
-    isAgentListShimmering: false,
-    isUpdate: false,
-    language: AppStrings.hebrewString,
-      ownerList :['1','2'],
-      owner:'1',
-    agentCodeController: TextEditingController()
-  );
-
+  factory FormDataState.initial() => FormDataState(
+        agentList: [],
+        agent: '',
+        business: '',
+        businessTypeList: [],
+        guarantee1addressController: TextEditingController(),
+        guarantee1idController: TextEditingController(),
+        guarantee1NameController: TextEditingController(),
+        guarantee1PhoneController: TextEditingController(),
+        guarantee2addressController: TextEditingController(),
+        guarantee2idController: TextEditingController(),
+        guarantee2NameController: TextEditingController(),
+        guarantee2PhoneController: TextEditingController(),
+        owner1israelIdController: TextEditingController(),
+        owner1NameController: TextEditingController(),
+        owner2israelIdController: TextEditingController(),
+        owner2NameController: TextEditingController(),
+        isShimmering: false,
+        haveMultiple: false,
+        isAgentListShimmering: false,
+        isUpdate: false,
+        language: AppStrings.hebrewString,
+        ownerList: ['1', '2'],
+        owner: '1',
+        agentCodeController: TextEditingController(),
+      );
 }

@@ -32,6 +32,8 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
 
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
 
+          printData("check date ${response.data!.ordersBySupplier![0].orderDeliveryDate}");
+
           final String statusData = preferencesHelper.getOrderStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
           emit(state.copyWith(statusData: statusList, language: preferencesHelper.getAppLanguage()));

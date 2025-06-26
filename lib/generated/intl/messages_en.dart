@@ -46,7 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "add_proof_img": MessageLookupByLibrary.simpleMessage("Add proof images"),
     "add_text": MessageLookupByLibrary.simpleMessage("Add Text"),
     "add_to_order": MessageLookupByLibrary.simpleMessage("Add to Order"),
-    "address": MessageLookupByLibrary.simpleMessage("Address"),
+    "address": MessageLookupByLibrary.simpleMessage("business address"),
     "admin_type_already_exist": MessageLookupByLibrary.simpleMessage(
       "Admin Type already exists",
     ),
@@ -193,7 +193,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cities_not_available": MessageLookupByLibrary.simpleMessage(
       "Cities not available",
     ),
-    "city": MessageLookupByLibrary.simpleMessage("City"),
+    "city": MessageLookupByLibrary.simpleMessage("City of business"),
     "clear": MessageLookupByLibrary.simpleMessage("clear"),
     "click_to_scan": MessageLookupByLibrary.simpleMessage(
       "Click to Scan Products",
@@ -201,6 +201,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "client_details_not_found": MessageLookupByLibrary.simpleMessage(
       "Client Details Not found.",
     ),
+    "client_form_details": MessageLookupByLibrary.simpleMessage("Client Info"),
+    "client_info": MessageLookupByLibrary.simpleMessage("Client Info"),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
     "collection_from_bank_account": MessageLookupByLibrary.simpleMessage(
       "Collection from bank account",
@@ -236,6 +238,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "copied": MessageLookupByLibrary.simpleMessage("Copied!"),
     "copy": MessageLookupByLibrary.simpleMessage("Copy"),
+    "countdown": MessageLookupByLibrary.simpleMessage(
+      " hours to create more orders without any minimum limit to the supplier Tavili.",
+    ),
     "credit_card": MessageLookupByLibrary.simpleMessage("Credit Card"),
     "credit_card_details": MessageLookupByLibrary.simpleMessage(
       "Credit card details",
@@ -570,6 +575,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "my_basket": MessageLookupByLibrary.simpleMessage("My Basket"),
     "my_invoices": MessageLookupByLibrary.simpleMessage("My invoices"),
     "my_orders": MessageLookupByLibrary.simpleMessage("My Orders"),
+    "my_refunds": MessageLookupByLibrary.simpleMessage("My refunds"),
     "name_of_bank": MessageLookupByLibrary.simpleMessage("Name of bank"),
     "name_of_owner": MessageLookupByLibrary.simpleMessage("Owner Name"),
     "new_order": MessageLookupByLibrary.simpleMessage("New Order"),
@@ -652,7 +658,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Order sent successfully",
     ),
     "order_sign_dialog": MessageLookupByLibrary.simpleMessage(
-      "There are orders that you have not signed, please go through the list of orders and confirm that you have received them.",
+      "It is not possible to transmit an order because there are orders that you received and did not sign\nPlease go through your order list and confirm that you have received them\nOnce you confirm you can broadcast the order\nThank you!",
     ),
     "order_status": MessageLookupByLibrary.simpleMessage("Order Status"),
     "order_summary": MessageLookupByLibrary.simpleMessage("Order Summary"),
@@ -1298,6 +1304,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "you_can_not_update_order": MessageLookupByLibrary.simpleMessage(
       "Invalid Supplier ID",
     ),
+    "you_have": MessageLookupByLibrary.simpleMessage("You have"),
     "you_have_reached_maximum_quantity": MessageLookupByLibrary.simpleMessage(
       "You have reached maximum quantity",
     ),

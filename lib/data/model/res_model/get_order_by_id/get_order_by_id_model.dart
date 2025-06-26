@@ -39,6 +39,8 @@ class OrderDatum with _$OrderDatum {
     String? id,
     double? vatPercentage,
     double? totalVatAmount,
+    @JsonKey(name: "orderNumber")
+    int? orderNumber,
     @JsonKey(name: "createdAt")
     String? createdAt,
     @JsonKey(name: "orderstatus")

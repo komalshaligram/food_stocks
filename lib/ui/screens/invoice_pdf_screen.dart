@@ -30,7 +30,7 @@ class InvoicePdfScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => InvoicePdfBloc()
         ..add(InvoicePdfEvent.getArgumentEvent(
-            invoiceDetailsList: args?[AppStrings.invoiceListString])),
+            invoiceDetailsList: args?[AppStrings.invoiceListString], context: context, )),
       child: InvoicePdfScreenWidget(invoiceDetailsList: args?[AppStrings.invoiceListString]),
     );
   }
@@ -54,7 +54,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
             preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
-              title: AppLocalizations.of(context)!.my_invoices,
+              title: context.read<InvoicePdfBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);

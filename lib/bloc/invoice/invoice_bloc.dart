@@ -13,6 +13,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'invoice_state.dart';
 part 'invoice_event.dart';
@@ -20,11 +21,15 @@ part 'invoice_bloc.freezed.dart';
 
 
 class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
+    String screenTitleName = '';
+
   InvoiceBloc() : super(InvoiceState.initial()) {
     on<InvoiceEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
       if (event is _getInvoicesDataEvent) {
+
+
 
         if (state.isLoadMore) {
           return;
@@ -35,6 +40,12 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
         try {
           final String statusData = preferences.getPaymentStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
+
+          final args = ModalRoute.of(event.context)!.settings.arguments as Map<String, dynamic>;
+          screenTitleName = args[AppStrings.invoiceTitleNameString ] as String;
+
+          printData("check name  ${screenTitleName}");
+
           emit(state.copyWith(
               statusList:statusList,
               language: preferences.getAppLanguage(),
@@ -58,17 +69,31 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
           if (response.status == AppConstants.code_200) {
             List<Invoice> invoiceDetailsList =
             state.invoiceDetailsList.toList(growable: true);
-            invoiceDetailsList.addAll(response.data?.invoices ?? []);
-            emit(state.copyWith(
-                invoiceDetailsList: invoiceDetailsList,
-                pageNum: state.pageNum + 1,
-                isShimmering: false,
-                isLoadMore: false));
-            emit(state.copyWith(
-                isBottomOfProducts: state.invoiceDetailsList.length >=
-                    (response.data?.totalRecords ?? 0)
-                    ? true
-                    : false));
+            if(screenTitleName == AppLocalizations.of(event.context)!.my_invoices) {
+              invoiceDetailsList.addAll(response.data?.orderInvoices?.invoices ?? []);
+              emit(state.copyWith(
+                  invoiceDetailsList: invoiceDetailsList,
+                  pageNum: state.pageNum + 1,
+                  isShimmering: false,
+                  isLoadMore: false));
+              emit(state.copyWith(
+                  isBottomOfProducts: state.invoiceDetailsList.length >=
+                      (response.data?.orderInvoices?.totalRecords ?? 0)
+                      ? true
+                      : false));
+            }else{
+              invoiceDetailsList.addAll(response.data?.refundInvoices?.invoices ?? []);
+              emit(state.copyWith(
+                  invoiceDetailsList: invoiceDetailsList,
+                  pageNum: state.pageNum + 1,
+                  isShimmering: false,
+                  isLoadMore: false));
+              emit(state.copyWith(
+                  isBottomOfProducts: state.invoiceDetailsList.length >=
+                      (response.data?.refundInvoices?.totalRecords ?? 0)
+                      ? true
+                      : false));
+            }
           } else {
             emit(state.copyWith(isLoadMore: false,isShimmering : false));
             CustomSnackBar.showSnackBar(

@@ -135,9 +135,14 @@ class S {
     );
   }
 
-  /// `Address`
+  /// `business address`
   String get address {
-    return Intl.message('Address', name: 'address', desc: '', args: []);
+    return Intl.message(
+      'business address',
+      name: 'address',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Owner Name`
@@ -158,6 +163,16 @@ class S {
   /// `More Info`
   String get more_details {
     return Intl.message('More Info', name: 'more_details', desc: '', args: []);
+  }
+
+  /// `Client Info`
+  String get client_form_details {
+    return Intl.message(
+      'Client Info',
+      name: 'client_form_details',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Full Address`
@@ -475,9 +490,9 @@ class S {
     return Intl.message('Received All', name: 'received', desc: '', args: []);
   }
 
-  /// `City`
+  /// `City of business`
   String get city {
-    return Intl.message('City', name: 'city', desc: '', args: []);
+    return Intl.message('City of business', name: 'city', desc: '', args: []);
   }
 
   /// `Enter your phone number`
@@ -3530,6 +3545,11 @@ class S {
     );
   }
 
+  /// `Client Info`
+  String get client_info {
+    return Intl.message('Client Info', name: 'client_info', desc: '', args: []);
+  }
+
   /// `My Agent Code`
   String get my_agent_code {
     return Intl.message(
@@ -3890,6 +3910,11 @@ class S {
     return Intl.message('My invoices', name: 'my_invoices', desc: '', args: []);
   }
 
+  /// `My refunds`
+  String get my_refunds {
+    return Intl.message('My refunds', name: 'my_refunds', desc: '', args: []);
+  }
+
   /// `Rivchit Invoice number`
   String get rivchit_invoice_number {
     return Intl.message(
@@ -3980,10 +4005,10 @@ class S {
     );
   }
 
-  /// `There are orders that you have not signed, please go through the list of orders and confirm that you have received them.`
+  /// `It is not possible to transmit an order because there are orders that you received and did not sign\nPlease go through your order list and confirm that you have received them\nOnce you confirm you can broadcast the order\nThank you!`
   String get order_sign_dialog {
     return Intl.message(
-      'There are orders that you have not signed, please go through the list of orders and confirm that you have received them.',
+      'It is not possible to transmit an order because there are orders that you received and did not sign\nPlease go through your order list and confirm that you have received them\nOnce you confirm you can broadcast the order\nThank you!',
       name: 'order_sign_dialog',
       desc: '',
       args: [],
@@ -5230,6 +5255,21 @@ class S {
     return Intl.message(
       'Click to Scan Products',
       name: 'click_to_scan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have`
+  String get you_have {
+    return Intl.message('You have', name: 'you_have', desc: '', args: []);
+  }
+
+  /// ` hours to create more orders without any minimum limit to the supplier Tavili.`
+  String get countdown {
+    return Intl.message(
+      ' hours to create more orders without any minimum limit to the supplier Tavili.',
+      name: 'countdown',
       desc: '',
       args: [],
     );

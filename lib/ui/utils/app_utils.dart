@@ -160,7 +160,7 @@ class CustomSnackBar {
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.all(20),
       borderRadius: BorderRadius.circular(15),
-      duration: const Duration(seconds: 1),
+      duration: const Duration(seconds: 3),
       flushbarPosition: FlushbarPosition.TOP,
     ).show(context);
   }

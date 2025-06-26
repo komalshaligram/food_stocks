@@ -26,10 +26,9 @@ class OrderSummaryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-    ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => OrderSummaryBloc()..add(OrderSummaryEvent.getDataEvent(context: context,cartItemList: args?[AppStrings.getCartListString])),
+      create: (context) => OrderSummaryBloc()..add(OrderSummaryEvent.getDataEvent(context: context, cartItemList: args?[AppStrings.getCartListString])),
       child: const OrderSummaryScreenWidget(),
     );
   }
@@ -41,12 +40,11 @@ class OrderSummaryScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     OrderSummaryBloc bloc = context.read<OrderSummaryBloc>();
-    return BlocListener<OrderSummaryBloc,OrderSummaryState>(
-      listener: (context,state){
-        if(state.showPopUp){
-          paymentOptionPopup(state,context,bloc);
-        }
-        else if (state.isPaymentFail) {
+    return BlocListener<OrderSummaryBloc, OrderSummaryState>(
+      listener: (context, state) {
+        if (state.showPopUp) {
+          paymentOptionPopup(state, context, bloc);
+        } else if (state.isPaymentFail) {
           showDialog(
             context: context,
             builder: (context1) {
@@ -64,8 +62,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
           ).then((value) {
             context.read<OrderSummaryBloc>().add(const OrderSummaryEvent.refreshEvent());
           });
-        }
-      else if (state.updatePaymentMethod) {
+        } else if (state.updatePaymentMethod) {
           showDialog(
             context: context,
             builder: (context1) {
@@ -73,12 +70,16 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
                 directionality: state.language,
-                positiveTitle: state.paymentTypesList.any((e) => e == AppStrings.creditCard)?AppLocalizations.of(context)!.pay_with_credit_card:null,
+                positiveTitle: state.paymentTypesList.any((e) => e == AppStrings.creditCard) ? AppLocalizations.of(context)!.pay_with_credit_card : null,
                 positiveOnTap: () {
                   Navigator.pop(context);
                   bool c = state.paymentTypesList.any((e) => e == AppStrings.creditCard);
                   if (c) {
-                    bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: false,  paymentMethod: AppStrings.creditCard,));
+                    bloc.add(OrderSummaryEvent.orderSendEvent(
+                      context: context,
+                      failPayment: false,
+                      paymentMethod: AppStrings.creditCard,
+                    ));
                   } else {
                     Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
                   }
@@ -87,7 +88,11 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   Navigator.pop(context);
                   bool c = state.paymentTypesList.any((e) => e == AppStrings.wallet);
                   if (c) {
-                    bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: false,  paymentMethod: AppStrings.wallet));
+                    bloc.add(OrderSummaryEvent.orderSendEvent(
+                      context: context,
+                      failPayment: false,
+                      paymentMethod: AppStrings.wallet,
+                    ));
                   } else {
                     Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail, AppStrings.updateString: true});
                   }
@@ -99,16 +104,16 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                       language: state.language,
                       text: state.bankTransferInfo ?? '',
                       function: () {
-                        bloc.add(OrderSummaryEvent.payWithBankTransferEvent(context: context,isFromRemovePopUp:false));
+                        bloc.add(OrderSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: false));
                       });
                 },
                 positiveOnTap3: () {
                   Navigator.pop(context);
-                  bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail,  paymentMethod: AppStrings.bankCheck));
+                  bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.bankCheck));
                 },
-                positiveTitle1:state.paymentTypesList.any((e) => e == AppStrings.wallet)? AppLocalizations.of(context)!.pay_with_wallet:null,
-                positiveTitle3: state.paymentTypesList.any((e) => e == AppStrings.bankCheck)?AppLocalizations.of(context)!.pay_with_bank_check:null,
-                positiveTitle2: state.paymentTypesList.any((e) => e == AppStrings.bankTransfer)?AppLocalizations.of(context)!.pay_with_bank_transfer:null,
+                positiveTitle1: state.paymentTypesList.any((e) => e == AppStrings.wallet) ? AppLocalizations.of(context)!.pay_with_wallet : null,
+                positiveTitle3: state.paymentTypesList.any((e) => e == AppStrings.bankCheck) ? AppLocalizations.of(context)!.pay_with_bank_check : null,
+                positiveTitle2: state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null,
               );
             },
           ).then((value) {
@@ -118,27 +123,21 @@ class OrderSummaryScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
         builder: (context, state) {
-
           return Scaffold(
             backgroundColor: AppColors.pageColor,
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 trailingWidget: Container(
-                  padding: const EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 2),
-                  decoration: BoxDecoration(
-                    color: AppColors.greyColor,
-                    border: Border.all(color: AppColors.whiteColor,width: 3),
-                    borderRadius: const BorderRadius.all(Radius.circular(20))
-                  ),
+                  padding: const EdgeInsets.only(left: 2, right: 2, top: 2, bottom: 2),
+                  decoration: BoxDecoration(color: AppColors.greyColor, border: Border.all(color: AppColors.whiteColor, width: 3), borderRadius: const BorderRadius.all(Radius.circular(20))),
                   child: Container(
-                    padding: const EdgeInsets.only(left: 8,right: 8,top: 3,bottom: 3),
-                      decoration: BoxDecoration(color: AppColors.greyColor,
-                          borderRadius: const BorderRadius.all(Radius.circular(20))),
-                      child: Text('${AppLocalizations.of(context)!.total} :${formatNumber(value:vatCalculation(price: state.orderSummaryList.data?.cart?.first.totalAmount?? 0,vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
-                        style:  TextStyle(
-                  color:AppColors.whiteColor
-                      ),)),
+                      padding: const EdgeInsets.only(left: 8, right: 8, top: 3, bottom: 3),
+                      decoration: BoxDecoration(color: AppColors.greyColor, borderRadius: const BorderRadius.all(Radius.circular(20))),
+                      child: Text(
+                        '${AppLocalizations.of(context)!.total} :${formatNumber(value: vatCalculation(price: state.orderSummaryList.data?.cart?.first.totalAmount ?? 0, vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2), local: AppStrings.hebrewLocal)}',
+                        style: TextStyle(color: AppColors.whiteColor),
+                      )),
                 ),
                 bgColor: AppColors.pageColor,
                 title: AppLocalizations.of(context)!.order_summary,
@@ -160,15 +159,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                               itemCount: state.tempList.length,
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: AppConstants.padding_5),
-                              itemBuilder: (context, index) =>
-                                  AnimationConfiguration.staggeredList(
-                                      duration: const Duration(seconds: 1),
-                                      position: index,
-                                      child: SlideAnimation(
-                                          child: FadeInAnimation(
-                                              child: orderListItem(index: index, context: context,bloc:bloc)))),
+                              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+                              itemBuilder: (context, index) => AnimationConfiguration.staggeredList(duration: const Duration(seconds: 1), position: index, child: SlideAnimation(child: FadeInAnimation(child: orderListItem(index: index, context: context, bloc: bloc)))),
                             ),
                           ),
                         ),
@@ -187,8 +179,12 @@ class OrderSummaryScreenWidget extends StatelessWidget {
       subTitle: AppLocalizations.of(context)!.payment_dialog_option_title,
       title: state.errorString,
       directionality: state.language,
-      positiveTitle: state.paymentTypesList.any((e) => e == AppStrings.creditCard)?state.isPaymentFail && state.errorString != AppStrings.getLocalizedStrings(AppLocalizations.of(context)!.credit_card_not_found, context)?AppLocalizations.of(context)!.pay_with_credit_card:AppLocalizations.of(context)!.change_credit_card:null,
-      positiveTitle1:state.paymentTypesList.any((e) => e == AppStrings.bankTransfer)? AppLocalizations.of(context)!.pay_with_bank_transfer:null,
+      positiveTitle: state.paymentTypesList.any((e) => e == AppStrings.creditCard)
+          ? state.isPaymentFail && state.errorString != AppStrings.getLocalizedStrings(AppLocalizations.of(context)!.credit_card_not_found, context)
+              ? AppLocalizations.of(context)!.pay_with_credit_card
+              : AppLocalizations.of(context)!.change_credit_card
+          : null,
+      positiveTitle1: state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null,
       positiveOnTap: () {
         Navigator.pop(context);
         if (state.isPaymentFail && state.errorString != AppStrings.getLocalizedStrings(AppLocalizations.of(context)!.credit_card_not_found, context)) {
@@ -204,14 +200,14 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             language: state.language,
             text: state.bankTransferInfo,
             function: () {
-              bloc.add(OrderSummaryEvent.payWithBankTransferEvent(context: context,isFromRemovePopUp:false));
+              bloc.add(OrderSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: false));
             });
       },
       positiveOnTap2: () {
         Navigator.pop(context);
-        bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail,  paymentMethod: AppStrings.bankCheck));
+        bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.bankCheck));
       },
-      positiveTitle2: state.paymentTypesList.any((e) => e == AppStrings.bankCheck)?AppLocalizations.of(context)!.pay_with_bank_check:null,
+      positiveTitle2: state.paymentTypesList.any((e) => e == AppStrings.bankCheck) ? AppLocalizations.of(context)!.pay_with_bank_check : null,
     );
   }
 
@@ -221,11 +217,19 @@ class OrderSummaryScreenWidget extends StatelessWidget {
       title: state.errorString,
       subTitle: AppLocalizations.of(context)!.payment_dialog_option_title,
       directionality: state.language,
-      positiveTitle: state.paymentTypesList.any((e) => e == AppStrings.creditCard)?state.isPaymentFail && !state.isWalletRelatedError ? AppLocalizations.of(context)!.change_credit_card : AppLocalizations.of(context)!.pay_with_credit_card:null,
+      positiveTitle: state.paymentTypesList.any((e) => e == AppStrings.creditCard)
+          ? state.isPaymentFail && !state.isWalletRelatedError
+              ? AppLocalizations.of(context)!.change_credit_card
+              : AppLocalizations.of(context)!.pay_with_credit_card
+          : null,
       positiveOnTap: () {
         Navigator.pop(context);
         if (state.isPaymentFail && state.errorString != AppStrings.getLocalizedStrings(AppLocalizations.of(context)!.credit_card_not_found, context)) {
-          bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.creditCard,));
+          bloc.add(OrderSummaryEvent.orderSendEvent(
+            context: context,
+            failPayment: state.isPaymentFail,
+            paymentMethod: AppStrings.creditCard,
+          ));
         } else {
           Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
         }
@@ -234,9 +238,16 @@ class OrderSummaryScreenWidget extends StatelessWidget {
         Navigator.pop(context);
         printData(' state.bankTransferInfo:${state.bankTransferInfo}');
         if (state.isPaymentFail && state.bankTransferInfo.isNotEmpty) {
-          bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.wallet,));
+          bloc.add(OrderSummaryEvent.orderSendEvent(
+            context: context,
+            failPayment: state.isPaymentFail,
+            paymentMethod: AppStrings.wallet,
+          ));
         } else {
-          Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name, arguments: {AppStrings.isPaymentFail: false, AppStrings.updateString: true,});
+          Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name, arguments: {
+            AppStrings.isPaymentFail: false,
+            AppStrings.updateString: true,
+          });
         }
       },
       positiveOnTap2: () {
@@ -246,16 +257,16 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             language: state.language,
             text: state.bankTransferInfo,
             function: () {
-              bloc.add(OrderSummaryEvent.payWithBankTransferEvent(context: context,isFromRemovePopUp:false));
+              bloc.add(OrderSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: false));
             });
       },
       positiveOnTap3: () {
         Navigator.pop(context);
-        bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail,  paymentMethod: AppStrings.bankCheck));
+        bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.bankCheck));
       },
-      positiveTitle1: state.paymentTypesList.any((e) => e == AppStrings.wallet)?AppLocalizations.of(context)!.change_to_wallet_payment:null,
-      positiveTitle2: state.paymentTypesList.any((e) => e == AppStrings.bankTransfer)?AppLocalizations.of(context)!.pay_with_bank_transfer:null,
-      positiveTitle3: state.paymentTypesList.any((e) => e == AppStrings.bankCheck)?AppLocalizations.of(context)!.pay_with_bank_check:null,
+      positiveTitle1: state.paymentTypesList.any((e) => e == AppStrings.wallet) ? AppLocalizations.of(context)!.change_to_wallet_payment : null,
+      positiveTitle2: state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null,
+      positiveTitle3: state.paymentTypesList.any((e) => e == AppStrings.bankCheck) ? AppLocalizations.of(context)!.pay_with_bank_check : null,
     );
   }
 
@@ -326,14 +337,14 @@ class OrderSummaryScreenWidget extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
               directionality: state.language,
-              positiveTitle: state.paymentTypesList.any((e) => e == AppStrings.creditCard)?AppLocalizations.of(context)!.pay_with_credit_card:null,
+              positiveTitle: AppLocalizations.of(context)!.pay_with_credit_card,//state.paymentTypesList.any((e) => e == AppStrings.creditCard) ? AppLocalizations.of(context)!.pay_with_credit_card : null,
               positiveOnTap: () {
                 Navigator.pop(context);
                 bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.creditCard));
               },
               positiveOnTap1: () {
                 Navigator.pop(context);
-                bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: false,  paymentMethod: AppStrings.wallet));
+                bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.wallet));
               },
               positiveOnTap2: () {
                 Navigator.pop(context);
@@ -342,16 +353,16 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     language: state.language,
                     text: state.bankTransferInfo,
                     function: () {
-                      bloc.add(OrderSummaryEvent.payWithBankTransferEvent(context: context,isFromRemovePopUp:isFromRemovePopUp));
+                      bloc.add(OrderSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: isFromRemovePopUp));
                     });
               },
               positiveOnTap3: () {
                 Navigator.pop(context1);
                 bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.bankCheck));
               },
-              positiveTitle1: state.paymentTypesList.any((e) => e == AppStrings.wallet)?AppLocalizations.of(context)!.change_to_wallet_payment:null,
-              positiveTitle2: state.paymentTypesList.any((e) => e == AppStrings.bankTransfer)?AppLocalizations.of(context)!.pay_with_bank_transfer:null,
-              positiveTitle3: state.paymentTypesList.any((e) => e == AppStrings.bankCheck)?AppLocalizations.of(context)!.pay_with_bank_check:null,
+              positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,//state.paymentTypesList.any((e) => e == AppStrings.wallet) ? AppLocalizations.of(context)!.change_to_wallet_payment : null,
+              positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,//state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null,
+              positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,//state.paymentTypesList.any((e) => e == AppStrings.bankCheck) ? AppLocalizations.of(context)!.pay_with_bank_check : null,
             );
           } else {
             return CustomOneButtonDialog(
@@ -361,7 +372,11 @@ class OrderSummaryScreenWidget extends StatelessWidget {
               positiveTitle: AppLocalizations.of(context)!.pay_with_credit_card,
               positiveOnTap: () {
                 Navigator.pop(context);
-                bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.creditCard,));
+                bloc.add(OrderSummaryEvent.orderSendEvent(
+                  context: context,
+                  failPayment: false,
+                  paymentMethod: AppStrings.creditCard,
+                ));
                 //  Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
               },
               positiveOnTap1: () {
@@ -371,9 +386,9 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     language: state.language,
                     text: state.bankTransferInfo,
                     function: () {
-                      bloc.add(OrderSummaryEvent.payWithBankTransferEvent(context: context,isFromRemovePopUp:isFromRemovePopUp));
+                      bloc.add(OrderSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: isFromRemovePopUp));
                     });
-             //   bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: false,  paymentMethod: AppStrings.bankTransfer,));
+                //   bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: false,  paymentMethod: AppStrings.bankTransfer,));
               },
               positiveTitle1: AppLocalizations.of(context)!.pay_with_bank_transfer,
             );
@@ -381,36 +396,41 @@ class OrderSummaryScreenWidget extends StatelessWidget {
         });
   }
 
-  Widget orderListItem({required int index, required BuildContext context,required OrderSummaryBloc bloc}) {
-   /* OrderSummaryBloc bloc = context.read<OrderSummaryBloc>();*/
+  Widget orderListItem({required int index, required BuildContext context, required OrderSummaryBloc bloc}) {
+    /* OrderSummaryBloc bloc = context.read<OrderSummaryBloc>();*/
     return BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
       builder: (context, state) {
         return Container(
           margin: const EdgeInsets.all(AppConstants.padding_10),
-          padding: const EdgeInsets.symmetric(
-              vertical: AppConstants.padding_10,
-              horizontal: AppConstants.padding_10),
+          padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
           decoration: BoxDecoration(
             color: AppColors.whiteColor,
             boxShadow: [
-              BoxShadow(
-                  color: AppColors.shadowColor.withOpacity(0.15),
-                  blurRadius: AppConstants.blur_10),
+              BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
             ],
-            borderRadius:
-                const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                state.tempList[index].suppliers
-                        ?.contactName! ?? '',
-                style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.font_14,
-                  color: AppColors.blackColor,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    state.tempList[index].suppliers?.contactName! ?? '',
+                    style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_14,
+                      color: AppColors.blackColor,
+                    ),
+                  ),
+                  // InkWell(
+                  //   onTap: () {
+                  //
+                  //   },
+                  //   child: Icon(Icons.info, color: AppColors.greyColor,),
+                  // ),
+                ],
               ),
               10.height,
               Row(
@@ -420,9 +440,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     borderCoder: AppColors.lightBorderColor,
                     flexValue: 3,
                     title: AppLocalizations.of(context)!.products,
-                    value:   state.tempList[index].totalQuantity
-                            ?.toString() ??
-                        '',
+                    value: state.tempList[index].totalQuantity?.toString() ?? '',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w700,
@@ -434,9 +452,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     borderCoder: AppColors.lightBorderColor,
                     flexValue: 5,
                     title: AppLocalizations.of(context)!.savings_for_sales,
-                    value:   state.tempList[index].totalSavings
-                        ?.toString() ??
-                        '',
+                    value: state.tempList[index].totalSavings?.toString() ?? '',
                     titleColor: AppColors.orangeColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w700,
@@ -448,24 +464,22 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     borderCoder: AppColors.lightBorderColor,
                     flexValue: 7,
                     title: AppLocalizations.of(context)!.total_order,
-                    value:
-                    formatNumber(value: vatCalculation(price: double.parse(  state.tempList[index].totalAmount ?? '0'),vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal),
+                    value: formatNumber(value: vatCalculation(price: double.parse(state.tempList[index].totalAmount ?? '0'), vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2), local: AppStrings.hebrewLocal),
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w500,
                     valueTextSize: AppConstants.smallFont,
                   ),
-
                 ],
               ),
-             8.height,
+              8.height,
               CustomButtonWidget(
                 buttonText: AppLocalizations.of(context)!.send_order,
                 bGColor: AppColors.mainColor,
                 height: 40,
-                isLoading: state.tempList[index].isProcess??false,
+                isLoading: state.tempList[index].isProcess ?? false,
                 onPressed: () {
-                  bloc.add(OrderSummaryEvent.getSupplierPaymentTypeEvent(context: context,id:  state.tempList[index].suppliers?.id??'',index: index));
+                  bloc.add(OrderSummaryEvent.getSupplierPaymentTypeEvent(context: context, id: state.tempList[index].suppliers?.id ?? '', index: index));
                 },
                 fontColors: AppColors.whiteColor,
               ),
