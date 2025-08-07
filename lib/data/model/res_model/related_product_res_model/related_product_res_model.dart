@@ -19,6 +19,8 @@ class RelatedProductDatum with _$RelatedProductDatum {
   const factory RelatedProductDatum({
     @JsonKey(name: "numberOfUnit")
     String? numberOfUnit,
+    @JsonKey(name: "supplierId")
+    String? supplierId,
     @JsonKey(name: "itemsWeight")
     String? itemsWeight,
     @JsonKey(name: "isBottle")
@@ -31,6 +33,8 @@ class RelatedProductDatum with _$RelatedProductDatum {
     String? id,
     @JsonKey(name: "productName")
     String? productName,
+    @JsonKey(name: "quantity")
+    int? quantity,
     @JsonKey(name: "brandId")
     String? brandId,
     @JsonKey(name: "brandLogo")

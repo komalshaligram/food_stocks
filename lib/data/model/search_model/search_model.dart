@@ -21,6 +21,10 @@ class SearchModel with _$SearchModel {
     @Default(false) bool isPesach,
     @Default('') String salesDesc,
     @Default(0.0) double salePrice,
+    @JsonKey(name: "_id")
+    String? id,
+    @JsonKey(name: "supplierId")
+    String? supplierId,
   }) = _SearchModel;
 
   factory SearchModel.fromJson(Map<String, dynamic> json) =>

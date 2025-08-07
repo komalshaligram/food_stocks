@@ -940,6 +940,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "product_return_list": MessageLookupByLibrary.simpleMessage(
       "Product return list",
     ),
+    "product_updated_in_cart": MessageLookupByLibrary.simpleMessage(
+      "Product has been successfully updated to your cart",
+    ),
     "products": MessageLookupByLibrary.simpleMessage("Products"),
     "products_not_available": MessageLookupByLibrary.simpleMessage(
       "Products not available",

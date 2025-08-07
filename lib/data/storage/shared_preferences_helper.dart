@@ -663,4 +663,8 @@ class SharedPreferencesHelper {
   bool getAvailablePayment() {
     return prefs.getBool(availableAllPayment) ?? false;
   }
+
+  Future<void> clearAll() async {
+    await prefs.clear();
+  }
 }

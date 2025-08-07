@@ -119,4 +119,33 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.userApproveEvent(
       {required BuildContext context}) = _userApproveEvent;
 
+  const factory StoreCategoryEvent.updateListQuantityOfProduct({
+    required BuildContext context,
+    required String quantity,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _updateListQuantityOfProductEvent;
+
+  const factory StoreCategoryEvent.increaseListQuantityOfProduct({
+    required BuildContext context,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _increaseListQuantityOfProductEvent;
+
+  const factory StoreCategoryEvent.decreaseListQuantityOfProduct({
+    required BuildContext context,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _decreaseListQuantityOfProductEvent;
+
+  const factory StoreCategoryEvent.addToCartListProductEvent({
+    required BuildContext context,
+    required String productId,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _addToCartListProductEvent;
 }

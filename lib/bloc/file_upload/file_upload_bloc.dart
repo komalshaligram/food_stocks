@@ -11,7 +11,6 @@ import '../../data/model/res_model/forms_res_model/forms_res_model.dart';
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../routes/app_routes.dart';
-import '../../ui/utils/constants/app_strings.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -23,9 +22,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/constants/app_constants.dart';
-import '../../ui/utils/constants/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_strings.dart';
+import '../../ui/utils/constants/app_urls.dart';
 
 part 'file_upload_state.dart';
 
@@ -92,7 +93,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     if (response.status == AppConstants.code_200) {
                       if (newModel[AppStrings.formsString] != null || newModel[AppStrings.filesString] != null) {
                         List<FormAndFileModel> formsAndFilesList = state.formsAndFilesList.toList(growable: true);
-
 
                         for (int i = 0; i < formsAndFilesList.length; i++) {
                           if (newModel[AppStrings.filesString] != '' && newModel[AppStrings.filesString] != null && (newModel[AppStrings.filesString].containsKey(formsAndFilesList[i].id) ?? false)) {
@@ -193,7 +193,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             fileSize = getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await file.length());
           }
 
-
           if (int.parse(fileSize!.split(' ').first) == 0) {
             return;
           }
@@ -252,7 +251,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 formAndFileList[event.fileIndex] = formAndFileList[event.fileIndex].copyWith(localUrl: croppedImage?.path ?? file.path);
               }
 
-
               emit(state.copyWith(formsAndFilesList: formAndFileList));
             } else {
               emit(state.copyWith(isUploadLoading: false));
@@ -268,7 +266,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           Map<String, Map<String, dynamic>> formsAndFiles = {AppStrings.filesString: {}};
           Map<String, String> fileList = {};
           for (var formAndFile in state.formsAndFilesList) {
-
             if (formAndFile.url?.isNotEmpty ?? false) {
               if ((formAndFile.isForm ?? false)) {
               } else if ((formAndFile.isForm == false)) {
@@ -306,7 +303,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 );
               } else {
                 emit(state.copyWith(isApiLoading: false));
-               // Navigator.pop(event.context);
+                Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppLocalizations.of(event.context)!.updated_successfully,
@@ -339,7 +336,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           Map<String, Map<String, dynamic>> formsAndFiles = {AppStrings.formsString: {}, AppStrings.filesString: {}};
 
           for (var formAndFile in state.formsAndFilesList) {
-
             if (formAndFile.url?.isNotEmpty ?? false) {
               if ((formAndFile.isForm ?? false)) {
                 formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] = formAndFile.url ?? '';
@@ -355,7 +351,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           );
 
           FileUpdateResModel response = FileUpdateResModel.fromJson(res);
-
 
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isRemoveProcess: false));
@@ -387,7 +382,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           await Dio().download("${AppUrlEndPoints.baseFileUrl}${state.formsAndFilesList[event.fileIndex].url}", filePath, onReceiveProgress: (received, total) {
             int progress = (received * 100) ~/ total;
             emit(state.copyWith(downloadProgress: progress));
-
           });
           CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.downloaded_successfully, type: SnackBarType.success);
           emit(state.copyWith(downloadProgress: 0, isDownloading: false));
@@ -412,7 +406,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 } else if (newModel[AppStrings.formsString].containsKey(formsAndFilesList[i].id) ?? false) {
                   formsAndFilesList[i] = formsAndFilesList[i].copyWith(url: newModel[AppStrings.formsString][formsAndFilesList[i].id]);
                 }
-
               }
               emit(state.copyWith(formsAndFilesList: formsAndFilesList));
             } else {

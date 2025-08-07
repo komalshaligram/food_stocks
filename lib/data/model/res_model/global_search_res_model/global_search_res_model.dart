@@ -38,6 +38,8 @@ class Datum with _$Datum {
     @JsonKey(name: "productNameMatch") int? productNameMatch,
     @JsonKey(name: "sale") Sale? sale,
     @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "supplierId")
+    String? supplierId,
     @JsonKey(name: "productName") String? productName,
     @JsonKey(name: "brandId") String? brandId,
     @JsonKey(name: "productDescription") String? productDescription,

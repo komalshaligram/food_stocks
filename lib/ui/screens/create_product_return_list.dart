@@ -54,8 +54,8 @@ class CreateProductReturnListWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.product_return_list,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  Navigator.pop(context);
-                  // Navigator.pushNamedAndRemoveUntil(context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
+                  // Navigator.pop(context, 'refresh');
+                  Navigator.pushNamedAndRemoveUntil(context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
                 },
                 trailingWidget: state.returnProductList.isNotEmpty
                     ? InkWell(

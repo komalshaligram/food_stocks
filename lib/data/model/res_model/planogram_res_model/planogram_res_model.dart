@@ -43,6 +43,8 @@ class Planogramproduct with _$Planogramproduct {
   const factory Planogramproduct({
     @JsonKey(name: "_id")
     String? id,
+    @JsonKey(name: "supplierId")
+    String? supplierId,
     @JsonKey(name: "productStock")
     double? productStock,
     @JsonKey(name: "totalSale")
@@ -77,6 +79,8 @@ class Sale with _$Sale {
   const factory Sale({
     @JsonKey(name: "isSale")
     bool? isSale,
+    @JsonKey(name: "supplierId")
+    String? supplierId,
     @JsonKey(name: "salePrice")
     String? salePrice,
     @JsonKey(name: "saleFromDate")

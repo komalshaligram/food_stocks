@@ -101,5 +101,37 @@ class ReorderEvent with _$ReorderEvent {
 
   const factory ReorderEvent.userApproveEvent(
       {required BuildContext context}) = _userApproveEvent;
+
+  const factory ReorderEvent.updateListQuantityOfProduct({
+    required BuildContext context,
+    required String quantity,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _updateListQuantityOfProductEvent;
+
+  const factory ReorderEvent.increaseListQuantityOfProduct({
+    required BuildContext context,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _increaseListQuantityOfProductEvent;
+
+  const factory ReorderEvent.decreaseListQuantityOfProduct({
+    required BuildContext context,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _decreaseListQuantityOfProductEvent;
+
+  const factory ReorderEvent.addToCartListProductEvent({
+    required BuildContext context,
+    required String productId,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _addToCartListProductEvent;
+
+
 }
 

@@ -342,12 +342,23 @@ extension StringCasingExtension on String {
 }
 
 String formatNumber({required String value, required String local}) {
-  String result = (NumberFormat.simpleCurrency(
-    locale: local,
-  ).format(double.parse(value)));
-  String result1 = splitNumber(result);
-  return result1;
+  final double number = double.parse(value);
+  final bool isNegative = number < 0;
+
+  final formatted = NumberFormat.simpleCurrency(locale: local)
+      .format(number.abs()); // Format absolute value to avoid trailing minus
+
+  final String result = isNegative ? '-$formatted' : formatted;
+
+  return splitNumber(result);
 }
+// String formatNumber({required String value, required String local}) {
+//   String result = (NumberFormat.simpleCurrency(
+//     locale: local,
+//   ).format(double.parse(value)));
+//   String result1 = splitNumber(result);
+//   return result1;
+// }
 
 String formatNumberForWallet({required String value, required String local, required BuildContext context}) {
   String result = (NumberFormat.compactSimpleCurrency(

@@ -533,7 +533,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "my_basket": MessageLookupByLibrary.simpleMessage("הסל שלי"),
     "my_invoices": MessageLookupByLibrary.simpleMessage("החשבוניות שלי"),
     "my_orders": MessageLookupByLibrary.simpleMessage("ההזמנות שלי"),
-    "my_refunds": MessageLookupByLibrary.simpleMessage("ההחזרים שלי"),
+    "my_refunds": MessageLookupByLibrary.simpleMessage("הזיכויים שלי"),
     "name_of_bank": MessageLookupByLibrary.simpleMessage("שם בנק"),
     "name_of_owner": MessageLookupByLibrary.simpleMessage("שם בעלים"),
     "new_order": MessageLookupByLibrary.simpleMessage("הזמנה חדשה"),
@@ -867,6 +867,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "product_return_list": MessageLookupByLibrary.simpleMessage(
       "רשימת מוצרים לבקשת חזרה",
+    ),
+    "product_updated_in_cart": MessageLookupByLibrary.simpleMessage(
+      "המוצר עודכן בהצלחה לעגלת הקניות שלך",
     ),
     "products": MessageLookupByLibrary.simpleMessage("מוצרים"),
     "products_not_available": MessageLookupByLibrary.simpleMessage(

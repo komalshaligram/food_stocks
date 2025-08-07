@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../bloc/home/home_bloc.dart';
 import '../../ui/widget/common_product_details_button.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
@@ -38,7 +40,30 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final Function() onCloseTap;
   final bool isFromBasketScreen;
 
-  const CommonProductDetailsWidget({super.key, required this.context, required this.productImages, required this.productStock, required this.productUnitPrice, required this.bottleTax, required this.isBottle, this.isLoading = false, required this.productDetails, required this.imageOnTap, required this.scrollController, required this.onQuantityIncreaseTap, required this.onQuantityDecreaseTap, required this.onQuantityChanged, required this.addToOrderTap, required this.productPrice, required this.productQuantity, required this.isSubUserAddToBasket, required this.totalBottleDeposit, required this.isIncludedVat, required this.onCloseTap,this.isFromBasketScreen = false});
+  const CommonProductDetailsWidget({
+    super.key,
+    required this.context,
+    required this.productImages,
+    required this.productStock,
+    required this.productUnitPrice,
+    required this.bottleTax,
+    required this.isBottle,
+    this.isLoading = false,
+    required this.productDetails,
+    required this.imageOnTap,
+    required this.scrollController,
+    required this.onQuantityIncreaseTap,
+    required this.onQuantityDecreaseTap,
+    required this.onQuantityChanged,
+    required this.addToOrderTap,
+    required this.productPrice,
+    required this.productQuantity,
+    required this.isSubUserAddToBasket,
+    required this.totalBottleDeposit,
+    required this.isIncludedVat,
+    required this.onCloseTap,
+    this.isFromBasketScreen = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +101,12 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   ),
                   Expanded(
                     child: GestureDetector(
-                      onTap: isFromBasketScreen?onCloseTap:(){
-                        Navigator.pop(context);
-                      },
+                      onTap: isFromBasketScreen
+                          ? onCloseTap
+                          : onCloseTap,
+                        // () {
+                        //       Navigator.pop(context);
+                        //     },
                       child: Icon(
                         Icons.close,
                         size: 36,
@@ -161,12 +189,9 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     onPanUpdate: (detail) {
                       Navigator.pop(context);
                     },
-                    onVerticalDragStart: (dragDetails) {
-                    },
-                    onVerticalDragUpdate: (dragDetails) {
-                    },
-                    onVerticalDragEnd: (endDetails) {
-                    },
+                    onVerticalDragStart: (dragDetails) {},
+                    onVerticalDragUpdate: (dragDetails) {},
+                    onVerticalDragEnd: (endDetails) {},
                     child: Center(
                       child: Stack(
                         children: [
@@ -177,8 +202,11 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                     onTap: imageOnTap,
                                     child: Image.network(
                                       "${AppUrlEndPoints.baseFileUrl}${productImages.first}",
-                                      height: getItemHeight( context, false) == 350.0 ? 200 :
-                                      getItemHeight(context, false) == 260.0 ? 180 : 150,
+                                      height: getItemHeight(context, false) == 350.0
+                                          ? 200
+                                          : getItemHeight(context, false) == 260.0
+                                              ? 180
+                                              : 150,
                                       fit: BoxFit.contain,
                                       loadingBuilder: (context, child, loadingProgress) {
                                         if (loadingProgress?.cumulativeBytesLoaded != loadingProgress?.expectedTotalBytes) {
@@ -200,8 +228,11 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           AppImagePath.imageNotAvailable5,
                                           fit: BoxFit.cover,
                                           // width: 90,
-                                          height: getItemHeight( context, false) == 350.0 ? 200 :
-                                          getItemHeight(context, false) == 260.0 ? 180 : 150,
+                                          height: getItemHeight(context, false) == 350.0
+                                              ? 200
+                                              : getItemHeight(context, false) == 260.0
+                                                  ? 180
+                                                  : 150,
                                         );
                                       },
                                     ),
@@ -376,7 +407,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                               ),
                                               alignment: Alignment.center,
                                               child: TextField(
-                                                controller: TextEditingController(text: "$productQuantity")..selection = TextSelection.fromPosition(TextPosition(offset: "$productQuantity".length)),
+                                                controller: TextEditingController(text: "$productQuantity")..selection =
+                                                TextSelection.fromPosition(TextPosition(offset: "$productQuantity".length)),
                                                 textAlign: TextAlign.center,
                                                 style: AppStyles.rkBoldTextStyle(size: AppConstants.font_26, color: AppColors.blackColor, fontWeight: FontWeight.w700),
                                                 maxLength: 5,
@@ -425,7 +457,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       ),
                                     )
                                   : 0.height,
-                              (productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMaxQuantity!='0'
+                              (productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMaxQuantity != '0'
                                   ? Container(
                                       alignment: Alignment.centerRight,
                                       margin: const EdgeInsets.only(top: 3),

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
@@ -30,6 +31,10 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final bool? isPesach;
   final String productStock;
   final bool? isSale;
+  final int? quantity;
+  final void Function()? onQuantityChanged;
+  final void Function()? onQuantityIncreaseTap;
+  final void Function()? onQuantityDecreaseTap;
 
   const CommonProductSaleItemWidget({
     super.key,
@@ -49,6 +54,10 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     this.isPesach = false,
     required this.isSale,
     this.productStock = '0',
+    this.quantity = 0,
+    this.onQuantityChanged,
+    this.onQuantityIncreaseTap,
+    this.onQuantityDecreaseTap,
   });
 
   @override
@@ -73,100 +82,113 @@ class CommonProductSaleItemWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                children: [
-                  Center(
-                    child: !isGuestUser
-                        ? saleImage.isNotEmpty
-                            ? CachedNetworkImage(
-                                imageUrl: "${AppUrlEndPoints.baseFileUrl}$saleImage",
-                                height: getItemHeight(context, false) == 350.0 ? 190 :
-                                getItemHeight(context, false) == 260.0 ? 125 :
-                                imageHeight,
-                                fit: BoxFit.fitHeight,
-                                placeholder: (context, url) {
-                                  return CommonShimmerWidget(
-                                    child: Container(
-                                      height:getItemHeight(context, false) == 350.0 ? 190 :
-                                      getItemHeight(context, false) == 260.0 ? 125 :
-                                       imageHeight,
-                                      width: 70,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.whiteColor,
-                                        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-                                      ),
+            Column(
+              children: [
+                Center(
+                  child: !isGuestUser
+                      ? saleImage.isNotEmpty
+                          ? CachedNetworkImage(
+                              imageUrl: "${AppUrlEndPoints.baseFileUrl}$saleImage",
+                              height: getItemHeight(context, false) == 350.0
+                                  ? 190
+                                  : getItemHeight(context, false) == 260.0
+                                      ? 125
+                                      : imageHeight,
+                              fit: BoxFit.fitHeight,
+                              placeholder: (context, url) {
+                                return CommonShimmerWidget(
+                                  child: Container(
+                                    height: getItemHeight(context, false) == 350.0
+                                        ? 190
+                                        : getItemHeight(context, false) == 260.0
+                                            ? 125
+                                            : imageHeight,
+                                    width: 70,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.whiteColor,
+                                      borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
                                     ),
-                                  );
-                                },
-                                errorWidget: (context, error, stackTrace) {
-                                  return Image.asset(AppImagePath.imageNotAvailable5,
-                                      height: getItemHeight( context, false) == 260.0 ? 125 :
-                                      getItemHeight(context, false) == 350.0 ? 190 : imageHeight,
-                                      width: 70, fit: BoxFit.cover);
-                                },
-                              )
-                            : Image.asset(
-                                AppImagePath.imageNotAvailable5,
-                                height: getItemHeight( context, false) == 260.0 ? 125 :
-                                getItemHeight(context, false) == 350.0 ? 190 : imageHeight,
-                                width: 70,
-                              )
-                        : Image.asset(
-                            AppImagePath.imageNotAvailable5,
-                            height: getItemHeight( context, false) == 260.0 ? 125 :
-                            getItemHeight(context, false) == 350.0 ? 190 : imageHeight,
-                            width: 70,
-                          ),
-                  ),
-                  2.height,
-                  Text(
-                    productName,
-                    style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  2.height,
-                  description.isNotEmpty
-                      ? Center(
-                          child: Container(
-                            width: width! - 10,
-                            padding: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
-                            child: Text(
-                              "${parse(description).body?.text}",
-                              style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.font_10,
-                                color: AppColors.whiteColor,
-                              ),
-                              maxLines: 3,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        )
-                      : 0.height,
-                  isGuestUser
-                      ? 0.height
-                      : (productStock) == '0' || productStock == '0.0'
-                          ? Container(
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: Text(
-                                AppLocalizations.of(context)!.out_of_stock1,
-                                textAlign: TextAlign.center,
-                                style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.redColor, fontWeight: FontWeight.w400),
-                              ),
+                                  ),
+                                );
+                              },
+                              errorWidget: (context, error, stackTrace) {
+                                return Image.asset(AppImagePath.imageNotAvailable5,
+                                    height: getItemHeight(context, false) == 260.0
+                                        ? 125
+                                        : getItemHeight(context, false) == 350.0
+                                            ? 190
+                                            : imageHeight,
+                                    width: 70,
+                                    fit: BoxFit.cover);
+                              },
                             )
-                          : lowStock.isNotEmpty
-                              ? Text(lowStock, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.orangeColor, fontWeight: FontWeight.w400))
-                              : 0.width,
-                  1.height,
-                  Center(child: isPesachLabelShow(isPesach!, context)),
-                  isPesach! ? 2.height : 0.height,
-                  !isGuestUser
-                      ? isSale!
-                          ? Center(
+                          : Image.asset(
+                              AppImagePath.imageNotAvailable5,
+                              height: getItemHeight(context, false) == 260.0
+                                  ? 125
+                                  : getItemHeight(context, false) == 350.0
+                                      ? 190
+                                      : imageHeight,
+                              width: 70,
+                            )
+                      : Image.asset(
+                          AppImagePath.imageNotAvailable5,
+                          height: getItemHeight(context, false) == 260.0
+                              ? 125
+                              : getItemHeight(context, false) == 350.0
+                                  ? 190
+                                  : imageHeight,
+                          width: 70,
+                        ),
+                ),
+                2.height,
+                Text(
+                  productName,
+                  style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                2.height,
+                description.isNotEmpty
+                    ? Center(
+                        child: Container(
+                          width: width! - 10,
+                          padding: const EdgeInsets.all(3),
+                          decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                          child: Text(
+                            "${parse(description).body?.text}",
+                            style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.font_10,
+                              color: AppColors.whiteColor,
+                            ),
+                            maxLines: 3,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      )
+                    : 0.height,
+                isGuestUser
+                    ? 0.height
+                    : (productStock) == '0' || productStock == '0.0'
+                        ? Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Text(
+                              AppLocalizations.of(context)!.out_of_stock1,
+                              textAlign: TextAlign.center,
+                              style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.redColor, fontWeight: FontWeight.w400),
+                            ),
+                          )
+                        : lowStock.isNotEmpty
+                            ? Text(lowStock, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.orangeColor, fontWeight: FontWeight.w400))
+                            : 0.width,
+                1.height,
+                Center(child: isPesachLabelShow(isPesach!, context)),
+                isPesach! ? 2.height : 0.height,
+                !isGuestUser
+                    ? isSale!
+                        ? Center(
                             child: Text(
                               "${AppLocalizations.of(context)!.currency}${originalPrice?.toStringAsFixed(2)}",
                               style: AppStyles.rkBoldTextStyle(
@@ -176,10 +198,9 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                               ).copyWith(decoration: TextDecoration.lineThrough),
                             ),
                           )
-                          : 0.width
-                      : 0.width,
-                ],
-              ),
+                        : 0.width
+                    : 0.width,
+              ],
             ),
             !isGuestUser
                 ? Center(
@@ -194,7 +215,63 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                       textSize: AppConstants.font_12,
                     ),
                   )
-                : 0.width
+                : 0.width,
+
+            const Spacer(),
+            // 10.height,
+            // Divider(
+            //   color: AppColors.borderColor,
+            // ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: onQuantityIncreaseTap,
+                  child: Container(
+                    width: 25,
+                    height: 25,
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_2), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
+                    child: const Icon(
+                      Icons.add,
+                      size: 15,
+                    ),
+                  ),
+                ),
+                // : const SizedBox(),
+                15.width,
+
+                Text(
+                  quantity.toString(),
+                  style: AppStyles.rkRegularTextStyle(
+                    color: AppColors.blackColor,
+                    size: AppConstants.font_17,
+                  ),
+                ),
+                // : const SizedBox(),
+                15.width,
+
+                GestureDetector(
+                  onTap: onQuantityDecreaseTap,
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 25,
+                    height: 25,
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_3), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
+                    child: const Icon(
+                      Icons.remove,
+                      size: 15,
+                    ),
+                  ),
+                )
+                // : 0.width,
+              ],
+            ),
+            5.height,
+            // Row(children: [
+            //     Container(height: 3.h, width: 3.h, decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)), child: Icon(Icons.add),)
+            //
+            // ],)
           ],
         ),
       ),

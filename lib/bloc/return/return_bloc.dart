@@ -27,6 +27,7 @@ part 'return_bloc.freezed.dart';
 
 class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
   ReturnBloc() : super(ReturnState.initial()) {
+    printData("come here");
     on<ReturnEvent>((event, emit) async {
       Map map = {};
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -88,7 +89,9 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         state.refreshController.loadComplete();
       } else if (event is _newRequestEvent) {
         preferencesHelper.setReturnProductList(returnList: '');
-        Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {'list': <ReturnProduct>[]});
+          Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {'list': <ReturnProduct>[]});
+
+
       } else if (event is _openScannerEvent) {
         String scanResult = await scanBarcodeOrQRCode(context: event.context, cancelText: AppLocalizations.of(event.context)!.cancel, scanMode: ScanMode.BARCODE);
         if (scanResult != '-1') {
@@ -117,11 +120,11 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
                   supplierName:response.product![i].supplierName,supplierId: response.product![i].supplierId,barcode: response.product![i].qrcode));
                 }
                 list.addAll(state.returnProductList);
-               // Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': list, /*'data': response.product?.first.toJson()*/});
-            //  } else {
-                //Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'data': response.product?.first.toJson()});
-             // }
-              Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': list, /*'data': response.product?.first.toJson()*/});
+
+                    Navigator.pushReplacementNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': list, /*'data': response.product?.first.toJson()*/});
+
+
+
             }
           } else {
             emit(state.copyWith(isLoading: false));

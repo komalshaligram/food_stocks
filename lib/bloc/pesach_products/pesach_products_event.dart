@@ -79,6 +79,34 @@ class PesachProductsEvent with _$PesachProductsEvent {
   const factory PesachProductsEvent.userApproveEvent(
       {required BuildContext context}) = _userApproveEvent;
 
+  const factory PesachProductsEvent.updateListQuantityOfProduct({
+    required BuildContext context,
+    required String quantity,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _updateListQuantityOfProductEvent;
 
+  const factory PesachProductsEvent.increaseListQuantityOfProduct({
+    required BuildContext context,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _increaseListQuantityOfProductEvent;
+
+  const factory PesachProductsEvent.decreaseListQuantityOfProduct({
+    required BuildContext context,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _decreaseListQuantityOfProductEvent;
+
+  const factory PesachProductsEvent.addToCartListProductEvent({
+    required BuildContext context,
+    required String productId,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _addToCartListProductEvent;
 
 }

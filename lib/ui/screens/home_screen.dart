@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
-import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,14 +11,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../../bloc/home/home_bloc.dart';
+import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/constants/app_colors.dart';
-import '../../ui/utils/constants/app_constants.dart';
-import '../../ui/utils/constants/app_img_path.dart';
-import '../../ui/utils/constants/app_strings.dart';
-import '../../ui/utils/constants/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../ui/widget/common_product_details_widget.dart';
 import '../../ui/widget/common_product_sale_item_widget.dart';
@@ -32,6 +27,11 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/search_model/search_model.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_img_path.dart';
+import '../utils/constants/app_strings.dart';
+import '../utils/constants/app_styles.dart';
 import '../utils/constants/app_urls.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_dialog_with_one_button.dart';
@@ -42,26 +42,22 @@ import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/pesach_banner_shimmer.dart';
 import '../widget/search_item_widget.dart';
 
-
 class HomeRoute {
   static Widget get route => HomeScreen();
 }
 
 class HomeScreen extends StatelessWidget {
   String isSubCategory;
-
   HomeScreen({super.key, this.isSubCategory = ''});
 
   @override
   Widget build(BuildContext context) {
-
-
     return BlocProvider(
       create: (context) => HomeBloc()
-        ..add(HomeEvent.getProfileDetailsEvent(context: context, isDialog: true))
-     // ..add(HomeEvent.getRecommendationProductsListEvent(context:context))
-      ..add(HomeEvent.getProductSalesListEvent(context: context))
-      ..add(const HomeEvent.getPreferencesDataEvent()),
+        ..add(HomeEvent.getProfileDetailsEvent(context: context))
+        ..add(HomeEvent.getProductSalesListEvent(context: context))
+        //..add(HomeEvent.getRecommendationProductsListEvent(context: context))
+        ..add(const HomeEvent.getPreferencesDataEvent()),
       child: HomeScreenWidget(isNavigation: isSubCategory),
     );
   }
@@ -78,8 +74,10 @@ class HomeScreenWidget extends StatelessWidget {
     HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
+        printData("come back here ");
         if (state.isCartCountChange) {
           BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.updateCartCountEvent(context: context));
+          //  BlocProvider.of<HomeBloc>(context).add(HomeEvent.getCartCountEvent(context: context));
         }
         if (state.isAccountPermissionShimmering) {
           BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
@@ -91,500 +89,687 @@ class HomeScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          return WillPopScope(
-            onWillPop: () async {
-              SystemNavigator.pop();
-              return true;
-            },
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              backgroundColor: AppColors.pageColor,
-              body: FocusDetector(
-                onFocusGained: () {
-                 bloc.add(HomeEvent.getProfileDetailsEvent(context: context, isDialog: false));
-
-                },
-                child: SafeArea(
-                  child: Stack(
-                    children: [
-                      AbsorbPointer(
-                        absorbing: state.allShimmering,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: AppConstants.padding_5,
-                                left: AppConstants.padding_10,
-                                right: AppConstants.padding_10,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: state.isSubUserSeeWallet ? 4 : 3, context: context));
-                                    },
-                                    child: Container(
-                                      height: 60,
-                                      width: 60,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: AppColors.whiteColor, width: 0.5),
-                                        boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)],
-                                        shape: BoxShape.circle,
-                                      ),
-                                      clipBehavior: Clip.hardEdge,
-                                      child: state.userImageUrl.isNotEmpty
-                                          ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: CachedNetworkImage(
-                                          placeholder: (context, url) => const Center(child: CupertinoActivityIndicator()),
-                                          imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.userImageUrl}',
-                                          fit: BoxFit.cover,
-                                          errorWidget: (context, url, error) {
-                                            return Container(
-                                              color: AppColors.whiteColor,
-                                            );
-                                          },
-                                        ),
-                                      )
-                                          : Container(
-                                        decoration: BoxDecoration(border: Border.all(color: AppColors.whiteColor, width: 5), borderRadius: BorderRadius.circular(40)),
-                                        child: SvgPicture.asset(
-                                          AppImagePath.placeholderProfile,
-                                          width: 80,
-                                          height: 80,
-                                          fit: BoxFit.scaleDown,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SvgPicture.asset(
-                                    AppImagePath.splashLogo,
-                                    fit: BoxFit.cover,
-                                    width: 100,
-                                    height: 100,
-                                  ),
-                                  Container(
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: AppColors.pageColor,
+            body: FocusDetector(
+              onFocusGained: () {
+                bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
+                bloc.add(HomeEvent.getProductSalesListEvent(context: context));
+                bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
+              },
+              child: SafeArea(
+                child: Stack(
+                  children: [
+                    AbsorbPointer(
+                      absorbing: state.allShimmering,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: AppConstants.padding_5,
+                              left: AppConstants.padding_10,
+                              right: AppConstants.padding_10,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: state.isSubUserSeeWallet ? 4 : 3, context: context));
+                                  },
+                                  child: Container(
                                     height: 60,
-                                    padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                                    decoration: BoxDecoration(color: AppColors.whiteColor, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.3), blurRadius: AppConstants.blur_10)], borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: AppColors.whiteColor, width: 0.5),
+                                      boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)],
+                                      shape: BoxShape.circle,
+                                    ),
                                     clipBehavior: Clip.hardEdge,
-                                    alignment: Alignment.center,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          height: 54,
-                                          width: 54,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.iconBGColor,
-                                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                                          ),
-                                          child: InkWell(
-                                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                                            onTap: () async {
-                                              dynamic messageResult = await Navigator.pushNamed(context, RouteDefine.messageScreen.name);
-                                              if (messageResult != null) {
-                                                bloc.add(HomeEvent.updateMessageListEvent(messageIdList: messageResult[AppStrings.messageIdListString] ?? ''));
-                                              }
-                                            },
-                                            child: Stack(
-                                              fit: StackFit.expand,
-                                              children: [
-                                                Transform(
-                                                  alignment: Alignment.center,
-                                                  transform: Matrix4.rotationY(context.rtl ? pi : 0),
-                                                  child: SvgPicture.asset(
-                                                    AppImagePath.message,
-                                                    height: 26,
-                                                    width: 24,
-                                                    fit: BoxFit.scaleDown,
-                                                  ),
-                                                ),
-                                                state.messageCount <= 0
-                                                    ? 0.width
-                                                    : Positioned(
-                                                    top: 8,
-                                                    right: context.rtl ? null : 7,
-                                                    left: context.rtl ? 7 : null,
-                                                    child: Container(
-                                                      height: 22,
-                                                      width: 22,
-                                                      decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, border: Border.all(color: AppColors.whiteColor, width: 1), shape: BoxShape.circle),
-                                                      alignment: Alignment.center,
-                                                      child: Text('${state.messageCount <= 99 ? state.messageCount : '99+'}', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.whiteColor)),
-                                                    ))
-                                              ],
+                                    child: state.userImageUrl.isNotEmpty
+                                        ? ClipRRect(
+                                            borderRadius: BorderRadius.circular(20),
+                                            child: CachedNetworkImage(
+                                              placeholder: (context, url) => const Center(child: CupertinoActivityIndicator()),
+                                              imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.userImageUrl}',
+                                              fit: BoxFit.cover,
+                                              errorWidget: (context, url, error) {
+                                                return Container(
+                                                  color: AppColors.whiteColor,
+                                                );
+                                              },
+                                            ),
+                                          )
+                                        : Container(
+                                            decoration: BoxDecoration(border: Border.all(color: AppColors.whiteColor, width: 5), borderRadius: BorderRadius.circular(40)),
+                                            child: SvgPicture.asset(
+                                              AppImagePath.placeholderProfile,
+                                              width: 80,
+                                              height: 80,
+                                              fit: BoxFit.scaleDown,
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
                                   ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Stack(
-                                children: [
-                                  SmartRefresher(
-                                    enablePullDown: true,
-                                    controller: state.refreshController,
-                                    header: CustomHeader(
-                                      refreshStyle: RefreshStyle.Behind,
-                                      builder: (c, m) {
-                                        return Container(
-                                          height: 30,
-                                          width: 30,
-                                          margin: const EdgeInsets.only(top: 90, bottom: 30),
-                                          decoration: BoxDecoration(boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)], color: AppColors.whiteColor, shape: BoxShape.circle),
-                                          child: CupertinoActivityIndicator(
-                                            color: AppColors.mainColor,
-                                            radius: 10,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    onRefresh: () {
-                                      bloc.add(HomeEvent.getProfileDetailsEvent(context: context, isDialog: false));
-                                      bloc.add(HomeEvent.userApproveEvent(context: context));
-                                      bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
-                                      bloc.add(HomeEvent.getProductSalesListEvent(context: context));
-                                      handleMessageOnBackground();
-                                      bloc.add(const HomeEvent.getPreferencesDataEvent());
-                                      bloc.add(HomeEvent.getMessageListEvent(context: context));
-                                      bloc.add(HomeEvent.getCartCountEvent(context: context));
-                                      bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
-                                      if (!state.isAppOnMaintenance) {
-                                        bloc.add(HomeEvent.generalSettings(context: context, dialogContext: context, isRetryLoading: false));
-                                      }
-                                      bloc.add(HomeEvent.getPermissionList(context: context));
-                                      state.refreshController.refreshCompleted();
-                                      state.refreshController.loadComplete();
-                                    },
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        children: [
-                                          80.height,
-                                          state.pesachBannerShimmering && state.pesachBannerURL.isEmpty
-                                              ? const PesachBannerShimmerWidget()
-                                              : state.showPesachBanner && state.pesachBannerURL.isNotEmpty
-                                              ? InkWell(
-                                              onTap: () {
-                                                Navigator.pushNamed(context, RouteDefine.pesachScreen.name);
-                                              },
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(left: 8.0, right: 8),
-                                                child: CachedNetworkImage(
-                                                  placeholder: (context, url) => const PesachBannerShimmerWidget(),
-                                                  imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.pesachBannerURL}',
-                                                  errorWidget: (context, url, error) {
-                                                    return Container(
-                                                      color: AppColors.whiteColor,
-                                                    );
-                                                  },
+                                ),
+                                SvgPicture.asset(
+                                  AppImagePath.splashLogo,
+                                  fit: BoxFit.cover,
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                Container(
+                                  height: 60,
+                                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                  decoration: BoxDecoration(color: AppColors.whiteColor, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.3), blurRadius: AppConstants.blur_10)], borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
+                                  clipBehavior: Clip.hardEdge,
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        height: 54,
+                                        width: 54,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.iconBGColor,
+                                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                                        ),
+                                        child: InkWell(
+                                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                                          onTap: () async {
+                                            dynamic messageResult = await Navigator.pushNamed(context, RouteDefine.messageScreen.name);
+                                            if (messageResult != null) {
+                                              bloc.add(HomeEvent.updateMessageListEvent(messageIdList: messageResult[AppStrings.messageIdListString] ?? ''));
+                                            }
+                                          },
+                                          child: Stack(
+                                            fit: StackFit.expand,
+                                            children: [
+                                              Transform(
+                                                alignment: Alignment.center,
+                                                transform: Matrix4.rotationY(context.rtl ? pi : 0),
+                                                child: SvgPicture.asset(
+                                                  AppImagePath.message,
+                                                  height: 26,
+                                                  width: 24,
+                                                  fit: BoxFit.scaleDown,
                                                 ),
-                                              ))
-                                              : 0.width,
-                                          10.height,
-                                          AnimatedCrossFade(
-                                              firstChild: getScreenWidth(context).width,
-                                              secondChild: Column(
-                                                children: [
-                                                  buildListTitles(
-                                                      context: context,
-                                                      title: AppLocalizations.of(context)!.sales,
-                                                      subTitle: AppLocalizations.of(context)!.all_sales,
-                                                      onTap: () {
-                                                        Navigator.pushNamed(context, RouteDefine.productSaleScreen.name);
-                                                      }),
-                                                  SizedBox(
-                                                    width: getScreenWidth(context),
-                                                    height: getItemHeight(context, state.isSaleOn),
-                                                    child: state.isProductSaleShimmering ? CommonProductListShimmerWidget(
-                                                    ):AbsorbPointer(
-                                                      absorbing: state.isProductSaleShimmering,
-                                                      child: ListView.builder(
-                                                        itemCount: state.productSalesList.length,
-                                                        shrinkWrap: true,
-                                                        scrollDirection: Axis.horizontal,
-                                                        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                                        itemBuilder: (context, index) {
-                                                          return CommonProductSaleItemWidget(
-                                                              isSale: state.productSalesList[index].sale?.isSale,
+                                              ),
+                                              state.messageCount <= 0
+                                                  ? 0.width
+                                                  : Positioned(
+                                                      top: 8,
+                                                      right: context.rtl ? null : 7,
+                                                      left: context.rtl ? 7 : null,
+                                                      child: Container(
+                                                        height: 22,
+                                                        width: 22,
+                                                        decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, border: Border.all(color: AppColors.whiteColor, width: 1), shape: BoxShape.circle),
+                                                        alignment: Alignment.center,
+                                                        child: Text('${state.messageCount <= 99 ? state.messageCount : '99+'}', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.whiteColor)),
+                                                      ))
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Stack(
+                              children: [
+                                SmartRefresher(
+                                  enablePullDown: true,
+                                  controller: state.refreshController,
+                                  header: CustomHeader(
+                                    refreshStyle: RefreshStyle.Behind,
+                                    builder: (c, m) {
+                                      return Container(
+                                        height: 30,
+                                        width: 30,
+                                        margin: const EdgeInsets.only(top: 90, bottom: 30),
+                                        decoration: BoxDecoration(boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)], color: AppColors.whiteColor, shape: BoxShape.circle),
+                                        child: CupertinoActivityIndicator(
+                                          color: AppColors.mainColor,
+                                          radius: 10,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  onRefresh: () {
+                                    bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
+                                    bloc.add(HomeEvent.userApproveEvent(context: context));
+                                    bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
+                                    bloc.add(HomeEvent.getProductSalesListEvent(context: context));
+                                    handleMessageOnBackground();
+                                    bloc.add(const HomeEvent.getPreferencesDataEvent());
+                                    bloc.add(HomeEvent.getMessageListEvent(context: context));
+                                    bloc.add(HomeEvent.getCartCountEvent(context: context));
+                                    bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
+                                    if (!state.isAppOnMaintenance) {
+                                      bloc.add(HomeEvent.generalSettings(context: context, dialogContext: context, isRetryLoading: false));
+                                    }
+                                    bloc.add(HomeEvent.getPermissionList(context: context));
+                                    state.refreshController.refreshCompleted();
+                                    state.refreshController.loadComplete();
+                                  },
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        80.height,
+                                        state.pesachBannerShimmering && state.pesachBannerURL.isEmpty
+                                            ? const PesachBannerShimmerWidget()
+                                            : state.showPesachBanner && state.pesachBannerURL.isNotEmpty
+                                                ? InkWell(
+                                                    onTap: () {
+                                                      Navigator.pushNamed(context, RouteDefine.pesachScreen.name);
+                                                    },
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(left: 8.0, right: 8),
+                                                      child: CachedNetworkImage(
+                                                        placeholder: (context, url) => const PesachBannerShimmerWidget(),
+                                                        imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.pesachBannerURL}',
+                                                        errorWidget: (context, url, error) {
+                                                          return Container(
+                                                            color: AppColors.whiteColor,
+                                                          );
+                                                        },
+                                                      ),
+                                                    ))
+                                                : 0.width,
+                                        10.height,
+                                        AnimatedCrossFade(
+                                            firstChild: getScreenWidth(context).width,
+                                            secondChild: Column(
+                                              children: [
+                                                buildListTitles(
+                                                    context: context,
+                                                    title: AppLocalizations.of(context)!.sales,
+                                                    subTitle: AppLocalizations.of(context)!.all_sales,
+                                                    onTap: () {
+                                                      Navigator.pushNamed(context, RouteDefine.productSaleScreen.name);
+                                                    }),
+                                                SizedBox(
+                                                  width: getScreenWidth(context),
+                                                  height: getItemHeight(context, state.isSaleOn),
+                                                  child: state.isProductSaleShimmering
+                                                      ? CommonProductListShimmerWidget()
+                                                      : AbsorbPointer(
+                                                          absorbing: state.isProductSaleShimmering,
+                                                          child: ListView.builder(
+                                                            // Product Sale
+                                                            itemCount: state.productSalesList.length,
+                                                            shrinkWrap: true,
+                                                            scrollDirection: Axis.horizontal,
+                                                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                            itemBuilder: (context, index) {
+                                                              return CommonProductSaleItemWidget(
+                                                                  isSale: state.productSalesList[index].sale?.isSale,
+                                                                  isGuestUser: state.isGuestUser,
+                                                                  height: AppConstants.salesProductItemHeight,
+                                                                  width: getItemWidth(context),
+                                                                  productName: state.productSalesList[index].productName ?? '',
+                                                                  saleImage: state.productSalesList[index].mainImage ?? '',
+                                                                  title: state.productSalesList[index].name,
+                                                                  description: parse(state.productSalesList[index].sale?.saleDescription).body?.text ?? '',
+                                                                  discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ""),
+                                                                  originalPrice: state.productSalesList[index].productPrice,
+                                                                  productStock: state.productSalesList[index].productStock.toString(),
+                                                                  lowStock: state.productSalesList[index].lowStock ?? '',
+                                                                  isPesach: state.productSalesList[index].isPesach,
+                                                                  quantity: state.productStockList[3][index].quantity,
+                                                                  onQuantityChanged: () {
+                                                                    context.read<HomeBloc>().add(
+                                                                          HomeEvent.updateListQuantityOfProduct(
+                                                                            context: context,
+                                                                            quantity: state.productStockList[3][index].quantity.toString(),
+                                                                            productListIndex: 3,
+                                                                            productStockUpdateIndex: index,
+                                                                            productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                                          ),
+                                                                        );
+                                                                  },
+                                                                  onQuantityIncreaseTap: () {
+                                                                    context.read<HomeBloc>().add(
+                                                                          HomeEvent.increaseListQuantityOfProduct(
+                                                                            context: context,
+                                                                            productListIndex: 3,
+                                                                            productStockUpdateIndex: index,
+                                                                            productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                                          ),
+                                                                        );
+
+                                                                    context.read<HomeBloc>().add(
+                                                                          HomeEvent.addToCartListProductEvent(
+                                                                            context: context,
+                                                                            productId: state.productSalesList[index].id.toString(),
+                                                                            productListIndex: 3,
+                                                                            productStockUpdateIndex: index,
+                                                                            productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                                          ),
+                                                                        );
+                                                                  },
+                                                                  onQuantityDecreaseTap: () {
+                                                                    // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                                                    if (state.productStockList[3][index].quantity != 0) {
+                                                                      context.read<HomeBloc>().add(
+                                                                            HomeEvent.decreaseListQuantityOfProduct(
+                                                                              context: context,
+                                                                              productListIndex: 3,
+                                                                              productStockUpdateIndex: index,
+                                                                              productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                                            ),
+                                                                          );
+
+                                                                      context.read<HomeBloc>().add(
+                                                                            HomeEvent.addToCartListProductEvent(
+                                                                              context: context,
+                                                                              productId: state.productSalesList[index].id.toString(),
+                                                                              productListIndex: 3,
+                                                                              productStockUpdateIndex: index,
+                                                                              productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                                            ),
+                                                                          );
+                                                                    }
+                                                                  },
+                                                                  onButtonTap: () {
+                                                                    if (!state.isGuestUser) {
+                                                                      showProductDetails(
+                                                                        isSaleOn: state.isSaleOn,
+                                                                        productListIndex: 3,
+                                                                        context: /*Platform.isIOS ? (state.context??context): */ context,
+                                                                        productId: state.productSalesList[index].id ?? '',
+                                                                        productStock: state.productSalesList[index].productStock.toString(),
+                                                                      );
+                                                                    } else {
+                                                                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                                    }
+                                                                  });
+                                                            },
+                                                          ),
+                                                        ),
+                                                ),
+                                              ],
+                                            ),
+                                            crossFadeState: state.productSalesList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                            duration: const Duration(milliseconds: 300)),
+                                        AnimatedCrossFade(
+                                            firstChild: getScreenWidth(context).width,
+                                            secondChild: Column(
+                                              children: [
+                                                buildListTitles(
+                                                    context: context,
+                                                    title: AppLocalizations.of(context)!.recommended_for_you,
+                                                    subTitle: AppLocalizations.of(context)!.more,
+                                                    onTap: () {
+                                                      Navigator.pushNamed(context, RouteDefine.recommendationProductsScreen.name);
+                                                    }),
+                                                SizedBox(
+                                                  width: getScreenWidth(context),
+                                                  height: getItemHeight(context, state.isSaleOn),
+                                                  child: state.isShimmering
+                                                      ? CommonProductListShimmerWidget()
+                                                      : ListView.builder(
+                                                          // Product Recommended
+                                                          itemCount: state.recommendedProductsList.length,
+                                                          shrinkWrap: true,
+                                                          scrollDirection: Axis.horizontal,
+                                                          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                                                          itemBuilder: (context, index) => CommonProductSaleItemWidget(
+                                                              isSale: state.recommendedProductsList[index].sale?.isSale,
                                                               isGuestUser: state.isGuestUser,
                                                               height: AppConstants.salesProductItemHeight,
                                                               width: getItemWidth(context),
-                                                              productName: state.productSalesList[index].productName ?? '',
-                                                              saleImage: state.productSalesList[index].mainImage ?? '',
-                                                              title: state.productSalesList[index].name,
-                                                              description: parse(state.productSalesList[index].sale?.saleDescription).body?.text ?? '',
-                                                              discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ""),
-                                                              originalPrice: state.productSalesList[index].productPrice,
-                                                              productStock: state.productSalesList[index].productStock.toString(),
-                                                              lowStock: state.productSalesList[index].lowStock ?? '',
-                                                              isPesach: state.productSalesList[index].isPesach,
+                                                              productName: state.recommendedProductsList[index].productName ?? '',
+                                                              saleImage: state.recommendedProductsList[index].mainImage ?? '',
+                                                              title: state.recommendedProductsList[index].name,
+                                                              description: parse(state.recommendedProductsList[index].sale?.saleDescription).body?.text ?? '',
+                                                              discountedPrice: double.parse(state.recommendedProductsList[index].sale?.salePrice ?? '0'),
+                                                              originalPrice: state.recommendedProductsList[index].productPrice,
+                                                              productStock: state.recommendedProductsList[index].productStock.toString(),
+                                                              lowStock: state.recommendedProductsList[index].lowStock ?? '',
+                                                              isPesach: state.recommendedProductsList[index].isPesach,
+                                                              quantity: state.productStockList[1][index].quantity,
+                                                              onQuantityChanged: () {
+                                                                context.read<HomeBloc>().add(
+                                                                      HomeEvent.updateListQuantityOfProduct(
+                                                                        context: context,
+                                                                        quantity: state.productStockList[1][index].quantity.toString(),
+                                                                        productListIndex: 1,
+                                                                        productStockUpdateIndex: index,
+                                                                        productSupplierIds: state.recommendedProductsList[index].supplierId.toString(),
+                                                                      ),
+                                                                    );
+                                                              },
+                                                              onQuantityIncreaseTap: () {
+                                                                context.read<HomeBloc>().add(
+                                                                      HomeEvent.increaseListQuantityOfProduct(
+                                                                        context: context,
+                                                                        productListIndex: 1,
+                                                                        productStockUpdateIndex: index,
+                                                                        productSupplierIds: state.recommendedProductsList[index].supplierId.toString(),
+                                                                      ),
+                                                                    );
+
+                                                                context.read<HomeBloc>().add(
+                                                                      HomeEvent.addToCartListProductEvent(
+                                                                        context: context,
+                                                                        productId: state.recommendedProductsList[index].id.toString(),
+                                                                        productListIndex: 1,
+                                                                        productStockUpdateIndex: index,
+                                                                        productSupplierIds: state.recommendedProductsList[index].supplierId.toString(),
+                                                                      ),
+                                                                    );
+                                                              },
+                                                              onQuantityDecreaseTap: () {
+                                                                // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                                                if (state.productStockList[1][index].quantity != 0) {
+                                                                  context.read<HomeBloc>().add(
+                                                                        HomeEvent.decreaseListQuantityOfProduct(
+                                                                          context: context,
+                                                                          productListIndex: 1,
+                                                                          productStockUpdateIndex: index,
+                                                                          productSupplierIds: state.recommendedProductsList[index].supplierId.toString(),
+                                                                        ),
+                                                                      );
+
+                                                                  context.read<HomeBloc>().add(
+                                                                        HomeEvent.addToCartListProductEvent(
+                                                                          context: context,
+                                                                          productId: state.recommendedProductsList[index].id.toString(),
+                                                                          productListIndex: 1,
+                                                                          productStockUpdateIndex: index,
+                                                                          productSupplierIds: state.recommendedProductsList[index].supplierId.toString(),
+                                                                        ),
+                                                                      );
+                                                                }
+                                                              },
                                                               onButtonTap: () {
                                                                 if (!state.isGuestUser) {
-                                                                  showProductDetails(isSaleOn: state.isSaleOn, productListIndex: 3, context: /*Platform.isIOS ? (state.context??context): */context, productId: state.productSalesList[index].id ?? '', productStock: state.productSalesList[index].productStock.toString());
+                                                                  showProductDetails(
+                                                                    isSaleOn: state.isSaleOn,
+                                                                    context: context,
+                                                                    productId: state.recommendedProductsList[index].id ?? '',
+                                                                    productStock: (state.recommendedProductsList[index].productStock.toString()),
+                                                                    productListIndex: 1,
+                                                                  );
                                                                 } else {
                                                                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                                 }
-                                                              });
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
+                                                              })),
+                                                ),
+                                              ],
+                                            ),
+                                            crossFadeState: state.recommendedProductsList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                            duration: const Duration(milliseconds: 300)),
+                                        state.cartCount == 0
+                                            ? CustomTextIconButtonWidget(
+                                                width: double.maxFinite,
+                                                title: AppLocalizations.of(context)!.new_order,
+                                                onPressed: () {
+                                                  context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 1, context: context));
+                                                },
+                                                svgImage: AppImagePath.add,
+                                              )
+                                            : CustomTextIconButtonWidget(
+                                                width: double.maxFinite,
+                                                title: AppLocalizations.of(context)!.my_basket,
+                                                onPressed: () {
+                                                  context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 2, context: context));
+                                                },
+                                                svgImage: AppImagePath.cart,
+                                                cartCount: state.cartCount,
                                               ),
-                                              crossFadeState: state.productSalesList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                              duration: const Duration(milliseconds: 300)),
-                                          AnimatedCrossFade(
-                                              firstChild: getScreenWidth(context).width,
-                                              secondChild: Column(
+                                        30.height,
+                                        state.messageList.isEmpty
+                                            ? 0.width
+                                            : Column(
+                                                mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  buildListTitles(
+                                                  titleRowWidget(
                                                       context: context,
-                                                      title: AppLocalizations.of(context)!.recommended_for_you,
-                                                      subTitle: AppLocalizations.of(context)!.more,
+                                                      title: AppLocalizations.of(context)!.messages,
+                                                      allContentTitle: AppLocalizations.of(context)!.all_messages,
                                                       onTap: () {
-                                                        Navigator.pushNamed(context, RouteDefine.recommendationProductsScreen.name);
+                                                        Navigator.pushNamed(context, RouteDefine.messageScreen.name);
                                                       }),
-                                                  SizedBox(
-                                                    width: getScreenWidth(context),
-                                                   height: getItemHeight(context, state.isSaleOn),
-                                                    child: state.isShimmering?CommonProductListShimmerWidget():ListView.builder(
-                                                        itemCount: state.recommendedProductsList.length,
-                                                        shrinkWrap: true,
-                                                        scrollDirection: Axis.horizontal,
-                                                        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                                        itemBuilder: (context, index) => CommonProductSaleItemWidget(
-                                                            isSale: state.recommendedProductsList[index].sale?.isSale,
-                                                            isGuestUser: state.isGuestUser,
-                                                            height: AppConstants.salesProductItemHeight,
-                                                            width: getItemWidth(context),
-                                                            productName: state.recommendedProductsList[index].productName ?? '',
-                                                            saleImage: state.recommendedProductsList[index].mainImage ?? '',
-                                                            title: state.recommendedProductsList[index].name,
-                                                            description: parse(state.recommendedProductsList[index].sale?.saleDescription).body?.text ?? '',
-                                                            discountedPrice: double.parse(state.recommendedProductsList[index].sale?.salePrice ?? '0'),
-                                                            originalPrice: state.recommendedProductsList[index].productPrice,
-                                                            productStock: state.recommendedProductsList[index].productStock.toString(),
-                                                            lowStock: state.recommendedProductsList[index].lowStock ?? '',
-                                                            isPesach: state.recommendedProductsList[index].isPesach,
-                                                            onButtonTap: () {
-                                                              if (!state.isGuestUser) {
-                                                                showProductDetails(
-                                                                  isSaleOn: state.isSaleOn,
-                                                                  context:  context,
-                                                                  productId: state.recommendedProductsList[index].id ?? '',
-                                                                  productStock: (state.recommendedProductsList[index].productStock.toString()),
-                                                                  productListIndex: 1,
-                                                                );
-                                                              } else {
-                                                                Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                                              }
-                                                            })),
+                                                  10.height,
+                                                  ListView.builder(
+                                                    itemCount: state.messageList.length > 1 ? 2 : 1,
+                                                    physics: const NeverScrollableScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    itemBuilder: (context, index) => messageListItem(
+                                                        context: context,
+                                                        title: state.messageList[index].message?.title ?? '',
+                                                        content: parse(state.messageList[index].message?.body ?? '').body?.text ?? '',
+                                                        dateTime: state.messageList[index].updatedAt?.replaceRange(11, 19, '') ?? '',
+                                                        onTap: () async {
+                                                          dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {
+                                                            AppStrings.messageDataString: state.messageList[index],
+                                                            AppStrings.messageIdString: state.messageList[index].id,
+                                                            AppStrings.isReadMoreString: true,
+                                                          });
+                                                          if (messageNewData != null) {
+                                                            context.read<HomeBloc>().add(HomeEvent.removeOrUpdateMessageEvent(messageId: messageNewData[AppStrings.messageIdString], isRead: messageNewData[AppStrings.messageReadString], isDelete: messageNewData[AppStrings.messageDeleteString]));
+                                                          }
+                                                        }),
                                                   ),
                                                 ],
                                               ),
-                                              crossFadeState: state.recommendedProductsList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                              duration: const Duration(milliseconds: 300)),
-                                          state.cartCount == 0
-                                              ? CustomTextIconButtonWidget(
-                                            width: double.maxFinite,
-                                            title: AppLocalizations.of(context)!.new_order,
-                                            onPressed: () {
-                                              context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 1, context: context));
-                                            },
-                                            svgImage: AppImagePath.add,
-                                          )
-                                              : CustomTextIconButtonWidget(
-                                            width: double.maxFinite,
-                                            title: AppLocalizations.of(context)!.my_basket,
-                                            onPressed: () {
-                                              context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 2, context: context));
-                                            },
-                                            svgImage: AppImagePath.cart,
-                                            cartCount: state.cartCount,
-                                          ),
-                                          30.height,
-                                          state.messageList.isEmpty
-                                              ? 0.width
-                                              : Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              titleRowWidget(
-                                                  context: context,
-                                                  title: AppLocalizations.of(context)!.messages,
-                                                  allContentTitle: AppLocalizations.of(context)!.all_messages,
-                                                  onTap: () {
-                                                    Navigator.pushNamed(context, RouteDefine.messageScreen.name);
-                                                  }),
-                                              10.height,
-                                              ListView.builder(
-                                                itemCount: state.messageList.length > 1 ? 2 : 1,
-                                                physics: const NeverScrollableScrollPhysics(),
-                                                shrinkWrap: true,
-                                                itemBuilder: (context, index) => messageListItem(
-                                                    context: context,
-                                                    title: state.messageList[index].message?.title ?? '',
-                                                    content: parse(state.messageList[index].message?.body ?? '').body?.text ?? '',
-                                                    dateTime: state.messageList[index].updatedAt?.replaceRange(11, 19, '') ?? '',
-                                                    onTap: () async {
-                                                      dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {
-                                                        AppStrings.messageDataString: state.messageList[index],
-                                                        AppStrings.messageIdString: state.messageList[index].id,
-                                                        AppStrings.isReadMoreString: true,
-                                                      });
-                                                      if (messageNewData != null) {
-                                                        context.read<HomeBloc>().add(HomeEvent.removeOrUpdateMessageEvent(messageId: messageNewData[AppStrings.messageIdString], isRead: messageNewData[AppStrings.messageReadString], isDelete: messageNewData[AppStrings.messageDeleteString]));
-                                                      }
-                                                    }),
+                                        AppConstants.bottomNavSpace.height,
+                                        //dashboard stats
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                CommonSearchWidget(
+                                  isFilterTap: true,
+                                  isCategoryExpand: state.isCategoryExpand,
+                                  isSearching: state.isSearching,
+                                  onFilterTap: () {
+                                    bloc.add(const HomeEvent.changeCategoryExpansion());
+                                  },
+                                  onCloseTap: () {
+                                    bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: false));
+                                    context.read<HomeBloc>().add(HomeEvent.getProductSalesListEvent(context: context));
+                                    context.read<HomeBloc>().add(HomeEvent.getRecommendationProductsListEvent(context: context));
+                                  },
+                                  onSearchTap: () {
+                                    if (state.searchController.text.isNotEmpty) {
+                                      bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: true));
+                                    }
+                                  },
+                                  onSearch: (String search) {
+                                    if (search.length > 1) {
+                                      bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: true));
+                                      bloc.add(HomeEvent.globalSearchEvent(context: context));
+                                    }
+                                  },
+                                  onSearchSubmit: (String search) {
+                                    Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                                  },
+                                  onOutSideTap: () {
+                                    state.searchController.clear();
+                                    bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: false));
+                                  },
+                                  onSearchItemTap: () {
+                                    bloc.add(const HomeEvent.changeCategoryExpansion());
+                                  },
+                                  controller: state.searchController,
+                                  searchList: state.searchList,
+                                  searchResultWidget: state.isSearching
+                                      ? const SizedBox()
+                                      : state.searchList.isEmpty
+                                          ? Center(
+                                              child: Text(
+                                                AppLocalizations.of(context)!.search_result_not_found,
+                                                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
                                               ),
-                                            ],
-                                          ),
-                                          AppConstants.bottomNavSpace.height,
-                                          //dashboard stats
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  CommonSearchWidget(
-                                    isFilterTap: true,
-                                    isCategoryExpand: state.isCategoryExpand,
-                                    isSearching: state.isSearching,
-                                    onFilterTap: () {
-                                      bloc.add(const HomeEvent.changeCategoryExpansion());
-                                    },
-                                    onCloseTap: () {
-                                      bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: false));
-                                    },
-                                    onSearchTap: () {
-                                      if (state.searchController.text.isNotEmpty) {
-                                        bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: true));
-                                      }
-                                    },
-                                    onSearch: (String search) {
-                                      if (search.length > 1) {
-                                        bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: true));
-                                        bloc.add(HomeEvent.globalSearchEvent(context: context));
-                                      }
-                                    },
-                                    onSearchSubmit: (String search) {
-                                      Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
-                                    },
-                                    onOutSideTap: () {
-                                      state.searchController.clear();
-                                      bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: false));
-                                    },
-                                    onSearchItemTap: () {
-                                      bloc.add(const HomeEvent.changeCategoryExpansion());
-                                    },
-                                    controller: state.searchController,
-                                    searchList: state.searchList,
-                                    searchResultWidget:state.isSearching ? const SizedBox() : state.searchList.isEmpty
-                                        ? Center(
-                                      child: Text(
-                                        AppLocalizations.of(context)!.search_result_not_found,
-                                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
-                                      ),
-                                    )
-                                        : ListView.builder(
-                                      itemCount: state.searchList.length,
-                                      shrinkWrap: true,
-                                      itemBuilder: (listViewContext, index) {
-                                        return SearchItemWidget(
-                                            isShowSeeAll: index==state.searchList.length-1?true:false,
-                                            isGuestUser: state.isGuestUser,
-                                            priceOfBox: state.searchList[index].priceOfBox,
-                                            salePrice: state.searchList[index].salePrice,
-                                            saleDesc: state.searchList[index].salesDesc,
-                                            isPesach: state.searchList[index].isPesach,
-                                            lowStock: state.searchList[index].lowStock.toString(),
-                                            numberOfUnits: state.searchList[index].numberOfUnits,
-                                            productStock: state.searchList[index].productStock.toString(),
-                                            context: context,
-                                            searchName: state.searchList[index].name,
-                                            searchImage: state.searchList[index].image,
-                                            searchType: state.searchList[index].searchType,
-                                            isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
-                                            isLastItem: state.searchList.length - 1 == index,
-                                            isShowSearchLabel: index == 0
-                                                ? true
-                                                : state.searchList[index].searchType != state.searchList[index - 1].searchType
-                                                ? true
-                                                : false,
-                                            onSeeAllTap: () async {
-                                              printData("searchType: ${state.searchList[index].searchType}");
-                                              if (state.searchList[index].searchType == SearchTypes.category) {
-                                                dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
-                                                if (searchResult != null) {
-                                                  bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
-                                                }
-                                              } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
-                                                dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].categoryId, AppStrings.categoryNameString: state.searchList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
-                                                if (searchResult != null) {
-                                                  bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
-                                                }
-                                              } else {
-                                                state.searchList[index].searchType == SearchTypes.company
-                                                    ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
-                                                    : state.searchList[index].searchType == SearchTypes.supplier
-                                                    ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
-                                                    : state.searchList[index].searchType == SearchTypes.sale
-                                                    ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
-                                                    : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
-                                              }
-                                            },
-                                            onTap: () async {
-                                              if (state.searchList[index].searchType == SearchTypes.subCategory) {
-                                                CustomSnackBar.showSnackBar(
-                                                  context: context,
-                                                  title: AppStrings.getLocalizedStrings('Oops! in progress', context),
-                                                  type: SnackBarType.success,
-                                                );
-                                                return;
-                                              }
-                                              if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
+                                            )
+                                          : ListView.builder(
+                                              // Search
+                                              itemCount: state.searchList.length,
+                                              shrinkWrap: true,
+                                              itemBuilder: (listViewContext, index) {
+                                                return SearchItemWidget(
+                                                    isShowSeeAll: index == state.searchList.length - 1 ? true : false,
+                                                    isGuestUser: state.isGuestUser,
+                                                    priceOfBox: state.searchList[index].priceOfBox,
+                                                    salePrice: state.searchList[index].salePrice,
+                                                    saleDesc: state.searchList[index].salesDesc,
+                                                    isPesach: state.searchList[index].isPesach,
+                                                    lowStock: state.searchList[index].lowStock.toString(),
+                                                    numberOfUnits: state.searchList[index].numberOfUnits,
+                                                    productStock: state.searchList[index].productStock.toString(),
+                                                    context: context,
+                                                    searchName: state.searchList[index].name,
+                                                    searchImage: state.searchList[index].image,
+                                                    searchType: state.searchList[index].searchType,
+                                                    isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
+                                                    isLastItem: state.searchList.length - 1 == index,
+                                                    quantity: state.productStockList[0][index].quantity,
+                                                    onQuantityChanged: () {
+                                                      context.read<HomeBloc>().add(
+                                                        HomeEvent.updateListQuantityOfProduct(
+                                                          context: context,
+                                                          quantity: state.productStockList[0][index].quantity.toString(),
+                                                          productListIndex: 0,
+                                                          productStockUpdateIndex: index,
+                                                          productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                        ),
+                                                      );
+                                                    },
+                                                    onQuantityIncreaseTap: () {
+                                                      printData("check supplierid ${state.searchList[index].supplierId}");
+                                                      context.read<HomeBloc>().add(
+                                                        HomeEvent.increaseListQuantityOfProduct(
+                                                          context: context,
+                                                          productListIndex: 0,
+                                                          productStockUpdateIndex: index,
+                                                          productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                        ),
+                                                      );
 
-                                                showProductDetails(context: Platform.isIOS ? (state.context??context): context, productId: state.searchList[index].searchId, isBarcode: true, productListIndex: 0, isSaleOn: state.isSaleOn, productStock: (state.searchList[index].productStock.toString()));
-                                              } else if (state.searchList[index].searchType == SearchTypes.category) {
-                                                dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
-                                                if (searchResult != null) {
-                                                  bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
-                                                }
-                                              } else {
-                                                state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
-                                              }
-                                              bloc.add(const HomeEvent.changeCategoryExpansion());
-                                            });
-                                      },
-                                    ),
-                                    onScanTap: () async {
-                                      String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
-                                      if (scanResult != '-1') {
-                                        // -1 result for cancel scanning
-                                        printData('result = $scanResult');
-                                        showProductDetails(context: context, productId: scanResult, isBarcode: true, productStock: '1', productListIndex: 0, isSaleOn: state.isSaleOn);
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+                                                      context.read<HomeBloc>().add(
+                                                        HomeEvent.addToCartListProductEvent(
+                                                          context: context,
+                                                          productId: state.searchList[index].searchId,
+                                                          productListIndex: 0,
+                                                          productStockUpdateIndex: index,
+                                                          productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                        ),
+                                                      );
+                                                    },
+                                                    onQuantityDecreaseTap: () {
+                                                      // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                                      if (state.productStockList[0][index].quantity != 0) {
+                                                        context.read<HomeBloc>().add(
+                                                          HomeEvent.decreaseListQuantityOfProduct(
+                                                            context: context,
+                                                            productListIndex: 0,
+                                                            productStockUpdateIndex: index,
+                                                            productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                          ),
+                                                        );
+
+                                                        context.read<HomeBloc>().add(
+                                                          HomeEvent.addToCartListProductEvent(
+                                                            context: context,
+                                                            productId: state.searchList[index].searchId,
+                                                            productListIndex: 0,
+                                                            productStockUpdateIndex: index,
+                                                            productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                    isShowSearchLabel: index == 0
+                                                        ? true
+                                                        : state.searchList[index].searchType != state.searchList[index - 1].searchType
+                                                            ? true
+                                                            : false,
+                                                    onSeeAllTap: () async {
+                                                      printData("searchType: ${state.searchList[index].searchType}");
+                                                      if (state.searchList[index].searchType == SearchTypes.category) {
+                                                        dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
+                                                        if (searchResult != null) {
+                                                          bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                                        }
+                                                      } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
+                                                        dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].categoryId, AppStrings.categoryNameString: state.searchList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
+                                                        if (searchResult != null) {
+                                                          bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                                        }
+                                                      } else {
+                                                        state.searchList[index].searchType == SearchTypes.company
+                                                            ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                            : state.searchList[index].searchType == SearchTypes.supplier
+                                                                ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                                : state.searchList[index].searchType == SearchTypes.sale
+                                                                    ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                                    : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                                                      }
+                                                    },
+                                                    onTap: () async {
+                                                      if (state.searchList[index].searchType == SearchTypes.subCategory) {
+                                                        CustomSnackBar.showSnackBar(
+                                                          context: context,
+                                                          title: AppStrings.getLocalizedStrings('Oops! in progress', context),
+                                                          type: SnackBarType.success,
+                                                        );
+                                                        return;
+                                                      }
+                                                      if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
+                                                        showProductDetails(context: Platform.isIOS ? (state.context ?? context) : context, productId:
+                                                        state.searchList[index].searchId, isBarcode: true, productListIndex: 0, isSaleOn: state.isSaleOn,
+                                                            productStock: (state.searchList[index].productStock.toString()));
+                                                      } else if (state.searchList[index].searchType == SearchTypes.category) {
+                                                        dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name,
+                                                            arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString:
+                                                            state.searchList[index].name, AppStrings.searchString: state.searchController.text,
+                                                              AppStrings.searchResultString: state.searchList});
+                                                        if (searchResult != null) {
+                                                          bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString],
+                                                              searchList: searchResult[AppStrings.searchResultString]));
+                                                        }
+                                                      } else {
+                                                        state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
+                                                      }
+                                                      bloc.add(const HomeEvent.changeCategoryExpansion());
+                                                    });
+                                              },
+                                            ),
+                                  onScanTap: () async {
+                                    String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
+                                    if (scanResult != '-1') {
+                                      // -1 result for cancel scanning
+                                      printData('result = $scanResult');
+                                      showProductDetails(context: context, productId: scanResult, isBarcode: true, productStock: '1', productListIndex: 0, isSaleOn: state.isSaleOn);
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
                       ),
-                      state.allShimmering?Center(
-                        child: SizedBox(
-                            height: 120,
-                            width: 120,
-                            child: CupertinoActivityIndicator(color: AppColors.mainColor,radius: 20,)),
-                      ):0.height
-                    ],
-                  ),
+                    ),
+                    state.allShimmering
+                        ? Center(
+                            child: SizedBox(
+                                height: 120,
+                                width: 120,
+                                child: CupertinoActivityIndicator(
+                                  color: AppColors.mainColor,
+                                  radius: 20,
+                                )),
+                          )
+                        : 0.height
+                  ],
                 ),
               ),
             ),
@@ -659,7 +844,7 @@ class HomeScreenWidget extends StatelessWidget {
             onTap: onTap,
             child: Text(
               title,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor,fontWeight: FontWeight.bold),
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
             ),
           ),
           GestureDetector(
@@ -674,13 +859,21 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  void showProductDetails({required BuildContext context, required String productId, bool isBarcode = false, String productStock = '0', int productListIndex = 0, required bool isSaleOn}) async {
+  void showProductDetails({
+    required BuildContext context,
+    required String productId,
+    bool isBarcode = false,
+    String productStock = '0',
+    int productListIndex = 0,
+    required bool isSaleOn,
+  }) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
           context: context,
           productId: productId,
           isBarcode: isBarcode,
           productListIndex: productListIndex,
         ));
+
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -688,9 +881,9 @@ class HomeScreenWidget extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
       ),
-      isDismissible: true,
+      isDismissible: false,
       clipBehavior: Clip.antiAliasWithSaveLayer,
-      enableDrag: true,
+      enableDrag: false,
       builder: (context1) {
         return SafeArea(
           bottom: false,
@@ -746,10 +939,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                     height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
                                                     width: getScreenWidth(context),
                                                     child: GestureDetector(
-                                                      onVerticalDragStart: (dragDetails) {
-                                                      },
-                                                      onVerticalDragUpdate: (dragDetails) {
-                                                      },
+                                                      onVerticalDragStart: (dragDetails) {},
+                                                      onVerticalDragUpdate: (dragDetails) {},
                                                       onVerticalDragEnd: (endDetails) {
                                                         Navigator.pop(dialogContext);
                                                       },
@@ -793,11 +984,18 @@ class HomeScreenWidget extends StatelessWidget {
                                           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
                                             context.read<HomeBloc>().add(HomeEvent.decreaseQuantityOfProduct(context: context1));
                                           }
-                                        },   onCloseTap: (){Navigator.pop(context);},
+                                        },
+                                        onCloseTap: () {
+                                          context.read<HomeBloc>().add(HomeEvent.getProductSalesListEvent(context: context1));
+                                          context.read<HomeBloc>().add(HomeEvent.getRecommendationProductsListEvent(context: context1));
+                                          Navigator.pop(context);
+                                        },
                                       ),
-                                      state.isRelatedShimmering?
-                                      const RelatedProductShimmerWidget():
-                                      state.relatedProductList.isEmpty ? 0.height : relatedProductWidget(context1, state.relatedProductList, context, scrollController, isSaleOn),
+                                      state.isRelatedShimmering
+                                          ? const RelatedProductShimmerWidget()
+                                          : state.relatedProductList.isEmpty
+                                              ? 0.height
+                                              : relatedProductWidget(context1, state.relatedProductList, context, scrollController, isSaleOn),
                                     ],
                                   ),
                                 ),
@@ -812,58 +1010,130 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList, BuildContext context, ScrollController scrollController, bool isSaleOn) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Align(
-          alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10),
-            child: Text(
-              AppLocalizations.of(context)!.related_products,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-        Container(
-         height: getItemHeight(context, isSaleOn),
-          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-          child: ListView.builder(
-            controller: ScrollController(),
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemBuilder: (context2, i) {
-              return CommonProductSaleItemWidget(
-                isSale: relatedProductList.elementAt(i).sale?.isSale,
-                isGuestUser: false,
-                height: AppConstants.salesProductItemHeight,
-                width:  getItemWidth(context),
-                productName: relatedProductList.elementAt(i).productName ?? '',
-                saleImage: relatedProductList.elementAt(i).mainImage ?? '',
-                title: relatedProductList.elementAt(i).name,
-                description: parse(relatedProductList.elementAt(i).sale?.saleDescription).body?.text ?? '',
-                discountedPrice: double.parse(relatedProductList.elementAt(i).sale?.salePrice ?? '0'),
-                originalPrice: relatedProductList.elementAt(i).productPrice,
-                productStock: relatedProductList.elementAt(i).productStock.toString(),
-                lowStock: relatedProductList.elementAt(i).lowStock ?? '',
-                isPesach: relatedProductList.elementAt(i).isPesach,
-                onButtonTap: () {
-                  Navigator.pop(prevContext);
-                  showProductDetails(isSaleOn: isSaleOn, context: context, productId: relatedProductList[i].id ?? '', isBarcode: false, productListIndex: 2, productStock: (relatedProductList[i].productStock.toString()));
-                },
-              );
-            },
-            itemCount: relatedProductList.length,
-          ),
-        )
-      ],
-    );
+  Widget relatedProductWidget(
+    BuildContext prevContext,
+    List<RelatedProductDatum> relatedProductList,
+    BuildContext context,
+    ScrollController scrollController,
+    bool isSaleOn,
+  ) {
+    return BlocProvider.value(
+        value: context.read<HomeBloc>(),
+        child: BlocBuilder<HomeBloc, HomeState>(builder: (blocContext, state) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Align(
+                alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10),
+                  child: Text(
+                    AppLocalizations.of(context)!.related_products,
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              Container(
+                height: getItemHeight(context, isSaleOn),
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                child: ListView.builder(
+                  controller: ScrollController(),
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemBuilder: (context2, i) {
+                    return CommonProductSaleItemWidget(
+                      isSale: relatedProductList.elementAt(i).sale?.isSale,
+                      isGuestUser: false,
+                      height: AppConstants.salesProductItemHeight,
+                      width: getItemWidth(context),
+                      productName: relatedProductList.elementAt(i).productName ?? '',
+                      saleImage: relatedProductList.elementAt(i).mainImage ?? '',
+                      title: relatedProductList.elementAt(i).name,
+                      description: parse(relatedProductList.elementAt(i).sale?.saleDescription).body?.text ?? '',
+                      discountedPrice: double.parse(relatedProductList.elementAt(i).sale?.salePrice ?? '0'),
+                      originalPrice: relatedProductList.elementAt(i).productPrice,
+                      productStock: relatedProductList.elementAt(i).productStock.toString(),
+                      lowStock: relatedProductList.elementAt(i).lowStock ?? '',
+                      isPesach: relatedProductList.elementAt(i).isPesach,
+                      quantity: state.productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity, //[i].quantity,
+                      onQuantityChanged: () {
+                        context.read<HomeBloc>().add(
+                              HomeEvent.updateListQuantityOfProduct(
+                                context: context,
+                                quantity: state.productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity.toString(),
+                                productListIndex: 2,
+                                productStockUpdateIndex: state.productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                                productSupplierIds: relatedProductList[i].supplierId.toString(),
+                              ),
+                            );
+                      },
+                      onQuantityIncreaseTap: () {
+                        context.read<HomeBloc>().add(
+                              HomeEvent.increaseListQuantityOfProduct(
+                                context: context,
+                                productListIndex: 2,
+                                productStockUpdateIndex: state.productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                                productSupplierIds: relatedProductList[i].supplierId.toString(),
+                              ),
+                            );
+
+                        context.read<HomeBloc>().add(
+                              HomeEvent.addToCartListProductEvent(
+                                context: context,
+                                productId: relatedProductList[i].id.toString(),
+                                productListIndex: 2,
+                                productStockUpdateIndex: state.productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                                productSupplierIds: relatedProductList[i].supplierId.toString(),
+                              ),
+                            );
+                      },
+                      onQuantityDecreaseTap: () {
+                        // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                        if (state.productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity != 0) {
+                          context.read<HomeBloc>().add(
+                                HomeEvent.decreaseListQuantityOfProduct(
+                                  context: context,
+                                  productListIndex: 2,
+                                  productStockUpdateIndex: state.productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                                  productSupplierIds: relatedProductList[i].supplierId.toString(),
+                                ),
+                              );
+
+                          context.read<HomeBloc>().add(
+                                HomeEvent.addToCartListProductEvent(
+                                  context: context,
+                                  productId: relatedProductList[i].id.toString(),
+                                  productListIndex: 2,
+                                  productStockUpdateIndex: state.productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                                  productSupplierIds: relatedProductList[i].supplierId.toString(),
+                                ),
+                              );
+                        }
+                      },
+                      onButtonTap: () {
+                        Navigator.pop(prevContext);
+                        showProductDetails(
+                          isSaleOn: isSaleOn,
+                          context: context,
+                          productId: relatedProductList[i].id ?? '',
+                          isBarcode: false,
+                          productListIndex: 2,
+                          productStock: (relatedProductList[i].productStock.toString()),
+                        );
+                      },
+                    );
+                  },
+                  itemCount: relatedProductList.length,
+                ),
+              )
+            ],
+          );
+        }));
   }
 
   Widget messageListItem({required BuildContext context, required String title, required String content, required String dateTime, required void Function() onTap}) {
@@ -972,7 +1242,7 @@ class HomeScreenWidget extends StatelessWidget {
               },
               positiveOnTap: () async {
                 bloc.add(HomeEvent.addToCartProductEvent(context: context, productId: productId));
-                await Future.delayed(const Duration(seconds: 1)).then((_){
+                await Future.delayed(const Duration(seconds: 1)).then((_) {
                   printData('message');
                   Navigator.pop(context1);
                 });

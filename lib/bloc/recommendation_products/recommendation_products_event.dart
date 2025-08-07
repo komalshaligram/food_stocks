@@ -79,4 +79,35 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
   const factory RecommendationProductsEvent.userApproveEvent(
       {required BuildContext context}) = _userApproveEvent;
 
+  const factory RecommendationProductsEvent.updateListQuantityOfProduct({
+    required BuildContext context,
+    required String quantity,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _updateListQuantityOfProductEvent;
+
+  const factory RecommendationProductsEvent.increaseListQuantityOfProduct({
+    required BuildContext context,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _increaseListQuantityOfProductEvent;
+
+  const factory RecommendationProductsEvent.decreaseListQuantityOfProduct({
+    required BuildContext context,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _decreaseListQuantityOfProductEvent;
+
+  const factory RecommendationProductsEvent.addToCartListProductEvent({
+    required BuildContext context,
+    required String productId,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _addToCartListProductEvent;
+
+
 }

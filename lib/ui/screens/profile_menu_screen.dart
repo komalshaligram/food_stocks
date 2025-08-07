@@ -163,13 +163,14 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                           Navigator.pushNamed(context, RouteDefine.invoiceScreen.name, arguments: {AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_invoices});
                                         })
                                     : 0.width,
-                                // state.isCanSeeInvoices
-                                //     ? profileMenuTiles(
-                                //         title: AppLocalizations.of(context)!.my_refunds,
-                                //         onTap: () {
-                                //           Navigator.pushNamed(context, RouteDefine.invoiceScreen.name, arguments: {AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_refunds});
-                                //         })
-                                //     : 0.width,
+                                state.isCanSeeInvoices
+                                    ? profileMenuTiles(
+                                        title: AppLocalizations.of(context)!.my_refunds,
+                                        onTap: () {
+                                          Navigator.pushNamed(context, RouteDefine.invoiceScreen.name,
+                                              arguments: {AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_refunds});
+                                        })
+                                    : 0.width,
                                 state.isSubUserSeeReturns
                                     ? profileMenuTiles(
                                         title: AppLocalizations.of(context)!.returns,

@@ -37,7 +37,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         if (!state.isUpdate) {
           emit(state.copyWith(
             streetNameController: TextEditingController(text: preferencesHelper.getStreetName()),
-            streetNumberController: TextEditingController(text: preferencesHelper.getStreetNumber()),
+            streetNumberController: TextEditingController(text:  preferencesHelper.getStreetNumber()),
             emailController: TextEditingController(text: preferencesHelper.getEmailId()),
             zipController: TextEditingController(text: preferencesHelper.getZip()),
             selectCity: preferencesHelper.getCity(),

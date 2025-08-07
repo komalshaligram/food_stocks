@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import '../../bloc/reorder/reorder_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../ui/utils/constants/app_img_path.dart';
 import '../../ui/widget/common_check_box_widget.dart';
@@ -180,7 +181,7 @@ class ReorderScreenWidget extends StatelessWidget {
                         onRefresh: () {
                           context.read<ReorderBloc>().add(ReorderEvent.refreshListEvent(context: context));
                         },
-                      /*  onLoading: () {
+                        /*  onLoading: () {
                           context.read<ReorderBloc>().add(ReorderEvent.getPreviousOrderProductsEvent(context: context));
                         },*/
                         child: SingleChildScrollView(
@@ -225,6 +226,61 @@ class ReorderScreenWidget extends StatelessWidget {
                                                   productStock: state.previousOrderProductsList[index].productStock.toString(),
                                                   lowStock: state.previousOrderProductsList[index].lowStock ?? '',
                                                   isPesach: state.previousOrderProductsList[index].isPesach,
+                                                  quantity: state.productStockList[1][index].quantity,
+                                                  onQuantityChanged: () {
+                                                    context.read<ReorderBloc>().add(
+                                                          ReorderEvent.updateListQuantityOfProduct(
+                                                            context: context,
+                                                            quantity: state.productStockList[1][index].quantity.toString(),
+                                                            productListIndex: 1,
+                                                            productStockUpdateIndex: index,
+                                                            productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                          ),
+                                                        );
+                                                  },
+                                                  onQuantityIncreaseTap: () {
+                                                    context.read<ReorderBloc>().add(
+                                                          ReorderEvent.increaseListQuantityOfProduct(
+                                                            context: context,
+                                                            productListIndex: 1,
+                                                            productStockUpdateIndex: index,
+                                                            productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                          ),
+                                                        );
+
+                                                    context.read<ReorderBloc>().add(
+                                                          ReorderEvent.addToCartListProductEvent(
+                                                            context: context,
+                                                            productId: state.previousOrderProductsList[index].id.toString(),
+                                                            productListIndex: 1,
+                                                            productStockUpdateIndex: index,
+                                                            productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                          ),
+                                                        );
+                                                  },
+                                                  onQuantityDecreaseTap: () {
+                                                    // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                                    if (state.productStockList[1][index].quantity != 0) {
+                                                      context.read<ReorderBloc>().add(
+                                                            ReorderEvent.decreaseListQuantityOfProduct(
+                                                              context: context,
+                                                              productListIndex: 1,
+                                                              productStockUpdateIndex: index,
+                                                              productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                            ),
+                                                          );
+
+                                                      context.read<ReorderBloc>().add(
+                                                            ReorderEvent.addToCartListProductEvent(
+                                                              context: context,
+                                                              productId: state.previousOrderProductsList[index].id.toString(),
+                                                              productListIndex: 1,
+                                                              productStockUpdateIndex: index,
+                                                              productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                            ),
+                                                          );
+                                                    }
+                                                  },
                                                   onButtonTap: () {
                                                     showProductDetails(
                                                       context: context,
@@ -253,6 +309,61 @@ class ReorderScreenWidget extends StatelessWidget {
                                                   productImage: state.previousOrderProductsList[index].mainImage ?? '',
                                                   productName: state.previousOrderProductsList[index].productName ?? '',
                                                   price: double.parse(state.previousOrderProductsList[index].productPrice.toString()),
+                                                  quantity: state.productStockList[1][index].quantity,
+                                                  onQuantityChanged: () {
+                                                    context.read<ReorderBloc>().add(
+                                                          ReorderEvent.updateListQuantityOfProduct(
+                                                            context: context,
+                                                            quantity: state.productStockList[1][index].quantity.toString(),
+                                                            productListIndex: 1,
+                                                            productStockUpdateIndex: index,
+                                                            productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                          ),
+                                                        );
+                                                  },
+                                                  onQuantityIncreaseTap: () {
+                                                    context.read<ReorderBloc>().add(
+                                                          ReorderEvent.increaseListQuantityOfProduct(
+                                                            context: context,
+                                                            productListIndex: 1,
+                                                            productStockUpdateIndex: index,
+                                                            productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                          ),
+                                                        );
+
+                                                    context.read<ReorderBloc>().add(
+                                                          ReorderEvent.addToCartListProductEvent(
+                                                            context: context,
+                                                            productId: state.previousOrderProductsList[index].id.toString(),
+                                                            productListIndex: 1,
+                                                            productStockUpdateIndex: index,
+                                                            productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                          ),
+                                                        );
+                                                  },
+                                                  onQuantityDecreaseTap: () {
+                                                    // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                                    if (state.productStockList[1][index].quantity != 0) {
+                                                      context.read<ReorderBloc>().add(
+                                                            ReorderEvent.decreaseListQuantityOfProduct(
+                                                              context: context,
+                                                              productListIndex: 1,
+                                                              productStockUpdateIndex: index,
+                                                              productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                            ),
+                                                          );
+
+                                                      context.read<ReorderBloc>().add(
+                                                            ReorderEvent.addToCartListProductEvent(
+                                                              context: context,
+                                                              productId: state.previousOrderProductsList[index].id.toString(),
+                                                              productListIndex: 1,
+                                                              productStockUpdateIndex: index,
+                                                              productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                            ),
+                                                          );
+                                                    }
+                                                  },
                                                   onButtonTap: () {
                                                     showProductDetails(
                                                       productListIndex: 1,
@@ -270,6 +381,7 @@ class ReorderScreenWidget extends StatelessWidget {
                       CommonSearchWidget(
                         onCloseTap: () {
                           bloc.add(const ReorderEvent.changeCategoryExpansion(isOpened: false));
+                          context.read<ReorderBloc>().add(ReorderEvent.getPreviousOrderProductsEvent(context: context));
                         },
                         isFilterTap: true,
                         isCategoryExpand: state.isCategoryExpand,
@@ -301,89 +413,147 @@ class ReorderScreenWidget extends StatelessWidget {
                         },
                         controller: state.searchController,
                         searchList: state.searchList,
-                        searchResultWidget: state.isSearching ? const SizedBox() :state.searchList.isEmpty
-                            ? Center(
-                                child: Text(
-                                  AppLocalizations.of(context)!.search_result_not_found,
-                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
-                                ),
-                              )
-                            : ListView.builder(
-                                itemCount: state.searchList.length,
-                                shrinkWrap: true,
-                                itemBuilder: (listViewContext, index) {
-                                  return SearchItemWidget(
-                                      isShowSeeAll: index==state.searchList.length?true:false,
-                                      salePrice: state.searchList[index].salePrice,
-                                      saleDesc: state.searchList[index].salesDesc,
-                                      isPesach: state.searchList[index].isPesach,
-                                      lowStock: state.searchList[index].lowStock.toString(),
-                                      numberOfUnits: state.searchList[index].numberOfUnits,
-                                      priceOfBox: state.searchList[index].priceOfBox,
-                                      productStock: state.searchList[index].productStock,
-                                      context: context,
-                                      isGuestUser: false,
-                                      searchName: state.searchList[index].name,
-                                      searchImage: state.searchList[index].image,
-                                      searchType: state.searchList[index].searchType,
-                                      isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
-                                      isLastItem: state.searchList.length - 1 == index,
-                                      isShowSearchLabel: index == 0
-                                          ? true
-                                          : state.searchList[index].searchType != state.searchList[index - 1].searchType
+                        searchResultWidget: state.isSearching
+                            ? const SizedBox()
+                            : state.searchList.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      AppLocalizations.of(context)!.search_result_not_found,
+                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    itemCount: state.searchList.length,
+                                    shrinkWrap: true,
+                                    itemBuilder: (listViewContext, index) {
+                                      return SearchItemWidget(
+                                          isShowSeeAll: index == state.searchList.length ? true : false,
+                                          salePrice: state.searchList[index].salePrice,
+                                          saleDesc: state.searchList[index].salesDesc,
+                                          isPesach: state.searchList[index].isPesach,
+                                          lowStock: state.searchList[index].lowStock.toString(),
+                                          numberOfUnits: state.searchList[index].numberOfUnits,
+                                          priceOfBox: state.searchList[index].priceOfBox,
+                                          productStock: state.searchList[index].productStock,
+                                          context: context,
+                                          isGuestUser: false,
+                                          searchName: state.searchList[index].name,
+                                          searchImage: state.searchList[index].image,
+                                          searchType: state.searchList[index].searchType,
+                                          isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
+                                          isLastItem: state.searchList.length - 1 == index,
+                                          quantity: state.productStockList[0][index].quantity,
+                                          onQuantityChanged: () {
+                                            context.read<ReorderBloc>().add(
+                                              ReorderEvent.updateListQuantityOfProduct(
+                                                context: context,
+                                                quantity: state.productStockList[0][index].quantity.toString(),
+                                                productListIndex: 0,
+                                                productStockUpdateIndex: index,
+                                                productSupplierIds: state.searchList[index].supplierId.toString(),
+                                              ),
+                                            );
+                                          },
+                                          onQuantityIncreaseTap: () {
+                                            printData("check supplierid ${state.searchList[index].supplierId}");
+                                            context.read<ReorderBloc>().add(
+                                              ReorderEvent.increaseListQuantityOfProduct(
+                                                context: context,
+                                                productListIndex: 0,
+                                                productStockUpdateIndex: index,
+                                                productSupplierIds: state.searchList[index].supplierId.toString(),
+                                              ),
+                                            );
+
+                                            context.read<ReorderBloc>().add(
+                                              ReorderEvent.addToCartListProductEvent(
+                                                context: context,
+                                                productId: state.searchList[index].searchId,
+                                                productListIndex: 0,
+                                                productStockUpdateIndex: index,
+                                                productSupplierIds: state.searchList[index].supplierId.toString(),
+                                              ),
+                                            );
+                                          },
+                                          onQuantityDecreaseTap: () {
+                                            // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                            if (state.productStockList[0][index].quantity != 0) {
+                                              context.read<ReorderBloc>().add(
+                                                ReorderEvent.decreaseListQuantityOfProduct(
+                                                  context: context,
+                                                  productListIndex: 0,
+                                                  productStockUpdateIndex: index,
+                                                  productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                ),
+                                              );
+
+                                              context.read<ReorderBloc>().add(
+                                                ReorderEvent.addToCartListProductEvent(
+                                                  context: context,
+                                                  productId: state.searchList[index].searchId,
+                                                  productListIndex: 0,
+                                                  productStockUpdateIndex: index,
+                                                  productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          isShowSearchLabel: index == 0
                                               ? true
-                                              : false,
-                                      onSeeAllTap: () async {
-                                        if (state.searchList[index].searchType == SearchTypes.category) {
-                                          dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
-                                          if (searchResult != null) {
-                                            bloc.add(ReorderEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
-                                          }
-                                        } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
-                                          dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].categoryId, AppStrings.categoryNameString: state.searchList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
-                                          if (searchResult != null) {
-                                            bloc.add(ReorderEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
-                                          }
-                                        } else {
-                                          state.searchList[index].searchType == SearchTypes.company
-                                              ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
-                                              : state.searchList[index].searchType == SearchTypes.supplier
-                                                  ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
-                                                  : state.searchList[index].searchType == SearchTypes.sale
-                                                      ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
-                                                      : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
-                                        }
-                                      },
-                                      onTap: () async {
-                                        if (state.searchList[index].searchType == SearchTypes.subCategory) {
-                                          CustomSnackBar.showSnackBar(
-                                            context: context,
-                                            title: AppStrings.getLocalizedStrings('Oops! in progress', context),
-                                            type: SnackBarType.success,
-                                          );
-                                          return;
-                                        }
-                                        if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
-                                          showProductDetails(
-                                            context: context,
-                                            productStock: state.searchList[index].productStock.toString(),
-                                            productId: state.searchList[index].searchId,
-                                            isBarcode: true,
-                                            productListIndex: 0,
-                                            isSaleOn: state.isSaleOn,
-                                          );
-                                        } else if (state.searchList[index].searchType == SearchTypes.category) {
-                                          dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
-                                          if (searchResult != null) {
-                                            bloc.add(ReorderEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
-                                          }
-                                        } else {
-                                          state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
-                                        }
-                                        bloc.add(const ReorderEvent.changeCategoryExpansion());
-                                      });
-                                },
-                              ),
+                                              : state.searchList[index].searchType != state.searchList[index - 1].searchType
+                                                  ? true
+                                                  : false,
+                                          onSeeAllTap: () async {
+                                            if (state.searchList[index].searchType == SearchTypes.category) {
+                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
+                                              if (searchResult != null) {
+                                                bloc.add(ReorderEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                              }
+                                            } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
+                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].categoryId, AppStrings.categoryNameString: state.searchList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
+                                              if (searchResult != null) {
+                                                bloc.add(ReorderEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                              }
+                                            } else {
+                                              state.searchList[index].searchType == SearchTypes.company
+                                                  ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                  : state.searchList[index].searchType == SearchTypes.supplier
+                                                      ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                      : state.searchList[index].searchType == SearchTypes.sale
+                                                          ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                          : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                                            }
+                                          },
+                                          onTap: () async {
+                                            if (state.searchList[index].searchType == SearchTypes.subCategory) {
+                                              CustomSnackBar.showSnackBar(
+                                                context: context,
+                                                title: AppStrings.getLocalizedStrings('Oops! in progress', context),
+                                                type: SnackBarType.success,
+                                              );
+                                              return;
+                                            }
+                                            if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
+                                              showProductDetails(
+                                                context: context,
+                                                productStock: state.searchList[index].productStock.toString(),
+                                                productId: state.searchList[index].searchId,
+                                                isBarcode: true,
+                                                productListIndex: 0,
+                                                isSaleOn: state.isSaleOn,
+                                              );
+                                            } else if (state.searchList[index].searchType == SearchTypes.category) {
+                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
+                                              if (searchResult != null) {
+                                                bloc.add(ReorderEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                              }
+                                            } else {
+                                              state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
+                                            }
+                                            bloc.add(const ReorderEvent.changeCategoryExpansion());
+                                          });
+                                    },
+                                  ),
                         onScanTap: () async {
                           String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
                           if (scanResult != '-1') {
@@ -395,14 +565,13 @@ class ReorderScreenWidget extends StatelessWidget {
                     ],
                   ),
                   onNotification: (notification) {
-          if (notification.metrics.pixels > (notification.metrics.maxScrollExtent - 400)) {
-            if (!state.isBottomOfProducts) {
-              context.read<ReorderBloc>().add(ReorderEvent
-                  .getPreviousOrderProductsEvent(context: context));
-            } else {
-              return false;
-            }
-          }
+                    if (notification.metrics.pixels > (notification.metrics.maxScrollExtent - 400)) {
+                      if (!state.isBottomOfProducts) {
+                        context.read<ReorderBloc>().add(ReorderEvent.getPreviousOrderProductsEvent(context: context));
+                      } else {
+                        return false;
+                      }
+                    }
                     return true;
                   },
                 ),
@@ -503,9 +672,9 @@ class ReorderScreenWidget extends StatelessWidget {
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      isDismissible: true,
+      isDismissible: false,
       clipBehavior: Clip.hardEdge,
-      enableDrag: true,
+      enableDrag: false,
       builder: (context1) {
         return SafeArea(
           bottom: false,
@@ -557,10 +726,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                                     height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
                                                     width: getScreenWidth(context),
                                                     child: GestureDetector(
-                                                      onVerticalDragStart: (dragDetails) {
-                                                      },
-                                                      onVerticalDragUpdate: (dragDetails) {
-                                                      },
+                                                      onVerticalDragStart: (dragDetails) {},
+                                                      onVerticalDragUpdate: (dragDetails) {},
                                                       onVerticalDragEnd: (endDetails) {
                                                         Navigator.pop(dialogContext);
                                                       },
@@ -607,11 +774,22 @@ class ReorderScreenWidget extends StatelessWidget {
                                             context.read<ReorderBloc>().add(ReorderEvent.decreaseQuantityOfProduct(context: context1));
                                           }
                                         },
-                                        onCloseTap: (){Navigator.pop(context);},
+                                        onCloseTap: () {
+                                          context.read<ReorderBloc>().add(ReorderEvent.getPreviousOrderProductsEvent(context: context1));
+                                          Navigator.pop(context);
+                                        },
                                       ),
-                                      state.isRelatedShimmering?
-                                      const RelatedProductShimmerWidget():
-                                      state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn)
+                                      state.isRelatedShimmering
+                                          ? const RelatedProductShimmerWidget()
+                                          : state.relatedProductList.isEmpty
+                                              ? 0.width
+                                              : relatedProductWidget(
+                                                  context1,
+                                                  state.relatedProductList,
+                                                  context,
+                                                  isSaleOn,
+                                                  productStockList: state.productStockList,
+                                                )
                                     ],
                                   ),
                                 ),
@@ -626,7 +804,13 @@ class ReorderScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList, BuildContext context, isSaleOn) {
+  Widget relatedProductWidget(
+    BuildContext prevContext,
+    List<RelatedProductDatum> relatedProductList,
+    BuildContext context,
+    isSaleOn, {
+    required List<List<ProductStockModel>> productStockList,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -665,9 +849,71 @@ class ReorderScreenWidget extends StatelessWidget {
                 productStock: relatedProductList.elementAt(i).productStock.toString(),
                 lowStock: relatedProductList.elementAt(i).lowStock ?? '',
                 isPesach: relatedProductList.elementAt(i).isPesach,
+                quantity: productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity, //[i].quantity,
+                onQuantityChanged: () {
+                  context.read<ReorderBloc>().add(
+                        ReorderEvent.updateListQuantityOfProduct(
+                          context: context,
+                          quantity: productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity.toString(),
+                          productListIndex: 2,
+                          productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                          productSupplierIds: relatedProductList[i].supplierId.toString(),
+                        ),
+                      );
+                },
+                onQuantityIncreaseTap: () {
+                  context.read<ReorderBloc>().add(
+                        ReorderEvent.increaseListQuantityOfProduct(
+                          context: context,
+                          productListIndex: 2,
+                          productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                          productSupplierIds: relatedProductList[i].supplierId.toString(),
+                        ),
+                      );
+
+                  context.read<ReorderBloc>().add(
+                        ReorderEvent.addToCartListProductEvent(
+                          context: context,
+                          productId: relatedProductList[i].id.toString(),
+                          productListIndex: 2,
+                          productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                          productSupplierIds: relatedProductList[i].supplierId.toString(),
+                        ),
+                      );
+                },
+                onQuantityDecreaseTap: () {
+                  // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                  if (productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity != 0) {
+                    context.read<ReorderBloc>().add(
+                          ReorderEvent.decreaseListQuantityOfProduct(
+                            context: context,
+                            productListIndex: 2,
+                            productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                            productSupplierIds: relatedProductList[i].supplierId.toString(),
+                          ),
+                        );
+
+                    context.read<ReorderBloc>().add(
+                          ReorderEvent.addToCartListProductEvent(
+                            context: context,
+                            productId: relatedProductList[i].id.toString(),
+                            productListIndex: 2,
+                            productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                            productSupplierIds: relatedProductList[i].supplierId.toString(),
+                          ),
+                        );
+                  }
+                },
                 onButtonTap: () {
                   Navigator.pop(prevContext);
-                  showProductDetails(isSaleOn: isSaleOn, productListIndex: 2, context: context, productId: relatedProductList[i].id ?? '', isBarcode: false, productStock: (relatedProductList[i].productStock.toString()));
+                  showProductDetails(
+                    isSaleOn: isSaleOn,
+                    productListIndex: 2,
+                    context: context,
+                    productId: relatedProductList[i].id ?? '',
+                    isBarcode: false,
+                    productStock: (relatedProductList[i].productStock.toString()),
+                  );
                 },
               );
             },

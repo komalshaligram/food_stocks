@@ -379,6 +379,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.product_or_supplier_not_exits;
       case 'productaddedincart':
         return AppLocalizations.of(context)!.product_added_in_cart;
+      case 'productupdatedincart':
+        return AppLocalizations.of(context)!.product_updated_in_cart;
       case 'orderissuecreatednotificationtitle':
         return AppLocalizations.of(context)!.order_issue_created_notification_title;
       case 'filenotfound':

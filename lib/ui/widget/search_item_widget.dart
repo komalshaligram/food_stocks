@@ -34,6 +34,10 @@ class SearchItemWidget extends StatelessWidget {
     required this.priceOfBox,
     required this.salePrice,
     required this.isShowSeeAll,
+    this.quantity = 0,
+    this.onQuantityChanged,
+    this.onQuantityIncreaseTap,
+    this.onQuantityDecreaseTap,
   });
 
   final String lowStock;
@@ -54,6 +58,10 @@ class SearchItemWidget extends StatelessWidget {
   final double priceOfBox;
   final double salePrice;
   bool isShowSeeAll = false;
+  final int? quantity;
+  final void Function()? onQuantityChanged;
+  final void Function()? onQuantityIncreaseTap;
+  final void Function()? onQuantityDecreaseTap;
 
   @override
   Widget build(BuildContext context) {
@@ -103,10 +111,10 @@ class SearchItemWidget extends StatelessWidget {
                 : double.parse(productStock.toString()) > 0 || lowStock.isEmpty
                     ? isPesach
                         ? 130
-                        : 110
+                        : salePrice != 0.0 ? 130 : 110
                     : isPesach
                         ? 130
-                        : 110,
+                        : salePrice != 0.0 ? 130 :110,
             decoration: BoxDecoration(color: AppColors.whiteColor, border: Border(bottom: (isLastItem ?? false) ? BorderSide.none : BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1))),
             padding: EdgeInsets.only(top: AppConstants.padding_5, left: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10, right: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10, bottom: AppConstants.padding_5),
             child: Row(
@@ -114,14 +122,22 @@ class SearchItemWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  height: getItemHeight(context, false) == 350 ? 120 : getItemHeight(context, false) == 260 ? 100 : 60,
-                  width: getItemWidth(context) == 190  ? 130  : getItemWidth(context) == 160  ? 100 : 50,
+                  height: getItemHeight(context, false) == 350
+                      ? 120
+                      : getItemHeight(context, false) == 260
+                          ? 100
+                          : 60,
+                  width: getItemWidth(context) == 190
+                      ? 130
+                      : getItemWidth(context) == 160
+                          ? 100
+                          : 50,
                   child: !isGuestUser
                       ? Image.network(
                           '${AppUrlEndPoints.baseFileUrl}$searchImage',
                           fit: BoxFit.scaleDown,
-                         // height: getItemHeight(context, false) == 350 ? 80 : getItemHeight(context, false) == 260 ? 150 : 60, //60
-                        //  width: /*getItemWidth(context),*/  150 ,   //50
+                          // height: getItemHeight(context, false) == 350 ? 80 : getItemHeight(context, false) == 260 ? 150 : 60, //60
+                          //  width: /*getItemWidth(context),*/  150 ,   //50
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) {
                               return child;
@@ -135,8 +151,8 @@ class SearchItemWidget extends StatelessWidget {
                                 : SvgPicture.asset(
                                     AppImagePath.splashLogo,
                                     fit: BoxFit.scaleDown,
-                                 //   width: 60,
-                                  //  height: 50,
+                                    //   width: 60,
+                                    //  height: 50,
                                   );
                           },
                         )
@@ -261,7 +277,54 @@ class SearchItemWidget extends StatelessWidget {
                               ),
                             ),
                           )
-                        : 0.height
+                        : 0.height,
+                    const Spacer(),
+                    // 7.height,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: onQuantityIncreaseTap,
+                          child: Container(
+                            width: 25,
+                            height: 25,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_2), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
+                            child: const Icon(
+                              Icons.add,
+                              size: 15,
+                            ),
+                          ),
+                        ),
+                        // : const SizedBox(),
+                        15.width,
+
+                        Text(
+                          quantity.toString(),
+                          style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.blackColor,
+                            size: AppConstants.font_17,
+                          ),
+                        ),
+                        // : const SizedBox(),
+                        15.width,
+
+                        GestureDetector(
+                          onTap: onQuantityDecreaseTap,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 25,
+                            height: 25,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_3), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
+                            child: const Icon(
+                              Icons.remove,
+                              size: 15,
+                            ),
+                          ),
+                        )
+                        // : 0.width,
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -270,14 +333,14 @@ class SearchItemWidget extends StatelessWidget {
         ),
         isShowSeeAll
             ? Padding(
-              padding: const EdgeInsets.only(left: 20,right: 20,bottom: 8),
-              child: CustomButtonWidget(
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 8),
+                child: CustomButtonWidget(
                   buttonText: AppLocalizations.of(context)!.show_all_results,
                   bGColor: AppColors.mainColor,
                   onPressed: onSeeAllTap,
                   fontColors: AppColors.whiteColor,
                 ),
-            )
+              )
             : 0.height
       ],
     );

@@ -29,6 +29,7 @@ class StoreEvent with _$StoreEvent {
   const factory StoreEvent.getProductDetailsEvent(
       {required BuildContext context,
       required String productId,
+      required int productListIndex,
       bool? isBarcode}) = _getProductDetailsEvent;
 
   const factory StoreEvent.increaseQuantityOfProduct(
@@ -88,4 +89,33 @@ class StoreEvent with _$StoreEvent {
   const factory StoreEvent.updateMaintenanceEvent(
       {required BuildContext context}) = _updateMaintenanceEvent;
 
+  const factory StoreEvent.updateListQuantityOfProduct({
+    required BuildContext context,
+    required String quantity,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _updateListQuantityOfProductEvent;
+
+  const factory StoreEvent.increaseListQuantityOfProduct({
+    required BuildContext context,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _increaseListQuantityOfProductEvent;
+
+  const factory StoreEvent.decreaseListQuantityOfProduct({
+    required BuildContext context,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _decreaseListQuantityOfProductEvent;
+
+  const factory StoreEvent.addToCartListProductEvent({
+    required BuildContext context,
+    required String productId,
+    required int productListIndex,
+    required int productStockUpdateIndex,
+    required String productSupplierIds,
+  }) = _addToCartListProductEvent;
 }

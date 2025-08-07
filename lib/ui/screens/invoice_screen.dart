@@ -87,7 +87,8 @@ class InvoiceScreenWidget extends StatelessWidget {
                           itemCount: state.invoiceDetailsList.length,
                           shrinkWrap: true,
                           physics: const AlwaysScrollableScrollPhysics(),
-                          itemBuilder: (context, index) => invoiceList(index: index, invoicesList: state.invoiceDetailsList, context: context, invoiceType: state.invoiceDetailsList[index].invoiceType.toString(), invoiceDate: state.invoiceDetailsList[index].invoiceDate.toString(), invoicePrice: state.invoiceDetailsList[index].invoiceAmount.toString(), invoiceNumber: state.invoiceDetailsList[index].invoiceNumber.toString(), invoiceStatus: state.statusList.isNotEmpty ? getStatus(state.statusList, state.invoiceDetailsList[index].paymentStatus.toString(), state.language).toCapitalized() : '', supplierName: state.invoiceDetailsList[index].supplierName ?? '', dueDate: state.invoiceDetailsList[index].dueDate.toString()),
+                          itemBuilder: (context, index) => invoiceList(index: index, invoicesList: state.invoiceDetailsList, context: context, invoiceType: state.invoiceDetailsList[index].invoiceType.toString(),
+                              invoiceDate: state.invoiceDetailsList[index].invoiceDate.toString(), invoicePrice: state.invoiceDetailsList[index].invoiceAmount.toString(), invoiceNumber: state.invoiceDetailsList[index].invoiceNumber.toString(), invoiceStatus: state.statusList.isNotEmpty ? getStatus(state.statusList, state.invoiceDetailsList[index].paymentStatus.toString(), state.language).toCapitalized() : '', supplierName: state.invoiceDetailsList[index].supplierName ?? '', dueDate: state.invoiceDetailsList[index].dueDate.toString()),
                         ),
             ),
           )),
@@ -96,7 +97,18 @@ class InvoiceScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget invoiceList({required BuildContext context, required String invoiceDate, required String invoiceType, required String invoicePrice, required String invoiceStatus, required String invoiceNumber, required String dueDate, required List<Invoice> invoicesList, required int index, required String supplierName}) {
+  Widget invoiceList({
+    required BuildContext context,
+    required String invoiceDate,
+    required String invoiceType,
+    required String invoicePrice,
+    required String invoiceStatus,
+    required String invoiceNumber,
+    required String dueDate,
+    required List<Invoice> invoicesList,
+    required int index,
+    required String supplierName,
+  }) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, RouteDefine.invoicePdfScreen.name, arguments: {AppStrings.invoiceListString: invoicesList[index], AppStrings.invoiceTitleNameString: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds});

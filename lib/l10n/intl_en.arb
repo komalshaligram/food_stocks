@@ -318,6 +318,7 @@
   "product_already_in_cart": "Product is already in cart",
   "product_or_supplier_not_exits": "Product or supplier dosent exist",
   "product_added_in_cart": "Product has been successfully added to your cart",
+  "product_updated_in_cart": "Product has been successfully updated to your cart",
   "order_issue_created_notification_title": "Issues Reported in SupplierOrderNumber#",
   "file_not_found": "File not found",
   "you_can_not_update_order": "Invalid Supplier ID",

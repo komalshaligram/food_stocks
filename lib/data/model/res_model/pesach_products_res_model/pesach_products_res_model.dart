@@ -30,6 +30,8 @@ class PesachData with _$PesachData {
   const factory PesachData({
     @JsonKey(name: "createdAt")
     String? createdAt,
+    @JsonKey(name: "supplierId")
+    String? supplierId,
     @JsonKey(name: "isBottle")
     bool? isBottle,
     @JsonKey(name: "itemsWeight")

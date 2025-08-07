@@ -28,6 +28,8 @@ class ProductCategoryBloc
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
+      printData("come her categories");
+
       if (event is _getProductCategoriesListEvent) {
         if (state.isLoadMore) {
           return;
@@ -77,16 +79,19 @@ class ProductCategoryBloc
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
-      } else if (event is _refreshListEvent) {
+      }
+      else if (event is _refreshListEvent) {
         emit(state.copyWith(
             pageNum: 0, productCategoryList: [], isBottomOfCategories: false));
         add(ProductCategoryEvent.getProductCategoriesListEvent(
             context: event.context));
-      } else if (event is _setSearchNavEvent) {
+      }
+      else if (event is _setSearchNavEvent) {
         emit(state.copyWith(
             reqSearch: event.reqSearch,
             isFromStoreCategory: event.isFromStoreCategory));
-      } else if (event is _updateGlobalSearchEvent) {
+      }
+      else if (event is _updateGlobalSearchEvent) {
         emit(
             state.copyWith(search: event.search, searchList: event.searchList));
       }

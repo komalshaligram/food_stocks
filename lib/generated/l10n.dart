@@ -2710,6 +2710,16 @@ class S {
     );
   }
 
+  /// `Product has been successfully updated to your cart`
+  String get product_updated_in_cart {
+    return Intl.message(
+      'Product has been successfully updated to your cart',
+      name: 'product_updated_in_cart',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Issues Reported in SupplierOrderNumber#`
   String get order_issue_created_notification_title {
     return Intl.message(

@@ -12,6 +12,7 @@ class ProductStockModel with _$ProductStockModel {
     @Default('') String cartProductId,
     @Default('') String productSaleId,
     @Default(0) int quantity,
+    @Default(0) int relatedQuantity,
     @Default('') String note,
     @Default(false) bool productIsInCart,
     @Default('0') String stock,

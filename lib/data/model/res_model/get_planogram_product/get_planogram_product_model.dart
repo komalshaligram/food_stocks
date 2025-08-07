@@ -53,6 +53,8 @@ class PlanoProduct with _$PlanoProduct {
   const factory PlanoProduct({
     @JsonKey(name: "createdAt")
     String? createdAt,
+    @JsonKey(name: "supplierId")
+    String? supplierId,
     @JsonKey(name: "isBottle")
     bool? isBottle,
     @JsonKey(name: "itemsWeight")

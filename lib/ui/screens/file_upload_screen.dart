@@ -6,9 +6,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../ui/utils/constants/app_constants.dart';
-import '../../ui/utils/constants/app_strings.dart';
-import '../../ui/utils/constants/app_urls.dart';
 import '../../ui/widget/file_upload_screen_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -17,9 +14,12 @@ import '../../bloc/file_upload/file_upload_bloc.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
-import '../utils/constants/app_colors.dart';
-import '../utils/constants/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
+import '../utils/constants/app_strings.dart';
+import '../utils/constants/app_styles.dart';
+import '../utils/constants/app_urls.dart';
 import '../widget/button_widget.dart';
 import '../widget/common_alert_dialog.dart';
 import '../widget/custom_button_widget.dart';
@@ -133,8 +133,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                           child: Column(
                                             children: [
                                               !state.isUpdate
-                                                  ?
-                                              CustomButtonWidget(
+                                                  ? CustomButtonWidget(
                                                       buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
                                                       fontColors: AppColors.whiteColor,
                                                       isLoading: state.isApiLoading,
@@ -148,23 +147,8 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                               }
                                                             },
                                                       bGColor: AppColors.mainColor,
-                                                    ) : const IgnorePointer(),
-                                                  // : CustomButtonWidget(
-                                                  //     buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
-                                                  //     fontColors: AppColors.whiteColor,
-                                                  //     isLoading: state.isApiLoading,
-                                                  //     onPressed: state.isApiLoading
-                                                  //         ? null
-                                                  //         : () {
-                                                  //             if (state.formsAndFilesList[1].url != null) {
-                                                  //               bloc.add(FileUploadEvent.uploadApiEvent(context: context));
-                                                  //             } else {
-                                                  //               CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.upload_document, type: SnackBarType.failure);
-                                                  //             }
-                                                  //             // bloc.add(FileUploadEvent.uploadApiEvent(context: context));
-                                                  //           },
-                                                  //     bGColor: AppColors.mainColor,
-                                                  //   ),
+                                                    )
+                                                  : const SizedBox(),
                                               15.height,
                                             ],
                                           ),
@@ -307,7 +291,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                         });
                       }
                     }
-                    if (isDownloadable) { //!isDownloadable
+                    if (!updateState) {
                       showModalBottomSheet(
                           context: context,
                           builder: (context1) => Container(

@@ -5,6 +5,7 @@ class StoreState with _$StoreState {
   const factory StoreState(
       {required bool isCategoryExpand,
       required List<Category> productCategoryList,
+      required int cartCount,
       required List<ProductSale> productSalesList,
       required List<RecommendationData> recommendedProductsList,
       required List<PreviousOrderProductData> previousOrderProductsList,
@@ -15,7 +16,7 @@ class StoreState with _$StoreState {
       required bool isLoading,
       required bool isProductLoading,
       required List<Product> productDetails,
-      required List<ProductStockModel> productStockList,
+      required List<List<ProductStockModel>> productStockList,
       required int productStockUpdateIndex,
       required bool isSelectSupplier,
       required List<ProductSupplierModel> productSupplierList,
@@ -32,7 +33,7 @@ class StoreState with _$StoreState {
       required bool isGuestUser,
       required List<RelatedProductDatum> relatedProductList,
       required bool isRelatedShimmering,
-          required bool isRecommendedShimmering,
+      required bool isRecommendedShimmering,
       required bool isPreviousOrderShimmering,
       required bool isSaleShimmering,
       required bool showPesachBanner,
@@ -46,12 +47,14 @@ class StoreState with _$StoreState {
       required bool isAppOnMaintenance,
       required String language,
       required bool isDialogOpen,
-          required BuildContext? context,
-      required bool retryLoading}) = _StoreState;
+      required BuildContext? context,
+      required bool retryLoading,
+      required int productListIndex,}) = _StoreState;
 
   factory StoreState.initial() => StoreState(
       isCategoryExpand: false,
       productCategoryList: [],
+      cartCount: 0,
       productSalesList: [],
       recommendedProductsList: [],
       previousOrderProductsList: [],
@@ -63,7 +66,13 @@ class StoreState with _$StoreState {
       isProductLoading: false,
       productDetails: [],
       productStockUpdateIndex: -1,
-      productStockList: [ ProductStockModel(productId: '')],
+      productStockList: [
+          [ProductStockModel(productId: '')],
+          [],
+          [],
+          [],
+          []
+      ],
       isSelectSupplier: false,
       productSupplierList: [],
       isCartCountChange: false,
@@ -92,7 +101,8 @@ class StoreState with _$StoreState {
       isDialogOpen: false,
       retryLoading: false,
       isPreviousOrderShimmering: false,
-      isRecommendedShimmering:false,
+      isRecommendedShimmering: false,
       context: null,
-      isSaleShimmering: false);
+      isSaleShimmering: false,
+      productListIndex: -1,);
 }

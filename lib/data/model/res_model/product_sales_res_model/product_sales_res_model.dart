@@ -29,6 +29,8 @@ class ProductSale with _$ProductSale{
   const factory ProductSale({
     @JsonKey(name: "createdAt")
     String? createdAt,
+    @JsonKey(name: "supplierId")
+    String? supplierId,
     @JsonKey(name: "isBottle")
     bool? isBottle,
     @JsonKey(name: "itemsWeight")

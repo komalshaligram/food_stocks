@@ -39,6 +39,9 @@ class DioClient {
               validateStatus: (status) {
                 if (status == AppConstants.code_401) {
                   return false;
+                } else if (status == AppConstants.code_501) {
+                  _handleLogout(_context);
+                  return true;
                 } else {
                   return true;
                 }
@@ -154,7 +157,7 @@ class DioClient {
       await preferencesHelper.setUserLoggedIn();
       printData('Token Expired = ${response.data}');
       await Provider.of<LocaleProvider>(_context, listen: false).setAppLocale(locale: const Locale(AppStrings.hebrewString));
-     /* Navigator.popUntil(_context, (route) => route.name == RouteDefine.bottomNavScreen.name);
+      /* Navigator.popUntil(_context, (route) => route.name == RouteDefine.bottomNavScreen.name);
       Navigator.pushNamed(_context, RouteDefine.connectScreen.name);*/
       Navigator.pushNamedAndRemoveUntil(_context, RouteDefine.connectScreen.name, (Route route) => route.isFirst);
 
@@ -332,7 +335,7 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
       );
 
     case DioExceptionType.receiveTimeout:
-    //  CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.receive_timed_out, type: SnackBarType.failure);
+      //  CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.receive_timed_out, type: SnackBarType.failure);
       return ErrorEntity(code: -1, message: AppLocalizations.of(context!)!.receive_timed_out);
 
     case DioExceptionType.badCertificate:
@@ -350,6 +353,16 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
         case 500:
           CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.server_internal_error, type: SnackBarType.failure);
           return ErrorEntity(code: 500, message: AppLocalizations.of(context)!.server_internal_error);
+
+        case 501:
+          // Handle 501 error: Show message, log out and redirect to login screen
+          printData("come out here for fail");
+
+          CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.account_not_approve, type: SnackBarType.failure);
+          _handleLogout(context);
+          // Perform logout (you may call your logout method here)
+
+          return ErrorEntity(code: 501, message: AppLocalizations.of(context)!.account_not_approve);
       }
       CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.server_bad_response, type: SnackBarType.failure);
       return ErrorEntity(code: error.response!.statusCode!, message: AppLocalizations.of(context)!.server_bad_response);
@@ -368,6 +381,21 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
   }
 }
 
+void _handleLogout(BuildContext context) async {
+  SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+  await preferencesHelper.setUserLoggedIn();
+  await Provider.of<LocaleProvider>(context, listen: false).setAppLocale(locale: const Locale(AppStrings.hebrewString));
+  Navigator.pop(context);
+  Navigator.popUntil(context, (route) => route.name == RouteDefine.bottomNavScreen.name);
+  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+  // CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.logged_out_successfully, type: SnackBarType.success);
+  CustomSnackBar.showSnackBar(
+    context: context,
+    title: "חשבון לא מאושר",//AppLocalizations.of(context)!.account_not_approve,
+    type: SnackBarType.failure,
+  );
+}
+
 void onError(ErrorEntity eInfo) {
   printData('error.code -> ${eInfo.code}, error.message -> ${eInfo.message}');
   switch (eInfo.code) {
@@ -379,6 +407,9 @@ void onError(ErrorEntity eInfo) {
       break;
     case 500:
       printData("Server internal error");
+      break;
+    case 501:
+      printData("Account Not Approved");
       break;
     default:
       printData("Unknown error");

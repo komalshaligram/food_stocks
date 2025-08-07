@@ -75,12 +75,19 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             ));
           }
         }
-      } else if (event is _navigateReturnEvent) {
+      }
+      else if (event is _navigateReturnEvent) {
         if (state.productQty != 0) {
           if (state.selectedRadioTile != 0) {
-            if (state.proofFile.path.isNotEmpty) {
-              ReturnProduct products = ReturnProduct(productName: state.productName, totalUnits: state.productQty, proofImages: state.proofImagesList, notes: state.addNoteController.text.toString(), barcode: state.barCode, isApproved: false, totalRefund: 0, reasonToReturn: state.reason, productImg: state.productImg, supplierName: state.supplierName, supplierId: state.supplierId, returnId: state.returnId);
+
+            if (state.proofFile.path.isNotEmpty || state.proofFile1.path.isNotEmpty || state.proofFile2.path.isNotEmpty) {
+
+
+              ReturnProduct products = ReturnProduct(productName: state.productName, totalUnits: state.productQty, proofImages: state.proofImagesList,
+                  notes: state.addNoteController.text.toString(), barcode: state.barCode, isApproved: false, totalRefund: 0, reasonToReturn: state.reason,
+                  productImg: state.productImg, supplierName: state.supplierName, supplierId: state.supplierId, returnId: state.returnId,);
               if (state.mainIndex != -1) {
+
                 //for update
                 List<ReturnProduct> returnList = [];
                 returnList.addAll(state.returnProductList);
@@ -93,19 +100,23 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
                 // return;
               } else {
                 //for create
+
                 List<ReturnProduct> returnList = [];
                 returnList.addAll(state.returnProductList);
                 returnList.removeAt(0);
                 returnList.add(products);
                 emit(state.copyWith(returnProductList: returnList));
                 if (state.returnProductList.length == 1) {
+
                   add(ProductReturnInfoEvent.createReturnEvent(context: event.context, supplierId: state.supplierId));
                 } else {
+
                   add(ProductReturnInfoEvent.updateReturnEvent(context: event.context));
                 }
                 // Navigator.pushNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {'list': state.returnProductList, AppStrings.isUpdateParamString: false});
               }
             } else {
+
               CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.add_one_proof_img, type: SnackBarType.failure);
             }
           } else {
@@ -115,14 +126,14 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
           CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.enter_units, type: SnackBarType.failure);
         }
       } else if (event is _updateReturnEvent) {
-        emit(state.copyWith(isLoading: true));
+        emit(state.copyWith(isShimmer: true));
         try {
           List<req.ReturnProduct> list = [];
           for (int i = 0; i < state.returnProductList.length; i++) {
             list.add(req.ReturnProduct(totalRefund: state.returnProductList[i].totalRefund, proofImages: state.returnProductList[i].proofImages,
                 supplierId: state.returnProductList[i].supplierId, notes: state.returnProductList[i].notes, productName: state.returnProductList[i].productName,
                 productImage: state.returnProductList[i].productImg, barcode: state.returnProductList[i].barcode, totalUnits: state.returnProductList[i].totalUnits,
-                isApproved: state.returnProductList[i].isApproved, reasonToReturn: state.returnProductList[i].reasonToReturn));
+                isApproved: state.returnProductList[i].isApproved, reasonToReturn: state.returnProductList[i].reasonToReturn,),);
           }
           req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(
             applicationName: AppStrings.appName,
@@ -158,10 +169,15 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
               }
             }
 
-            emit(state.copyWith(isLoading: false, returnId: state.returnProductList.first.returnId ?? '', returnProductList: list));
-            Navigator.pushNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {'list': state.returnProductList, AppStrings.isUpdateParamString: false,'status':state.isFromPending});
+            emit(state.copyWith(returnProductList: list, isShimmer: false, returnId: state.returnProductList.first.returnId ?? '', ));
+
+            Navigator.pushReplacementNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {'list': list, //state.returnProductList,
+              AppStrings.isUpdateParamString: false,'status':state.isFromPending,});
+
+
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context),
+                type: SnackBarType.failure);
             emit(state.copyWith(isShimmer: false));
           }
         } catch (e) {}
@@ -189,7 +205,8 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
           }
         }
-      } else if (event is _pickDocumentEvent) {
+      }
+      else if (event is _pickDocumentEvent) {
         XFile? image = await openImagePicker(event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (image != null) {
           CroppedFile? croppedImage = await cropImage(path: image.path, shape: CropStyle.rectangle, quality: AppConstants.fileQuality);
@@ -222,7 +239,8 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
           }
           emit(state.copyWith(proofImagesList: imgList));
         }
-      } else if (event is _deleteFileEvent) {
+      }
+      else if (event is _deleteFileEvent) {
         if (event.index == 1) {
           emit(state.copyWith(proofFile: File('')));
         } else if (event.index == 2) {
@@ -230,7 +248,8 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         } else if (event.index == 3) {
           emit(state.copyWith(proofFile2: File('')));
         }
-      } else if (event is _productIncrementEvent) {
+      }
+      else if (event is _productIncrementEvent) {
         if (state.updateId.isEmpty) {
           emit(state.copyWith(
             productQty: event.productQuantity.round() + 1,
@@ -240,15 +259,18 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             productQty: event.productQuantity.round() + 1,
           ));
         }
-      } else if (event is _productDecrementEvent) {
+      }
+      else if (event is _productDecrementEvent) {
         if (event.productQuantity >= 1) {
           emit(state.copyWith(
             productQty: event.productQuantity.round() - 1,
           ));
         }
-      } else if (event is _radioButtonEvent) {
+      }
+      else if (event is _radioButtonEvent) {
         emit(state.copyWith(selectedRadioTile: event.selectRadioTile, reason: event.reason));
-      } else if (event is _createReturnEvent) {
+      }
+      else if (event is _createReturnEvent) {
         emit(state.copyWith(isShimmer: true));
         try {
           List<req.ReturnProduct> list = [];
@@ -282,9 +304,11 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
               }
             }
             emit(state.copyWith(returnProductList: list, isShimmer: false, returnId: resModel.data!.first.id.toString()));
-            Navigator.pushNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {'list': state.returnProductList, AppStrings.isUpdateParamString: false,'status':state.isFromPending});
+            Navigator.pushReplacementNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {'list': state.returnProductList,
+              AppStrings.isUpdateParamString: false,'status':state.isFromPending,});
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context),
+                type: SnackBarType.failure);
             emit(state.copyWith(isShimmer: false));
           }
         } catch (e) {}

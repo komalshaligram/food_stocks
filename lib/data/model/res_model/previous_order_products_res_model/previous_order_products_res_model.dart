@@ -24,6 +24,8 @@ class PreviousOrderProductData with _$PreviousOrderProductData {
   const factory PreviousOrderProductData({
     @JsonKey(name: "_id")
     String? id,
+    @JsonKey(name: "supplierId")
+    String? supplierId,
     @JsonKey(name: "productStock")
     double? productStock,
     @JsonKey(name: "totalSale")

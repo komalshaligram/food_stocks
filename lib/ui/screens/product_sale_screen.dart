@@ -1,12 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
 import '../../bloc/product_sale/product_sale_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../routes/app_routes.dart';
-import '../../ui/utils/constants/app_colors.dart';
 import '../../ui/widget/common_product_sale_item_widget.dart';
 import '../../ui/widget/common_sale_description_dialog.dart';
 import '../../ui/widget/common_sale_listview.dart';
@@ -18,6 +17,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../utils/app_utils.dart';
+import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
 import '../utils/constants/app_styles.dart';
@@ -43,18 +43,19 @@ class ProductSaleScreen extends StatelessWidget {
       create: (context) => ProductSaleBloc()
         ..add(ProductSaleEvent.setSearchEvent(search: args?[AppStrings.searchString] ?? ''))
         ..add(ProductSaleEvent.getProductSalesListEvent(context: context))
-      ..add(ProductSaleEvent.userApproveEvent(context: context)),
+        ..add(ProductSaleEvent.userApproveEvent(context: context)),
       child: ProductSaleScreenWidget(saleProductId: args?[AppStrings.companyIdString] ?? ''),
     );
   }
 }
 
 class ProductSaleScreenWidget extends StatelessWidget {
-   final String saleProductId;
-   const ProductSaleScreenWidget({super.key,this.saleProductId = ''});
+  final String saleProductId;
+  const ProductSaleScreenWidget({super.key, this.saleProductId = ''});
 
   @override
   Widget build(BuildContext context) {
+    ProductSaleBloc bloc = context.read<ProductSaleBloc>();
     return BlocListener<ProductSaleBloc, ProductSaleState>(
       listener: (context, state) {},
       child: BlocBuilder<ProductSaleBloc, ProductSaleState>(
@@ -78,35 +79,28 @@ class ProductSaleScreenWidget extends StatelessWidget {
               ),
             ),
             body: FocusDetector(
-              onFocusGained: (){
-                if(saleProductId != ''){
-                  showProductDetails(
-                      context: context,
-                      productId: saleProductId,
-                    productStock: '1',
-                    isBarcode: true,
-                    productListIndex: 0
-                  );
+              onFocusGained: () {
+                if (saleProductId != '') {
+                  showProductDetails(context: context, productId: saleProductId, productStock: '1', isBarcode: true, productListIndex: 0);
                 }
               },
               child: SafeArea(
-                child:
-                NotificationListener<ScrollNotification>(
-                      child: SmartRefresher(
-                                        enablePullDown: true,
-                                        controller: state.refreshController,
-                                        header: const RefreshWidget(),
-                                        footer: CustomFooter(
+                child: NotificationListener<ScrollNotification>(
+                  child: SmartRefresher(
+                    enablePullDown: true,
+                    controller: state.refreshController,
+                    header: const RefreshWidget(),
+                    footer: CustomFooter(
                       builder: (context, mode) => const ProductSaleScreenShimmerWidget(),
-                                        ),
-                                        enablePullUp: !state.isBottomOfProducts,
-                                        onRefresh: () {
+                    ),
+                    enablePullUp: !state.isBottomOfProducts,
+                    onRefresh: () {
                       context.read<ProductSaleBloc>().add(ProductSaleEvent.refreshListEvent(context: context));
-                                        },
-                                    /*    onLoading: () {
+                    },
+                    /*    onLoading: () {
                       context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductSalesListEvent(context: context));
                                         },*/
-                                        child: SingleChildScrollView(
+                    child: SingleChildScrollView(
                       child: Column(
                         children: [
                           state.isShimmering
@@ -129,10 +123,13 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                           itemCount: state.productSalesList.length,
                                           physics: const NeverScrollableScrollPhysics(),
                                           padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                                          gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
-                                            childAspectRatio: getScreenHeight(context) > 1000 && getScreenWidth(context) > 700 ? 0.70 :
-                                            getScreenHeight(context) > 850 &&   getScreenHeight(context) <  1000 && getScreenWidth(context) > 550 ? 0.65 :
-                                            0.45,
+                                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 3,
+                                            childAspectRatio: getScreenHeight(context) > 1000 && getScreenWidth(context) > 700
+                                                ? 0.70
+                                                : getScreenHeight(context) > 850 && getScreenHeight(context) < 1000 && getScreenWidth(context) > 550
+                                                    ? 0.65
+                                                    : 0.45,
                                           ),
                                           //getChildAspectRatio(context)),
                                           itemBuilder: (context, index) {
@@ -140,7 +137,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                               productStock: state.productSalesList[index].productStock.toString(),
                                               isPesach: state.productSalesList[index].isPesach ?? false,
                                               lowStock: state.productSalesList[index].lowStock ?? '',
-                                              originalPrice:state.productSalesList[index].productPrice ?? 0.0,
+                                              originalPrice: state.productSalesList[index].productPrice ?? 0.0,
                                               isGuestUser: state.isGuestUser,
                                               index: index,
                                               context: context,
@@ -148,15 +145,69 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                               title: state.productSalesList[index].name,
                                               productName: state.productSalesList[index].productName ?? '',
                                               description: parse(state.productSalesList[index].sale?.saleDescription ?? '').body?.text ?? '',
-
                                               discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ''),
+                                              quantity: state.productStockList[1][index].quantity,
+                                              onQuantityChanged: () {
+                                                context.read<ProductSaleBloc>().add(
+                                                      ProductSaleEvent.updateListQuantityOfProduct(
+                                                        context: context,
+                                                        quantity: state.productStockList[1][index].quantity.toString(),
+                                                        productListIndex: 1,
+                                                        productStockUpdateIndex: index,
+                                                        productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                      ),
+                                                    );
+                                              },
+                                              onQuantityIncreaseTap: () {
+                                                context.read<ProductSaleBloc>().add(
+                                                      ProductSaleEvent.increaseListQuantityOfProduct(
+                                                        context: context,
+                                                        productListIndex: 1,
+                                                        productStockUpdateIndex: index,
+                                                        productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                      ),
+                                                    );
+
+                                                context.read<ProductSaleBloc>().add(
+                                                      ProductSaleEvent.addToCartListProductEvent(
+                                                        context: context,
+                                                        productId: state.productSalesList[index].id.toString(),
+                                                        productListIndex: 1,
+                                                        productStockUpdateIndex: index,
+                                                        productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                      ),
+                                                    );
+                                              },
+                                              onQuantityDecreaseTap: () {
+                                                // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                                if (state.productStockList[1][index].quantity != 0) {
+                                                  context.read<ProductSaleBloc>().add(
+                                                        ProductSaleEvent.decreaseListQuantityOfProduct(
+                                                          context: context,
+                                                          productListIndex: 1,
+                                                          productStockUpdateIndex: index,
+                                                          productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                        ),
+                                                      );
+
+                                                  context.read<ProductSaleBloc>().add(
+                                                        ProductSaleEvent.addToCartListProductEvent(
+                                                          context: context,
+                                                          productId: state.productSalesList[index].id.toString(),
+                                                          productListIndex: 1,
+                                                          productStockUpdateIndex: index,
+                                                          productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                        ),
+                                                      );
+                                                }
+                                              },
                                               onButtonTap: () {
                                                 if (!state.isGuestUser) {
                                                   showProductDetails(
                                                     context: context,
                                                     productId: state.productSalesList[index].id ?? '',
-                                                     productStock: state.productSalesList[index].toString(),
-                                                    productListIndex: 1
+                                                    productStock: state.productSalesList[index].productStock.toString(),
+                                                    productListIndex: 1,
                                                   );
                                                 } else {
                                                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
@@ -173,40 +224,97 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                           itemBuilder: (context, index) => CommonSaleListView(
                                               context: context,
                                               discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ''),
-                                              isFromSale: state.productSalesList[index].sale?.isSale?? false,
+                                              isFromSale: state.productSalesList[index].sale?.isSale ?? false,
                                               salesDesc: state.productSalesList[index].sale?.saleDescription ?? '',
                                               isGuestUser: state.isGuestUser,
                                               isPesach: state.productSalesList[index].isPesach,
                                               numberOfUnits: state.productSalesList[index].numberOfUnit.toString(),
                                               lowStock: state.productSalesList[index].lowStock.toString(),
                                               productStock: state.productSalesList[index].productStock.toString(),
-                                              productImage: state.productSalesList[index].mainImage ?? '' ,
-                                              productName: state.productSalesList[index].productName ?? '' ,
+                                              productImage: state.productSalesList[index].mainImage ?? '',
+                                              productName: state.productSalesList[index].productName ?? '',
                                               price: double.parse(state.productSalesList[index].productPrice.toString()),
+                                              quantity: state.productStockList[1][index].quantity,
+                                              onQuantityChanged: () {
+                                                context.read<ProductSaleBloc>().add(
+                                                      ProductSaleEvent.updateListQuantityOfProduct(
+                                                        context: context,
+                                                        quantity: state.productStockList[1][index].quantity.toString(),
+                                                        productListIndex: 1,
+                                                        productStockUpdateIndex: index,
+                                                        productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                      ),
+                                                    );
+                                              },
+                                              onQuantityIncreaseTap: () {
+                                                context.read<ProductSaleBloc>().add(
+                                                      ProductSaleEvent.increaseListQuantityOfProduct(
+                                                        context: context,
+                                                        productListIndex: 1,
+                                                        productStockUpdateIndex: index,
+                                                        productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                      ),
+                                                    );
+
+                                                context.read<ProductSaleBloc>().add(
+                                                      ProductSaleEvent.addToCartListProductEvent(
+                                                        context: context,
+                                                        productId: state.productSalesList[index].id.toString(),
+                                                        productListIndex: 1,
+                                                        productStockUpdateIndex: index,
+                                                        productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                      ),
+                                                    );
+                                              },
+                                              onQuantityDecreaseTap: () {
+                                                // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                                if (state.productStockList[1][index].quantity != 0) {
+                                                  context.read<ProductSaleBloc>().add(
+                                                        ProductSaleEvent.decreaseListQuantityOfProduct(
+                                                          context: context,
+                                                          productListIndex: 1,
+                                                          productStockUpdateIndex: index,
+                                                          productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                        ),
+                                                      );
+
+                                                  context.read<ProductSaleBloc>().add(
+                                                        ProductSaleEvent.addToCartListProductEvent(
+                                                          context: context,
+                                                          productId: state.productSalesList[index].id.toString(),
+                                                          productListIndex: 1,
+                                                          productStockUpdateIndex: index,
+                                                          productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                                        ),
+                                                      );
+                                                }
+                                              },
                                               onButtonTap: () {
                                                 showProductDetails(
                                                   context: context,
-                                                  productId: state.productSalesList[index].id ??'',
+                                                  productId: state.productSalesList[index].id ?? '',
                                                   productStock: state.productSalesList[index].toString(),
-                                                  productListIndex: 1
+                                                  productListIndex: 1,
                                                 );
+
+                                                // bloc.add(ProductSaleEvent.getProductSalesListEvent(context: context));
                                               }),
                                         ),
                         ],
                       ),
-                                        ),
-                                      ),
-                      onNotification: (notification) {
-                        if (notification.metrics.pixels > (notification.metrics.maxScrollExtent - 400)) {
-                          if (!state.isBottomOfProducts) {
-                            context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductSalesListEvent(context: context));
-                          } else {
-                            return false;
-                          }
-                        }
-                        return true;
-                      },
                     ),
+                  ),
+                  onNotification: (notification) {
+                    if (notification.metrics.pixels > (notification.metrics.maxScrollExtent - 400)) {
+                      if (!state.isBottomOfProducts) {
+                        context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductSalesListEvent(context: context));
+                      } else {
+                        return false;
+                      }
+                    }
+                    return true;
+                  },
+                ),
               ),
             ),
           );
@@ -221,7 +329,6 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required String saleImage,
     required String title,
     required String description,
-
     required String productName,
     required double discountedPrice,
     required void Function() onButtonTap,
@@ -229,10 +336,14 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required double originalPrice,
     required bool isPesach,
     required String lowStock,
-    required String productStock
+    required String productStock,
+    required int quantity,
+    required void Function() onQuantityChanged,
+    required void Function() onQuantityIncreaseTap,
+    required void Function() onQuantityDecreaseTap,
   }) {
     return CommonProductSaleItemWidget(
-        isSale: true,
+      isSale: true,
       height: AppConstants.salesProductItemHeight,
       width: 140,
       isGuestUser: isGuestUser,
@@ -245,26 +356,22 @@ class ProductSaleScreenWidget extends StatelessWidget {
       discountedPrice: discountedPrice,
       isPesach: isPesach,
       lowStock: lowStock,
-      productStock : productStock
+      productStock: productStock,
+      quantity: quantity,
+      onQuantityChanged: onQuantityChanged,
+      onQuantityIncreaseTap: onQuantityIncreaseTap,
+      onQuantityDecreaseTap: onQuantityDecreaseTap,
     );
   }
 
-
-  void showProductDetails({
-    required BuildContext context,
-    required String productId,
-    String productStock = '0',
-    bool isBarcode = false,
-    required int productListIndex
-  }) async {
-    context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductDetailsEvent(context: context, productId: productId,isBarcode: isBarcode,productListIndex: productListIndex));
+  void showProductDetails({required BuildContext context, required String productId, String productStock = '0', bool isBarcode = false, required int productListIndex}) async {
+    context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductDetailsEvent(context: context, productId: productId, isBarcode: isBarcode, productListIndex: productListIndex));
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      isDismissible: true,
+      isDismissible: false,
       clipBehavior: Clip.hardEdge,
-
-      enableDrag: true,
+      enableDrag: false,
       builder: (context1) {
         return BlocProvider.value(
           value: context.read<ProductSaleBloc>(),
@@ -275,8 +382,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 child: DraggableScrollableSheet(
                   expand: true,
                   maxChildSize: 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
-                  minChildSize: productStock == '0' ||productStock == '0.0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
-                  initialChildSize: productStock == '0'||productStock == '0.0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
+                  minChildSize: productStock == '0' || productStock == '0.0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
+                  initialChildSize: productStock == '0' || productStock == '0.0' ? 0.9 : 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context) * 0.2),
                   builder: (BuildContext context1, ScrollController scrollController) {
                     return Container(
                       decoration: BoxDecoration(
@@ -298,11 +405,11 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     productDetails: state.productDetails,
                                     isSubUserAddToBasket: state.isSubUserAddToBasket,
                                     bottleTax: state.bottleDeposit,
-                                    totalBottleDeposit: (state.bottleDeposit * (state.productDetails.first.numberOfUnit  ?? 1).toDouble()* state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
-                                    isBottle:(state.productDetails.first.isBottle ?? false),
+                                    totalBottleDeposit: (state.bottleDeposit * (state.productDetails.first.numberOfUnit ?? 1).toDouble() * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
+                                    isBottle: (state.productDetails.first.isBottle ?? false),
                                     isLoading: state.isLoading,
                                     addToOrderTap: () {
-                                      context.read<ProductSaleBloc>().add(ProductSaleEvent.addToCartProductEvent(context: context1,productId: productId));
+                                      context.read<ProductSaleBloc>().add(ProductSaleEvent.addToCartProductEvent(context: context1, productId: productId));
                                     },
                                     imageOnTap: () {
                                       showDialog(
@@ -316,10 +423,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                   height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
                                                   width: getScreenWidth(context),
                                                   child: GestureDetector(
-                                                    onVerticalDragStart: (dragDetails) {
-                                                    },
-                                                    onVerticalDragUpdate: (dragDetails) {
-                                                    },
+                                                    onVerticalDragStart: (dragDetails) {},
+                                                    onVerticalDragUpdate: (dragDetails) {},
                                                     onVerticalDragEnd: (endDetails) {
                                                       Navigator.pop(context);
                                                     },
@@ -347,18 +452,11 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         },
                                       );
                                     },
-
                                     context: context,
                                     productUnitPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
-
-                                    productImages: [state.productDetails.first.mainImage ?? '' ],
-
-                                    productPrice:(state.productDetails.first.sale?.isSale ?? false) ?
-                                    double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1)
-                                        :
-                                    state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 0),
+                                    productImages: [state.productDetails.first.mainImage ?? ''],
+                                    productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 0),
                                     productStock: state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString(),
-
                                     scrollController: scrollController,
                                     productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                     onQuantityChanged: (quantity) {
@@ -372,11 +470,23 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                         context.read<ProductSaleBloc>().add(ProductSaleEvent.decreaseQuantityOfProduct(context: context1));
                                       }
                                     },
-                                    onCloseTap: (){Navigator.pop(context);},
+                                    onCloseTap: () {
+                                      context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductSalesListEvent(
+                                            context: context1,
+                                          ));
+                                      Navigator.pop(context);
+                                    },
                                   ),
-                                  state.isRelatedShimmering?
-                                  const RelatedProductShimmerWidget():
-                                  state.relatedProductList.isEmpty ? 0.width : relatedProductWidget(context1, state.relatedProductList, context)
+                                  state.isRelatedShimmering
+                                      ? const RelatedProductShimmerWidget()
+                                      : state.relatedProductList.isEmpty
+                                          ? 0.width
+                                          : relatedProductWidget(
+                                              context1,
+                                              state.relatedProductList,
+                                              context,
+                                              productStockList: state.productStockList,
+                                            )
                                 ],
                               ),
                             ),
@@ -391,7 +501,12 @@ class ProductSaleScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList, BuildContext context) {
+  Widget relatedProductWidget(
+    BuildContext prevContext,
+    List<RelatedProductDatum> relatedProductList,
+    BuildContext context, {
+    required List<List<ProductStockModel>> productStockList,
+  }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -422,38 +537,90 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 isGuestUser: false,
                 height: AppConstants.salesProductItemHeight,
                 width: getItemWidth(context),
-                productName: relatedProductList.elementAt(i).productName ?? '' ,
-                saleImage: relatedProductList.elementAt(i).mainImage ?? '' ,
-                title: relatedProductList.elementAt(i).name ,
-                description: parse(relatedProductList
-                    .elementAt(i)
-                    .sale?.saleDescription )
-                    .body
-                    ?.text ??
-                    '',
-                discountedPrice: double.parse(
-                    relatedProductList.elementAt(i).sale?.salePrice ?? '0'),
-                originalPrice:
-                relatedProductList.elementAt(i).productPrice ,
-                productStock:
-                relatedProductList.elementAt(i).productStock.toString(),
+                productName: relatedProductList.elementAt(i).productName ?? '',
+                saleImage: relatedProductList.elementAt(i).mainImage ?? '',
+                title: relatedProductList.elementAt(i).name,
+                description: parse(relatedProductList.elementAt(i).sale?.saleDescription).body?.text ?? '',
+                discountedPrice: double.parse(relatedProductList.elementAt(i).sale?.salePrice ?? '0'),
+                originalPrice: relatedProductList.elementAt(i).productPrice,
+                productStock: relatedProductList.elementAt(i).productStock.toString(),
                 lowStock: relatedProductList.elementAt(i).lowStock ?? '',
                 isPesach: relatedProductList.elementAt(i).isPesach,
+                quantity: productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity, //[i].quantity,
+                onQuantityChanged: () {
+                  context.read<ProductSaleBloc>().add(
+                        ProductSaleEvent.updateListQuantityOfProduct(
+                          context: context,
+                          quantity: productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity.toString(),
+                          productListIndex: 2,
+                          productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                          productSupplierIds: relatedProductList[i].supplierId.toString(),
+                        ),
+                      );
+                },
+                onQuantityIncreaseTap: () {
+                  context.read<ProductSaleBloc>().add(
+                        ProductSaleEvent.increaseListQuantityOfProduct(
+                          context: context,
+                          productListIndex: 2,
+                          productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                          productSupplierIds: relatedProductList[i].supplierId.toString(),
+                        ),
+                      );
+
+                  context.read<ProductSaleBloc>().add(
+                        ProductSaleEvent.addToCartListProductEvent(
+                          context: context,
+                          productId: relatedProductList[i].id.toString(),
+                          productListIndex: 2,
+                          productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                          productSupplierIds: relatedProductList[i].supplierId.toString(),
+                        ),
+                      );
+                },
+                onQuantityDecreaseTap: () {
+                  // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                  if (productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity != 0) {
+                    context.read<ProductSaleBloc>().add(
+                          ProductSaleEvent.decreaseListQuantityOfProduct(
+                            context: context,
+                            productListIndex: 2,
+                            productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                            productSupplierIds: relatedProductList[i].supplierId.toString(),
+                          ),
+                        );
+
+                    context.read<ProductSaleBloc>().add(
+                          ProductSaleEvent.addToCartListProductEvent(
+                            context: context,
+                            productId: relatedProductList[i].id.toString(),
+                            productListIndex: 2,
+                            productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                            productSupplierIds: relatedProductList[i].supplierId.toString(),
+                          ),
+                        );
+                  }
+                },
                 onButtonTap: () {
                   Navigator.of(prevContext).pop();
-                  showProductDetails(context: context, productId: relatedProductList[i].id ?? '',
-                  productStock:  relatedProductList.elementAt(i)
-                      .productStock.toString(),
-                    productListIndex: 2
+                  showProductDetails(
+                    context: context,
+                    productId: relatedProductList[i].id ?? '',
+                    productStock: relatedProductList.elementAt(i).productStock.toString(),
+                    productListIndex: 2,
                   );
-                },);
+
+                  // context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductSalesListEvent(
+                  //       context: context,
+                  //     ));
+                },
+              );
             },
             itemCount: relatedProductList.length,
           ),
         )
       ],
     );
-
   }
 
   void showConditionDialog({required BuildContext context, required String saleCondition}) {

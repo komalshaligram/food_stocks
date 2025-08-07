@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../routes/app_routes.dart';
 import '/ui/utils/constants/app_img_path.dart';
 import '/ui/widget/common_app_bar.dart';
 import '/ui/widget/sized_box_widget.dart';
@@ -44,7 +45,8 @@ class ScanReturnProduct extends StatelessWidget {
           title: AppLocalizations.of(context)!.scan_return_product,
           iconData: Icons.arrow_back_ios_sharp,
           onTap: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            Navigator.pushNamedAndRemoveUntil(context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
           },
         ),
       ),

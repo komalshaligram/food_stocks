@@ -49,7 +49,7 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
         }
       } else if (event is _navigateToAddProductEvent) {
         //  emit(state.copyWith(returnProductList: state.returnProductList));
-        Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {'list': state.returnProductList, 'status': state.isFromPending});
+        Navigator.pushReplacementNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {'list': state.returnProductList, 'status': state.isFromPending});
       } else if (event is _deleteEvent) {
         if (state.returnId.isNotEmpty) {
           DeleteReturnReq req = DeleteReturnReq(ids: [state.returnId]);
@@ -131,8 +131,9 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
             emit(state.copyWith(isLoading: false));
             Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
           } else {
+            printData("message ${res[AppStrings.messageString]}" );
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.failure);
-            emit(state.copyWith(isShimmer: false));
+            emit(state.copyWith(isLoading: false));
           }
         } catch (e) {}
       } else if (event is _detailReturnEvent) {

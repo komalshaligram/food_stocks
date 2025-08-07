@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import '../../bloc/pesach_products/pesach_products_bloc.dart';
+import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../ui/utils/app_utils.dart';
@@ -158,6 +159,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
               onFocusGained: () {
                 bloc.add(const PesachProductsEvent.getCartCountEvent());
                 bloc.add(PesachProductsEvent.getPermissionList(context: context));
+                //   bloc.add(PesachProductsEvent.getSupplierProductsListEvent(context: context, searchType: state.searchType));
               },
               child: SafeArea(
                 child: NotificationListener<ScrollNotification>(
@@ -207,7 +209,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                     shrinkWrap: true,
                                                     physics: const NeverScrollableScrollPhysics(),
                                                     padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context, state.isSaleOn)),
+                                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio:
+                                                    getChildAspectRatio(context, state.isSaleOn)),
                                                     itemBuilder: (context, index) {
                                                       return CommonProductSaleItemWidget(
                                                           isSale: state.productList[index].sale?.isSale,
@@ -223,9 +226,71 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                           productStock: state.productList[index].productStock.toString(),
                                                           lowStock: state.productList[index].lowStock ?? '',
                                                           isPesach: state.productList[index].isPesach,
+                                                          quantity: state.productStockList[1][index].quantity,
+                                                          onQuantityChanged: () {
+                                                            context.read<PesachProductsBloc>().add(
+                                                                  PesachProductsEvent.updateListQuantityOfProduct(
+                                                                    context: context,
+                                                                    quantity: state.productStockList[1][index].quantity.toString(),
+                                                                    productListIndex: 1,
+                                                                    productStockUpdateIndex: index,
+                                                                    productSupplierIds: state.productList[index].supplierId.toString(),
+                                                                  ),
+                                                                );
+                                                          },
+                                                          onQuantityIncreaseTap: () {
+                                                            context.read<PesachProductsBloc>().add(
+                                                                  PesachProductsEvent.increaseListQuantityOfProduct(
+                                                                    context: context,
+                                                                    productListIndex: 1,
+                                                                    productStockUpdateIndex: index,
+                                                                    productSupplierIds: state.productList[index].supplierId.toString(),
+                                                                  ),
+                                                                );
+
+                                                            context.read<PesachProductsBloc>().add(
+                                                                  PesachProductsEvent.addToCartListProductEvent(
+                                                                    context: context,
+                                                                    productId: state.productList[index].id.toString(),
+                                                                    productListIndex: 1,
+                                                                    productStockUpdateIndex: index,
+                                                                    productSupplierIds: state.productList[index].supplierId.toString(),
+                                                                  ),
+                                                                );
+                                                          },
+                                                          onQuantityDecreaseTap: () {
+                                                            // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                                            if (state.productStockList[1][index].quantity != 0) {
+                                                              context.read<PesachProductsBloc>().add(
+                                                                    PesachProductsEvent.decreaseListQuantityOfProduct(
+                                                                      context: context,
+                                                                      productListIndex: 1,
+                                                                      productStockUpdateIndex: index,
+                                                                      productSupplierIds: state.productList[index].supplierId.toString(),
+                                                                    ),
+                                                                  );
+
+                                                              context.read<PesachProductsBloc>().add(
+                                                                    PesachProductsEvent.addToCartListProductEvent(
+                                                                      context: context,
+                                                                      productId: state.productList[index].id.toString(),
+                                                                      productListIndex: 1,
+                                                                      productStockUpdateIndex: index,
+                                                                      productSupplierIds: state.productList[index].supplierId.toString(),
+                                                                    ),
+                                                                  );
+                                                            }
+                                                          },
                                                           onButtonTap: () {
                                                             if (!state.isGuestUser) {
-                                                              showProductDetails(maxQty: int.parse(state.productList[index].sale?.saleMaxQuantity.toString() ?? '0 '), productListIndex: 1, context: context, productId: state.productList[index].id ?? '', productStock: state.productList[index].productStock.toString(), isSaleOn: state.isSaleOn);
+                                                              showProductDetails(
+                                                                maxQty: int.parse(state.productList[index].sale?.saleMaxQuantity.toString() ?? '0 '),
+                                                                productListIndex: 1,
+                                                                context: context,
+                                                                productId: state.productList[index].id ?? '',
+                                                                productStock: state.productList[index].productStock.toString(),
+                                                                isSaleOn: state.isSaleOn,
+                                                              );
                                                             } else {
                                                               Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                             }
@@ -247,9 +312,72 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                       productImage: state.productList[index].mainImage ?? '',
                                                       productName: state.productList[index].productName ?? '',
                                                       price: double.parse(state.productList[index].productPrice.toString()),
+                                                      quantity: state.productStockList[1][index].quantity,
+                                                      onQuantityChanged: () {
+                                                        context.read<PesachProductsBloc>().add(
+                                                              PesachProductsEvent.updateListQuantityOfProduct(
+                                                                context: context,
+                                                                quantity: state.productStockList[1][index].quantity.toString(),
+                                                                productListIndex: 1,
+                                                                productStockUpdateIndex: index,
+                                                                productSupplierIds: state.productList[index].supplierId.toString(),
+                                                              ),
+                                                            );
+                                                      },
+                                                      onQuantityIncreaseTap: () {
+                                                        context.read<PesachProductsBloc>().add(
+                                                              PesachProductsEvent.increaseListQuantityOfProduct(
+                                                                context: context,
+                                                                productListIndex: 1,
+                                                                productStockUpdateIndex: index,
+                                                                productSupplierIds: state.productList[index].supplierId.toString(),
+                                                              ),
+                                                            );
+
+                                                        context.read<PesachProductsBloc>().add(
+                                                              PesachProductsEvent.addToCartListProductEvent(
+                                                                context: context,
+                                                                productId: state.productList[index].id.toString(),
+                                                                productListIndex: 1,
+                                                                productStockUpdateIndex: index,
+                                                                productSupplierIds: state.productList[index].supplierId.toString(),
+                                                              ),
+                                                            );
+                                                      },
+                                                      onQuantityDecreaseTap: () {
+                                                        // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                                        context.read<PesachProductsBloc>().add(
+                                                              PesachProductsEvent.decreaseListQuantityOfProduct(
+                                                                context: context,
+                                                                productListIndex: 1,
+                                                                productStockUpdateIndex: index,
+                                                                productSupplierIds: state.productList[index].supplierId.toString(),
+                                                              ),
+                                                            );
+
+                                                        if (state.productStockList[1][index].quantity != 0) {
+                                                          context.read<PesachProductsBloc>().add(
+                                                                PesachProductsEvent.addToCartListProductEvent(
+                                                                  context: context,
+                                                                  productId: state.productList[index].id.toString(),
+                                                                  productListIndex: 1,
+                                                                  productStockUpdateIndex: index,
+                                                                  productSupplierIds: state.productList[index].supplierId.toString(),
+                                                                ),
+                                                              );
+                                                        }
+
+                                                        // }
+                                                      },
                                                       onButtonTap: () {
                                                         if (!state.isGuestUser) {
-                                                          showProductDetails(productListIndex: 1, context: context, productId: state.productList[index].id ?? '', productStock: state.productList[index].productStock.toString(), isSaleOn: state.isSaleOn);
+                                                          showProductDetails(
+                                                            productListIndex: 1,
+                                                            context: context,
+                                                            productId: state.productList[index].id ?? '',
+                                                            productStock: state.productList[index].productStock.toString(),
+                                                            isSaleOn: state.isSaleOn,
+                                                          );
                                                         } else {
                                                           Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                         }
@@ -268,6 +396,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                       CommonSearchWidget(
                         onCloseTap: () {
                           bloc.add(const PesachProductsEvent.changeCategoryExpansion(isOpened: false));
+                          context.read<PesachProductsBloc>().add(PesachProductsEvent.getSupplierProductsListEvent(context: context, searchType: state.searchType));
                         },
                         isFilterTap: true,
                         isCategoryExpand: state.isCategoryExpand,
@@ -327,6 +456,62 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                           searchType: state.searchList[index].searchType,
                                           isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
                                           isLastItem: state.searchList.length - 1 == index,
+                                          quantity: state.productStockList[0][index].quantity,
+                                          onQuantityChanged: () {
+                                            context.read<PesachProductsBloc>().add(
+                                              PesachProductsEvent.updateListQuantityOfProduct(
+                                                context: context,
+                                                quantity: state.productStockList[0][index].quantity.toString(),
+                                                productListIndex: 0,
+                                                productStockUpdateIndex: index,
+                                                productSupplierIds: state.searchList[index].supplierId.toString(),
+                                              ),
+                                            );
+                                          },
+                                          onQuantityIncreaseTap: () {
+                                            printData("check supplierid ${state.searchList[index].supplierId}");
+                                            context.read<PesachProductsBloc>().add(
+                                              PesachProductsEvent.increaseListQuantityOfProduct(
+                                                context: context,
+                                                productListIndex: 0,
+                                                productStockUpdateIndex: index,
+                                                productSupplierIds: state.searchList[index].supplierId.toString(),
+                                              ),
+                                            );
+
+                                            context.read<PesachProductsBloc>().add(
+                                              PesachProductsEvent.addToCartListProductEvent(
+                                                context: context,
+                                                productId: state.searchList[index].searchId,
+                                                productListIndex: 0,
+                                                productStockUpdateIndex: index,
+                                                productSupplierIds: state.searchList[index].supplierId.toString(),
+                                              ),
+                                            );
+                                          },
+                                          onQuantityDecreaseTap: () {
+                                            // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                            if (state.productStockList[0][index].quantity != 0) {
+                                              context.read<PesachProductsBloc>().add(
+                                                PesachProductsEvent.decreaseListQuantityOfProduct(
+                                                  context: context,
+                                                  productListIndex: 0,
+                                                  productStockUpdateIndex: index,
+                                                  productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                ),
+                                              );
+
+                                              context.read<PesachProductsBloc>().add(
+                                                PesachProductsEvent.addToCartListProductEvent(
+                                                  context: context,
+                                                  productId: state.searchList[index].searchId,
+                                                  productListIndex: 0,
+                                                  productStockUpdateIndex: index,
+                                                  productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                ),
+                                              );
+                                            }
+                                          },
                                           isShowSearchLabel: index == 0
                                               ? true
                                               : state.searchList[index].searchType != state.searchList[index - 1].searchType
@@ -366,7 +551,14 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                             if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
                                               debugPrint("tap 4");
                                               if (!state.isGuestUser) {
-                                                showProductDetails(productListIndex: 0, context: context, productStock: state.searchList[index].productStock.toString(), productId: state.searchList[index].searchId, isBarcode: true, isSaleOn: state.isSaleOn);
+                                                showProductDetails(
+                                                  productListIndex: 0,
+                                                  context: context,
+                                                  productStock: state.searchList[index].productStock.toString(),
+                                                  productId: state.searchList[index].searchId,
+                                                  isBarcode: true,
+                                                  isSaleOn: state.isSaleOn,
+                                                );
                                               } else {
                                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                               }
@@ -388,7 +580,14 @@ class PesachProductsScreenWidget extends StatelessWidget {
                             // -1 result for cancel scanning
 
                             if (!state.isGuestUser) {
-                              showProductDetails(context: context, productListIndex: 0, productId: scanResult, isBarcode: true, productStock: '1', isSaleOn: state.isSaleOn);
+                              showProductDetails(
+                                context: context,
+                                productListIndex: 0,
+                                productId: scanResult,
+                                isBarcode: true,
+                                productStock: '1',
+                                isSaleOn: state.isSaleOn,
+                              );
                             } else {
                               Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                             }
@@ -492,9 +691,9 @@ class PesachProductsScreenWidget extends StatelessWidget {
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      isDismissible: true,
+      isDismissible: false,
       clipBehavior: Clip.hardEdge,
-      enableDrag: true,
+      enableDrag: false,
       builder: (context1) {
         return SafeArea(
           bottom: false,
@@ -603,15 +802,22 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                             context.read<PesachProductsBloc>().add(PesachProductsEvent.decreaseQuantityOfProduct(context: context1));
                                           }
                                         },
-                                        onCloseTap: () {
-                                          Navigator.pop(context);
+                                        onCloseTap: () async {
+                                          context.read<PesachProductsBloc>().add(PesachProductsEvent.getSupplierProductsListEvent(context: context1, searchType: state.searchType));
+                                          Navigator.pop(context1);
                                         },
                                       ),
                                       state.isRelatedShimmering
                                           ? const RelatedProductShimmerWidget()
                                           : state.relatedProductList.isEmpty
                                               ? 0.width
-                                              : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn),
+                                              : relatedProductWidget(
+                                                  context1,
+                                                  state.relatedProductList,
+                                                  context,
+                                                  isSaleOn,
+                                                  productStockList: state.productStockList,
+                                                ),
                                       10.height
                                     ],
                                   ),
@@ -627,7 +833,13 @@ class PesachProductsScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList, BuildContext context, bool isSaleOn) {
+  Widget relatedProductWidget(
+    BuildContext prevContext,
+    List<RelatedProductDatum> relatedProductList,
+    BuildContext context,
+    bool isSaleOn, {
+    required List<List<ProductStockModel>> productStockList,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -666,9 +878,71 @@ class PesachProductsScreenWidget extends StatelessWidget {
                 productStock: relatedProductList.elementAt(i).productStock.toString(),
                 lowStock: relatedProductList.elementAt(i).lowStock ?? '',
                 isPesach: relatedProductList.elementAt(i).isPesach,
+                quantity: productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity, //[i].quantity,
+                onQuantityChanged: () {
+                  context.read<PesachProductsBloc>().add(
+                        PesachProductsEvent.updateListQuantityOfProduct(
+                          context: context,
+                          quantity: productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity.toString(),
+                          productListIndex: 2,
+                          productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                          productSupplierIds: relatedProductList[i].supplierId.toString(),
+                        ),
+                      );
+                },
+                onQuantityIncreaseTap: () {
+                  context.read<PesachProductsBloc>().add(
+                        PesachProductsEvent.increaseListQuantityOfProduct(
+                          context: context,
+                          productListIndex: 2,
+                          productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                          productSupplierIds: relatedProductList[i].supplierId.toString(),
+                        ),
+                      );
+
+                  context.read<PesachProductsBloc>().add(
+                        PesachProductsEvent.addToCartListProductEvent(
+                          context: context,
+                          productId: relatedProductList[i].id.toString(),
+                          productListIndex: 2,
+                          productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                          productSupplierIds: relatedProductList[i].supplierId.toString(),
+                        ),
+                      );
+                },
+                onQuantityDecreaseTap: () {
+                  // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                  if (productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity != 0) {
+                    context.read<PesachProductsBloc>().add(
+                          PesachProductsEvent.decreaseListQuantityOfProduct(
+                            context: context,
+                            productListIndex: 2,
+                            productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                            productSupplierIds: relatedProductList[i].supplierId.toString(),
+                          ),
+                        );
+
+                    context.read<PesachProductsBloc>().add(
+                          PesachProductsEvent.addToCartListProductEvent(
+                            context: context,
+                            productId: relatedProductList[i].id.toString(),
+                            productListIndex: 2,
+                            productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                            productSupplierIds: relatedProductList[i].supplierId.toString(),
+                          ),
+                        );
+                  }
+                },
                 onButtonTap: () {
                   Navigator.pop(prevContext);
-                  showProductDetails(isSaleOn: isSaleOn, context: context, productId: relatedProductList[i].id ?? '', isBarcode: false, productListIndex: 2, productStock: (relatedProductList[i].productStock.toString()));
+                  showProductDetails(
+                    isSaleOn: isSaleOn,
+                    context: context,
+                    productId: relatedProductList[i].id ?? '',
+                    isBarcode: false,
+                    productListIndex: 2,
+                    productStock: (relatedProductList[i].productStock.toString()),
+                  );
                 },
               );
             },

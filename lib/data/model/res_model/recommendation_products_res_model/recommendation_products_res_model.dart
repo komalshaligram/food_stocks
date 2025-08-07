@@ -25,6 +25,8 @@ class RecommendationData with _$RecommendationData {
   const factory RecommendationData({
     @JsonKey(name: "_id")
     String? id,
+    @JsonKey(name: "supplierId")
+    String? supplierId,
     @JsonKey(name: "productStock")
     double? productStock,
     @JsonKey(name: "totalSale")

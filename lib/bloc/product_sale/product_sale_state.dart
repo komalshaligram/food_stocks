@@ -30,40 +30,40 @@ class ProductSaleState with _$ProductSaleState {
     required bool isSaleOn,
     required bool isProgress
 
-   
+
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => ProductSaleState(
-        productSalesList: [],
-        search: '',
-        productDetails: [],
-        isShimmering: false,
-        isLoading: false,
-        isProductLoading: false,
-        productStockUpdateIndex: -1,
+      productSalesList: [],
+      search: '',
+      productDetails: [],
+      isShimmering: false,
+      isLoading: false,
+      isProductLoading: false,
+      productStockUpdateIndex: -1,
       productStockList: [
         [ ProductStockModel(productId: '')],
         [],
         []
       ],
-        pageNum: 0,
-        isLoadMore: false,
-        isBottomOfProducts: false,
-        isSelectSupplier: false,
-        productSupplierList: [],
-        imageIndex: 0,
-        noteController: TextEditingController(),
-        refreshController: RefreshController(),
+      pageNum: 0,
+      isLoadMore: false,
+      isBottomOfProducts: false,
+      isSelectSupplier: false,
+      productSupplierList: [],
+      imageIndex: 0,
+      noteController: TextEditingController(),
+      refreshController: RefreshController(),
       isGuestUser : false,
-    relatedProductList: [],
-    isRelatedShimmering: false,
+      relatedProductList: [],
+      isRelatedShimmering: false,
       bottleDeposit:0,
-    isSubUserAddToBasket: false,
+      isSubUserAddToBasket: false,
       isGridView : true,
-    productListIndex: -1,
+      productListIndex: -1,
       isIncludedVat : false,
       isSaleOn : false,
       isProgress:false
-    
-      );
+
+  );
 }
