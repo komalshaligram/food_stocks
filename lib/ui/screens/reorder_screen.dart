@@ -1601,6 +1601,7 @@ class ReorderScreenWidget extends StatelessWidget {
                 Navigator.pop(context);
               },
               positiveOnTap: () async {
+                Navigator.pop(dialogContext);
                 bloc.add(ReorderEvent.increaseListQuantityOfProduct(
                   context: context,
                   productListIndex: productListIndex,
@@ -1615,9 +1616,9 @@ class ReorderScreenWidget extends StatelessWidget {
                   productStockUpdateIndex: index,
                   productSupplierIds: supplierId,
                 ));
-                await Future.delayed(const Duration(seconds: 1)).then((_) {
-                  Navigator.pop(dialogContext);
-                });
+                // await Future.delayed(const Duration(seconds: 1)).then((_) {
+                //   Navigator.pop(dialogContext);
+                // });
               },
             );
           },
@@ -1643,6 +1644,7 @@ class ReorderScreenWidget extends StatelessWidget {
                 Navigator.pop(context);
               },
               positiveOnTap: () async {
+                Navigator.pop(dialogContext);
                 bloc.add(
                   ReorderEvent.decreaseListQuantityOfProduct(
                     context: context,
@@ -1662,9 +1664,9 @@ class ReorderScreenWidget extends StatelessWidget {
                   ),
                 );
 
-                await Future.delayed(const Duration(seconds: 1)).then((_) {
-                  Navigator.pop(dialogContext);
-                });
+                // await Future.delayed(const Duration(seconds: 1)).then((_) {
+                //   Navigator.pop(dialogContext);
+                // });
               },
             );
           },

@@ -1356,6 +1356,8 @@ class HomeScreenWidget extends StatelessWidget {
                 Navigator.pop(context);
               },
               positiveOnTap: () async {
+                Navigator.pop(dialogContext);
+
                 bloc.add(HomeEvent.increaseListQuantityOfProduct(
                   context: context,
                   productListIndex: productListIndex,
@@ -1371,9 +1373,9 @@ class HomeScreenWidget extends StatelessWidget {
                   productSupplierIds: supplierId,
                 ));
 
-                await Future.delayed(const Duration(seconds: 1)).then((_) {
-                  Navigator.pop(dialogContext);
-                });
+                // await Future.delayed(const Duration(seconds: 1)).then((_) {
+                //
+                // });
               },
             );
           },
@@ -1399,6 +1401,7 @@ class HomeScreenWidget extends StatelessWidget {
                 Navigator.pop(context);
               },
               positiveOnTap: () async {
+                Navigator.pop(dialogContext);
                 bloc.add(
                   HomeEvent.decreaseListQuantityOfProduct(
                     context: context,
@@ -1418,9 +1421,9 @@ class HomeScreenWidget extends StatelessWidget {
                   ),
                 );
 
-                await Future.delayed(const Duration(seconds: 1)).then((_) {
-                  Navigator.pop(dialogContext);
-                });
+                // await Future.delayed(const Duration(seconds: 1)).then((_) {
+                //   Navigator.pop(dialogContext);
+                // });
               },
             );
           },

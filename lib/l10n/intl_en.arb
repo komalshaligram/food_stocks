@@ -551,7 +551,7 @@
   "enter_valid_year": "Please enter valid year",
   "select_valid_month": "Please select valid month",
   "minimum_box": "Minimum box",
-  "minimum_box_title": "The minimum boxes for this sale is: ",
+  "minimum_box_title": "The minimum boxes for this mixed sale is: ",
   "confirm_minimum_box": ", are you sure you don’t want to get the sale price?",
   "minimumGrid" : "Min",
   "maximumGrid" : "Max",

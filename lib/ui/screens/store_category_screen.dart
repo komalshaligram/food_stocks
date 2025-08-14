@@ -1506,6 +1506,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 Navigator.pop(context);
               },
               positiveOnTap: () async {
+                Navigator.pop(dialogContext);
                 bloc.add(StoreCategoryEvent.increaseListQuantityOfProduct(
                   context: context,
                   productListIndex: productListIndex,
@@ -1521,7 +1522,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   productSupplierIds: supplierId,
                 ));
 
-                Navigator.pop(dialogContext);
+                // Navigator.pop(dialogContext);
               },
             );
           },
@@ -1547,6 +1548,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 Navigator.pop(context);
               },
               positiveOnTap: () async {
+                Navigator.pop(dialogContext);
                 bloc.add(
                   StoreCategoryEvent.decreaseListQuantityOfProduct(
                     context: context,
@@ -1565,7 +1567,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     productSupplierIds: supplierId,
                   ),
                 );
-                Navigator.pop(dialogContext);
+                // Navigator.pop(dialogContext);
               },
             );
           },

@@ -516,7 +516,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "מינימום מארזים להזמנה עבור המבצע",
     ),
     "minimum_box_title": MessageLookupByLibrary.simpleMessage(
-      "מינימום מארזים להזמנה עבור המבצע",
+      "מספר הקופסאות המינימלי למכירה מעורבת זו הוא: ",
     ),
     "missing_quantity_not_more_than_original":
         MessageLookupByLibrary.simpleMessage(

@@ -4845,10 +4845,10 @@ class S {
     return Intl.message('Minimum box', name: 'minimum_box', desc: '', args: []);
   }
 
-  /// `The minimum boxes for this sale is: `
+  /// `The minimum boxes for this mixed sale is: `
   String get minimum_box_title {
     return Intl.message(
-      'The minimum boxes for this sale is: ',
+      'The minimum boxes for this mixed sale is: ',
       name: 'minimum_box_title',
       desc: '',
       args: [],

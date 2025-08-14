@@ -558,7 +558,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "minimumList": MessageLookupByLibrary.simpleMessage("Minimum for sale"),
     "minimum_box": MessageLookupByLibrary.simpleMessage("Minimum box"),
     "minimum_box_title": MessageLookupByLibrary.simpleMessage(
-      "The minimum boxes for this sale is: ",
+      "The minimum boxes for this mixed sale is: ",
     ),
     "missing_quantity_not_more_than_original":
         MessageLookupByLibrary.simpleMessage(
