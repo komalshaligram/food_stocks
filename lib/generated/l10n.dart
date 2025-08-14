@@ -4855,11 +4855,41 @@ class S {
     );
   }
 
-  /// `,are you sure you don’t want to get the sale price?`
+  /// `, are you sure you don’t want to get the sale price?`
   String get confirm_minimum_box {
     return Intl.message(
-      ',are you sure you don’t want to get the sale price?',
+      ', are you sure you don’t want to get the sale price?',
       name: 'confirm_minimum_box',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min`
+  String get minimumGrid {
+    return Intl.message('Min', name: 'minimumGrid', desc: '', args: []);
+  }
+
+  /// `Max`
+  String get maximumGrid {
+    return Intl.message('Max', name: 'maximumGrid', desc: '', args: []);
+  }
+
+  /// `Minimum for sale`
+  String get minimumList {
+    return Intl.message(
+      'Minimum for sale',
+      name: 'minimumList',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maximum for sale`
+  String get maximumList {
+    return Intl.message(
+      'Maximum for sale',
+      name: 'maximumList',
       desc: '',
       args: [],
     );

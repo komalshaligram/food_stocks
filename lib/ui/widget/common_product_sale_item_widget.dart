@@ -35,6 +35,8 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final void Function()? onQuantityChanged;
   final void Function()? onQuantityIncreaseTap;
   final void Function()? onQuantityDecreaseTap;
+  final String? minQuantity;
+  final String? maxQuantity;
 
   const CommonProductSaleItemWidget({
     super.key,
@@ -58,6 +60,8 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     this.onQuantityChanged,
     this.onQuantityIncreaseTap,
     this.onQuantityDecreaseTap,
+    this.minQuantity,
+    this.maxQuantity,
   });
 
   @override
@@ -216,6 +220,24 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                     ),
                   )
                 : 0.width,
+
+            5.height,
+
+            isSale!
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${AppLocalizations.of(context)!.minimumGrid}: ${minQuantity.toString()} / ${AppLocalizations.of(context)!.maximumGrid}: ${maxQuantity.toString()}',
+                        style: AppStyles.rkRegularTextStyle(
+                          color: AppColors.redColor,
+                          size: AppConstants.font_10,
+                        ),
+                      ),
+                    ],
+                  )
+                : const IgnorePointer(),
 
             const Spacer(),
             // 10.height,

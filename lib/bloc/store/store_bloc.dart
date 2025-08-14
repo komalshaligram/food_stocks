@@ -723,7 +723,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                           isPesach: supplier.isPesach ?? false,
                           salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
                           salesDesc: parse(supplier.sale?.saleDescription ?? '').body?.text ?? '',
-                          supplierId: supplier.supplierId))
+                          supplierId: supplier.supplierId,
+                  isSale: supplier.sale?.isSale,
+                  saleMinQuantity: supplier.sale?.saleMinQuantity, saleMaxQuantity: supplier.sale?.saleMaxQuantity))
                       .toList() ??
                   [],
             );

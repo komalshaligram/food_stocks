@@ -39,22 +39,25 @@ class PesachProductsState with _$PesachProductsState {
     required bool isIncludedVat,
     required bool isSaleOn,
     required bool isProgress,
-
-
+    required String language,
   }) = _PesachProductsState;
 
   factory PesachProductsState.initial() => PesachProductsState(
-    supplierId: '',
+        supplierId: '',
         search: '',
-      bottleDeposit:0.0,
-      isProgress:false,
+        bottleDeposit: 0.0,
+        isProgress: false,
         productList: [],
         isShimmering: false,
         isLoading: false,
         isProductLoading: false,
         productDetails: [],
         productStockUpdateIndex: -1,
-      productStockList: [[ ProductStockModel(productId: '')],[],[]],
+        productStockList: [
+          [ProductStockModel(productId: '')],
+          [],
+          []
+        ],
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,
@@ -64,25 +67,22 @@ class PesachProductsState with _$PesachProductsState {
         noteController: TextEditingController(),
         refreshController: RefreshController(),
         searchType: '',
-      isGuestUser:false,
-     isGridView :false,
-    isCategoryExpand: false,
-    isSearching: false,
-    searchController: TextEditingController(),
-    searchList: [],
-    productCategoryList: [],
-    isCatVisible: false,
-    relatedProductList: [],
-    isRelatedShimmering: false,
-    duringCelebration: false,
-    cartCount: 0,
-    productListIndex: 0,
-    isSubUserAddToBasket: false,
-      isIncludedVat : false,
-      isSaleOn : false
-    
-    
-
-
+        isGuestUser: false,
+        isGridView: false,
+        isCategoryExpand: false,
+        isSearching: false,
+        searchController: TextEditingController(),
+        searchList: [],
+        productCategoryList: [],
+        isCatVisible: false,
+        relatedProductList: [],
+        isRelatedShimmering: false,
+        duringCelebration: false,
+        cartCount: 0,
+        productListIndex: 0,
+        isSubUserAddToBasket: false,
+        isIncludedVat: false,
+        isSaleOn: false,
+        language: AppStrings.hebrewString,
       );
 }

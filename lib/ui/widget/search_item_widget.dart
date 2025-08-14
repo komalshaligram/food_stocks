@@ -38,6 +38,9 @@ class SearchItemWidget extends StatelessWidget {
     this.onQuantityChanged,
     this.onQuantityIncreaseTap,
     this.onQuantityDecreaseTap,
+    this.isSale,
+    this.minQuantity,
+    this.maxQuantity,
   });
 
   final String lowStock;
@@ -62,6 +65,9 @@ class SearchItemWidget extends StatelessWidget {
   final void Function()? onQuantityChanged;
   final void Function()? onQuantityIncreaseTap;
   final void Function()? onQuantityDecreaseTap;
+  final bool? isSale;
+  final String? minQuantity;
+  final String? maxQuantity;
 
   @override
   Widget build(BuildContext context) {
@@ -111,10 +117,10 @@ class SearchItemWidget extends StatelessWidget {
                 : double.parse(productStock.toString()) > 0 || lowStock.isEmpty
                     ? isPesach
                         ? 130
-                        : salePrice != 0.0 ? 130 : 110
+                        : salePrice != 0.0 ? 180 : 120
                     : isPesach
                         ? 130
-                        : salePrice != 0.0 ? 130 :110,
+                        : salePrice != 0.0 ? 180 :120,
             decoration: BoxDecoration(color: AppColors.whiteColor, border: Border(bottom: (isLastItem ?? false) ? BorderSide.none : BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1))),
             padding: EdgeInsets.only(top: AppConstants.padding_5, left: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10, right: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10, bottom: AppConstants.padding_5),
             child: Row(
@@ -278,6 +284,32 @@ class SearchItemWidget extends StatelessWidget {
                             ),
                           )
                         : 0.height,
+
+                    5.height,
+                    isSale!
+                        ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${AppLocalizations.of(context)!.minimumList}: ${minQuantity.toString()}',
+                          style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.redColor,
+                            size: AppConstants.font_14,
+                          ),
+                        ),
+                        Text(
+                          '${AppLocalizations.of(context)!.maximumList}: ${maxQuantity.toString()}',
+                          style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.redColor,
+                            size: AppConstants.font_14,
+                          ),
+                        ),
+                      ],
+                    )
+                        : const IgnorePointer(),
+
+
                     const Spacer(),
                     // 7.height,
                     Row(
@@ -325,6 +357,7 @@ class SearchItemWidget extends StatelessWidget {
                         // : 0.width,
                       ],
                     ),
+                    5.height,
                   ],
                 ),
               ],

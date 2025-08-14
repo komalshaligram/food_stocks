@@ -213,7 +213,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                           );
                                     },
                                     onQuantityDecreaseTap: () {
-                                      // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
                                       context.read<PlanogramProductBloc>().add(
                                             PlanogramProductEvent.decreaseListQuantityOfProduct(
                                               context: context,
@@ -234,17 +233,15 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                           );
                                       // }
                                     },
-                                    onPressed: ()  {
+                                    onPressed: () {
                                       if (!state.isGuestUser) {
-                                         showProductDetails(
+                                        showProductDetails(
                                           context: context,
                                           productId: state.planogramProductList[index].id ?? '',
                                           productStock: state.planogramProductList[index].productStock.toString(),
                                           productListIndex: 1,
                                           isSaleOn: state.isSaleOn,
                                         );
-
-
                                       } else {
                                         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                       }
@@ -337,11 +334,10 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                           isSaleOn: state.isSaleOn,
                                         );
 
-                                     // Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
-                                     //
-                                     // context.read<PlanogramProductBloc>().add(
-                                     //     PlanogramProductEvent.getPlanogramProductsEvent(planogram: args?[AppStrings.planogramProductsParamString] ?? const PlanogramDatum(), context: context));
-
+                                        // Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+                                        //
+                                        // context.read<PlanogramProductBloc>().add(
+                                        //     PlanogramProductEvent.getPlanogramProductsEvent(planogram: args?[AppStrings.planogramProductsParamString] ?? const PlanogramDatum(), context: context));
                                       } else {
                                         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                       }
@@ -649,8 +645,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                         onCloseTap: () {
                                           Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
 
-                                          context.read<PlanogramProductBloc>().add(
-                                              PlanogramProductEvent.getPlanogramProductsEvent(planogram: args?[AppStrings.planogramProductsParamString] ?? const PlanogramDatum(), context: context));
+                                          context.read<PlanogramProductBloc>().add(PlanogramProductEvent.getPlanogramProductsEvent(planogram: args?[AppStrings.planogramProductsParamString] ?? const PlanogramDatum(), context: context));
 
                                           Navigator.pop(context);
                                         },
@@ -758,7 +753,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                       );
                 },
                 onQuantityDecreaseTap: () {
-                  // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
                   if (productStockList[2][i].quantity != 0) {
                     context.read<PlanogramProductBloc>().add(
                           PlanogramProductEvent.decreaseListQuantityOfProduct(

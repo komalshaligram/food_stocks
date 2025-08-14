@@ -28,8 +28,8 @@ class ProductSaleState with _$ProductSaleState {
     required int productListIndex,
     required bool isIncludedVat,
     required bool isSaleOn,
-    required bool isProgress
-
+    required bool isProgress,
+    required String language,
 
   }) = _ProductSaleState;
 
@@ -63,7 +63,7 @@ class ProductSaleState with _$ProductSaleState {
       productListIndex: -1,
       isIncludedVat : false,
       isSaleOn : false,
-      isProgress:false
-
+      isProgress:false,
+      language :AppStrings.hebrewString,
   );
 }

@@ -58,6 +58,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             bottleDeposit: preferences.getBottleTax(),
             isSubUserAddToBasket: preferences.getCanAddToBasket(),
             isGridView: preferences.getSalesProductGrid(),
+            language: preferences.getAppLanguage()
           ),
         );
 
@@ -88,7 +89,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               pageNum: state.pageNum + 1,
               isShimmering: false,
               isProgress: false,
-              isLoadMore: false));
+              isLoadMore: false,
+              ));
           return;
         }
         if (state.isProgress) {

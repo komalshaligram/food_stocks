@@ -492,6 +492,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "mar": MessageLookupByLibrary.simpleMessage("מרץ"),
     "march": MessageLookupByLibrary.simpleMessage("מרץ"),
+    "maximumGrid": MessageLookupByLibrary.simpleMessage("מקס"),
+    "maximumList": MessageLookupByLibrary.simpleMessage("מקסימום מארזים למבצע"),
     "maximum_qty": MessageLookupByLibrary.simpleMessage(
       "מקסימום מארזים להזמנה עבור המבצע",
     ),
@@ -508,6 +510,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "messages_not_found": MessageLookupByLibrary.simpleMessage(
       "לא נמצאו הודעות",
     ),
+    "minimumGrid": MessageLookupByLibrary.simpleMessage("מיני"),
+    "minimumList": MessageLookupByLibrary.simpleMessage("מינימום מארזים למבצע"),
     "minimum_box": MessageLookupByLibrary.simpleMessage(
       "מינימום מארזים להזמנה עבור המבצע",
     ),

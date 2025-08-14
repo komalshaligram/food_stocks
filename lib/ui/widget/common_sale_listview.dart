@@ -32,8 +32,32 @@ class CommonSaleListView extends StatelessWidget {
   final void Function()? onQuantityChanged;
   final void Function()? onQuantityIncreaseTap;
   final void Function()? onQuantityDecreaseTap;
+  final String? minQuantity;
+  final String? maxQuantity;
 
-  const CommonSaleListView({super.key, this.height, required this.discountedPrice, required this.productImage, required this.productName, required this.price, required this.productStock, required this.onButtonTap, required this.isGuestUser, required this.numberOfUnits, required this.lowStock, this.isPesach, this.isFromSale, required this.context, this.salesDesc, this.quantity, this.onQuantityChanged, this.onQuantityIncreaseTap, this.onQuantityDecreaseTap});
+  const CommonSaleListView({
+    super.key,
+    this.height,
+    required this.discountedPrice,
+    required this.productImage,
+    required this.productName,
+    required this.price,
+    required this.productStock,
+    required this.onButtonTap,
+    required this.isGuestUser,
+    required this.numberOfUnits,
+    required this.lowStock,
+    this.isPesach,
+    this.isFromSale,
+    required this.context,
+    this.salesDesc,
+    this.quantity,
+    this.onQuantityChanged,
+    this.onQuantityIncreaseTap,
+    this.onQuantityDecreaseTap,
+    this.minQuantity,
+    this.maxQuantity,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +178,7 @@ class CommonSaleListView extends StatelessWidget {
                               "${parse(salesDesc).body?.text}",
                               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor, fontWeight: FontWeight.w500),
                               maxLines: 4,
-                              textAlign:  TextAlign.center,
+                              textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                               softWrap: true,
                             ),
@@ -188,7 +212,30 @@ class CommonSaleListView extends StatelessWidget {
                             : 0.width,
                       ],
                     ),
-                    10.height,
+                    5.height,
+                    isFromSale!
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${AppLocalizations.of(context)!.minimumList}: ${minQuantity.toString()}',
+                                style: AppStyles.rkRegularTextStyle(
+                                  color: AppColors.redColor,
+                                  size: AppConstants.font_14,
+                                ),
+                              ),
+                              Text(
+                                '${AppLocalizations.of(context)!.maximumList}: ${maxQuantity.toString()}',
+                                style: AppStyles.rkRegularTextStyle(
+                                  color: AppColors.redColor,
+                                  size: AppConstants.font_14,
+                                ),
+                              ),
+                            ],
+                          )
+                        : const IgnorePointer(),
+                    5.height,
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,

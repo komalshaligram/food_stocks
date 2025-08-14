@@ -21,6 +21,12 @@ class SearchModel with _$SearchModel {
     @Default(false) bool isPesach,
     @Default('') String salesDesc,
     @Default(0.0) double salePrice,
+    @JsonKey(name: "isSale")
+    bool? isSale,
+    @JsonKey(name: "saleMaxQuantity")
+    String? saleMaxQuantity,
+    @JsonKey(name: "saleMinQuantity")
+    String? saleMinQuantity,
     @JsonKey(name: "_id")
     String? id,
     @JsonKey(name: "supplierId")

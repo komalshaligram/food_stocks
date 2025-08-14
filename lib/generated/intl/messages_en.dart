@@ -222,7 +222,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirm_minimum_box": MessageLookupByLibrary.simpleMessage(
-      ",are you sure you don’t want to get the sale price?",
+      ", are you sure you don’t want to get the sale price?",
     ),
     "connection_error": MessageLookupByLibrary.simpleMessage(
       "Connection error",
@@ -538,6 +538,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "mar": MessageLookupByLibrary.simpleMessage("Oct"),
     "march": MessageLookupByLibrary.simpleMessage("October"),
+    "maximumGrid": MessageLookupByLibrary.simpleMessage("Max"),
+    "maximumList": MessageLookupByLibrary.simpleMessage("Maximum for sale"),
     "maximum_qty": MessageLookupByLibrary.simpleMessage("Maximum Quantity"),
     "may": MessageLookupByLibrary.simpleMessage("Aug"),
     "menu": MessageLookupByLibrary.simpleMessage("Menu"),
@@ -552,6 +554,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "messages_not_found": MessageLookupByLibrary.simpleMessage(
       "Messages not found",
     ),
+    "minimumGrid": MessageLookupByLibrary.simpleMessage("Min"),
+    "minimumList": MessageLookupByLibrary.simpleMessage("Minimum for sale"),
     "minimum_box": MessageLookupByLibrary.simpleMessage("Minimum box"),
     "minimum_box_title": MessageLookupByLibrary.simpleMessage(
       "The minimum boxes for this sale is: ",

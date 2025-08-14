@@ -35,51 +35,48 @@ class RecommendationProductsState with _$RecommendationProductsState {
     required bool isSubUserAddToBasket,
     required bool isIncludedVat,
     required bool isSaleOn,
-    required bool isProgress
-
-    
+    required bool isProgress,
+    required String language,
   }) = _RecommendationProductsState;
 
   factory RecommendationProductsState.initial() => RecommendationProductsState(
-      recommendationProductsList: [],
-      isShimmering: false,
-      isLoading: false,
-      isProductLoading: false,
-      productDetails: [],
-      productStockUpdateIndex: -1,
-      productStockList: [
-        [ ProductStockModel(productId: '')],
-        [],
-        []
-      ],
-      pageNum: 0,
-      isLoadMore: false,
-      isBottomOfProducts: false,
-      isSelectSupplier: false,
-      productSupplierList: [],
-      imageIndex: 0,
-      refreshController: RefreshController(),
-      noteController: TextEditingController(),
-      cartCount: 0,
-      duringCelebration: false,
-      isCategoryExpand: false,
-      isSearching: false,
-      searchController: TextEditingController(),
-      searchList: [],
-      search: '',
-      productCategoryList: [],
-      isCatVisible: false,
-      isGridView: true,
-      relatedProductList: [],
-      isRelatedShimmering: false,
-      productListIndex: -1,
-      bottleDeposit: 0,
-    isSubUserAddToBasket: false,
-      isIncludedVat : false,
-      isSaleOn : false,
-      isProgress:false
-    
-    
-
-  );
+        recommendationProductsList: [],
+        isShimmering: false,
+        isLoading: false,
+        isProductLoading: false,
+        productDetails: [],
+        productStockUpdateIndex: -1,
+        productStockList: [
+          [ProductStockModel(productId: '')],
+          [],
+          []
+        ],
+        pageNum: 0,
+        isLoadMore: false,
+        isBottomOfProducts: false,
+        isSelectSupplier: false,
+        productSupplierList: [],
+        imageIndex: 0,
+        refreshController: RefreshController(),
+        noteController: TextEditingController(),
+        cartCount: 0,
+        duringCelebration: false,
+        isCategoryExpand: false,
+        isSearching: false,
+        searchController: TextEditingController(),
+        searchList: [],
+        search: '',
+        productCategoryList: [],
+        isCatVisible: false,
+        isGridView: true,
+        relatedProductList: [],
+        isRelatedShimmering: false,
+        productListIndex: -1,
+        bottleDeposit: 0,
+        isSubUserAddToBasket: false,
+        isIncludedVat: false,
+        isSaleOn: false,
+        isProgress: false,
+        language: AppStrings.hebrewString,
+      );
 }

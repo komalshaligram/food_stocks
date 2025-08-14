@@ -57,6 +57,7 @@ class HomeState with _$HomeState {
     required bool retryLoading,
     required BuildContext? context,
     required RefreshController refreshController,
+    required bool isDialog,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -120,5 +121,6 @@ class HomeState with _$HomeState {
     allShimmering: true,
     context : null,
     refreshController: RefreshController(),
+    isDialog : true,
   );
 }

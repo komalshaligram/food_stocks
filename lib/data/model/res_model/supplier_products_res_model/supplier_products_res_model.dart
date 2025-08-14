@@ -76,6 +76,8 @@ class Sale with _$Sale {
     required String saleUntilDate,
     @JsonKey(name: "saleMaxQuantity")
     required String saleMaxQuantity,
+    @JsonKey(name: "saleMinQuantity")
+    required String saleMinQuantity,
     @JsonKey(name: "saleDescription")
     required String saleDescription,
   }) = _Sale;

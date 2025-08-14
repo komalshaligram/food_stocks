@@ -36,6 +36,7 @@ import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
 import '../widget/custom_button_widget.dart';
+import '../widget/custom_dialog.dart';
 import '../widget/filter_bottom_sheet_shimmer_widget.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
@@ -227,6 +228,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                                   lowStock: state.previousOrderProductsList[index].lowStock ?? '',
                                                   isPesach: state.previousOrderProductsList[index].isPesach,
                                                   quantity: state.productStockList[1][index].quantity,
+                                                  minQuantity: state.previousOrderProductsList[index].sale?.saleMinQuantity,
+                                                  maxQuantity: state.previousOrderProductsList[index].sale?.saleMaxQuantity,
                                                   onQuantityChanged: () {
                                                     context.read<ReorderBloc>().add(
                                                           ReorderEvent.updateListQuantityOfProduct(
@@ -239,30 +242,9 @@ class ReorderScreenWidget extends StatelessWidget {
                                                         );
                                                   },
                                                   onQuantityIncreaseTap: () {
-                                                    context.read<ReorderBloc>().add(
-                                                          ReorderEvent.increaseListQuantityOfProduct(
-                                                            context: context,
-                                                            productListIndex: 1,
-                                                            productStockUpdateIndex: index,
-                                                            productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
-                                                          ),
-                                                        );
-
-                                                    context.read<ReorderBloc>().add(
-                                                          ReorderEvent.addToCartListProductEvent(
-                                                            context: context,
-                                                            productId: state.previousOrderProductsList[index].id.toString(),
-                                                            productListIndex: 1,
-                                                            productStockUpdateIndex: index,
-                                                            productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
-                                                          ),
-                                                        );
-                                                  },
-                                                  onQuantityDecreaseTap: () {
-                                                    // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
-                                                    if (state.productStockList[1][index].quantity != 0) {
+                                                    if (int.parse(state.previousOrderProductsList[index].sale?.saleMinQuantity ?? '0') <= state.productStockList[1][index].quantity + 1) {
                                                       context.read<ReorderBloc>().add(
-                                                            ReorderEvent.decreaseListQuantityOfProduct(
+                                                            ReorderEvent.increaseListQuantityOfProduct(
                                                               context: context,
                                                               productListIndex: 1,
                                                               productStockUpdateIndex: index,
@@ -279,6 +261,48 @@ class ReorderScreenWidget extends StatelessWidget {
                                                               productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
                                                             ),
                                                           );
+                                                    } else {
+                                                      showMinMaxIncreaseQtyConfirmDialog(
+                                                        context,
+                                                        state.previousOrderProductsList[index].id.toString(),
+                                                        state.previousOrderProductsList[index].sale?.saleMinQuantity.toString() ?? '0',
+                                                        index,
+                                                        state.previousOrderProductsList[index].supplierId.toString(),
+                                                        1,
+                                                      );
+                                                    }
+                                                  },
+                                                  onQuantityDecreaseTap: () {
+                                                    if (state.productStockList[1][index].quantity != 0) {
+                                                      if (int.parse(state.previousOrderProductsList[index].sale?.saleMinQuantity ?? '0') <= state.productStockList[1][index].quantity - 1) {
+                                                        context.read<ReorderBloc>().add(
+                                                              ReorderEvent.decreaseListQuantityOfProduct(
+                                                                context: context,
+                                                                productListIndex: 1,
+                                                                productStockUpdateIndex: index,
+                                                                productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                              ),
+                                                            );
+
+                                                        context.read<ReorderBloc>().add(
+                                                              ReorderEvent.addToCartListProductEvent(
+                                                                context: context,
+                                                                productId: state.previousOrderProductsList[index].id.toString(),
+                                                                productListIndex: 1,
+                                                                productStockUpdateIndex: index,
+                                                                productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                              ),
+                                                            );
+                                                      } else {
+                                                        showMinMaxDecreaseQtyConfirmDialog(
+                                                          context,
+                                                          state.previousOrderProductsList[index].id.toString(),
+                                                          state.previousOrderProductsList[index].sale?.saleMinQuantity.toString() ?? '0',
+                                                          index,
+                                                          state.previousOrderProductsList[index].supplierId.toString(),
+                                                          1,
+                                                        );
+                                                      }
                                                     }
                                                   },
                                                   onButtonTap: () {
@@ -310,6 +334,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                                   productName: state.previousOrderProductsList[index].productName ?? '',
                                                   price: double.parse(state.previousOrderProductsList[index].productPrice.toString()),
                                                   quantity: state.productStockList[1][index].quantity,
+                                                  minQuantity: state.previousOrderProductsList[index].sale?.saleMinQuantity,
+                                                  maxQuantity: state.previousOrderProductsList[index].sale?.saleMaxQuantity,
                                                   onQuantityChanged: () {
                                                     context.read<ReorderBloc>().add(
                                                           ReorderEvent.updateListQuantityOfProduct(
@@ -322,30 +348,9 @@ class ReorderScreenWidget extends StatelessWidget {
                                                         );
                                                   },
                                                   onQuantityIncreaseTap: () {
-                                                    context.read<ReorderBloc>().add(
-                                                          ReorderEvent.increaseListQuantityOfProduct(
-                                                            context: context,
-                                                            productListIndex: 1,
-                                                            productStockUpdateIndex: index,
-                                                            productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
-                                                          ),
-                                                        );
-
-                                                    context.read<ReorderBloc>().add(
-                                                          ReorderEvent.addToCartListProductEvent(
-                                                            context: context,
-                                                            productId: state.previousOrderProductsList[index].id.toString(),
-                                                            productListIndex: 1,
-                                                            productStockUpdateIndex: index,
-                                                            productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
-                                                          ),
-                                                        );
-                                                  },
-                                                  onQuantityDecreaseTap: () {
-                                                    // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
-                                                    if (state.productStockList[1][index].quantity != 0) {
+                                                    if (int.parse(state.previousOrderProductsList[index].sale?.saleMinQuantity ?? '0') <= state.productStockList[1][index].quantity + 1) {
                                                       context.read<ReorderBloc>().add(
-                                                            ReorderEvent.decreaseListQuantityOfProduct(
+                                                            ReorderEvent.increaseListQuantityOfProduct(
                                                               context: context,
                                                               productListIndex: 1,
                                                               productStockUpdateIndex: index,
@@ -362,6 +367,48 @@ class ReorderScreenWidget extends StatelessWidget {
                                                               productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
                                                             ),
                                                           );
+                                                    } else {
+                                                      showMinMaxIncreaseQtyConfirmDialog(
+                                                        context,
+                                                        state.previousOrderProductsList[index].id.toString(),
+                                                        state.previousOrderProductsList[index].sale?.saleMinQuantity.toString() ?? '0',
+                                                        index,
+                                                        state.previousOrderProductsList[index].supplierId.toString(),
+                                                        1,
+                                                      );
+                                                    }
+                                                  },
+                                                  onQuantityDecreaseTap: () {
+                                                    if (state.productStockList[1][index].quantity != 0) {
+                                                      if (int.parse(state.previousOrderProductsList[index].sale?.saleMinQuantity ?? '0') <= state.productStockList[1][index].quantity - 1) {
+                                                        context.read<ReorderBloc>().add(
+                                                              ReorderEvent.decreaseListQuantityOfProduct(
+                                                                context: context,
+                                                                productListIndex: 1,
+                                                                productStockUpdateIndex: index,
+                                                                productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                              ),
+                                                            );
+
+                                                        context.read<ReorderBloc>().add(
+                                                              ReorderEvent.addToCartListProductEvent(
+                                                                context: context,
+                                                                productId: state.previousOrderProductsList[index].id.toString(),
+                                                                productListIndex: 1,
+                                                                productStockUpdateIndex: index,
+                                                                productSupplierIds: state.previousOrderProductsList[index].supplierId.toString(),
+                                                              ),
+                                                            );
+                                                      } else {
+                                                        showMinMaxDecreaseQtyConfirmDialog(
+                                                          context,
+                                                          state.previousOrderProductsList[index].id.toString(),
+                                                          state.previousOrderProductsList[index].sale?.saleMinQuantity.toString() ?? '0',
+                                                          index,
+                                                          state.previousOrderProductsList[index].supplierId.toString(),
+                                                          1,
+                                                        );
+                                                      }
                                                     }
                                                   },
                                                   onButtonTap: () {
@@ -443,59 +490,82 @@ class ReorderScreenWidget extends StatelessWidget {
                                           isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
                                           isLastItem: state.searchList.length - 1 == index,
                                           quantity: state.productStockList[0][index].quantity,
+                                          isSale: state.searchList[index].isSale,
+                                          minQuantity: state.searchList[index].saleMinQuantity,
+                                          maxQuantity: state.searchList[index].saleMaxQuantity,
                                           onQuantityChanged: () {
                                             context.read<ReorderBloc>().add(
-                                              ReorderEvent.updateListQuantityOfProduct(
-                                                context: context,
-                                                quantity: state.productStockList[0][index].quantity.toString(),
-                                                productListIndex: 0,
-                                                productStockUpdateIndex: index,
-                                                productSupplierIds: state.searchList[index].supplierId.toString(),
-                                              ),
-                                            );
+                                                  ReorderEvent.updateListQuantityOfProduct(
+                                                    context: context,
+                                                    quantity: state.productStockList[0][index].quantity.toString(),
+                                                    productListIndex: 0,
+                                                    productStockUpdateIndex: index,
+                                                    productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                  ),
+                                                );
                                           },
                                           onQuantityIncreaseTap: () {
-                                            printData("check supplierid ${state.searchList[index].supplierId}");
-                                            context.read<ReorderBloc>().add(
-                                              ReorderEvent.increaseListQuantityOfProduct(
-                                                context: context,
-                                                productListIndex: 0,
-                                                productStockUpdateIndex: index,
-                                                productSupplierIds: state.searchList[index].supplierId.toString(),
-                                              ),
-                                            );
+                                            if (int.parse(state.searchList[index].saleMinQuantity ?? '0') <= state.productStockList[0][index].quantity + 1) {
+                                              context.read<ReorderBloc>().add(
+                                                    ReorderEvent.increaseListQuantityOfProduct(
+                                                      context: context,
+                                                      productListIndex: 0,
+                                                      productStockUpdateIndex: index,
+                                                      productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                    ),
+                                                  );
 
-                                            context.read<ReorderBloc>().add(
-                                              ReorderEvent.addToCartListProductEvent(
-                                                context: context,
-                                                productId: state.searchList[index].searchId,
-                                                productListIndex: 0,
-                                                productStockUpdateIndex: index,
-                                                productSupplierIds: state.searchList[index].supplierId.toString(),
-                                              ),
-                                            );
+                                              context.read<ReorderBloc>().add(
+                                                    ReorderEvent.addToCartListProductEvent(
+                                                      context: context,
+                                                      productId: state.searchList[index].searchId,
+                                                      productListIndex: 0,
+                                                      productStockUpdateIndex: index,
+                                                      productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                    ),
+                                                  );
+                                            } else {
+                                              showMinMaxIncreaseQtyConfirmDialog(
+                                                context,
+                                                state.searchList[index].searchId,
+                                                state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                                index,
+                                                state.searchList[index].supplierId.toString(),
+                                                0,
+                                              );
+                                            }
                                           },
                                           onQuantityDecreaseTap: () {
-                                            // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
                                             if (state.productStockList[0][index].quantity != 0) {
-                                              context.read<ReorderBloc>().add(
-                                                ReorderEvent.decreaseListQuantityOfProduct(
-                                                  context: context,
-                                                  productListIndex: 0,
-                                                  productStockUpdateIndex: index,
-                                                  productSupplierIds: state.searchList[index].supplierId.toString(),
-                                                ),
-                                              );
+                                              if (int.parse(state.searchList[index].saleMinQuantity ?? '0') <= state.productStockList[0][index].quantity - 1) {
+                                                context.read<ReorderBloc>().add(
+                                                      ReorderEvent.decreaseListQuantityOfProduct(
+                                                        context: context,
+                                                        productListIndex: 0,
+                                                        productStockUpdateIndex: index,
+                                                        productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                      ),
+                                                    );
 
-                                              context.read<ReorderBloc>().add(
-                                                ReorderEvent.addToCartListProductEvent(
-                                                  context: context,
-                                                  productId: state.searchList[index].searchId,
-                                                  productListIndex: 0,
-                                                  productStockUpdateIndex: index,
-                                                  productSupplierIds: state.searchList[index].supplierId.toString(),
-                                                ),
-                                              );
+                                                context.read<ReorderBloc>().add(
+                                                      ReorderEvent.addToCartListProductEvent(
+                                                        context: context,
+                                                        productId: state.searchList[index].searchId,
+                                                        productListIndex: 0,
+                                                        productStockUpdateIndex: index,
+                                                        productSupplierIds: state.searchList[index].supplierId.toString(),
+                                                      ),
+                                                    );
+                                              } else {
+                                                showMinMaxDecreaseQtyConfirmDialog(
+                                                  context,
+                                                  state.searchList[index].searchId,
+                                                  state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                                  index,
+                                                  state.searchList[index].supplierId.toString(),
+                                                  0,
+                                                );
+                                              }
                                             }
                                           },
                                           isShowSearchLabel: index == 0
@@ -713,7 +783,12 @@ class ReorderScreenWidget extends StatelessWidget {
                                         totalBottleDeposit: (state.bottleDeposit * (state.productDetails.first.numberOfUnit ?? 1).toDouble() * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
                                         isBottle: (state.productDetails.first.isBottle ?? false),
                                         addToOrderTap: () {
-                                          context.read<ReorderBloc>().add(ReorderEvent.addToCartProductEvent(context: context1, productId: productId));
+                                          if (int.parse(state.productDetails.first.sale!.saleMinQuantity!) <= state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
+                                            context.read<ReorderBloc>().add(ReorderEvent.addToCartProductEvent(context: context1, productId: productId));
+                                          } else {
+                                            showMinQtyConfirmDialog(context, productId, state.productDetails.first.sale!.saleMinQuantity.toString());
+                                          }
+                                          // context.read<ReorderBloc>().add(ReorderEvent.addToCartProductEvent(context: context1, productId: productId));
                                         },
                                         isLoading: state.isLoading,
                                         imageOnTap: () {
@@ -850,6 +925,8 @@ class ReorderScreenWidget extends StatelessWidget {
                 lowStock: relatedProductList.elementAt(i).lowStock ?? '',
                 isPesach: relatedProductList.elementAt(i).isPesach,
                 quantity: productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity, //[i].quantity,
+                minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
+                maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 onQuantityChanged: () {
                   context.read<ReorderBloc>().add(
                         ReorderEvent.updateListQuantityOfProduct(
@@ -862,30 +939,9 @@ class ReorderScreenWidget extends StatelessWidget {
                       );
                 },
                 onQuantityIncreaseTap: () {
-                  context.read<ReorderBloc>().add(
-                        ReorderEvent.increaseListQuantityOfProduct(
-                          context: context,
-                          productListIndex: 2,
-                          productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
-                          productSupplierIds: relatedProductList[i].supplierId.toString(),
-                        ),
-                      );
-
-                  context.read<ReorderBloc>().add(
-                        ReorderEvent.addToCartListProductEvent(
-                          context: context,
-                          productId: relatedProductList[i].id.toString(),
-                          productListIndex: 2,
-                          productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
-                          productSupplierIds: relatedProductList[i].supplierId.toString(),
-                        ),
-                      );
-                },
-                onQuantityDecreaseTap: () {
-                  // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
-                  if (productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity != 0) {
+                  if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity + 1) {
                     context.read<ReorderBloc>().add(
-                          ReorderEvent.decreaseListQuantityOfProduct(
+                          ReorderEvent.increaseListQuantityOfProduct(
                             context: context,
                             productListIndex: 2,
                             productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
@@ -902,6 +958,48 @@ class ReorderScreenWidget extends StatelessWidget {
                             productSupplierIds: relatedProductList[i].supplierId.toString(),
                           ),
                         );
+                  } else {
+                    showMinMaxIncreaseQtyConfirmDialog(
+                      context,
+                      relatedProductList[i].id.toString(),
+                      relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
+                      productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                      relatedProductList[i].supplierId.toString(),
+                      2,
+                    );
+                  }
+                },
+                onQuantityDecreaseTap: () {
+                  if (productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity != 0) {
+                    if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity - 1) {
+                      context.read<ReorderBloc>().add(
+                            ReorderEvent.decreaseListQuantityOfProduct(
+                              context: context,
+                              productListIndex: 2,
+                              productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                              productSupplierIds: relatedProductList[i].supplierId.toString(),
+                            ),
+                          );
+
+                      context.read<ReorderBloc>().add(
+                            ReorderEvent.addToCartListProductEvent(
+                              context: context,
+                              productId: relatedProductList[i].id.toString(),
+                              productListIndex: 2,
+                              productStockUpdateIndex: productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                              productSupplierIds: relatedProductList[i].supplierId.toString(),
+                            ),
+                          );
+                    } else {
+                      showMinMaxDecreaseQtyConfirmDialog(
+                        context,
+                        relatedProductList[i].id.toString(),
+                        relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
+                        productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                        relatedProductList[i].supplierId.toString(),
+                        2,
+                      );
+                    }
                   }
                 },
                 onButtonTap: () {
@@ -1455,6 +1553,123 @@ class ReorderScreenWidget extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  showMinQtyConfirmDialog(BuildContext context, String productId, String minBox) {
+    ReorderBloc bloc = context.read<ReorderBloc>();
+    showDialog(
+      context: context,
+      builder: (dialogContext) => BlocProvider.value(
+        value: context.read<ReorderBloc>(),
+        child: BlocBuilder<ReorderBloc, ReorderState>(
+          builder: (context1, state) {
+            return CustomDialog(
+              directionality: state.language,
+              title: '${AppLocalizations.of(context)?.minimum_box_title}$minBox${AppLocalizations.of(context)?.confirm_minimum_box}',
+              positiveTitle: AppLocalizations.of(context)!.yes,
+              negativeTitle: AppLocalizations.of(context)!.no,
+              negativeOnTap: () async {
+                Navigator.pop(context);
+              },
+              positiveOnTap: () async {
+                Navigator.pop(dialogContext);
+
+                bloc.add(ReorderEvent.addToCartProductEvent(context: context, productId: productId));
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  showMinMaxIncreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex) {
+    ReorderBloc bloc = context.read<ReorderBloc>();
+    showDialog(
+      context: context,
+      builder: (dialogContext) => BlocProvider.value(
+        value: context.read<ReorderBloc>(),
+        child: BlocBuilder<ReorderBloc, ReorderState>(
+          builder: (context1, state) {
+            return CustomDialog(
+              directionality: state.language,
+              title: '${AppLocalizations.of(context)?.minimum_box_title}$minBox${AppLocalizations.of(context)?.confirm_minimum_box}',
+              positiveTitle: AppLocalizations.of(context)!.yes,
+              negativeTitle: AppLocalizations.of(context)!.no,
+              negativeOnTap: () async {
+                Navigator.pop(context);
+              },
+              positiveOnTap: () async {
+                bloc.add(ReorderEvent.increaseListQuantityOfProduct(
+                  context: context,
+                  productListIndex: productListIndex,
+                  productStockUpdateIndex: index,
+                  productSupplierIds: supplierId,
+                ));
+
+                bloc.add(ReorderEvent.addToCartListProductEvent(
+                  context: context,
+                  productId: productId,
+                  productListIndex: productListIndex,
+                  productStockUpdateIndex: index,
+                  productSupplierIds: supplierId,
+                ));
+                await Future.delayed(const Duration(seconds: 1)).then((_) {
+                  Navigator.pop(dialogContext);
+                });
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  showMinMaxDecreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => BlocProvider.value(
+        value: context.read<ReorderBloc>(),
+        child: BlocBuilder<ReorderBloc, ReorderState>(
+          builder: (context1, state) {
+            ReorderBloc bloc = context.read<ReorderBloc>();
+            return CustomDialog(
+              directionality: state.language,
+              title: '${AppLocalizations.of(context)?.minimum_box_title}$minBox${AppLocalizations.of(context)?.confirm_minimum_box}',
+              positiveTitle: AppLocalizations.of(context)!.yes,
+              negativeTitle: AppLocalizations.of(context)!.no,
+              negativeOnTap: () async {
+                Navigator.pop(context);
+              },
+              positiveOnTap: () async {
+                bloc.add(
+                  ReorderEvent.decreaseListQuantityOfProduct(
+                    context: context,
+                    productListIndex: productListIndex,
+                    productStockUpdateIndex: index,
+                    productSupplierIds: supplierId,
+                  ),
+                );
+
+                bloc.add(
+                  ReorderEvent.addToCartListProductEvent(
+                    context: context,
+                    productId: productId,
+                    productListIndex: productListIndex,
+                    productStockUpdateIndex: index,
+                    productSupplierIds: supplierId,
+                  ),
+                );
+
+                await Future.delayed(const Duration(seconds: 1)).then((_) {
+                  Navigator.pop(dialogContext);
+                });
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }
