@@ -181,6 +181,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     productPrice: state.planogramProductList[index].productPrice ?? 0.0,
                                     totalSale: state.planogramProductList[index].totalSale ?? 0,
                                     quantity: state.productStockList[1][index].quantity,
+                                    isMixedSale: state.planogramProductList[index].sale?.isMixedSale,
                                     onQuantityChanged: () {
                                       context.read<PlanogramProductBloc>().add(
                                             PlanogramProductEvent.updateListQuantityOfProduct(
@@ -270,6 +271,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     productName: state.planogramProductList[index].productName ?? '',
                                     price: double.parse(state.planogramProductList[index].productPrice.toString()),
                                     quantity: state.productStockList[1][index].quantity,
+                                    isMixedSale: state.planogramProductList[index].sale?.isMixedSale,
                                     onQuantityChanged: () {
                                       context.read<PlanogramProductBloc>().add(
                                             PlanogramProductEvent.updateListQuantityOfProduct(
@@ -408,6 +410,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                       searchImage: state.searchList[index].image,
                                       searchType: state.searchList[index].searchType,
                                       isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
+                                      isMixedSale: state.searchList[index].isMixedSale,
                                       isLastItem: state.searchList.length - 1 == index,
                                       isShowSearchLabel: index == 0
                                           ? true
@@ -510,6 +513,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
     required void Function() onQuantityChanged,
     required void Function() onQuantityIncreaseTap,
     required void Function() onQuantityDecreaseTap,
+    required bool? isMixedSale,
   }) {
     return CommonProductSaleItemWidget(
       originalPrice: originalPrice,
@@ -531,6 +535,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       onQuantityChanged: onQuantityChanged,
       onQuantityIncreaseTap: onQuantityIncreaseTap,
       onQuantityDecreaseTap: onQuantityDecreaseTap,
+        isMixedSale:isMixedSale
     );
   }
 
@@ -631,6 +636,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                         productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                         scrollController: scrollController,
                                         productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
+                                        isMixedSale: state.productDetails.first.sale!.isMixedSale,
                                         onQuantityChanged: (quantity) {
                                           context.read<PlanogramProductBloc>().add(PlanogramProductEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
                                         },
@@ -721,6 +727,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                 lowStock: relatedProductList.elementAt(i).lowStock ?? '',
                 isPesach: relatedProductList.elementAt(i).isPesach,
                 quantity: productStockList[2][i].quantity,
+                isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
                 onQuantityChanged: () {
                   context.read<PlanogramProductBloc>().add(
                         PlanogramProductEvent.updateListQuantityOfProduct(

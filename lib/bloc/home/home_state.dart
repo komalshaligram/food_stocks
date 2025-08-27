@@ -121,6 +121,6 @@ class HomeState with _$HomeState {
     allShimmering: true,
     context : null,
     refreshController: RefreshController(),
-    isDialog : true,
+    isDialog : false,
   );
 }

@@ -39,6 +39,9 @@ class SupplierProductsState with _$SupplierProductsState {
     required bool isSaleOn,
     required bool isProgress,
     required String language,
+    required bool isCartCountChange,
+    required int cartCount,
+    required int messageCount,
   }) = _SupplierProductsState;
 
   factory SupplierProductsState.initial() => SupplierProductsState(
@@ -82,5 +85,8 @@ class SupplierProductsState with _$SupplierProductsState {
         isIncludedVat: false,
         isSaleOn: false,
         language: AppStrings.hebrewString,
+    isCartCountChange: false,
+    cartCount: 0,
+    messageCount: 0,
       );
 }

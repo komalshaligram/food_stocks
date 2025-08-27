@@ -132,6 +132,8 @@ class ReorderEvent with _$ReorderEvent {
     required String productSupplierIds,
   }) = _addToCartListProductEvent;
 
-
+  const factory ReorderEvent.getCartCountNoEvent({
+    required BuildContext context,
+  }) = _getCartCountNoEvent;
 }
 

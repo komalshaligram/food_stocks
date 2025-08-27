@@ -229,6 +229,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                           quantity: state.productStockList[1][index].quantity,
                                                           minQuantity: state.productList[index].sale?.saleMinQuantity,
                                                           maxQuantity: state.productList[index].sale?.saleMaxQuantity,
+                                                          isMixedSale: state.productList[index].sale?.isMixedSale,
                                                           onQuantityChanged: () {
                                                             context.read<PesachProductsBloc>().add(
                                                                   PesachProductsEvent.updateListQuantityOfProduct(
@@ -268,6 +269,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                                 index,
                                                                 state.productList[index].supplierId.toString(),
                                                                 1,
+                                                                state.productList[index].sale?.isMixedSale,
+                                                                state.productList[index].sale?.sameSaleProducts,
                                                               );
                                                             }
                                                           },
@@ -300,6 +303,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                                   index,
                                                                   state.productList[index].supplierId.toString(),
                                                                   1,
+                                                                  state.productList[index].sale?.isMixedSale,
+                                                                  state.productList[index].sale?.sameSaleProducts,
                                                                 );
                                                               }
                                                             }
@@ -338,6 +343,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                       quantity: state.productStockList[1][index].quantity,
                                                       minQuantity: state.productList[index].sale?.saleMinQuantity,
                                                       maxQuantity: state.productList[index].sale?.saleMaxQuantity,
+                                                      isMixedSale: state.productList[index].sale?.isMixedSale,
                                                       onQuantityChanged: () {
                                                         context.read<PesachProductsBloc>().add(
                                                               PesachProductsEvent.updateListQuantityOfProduct(
@@ -377,6 +383,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                             index,
                                                             state.productList[index].supplierId.toString(),
                                                             1,
+                                                            state.productList[index].sale?.isMixedSale,
+                                                            state.productList[index].sale?.sameSaleProducts,
                                                           );
                                                         }
                                                       },
@@ -409,6 +417,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                               index,
                                                               state.productList[index].supplierId.toString(),
                                                               1,
+                                                              state.productList[index].sale?.isMixedSale,
+                                                              state.productList[index].sale?.sameSaleProducts,
                                                             );
                                                           }
                                                         }
@@ -504,6 +514,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                           isSale: state.searchList[index].isSale,
                                           minQuantity: state.searchList[index].saleMinQuantity,
                                           maxQuantity: state.searchList[index].saleMaxQuantity,
+                                          isMixedSale: state.searchList[index].isMixedSale,
                                           onQuantityChanged: () {
                                             context.read<PesachProductsBloc>().add(
                                                   PesachProductsEvent.updateListQuantityOfProduct(
@@ -543,6 +554,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                 index,
                                                 state.searchList[index].supplierId.toString(),
                                                 0,
+                                                state.searchList[index].isMixedSale,
+                                                state.searchList[index].sameSaleProducts,
                                               );
                                             }
                                           },
@@ -575,6 +588,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                   index,
                                                   state.searchList[index].supplierId.toString(),
                                                   0,
+                                                  state.searchList[index].isMixedSale,
+                                                  state.searchList[index].sameSaleProducts,
                                                 );
                                               }
                                             }
@@ -802,7 +817,9 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                           if (int.parse(state.productDetails.first.sale!.saleMinQuantity!) <= state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
                                             context.read<PesachProductsBloc>().add(PesachProductsEvent.addToCartProductEvent(context: context1, productId: productId));
                                           } else {
-                                            showMinQtyConfirmDialog(context, productId, state.productDetails.first.sale!.saleMinQuantity.toString());
+                                            showMinQtyConfirmDialog(context, productId, state.productDetails.first.sale!.saleMinQuantity.toString(),
+                                              state.productDetails.first.sale!.isMixedSale,
+                                              state.productDetails.first.sale!.sameSaleProducts,);
                                           }
                                           // context.read<PesachProductsBloc>().add(PesachProductsEvent.addToCartProductEvent(context: context1, productId: productId));
                                         },
@@ -820,13 +837,10 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                       width: getScreenWidth(context),
                                                       child: GestureDetector(
                                                         onVerticalDragStart: (dragDetails) {
-                                                          debugPrint('onVerticalDragStart');
                                                         },
                                                         onVerticalDragUpdate: (dragDetails) {
-                                                          debugPrint('onVerticalDragUpdate');
                                                         },
                                                         onVerticalDragEnd: (endDetails) {
-                                                          debugPrint('onVerticalDragEnd');
                                                           Navigator.pop(dialogContext);
                                                         },
                                                         child: state.productDetails[state.imageIndex].mainImage != ''
@@ -863,6 +877,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                         productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                         scrollController: scrollController,
                                         productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
+                                        isMixedSale: state.productDetails.first.sale!.isMixedSale,
                                         onQuantityChanged: (quantity) {
                                           context.read<PesachProductsBloc>().add(PesachProductsEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
                                         },
@@ -953,6 +968,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                 quantity: productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity, //[i].quantity,
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
+                isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
                 onQuantityChanged: () {
                   context.read<PesachProductsBloc>().add(
                         PesachProductsEvent.updateListQuantityOfProduct(
@@ -992,6 +1008,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                       productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
                       relatedProductList[i].supplierId.toString(),
                       2,
+                      relatedProductList[i].sale?.isMixedSale,
+                      relatedProductList[i].sale?.sameSaleProducts,
                     );
                   }
                 },
@@ -1024,6 +1042,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                         productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
                         relatedProductList[i].supplierId.toString(),
                         2,
+                        relatedProductList[i].sale?.isMixedSale,
+                        relatedProductList[i].sale?.sameSaleProducts,
                       );
                     }
                   }
@@ -1059,7 +1079,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
             buttonTitle: AppLocalizations.of(context)!.ok));
   }
 
-  showMinQtyConfirmDialog(BuildContext context, String productId, String minBox) {
+  showMinQtyConfirmDialog(BuildContext context, String productId, String minBox, bool? isMixedSale,
+      List? sameSaleProducts,) {
     PesachProductsBloc bloc = context.read<PesachProductsBloc>();
     showDialog(
       context: context,
@@ -1067,18 +1088,27 @@ class PesachProductsScreenWidget extends StatelessWidget {
         value: context.read<PesachProductsBloc>(),
         child: BlocBuilder<PesachProductsBloc, PesachProductsState>(
           builder: (context1, state) {
+            String mixedSale = '';
+            if (isMixedSale!) {
+              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+            } else {
+              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+            }
             return CustomDialog(
               directionality: state.language,
-              title: '${AppLocalizations.of(context)?.minimum_box_title}$minBox${AppLocalizations.of(context)?.confirm_minimum_box}',
-              positiveTitle: AppLocalizations.of(context)!.yes,
-              negativeTitle: AppLocalizations.of(context)!.no,
+              title: mixedSale,
+              content: isMixedSale ? sameSaleProducts! : [],
+              isMixedSale : isMixedSale,
+              positiveTitle: AppLocalizations.of(context)!.closeText,
+              negativeTitle: AppLocalizations.of(context)!.addText,
               negativeOnTap: () async {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
+                bloc.add(PesachProductsEvent.addToCartProductEvent(context: context, productId: productId));
               },
               positiveOnTap: () async {
-                Navigator.pop(dialogContext);
+                Navigator.pop(context);
+                bloc.add(PesachProductsEvent.getCartCountNoEvent(context: context,));
 
-                bloc.add(PesachProductsEvent.addToCartProductEvent(context: context, productId: productId));
               },
             );
           },
@@ -1087,7 +1117,9 @@ class PesachProductsScreenWidget extends StatelessWidget {
     );
   }
 
-  showMinMaxIncreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex) {
+  showMinMaxIncreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex,
+      bool? isMixedSale,
+      List? sameSaleProducts,) {
     PesachProductsBloc bloc = context.read<PesachProductsBloc>();
     showDialog(
       context: context,
@@ -1095,15 +1127,20 @@ class PesachProductsScreenWidget extends StatelessWidget {
         value: context.read<PesachProductsBloc>(),
         child: BlocBuilder<PesachProductsBloc, PesachProductsState>(
           builder: (context1, state) {
+            String mixedSale = '';
+            if (isMixedSale!) {
+              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+            } else {
+              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+            }
             return CustomDialog(
               directionality: state.language,
-              title: '${AppLocalizations.of(context)?.minimum_box_title}$minBox${AppLocalizations.of(context)?.confirm_minimum_box}',
-              positiveTitle: AppLocalizations.of(context)!.yes,
-              negativeTitle: AppLocalizations.of(context)!.no,
+              title: mixedSale,
+              content: isMixedSale ? sameSaleProducts! : [],
+              isMixedSale : isMixedSale,
+              positiveTitle: AppLocalizations.of(context)!.closeText,
+              negativeTitle: AppLocalizations.of(context)!.addText,
               negativeOnTap: () async {
-                Navigator.pop(context);
-              },
-              positiveOnTap: () async {
                 Navigator.pop(dialogContext);
                 bloc.add(PesachProductsEvent.increaseListQuantityOfProduct(
                   context: context,
@@ -1119,6 +1156,10 @@ class PesachProductsScreenWidget extends StatelessWidget {
                   productStockUpdateIndex: index,
                   productSupplierIds: supplierId,
                 ));
+
+              },
+              positiveOnTap: () async {
+                Navigator.pop(context);
                 // Navigator.pop(dialogContext);
               },
             );
@@ -1128,23 +1169,30 @@ class PesachProductsScreenWidget extends StatelessWidget {
     );
   }
 
-  showMinMaxDecreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex) {
+  showMinMaxDecreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex,
+      bool? isMixedSale,
+      List? sameSaleProducts,) {
     showDialog(
       context: context,
       builder: (dialogContext) => BlocProvider.value(
         value: context.read<PesachProductsBloc>(),
         child: BlocBuilder<PesachProductsBloc, PesachProductsState>(
           builder: (context1, state) {
+            String mixedSale = '';
+            if (isMixedSale!) {
+              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+            } else {
+              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+            }
             PesachProductsBloc bloc = context.read<PesachProductsBloc>();
             return CustomDialog(
               directionality: state.language,
-              title: '${AppLocalizations.of(context)?.minimum_box_title}$minBox${AppLocalizations.of(context)?.confirm_minimum_box}',
-              positiveTitle: AppLocalizations.of(context)!.yes,
-              negativeTitle: AppLocalizations.of(context)!.no,
+              title: mixedSale,
+              content: isMixedSale ? sameSaleProducts! : [],
+              isMixedSale : isMixedSale,
+              positiveTitle: AppLocalizations.of(context)!.closeText,
+              negativeTitle: AppLocalizations.of(context)!.addText,
               negativeOnTap: () async {
-                Navigator.pop(context);
-              },
-              positiveOnTap: () async {
                 Navigator.pop(dialogContext);
                 bloc.add(
                   PesachProductsEvent.decreaseListQuantityOfProduct(
@@ -1164,6 +1212,10 @@ class PesachProductsScreenWidget extends StatelessWidget {
                     productSupplierIds: supplierId,
                   ),
                 );
+
+              },
+              positiveOnTap: () async {
+                Navigator.pop(context);
                 // Navigator.pop(dialogContext);
               },
             );

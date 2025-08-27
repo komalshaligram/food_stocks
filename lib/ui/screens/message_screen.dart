@@ -135,6 +135,8 @@ class MessageScreenWidget extends StatelessWidget {
                                                           absorbing: state.isRemoveProcess ? true : false,
                                                           child: CustomDialog(
                                                             title: AppLocalizations.of(context)!.are_you_sure,
+                                                            content: [],
+                                                            isMixedSale : false,
                                                             directionality: state.language,
                                                             positiveTitle: AppLocalizations.of(context)!.yes,
                                                             negativeTitle: AppLocalizations.of(context)!.no,

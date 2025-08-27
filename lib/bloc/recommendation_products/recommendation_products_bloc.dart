@@ -21,6 +21,7 @@ import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model
 import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart' as insert;
+import '../../data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
@@ -650,7 +651,10 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
                           salesDesc: parse(supplier.sale?.saleDescription ?? '').body?.text ?? '',
                           supplierId: supplier.supplierId
                           , isSale: supplier.sale?.isSale,
-                          saleMinQuantity: supplier.sale?.saleMinQuantity, saleMaxQuantity: supplier.sale?.saleMaxQuantity,
+                          saleMinQuantity: supplier.sale?.saleMinQuantity,
+                          saleMaxQuantity: supplier.sale?.saleMaxQuantity,
+                          isMixedSale: supplier.sale?.isMixedSale,
+                          sameSaleProducts: supplier.sale?.sameSaleProducts,
                         ),
                       )
                       .toList() ??
@@ -1117,6 +1121,32 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
           }
         }
         //
+      }
+
+      else if (event is _getCartCountNoEvent) {
+        try {
+          final res = await DioClient(event.context).post(
+            '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
+          );
+          if (res != null) {
+            GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+            if (response.status == AppConstants.code_200) {
+              emit(state.copyWith(isCartCountChange: true));
+              await preferences.setCartCount(count: response.data?.data?.length ?? preferences.getCartCount());
+              emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
+            }
+          }
+        } on ServerException {}
+        //message count
+        try {
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
+
+          MessageCountResModel response = MessageCountResModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());
+            emit(state.copyWith(messageCount: response.data ?? 0));
+          }
+        } catch (e) {}
       }
     });
   }

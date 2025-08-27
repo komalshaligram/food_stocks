@@ -4845,11 +4845,61 @@ class S {
     return Intl.message('Minimum box', name: 'minimum_box', desc: '', args: []);
   }
 
-  /// `The minimum boxes for this mixed sale is: `
+  /// `The minimum number of packages for this sale is: `
   String get minimum_box_title {
     return Intl.message(
-      'The minimum boxes for this mixed sale is: ',
+      'The minimum number of packages for this sale is: ',
       name: 'minimum_box_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The minimum boxes for this mixed sale is: `
+  String get mix_minimum_box_title {
+    return Intl.message(
+      'The minimum boxes for this mixed sale is: ',
+      name: 'mix_minimum_box_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is a mixed sale`
+  String get mix_sale_text {
+    return Intl.message(
+      'This is a mixed sale',
+      name: 'mix_sale_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If you do not order at least`
+  String get sale_other_text {
+    return Intl.message(
+      'If you do not order at least',
+      name: 'sale_other_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `products, you will not receive the sale price`
+  String get sale_other_text1 {
+    return Intl.message(
+      'products, you will not receive the sale price',
+      name: 'sale_other_text1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You may also order from the other products participating in the sale`
+  String get mixed_sale_other_text {
+    return Intl.message(
+      'You may also order from the other products participating in the sale',
+      name: 'mixed_sale_other_text',
       desc: '',
       args: [],
     );
@@ -4863,6 +4913,41 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Product participating in the sale:`
+  String get productParticipatingSale {
+    return Intl.message(
+      'Product participating in the sale:',
+      name: 'productParticipatingSale',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The minimum boxes for this sale is: `
+  String get minimum_boxes_detail {
+    return Intl.message(
+      'The minimum boxes for this sale is: ',
+      name: 'minimum_boxes_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add`
+  String get addText {
+    return Intl.message('Add', name: 'addText', desc: '', args: []);
+  }
+
+  /// `Close`
+  String get closeText {
+    return Intl.message('Close', name: 'closeText', desc: '', args: []);
+  }
+
+  /// `Mixed sale`
+  String get mixedSale {
+    return Intl.message('Mixed sale', name: 'mixedSale', desc: '', args: []);
   }
 
   /// `Min`

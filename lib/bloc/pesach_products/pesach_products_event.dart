@@ -109,4 +109,7 @@ class PesachProductsEvent with _$PesachProductsEvent {
     required String productSupplierIds,
   }) = _addToCartListProductEvent;
 
+  const factory PesachProductsEvent.getCartCountNoEvent({
+    required BuildContext context,
+  }) = _getCartCountNoEvent;
 }

@@ -121,7 +121,8 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
                 }
                 list.addAll(state.returnProductList);
 
-                    Navigator.pushReplacementNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': list, /*'data': response.product?.first.toJson()*/});
+                    Navigator.pushReplacementNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': list,
+                      /*'data': response.product?.first.toJson()*/});
 
 
 

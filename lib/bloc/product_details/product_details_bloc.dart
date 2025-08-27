@@ -110,6 +110,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             ],
           );
 
+
           try {
             final response = await DioClient(event.context).post(
               '${AppUrlEndPoints.createIssueUrl}${event.orderId}',

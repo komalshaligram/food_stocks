@@ -41,6 +41,7 @@ class SearchItemWidget extends StatelessWidget {
     this.isSale,
     this.minQuantity,
     this.maxQuantity,
+    required this.isMixedSale,
   });
 
   final String lowStock;
@@ -68,6 +69,7 @@ class SearchItemWidget extends StatelessWidget {
   final bool? isSale;
   final String? minQuantity;
   final String? maxQuantity;
+  final bool? isMixedSale;
 
   @override
   Widget build(BuildContext context) {
@@ -112,15 +114,20 @@ class SearchItemWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
+
             height: (searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company)
                 ? 80
                 : double.parse(productStock.toString()) > 0 || lowStock.isEmpty
                     ? isPesach
                         ? 130
-                        : salePrice != 0.0 ? 180 : 120
+                        : salePrice != 0.0
+                            ? minQuantity != '0' || maxQuantity != '0' && isMixedSale == true ? 220 :150
+                            : 120
                     : isPesach
                         ? 130
-                        : salePrice != 0.0 ? 180 :120,
+                        : salePrice != 0.0
+                            ? minQuantity != '0' || maxQuantity != '0' && isMixedSale == true ? 220 :150
+                            : 120,
             decoration: BoxDecoration(color: AppColors.whiteColor, border: Border(bottom: (isLastItem ?? false) ? BorderSide.none : BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1))),
             padding: EdgeInsets.only(top: AppConstants.padding_5, left: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10, right: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10, bottom: AppConstants.padding_5),
             child: Row(
@@ -288,28 +295,35 @@ class SearchItemWidget extends StatelessWidget {
                     5.height,
                     isSale!
                         ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${AppLocalizations.of(context)!.minimumList}: ${minQuantity.toString()}',
-                          style: AppStyles.rkRegularTextStyle(
-                            color: AppColors.redColor,
-                            size: AppConstants.font_14,
-                          ),
-                        ),
-                        Text(
-                          '${AppLocalizations.of(context)!.maximumList}: ${maxQuantity.toString()}',
-                          style: AppStyles.rkRegularTextStyle(
-                            color: AppColors.redColor,
-                            size: AppConstants.font_14,
-                          ),
-                        ),
-                      ],
-                    )
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              minQuantity != '0' ?  Text(
+                                '${AppLocalizations.of(context)!.minimumList}: ${minQuantity.toString()}',
+                                style: AppStyles.rkRegularTextStyle(
+                                  color: AppColors.redColor,
+                                  size: AppConstants.font_14,
+                                ),
+                              ) : IgnorePointer(),
+                              maxQuantity != '0' ?   Text(
+                                '${AppLocalizations.of(context)!.maximumList}: ${maxQuantity.toString()}',
+                                style: AppStyles.rkRegularTextStyle(
+                                  color: AppColors.redColor,
+                                  size: AppConstants.font_14,
+                                ),
+                              ) : IgnorePointer(),
+                            ],
+                          )
                         : const IgnorePointer(),
-
-
+                    isMixedSale!
+                        ? Text(
+                          AppLocalizations.of(context)!.mixedSale,
+                          style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.redColor,
+                            size: AppConstants.font_14,
+                          ),
+                        )
+                        : const IgnorePointer(),
                     const Spacer(),
                     // 7.height,
                     Row(

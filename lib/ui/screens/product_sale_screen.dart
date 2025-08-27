@@ -129,8 +129,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                             childAspectRatio: getScreenHeight(context) > 1000 && getScreenWidth(context) > 700
                                                 ? 0.70
                                                 : getScreenHeight(context) > 850 && getScreenHeight(context) < 1000 && getScreenWidth(context) > 550
-                                                    ? 0.65
-                                                    : 0.45,
+                                                    ? 0.67
+                                                    : 0.42,
                                           ),
                                           //getChildAspectRatio(context)),
                                           itemBuilder: (context, index) {
@@ -150,6 +150,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                               quantity: state.productStockList[1][index].quantity,
                                               minQuantity: state.productSalesList[index].sale?.saleMinQuantity,
                                               maxQuantity: state.productSalesList[index].sale?.saleMaxQuantity,
+                                              isMixedSale: state.productSalesList[index].sale?.isMixedSale,
                                               onQuantityChanged: () {
                                                 context.read<ProductSaleBloc>().add(
                                                       ProductSaleEvent.updateListQuantityOfProduct(
@@ -190,6 +191,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                     index,
                                                     state.productSalesList[index].supplierId.toString(),
                                                     1,
+                                                    state.productSalesList[index].sale?.isMixedSale,
+                                                    state.productSalesList[index].sale?.sameSaleProducts,
                                                   );
                                                 }
                                               },
@@ -223,6 +226,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                       index,
                                                       state.productSalesList[index].supplierId.toString(),
                                                       1,
+                                                      state.productSalesList[index].sale?.isMixedSale,
+                                                      state.productSalesList[index].sale?.sameSaleProducts,
                                                     );
                                                   }
                                                 }
@@ -263,6 +268,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                               quantity: state.productStockList[1][index].quantity,
                                               minQuantity: state.productSalesList[index].sale?.saleMinQuantity,
                                               maxQuantity: state.productSalesList[index].sale?.saleMaxQuantity,
+                                              isMixedSale: state.productSalesList[index].sale?.isMixedSale,
                                               onQuantityChanged: () {
                                                 context.read<ProductSaleBloc>().add(
                                                       ProductSaleEvent.updateListQuantityOfProduct(
@@ -302,6 +308,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                     index,
                                                     state.productSalesList[index].supplierId.toString(),
                                                     1,
+                                                    state.productSalesList[index].sale?.isMixedSale,
+                                                    state.productSalesList[index].sale?.sameSaleProducts,
                                                   );
                                                 }
                                               },
@@ -334,6 +342,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                       index,
                                                       state.productSalesList[index].supplierId.toString(),
                                                       1,
+                                                      state.productSalesList[index].sale?.isMixedSale,
+                                                      state.productSalesList[index].sale?.sameSaleProducts,
                                                     );
                                                   }
                                                 }
@@ -392,6 +402,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required void Function() onQuantityDecreaseTap,
     String? minQuantity,
     String? maxQuantity,
+    required bool? isMixedSale,
   }) {
     return CommonProductSaleItemWidget(
       isSale: true,
@@ -414,6 +425,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
       onQuantityDecreaseTap: onQuantityDecreaseTap,
       minQuantity: minQuantity,
       maxQuantity: maxQuantity,
+        isMixedSale : isMixedSale,
     );
   }
 
@@ -478,7 +490,9 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                       if (int.parse(state.productDetails.first.sale!.saleMinQuantity!) <= state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
                                         context.read<ProductSaleBloc>().add(ProductSaleEvent.addToCartProductEvent(context: context1, productId: productId));
                                       } else {
-                                        showMinQtyConfirmDialog(context, productId, state.productDetails.first.sale!.saleMinQuantity.toString());
+                                        showMinQtyConfirmDialog(context, productId, state.productDetails.first.sale!.saleMinQuantity.toString(),
+                                          state.productDetails.first.sale!.isMixedSale,
+                                          state.productDetails.first.sale!.sameSaleProducts,);
                                       }
                                       // context.read<ProductSaleBloc>().add(ProductSaleEvent.addToCartProductEvent(context: context1, productId: productId));
                                     },
@@ -530,6 +544,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     productStock: state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString(),
                                     scrollController: scrollController,
                                     productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
+                                    isMixedSale: state.productDetails.first.sale!.isMixedSale,
                                     onQuantityChanged: (quantity) {
                                       context.read<ProductSaleBloc>().add(ProductSaleEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
                                     },
@@ -620,6 +635,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 quantity: productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity, //[i].quantity,
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
+                isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
                 onQuantityChanged: () {
                   context.read<ProductSaleBloc>().add(
                         ProductSaleEvent.updateListQuantityOfProduct(
@@ -660,6 +676,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                         productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
                       relatedProductList[i].supplierId.toString(),
                       2,
+                      relatedProductList[i].sale?.isMixedSale,
+                      relatedProductList[i].sale?.sameSaleProducts,
                     );
                   }
                 },
@@ -693,6 +711,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                         productStockList[2].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
                         relatedProductList[i].supplierId.toString(),
                         2,
+                        relatedProductList[i].sale?.isMixedSale,
+                        relatedProductList[i].sale?.sameSaleProducts,
                       );
                     }
                   }
@@ -726,7 +746,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
             buttonTitle: AppLocalizations.of(context)!.ok));
   }
 
-  showMinQtyConfirmDialog(BuildContext context, String productId, String minBox) {
+  showMinQtyConfirmDialog(BuildContext context, String productId, String minBox,bool? isMixedSale,
+      List? sameSaleProducts,) {
     ProductSaleBloc bloc = context.read<ProductSaleBloc>();
     showDialog(
       context: context,
@@ -734,19 +755,27 @@ class ProductSaleScreenWidget extends StatelessWidget {
         value: context.read<ProductSaleBloc>(),
         child: BlocBuilder<ProductSaleBloc, ProductSaleState>(
           builder: (context1, state) {
-            printData("state.language ${state.language}");
+            String mixedSale = '';
+            if (isMixedSale!) {
+              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+            } else {
+              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+            }
             return CustomDialog(
               directionality: state.language,
-              title: '${AppLocalizations.of(context)?.minimum_box_title}$minBox${AppLocalizations.of(context)?.confirm_minimum_box}',
-              positiveTitle: AppLocalizations.of(context)!.yes,
-              negativeTitle: AppLocalizations.of(context)!.no,
+              title: mixedSale,
+              content: isMixedSale ? sameSaleProducts! : [],
+              isMixedSale : isMixedSale,
+              positiveTitle: AppLocalizations.of(context)!.closeText,
+              negativeTitle: AppLocalizations.of(context)!.addText,
               negativeOnTap: () async {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
+                bloc.add(ProductSaleEvent.addToCartProductEvent(context: context, productId: productId));
               },
               positiveOnTap: () async {
-                Navigator.pop(dialogContext);
+                Navigator.pop(context);
+                bloc.add(ProductSaleEvent.getCartCountEvent(context: context,));
 
-                bloc.add(ProductSaleEvent.addToCartProductEvent(context: context, productId: productId));
               },
             );
           },
@@ -755,7 +784,9 @@ class ProductSaleScreenWidget extends StatelessWidget {
     );
   }
 
-  showMinMaxIncreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex) {
+  showMinMaxIncreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex,
+      bool? isMixedSale,
+      List? sameSaleProducts,) {
     ProductSaleBloc bloc = context.read<ProductSaleBloc>();
     showDialog(
       context: context,
@@ -763,15 +794,20 @@ class ProductSaleScreenWidget extends StatelessWidget {
         value: context.read<ProductSaleBloc>(),
         child: BlocBuilder<ProductSaleBloc, ProductSaleState>(
           builder: (context1, state) {
+            String mixedSale = '';
+            if (isMixedSale!) {
+              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+            } else {
+              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+            }
             return CustomDialog(
               directionality: state.language,
-              title: '${AppLocalizations.of(context)?.minimum_box_title}$minBox${AppLocalizations.of(context)?.confirm_minimum_box}',
-              positiveTitle: AppLocalizations.of(context)!.yes,
-              negativeTitle: AppLocalizations.of(context)!.no,
+              title: mixedSale,
+              content: isMixedSale ? sameSaleProducts! : [],
+              isMixedSale : isMixedSale,
+              positiveTitle: AppLocalizations.of(context)!.closeText,
+              negativeTitle: AppLocalizations.of(context)!.addText,
               negativeOnTap: () async {
-                Navigator.pop(context);
-              },
-              positiveOnTap: () async {
                 Navigator.pop(dialogContext);
                 bloc.add(ProductSaleEvent.increaseListQuantityOfProduct(
                   context: context,
@@ -787,6 +823,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                   productStockUpdateIndex: index,
                   productSupplierIds: supplierId,
                 ));
+
+              },
+              positiveOnTap: () async {
+                Navigator.pop(context);
                 // Navigator.pop(dialogContext);
               },
             );
@@ -796,23 +836,30 @@ class ProductSaleScreenWidget extends StatelessWidget {
     );
   }
 
-  showMinMaxDecreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex) {
+  showMinMaxDecreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex,
+      bool? isMixedSale,
+      List? sameSaleProducts,) {
     showDialog(
       context: context,
       builder: (dialogContext) => BlocProvider.value(
         value: context.read<ProductSaleBloc>(),
         child: BlocBuilder<ProductSaleBloc, ProductSaleState>(
           builder: (context1, state) {
+            String mixedSale = '';
+            if (isMixedSale!) {
+              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+            } else {
+              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+            }
             ProductSaleBloc bloc = context.read<ProductSaleBloc>();
             return CustomDialog(
               directionality: state.language,
-              title: '${AppLocalizations.of(context)?.minimum_box_title}$minBox${AppLocalizations.of(context)?.confirm_minimum_box}',
-              positiveTitle: AppLocalizations.of(context)!.yes,
-              negativeTitle: AppLocalizations.of(context)!.no,
+              title: mixedSale,
+              content: isMixedSale ? sameSaleProducts! : [],
+              isMixedSale : isMixedSale,
+              positiveTitle: AppLocalizations.of(context)!.closeText,
+              negativeTitle: AppLocalizations.of(context)!.addText,
               negativeOnTap: () async {
-                Navigator.pop(context);
-              },
-              positiveOnTap: () async {
                 Navigator.pop(dialogContext);
                 bloc.add(
                   ProductSaleEvent.decreaseListQuantityOfProduct(
@@ -832,6 +879,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                     productSupplierIds: supplierId,
                   ),
                 );
+
+              },
+              positiveOnTap: () async {
+                Navigator.pop(context);
                 // Navigator.pop(dialogContext);
               },
             );

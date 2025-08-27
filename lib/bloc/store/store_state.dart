@@ -3,7 +3,9 @@ part of 'store_bloc.dart';
 @freezed
 class StoreState with _$StoreState {
   const factory StoreState(
-      {required bool isCategoryExpand,
+      {
+          required int messageCount,
+          required bool isCategoryExpand,
       required List<Category> productCategoryList,
       required int cartCount,
       required List<ProductSale> productSalesList,
@@ -52,6 +54,7 @@ class StoreState with _$StoreState {
       required int productListIndex,}) = _StoreState;
 
   factory StoreState.initial() => StoreState(
+      messageCount: 0,
       isCategoryExpand: false,
       productCategoryList: [],
       cartCount: 0,

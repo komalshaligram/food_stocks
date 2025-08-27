@@ -80,31 +80,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             bottlePrice: preferences.getBottleTax(),
           ));
         }
-        else if (event is _getCartCountEvent) {
-          try {
-            final res = await DioClient(event.context).post(
-              '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-            );
-            if (res != null) {
-              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-              if (response.status == AppConstants.code_200) {
-                emit(state.copyWith(isCartCountChange: true));
-                await preferences.setCartCount(count: response.data?.data?.length ?? preferences.getCartCount());
-                emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
-              }
-            }
-          } on ServerException {}
-          //message count
-          try {
-            final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
-
-            MessageCountResModel response = MessageCountResModel.fromJson(res);
-            if (response.status == AppConstants.code_200) {
-              await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());
-              emit(state.copyWith(messageCount: response.data ?? 0));
-            }
-          } catch (e) {}
-        }
         else if (event is _getProductDetailsEvent) {
           emit(state.copyWith(isCartCountChange: false));
           add(const HomeEvent.removeRelatedProductEvent());
@@ -433,8 +408,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 );
                 emit(state.copyWith(isLoading: false, productStockList: productStockList));
 
-                CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!,
-                    event.context), type: SnackBarType.success);
+                CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
               } else {
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
@@ -699,8 +673,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             final res = await DioClient(event.context).post(AppUrlEndPoints.getPlanogramAllProductForSearchUrl, data: globalSearchReqModel.toJson());
             GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
 
-            printData("check here ${response}");
-
             if (state.searchController.text == '') {
               List<SearchModel> searchList = [];
               searchList.addAll(state.productCategoryList.map((category) => SearchModel(
@@ -762,12 +734,28 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       .toList() ??
                   []);*/
               //supplier products result
-              searchList.addAll(response.data?.map((supplier) => SearchModel(searchId: supplier.id ?? '', name: supplier.productName ?? '',
-                  searchType: SearchTypes.product, image: supplier.mainImage ?? '', productStock: supplier.productStock.toString(),
-                  numberOfUnits: int.parse(supplier.numberOfUnit.toString()), priceOfBox: double.parse(supplier.productPrice.toString()),
-                  lowStock: supplier.lowStock.toString(), isPesach: supplier.isPesach ?? false, salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
-                  salesDesc: parse(supplier.sale?.saleDescription ?? '').body?.text ?? '', supplierId: supplier.supplierId, isSale: supplier.sale?.isSale,
-              saleMinQuantity: supplier.sale?.saleMinQuantity, saleMaxQuantity: supplier.sale?.saleMaxQuantity,)).toList() ?? []);
+              searchList.addAll(response.data
+                      ?.map((supplier) => SearchModel(
+                            searchId: supplier.id ?? '',
+                            name: supplier.productName ?? '',
+                            searchType: SearchTypes.product,
+                            image: supplier.mainImage ?? '',
+                            productStock: supplier.productStock.toString(),
+                            numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
+                            priceOfBox: double.parse(supplier.productPrice.toString()),
+                            lowStock: supplier.lowStock.toString(),
+                            isPesach: supplier.isPesach ?? false,
+                            salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
+                            salesDesc: parse(supplier.sale?.saleDescription ?? '').body?.text ?? '',
+                            supplierId: supplier.supplierId,
+                            isSale: supplier.sale?.isSale,
+                            saleMinQuantity: supplier.sale?.saleMinQuantity,
+                            saleMaxQuantity: supplier.sale?.saleMaxQuantity,
+                            isMixedSale: supplier.sale?.isMixedSale,
+                            sameSaleProducts: supplier.sale?.sameSaleProducts,
+                          ))
+                      .toList() ??
+                  []);
 
               final cartMap = await fetchCartQuantities(event.context); // fetch once
 
@@ -1255,6 +1243,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
           }
           //
+        }
+        else if (event is _getCartCountEvent) {
+          try {
+            final res = await DioClient(event.context).post(
+              '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
+            );
+            if (res != null) {
+              GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+              if (response.status == AppConstants.code_200) {
+                emit(state.copyWith(isCartCountChange: true));
+                await preferences.setCartCount(count: response.data?.data?.length ?? preferences.getCartCount());
+                emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
+              }
+            }
+          } on ServerException {}
+          //message count
+          try {
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
+
+            MessageCountResModel response = MessageCountResModel.fromJson(res);
+            if (response.status == AppConstants.code_200) {
+              await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());
+              emit(state.copyWith(messageCount: response.data ?? 0));
+            }
+          } catch (e) {}
         }
       }
     });

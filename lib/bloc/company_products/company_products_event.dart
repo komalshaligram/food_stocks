@@ -113,4 +113,8 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
     required String productSupplierIds,
   }) = _addToCartListProductEvent;
 
+  const factory CompanyProductsEvent.getCartCountNoEvent({
+    required BuildContext context,
+  }) = _getCartCountNoEvent;
+
 }

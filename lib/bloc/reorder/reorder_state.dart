@@ -43,6 +43,8 @@ class ReorderState with _$ReorderState {
     required bool isSaleOn,
     required bool isProgress,
     required String language,
+    required bool isCartCountChange,
+    required int messageCount,
   }) = _ReorderState;
 
   factory ReorderState.initial() => ReorderState(
@@ -90,5 +92,7 @@ class ReorderState with _$ReorderState {
         isIncludedVat: false,
         isSaleOn: false,
         language: AppStrings.hebrewString,
+    isCartCountChange: false,
+    messageCount: 0,
       );
 }

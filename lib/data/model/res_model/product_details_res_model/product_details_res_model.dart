@@ -64,6 +64,8 @@ class SaleProduct with _$SaleProduct {
   @JsonSerializable(includeIfNull: false)
   const factory SaleProduct({
     bool? isSale,
+    bool? isMixedSale,
+    List<dynamic>? sameSaleProducts,
     String? salePrice,
     String? saleFromDate,
     String? saleUntilDate,

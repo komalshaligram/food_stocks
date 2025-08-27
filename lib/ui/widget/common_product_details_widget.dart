@@ -39,6 +39,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final bool isIncludedVat;
   final Function() onCloseTap;
   final bool isFromBasketScreen;
+  final bool? isMixedSale;
 
   const CommonProductDetailsWidget({
     super.key,
@@ -63,6 +64,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
     required this.isIncludedVat,
     required this.onCloseTap,
     this.isFromBasketScreen = false,
+    required this.isMixedSale,
   });
 
   @override
@@ -101,12 +103,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   ),
                   Expanded(
                     child: GestureDetector(
-                      onTap: isFromBasketScreen
-                          ? onCloseTap
-                          : onCloseTap,
-                        // () {
-                        //       Navigator.pop(context);
-                        //     },
+                      onTap: isFromBasketScreen ? onCloseTap : onCloseTap,
+                      // () {
+                      //       Navigator.pop(context);
+                      //     },
                       child: Icon(
                         Icons.close,
                         size: 36,
@@ -407,8 +407,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                               ),
                                               alignment: Alignment.center,
                                               child: TextField(
-                                                controller: TextEditingController(text: "$productQuantity")..selection =
-                                                TextSelection.fromPosition(TextPosition(offset: "$productQuantity".length)),
+                                                controller: TextEditingController(text: "$productQuantity")..selection = TextSelection.fromPosition(TextPosition(offset: "$productQuantity".length)),
                                                 textAlign: TextAlign.center,
                                                 style: AppStyles.rkBoldTextStyle(size: AppConstants.font_26, color: AppColors.blackColor, fontWeight: FontWeight.w700),
                                                 maxLength: 5,
@@ -447,13 +446,13 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              (productDetails.first.sale?.saleMinQuantity != '0')
+                              ((productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMinQuantity != '0')
                                   ? Container(
                                       alignment: Alignment.centerRight,
                                       margin: const EdgeInsets.only(top: 3),
                                       child: Text(
-                                        '${AppLocalizations.of(context)!.minimum_box_title} : ${productDetails.first.sale?.saleMinQuantity}',
-                                        style: AppStyles.rkBoldTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                                        '${AppLocalizations.of(context)!.minimum_box_title} ${productDetails.first.sale?.saleMinQuantity}',
+                                        style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
                                       ),
                                     )
                                   : 0.height,
@@ -462,17 +461,23 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       alignment: Alignment.centerRight,
                                       margin: const EdgeInsets.only(top: 3),
                                       child: Text(
-                                        '${AppLocalizations.of(context)!.maximum_qty} : ${productDetails.first.sale?.saleMaxQuantity}',
-                                        style: AppStyles.rkBoldTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                                        '${AppLocalizations.of(context)!.maximum_qty}: ${productDetails.first.sale?.saleMaxQuantity}',
+                                        style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
                                       ),
                                     )
                                   : 0.height,
                               (productDetails.first.supplierSales?.first.lowStock != '') && (productStock != '0' || productStock != '0.0')
                                   ? Text(
                                       (productDetails.first.supplierSales?.first.lowStock.toString() ?? ''),
-                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.orangeColor),
+                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor),
                                     )
                                   : 0.height,
+                              isMixedSale!
+                                  ? Container(
+                                      alignment: Alignment.centerRight,
+                                      child: Text(AppLocalizations.of(context)!.mixedSale, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400)),
+                                    )
+                                  : const IgnorePointer(),
                               !isSubUserAddToBasket ? 13.height : 0.width,
                               isSubUserAddToBasket ? CommonProductDetailsButton(isLoading: isLoading, isSupplierAvailable: true, productStock: (productStock.toString()), onAddToOrderPressed: isLoading ? null : addToOrderTap) : 0.width,
                             ],

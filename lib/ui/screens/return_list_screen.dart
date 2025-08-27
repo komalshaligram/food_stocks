@@ -53,7 +53,8 @@ class ReturnListWidget extends StatelessWidget {
               title: AppLocalizations.of(context)!.returns,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, RouteDefine.profileMenuScreen.name,);
               },
               trailingWidget: InkWell(
                 onTap: () {

@@ -30,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "account_number": MessageLookupByLibrary.simpleMessage("מספר חשבון"),
     "account_permission": MessageLookupByLibrary.simpleMessage("הרשאות משתמש"),
     "activity_time": MessageLookupByLibrary.simpleMessage("זמני פעילות"),
+    "addText": MessageLookupByLibrary.simpleMessage("הוסף"),
     "add_1_quantity": MessageLookupByLibrary.simpleMessage(
       "בחר לפחות כמות אחת",
     ),
@@ -200,6 +201,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "client_form_details": MessageLookupByLibrary.simpleMessage("פרטי לקוח"),
     "client_info": MessageLookupByLibrary.simpleMessage("פרטי לקוח"),
     "close": MessageLookupByLibrary.simpleMessage("סגור"),
+    "closeText": MessageLookupByLibrary.simpleMessage("סגור"),
     "collection_from_bank_account": MessageLookupByLibrary.simpleMessage(
       "גבייה מחשבון בנק לפי תנאי התשלום שנקבעו",
     ),
@@ -516,12 +518,23 @@ class MessageLookup extends MessageLookupByLibrary {
       "מינימום מארזים להזמנה עבור המבצע",
     ),
     "minimum_box_title": MessageLookupByLibrary.simpleMessage(
-      "מספר הקופסאות המינימלי למכירה מעורבת זו הוא: ",
+      "מספר המארזים המינימלי למבצע זה הוא: ",
+    ),
+    "minimum_boxes_detail": MessageLookupByLibrary.simpleMessage(
+      "מספר הקופסאות המינימלי למכירה זו הוא:",
     ),
     "missing_quantity_not_more_than_original":
         MessageLookupByLibrary.simpleMessage(
           "כמות לא יכולה להיות יותר מהכמות המקורית",
         ),
+    "mix_minimum_box_title": MessageLookupByLibrary.simpleMessage(
+      "מספר הקופסאות המינימלי למכירה מעורבת זו הוא: ",
+    ),
+    "mix_sale_text": MessageLookupByLibrary.simpleMessage("מדובר במבצע מעורב"),
+    "mixedSale": MessageLookupByLibrary.simpleMessage("מבצע מעורב"),
+    "mixed_sale_other_text": MessageLookupByLibrary.simpleMessage(
+      "תוכל להזמין גם משאר המוצרים המשתתפים במבצע",
+    ),
     "module_already_exist": MessageLookupByLibrary.simpleMessage(
       "שם מודל קיים כבר",
     ),
@@ -820,6 +833,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "הסכם שימוש בשירות - TAVILI",
     ),
     "problem_detected": MessageLookupByLibrary.simpleMessage("זוהתה בעיה"),
+    "productParticipatingSale": MessageLookupByLibrary.simpleMessage(
+      "מוצרים המשתתפים במבצע:",
+    ),
     "product_Name": MessageLookupByLibrary.simpleMessage("שם המוצר"),
     "product_added_in_cart": MessageLookupByLibrary.simpleMessage(
       "המוצר נוסף לעגלה שלך בהצלחה",
@@ -977,6 +993,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "sale": MessageLookupByLibrary.simpleMessage("מבצע"),
     "sale_not_exists": MessageLookupByLibrary.simpleMessage(
       "המבצע לא קיים יותר",
+    ),
+    "sale_other_text": MessageLookupByLibrary.simpleMessage(
+      "אם לא תזמין לפחות",
+    ),
+    "sale_other_text1": MessageLookupByLibrary.simpleMessage(
+      "מוצרים לא תקבל את מחיר המבצע",
     ),
     "sales": MessageLookupByLibrary.simpleMessage("לצפיה בכל המבצעים"),
     "saturday_and_holidays": MessageLookupByLibrary.simpleMessage(

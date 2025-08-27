@@ -109,4 +109,7 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
     required String productSupplierIds,
   }) = _addToCartListProductEvent;
 
+  const factory SupplierProductsEvent.getCartCountEvent({
+    required BuildContext context,
+  }) = _getCartCountEvent;
 }

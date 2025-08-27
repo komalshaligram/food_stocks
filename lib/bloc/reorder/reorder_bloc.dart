@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../../data/model/req_model/previous_order_products_req_model/previous_order_products_req_model.dart';
+import '../../data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import '../../data/model/res_model/previous_order_products_res_model/previous_order_products_res_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -667,6 +668,8 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                            supplierId: supplier.supplierId,
               isSale: supplier.sale?.isSale,
               saleMinQuantity: supplier.sale?.saleMinQuantity, saleMaxQuantity: supplier.sale?.saleMaxQuantity,
+              isMixedSale: supplier.sale?.isMixedSale,
+              sameSaleProducts: supplier.sale?.sameSaleProducts,
                         ))
                     .toList() ??
                 []);
@@ -1239,6 +1242,32 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           }
         }
         //
+      }
+
+      else if (event is _getCartCountNoEvent) {
+        try {
+          final res = await DioClient(event.context).post(
+            '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
+          );
+          if (res != null) {
+            GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+            if (response.status == AppConstants.code_200) {
+              emit(state.copyWith(isCartCountChange: true));
+              await preferences.setCartCount(count: response.data?.data?.length ?? preferences.getCartCount());
+              emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
+            }
+          }
+        } on ServerException {}
+        //message count
+        try {
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
+
+          MessageCountResModel response = MessageCountResModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());
+            emit(state.copyWith(messageCount: response.data ?? 0));
+          }
+        } catch (e) {}
       }
 
     });

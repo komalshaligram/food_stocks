@@ -27,6 +27,10 @@ class SearchModel with _$SearchModel {
     String? saleMaxQuantity,
     @JsonKey(name: "saleMinQuantity")
     String? saleMinQuantity,
+    @JsonKey(name: "isMixedSale")
+    bool? isMixedSale,
+    @JsonKey(name: "sameSaleProducts")
+    List<dynamic>? sameSaleProducts,
     @JsonKey(name: "_id")
     String? id,
     @JsonKey(name: "supplierId")

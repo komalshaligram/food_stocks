@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Account Permission",
     ),
     "activity_time": MessageLookupByLibrary.simpleMessage("Activity Time"),
+    "addText": MessageLookupByLibrary.simpleMessage("Add"),
     "add_1_quantity": MessageLookupByLibrary.simpleMessage(
       "Add at least 1 quantity",
     ),
@@ -204,6 +205,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "client_form_details": MessageLookupByLibrary.simpleMessage("Client Info"),
     "client_info": MessageLookupByLibrary.simpleMessage("Client Info"),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
+    "closeText": MessageLookupByLibrary.simpleMessage("Close"),
     "collection_from_bank_account": MessageLookupByLibrary.simpleMessage(
       "Collection from bank account",
     ),
@@ -558,12 +560,25 @@ class MessageLookup extends MessageLookupByLibrary {
     "minimumList": MessageLookupByLibrary.simpleMessage("Minimum for sale"),
     "minimum_box": MessageLookupByLibrary.simpleMessage("Minimum box"),
     "minimum_box_title": MessageLookupByLibrary.simpleMessage(
-      "The minimum boxes for this mixed sale is: ",
+      "The minimum number of packages for this sale is: ",
+    ),
+    "minimum_boxes_detail": MessageLookupByLibrary.simpleMessage(
+      "The minimum boxes for this sale is: ",
     ),
     "missing_quantity_not_more_than_original":
         MessageLookupByLibrary.simpleMessage(
           "missing quantity can\'t be more then original quantity",
         ),
+    "mix_minimum_box_title": MessageLookupByLibrary.simpleMessage(
+      "The minimum boxes for this mixed sale is: ",
+    ),
+    "mix_sale_text": MessageLookupByLibrary.simpleMessage(
+      "This is a mixed sale",
+    ),
+    "mixedSale": MessageLookupByLibrary.simpleMessage("Mixed sale"),
+    "mixed_sale_other_text": MessageLookupByLibrary.simpleMessage(
+      "You may also order from the other products participating in the sale",
+    ),
     "module_already_exist": MessageLookupByLibrary.simpleMessage(
       "Module name already exists",
     ),
@@ -888,6 +903,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "problem_detected": MessageLookupByLibrary.simpleMessage(
       "Problem Detected",
     ),
+    "productParticipatingSale": MessageLookupByLibrary.simpleMessage(
+      "Product participating in the sale:",
+    ),
     "product_Name": MessageLookupByLibrary.simpleMessage("Product Name"),
     "product_added_in_cart": MessageLookupByLibrary.simpleMessage(
       "Product has been successfully added to your cart",
@@ -1059,6 +1077,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "sale": MessageLookupByLibrary.simpleMessage("Sale"),
     "sale_not_exists": MessageLookupByLibrary.simpleMessage(
       "Sale does not exist",
+    ),
+    "sale_other_text": MessageLookupByLibrary.simpleMessage(
+      "If you do not order at least",
+    ),
+    "sale_other_text1": MessageLookupByLibrary.simpleMessage(
+      "products, you will not receive the sale price",
     ),
     "sales": MessageLookupByLibrary.simpleMessage("Sales"),
     "saturday_and_holidays": MessageLookupByLibrary.simpleMessage(

@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:audioplayers/audioplayers.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/planogram_req_model/planogram_req_model.dart';
 import '../../data/model/req_model/product_subcategories_req_model/product_subcategories_req_model.dart';
+import '../../data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import '../../data/model/res_model/planogram_res_model/planogram_res_model.dart';
 import '../../data/model/res_model/product_subcategories_res_model/product_subcategories_res_model.dart';
 import '../../repository/dio_client.dart';
@@ -620,7 +624,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 totalPrice: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].totalPrice,
                 productSaleId: '',
               );
-              add(const StoreCategoryEvent.getCartCountEvent());
+              add( StoreCategoryEvent.getCartCountEvent(context: event.context));
               emit(state.copyWith(isLoading: false, productStockList: productStockList, duringCelebration: true));
 
               await Future.delayed(const Duration(milliseconds: 2000));
@@ -731,7 +735,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                           supplierId: supplier.supplierId,
                           image: supplier.mainImage ?? '',
                           isSale: supplier.sale?.isSale,
-                          saleMinQuantity: supplier.sale?.saleMinQuantity, saleMaxQuantity: supplier.sale?.saleMaxQuantity,
+                          saleMinQuantity: supplier.sale?.saleMinQuantity,
+                          saleMaxQuantity: supplier.sale?.saleMaxQuantity,
+                          isMixedSale: supplier.sale?.isMixedSale,
+                          sameSaleProducts: supplier.sale?.sameSaleProducts,
                         ),
                       )
                       .toList() ??
@@ -904,9 +911,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         preferences.setIsGridView(isGridView: !state.isGridView);
         emit(state.copyWith(isGridView: !state.isGridView));
       }
-      else if (event is _getCartCountEvent) {
-        emit(state.copyWith(cartCount: preferences.getCartCount()));
-      }
+      // else if (event is _getCartCountEvent) {
+      //   emit(state.copyWith(cartCount: preferences.getCartCount()));
+      // }
       else if (event is _relatedProductsEvent) {
         emit(state.copyWith(isRelatedShimmering: true));
         final res = await DioClient(event.context).post(AppUrlEndPoints.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
@@ -1255,7 +1262,34 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
         //
       }
+
+      else if (event is _getCartCountEvent) {
+        try {
+          final res = await DioClient(event.context!).post(
+            '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
+          );
+          if (res != null) {
+            GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+            if (response.status == AppConstants.code_200) {
+              emit(state.copyWith(isCartCountChange: true));
+              await preferences.setCartCount(count: response.data?.data?.length ?? preferences.getCartCount());
+              emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
+            }
+          }
+        } on ServerException {}
+        //message count
+        try {
+          final res = await DioClient(event.context!).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
+
+          MessageCountResModel response = MessageCountResModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());
+            emit(state.copyWith(messageCount: response.data ?? 0));
+          }
+        } catch (e) {}
+      }
     });
+
   }
 
   Future<Map<String, int>> fetchCartQuantities(BuildContext context) async {

@@ -399,7 +399,6 @@ class BasketScreenWidget extends StatelessWidget {
       },
       positiveOnTap1: () {
         Navigator.pop(context);
-        printData(' state.bankTransferInfo:${state.bankTransferInfo}');
         if (state.isPaymentFail && state.bankTransferInfo.isNotEmpty) {
           bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.wallet, isFromRemovePopUp: false));
         } else {
@@ -561,6 +560,8 @@ class BasketScreenWidget extends StatelessWidget {
                             child: CustomDialog(
                               isProcessing: state.isRemoveProcess,
                               title: AppLocalizations.of(context)!.you_want_delete_product,
+                              content: [],
+                              isMixedSale: false,
                               directionality: state.language,
                               positiveTitle: AppLocalizations.of(context)!.yes,
                               negativeTitle: AppLocalizations.of(context)!.no,
@@ -579,189 +580,230 @@ class BasketScreenWidget extends StatelessWidget {
             }
             return null;
           },
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-            decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              boxShadow: [
-                BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
-              ],
-              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-            ),
-            child: GestureDetector(
-              onTap: () {
-                showProductDetails(
-                  isSaleOn: state.isSaleOn,
-                  context: /*Platform.isIOS ? (state.context??context): */
-                      context,
-                  cartProductId: state.cartItemList.data?.data?[index].id ?? '',
-                  productListIndex: 0,
-                  productStock: state.cartItemList.data?.data?[index].productStock.toString() ?? '0',
-                );
-              },
-              child: Column(
-                children: [
-                  state.basketProductList[index].isProcess == true
-                      ? LinearProgressIndicator(
-                          color: AppColors.mainColor,
-                          minHeight: 3,
-                          backgroundColor: AppColors.mainColor.withOpacity(0.5),
-                        )
-                      : 3.height,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        state.basketProductList[index].mainImage == ''
-                            ? Image.asset(
-                                AppImagePath.imageNotAvailable5,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.fitWidth,
-                              )
-                            : Image.network(
-                                '${AppUrlEndPoints.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.contain,
-                                loadingBuilder: (context, child, loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  } else {
-                                    return Center(
-                                      child: SizedBox(
-                                        width: 100,
-                                        height: 100,
-                                        child: CupertinoActivityIndicator(
-                                          color: AppColors.blackColor,
+          child: Stack(
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
+                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                decoration: BoxDecoration(
+                  color: AppColors.whiteColor,
+                  boxShadow: [
+                    BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+                  ],
+                  borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    showProductDetails(
+                      isSaleOn: state.isSaleOn,
+                      context: /*Platform.isIOS ? (state.context??context): */
+                          context,
+                      cartProductId: state.cartItemList.data?.data?[index].id ?? '',
+                      productListIndex: 0,
+                      productStock: state.cartItemList.data?.data?[index].productStock.toString() ?? '0',
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      state.basketProductList[index].isProcess == true
+                          ? LinearProgressIndicator(
+                              color: AppColors.mainColor,
+                              minHeight: 3,
+                              backgroundColor: AppColors.mainColor.withOpacity(0.5),
+                            )
+                          : 3.height,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            state.basketProductList[index].mainImage == ''
+                                ? Image.asset(
+                                    AppImagePath.imageNotAvailable5,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.fitWidth,
+                                  )
+                                : Image.network(
+                                    '${AppUrlEndPoints.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.contain,
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Center(
+                                          child: SizedBox(
+                                            width: 100,
+                                            height: 100,
+                                            child: CupertinoActivityIndicator(
+                                              color: AppColors.blackColor,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+                                    },
+                                  ),
+                            20.width,
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    state.basketProductList[index].productName ?? '',
+                                    style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.bold),
+                                  ),
+                                  5.height,
+                                  Text(
+                                    state.basketProductList[index].supplierName ?? '',
+                                    style: TextStyle(color: AppColors.mainColor),
+                                  ),
+                                  productStock == 0 || productStock == 0.0
+                                      ? Text(
+                                          AppLocalizations.of(context)!.product_no_longer_in_stock,
+                                          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.redColor, fontWeight: FontWeight.w400),
+                                        )
+                                      : (lowStock.isNotEmpty) && double.parse(productStock.toString()) > 0
+                                          ? Text(lowStock, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.orangeColor, fontWeight: FontWeight.w400))
+                                          : 0.width,
+                                  lowStock.isNotEmpty ? 5.height : 0.height,
+                                  state.basketProductList[index].isSale
+                                      ? Container(
+                                          width: MediaQuery.of(context).size.width,
+                                          margin: const EdgeInsets.only(top: 3, bottom: 5),
+                                          padding: const EdgeInsets.all(5),
+                                          decoration: BoxDecoration(color: AppColors.saleBGColor, borderRadius: const BorderRadius.all(Radius.circular(8))),
+                                          child: Center(
+                                              child: Text(
+                                            state.basketProductList[index].saleDesc,
+                                            style: const TextStyle(color: Colors.white, fontSize: AppConstants.font_12),
+                                          )),
+                                        )
+                                      : 0.width,
+                                  isPesachLabelShow(isPesach, context),
+                                  isPesach ? 5.height : 0.height,
+                                  Text(
+                                    formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal),
+                                    style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.w700),
+                                  ),
+                                  10.height,
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (!state.isLoading) {
+                                            if (state.cartItemList.data?.data?[index].sale?.saleMaxQuantity == 0) {
+                                              if ((state.cartItemList.data?.data?[index].productStock ?? 0.0) >= state.basketProductList[index].totalQuantity! + 1) {
+                                                bloc.add(BasketEvent.productUpdateEvent(listIndex: index, productWeight: state.basketProductList[index].totalQuantity! + 1, context: context, productId: state.cartItemList.data?.data?[index].productDetails?.id ?? '', supplierId: state.cartItemList.data?.data?[index].suppliers?.first.id ?? '', cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '', totalPayment: state.totalPayment, saleId: state.cartItemList.data?.data?[index].id ?? ''));
+                                              } else {
+                                                CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.out_of_stock, type: SnackBarType.failure);
+                                              }
+                                            } else if (state.cartItemList.data?.data?[index].sale?.saleMaxQuantity == state.basketProductList[index].totalQuantity!) {
+                                              CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
+                                            } else {
+                                              bloc.add(BasketEvent.productUpdateEvent(listIndex: index, productWeight: state.basketProductList[index].totalQuantity! + 1, context: context, productId: state.cartItemList.data?.data?[index].productDetails?.id ?? '', supplierId: state.cartItemList.data?.data?[index].suppliers?.first.id ?? '', cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '', totalPayment: state.totalPayment, saleId: state.cartItemList.data?.data?[index].id ?? ''));
+                                            }
+                                          }
+                                        },
+                                        child: Container(
+                                          width: AppConstants.containerSize_35,
+                                          height: AppConstants.containerSize_35,
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_4), border: Border.all(color: AppColors.navSelectedColor), color: AppColors.pageColor),
+                                          child: Icon(
+                                            Icons.add,
+                                            size: 20,
+                                            color: AppColors.blackColor,
+                                          ),
                                         ),
                                       ),
-                                    );
-                                  }
-                                },
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
-                                },
-                              ),
-                        20.width,
-                        Expanded(
-                          flex: 3,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                state.basketProductList[index].productName ?? '',
-                                style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.bold),
-                              ),
-                              5.height,
-                              Text(
-                                state.basketProductList[index].supplierName ?? '',
-                                style: TextStyle(color: AppColors.mainColor),
-                              ),
-                              productStock == 0 || productStock == 0.0
-                                  ? Text(
-                                      AppLocalizations.of(context)!.product_no_longer_in_stock,
-                                      style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.redColor, fontWeight: FontWeight.w400),
-                                    )
-                                  : (lowStock.isNotEmpty) && double.parse(productStock.toString()) > 0
-                                      ? Text(lowStock, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.orangeColor, fontWeight: FontWeight.w400))
-                                      : 0.width,
-                              lowStock.isNotEmpty ? 5.height : 0.height,
-                              state.basketProductList[index].isSale
-                                  ? Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      margin: const EdgeInsets.only(top: 3, bottom: 5),
-                                      padding: const EdgeInsets.all(5),
-                                      decoration: BoxDecoration(color: AppColors.saleBGColor, borderRadius: const BorderRadius.all(Radius.circular(8))),
-                                      child: Center(
-                                          child: Text(
-                                        state.basketProductList[index].saleDesc,
-                                        style: const TextStyle(color: Colors.white, fontSize: AppConstants.font_12),
-                                      )),
-                                    )
-                                  : 0.width,
-                              isPesachLabelShow(isPesach, context),
-                              isPesach ? 5.height : 0.height,
-                              Text(
-                                formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal),
-                                style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.w700),
-                              ),
-                              10.height,
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (!state.isLoading) {
-                                        if (state.cartItemList.data?.data?[index].sale?.saleMaxQuantity == 0) {
-                                          if ((state.cartItemList.data?.data?[index].productStock ?? 0.0) >= state.basketProductList[index].totalQuantity! + 1) {
-                                            bloc.add(BasketEvent.productUpdateEvent(listIndex: index, productWeight: state.basketProductList[index].totalQuantity! + 1, context: context, productId: state.cartItemList.data?.data?[index].productDetails?.id ?? '', supplierId: state.cartItemList.data?.data?[index].suppliers?.first.id ?? '', cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '', totalPayment: state.totalPayment, saleId: state.cartItemList.data?.data?[index].id ?? ''));
-                                          } else {
-                                            CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.out_of_stock, type: SnackBarType.failure);
+                                      10.width,
+                                      Text(
+                                        '${state.basketProductList[index].totalQuantity}${' '}${state.basketProductList[index].scales}',
+                                        style: TextStyle(
+                                          color: AppColors.blackColor,
+                                          fontSize: AppConstants.smallFont,
+                                        ),
+                                      ),
+                                      10.width,
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (!state.isLoading) {
+                                            if (state.basketProductList[index].totalQuantity! > 1) {
+                                              bloc.add(BasketEvent.productUpdateEvent(listIndex: index, productWeight: state.basketProductList[index].totalQuantity! - 1, context: context, productId: state.cartItemList.data?.data?[index].productDetails?.id ?? '', supplierId: state.cartItemList.data?.data?[index].suppliers?.first.id ?? '', cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '', totalPayment: state.totalPayment, saleId: state.cartItemList.data?.data?[index].id ?? ''));
+                                            } else {
+                                              deleteDialog(context: context, updateClearString: '', cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '', listIndex: index, totalAmount: state.totalPayment);
+                                            }
                                           }
-                                        } else if (state.cartItemList.data?.data?[index].sale?.saleMaxQuantity == state.basketProductList[index].totalQuantity!) {
-                                          CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
-                                        } else {
-                                          bloc.add(BasketEvent.productUpdateEvent(listIndex: index, productWeight: state.basketProductList[index].totalQuantity! + 1, context: context, productId: state.cartItemList.data?.data?[index].productDetails?.id ?? '', supplierId: state.cartItemList.data?.data?[index].suppliers?.first.id ?? '', cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '', totalPayment: state.totalPayment, saleId: state.cartItemList.data?.data?[index].id ?? ''));
-                                        }
-                                      }
-                                    },
-                                    child: Container(
-                                      width: AppConstants.containerSize_35,
-                                      height: AppConstants.containerSize_35,
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_4), border: Border.all(color: AppColors.navSelectedColor), color: AppColors.pageColor),
-                                      child: Icon(
-                                        Icons.add,
-                                        size: 20,
-                                        color: AppColors.blackColor,
+                                        },
+                                        child: Container(
+                                          width: AppConstants.containerSize_35,
+                                          height: AppConstants.containerSize_35,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_4), border: Border.all(color: AppColors.navSelectedColor), color: AppColors.pageColor),
+                                          child: Icon(
+                                            Icons.remove,
+                                            size: 20,
+                                            color: AppColors.blackColor,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  10.width,
-                                  Text(
-                                    '${state.basketProductList[index].totalQuantity}${' '}${state.basketProductList[index].scales}',
-                                    style: TextStyle(
-                                      color: AppColors.blackColor,
-                                      fontSize: AppConstants.smallFont,
-                                    ),
-                                  ),
-                                  10.width,
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (!state.isLoading) {
-                                        if (state.basketProductList[index].totalQuantity! > 1) {
-                                          bloc.add(BasketEvent.productUpdateEvent(listIndex: index, productWeight: state.basketProductList[index].totalQuantity! - 1, context: context, productId: state.cartItemList.data?.data?[index].productDetails?.id ?? '', supplierId: state.cartItemList.data?.data?[index].suppliers?.first.id ?? '', cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '', totalPayment: state.totalPayment, saleId: state.cartItemList.data?.data?[index].id ?? ''));
-                                        } else {
-                                          deleteDialog(context: context, updateClearString: '', cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '', listIndex: index, totalAmount: state.totalPayment);
-                                        }
-                                      }
-                                    },
-                                    child: Container(
-                                      width: AppConstants.containerSize_35,
-                                      height: AppConstants.containerSize_35,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_4), border: Border.all(color: AppColors.navSelectedColor), color: AppColors.pageColor),
-                                      child: Icon(
-                                        Icons.remove,
-                                        size: 20,
-                                        color: AppColors.blackColor,
+                                      const Spacer(),
+                                      GestureDetector(
+                                        onTap: () {
+                                          deleteDialog(
+                                            context: context,
+                                            cartProductId: state.basketProductList[index].cartProductId,
+                                            listIndex: index,
+                                            updateClearString: '',
+                                            totalAmount: state.basketProductList[index].totalPayment!,
+                                          );
+                                        },
+                                        child: Container(
+                                          width: AppConstants.containerSize_35,
+                                          height: AppConstants.containerSize_35,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_4), border: Border.all(color: AppColors.redColor), color: AppColors.pageColor),
+                                          child: SvgPicture.asset(
+                                            AppImagePath.delete,
+                                            colorFilter: ColorFilter.mode(AppColors.redColor, BlendMode.srcIn),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+                if ((state.cartItemList.data?.data?[index].productStock ?? 0) == 0)
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
+                      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                      decoration: BoxDecoration(
+                        color: AppColors.redColor.withOpacity(0.2), // Semi-transparent red
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(AppConstants.radius_5),
+                        ),
+                      ),
                     ),
                   ),
-                ],
-              ),
-            ),
+                ),
+            ],
           ),
         );
       },
@@ -782,6 +824,8 @@ class BasketScreenWidget extends StatelessWidget {
                       absorbing: state.isRemoveProcess ? true : false,
                       child: CustomDialog(
                         title: AppLocalizations.of(context)!.some_products_out_of_stock_Do_you_want_submit_order,
+                        content: [],
+                        isMixedSale: false,
                         directionality: state.language,
                         positiveTitle: AppLocalizations.of(context)!.yes,
                         isProcessing: state.isRemoveProcess,
@@ -925,6 +969,8 @@ class BasketScreenWidget extends StatelessWidget {
                       absorbing: state.isRemoveProcess ? true : false,
                       child: CustomDialog(
                         title: updateClearString == AppStrings.clearString ? AppLocalizations.of(context)!.you_want_clear_cart : AppLocalizations.of(context)!.you_want_delete_product,
+                        content: [],
+                        isMixedSale: false,
                         directionality: state.language,
                         positiveTitle: AppLocalizations.of(context)!.yes,
                         isProcessing: state.isRemoveProcess,
@@ -1059,6 +1105,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                           scrollController: scrollController,
                                           productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
+                                          isMixedSale: state.productDetails.first.sale!.isMixedSale,
                                           onQuantityChanged: (quantity) {
                                             context.read<BasketBloc>().add(BasketEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
                                           },
@@ -1139,59 +1186,58 @@ class BasketScreenWidget extends StatelessWidget {
                   lowStock: state.relatedProductList.elementAt(i).lowStock ?? '',
                   isPesach: state.relatedProductList.elementAt(i).isPesach,
                   quantity: state.productStockList[1].firstWhere((test) => test.productId == state.relatedProductList.elementAt(i).id).quantity, //[i].quantity,
+                  isMixedSale: state.relatedProductList.elementAt(i).sale?.isMixedSale,
                   onQuantityChanged: () {
                     context2.read<BasketBloc>().add(
-                      BasketEvent.updateListQuantityOfProduct(
-                        context: context2,
-                        quantity: state.productStockList[1].firstWhere((test) => test.productId == state.relatedProductList.elementAt(i).id).quantity.toString(),
-                        productListIndex: 1,
-                        productStockUpdateIndex: state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
-                        productSupplierIds: state.relatedProductList[i].supplierId.toString(),
-                      ),
-                    );
+                          BasketEvent.updateListQuantityOfProduct(
+                            context: context2,
+                            quantity: state.productStockList[1].firstWhere((test) => test.productId == state.relatedProductList.elementAt(i).id).quantity.toString(),
+                            productListIndex: 1,
+                            productStockUpdateIndex: state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
+                            productSupplierIds: state.relatedProductList[i].supplierId.toString(),
+                          ),
+                        );
                   },
                   onQuantityIncreaseTap: () {
                     context2.read<BasketBloc>().add(
-
-                      BasketEvent.increaseListQuantityOfProduct(
-                        context: context2,
-                        productListIndex: 1,
-                        productStockUpdateIndex: state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
-                        productSupplierIds: state.relatedProductList[i].supplierId.toString(),
-                      ),
-                    );
+                          BasketEvent.increaseListQuantityOfProduct(
+                            context: context2,
+                            productListIndex: 1,
+                            productStockUpdateIndex: state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
+                            productSupplierIds: state.relatedProductList[i].supplierId.toString(),
+                          ),
+                        );
 
                     context2.read<BasketBloc>().add(
-                      BasketEvent.addToCartListProductEvent(
-                        context: context2,
-                        productId: state.relatedProductList[i].id.toString(),
-                        productListIndex: 1,
-                        productStockUpdateIndex: state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
-                        productSupplierIds: state.relatedProductList[i].supplierId.toString(),
-                      ),
-                    );
+                          BasketEvent.addToCartListProductEvent(
+                            context: context2,
+                            productId: state.relatedProductList[i].id.toString(),
+                            productListIndex: 1,
+                            productStockUpdateIndex: state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
+                            productSupplierIds: state.relatedProductList[i].supplierId.toString(),
+                          ),
+                        );
                   },
                   onQuantityDecreaseTap: () {
-                    // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
                     if (state.productStockList[1].firstWhere((test) => test.productId == state.relatedProductList.elementAt(i).id).quantity != 0) {
                       context2.read<BasketBloc>().add(
-                        BasketEvent.decreaseListQuantityOfProduct(
-                          context: context2,
-                          productListIndex: 1,
-                          productStockUpdateIndex: state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
-                          productSupplierIds: state.relatedProductList[i].supplierId.toString(),
-                        ),
-                      );
+                            BasketEvent.decreaseListQuantityOfProduct(
+                              context: context2,
+                              productListIndex: 1,
+                              productStockUpdateIndex: state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
+                              productSupplierIds: state.relatedProductList[i].supplierId.toString(),
+                            ),
+                          );
 
                       context2.read<BasketBloc>().add(
-                        BasketEvent.addToCartListProductEvent(
-                          context: context2,
-                          productId: state.relatedProductList[i].id.toString(),
-                          productListIndex: 1,
-                          productStockUpdateIndex: state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
-                          productSupplierIds: state.relatedProductList[i].supplierId.toString(),
-                        ),
-                      );
+                            BasketEvent.addToCartListProductEvent(
+                              context: context2,
+                              productId: state.relatedProductList[i].id.toString(),
+                              productListIndex: 1,
+                              productStockUpdateIndex: state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
+                              productSupplierIds: state.relatedProductList[i].supplierId.toString(),
+                            ),
+                          );
                     }
                   },
                   onButtonTap: () {
@@ -1299,5 +1345,12 @@ class BasketScreenWidget extends StatelessWidget {
     } else {
       context.read<BasketBloc>().add(BasketEvent.updateMaintenanceEvent(context: context));
     }
+  }
+
+  Color getProductColor(int index, state) {
+    final stock = state.cartItemList.data?.data?[index].productStock ?? 0.0;
+    final totalQty = state.basketProductList[index].totalQuantity ?? 0;
+
+    return stock >= totalQty + 1 ? AppColors.whiteColor : Color(0XFFfadad7);
   }
 }

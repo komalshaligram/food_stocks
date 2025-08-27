@@ -64,6 +64,10 @@ class Datum with _$Datum {
 class Sale with _$Sale {
   const factory Sale({
     @JsonKey(name: "isSale") bool? isSale,
+    @JsonKey(name: "isMixedSale")
+    bool? isMixedSale,
+    @JsonKey(name: "sameSaleProducts")
+    List<dynamic>? sameSaleProducts,
     @JsonKey(name: "salePrice") String? salePrice,
     @JsonKey(name: "saleFromDate") String? saleFromDate,
     @JsonKey(name: "saleUntilDate") String? saleUntilDate,

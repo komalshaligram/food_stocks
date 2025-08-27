@@ -118,4 +118,8 @@ class StoreEvent with _$StoreEvent {
     required int productStockUpdateIndex,
     required String productSupplierIds,
   }) = _addToCartListProductEvent;
+
+  const factory StoreEvent.getCartCountEvent({
+    required BuildContext context,
+  }) = _getCartCountEvent;
 }

@@ -126,4 +126,6 @@ class HomeEvent with _$HomeEvent {
     required BuildContext context,
 
   }) = _syncCartWithProductStockListEvent;
+
+
 }

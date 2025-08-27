@@ -109,5 +109,7 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
     required String productSupplierIds,
   }) = _addToCartListProductEvent;
 
-
+  const factory RecommendationProductsEvent.getCartCountNoEvent({
+    required BuildContext context,
+  }) = _getCartCountNoEvent;
 }

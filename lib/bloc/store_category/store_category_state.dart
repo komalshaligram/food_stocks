@@ -58,6 +58,8 @@ class StoreCategoryState with _$StoreCategoryState {
     required bool isIncludedVat,
     required bool isSaleOn,
     required String language,
+    required bool isCartCountChange,
+    required int messageCount,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -115,5 +117,7 @@ class StoreCategoryState with _$StoreCategoryState {
       isSubUserAddToBasket: false,
       isIncludedVat: false,
       isSaleOn: false,
-    language :AppStrings.hebrewString,);
+    language :AppStrings.hebrewString,
+    isCartCountChange: false,
+    messageCount: 0,);
 }

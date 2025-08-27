@@ -34,6 +34,7 @@ class CommonSaleListView extends StatelessWidget {
   final void Function()? onQuantityDecreaseTap;
   final String? minQuantity;
   final String? maxQuantity;
+  final bool? isMixedSale;
 
   const CommonSaleListView({
     super.key,
@@ -57,6 +58,7 @@ class CommonSaleListView extends StatelessWidget {
     this.onQuantityDecreaseTap,
     this.minQuantity,
     this.maxQuantity,
+    required this.isMixedSale,
   });
 
   @override
@@ -218,21 +220,33 @@ class CommonSaleListView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(
+                              minQuantity != '0' ?  Text(
                                 '${AppLocalizations.of(context)!.minimumList}: ${minQuantity.toString()}',
                                 style: AppStyles.rkRegularTextStyle(
                                   color: AppColors.redColor,
                                   size: AppConstants.font_14,
                                 ),
-                              ),
-                              Text(
+                              ) : const IgnorePointer(),
+                              maxQuantity != '0' ?  Text(
                                 '${AppLocalizations.of(context)!.maximumList}: ${maxQuantity.toString()}',
                                 style: AppStyles.rkRegularTextStyle(
                                   color: AppColors.redColor,
                                   size: AppConstants.font_14,
                                 ),
-                              ),
+                              ): const IgnorePointer(),
                             ],
+                          )
+                        : const IgnorePointer(),
+                    // isMixedSale! ? 3.height : const IgnorePointer(),
+                    isMixedSale!
+                        ? Center(
+                            child: Text(
+                              AppLocalizations.of(context)!.mixedSale,
+                              style: AppStyles.rkRegularTextStyle(
+                                color: AppColors.redColor,
+                                size: AppConstants.font_14,
+                              ),
+                            ),
                           )
                         : const IgnorePointer(),
                     5.height,

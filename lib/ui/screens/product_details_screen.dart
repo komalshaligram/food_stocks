@@ -973,6 +973,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                 child: CustomDialog(
                   isProcessing: state.isDuplicateOrderProcess,
                   title: AppLocalizations.of(context)!.you_want_to_duplicate_this_order,
+                  content: [],
+                  isMixedSale: false,
                   directionality: state.language,
                   positiveTitle: AppLocalizations.of(context)!.yes,
                   negativeTitle: AppLocalizations.of(context)!.no,

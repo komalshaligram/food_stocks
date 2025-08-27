@@ -107,7 +107,6 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
           });
         }
       } else if (event is _updateReturnEvent) {
-        printData("check here click");
         emit(state.copyWith(isLoading: true));
         try {
           List<req.ReturnProduct> list = [];
@@ -129,7 +128,8 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
           CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
           if (resModel.status == AppConstants.code_201) {
             emit(state.copyWith(isLoading: false));
-            Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
+            Navigator.pushReplacementNamed(event.context, RouteDefine.returnListScreen.name);
+            //Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
           } else {
             printData("message ${res[AppStrings.messageString]}" );
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.failure);

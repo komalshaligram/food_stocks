@@ -37,6 +37,8 @@ class RecommendationProductsState with _$RecommendationProductsState {
     required bool isSaleOn,
     required bool isProgress,
     required String language,
+    required bool isCartCountChange,
+    required int messageCount,
   }) = _RecommendationProductsState;
 
   factory RecommendationProductsState.initial() => RecommendationProductsState(
@@ -78,5 +80,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
         isSaleOn: false,
         isProgress: false,
         language: AppStrings.hebrewString,
+    isCartCountChange: false,
+    messageCount: 0,
       );
 }

@@ -104,8 +104,8 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
     required bool isGridView,
   }) = _changeGridToListViewEvent;
 
-  const factory StoreCategoryEvent.getCartCountEvent(
-  ) = _getCartCountEvent;
+  // const factory StoreCategoryEvent.getCartCountEvent(
+  // ) = _getCartCountEvent;
 
   const factory StoreCategoryEvent.allProductsRefreshListEvent(
       {required BuildContext context}) = _allProductsRefreshListEvent;
@@ -148,4 +148,8 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
     required int productStockUpdateIndex,
     required String productSupplierIds,
   }) = _addToCartListProductEvent;
+
+  const factory StoreCategoryEvent.getCartCountEvent({
+     BuildContext? context,
+  }) = _getCartCountEvent;
 }

@@ -15,6 +15,7 @@ import '../../data/model/req_model/recommendation_products_req_model/recommendat
 import '../../data/model/req_model/suppliers_req_model/suppliers_req_model.dart';
 import '../../data/model/res_model/company_res_model/company_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
+import '../../data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
 import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
@@ -100,7 +101,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           printData('product categories = ${response.data?.categories!.length.toString()}');
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
-            searchList.addAll(response.data?.categories?.map((category) => SearchModel(searchId: category.id ?? '', name: category.categoryName ?? '', searchType: SearchTypes.category, image: category.categoryImage ?? '')) ?? []);
+            searchList.addAll(response.data?.categories?.map((category) => SearchModel(searchId: category.id ?? '', name: category.categoryName ?? '',
+                searchType: SearchTypes.category, image: category.categoryImage ?? '')) ?? []);
             printData('store search list = ${searchList.length}');
             bool productVisible = response.data?.categories?.any((element) => element.isHomePreference == true) ?? true;
             emit(state.copyWith(isCatVisible: productVisible, productCategoryList: response.data?.categories ?? [], searchList: searchList, isShimmering: false));
@@ -724,8 +726,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                           salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
                           salesDesc: parse(supplier.sale?.saleDescription ?? '').body?.text ?? '',
                           supplierId: supplier.supplierId,
-                  isSale: supplier.sale?.isSale,
-                  saleMinQuantity: supplier.sale?.saleMinQuantity, saleMaxQuantity: supplier.sale?.saleMaxQuantity))
+                          isSale: supplier.sale?.isSale,
+                          saleMinQuantity: supplier.sale?.saleMinQuantity,
+                          saleMaxQuantity: supplier.sale?.saleMaxQuantity,
+                          isMixedSale: supplier.sale?.isMixedSale,
+                          sameSaleProducts: supplier.sale?.sameSaleProducts,))
                       .toList() ??
                   [],
             );
@@ -1230,6 +1235,31 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           }
         }
         //
+      }
+      else if (event is _getCartCountEvent) {
+        try {
+          final res = await DioClient(event.context).post(
+            '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
+          );
+          if (res != null) {
+            GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+            if (response.status == AppConstants.code_200) {
+              emit(state.copyWith(isCartCountChange: true));
+              await preferences.setCartCount(count: response.data?.data?.length ?? preferences.getCartCount());
+              emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
+            }
+          }
+        } on ServerException {}
+        //message count
+        try {
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
+
+          MessageCountResModel response = MessageCountResModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());
+            emit(state.copyWith(messageCount: response.data ?? 0));
+          }
+        } catch (e) {}
       }
     });
   }

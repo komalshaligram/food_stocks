@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import '../../data/error/exceptions.dart';
+import '../../data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import '../../data/model/res_model/pesach_products_res_model/pesach_products_res_model.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
@@ -685,6 +686,8 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
                           isSale: supplier.sale?.isSale,
                           saleMinQuantity: supplier.sale?.saleMinQuantity,
                           saleMaxQuantity: supplier.sale?.saleMaxQuantity,
+              isMixedSale: supplier.sale?.isMixedSale,
+              sameSaleProducts: supplier.sale?.sameSaleProducts,
                         ))
                     .toList() ??
                 []);
@@ -1090,6 +1093,32 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
           }
         }
         //
+      }
+
+      else if (event is _getCartCountNoEvent) {
+        try {
+          final res = await DioClient(event.context).post(
+            '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
+          );
+          if (res != null) {
+            GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+            if (response.status == AppConstants.code_200) {
+              emit(state.copyWith(isCartCountChange: true));
+              await preferences.setCartCount(count: response.data?.data?.length ?? preferences.getCartCount());
+              emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
+            }
+          }
+        } on ServerException {}
+        //message count
+        try {
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
+
+          MessageCountResModel response = MessageCountResModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());
+            emit(state.copyWith(messageCount: response.data ?? 0));
+          }
+        } catch (e) {}
       }
     });
   }

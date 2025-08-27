@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
@@ -20,7 +19,6 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final String title;
   final String description;
   final String productName;
-
   final double discountedPrice;
   final void Function() onButtonTap;
   final bool isGuestUser;
@@ -37,6 +35,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final void Function()? onQuantityDecreaseTap;
   final String? minQuantity;
   final String? maxQuantity;
+  final bool? isMixedSale;
 
   const CommonProductSaleItemWidget({
     super.key,
@@ -62,6 +61,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     this.onQuantityDecreaseTap,
     this.minQuantity,
     this.maxQuantity,
+    required this.isMixedSale,
   });
 
   @override
@@ -148,7 +148,11 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                 2.height,
                 Text(
                   productName,
-                  style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600),
+                  style: AppStyles.rkBoldTextStyle(
+                    size: AppConstants.font_12,
+                    color: AppColors.blackColor,
+                    fontWeight: FontWeight.w600,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -158,7 +162,13 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                         child: Container(
                           width: width! - 10,
                           padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                          decoration: BoxDecoration(
+                            color: AppColors.saleBGColor,
+                            border: Border.all(color: AppColors.saleBGColor),
+                            borderRadius: BorderRadius.circular(
+                              AppConstants.radius_3,
+                            ),
+                          ),
                           child: Text(
                             "${parse(description).body?.text}",
                             style: AppStyles.rkRegularTextStyle(
@@ -181,11 +191,22 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                             child: Text(
                               AppLocalizations.of(context)!.out_of_stock1,
                               textAlign: TextAlign.center,
-                              style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.redColor, fontWeight: FontWeight.w400),
+                              style: AppStyles.rkBoldTextStyle(
+                                size: AppConstants.font_12,
+                                color: AppColors.redColor,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           )
                         : lowStock.isNotEmpty
-                            ? Text(lowStock, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.orangeColor, fontWeight: FontWeight.w400))
+                            ? Text(
+                                lowStock,
+                                style: AppStyles.rkBoldTextStyle(
+                                  size: AppConstants.font_12,
+                                  color: AppColors.orangeColor,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              )
                             : 0.width,
                 1.height,
                 Center(child: isPesachLabelShow(isPesach!, context)),
@@ -220,9 +241,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                     ),
                   )
                 : 0.width,
-
-            5.height,
-
+            // 3.height,
             isSale!
                 ? Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -238,12 +257,18 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                     ],
                   )
                 : const IgnorePointer(),
-
+            isMixedSale!
+                ? Center(
+                    child: Text(
+                      AppLocalizations.of(context)!.mixedSale,
+                      style: AppStyles.rkRegularTextStyle(
+                        color: AppColors.redColor,
+                        size: AppConstants.font_10,
+                      ),
+                    ),
+                  )
+                : const IgnorePointer(),
             const Spacer(),
-            // 10.height,
-            // Divider(
-            //   color: AppColors.borderColor,
-            // ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -253,16 +278,18 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                   child: Container(
                     width: 25,
                     height: 25,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_2), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(AppConstants.radius_2),
+                      border: Border.all(color: AppColors.greyColor),
+                      color: AppColors.pageColor,
+                    ),
                     child: const Icon(
                       Icons.add,
                       size: 15,
                     ),
                   ),
                 ),
-                // : const SizedBox(),
                 15.width,
-
                 Text(
                   quantity.toString(),
                   style: AppStyles.rkRegularTextStyle(
@@ -270,30 +297,28 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                     size: AppConstants.font_17,
                   ),
                 ),
-                // : const SizedBox(),
                 15.width,
-
                 GestureDetector(
                   onTap: onQuantityDecreaseTap,
                   child: Container(
                     alignment: Alignment.center,
                     width: 25,
                     height: 25,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_3), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(AppConstants.radius_3),
+                      border: Border.all(color: AppColors.greyColor),
+                      color: AppColors.pageColor,
+                    ),
                     child: const Icon(
                       Icons.remove,
                       size: 15,
                     ),
                   ),
-                )
-                // : 0.width,
+                ),
+
               ],
             ),
             5.height,
-            // Row(children: [
-            //     Container(height: 3.h, width: 3.h, decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)), child: Icon(Icons.add),)
-            //
-            // ],)
           ],
         ),
       ),
