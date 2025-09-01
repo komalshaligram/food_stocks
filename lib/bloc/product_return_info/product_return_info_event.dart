@@ -36,4 +36,6 @@ class ProductReturnInfoEvent with _$ProductReturnInfoEvent {
     _createReturnEvent;
     factory ProductReturnInfoEvent.updateReturnEvent({required BuildContext context}) =
     _updateReturnEvent;
+    factory ProductReturnInfoEvent.removeProductEvent({required BuildContext context,required String returnProductId}) =
+    _removeProductEvent;
 }

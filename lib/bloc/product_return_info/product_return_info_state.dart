@@ -16,6 +16,7 @@ class ProductReturnInfoState with _$ProductReturnInfoState {
     required List<RadioModel> radioList,
     required List<String> proofImagesList,
     required String barCode,
+    required String returnProductId,
     required bool isShimmer,
     required String updateId,
     required String statusId,
@@ -28,7 +29,7 @@ class ProductReturnInfoState with _$ProductReturnInfoState {
     required bool isFromPending,
     required TextEditingController addNoteController}) = _ProductReturnInfoState;
 
-  factory ProductReturnInfoState.initial() => ProductReturnInfoState(proofFile: File(''), proofFile1: File(''),isLoading:false,barCode:'',
+  factory ProductReturnInfoState.initial() => ProductReturnInfoState(proofFile: File(''), proofFile1: File(''),isLoading:false,barCode:'', returnProductId:'',
       proofFile2: File(''), addNoteController: TextEditingController(),noOfUnits: '1',productImg: '',productName: '',reason:'',radioList:[],supplierId:'',
       returnProductList: [], productQty: 1, language: AppStrings.hebrewString,totalQty:1,selectedRadioTile:0,proofImagesList:[],returnIdList:[],
       isShimmer:false,updateId:'',statusId: '',mainIndex: -1,supplierName:'',returnId:'',isFromPending: false);

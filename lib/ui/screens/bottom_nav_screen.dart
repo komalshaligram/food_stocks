@@ -48,7 +48,8 @@ class BottomNavScreen extends StatelessWidget {
 class BottomNavScreenWidget extends StatelessWidget {
   final String storeScreen;
   final String basketScreen;
-  BottomNavScreenWidget({super.key, this.storeScreen = '', this.basketScreen = ''});
+  final String profileScreen;
+  BottomNavScreenWidget({super.key, this.storeScreen = '', this.basketScreen = '', this.profileScreen = ''});
 
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
@@ -59,7 +60,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       listener: (context, state) {
         bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
         bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
-        bloc.add(BottomNavEvent.navigateToStoreScreenEvent(context: context, storeScreen: storeScreen, basketScreen: basketScreen));
+        bloc.add(BottomNavEvent.navigateToStoreScreenEvent(context: context, storeScreen: storeScreen, basketScreen: basketScreen, profileScreen: profileScreen));
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {

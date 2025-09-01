@@ -97,8 +97,10 @@ class ReturnProduct with _$ReturnProduct {
     @JsonKey(name: "productImage")
     String? productImg,
     String? returnId,
-   String? supplierId,
+    String? supplierId,
     String? supplierName,
+    @JsonKey(name: "_id")
+    String? returnProductId,
 
   }) = _ReturnProduct;
 

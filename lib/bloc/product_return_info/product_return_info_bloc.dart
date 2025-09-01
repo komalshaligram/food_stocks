@@ -47,24 +47,48 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             List<ReturnProduct> tempProductList = [];
             final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
             for (int i = 0; i < myList.length; i++) {
-              tempProductList.add(ReturnProduct(
-                returnId: myList[i].returnId,
-                supplierName: myList[i].supplierName,
-                totalRefund: myList[i].totalRefund,
-                supplierId: myList[i].supplierId,
-                proofImages: myList[i].proofImages,
-                notes: myList[i].notes,
-                productName: myList[i].productName,
-                productImg: myList[i].productImg,
-                barcode: myList[i].barcode,
-                totalUnits: myList[i].totalUnits,
-                isApproved: myList[i].isApproved,
-                reasonToReturn: myList[i].reasonToReturn,
-              ));
+              printData("myList[i].returnProductId ${myList[i].returnProductId}");
+              tempProductList.add(
+                ReturnProduct(
+                  returnId: myList[i].returnId,
+                  supplierName: myList[i].supplierName,
+                  totalRefund: myList[i].totalRefund,
+                  supplierId: myList[i].supplierId,
+                  proofImages: myList[i].proofImages,
+                  notes: myList[i].notes,
+                  productName: myList[i].productName,
+                  productImg: myList[i].productImg,
+                  barcode: myList[i].barcode,
+                  totalUnits: myList[i].totalUnits,
+                  isApproved: myList[i].isApproved,
+                  reasonToReturn: myList[i].reasonToReturn,
+                  returnProductId: myList[i].returnProductId,
+                ),
+              );
             }
             int index = map['index'] ?? 0;
             int radioIndex = tempList.indexWhere((e) => e.text.toLowerCase() == tempProductList[index].reasonToReturn?.toLowerCase()).toInt();
-            emit(state.copyWith(selectedRadioTile: radioIndex + 1, returnId: tempProductList.elementAt(index).returnId ?? '', supplierName: tempProductList.elementAt(index).supplierName ?? '', supplierId: tempProductList.elementAt(index).supplierId ?? '', returnProductList: tempProductList, barCode: tempProductList.elementAt(index).barcode ?? '', totalQty: tempProductList.elementAt(index).totalUnits ?? 0, productName: tempProductList.elementAt(index).productName ?? '', productImg: (tempProductList.elementAt(index).productImg ?? ''), mainIndex: tempProductList[index].proofImages == null ? -1 : index, productQty: tempProductList[index].totalUnits ?? 1, proofImagesList: tempProductList.elementAt(index).proofImages ?? [], reason: tempProductList.elementAt(index).reasonToReturn ?? '', addNoteController: TextEditingController(text: tempProductList.elementAt(index).notes ?? '')));
+            emit(
+              state.copyWith(
+                selectedRadioTile: radioIndex + 1,
+                returnId: tempProductList.elementAt(index).returnId ?? '',
+                supplierName: tempProductList.elementAt(index).supplierName ?? '',
+                supplierId: tempProductList.elementAt(index).supplierId ?? '',
+                returnProductList: tempProductList,
+                barCode: tempProductList.elementAt(index).barcode ?? '',
+                returnProductId: tempProductList.elementAt(index).returnProductId ?? '',
+                totalQty: tempProductList.elementAt(index).totalUnits ?? 0,
+                productName: tempProductList.elementAt(index).productName ?? '',
+                productImg: (tempProductList.elementAt(index).productImg ?? ''),
+                mainIndex: tempProductList[index].proofImages == null ? -1 : index,
+                productQty: tempProductList[index].totalUnits ?? 1,
+                proofImagesList: tempProductList.elementAt(index).proofImages ?? [],
+                reason: tempProductList.elementAt(index).reasonToReturn ?? '',
+                addNoteController: TextEditingController(
+                  text: tempProductList.elementAt(index).notes ?? '',
+                ),
+              ),
+            );
             emit(state.copyWith(
               isFromPending: map['status'] ?? false,
               language: preferencesHelper.getAppLanguage(),
@@ -75,19 +99,15 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             ));
           }
         }
-      }
-      else if (event is _navigateReturnEvent) {
+      } else if (event is _navigateReturnEvent) {
         if (state.productQty != 0) {
           if (state.selectedRadioTile != 0) {
-
             if (state.proofFile.path.isNotEmpty || state.proofFile1.path.isNotEmpty || state.proofFile2.path.isNotEmpty) {
-
-
-              ReturnProduct products = ReturnProduct(productName: state.productName, totalUnits: state.productQty, proofImages: state.proofImagesList,
-                  notes: state.addNoteController.text.toString(), barcode: state.barCode, isApproved: false, totalRefund: 0, reasonToReturn: state.reason,
-                  productImg: state.productImg, supplierName: state.supplierName, supplierId: state.supplierId, returnId: state.returnId,);
+              ReturnProduct products = ReturnProduct(productName: state.productName, totalUnits: state.productQty,
+                  proofImages: state.proofImagesList, notes: state.addNoteController.text.toString(), barcode: state.barCode,
+                  isApproved: false, totalRefund: 0, reasonToReturn: state.reason, productImg: state.productImg, supplierName: state.supplierName,
+                  supplierId: state.supplierId, returnId: state.returnId, returnProductId: state.returnProductId,);
               if (state.mainIndex != -1) {
-
                 //for update
                 List<ReturnProduct> returnList = [];
                 returnList.addAll(state.returnProductList);
@@ -107,16 +127,13 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
                 returnList.add(products);
                 emit(state.copyWith(returnProductList: returnList));
                 if (state.returnProductList.length == 1) {
-
                   add(ProductReturnInfoEvent.createReturnEvent(context: event.context, supplierId: state.supplierId));
                 } else {
-
                   add(ProductReturnInfoEvent.updateReturnEvent(context: event.context));
                 }
                 // Navigator.pushNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {'list': state.returnProductList, AppStrings.isUpdateParamString: false});
               }
             } else {
-
               CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.add_one_proof_img, type: SnackBarType.failure);
             }
           } else {
@@ -125,62 +142,20 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         } else {
           CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.enter_units, type: SnackBarType.failure);
         }
-      } else if (event is _updateReturnEvent) {
-        emit(state.copyWith(isShimmer: true));
-        try {
-          List<req.ReturnProduct> list = [];
-          for (int i = 0; i < state.returnProductList.length; i++) {
-            list.add(req.ReturnProduct(totalRefund: state.returnProductList[i].totalRefund, proofImages: state.returnProductList[i].proofImages,
-                supplierId: state.returnProductList[i].supplierId, notes: state.returnProductList[i].notes, productName: state.returnProductList[i].productName,
-                productImage: state.returnProductList[i].productImg, barcode: state.returnProductList[i].barcode, totalUnits: state.returnProductList[i].totalUnits,
-                isApproved: state.returnProductList[i].isApproved, reasonToReturn: state.returnProductList[i].reasonToReturn,),);
-          }
-          req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(
-            applicationName: AppStrings.appName,
-            supplierId: '',
-            isDraft: !state.isFromPending,
-            clientId: preferencesHelper.getUserId(),
-            returnProducts: list,
-            subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null,
-          );
-          final res = await DioClient(event.context).post(
-            '${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId}',
-            data: reqModel.toJson(),
-          );
-          CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
-          if (resModel.status == AppConstants.code_201) {
-            List<ReturnProduct> list = [];
-            if (resModel.data!.first.returnproducts != null) {
-              List<Returnproduct> tempList = [];
-              tempList.addAll(resModel.data!.first.returnproducts as Iterable<Returnproduct>);
-              for (var i in tempList) {
-                list.add(ReturnProduct(
-                  returnId: i.returnId,
-                  supplierName: i.supplierName,
-                  totalUnits: i.totalUnits,
-                  reasonToReturn: i.reasonToReturn,
-                  barcode: i.barcode,
-                  notes: i.notes,
-                  proofImages: i.proofImages ?? [],
-                  productName: i.productName,
-                  productImg: i.productImage,
-                  supplierId: i.supplierId,
-                ));
-              }
-            }
+      }  else if (event is _removeProductEvent) {
+        if (state.returnProductList.length > 1) {
+          final updatedList = List<ReturnProduct>.from(state.returnProductList); // make a modifiable copy
 
-            emit(state.copyWith(returnProductList: list, isShimmer: false, returnId: state.returnProductList.first.returnId ?? '', ));
+          printData("event.returnProductId ${event.returnProductId}");
 
-            Navigator.pushReplacementNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {'list': list, //state.returnProductList,
-              AppStrings.isUpdateParamString: false,'status':state.isFromPending,});
+          updatedList.removeWhere((returnProduct) => returnProduct.returnProductId == event.returnProductId); // safely remove item
 
+          emit(state.copyWith(returnProductList: updatedList));
 
-          } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context),
-                type: SnackBarType.failure);
-            emit(state.copyWith(isShimmer: false));
-          }
-        } catch (e) {}
+          add(ProductReturnInfoEvent.updateReturnEvent(
+            context: event.context,
+          ));
+        }
       } else if (event is _deleteEvent) {
         List<ReturnProduct> list = [];
         list.addAll(state.returnProductList);
@@ -205,8 +180,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
           }
         }
-      }
-      else if (event is _pickDocumentEvent) {
+      } else if (event is _pickDocumentEvent) {
         XFile? image = await openImagePicker(event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (image != null) {
           CroppedFile? croppedImage = await cropImage(path: image.path, shape: CropStyle.rectangle, quality: AppConstants.fileQuality);
@@ -239,8 +213,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
           }
           emit(state.copyWith(proofImagesList: imgList));
         }
-      }
-      else if (event is _deleteFileEvent) {
+      } else if (event is _deleteFileEvent) {
         if (event.index == 1) {
           emit(state.copyWith(proofFile: File('')));
         } else if (event.index == 2) {
@@ -248,8 +221,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         } else if (event.index == 3) {
           emit(state.copyWith(proofFile2: File('')));
         }
-      }
-      else if (event is _productIncrementEvent) {
+      } else if (event is _productIncrementEvent) {
         if (state.updateId.isEmpty) {
           emit(state.copyWith(
             productQty: event.productQuantity.round() + 1,
@@ -259,27 +231,51 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             productQty: event.productQuantity.round() + 1,
           ));
         }
-      }
-      else if (event is _productDecrementEvent) {
+      } else if (event is _productDecrementEvent) {
         if (event.productQuantity >= 1) {
           emit(state.copyWith(
             productQty: event.productQuantity.round() - 1,
           ));
         }
-      }
-      else if (event is _radioButtonEvent) {
+      } else if (event is _radioButtonEvent) {
         emit(state.copyWith(selectedRadioTile: event.selectRadioTile, reason: event.reason));
       }
-      else if (event is _createReturnEvent) {
+      else if (event is _updateReturnEvent) {
         emit(state.copyWith(isShimmer: true));
+
         try {
           List<req.ReturnProduct> list = [];
           for (int i = 0; i < state.returnProductList.length; i++) {
-            list.add(req.ReturnProduct(totalRefund: state.returnProductList[i].totalRefund, proofImages: state.returnProductList[i].proofImages, notes: state.returnProductList[i].notes, productName: state.returnProductList[i].productName, productImage: state.returnProductList[i].productImg, barcode: state.returnProductList[i].barcode, totalUnits: state.returnProductList[i].totalUnits, isApproved: state.returnProductList[i].isApproved, reasonToReturn: state.returnProductList[i].reasonToReturn, supplierId: event.supplierId));
+            list.add(
+              req.ReturnProduct(
+                totalRefund: state.returnProductList[i].totalRefund,
+                proofImages: state.returnProductList[i].proofImages,
+                supplierId: state.returnProductList[i].supplierId,
+                notes: state.returnProductList[i].notes,
+                productName: state.returnProductList[i].productName,
+                productImage: state.returnProductList[i].productImg,
+                barcode: state.returnProductList[i].barcode,
+                totalUnits: state.returnProductList[i].totalUnits,
+                isApproved: state.returnProductList[i].isApproved,
+                reasonToReturn: state.returnProductList[i].reasonToReturn,
+                returnProductId : state.returnProductList[i].returnProductId,
+              ),
+            );
           }
-          req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(applicationName: AppStrings.appName, clientId: preferencesHelper.getUserId(), returnProducts: list, subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null, supplierId: '', isDraft: true);
+
+
+
+          req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(
+            applicationName: AppStrings.appName,
+            supplierId: '',
+            isDraft: !state.isFromPending,
+            clientId: preferencesHelper.getUserId(),
+            returnProducts: list,
+            subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null,
+
+          );
           final res = await DioClient(event.context).post(
-            AppUrlEndPoints.createReturnUrl,
+            '${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId}',
             data: reqModel.toJson(),
           );
           CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
@@ -287,7 +283,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             List<ReturnProduct> list = [];
             if (resModel.data!.first.returnproducts != null) {
               List<Returnproduct> tempList = [];
-              tempList.add(resModel.data!.first.returnproducts!.first);
+              tempList.addAll(resModel.data!.first.returnproducts as Iterable<Returnproduct>);
               for (var i in tempList) {
                 list.add(ReturnProduct(
                   returnId: i.returnId,
@@ -300,15 +296,83 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
                   productName: i.productName,
                   productImg: i.productImage,
                   supplierId: i.supplierId,
+                  returnProductId: i.id,
+                ));
+              }
+            }
+
+            emit(state.copyWith(
+              returnProductList: list,
+              isShimmer: false,
+              returnId: state.returnProductList.first.returnId ?? '',
+            ));
+
+            printData("afet update check list ${list}");
+
+            Navigator.pop(event.context); // Closes dialog
+            Navigator.pop(event.context); // Closes product detail page
+            Navigator.pushReplacementNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {
+              'list': list, //state.returnProductList,
+              AppStrings.isUpdateParamString: false, 'status': state.isFromPending,
+            });
+          } else {
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
+            emit(state.copyWith(isShimmer: false));
+          }
+        } catch (e) {}
+      }
+      else if (event is _createReturnEvent) {
+        emit(state.copyWith(isShimmer: true));
+        try {
+          List<req.ReturnProduct> list = [];
+          for (int i = 0; i < state.returnProductList.length; i++) {
+            list.add(req.ReturnProduct(totalRefund: state.returnProductList[i].totalRefund, proofImages: state.returnProductList[i].proofImages,
+                notes: state.returnProductList[i].notes, productName: state.returnProductList[i].productName,
+                productImage: state.returnProductList[i].productImg, barcode: state.returnProductList[i].barcode,
+                totalUnits: state.returnProductList[i].totalUnits, isApproved: state.returnProductList[i].isApproved,
+                reasonToReturn: state.returnProductList[i].reasonToReturn, supplierId: event.supplierId,));
+          }
+          req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(applicationName: AppStrings.appName, clientId: preferencesHelper.getUserId(),
+              returnProducts: list, subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null, supplierId: '', isDraft: true,);
+          final res = await DioClient(event.context).post(
+            AppUrlEndPoints.createReturnUrl,
+            data: reqModel.toJson(),
+          );
+          CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
+          if (resModel.status == AppConstants.code_201) {
+            List<ReturnProduct> list = [];
+            if (resModel.data!.first.returnproducts != null) {
+              List<Returnproduct> tempList = [];
+              tempList.add(resModel.data!.first.returnproducts!.first);
+
+              printData("tempListdate ${tempList}");
+
+              for (var i in tempList) {
+                list.add(ReturnProduct(
+                  returnId: i.returnId,
+                  supplierName: i.supplierName,
+                  totalUnits: i.totalUnits,
+                  reasonToReturn: i.reasonToReturn,
+                  barcode: i.barcode,
+                  notes: i.notes,
+                  proofImages: i.proofImages ?? [],
+                  productName: i.productName,
+                  productImg: i.productImage,
+                  supplierId: i.supplierId,
+                  returnProductId: i.id
                 ));
               }
             }
             emit(state.copyWith(returnProductList: list, isShimmer: false, returnId: resModel.data!.first.id.toString()));
-            Navigator.pushReplacementNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {'list': state.returnProductList,
-              AppStrings.isUpdateParamString: false,'status':state.isFromPending,});
+            printData("check here to go");
+            Navigator.pushReplacementNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {
+              'list': state.returnProductList,
+              AppStrings.isUpdateParamString: false,
+              'status': state.isFromPending,
+
+            });
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context),
-                type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
             emit(state.copyWith(isShimmer: false));
           }
         } catch (e) {}

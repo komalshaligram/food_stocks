@@ -20,8 +20,8 @@ mixin _$BottomNavEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int index, BuildContext context) changePage,
     required TResult Function(BuildContext context) updateCartCountEvent,
-    required TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)
+    required TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)
         navigateToStoreScreenEvent,
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
@@ -33,8 +33,8 @@ mixin _$BottomNavEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index, BuildContext context)? changePage,
     TResult? Function(BuildContext context)? updateCartCountEvent,
-    TResult? Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult? Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
@@ -45,8 +45,8 @@ mixin _$BottomNavEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int index, BuildContext context)? changePage,
     TResult Function(BuildContext context)? updateCartCountEvent,
-    TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
@@ -187,8 +187,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int index, BuildContext context) changePage,
     required TResult Function(BuildContext context) updateCartCountEvent,
-    required TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)
+    required TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)
         navigateToStoreScreenEvent,
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
@@ -203,8 +203,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index, BuildContext context)? changePage,
     TResult? Function(BuildContext context)? updateCartCountEvent,
-    TResult? Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult? Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
@@ -218,8 +218,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int index, BuildContext context)? changePage,
     TResult Function(BuildContext context)? updateCartCountEvent,
-    TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
@@ -363,8 +363,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int index, BuildContext context) changePage,
     required TResult Function(BuildContext context) updateCartCountEvent,
-    required TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)
+    required TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)
         navigateToStoreScreenEvent,
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
@@ -379,8 +379,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index, BuildContext context)? changePage,
     TResult? Function(BuildContext context)? updateCartCountEvent,
-    TResult? Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult? Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
@@ -394,8 +394,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int index, BuildContext context)? changePage,
     TResult Function(BuildContext context)? updateCartCountEvent,
-    TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
@@ -476,7 +476,11 @@ abstract class _$$NavigateToStoreScreenEventImplCopyWith<$Res> {
           $Res Function(_$NavigateToStoreScreenEventImpl) then) =
       __$$NavigateToStoreScreenEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({BuildContext context, String storeScreen, String basketScreen});
+  $Res call(
+      {BuildContext context,
+      String storeScreen,
+      String profileScreen,
+      String basketScreen});
 }
 
 /// @nodoc
@@ -493,6 +497,7 @@ class __$$NavigateToStoreScreenEventImplCopyWithImpl<$Res>
   $Res call({
     Object? context = null,
     Object? storeScreen = null,
+    Object? profileScreen = null,
     Object? basketScreen = null,
   }) {
     return _then(_$NavigateToStoreScreenEventImpl(
@@ -503,6 +508,10 @@ class __$$NavigateToStoreScreenEventImplCopyWithImpl<$Res>
       storeScreen: null == storeScreen
           ? _value.storeScreen
           : storeScreen // ignore: cast_nullable_to_non_nullable
+              as String,
+      profileScreen: null == profileScreen
+          ? _value.profileScreen
+          : profileScreen // ignore: cast_nullable_to_non_nullable
               as String,
       basketScreen: null == basketScreen
           ? _value.basketScreen
@@ -518,6 +527,7 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
   const _$NavigateToStoreScreenEventImpl(
       {required this.context,
       required this.storeScreen,
+      required this.profileScreen,
       required this.basketScreen});
 
   @override
@@ -525,11 +535,13 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
   @override
   final String storeScreen;
   @override
+  final String profileScreen;
+  @override
   final String basketScreen;
 
   @override
   String toString() {
-    return 'BottomNavEvent.navigateToStoreScreenEvent(context: $context, storeScreen: $storeScreen, basketScreen: $basketScreen)';
+    return 'BottomNavEvent.navigateToStoreScreenEvent(context: $context, storeScreen: $storeScreen, profileScreen: $profileScreen, basketScreen: $basketScreen)';
   }
 
   @override
@@ -540,13 +552,15 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
             (identical(other.context, context) || other.context == context) &&
             (identical(other.storeScreen, storeScreen) ||
                 other.storeScreen == storeScreen) &&
+            (identical(other.profileScreen, profileScreen) ||
+                other.profileScreen == profileScreen) &&
             (identical(other.basketScreen, basketScreen) ||
                 other.basketScreen == basketScreen));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, context, storeScreen, basketScreen);
+  int get hashCode => Object.hash(
+      runtimeType, context, storeScreen, profileScreen, basketScreen);
 
   @JsonKey(ignore: true)
   @override
@@ -560,15 +574,16 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int index, BuildContext context) changePage,
     required TResult Function(BuildContext context) updateCartCountEvent,
-    required TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)
+    required TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)
         navigateToStoreScreenEvent,
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
     required TResult Function(BuildContext context) getPreferencesDataEvent,
     required TResult Function(bool isOpen) setDialogOpen,
   }) {
-    return navigateToStoreScreenEvent(context, storeScreen, basketScreen);
+    return navigateToStoreScreenEvent(
+        context, storeScreen, profileScreen, basketScreen);
   }
 
   @override
@@ -576,14 +591,15 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index, BuildContext context)? changePage,
     TResult? Function(BuildContext context)? updateCartCountEvent,
-    TResult? Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult? Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
     TResult? Function(bool isOpen)? setDialogOpen,
   }) {
-    return navigateToStoreScreenEvent?.call(context, storeScreen, basketScreen);
+    return navigateToStoreScreenEvent?.call(
+        context, storeScreen, profileScreen, basketScreen);
   }
 
   @override
@@ -591,8 +607,8 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int index, BuildContext context)? changePage,
     TResult Function(BuildContext context)? updateCartCountEvent,
-    TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
@@ -600,7 +616,8 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
     required TResult orElse(),
   }) {
     if (navigateToStoreScreenEvent != null) {
-      return navigateToStoreScreenEvent(context, storeScreen, basketScreen);
+      return navigateToStoreScreenEvent(
+          context, storeScreen, profileScreen, basketScreen);
     }
     return orElse();
   }
@@ -660,10 +677,12 @@ abstract class _NavigateToStoreScreenEvent implements BottomNavEvent {
   const factory _NavigateToStoreScreenEvent(
       {required final BuildContext context,
       required final String storeScreen,
+      required final String profileScreen,
       required final String basketScreen}) = _$NavigateToStoreScreenEventImpl;
 
   BuildContext get context;
   String get storeScreen;
+  String get profileScreen;
   String get basketScreen;
   @JsonKey(ignore: true)
   _$$NavigateToStoreScreenEventImplCopyWith<_$NavigateToStoreScreenEventImpl>
@@ -742,8 +761,8 @@ class _$seeWalletPermissionUpdateEventImpl
   TResult when<TResult extends Object?>({
     required TResult Function(int index, BuildContext context) changePage,
     required TResult Function(BuildContext context) updateCartCountEvent,
-    required TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)
+    required TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)
         navigateToStoreScreenEvent,
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
@@ -758,8 +777,8 @@ class _$seeWalletPermissionUpdateEventImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index, BuildContext context)? changePage,
     TResult? Function(BuildContext context)? updateCartCountEvent,
-    TResult? Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult? Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
@@ -773,8 +792,8 @@ class _$seeWalletPermissionUpdateEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int index, BuildContext context)? changePage,
     TResult Function(BuildContext context)? updateCartCountEvent,
-    TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
@@ -919,8 +938,8 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int index, BuildContext context) changePage,
     required TResult Function(BuildContext context) updateCartCountEvent,
-    required TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)
+    required TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)
         navigateToStoreScreenEvent,
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
@@ -935,8 +954,8 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index, BuildContext context)? changePage,
     TResult? Function(BuildContext context)? updateCartCountEvent,
-    TResult? Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult? Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
@@ -950,8 +969,8 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int index, BuildContext context)? changePage,
     TResult Function(BuildContext context)? updateCartCountEvent,
-    TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,
@@ -1092,8 +1111,8 @@ class _$SetDialogOpenEventImpl implements _SetDialogOpenEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int index, BuildContext context) changePage,
     required TResult Function(BuildContext context) updateCartCountEvent,
-    required TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)
+    required TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)
         navigateToStoreScreenEvent,
     required TResult Function(BuildContext context)
         seeWalletPermissionUpdateEvent,
@@ -1108,8 +1127,8 @@ class _$SetDialogOpenEventImpl implements _SetDialogOpenEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index, BuildContext context)? changePage,
     TResult? Function(BuildContext context)? updateCartCountEvent,
-    TResult? Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult? Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult? Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult? Function(BuildContext context)? getPreferencesDataEvent,
@@ -1123,8 +1142,8 @@ class _$SetDialogOpenEventImpl implements _SetDialogOpenEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int index, BuildContext context)? changePage,
     TResult Function(BuildContext context)? updateCartCountEvent,
-    TResult Function(
-            BuildContext context, String storeScreen, String basketScreen)?
+    TResult Function(BuildContext context, String storeScreen,
+            String profileScreen, String basketScreen)?
         navigateToStoreScreenEvent,
     TResult Function(BuildContext context)? seeWalletPermissionUpdateEvent,
     TResult Function(BuildContext context)? getPreferencesDataEvent,

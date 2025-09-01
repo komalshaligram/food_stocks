@@ -42,7 +42,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
                   supplierName:myList[i].supplierName,supplierId: myList[i].supplierId,
                   proofImages: myList[i].proofImages, notes: myList[i].notes,
                   productName: myList[i].productName, productImg: myList[i].productImg, returnId: myList[i].returnId,
-                  barcode: myList[i].barcode, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
+                  barcode: myList[i].barcode, returnProductId: myList[i].returnProductId, totalUnits: myList[i].totalUnits, isApproved: myList[i].isApproved, reasonToReturn: myList[i].reasonToReturn));
             }
             emit(state.copyWith(returnProductList: tempList));
           }
@@ -57,13 +57,12 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         if (state.isBottomOfProducts) {
           return;
         }
-        emit(state.copyWith(language: preferencesHelper.getAppLanguage(), isLoading:  state.pageNum == 0 ? true : false, statusList: statusList,isLoadMore: state.pageNum == 0 ? false : true));
+        emit(state.copyWith(language: preferencesHelper.getAppLanguage(), isLoading:  state.pageNum == 0 ? true : false, statusList: statusList,isLoadMore: state.pageNum == 0
+            ? false : true));
         try {
           GetAllOrderReqModel reqMap = GetAllOrderReqModel(pageNum: state.pageNum + 1, pageLimit:AppConstants.orderPageLimit, userId :preferencesHelper.getUserId());
 
-          printData("request ${reqMap}");
 
-          printData("check clientid ${preferencesHelper.getUserId()}");
           // userId :preferencesHelper.getUserId()
           final res = await DioClient(event.context).post(AppUrlEndPoints.getReturnListUrl, data: reqMap);
           GetReturnListResModel response = GetReturnListResModel.fromJson(res);
@@ -96,7 +95,6 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         String scanResult = await scanBarcodeOrQRCode(context: event.context, cancelText: AppLocalizations.of(event.context)!.cancel, scanMode: ScanMode.BARCODE);
         if (scanResult != '-1') {
           // -1 result for cancel scanning
-          printData('result = $scanResult');
           emit(state.copyWith(barCodeController: TextEditingController(text: scanResult)));
         }
       } else if (event is _scanProductEvent) {
@@ -105,7 +103,6 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
           final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.barCode, isReturn: true).toJson());
           ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
 
-          printData("check res ${response}");
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false, barCodeController: TextEditingController(text: event.barCode)));
             if (response.product!.isEmpty) {

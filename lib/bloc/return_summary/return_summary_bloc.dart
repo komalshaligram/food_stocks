@@ -36,10 +36,11 @@ class ReturnSummaryBloc extends Bloc<ReturnSummaryEvent, ReturnSummaryState> {
             );
             GetReturnByIdResModel res = GetReturnByIdResModel.fromJson(response);
             tempList.addAll(res.data?.returnProducts ?? []);
+            printData("tempList ${tempList}");
             for(int i =0;i<tempList.length;i++){
               if(tempList[i].supplierId==null){
                 tempList[i]= ReturnProduct(supplierId: res.data?.supplierId,productImg: tempList[i].productImg,productName: tempList[i].productName,
-                proofImages: tempList[i].proofImages,notes: tempList[i].notes,barcode: tempList[i].barcode,reasonToReturn: tempList[i].reasonToReturn,
+                proofImages: tempList[i].proofImages,notes: tempList[i].notes, returnProductId: tempList[i].returnProductId, barcode: tempList[i].barcode,reasonToReturn: tempList[i].reasonToReturn,
                 totalUnits: tempList[i].totalUnits,supplierName: res.data?.supplierName);
               }
             }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:focus_detector/focus_detector.dart';
 import '/routes/app_routes.dart';
 import '/ui/widget/custom_button_widget.dart';
 import '/ui/widget/order_summary_screen_shimmer_widget.dart';
@@ -28,6 +29,9 @@ class CreateProductReturnListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+
+    printData("args11 ${args}");
+
     return BlocProvider(
       create: (context) => CreateReturnBloc()..add(CreateReturnEvent.getReturnListEvent(product: args ?? {}, context: context)),
       child: const CreateProductReturnListWidget(),
@@ -41,6 +45,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<CreateReturnBloc>();
+   // Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocBuilder<CreateReturnBloc, CreateReturnState>(
       builder: (context, state) {
         return PopScope(
@@ -49,30 +54,38 @@ class CreateProductReturnListWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
-              child: CommonAppBar(
-                bgColor: AppColors.pageColor,
-                title: AppLocalizations.of(context)!.product_return_list,
-                iconData: Icons.arrow_back_ios_sharp,
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, RouteDefine.returnListScreen.name,);
-                  // Navigator.pop(context, 'refresh');
-                  //Navigator.pushNamedAndRemoveUntil(context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
+              child: FocusDetector(
+                onFocusGained: () {
+                  // bloc.add(CreateReturnEvent.getReturnListEvent(context: context, product: args ?? {} ));
                 },
-                trailingWidget: state.returnProductList.isNotEmpty
-                    ? InkWell(
-                        onTap: () {
-                          deleteProductDialog(context: context);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                          decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(5.0)),
-                          child: Text(
-                            AppLocalizations.of(context)!.delete,
-                            style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor),
+                child: CommonAppBar(
+                  bgColor: AppColors.pageColor,
+                  title: AppLocalizations.of(context)!.product_return_list,
+                  iconData: Icons.arrow_back_ios_sharp,
+                  onTap: () {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      RouteDefine.returnListScreen.name,
+                    );
+                    // Navigator.pop(context, 'refresh');
+                    //Navigator.pushNamedAndRemoveUntil(context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
+                  },
+                  trailingWidget: state.returnProductList.isNotEmpty
+                      ? InkWell(
+                          onTap: () {
+                            deleteProductDialog(context: context,);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                            decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(5.0)),
+                            child: Text(
+                              AppLocalizations.of(context)!.delete,
+                              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor),
+                            ),
                           ),
-                        ),
-                      )
-                    : 0.height,
+                        )
+                      : 0.height,
+                ),
               ),
             ),
             body: SafeArea(
@@ -159,6 +172,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
 
   void deleteProductDialog({
     required BuildContext context,
+    Map? returnId,
   }) {
     showDialog(
       context: context,

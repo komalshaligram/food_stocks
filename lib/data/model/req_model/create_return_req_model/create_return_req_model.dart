@@ -30,7 +30,8 @@ class ReturnProduct with _$ReturnProduct {
     String? reasonToReturn,
     String? notes,
     String? productImage,
-    String? supplierId
+    String? supplierId,
+    String? returnProductId,
   }) = _ReturnProduct;
 
   factory ReturnProduct.fromJson(Map<String, dynamic> json) => _$ReturnProductFromJson(json);

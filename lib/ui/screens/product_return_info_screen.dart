@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../data/model/res_model/get_return_by_id_res_model/get_return_by_id_res_model.dart';
 import '/bloc/product_return_info/product_return_info_bloc.dart';
 import '/ui/widget/file_selection_option_widget.dart';
 import '/ui/widget/sized_box_widget.dart';
@@ -57,7 +58,8 @@ class ReturnListWidget extends StatelessWidget {
               trailingWidget: state.mainIndex != -1
                   ? InkWell(
                       onTap: () {
-                        deleteProductDialog(context: context);
+                        printData("state.returnProductId ${state.returnProductId}");
+                       deleteProductDialog(context: context,returnProductId : state.returnProductId);
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
@@ -409,9 +411,7 @@ class ReturnListWidget extends StatelessWidget {
         itemCount: state.radioList.length);
   }
 
-  void deleteProductDialog({
-    required BuildContext context,
-  }) {
+  void deleteProductDialog({required BuildContext context, required String returnProductId}) {
     showDialog(
       context: context,
       builder: (context1) => BlocProvider.value(
@@ -429,11 +429,24 @@ class ReturnListWidget extends StatelessWidget {
                 Navigator.pop(c);
               },
               positiveOnTap: () async {
-                bloc.add(ProductReturnInfoEvent.deleteEvent(
-                  context: context,
-                ));
-                Navigator.pop(c);
-                Navigator.pop(context);
+
+                if(state.returnProductList.length > 1){
+                  bloc.add(ProductReturnInfoEvent.removeProductEvent(
+                      context: context,
+                      returnProductId: returnProductId
+                  ));
+                }else {
+                  bloc.add(ProductReturnInfoEvent.deleteEvent(
+                    context: context,
+                  ));
+
+                  Navigator.pop(c);
+                  Navigator.pop(context);
+                }
+
+                // await Future.delayed(Duration(milliseconds: 100));
+                // Navigator.pop(c);
+                // Navigator.pop(context);
               },
             );
           },

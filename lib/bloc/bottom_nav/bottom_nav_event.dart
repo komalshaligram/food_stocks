@@ -10,6 +10,7 @@ class BottomNavEvent with _$BottomNavEvent {
   const factory BottomNavEvent.navigateToStoreScreenEvent(
       {required BuildContext context,
         required String storeScreen,
+        required String profileScreen,
         required String basketScreen,
       }) = _NavigateToStoreScreenEvent;
 
