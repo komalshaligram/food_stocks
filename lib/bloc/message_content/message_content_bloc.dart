@@ -30,6 +30,8 @@ class MessageContentBloc
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _GetMessageDataEvent) {
+
+
         emit(state.copyWith(
             message: event.messageData, isReadMore: event.isReadMore,language: preferences.getAppLanguage()));
       } else if (event is _messageDeleteEvent) {

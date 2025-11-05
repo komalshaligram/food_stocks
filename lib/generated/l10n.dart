@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -705,6 +704,16 @@ class S {
     );
   }
 
+  /// `Return products list`
+  String get return_products_list {
+    return Intl.message(
+      'Return products list',
+      name: 'return_products_list',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Product Name`
   String get product_Name {
     return Intl.message(
@@ -735,9 +744,29 @@ class S {
     );
   }
 
+  /// `Driver Return`
+  String get driver_return {
+    return Intl.message(
+      'Driver Return',
+      name: 'driver_return',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Signature`
   String get signature {
     return Intl.message('Signature', name: 'signature', desc: '', args: []);
+  }
+
+  /// `Driver Signature`
+  String get driver_signature {
+    return Intl.message(
+      'Driver Signature',
+      name: 'driver_signature',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `All Categories`
@@ -800,6 +829,11 @@ class S {
     return Intl.message('Note', name: 'note', desc: '', args: []);
   }
 
+  /// `Notes`
+  String get notes {
+    return Intl.message('Notes', name: 'notes', desc: '', args: []);
+  }
+
   /// `Add to Order`
   String get add_to_order {
     return Intl.message(
@@ -840,11 +874,11 @@ class S {
     );
   }
 
-  /// `The product did not arrive at all`
-  String get the_product_did_not_arrive_at_all {
+  /// `Product did not arrive at all`
+  String get product_did_not_arrive_at_all {
     return Intl.message(
-      'The product did not arrive at all',
-      name: 'the_product_did_not_arrive_at_all',
+      'Product did not arrive at all',
+      name: 'product_did_not_arrive_at_all',
       desc: '',
       args: [],
     );
@@ -860,21 +894,31 @@ class S {
     );
   }
 
-  /// `The product arrived missing`
-  String get the_product_arrived_missing {
+  /// `Product arrived incomplete`
+  String get product_arrived_incomplete {
     return Intl.message(
-      'The product arrived missing',
-      name: 'the_product_arrived_missing',
+      'Product arrived incomplete',
+      name: 'product_arrived_incomplete',
       desc: '',
       args: [],
     );
   }
 
-  /// `Another product problem`
-  String get another_product_problem {
+  /// `Expiration date issue`
+  String get expiration_date_issue {
     return Intl.message(
-      'Another product problem',
-      name: 'another_product_problem',
+      'Expiration date issue',
+      name: 'expiration_date_issue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wrong product received`
+  String get wrong_product_received {
+    return Intl.message(
+      'Wrong product received',
+      name: 'wrong_product_received',
       desc: '',
       args: [],
     );
@@ -1755,11 +1799,41 @@ class S {
     );
   }
 
+  /// `Please select atleast one checkbox`
+  String get select_atleast_one_checkbox {
+    return Intl.message(
+      'Please select atleast one checkbox',
+      name: 'select_atleast_one_checkbox',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select all checkbox`
+  String get select_checkbox {
+    return Intl.message(
+      'Please select all checkbox',
+      name: 'select_checkbox',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Signature is missing`
   String get signature_missing {
     return Intl.message(
       'Signature is missing',
       name: 'signature_missing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Missing driver signature`
+  String get driver_signature_missing {
+    return Intl.message(
+      'Missing driver signature',
+      name: 'driver_signature_missing',
       desc: '',
       args: [],
     );
@@ -4951,13 +5025,23 @@ class S {
   }
 
   /// `Min`
-  String get minimumGrid {
-    return Intl.message('Min', name: 'minimumGrid', desc: '', args: []);
+  String get minGrid {
+    return Intl.message('Min', name: 'minGrid', desc: '', args: []);
   }
 
   /// `Max`
+  String get maxGrid {
+    return Intl.message('Max', name: 'maxGrid', desc: '', args: []);
+  }
+
+  /// `Minimum`
+  String get minimumGrid {
+    return Intl.message('Minimum', name: 'minimumGrid', desc: '', args: []);
+  }
+
+  /// `Maximum`
   String get maximumGrid {
-    return Intl.message('Max', name: 'maximumGrid', desc: '', args: []);
+    return Intl.message('Maximum', name: 'maximumGrid', desc: '', args: []);
   }
 
   /// `Minimum for sale`
@@ -5033,6 +5117,16 @@ class S {
   /// `Due Date`
   String get due_date {
     return Intl.message('Due Date', name: 'due_date', desc: '', args: []);
+  }
+
+  /// `You will be charged when you get the invoice`
+  String get invoice_charge {
+    return Intl.message(
+      'You will be charged when you get the invoice',
+      name: 'invoice_charge',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Paid`
@@ -5180,6 +5274,46 @@ class S {
     return Intl.message(
       'Add proof images',
       name: 'add_proof_img',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A photocopy of the delivery receipt you received`
+  String get add_driver_delivery_document_img {
+    return Intl.message(
+      'A photocopy of the delivery receipt you received',
+      name: 'add_driver_delivery_document_img',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The delivery note must be photographed as proof of receipt of the goods.`
+  String get add_driver_delivery_document_img_note {
+    return Intl.message(
+      'The delivery note must be photographed as proof of receipt of the goods.',
+      name: 'add_driver_delivery_document_img_note',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A photocopy of the return certificate you received`
+  String get driver_return_delivery_document_img {
+    return Intl.message(
+      'A photocopy of the return certificate you received',
+      name: 'driver_return_delivery_document_img',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The return receipt must be photographed as proof of returning the goods.`
+  String get driver_return_delivery_document_img_note {
+    return Intl.message(
+      'The return receipt must be photographed as proof of returning the goods.',
+      name: 'driver_return_delivery_document_img_note',
       desc: '',
       args: [],
     );
@@ -5375,6 +5509,16 @@ class S {
     );
   }
 
+  /// `Return updated successfully.`
+  String get return_updated_success {
+    return Intl.message(
+      'Return updated successfully.',
+      name: 'return_updated_success',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Click to Scan Products`
   String get click_to_scan {
     return Intl.message(
@@ -5395,6 +5539,116 @@ class S {
     return Intl.message(
       ' hours to create more orders without any minimum limit to the supplier Tavili.',
       name: 'countdown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Call the Agent`
+  String get call_the_agent {
+    return Intl.message(
+      'Call the Agent',
+      name: 'call_the_agent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have returns that haven't been sent yet.`
+  String get return_draft_not_sent {
+    return Intl.message(
+      'You have returns that haven\'t been sent yet.',
+      name: 'return_draft_not_sent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View Return`
+  String get view_return {
+    return Intl.message('View Return', name: 'view_return', desc: '', args: []);
+  }
+
+  /// `Send any way`
+  String get send_any_way {
+    return Intl.message(
+      'Send any way',
+      name: 'send_any_way',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The, return has been successfully recorded. For convenience, your return will be sent on the day you place your next order. Until then, you can add more returns.`
+  String get waiting_for_new_order_success_msg {
+    return Intl.message(
+      'The, return has been successfully recorded. For convenience, your return will be sent on the day you place your next order. Until then, you can add more returns.',
+      name: 'waiting_for_new_order_success_msg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `issue: `
+  String get issue_text {
+    return Intl.message('issue: ', name: 'issue_text', desc: '', args: []);
+  }
+
+  /// `Return Number: `
+  String get return_number_text {
+    return Intl.message(
+      'Return Number: ',
+      name: 'return_number_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must add delivery document image`
+  String get return_delivery_document_image {
+    return Intl.message(
+      'You must add delivery document image',
+      name: 'return_delivery_document_image',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must add return document image`
+  String get driver_return_document_image {
+    return Intl.message(
+      'You must add return document image',
+      name: 'driver_return_document_image',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your order is being sent`
+  String get basket_loader_text {
+    return Intl.message(
+      'Your order is being sent',
+      name: 'basket_loader_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please wait...`
+  String get please_wait_text {
+    return Intl.message(
+      'Please wait...',
+      name: 'please_wait_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your order confirmation is being sent`
+  String get order_confirmation_loader_text {
+    return Intl.message(
+      'Your order confirmation is being sent',
+      name: 'order_confirmation_loader_text',
       desc: '',
       args: [],
     );

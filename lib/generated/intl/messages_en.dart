@@ -40,6 +40,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Add another product",
     ),
     "add_credit_card": MessageLookupByLibrary.simpleMessage("Add credit card"),
+    "add_driver_delivery_document_img": MessageLookupByLibrary.simpleMessage(
+      "A photocopy of the delivery receipt you received",
+    ),
+    "add_driver_delivery_document_img_note": MessageLookupByLibrary.simpleMessage(
+      "The delivery note must be photographed as proof of receipt of the goods.",
+    ),
     "add_notes": MessageLookupByLibrary.simpleMessage("Add your notes here"),
     "add_one_proof_img": MessageLookupByLibrary.simpleMessage(
       "You must add at least one proof image",
@@ -75,9 +81,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "already_verified": MessageLookupByLibrary.simpleMessage(
       "Verification already completed",
     ),
-    "another_product_problem": MessageLookupByLibrary.simpleMessage(
-      "Another product problem",
-    ),
     "app_language": MessageLookupByLibrary.simpleMessage("Hebrew Language"),
     "application_version": MessageLookupByLibrary.simpleMessage(
       "Application version",
@@ -110,6 +113,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "bank_transfer_information": MessageLookupByLibrary.simpleMessage(
       "Bank transfer information",
     ),
+    "basket_loader_text": MessageLookupByLibrary.simpleMessage(
+      "Your order is being sent",
+    ),
     "bdi_error": MessageLookupByLibrary.simpleMessage(
       "Something went wrong in BDI",
     ),
@@ -127,6 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "business_type_not_found": MessageLookupByLibrary.simpleMessage(
       "Business Type Not Found.",
     ),
+    "call_the_agent": MessageLookupByLibrary.simpleMessage("Call the Agent"),
     "camera": MessageLookupByLibrary.simpleMessage("Camera"),
     "camera_permission": MessageLookupByLibrary.simpleMessage(
       "Please allow camera permission from settings",
@@ -302,6 +309,23 @@ class MessageLookup extends MessageLookupByLibrary {
       "Downloaded successfully!",
     ),
     "driver_name": MessageLookupByLibrary.simpleMessage("Driver Name"),
+    "driver_return": MessageLookupByLibrary.simpleMessage("Driver Return"),
+    "driver_return_delivery_document_img": MessageLookupByLibrary.simpleMessage(
+      "A photocopy of the return certificate you received",
+    ),
+    "driver_return_delivery_document_img_note":
+        MessageLookupByLibrary.simpleMessage(
+          "The return receipt must be photographed as proof of returning the goods.",
+        ),
+    "driver_return_document_image": MessageLookupByLibrary.simpleMessage(
+      "You must add return document image",
+    ),
+    "driver_signature": MessageLookupByLibrary.simpleMessage(
+      "Driver Signature",
+    ),
+    "driver_signature_missing": MessageLookupByLibrary.simpleMessage(
+      "Missing driver signature",
+    ),
     "due_date": MessageLookupByLibrary.simpleMessage("Due Date"),
     "duplicate_or_invalid_sku": MessageLookupByLibrary.simpleMessage(
       "Duplicate Or Invalid SKU",
@@ -356,6 +380,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "err_message": MessageLookupByLibrary.simpleMessage("Something went wrong"),
     "everything_was_received": MessageLookupByLibrary.simpleMessage(
       "Received All",
+    ),
+    "expiration_date_issue": MessageLookupByLibrary.simpleMessage(
+      "Expiration date issue",
     ),
     "expired_code": MessageLookupByLibrary.simpleMessage(
       "Verification code has expired. Please request a new verification code",
@@ -484,6 +511,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Invalid verification code. Please check the code and try again",
     ),
     "invoice_amount": MessageLookupByLibrary.simpleMessage("Invoice amount"),
+    "invoice_charge": MessageLookupByLibrary.simpleMessage(
+      "You will be charged when you get the invoice",
+    ),
     "invoice_date": MessageLookupByLibrary.simpleMessage("Invoice date"),
     "invoice_number": MessageLookupByLibrary.simpleMessage("Invoice Number"),
     "invoice_status": MessageLookupByLibrary.simpleMessage("Invoice status"),
@@ -503,6 +533,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "issue_removed": MessageLookupByLibrary.simpleMessage(
       "Issue removed successfully.",
     ),
+    "issue_text": MessageLookupByLibrary.simpleMessage("issue: "),
     "issue_with_payment": MessageLookupByLibrary.simpleMessage(
       "There is an issue with the Payment.",
     ),
@@ -540,7 +571,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "mar": MessageLookupByLibrary.simpleMessage("Oct"),
     "march": MessageLookupByLibrary.simpleMessage("October"),
-    "maximumGrid": MessageLookupByLibrary.simpleMessage("Max"),
+    "maxGrid": MessageLookupByLibrary.simpleMessage("Max"),
+    "maximumGrid": MessageLookupByLibrary.simpleMessage("Maximum"),
     "maximumList": MessageLookupByLibrary.simpleMessage("Maximum for sale"),
     "maximum_qty": MessageLookupByLibrary.simpleMessage("Maximum Quantity"),
     "may": MessageLookupByLibrary.simpleMessage("Aug"),
@@ -556,7 +588,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "messages_not_found": MessageLookupByLibrary.simpleMessage(
       "Messages not found",
     ),
-    "minimumGrid": MessageLookupByLibrary.simpleMessage("Min"),
+    "minGrid": MessageLookupByLibrary.simpleMessage("Min"),
+    "minimumGrid": MessageLookupByLibrary.simpleMessage("Minimum"),
     "minimumList": MessageLookupByLibrary.simpleMessage("Minimum for sale"),
     "minimum_box": MessageLookupByLibrary.simpleMessage("Minimum box"),
     "minimum_box_title": MessageLookupByLibrary.simpleMessage(
@@ -642,6 +675,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Not sufficient permission",
     ),
     "note": MessageLookupByLibrary.simpleMessage("Note"),
+    "notes": MessageLookupByLibrary.simpleMessage("Notes"),
     "nov": MessageLookupByLibrary.simpleMessage("Feb"),
     "november": MessageLookupByLibrary.simpleMessage("February"),
     "null_password": MessageLookupByLibrary.simpleMessage(
@@ -655,6 +689,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Open refund invoice",
     ),
     "order": MessageLookupByLibrary.simpleMessage("Order"),
+    "order_confirmation_loader_text": MessageLookupByLibrary.simpleMessage(
+      "Your order confirmation is being sent",
+    ),
     "order_created_successfully": MessageLookupByLibrary.simpleMessage(
       "Order placed successfully",
     ),
@@ -889,6 +926,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_select_time_grater_then_0": MessageLookupByLibrary.simpleMessage(
       "Please select time grater then 00:00",
     ),
+    "please_wait_text": MessageLookupByLibrary.simpleMessage("Please wait..."),
     "previous_order_products": MessageLookupByLibrary.simpleMessage(
       "Products from Previous Orders",
     ),
@@ -922,8 +960,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "product_arrived_damaged": MessageLookupByLibrary.simpleMessage(
       "Product arrived damaged",
     ),
+    "product_arrived_incomplete": MessageLookupByLibrary.simpleMessage(
+      "Product arrived incomplete",
+    ),
     "product_defective": MessageLookupByLibrary.simpleMessage(
       "The product is defective",
+    ),
+    "product_did_not_arrive_at_all": MessageLookupByLibrary.simpleMessage(
+      "Product did not arrive at all",
     ),
     "product_does_not_exist": MessageLookupByLibrary.simpleMessage(
       "The product doesn\'t exist in the system",
@@ -1060,10 +1104,25 @@ class MessageLookup extends MessageLookupByLibrary {
     "return_deleted": MessageLookupByLibrary.simpleMessage(
       "Return deleted successfully.",
     ),
+    "return_delivery_document_image": MessageLookupByLibrary.simpleMessage(
+      "You must add delivery document image",
+    ),
+    "return_draft_not_sent": MessageLookupByLibrary.simpleMessage(
+      "You have returns that haven\'t been sent yet.",
+    ),
     "return_not_found": MessageLookupByLibrary.simpleMessage(
       "Return not found.",
     ),
+    "return_number_text": MessageLookupByLibrary.simpleMessage(
+      "Return Number: ",
+    ),
+    "return_products_list": MessageLookupByLibrary.simpleMessage(
+      "Return products list",
+    ),
     "return_summary": MessageLookupByLibrary.simpleMessage("Return Summary"),
+    "return_updated_success": MessageLookupByLibrary.simpleMessage(
+      "Return updated successfully.",
+    ),
     "returns": MessageLookupByLibrary.simpleMessage("Returns"),
     "rivchit_credentials_not_set": MessageLookupByLibrary.simpleMessage(
       "Rivchit credentials not set",
@@ -1103,8 +1162,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "see_all": MessageLookupByLibrary.simpleMessage("See All"),
     "see_order": MessageLookupByLibrary.simpleMessage("Can see My orders"),
     "select_all": MessageLookupByLibrary.simpleMessage("Select all"),
+    "select_atleast_one_checkbox": MessageLookupByLibrary.simpleMessage(
+      "Please select atleast one checkbox",
+    ),
     "select_business_type": MessageLookupByLibrary.simpleMessage(
       "Please select your business type",
+    ),
+    "select_checkbox": MessageLookupByLibrary.simpleMessage(
+      "Please select all checkbox",
     ),
     "select_issue": MessageLookupByLibrary.simpleMessage("Please select issue"),
     "select_next_day_shift": MessageLookupByLibrary.simpleMessage(
@@ -1125,6 +1190,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Please select valid month",
     ),
     "send_again": MessageLookupByLibrary.simpleMessage("Send Again"),
+    "send_any_way": MessageLookupByLibrary.simpleMessage("Send any way"),
     "send_order": MessageLookupByLibrary.simpleMessage("Send Order"),
     "send_the_request": MessageLookupByLibrary.simpleMessage(
       "Send the request",
@@ -1221,12 +1287,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "terms_of_use": MessageLookupByLibrary.simpleMessage(
       "Terms and Conditions",
     ),
-    "the_product_arrived_missing": MessageLookupByLibrary.simpleMessage(
-      "The product arrived missing",
-    ),
-    "the_product_did_not_arrive_at_all": MessageLookupByLibrary.simpleMessage(
-      "The product did not arrive at all",
-    ),
     "this_company_has_no_product": MessageLookupByLibrary.simpleMessage(
       "Currently this company has no products",
     ),
@@ -1297,8 +1357,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "verification_success": MessageLookupByLibrary.simpleMessage(
       "Verification successfully",
     ),
+    "view_return": MessageLookupByLibrary.simpleMessage("View Return"),
     "wait_while_uploading": MessageLookupByLibrary.simpleMessage(
       "Please wait while uploading",
+    ),
+    "waiting_for_new_order_success_msg": MessageLookupByLibrary.simpleMessage(
+      "The, return has been successfully recorded. For convenience, your return will be sent on the day you place your next order. Until then, you can add more returns.",
     ),
     "wallet": MessageLookupByLibrary.simpleMessage("Wallet"),
     "wallet_already_exist": MessageLookupByLibrary.simpleMessage(
@@ -1321,6 +1385,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Why do you want to return the product?",
     ),
     "wrong_product": MessageLookupByLibrary.simpleMessage("Wrong product"),
+    "wrong_product_received": MessageLookupByLibrary.simpleMessage(
+      "Wrong product received",
+    ),
     "year": MessageLookupByLibrary.simpleMessage("Year"),
     "yes": MessageLookupByLibrary.simpleMessage("Yes"),
     "you_can_not_confirm_delivery": MessageLookupByLibrary.simpleMessage(

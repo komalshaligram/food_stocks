@@ -294,7 +294,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
 
               });
-              printData('file____$file');
 
             }
             else {
@@ -349,7 +348,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               emit(state.copyWith(orderThisMonth: (response.data?.toInt() ?? 0 )));
             }
           } catch (e) {
-            printData('catch');
           /*  CustomSnackBar.showSnackBar(
               context: event.context,
               title: e.toString(),
@@ -421,7 +419,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             }
           }
           catch (e) {
-            printData('catch____$e');
           }
         }
       }

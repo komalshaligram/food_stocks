@@ -1,28 +1,29 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_details_res_model.freezed.dart';
 part 'product_details_res_model.g.dart';
 
-ProductDetailsResModel productDetailsResModelFromJson(String str) => ProductDetailsResModel.fromJson(json.decode(str));
+ProductDetailsResModel productDetailsResModelFromJson(String str) =>
+    ProductDetailsResModel.fromJson(json.decode(str));
 
-String productDetailsResModelToJson(ProductDetailsResModel data) => json.encode(data.toJson());
+String productDetailsResModelToJson(ProductDetailsResModel data) =>
+    json.encode(data.toJson());
 
 @freezed
 class ProductDetailsResModel with _$ProductDetailsResModel {
-  @JsonSerializable(includeIfNull: false)
   const factory ProductDetailsResModel({
     int? status,
     @JsonKey(name: "data") List<Product>? product,
     String? message,
   }) = _ProductDetailsResModel;
 
-  factory ProductDetailsResModel.fromJson(Map<String, dynamic> json) => _$ProductDetailsResModelFromJson(json);
+  factory ProductDetailsResModel.fromJson(Map<String, dynamic> json) =>
+      _$ProductDetailsResModelFromJson(json);
 }
 
 @freezed
 class Product with _$Product {
-  @JsonSerializable(includeIfNull: true)
   const factory Product({
     @JsonKey(name: "_id") String? id,
     String? productName,
@@ -37,8 +38,8 @@ class Product with _$Product {
     int? totalWeight,
     bool? kosharMilk,
     String? dairyMeatyAndFur,
-    @JsonKey(name: "categoryId", includeIfNull: false) String? categoryId,
-    @JsonKey(name: "subCategoryId", includeIfNull: false) String? subCategoryId,
+    @JsonKey(name: "categoryId") String? categoryId,
+    @JsonKey(name: "subCategoryId") String? subCategoryId,
     @JsonKey(name: "caseTypeId") String? caseTypeId,
     @JsonKey(name: "scaleId") String? scaleId,
     @JsonKey(name: "status") String? status,
@@ -49,19 +50,19 @@ class Product with _$Product {
     String? supplierId,
     String? supplierName,
     String? nmMashlim,
-    @JsonKey(name: "isPesach", includeIfNull: false) bool? isPesach,
+    @JsonKey(name: "isPesach") bool? isPesach,
     String? statusId,
     SaleProduct? sale,
     Scales? scales,
     @JsonKey(name: "supplierSales") List<SupplierSale>? supplierSales,
   }) = _Product;
 
-  factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
+  factory Product.fromJson(Map<String, dynamic> json) =>
+      _$ProductFromJson(json);
 }
 
 @freezed
 class SaleProduct with _$SaleProduct {
-  @JsonSerializable(includeIfNull: false)
   const factory SaleProduct({
     bool? isSale,
     bool? isMixedSale,
@@ -74,12 +75,12 @@ class SaleProduct with _$SaleProduct {
     String? saleDescription,
   }) = _SaleProduct;
 
-  factory SaleProduct.fromJson(Map<String, dynamic> json) => _$SaleProductFromJson(json);
+  factory SaleProduct.fromJson(Map<String, dynamic> json) =>
+      _$SaleProductFromJson(json);
 }
 
 @freezed
 class Scales with _$Scales {
-  @JsonSerializable(includeIfNull: false)
   const factory Scales({
     @JsonKey(name: "_id") String? id,
     String? scaleType,
@@ -88,12 +89,12 @@ class Scales with _$Scales {
     int? scaleNumber,
   }) = _Scales;
 
-  factory Scales.fromJson(Map<String, dynamic> json) => _$ScalesFromJson(json);
+  factory Scales.fromJson(Map<String, dynamic> json) =>
+      _$ScalesFromJson(json);
 }
 
 @freezed
 class SupplierSale with _$SupplierSale {
-  @JsonSerializable(includeIfNull: false)
   const factory SupplierSale({
     @JsonKey(name: "_id") Id? id,
     String? supplierId,
@@ -105,7 +106,8 @@ class SupplierSale with _$SupplierSale {
     String? lowStock,
   }) = _SupplierSale;
 
-  factory SupplierSale.fromJson(Map<String, dynamic> json) => _$SupplierSaleFromJson(json);
+  factory SupplierSale.fromJson(Map<String, dynamic> json) =>
+      _$SupplierSaleFromJson(json);
 }
 
 @freezed

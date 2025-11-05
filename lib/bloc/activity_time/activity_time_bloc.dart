@@ -28,8 +28,7 @@ part 'activity_time_bloc.freezed.dart';
 class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
   ActivityTimeBloc() : super(ActivityTimeState.initial()) {
     on<ActivityTimeEvent>((event, emit) async {
-      SharedPreferencesHelper preferences =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       res_get.ProfileDetailsResModel response = const res_get.ProfileDetailsResModel();
 
       List<Day> sundayList = [];
@@ -50,8 +49,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           try {
             final res = await DioClient(event.context).post(
               AppUrlEndPoints.getProfileDetailsUrl,
-              data: req.ProfileDetailsReqModel(id: preferences.getUserId())
-                  .toJson(),
+              data: req.ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
             );
 
             response = res_get.ProfileDetailsResModel.fromJson(res);
@@ -59,60 +57,26 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             if (response.status == AppConstants.code_200) {
               if ((response.data?.clients?.first.clientDetail?.operationTime?.isNotEmpty ?? false)) {
                 List<ActivityTimeModel> temp1 = state.operationTimeList;
-                int listLength = response.data?.clients?.first.clientDetail
-                    ?.operationTime?.length ??
-                    0;
+                int listLength = response.data?.clients?.first.clientDetail?.operationTime?.length ?? 0;
 
-                var sundayRs = (listLength) > 0
-                    ? (response.data?.clients?.first.clientDetail
-                    ?.operationTime?[0].sunday ?? [const Day(from:AppStrings.timeString ,until: AppStrings.timeString )]
-                )
-                    : [const Day(from:AppStrings.timeString  ,until: AppStrings.timeString )];
-                var mondayRs = (listLength) > 1
-                    ? (response.data?.clients?.first.clientDetail
-                    ?.operationTime?[1].monday ??
-                    [const Day(from: AppStrings.timeString,until: AppStrings.timeString)])
-                    : [const Day(from:AppStrings.timeString ,until: AppStrings.timeString)];
-                var tuesdayRs = (listLength) > 2
-                    ? (response.data?.clients?.first.clientDetail
-                    ?.operationTime?[2].tuesday ??
-                    [const Day(from:AppStrings.timeString ,until: AppStrings.timeString)])
-                    : [const Day(from:AppStrings.timeString ,until: AppStrings.timeString)];
-                var wednesdayRs = (listLength) > 3
-                    ? (response.data?.clients?.first.clientDetail
-                    ?.operationTime?[3].wednesday ??
-                    [const Day(from:AppStrings.timeString ,until: AppStrings.timeString)])
-                    : [const Day(from:AppStrings.timeString ,until: AppStrings.timeString)];
-                var thursdayRs = (listLength) > 4
-                    ? (response.data?.clients?.first.clientDetail
-                    ?.operationTime?[4].thursday ??
-                    [const Day(from:AppStrings.timeString ,until: AppStrings.timeString)])
-                    :   [const Day(from:AppStrings.timeString ,until: AppStrings.timeString)];
-                var fridayAndHolidayEvesRs = (listLength) > 5
-                    ? (response.data?.clients?.first.clientDetail
-                    ?.operationTime?[5].friday ??
-                    [const Day(from:AppStrings.timeString ,until: AppStrings.timeString)])
-                    : [const Day(from:AppStrings.timeString ,until: AppStrings.timeString)];
-                var saturdayAndHolidaysRs = (listLength) > 6
-                    ? (response.data?.clients?.first.clientDetail
-                    ?.operationTime?[6].saturday ??
-                    [const Day(from:AppStrings.timeString ,until: AppStrings.timeString)])
-                    : [const Day(from:AppStrings.timeString ,until: AppStrings.timeString)];
+                var sundayRs = (listLength) > 0 ? (response.data?.clients?.first.clientDetail?.operationTime?[0].sunday ?? [const Day(from: AppStrings.timeString, until: AppStrings.timeString)]) : [const Day(from: AppStrings.timeString, until: AppStrings.timeString)];
+                var mondayRs = (listLength) > 1 ? (response.data?.clients?.first.clientDetail?.operationTime?[1].monday ?? [const Day(from: AppStrings.timeString, until: AppStrings.timeString)]) : [const Day(from: AppStrings.timeString, until: AppStrings.timeString)];
+                var tuesdayRs = (listLength) > 2 ? (response.data?.clients?.first.clientDetail?.operationTime?[2].tuesday ?? [const Day(from: AppStrings.timeString, until: AppStrings.timeString)]) : [const Day(from: AppStrings.timeString, until: AppStrings.timeString)];
+                var wednesdayRs = (listLength) > 3 ? (response.data?.clients?.first.clientDetail?.operationTime?[3].wednesday ?? [const Day(from: AppStrings.timeString, until: AppStrings.timeString)]) : [const Day(from: AppStrings.timeString, until: AppStrings.timeString)];
+                var thursdayRs = (listLength) > 4 ? (response.data?.clients?.first.clientDetail?.operationTime?[4].thursday ?? [const Day(from: AppStrings.timeString, until: AppStrings.timeString)]) : [const Day(from: AppStrings.timeString, until: AppStrings.timeString)];
+                var fridayAndHolidayEvesRs = (listLength) > 5 ? (response.data?.clients?.first.clientDetail?.operationTime?[5].friday ?? [const Day(from: AppStrings.timeString, until: AppStrings.timeString)]) : [const Day(from: AppStrings.timeString, until: AppStrings.timeString)];
+                var saturdayAndHolidaysRs = (listLength) > 6 ? (response.data?.clients?.first.clientDetail?.operationTime?[6].saturday ?? [const Day(from: AppStrings.timeString, until: AppStrings.timeString)]) : [const Day(from: AppStrings.timeString, until: AppStrings.timeString)];
 
                 sundayList = sundayRs.map((e) {
                   return Day(from: e.from ?? AppStrings.timeString, until: e.until ?? AppStrings.timeString);
                 }).toList();
 
                 mondayList = mondayRs.map((e) {
-                  return Day(
-                      from:  e.from ?? AppStrings.timeString,
-                      until:  e.until ?? AppStrings.timeString );
+                  return Day(from: e.from ?? AppStrings.timeString, until: e.until ?? AppStrings.timeString);
                 }).toList();
 
                 tuesdayList = tuesdayRs.map((e) {
-                  return Day(
-                      from:  e.from ?? AppStrings.timeString,
-                      until: e.until  ?? AppStrings.timeString);
+                  return Day(from: e.from ?? AppStrings.timeString, until: e.until ?? AppStrings.timeString);
                 }).toList();
 
                 wednesdayList = wednesdayRs.map((e) {
@@ -148,12 +112,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 emit(state.copyWith(isShimmering: false));
               }
             } else {
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ?? response.message!,
-                      event.context),
-                  type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               emit(state.copyWith(isShimmering: false));
             }
           } on ServerException {
@@ -177,18 +136,14 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             ActivityTimeModel(
               dayString: AppLocalizations.of(event.context)!.monday,
               monday: [
-                const  Day(until: AppStrings.timeString, from: AppStrings.timeString),
+                const Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],
             ),
           );
           temp.add(
-            ActivityTimeModel(
-                dayString: AppLocalizations.of(event.context)!.tuesday,
-                monday: [
-                  const  Day(
-                      until: AppStrings.timeString,
-                      from: AppStrings.timeString),
-                ]),
+            ActivityTimeModel(dayString: AppLocalizations.of(event.context)!.tuesday, monday: [
+              const Day(until: AppStrings.timeString, from: AppStrings.timeString),
+            ]),
           );
           temp.add(
             ActivityTimeModel(
@@ -208,8 +163,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           );
           temp.add(
             ActivityTimeModel(
-              dayString:
-              AppLocalizations.of(event.context)!.friday_and_holiday_eves,
+              dayString: AppLocalizations.of(event.context)!.friday_and_holiday_eves,
               monday: [
                 const Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],
@@ -217,8 +171,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           );
           temp.add(
             ActivityTimeModel(
-              dayString:
-              AppLocalizations.of(event.context)!.saturday_and_holidays,
+              dayString: AppLocalizations.of(event.context)!.saturday_and_holidays,
               monday: [
                 const Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],
@@ -236,7 +189,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
         if (state.time.isNotEmpty) {
           String? selectedTime;
           selectedTime = state.time;
-          if (event.openingIndex == 0 && event.time == AppStrings.timeString || event.time == '' || event.time == '24:59' ) {
+          if (event.openingIndex == 0 && event.time == AppStrings.timeString || event.time == '' || event.time == '24:59') {
             selectedTime = AppStrings.hr24String;
             emit(state.copyWith(time: selectedTime));
           }
@@ -244,163 +197,94 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           List<ActivityTimeModel> temp = [];
           temp.addAll(state.operationTimeList);
 
-          String?  afterOpeningTime;
+          String? afterOpeningTime;
           DateTime afterStart = DateTime.now();
 
           var shortVar = temp[event.rowIndex].monday;
 
-          String? openingTime =
-          shortVar[event.timeIndex].from!.isEmpty ?'24:59': shortVar[event.timeIndex].from;
-          String? closingTime =
-          shortVar[event.timeIndex].until!.isEmpty ?'24:59' : shortVar[event.timeIndex].until;
+          String? openingTime = shortVar[event.timeIndex].from!.isEmpty ? '24:59' : shortVar[event.timeIndex].from;
+          String? closingTime = shortVar[event.timeIndex].until!.isEmpty ? '24:59' : shortVar[event.timeIndex].until;
 
-
-          if(shortVar.length > 1 && event.openingIndex == 0 && event.previousTime != AppStrings.timeString
-              && event.previousTime != '24:59' && shortVar.length != event.timeIndex + 1
-          ){
-            afterOpeningTime =
-            shortVar[event.timeIndex + 1].from!.isEmpty ?'24:59' : shortVar[event.timeIndex + 1].from;
+          if (shortVar.length > 1 && event.openingIndex == 0 && event.previousTime != AppStrings.timeString && event.previousTime != '24:59' && shortVar.length != event.timeIndex + 1) {
+            afterOpeningTime = shortVar[event.timeIndex + 1].from!.isEmpty ? '24:59' : shortVar[event.timeIndex + 1].from;
 
             afterStart = format.parse(afterOpeningTime ?? '');
           }
 
-
-
           String? previousClosingTime;
-
 
           var start = format.parse(openingTime!);
           var end = format.parse(closingTime!);
 
-
-
           var selectTimeZone = format.parse(selectedTime);
 
-
-          if (selectedTime != AppStrings.timeString ) {
-
+          if (selectedTime != AppStrings.timeString) {
             if (event.timeIndex > 0) {
-              previousClosingTime =
-                  shortVar[event.timeIndex - 1].until;
+              previousClosingTime = shortVar[event.timeIndex - 1].until;
 
               var format = DateFormat("HH:mm");
-              var preEnd =
-              format.parse(previousClosingTime ?? AppStrings.timeString);
+              var preEnd = format.parse(previousClosingTime ?? AppStrings.timeString);
 
               if (event.openingIndex == 1) {
-                if (closingTime == AppStrings.timeString &&
-                    selectTimeZone.isAfter(preEnd)) {
+                if (closingTime == AppStrings.timeString && selectTimeZone.isAfter(preEnd)) {
                   shortVar.removeAt(event.timeIndex);
-                  shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
+                  shortVar.insert(event.timeIndex, Day(from: selectedTime, until: closingTime));
                   //  shortVar.add(Day(from: selectedTime, until: closingTime));
                 } else if (closingTime != AppStrings.timeString) {
-                  if (selectTimeZone.isAfter(preEnd) &&
-                      selectTimeZone.isBefore(end)) {
+                  if (selectTimeZone.isAfter(preEnd) && selectTimeZone.isBefore(end)) {
                     shortVar.removeAt(event.timeIndex);
-                    shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
+                    shortVar.insert(event.timeIndex, Day(from: selectedTime, until: closingTime));
 
                     //shortVar.add(Day(from: selectedTime, until: closingTime));
                   } else if (selectTimeZone.isBefore(preEnd)) {
-                    CustomSnackBar.showSnackBar(
-                        context: event.context,
-                        title:
-                        AppLocalizations.of(event.context)!.please_select_opening_time_after_previous_closing_time,
-                        type: SnackBarType.failure);
+                    CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_select_opening_time_after_previous_closing_time, type: SnackBarType.failure);
                   } else {
-                    CustomSnackBar.showSnackBar(
-                        context: event.context,
-                        title:
-                        AppLocalizations.of(event.context)!.please_select_opening_time_before_closing_time,
-                        type: SnackBarType.failure);
+                    CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_select_opening_time_before_closing_time, type: SnackBarType.failure);
                   }
                 } else {
-                  CustomSnackBar.showSnackBar(
-                      context: event.context,
-                      title:
-                      AppLocalizations.of(event.context)!.please_select_opening_time_after_previous_closing_time,
-                      type: SnackBarType.failure);
+                  CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_select_opening_time_after_previous_closing_time, type: SnackBarType.failure);
                 }
-              }
-              else if (event.openingIndex == 0) {
+              } else if (event.openingIndex == 0) {
                 if (openingTime == AppStrings.timeString) {
-                  CustomSnackBar.showSnackBar(
-                      context: event.context,
-                      title:
-                      AppLocalizations.of(event.context)!.please_select_opening_time,
-                      type: SnackBarType.failure);
+                  CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_select_opening_time, type: SnackBarType.failure);
                 } else if (selectTimeZone.isAfter(start)) {
                   shortVar.removeAt(event.timeIndex);
-                  shortVar.insert(event.timeIndex,Day(from: openingTime, until: selectedTime));
+                  shortVar.insert(event.timeIndex, Day(from: openingTime, until: selectedTime));
                   //shortVar.add(Day(from: openingTime, until: selectedTime));
                 } else {
-                  CustomSnackBar.showSnackBar(
-                      context: event.context,
-                      title:
-                      AppLocalizations.of(event.context)!.please_select_closing_time_after_opening_time,
-                      type: SnackBarType.failure);
+                  CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_select_closing_time_after_opening_time, type: SnackBarType.failure);
                 }
               }
-            }
-            else {
+            } else {
               if (event.openingIndex == 1) {
-                if (closingTime != AppStrings.timeString &&
-                    selectTimeZone.isBefore(end)) {
+                if (closingTime != AppStrings.timeString && selectTimeZone.isBefore(end)) {
                   shortVar.removeAt(event.timeIndex);
-                  shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
+                  shortVar.insert(event.timeIndex, Day(from: selectedTime, until: closingTime));
                   // shortVar.add(Day(from: selectedTime, until: closingTime));
                 } else if (closingTime == AppStrings.timeString) {
                   shortVar.removeAt(event.timeIndex);
-                  shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
+                  shortVar.insert(event.timeIndex, Day(from: selectedTime, until: closingTime));
                   //shortVar.add(Day(from: selectedTime, until: closingTime));
                 } else {
-                  CustomSnackBar.showSnackBar(
-                      context: event.context,
-                      title:
-                      AppLocalizations.of(event.context)!.please_select_opening_time_before_closing_time,
-                      type: SnackBarType.failure);
+                  CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_select_opening_time_before_closing_time, type: SnackBarType.failure);
                 }
-              }
-
-
-              else if (event.openingIndex == 0) {
+              } else if (event.openingIndex == 0) {
                 if (openingTime == AppStrings.timeString) {
-                  CustomSnackBar.showSnackBar(
-                      context: event.context,
-                      title:
-                      AppLocalizations.of(event.context)!.please_select_opening_time,
-                      type: SnackBarType.failure);
-                } else if (shortVar.length == 1   && selectTimeZone.isAfter(start) ) {
-
+                  CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_select_opening_time, type: SnackBarType.failure);
+                } else if (shortVar.length == 1 && selectTimeZone.isAfter(start)) {
                   shortVar.removeAt(event.timeIndex);
-                  shortVar.insert(event.timeIndex,Day(from: openingTime, until: selectedTime));
-
-
-                }
-                else if(shortVar.length > 1   && selectTimeZone.isAfter(start) &&
-                    selectTimeZone.isBefore(afterStart)){
-
+                  shortVar.insert(event.timeIndex, Day(from: openingTime, until: selectedTime));
+                } else if (shortVar.length > 1 && selectTimeZone.isAfter(start) && selectTimeZone.isBefore(afterStart)) {
                   shortVar.removeAt(event.timeIndex);
-                  shortVar.insert(event.timeIndex,Day(from: openingTime, until: selectedTime));
-
-                }
-
-                else {
-                  CustomSnackBar.showSnackBar(
-                      context: event.context,
-                      title:
-                      AppLocalizations.of(event.context)!.please_provide_valid_time,
-                      type: SnackBarType.failure);
+                  shortVar.insert(event.timeIndex, Day(from: openingTime, until: selectedTime));
+                } else {
+                  CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_provide_valid_time, type: SnackBarType.failure);
                 }
               }
             }
-            emit(state.copyWith(
-                operationTimeList: temp, isRefresh: !state.isRefresh));
+            emit(state.copyWith(operationTimeList: temp, isRefresh: !state.isRefresh));
           } else {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:
-                AppLocalizations.of(event.context)!.please_select_time_grater_then_0,
-                type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_select_time_grater_then_0, type: SnackBarType.failure);
           }
         }
       }
@@ -412,44 +296,22 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
         if (state.time != AppStrings.hr24String) {
           if (state.operationTimeList[event.rowIndex].monday.length > 1) {
             int len = state.operationTimeList[event.rowIndex].monday.length;
-            if (state.operationTimeList[event.rowIndex].monday[len - 1].from !=
-                AppStrings.timeString &&
-                state.operationTimeList[event.rowIndex].monday[len - 1].until !=
-                    AppStrings.timeString) {
-              temp[event.rowIndex].monday.add(
-                  const Day(from: AppStrings.timeString, until: AppStrings.timeString));
-              emit(state.copyWith(
-                  operationTimeList: temp, isRefresh: !state.isRefresh));
+            if (state.operationTimeList[event.rowIndex].monday[len - 1].from != AppStrings.timeString && state.operationTimeList[event.rowIndex].monday[len - 1].until != AppStrings.timeString) {
+              temp[event.rowIndex].monday.add(const Day(from: AppStrings.timeString, until: AppStrings.timeString));
+              emit(state.copyWith(operationTimeList: temp, isRefresh: !state.isRefresh));
             } else {
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title:
-                  AppLocalizations.of(event.context)!.please_select_previous_shift_time,
-                  type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_select_previous_shift_time, type: SnackBarType.failure);
             }
           } else {
-            if (state.operationTimeList[event.rowIndex].monday[0].from !=
-                AppStrings.timeString &&
-                state.operationTimeList[event.rowIndex].monday[0].until !=
-                    AppStrings.timeString) {
-              temp[event.rowIndex].monday.add(
-                  const Day(from: AppStrings.timeString, until: AppStrings.timeString));
-              emit(state.copyWith(
-                  operationTimeList: temp, isRefresh: !state.isRefresh));
+            if (state.operationTimeList[event.rowIndex].monday[0].from != AppStrings.timeString && state.operationTimeList[event.rowIndex].monday[0].until != AppStrings.timeString) {
+              temp[event.rowIndex].monday.add(const Day(from: AppStrings.timeString, until: AppStrings.timeString));
+              emit(state.copyWith(operationTimeList: temp, isRefresh: !state.isRefresh));
             } else {
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title:
-                  AppLocalizations.of(event.context)!.please_select_first_shift_time,
-                  type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_select_first_shift_time, type: SnackBarType.failure);
             }
           }
-        }
-        else{
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!.select_next_day_shift,
-              type: SnackBarType.failure);
+        } else {
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.select_next_day_shift, type: SnackBarType.failure);
         }
       }
 
@@ -457,50 +319,23 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
         List<ActivityTimeModel> temp = [];
         temp.addAll(state.operationTimeList);
         temp[event.rowIndex].monday.removeAt(event.timeIndex);
-        emit(state.copyWith(
-            operationTimeList: temp, isRefresh: !state.isRefresh));
+        emit(state.copyWith(operationTimeList: temp, isRefresh: !state.isRefresh));
       }
 
       if (event is _activityTimeApiEvent) {
         bool isSnackbarActive = false;
 
-
         for (int i = 0; i < state.operationTimeList.length; i++) {
-
-          if(state.operationTimeList[i].monday != [] && state.operationTimeList[i].monday.isNotEmpty  ){
-
-            if (state.operationTimeList[i].monday[0].until ==
-                AppStrings.timeString &&
-                state.operationTimeList[i].monday[0].from !=
-                    AppStrings.timeString || state.operationTimeList[i].monday[0].until ==
-                '24:59'
-
-            ) {
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title:
-                  AppLocalizations.of(event.context)!.please_fill_up_closing_time,
-                  type: SnackBarType.failure);
+          if (state.operationTimeList[i].monday != [] && state.operationTimeList[i].monday.isNotEmpty) {
+            if (state.operationTimeList[i].monday[0].until == AppStrings.timeString && state.operationTimeList[i].monday[0].from != AppStrings.timeString || state.operationTimeList[i].monday[0].until == '24:59') {
+              CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_fill_up_closing_time, type: SnackBarType.failure);
               isSnackbarActive = true;
             }
             for (int j = 1; j < state.operationTimeList[i].monday.length; j++) {
-              if (state.operationTimeList[i].monday[j] ==
-                  const Day(
-                      from: AppStrings.timeString,
-                      until: AppStrings.timeString)) {
+              if (state.operationTimeList[i].monday[j] == const Day(from: AppStrings.timeString, until: AppStrings.timeString)) {
                 state.operationTimeList[i].monday.removeAt(j);
-              } else if (state.operationTimeList[i].monday[j].until ==
-                  AppStrings.timeString &&
-                  state.operationTimeList[i].monday[j].from !=
-                      AppStrings.timeString ||
-                  state.operationTimeList[i].monday[j].until ==
-                      '24:59'
-              ) {
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title:
-                    AppLocalizations.of(event.context)!.please_fill_up_closing_time,
-                    type: SnackBarType.failure);
+              } else if (state.operationTimeList[i].monday[j].until == AppStrings.timeString && state.operationTimeList[i].monday[j].from != AppStrings.timeString || state.operationTimeList[i].monday[j].until == '24:59') {
+                CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_fill_up_closing_time, type: SnackBarType.failure);
                 isSnackbarActive = true;
               }
             }
@@ -508,7 +343,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
         }
 
         if (isSnackbarActive == false) {
-
           sundayList.addAll(
             state.operationTimeList[0].monday,
           );
@@ -531,20 +365,12 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             state.operationTimeList[6].monday,
           );
 
-
           if (!state.isUpdate) {
             emit(state.copyWith(isLoading: true));
-            if (sundayList.first.from != AppStrings.timeString ||
-                mondayList.first.from != AppStrings.timeString &&
-                    tuesdayList.first.from != AppStrings.timeString ||
-                wednesdayList.first.from != AppStrings.timeString ||
-                thursdayList.first.from != AppStrings.timeString ||
-                fridayAndHolidayEvesList.first.from != AppStrings.timeString ||
-                saturdayAndHolidaysList.first.from != AppStrings.timeString) {
-              ActivityTimeReqModel reqMap =
-              ActivityTimeReqModel(operationTime: [
+            if (sundayList.first.from != AppStrings.timeString || mondayList.first.from != AppStrings.timeString && tuesdayList.first.from != AppStrings.timeString || wednesdayList.first.from != AppStrings.timeString || thursdayList.first.from != AppStrings.timeString || fridayAndHolidayEvesList.first.from != AppStrings.timeString || saturdayAndHolidaysList.first.from != AppStrings.timeString) {
+              ActivityTimeReqModel reqMap = ActivityTimeReqModel(operationTime: [
                 OperationTime(
-                  sunday:sundayList,
+                  sunday: sundayList,
                 ),
                 OperationTime(monday: mondayList),
                 OperationTime(tuesday: tuesdayList),
@@ -558,96 +384,66 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   friday: fridayAndHolidayEvesList,
                 ),
                 OperationTime(saturday: saturdayAndHolidaysList),
-
               ]);
 
               try {
-                final response1 = await DioClient(event.context).post(
-                    '${AppUrlEndPoints.operationTimeUrl}/${preferences.getUserId()}',
-                    data: reqMap);
-                res.ActivityTimeResModel operationTimeResModel =
-                res.ActivityTimeResModel.fromJson(response1);
+                final response1 = await DioClient(event.context).post('${AppUrlEndPoints.operationTimeUrl}/${preferences.getUserId()}', data: reqMap);
+                res.ActivityTimeResModel operationTimeResModel = res.ActivityTimeResModel.fromJson(response1);
 
                 if (response1[AppStrings.statusString] == AppConstants.code_200) {
-                  Navigator.pushNamed(
-                      event.context, RouteDefine.formDataScreen.name);
+                  Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
                   emit(state.copyWith(isLoading: false));
                 } else {
-                  CustomSnackBar.showSnackBar(
-                      context: event.context,
-                      title: AppStrings.getLocalizedStrings(
-                          response1.message?.toLocalization() ??
-                              response.message!,
-                          event.context),
-                      type: SnackBarType.failure);
+                  CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response1.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
                   emit(state.copyWith(isLoading: false));
                 }
               } on ServerException {
                 emit(state.copyWith(isLoading: false));
               }
             } else {
-              CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title:
-                  AppLocalizations.of(event.context)!.please_select_first_shift_time,
-                  type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_select_first_shift_time, type: SnackBarType.failure);
             }
           } else {
             emit(state.copyWith(isLoading: true));
 
             ProfileDetailsUpdateReqModel reqMap = ProfileDetailsUpdateReqModel(
                 clientDetail: ClientDetail(operationTime: [
-                  OperationTime(sunday: sundayList),
-                  OperationTime(monday: mondayList),
-                  OperationTime(tuesday: tuesdayList),
-                  OperationTime(wednesday: wednesdayList),
-                  OperationTime(thursday: thursdayList),
-                  OperationTime(friday: fridayAndHolidayEvesList),
-                  OperationTime(saturday: saturdayAndHolidaysList),
-                ]));
+              OperationTime(sunday: sundayList),
+              OperationTime(monday: mondayList),
+              OperationTime(tuesday: tuesdayList),
+              OperationTime(wednesday: wednesdayList),
+              OperationTime(thursday: thursdayList),
+              OperationTime(friday: fridayAndHolidayEvesList),
+              OperationTime(saturday: saturdayAndHolidaysList),
+            ]));
 
             Map<String, dynamic> req = reqMap.toJson();
             Map<String, dynamic>? clientDetail = reqMap.clientDetail?.toJson();
-            printData("update before Model = $req");
             clientDetail?.removeWhere((key, value) {
-              if (value != null) {
-                printData("[$key] = $value");
-              }
+              if (value != null) {}
               return value == null;
             });
             req[AppStrings.clientDetailString] = clientDetail;
             req.removeWhere((key, value) {
-              if (value != null) {
-                printData("[$key] = $value");
-              }
+              if (value != null) {}
               return value == null;
             });
-            printData("update after Model = $req");
             try {
               final res = await DioClient(event.context).post(
                 "${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}",
                 data: req,
               );
-              printData('operation update req _____$req');
-              req_update.ProfileDetailsUpdateResModel res1 =
-              req_update.ProfileDetailsUpdateResModel.fromJson(res);
-              printData('operation update res _____$res1');
+              req_update.ProfileDetailsUpdateResModel res1 = req_update.ProfileDetailsUpdateResModel.fromJson(res);
               if (res1.status == AppConstants.code_200) {
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title:
-                  AppLocalizations.of(event.context)!.updated_successfully,
+                  title: AppLocalizations.of(event.context)!.updated_successfully,
                   type: SnackBarType.success,
                 );
                 emit(state.copyWith(isLoading: false));
               } else {
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title: AppStrings.getLocalizedStrings(
-                        res1.message?.toLocalization() ?? response.message!,
-                        event.context),
-                    type: SnackBarType.failure);
+                CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res1.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
                 emit(state.copyWith(isLoading: false));
               }
             } on ServerException {

@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/model/res_model/get_return_by_id_res_model/get_return_by_id_res_model.dart';
 import '/bloc/product_return_info/product_return_info_bloc.dart';
 import '/ui/widget/file_selection_option_widget.dart';
 import '/ui/widget/sized_box_widget.dart';
@@ -58,8 +57,7 @@ class ReturnListWidget extends StatelessWidget {
               trailingWidget: state.mainIndex != -1
                   ? InkWell(
                       onTap: () {
-                        printData("state.returnProductId ${state.returnProductId}");
-                       deleteProductDialog(context: context,returnProductId : state.returnProductId);
+                        deleteProductDialog(context: context, returnProductId: state.returnProductId);
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
@@ -220,8 +218,20 @@ class ReturnListWidget extends StatelessWidget {
                             child: Row(
                               children: [
                                 InkWell(
-                                  onTap: () {
-                                    state.proofFile.existsSync() ? uploadProofBottomSheet(context: context, file: state.proofFile, index: 1, language: state.language) : cameraEvent(context: context, index: 1);
+                                  onTap: () async {
+                                    if (state.proofFile != null && await state.proofFile!.exists() || state.proofFile.path.contains("https")) {
+                                      uploadProofBottomSheet(
+                                        context: context,
+                                        file: state.proofFile,
+                                        index: 1,
+                                        language: state.language,
+                                      );
+                                      return;
+                                    }
+
+                                    cameraEvent(context: context, index: 1);
+                                    // state.proofFile.existsSync() ? uploadProofBottomSheet(context: context, file: state.proofFile, index: 1, language: state.language) :
+                                    // cameraEvent(context: context, index: 1);
                                   },
                                   child: Container(
                                     height: 120,
@@ -267,8 +277,19 @@ class ReturnListWidget extends StatelessWidget {
                                 ),
                                 8.width,
                                 InkWell(
-                                  onTap: () {
-                                    state.proofFile1.existsSync() ? uploadProofBottomSheet(context: context, file: state.proofFile1, index: 2, language: state.language) : cameraEvent(context: context, index: 2);
+                                  onTap: () async {
+                                    if (state.proofFile1 != null && await state.proofFile1!.exists() || state.proofFile1.path.contains("https")) {
+                                    uploadProofBottomSheet(
+                                    context: context,
+                                    file: state.proofFile1,
+                                    index: 2,
+                                    language: state.language,
+                                    );
+                                    return;
+                                    }
+
+                                    cameraEvent(context: context, index: 2);
+                                    // state.proofFile1.existsSync() ? uploadProofBottomSheet(context: context, file: state.proofFile1, index: 2, language: state.language) : cameraEvent(context: context, index: 2);
                                   },
                                   child: Container(
                                     height: 120,
@@ -314,8 +335,19 @@ class ReturnListWidget extends StatelessWidget {
                                 ),
                                 8.width,
                                 InkWell(
-                                  onTap: () {
-                                    state.proofFile2.existsSync() ? uploadProofBottomSheet(context: context, file: state.proofFile2, index: 3, language: state.language) : cameraEvent(context: context, index: 3);
+                                  onTap: () async {
+                                    if (state.proofFile2 != null && await state.proofFile2!.exists() || state.proofFile2.path.contains("https")) {
+                                    uploadProofBottomSheet(
+                                    context: context,
+                                    file: state.proofFile2,
+                                    index: 3,
+                                    language: state.language,
+                                    );
+                                    return;
+                                    }
+
+                                    cameraEvent(context: context, index: 3);
+                                    // state.proofFile2.existsSync() ? uploadProofBottomSheet(context: context, file: state.proofFile2, index: 3, language: state.language) : cameraEvent(context: context, index: 3);
                                   },
                                   child: Container(
                                     height: 120,
@@ -429,13 +461,9 @@ class ReturnListWidget extends StatelessWidget {
                 Navigator.pop(c);
               },
               positiveOnTap: () async {
-
-                if(state.returnProductList.length > 1){
-                  bloc.add(ProductReturnInfoEvent.removeProductEvent(
-                      context: context,
-                      returnProductId: returnProductId
-                  ));
-                }else {
+                if (state.returnProductList.length > 1) {
+                  bloc.add(ProductReturnInfoEvent.removeProductEvent(context: context, returnProductId: returnProductId));
+                } else {
                   bloc.add(ProductReturnInfoEvent.deleteEvent(
                     context: context,
                   ));
@@ -468,7 +496,6 @@ class ReturnListWidget extends StatelessWidget {
             ),
             groupValue: radioValue,
             onChanged: (val) {
-              printData('val:$text');
               context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.radioButtonEvent(selectRadioTile: val!, reason: text));
             },
           ),
@@ -507,10 +534,10 @@ class ReturnListWidget extends StatelessWidget {
                       title: AppLocalizations.of(context)!.camera,
                       icon: Icons.camera_alt_rounded,
                       onTap: () {
+                        Navigator.pop(context);
                         cameraEvent(context: context, index: index);
                       }),
-                  file.existsSync()
-                      ? FileSelectionOptionWidget(
+                   FileSelectionOptionWidget(
                           title: AppLocalizations.of(context)!.delete,
                           icon: Icons.delete,
                           lastItem: true,
@@ -535,7 +562,7 @@ class ReturnListWidget extends StatelessWidget {
                               ),
                             );
                           })
-                      : 0.height
+
                 ],
               ),
             ),

@@ -49,6 +49,7 @@ import '../ui/screens/product_details_screen.dart';
 import '../ui/screens/product_return_info_screen.dart';
 import '../ui/screens/profile_screen.dart';
 import '../ui/screens/more_details_screen.dart';
+import '../ui/screens/return_driver.dart';
 import '../ui/screens/return_list_screen.dart';
 import '../ui/screens/shipment_verification_screen.dart';
 import '../ui/screens/store_screen.dart';
@@ -122,7 +123,8 @@ enum RouteDefine {
   productReturnInfoScreen,
   createProductReturnListScreen,
   returnSummaryScreen,
-  clientFormDetailsScreen
+  clientFormDetailsScreen,
+  returnDriverScreen
 }
 
 class AppRouting {
@@ -191,6 +193,7 @@ class AppRouting {
       RouteDefine.createProductReturnListScreen.name:(_)=>CreateProductReturnListRoute.route,
       RouteDefine.returnSummaryScreen.name:(_)=>ReturnSummaryRoute.route,
       RouteDefine.clientFormDetailsScreen.name:(_)=>ClientFormDetailsRoute.route,
+      RouteDefine.returnDriverScreen.name:(_)=>ReturnDriverRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

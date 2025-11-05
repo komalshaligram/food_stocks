@@ -66,7 +66,7 @@ class CommonOrderContentWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               5.height,
-              Text(
+              value == '' ? IgnorePointer() :  Text(
                 value,
                 style: AppStyles.rkRegularTextStyle(
                     size: valueTextSize,

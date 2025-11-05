@@ -446,18 +446,18 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              ((productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMinQuantity != '0')
-                                  ? Container(
+                              if ((productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMinQuantity != '0' && productDetails.first.sale?.saleMaxQuantity != '100')
+                                Column(
+                                  children: [
+                                    Container(
                                       alignment: Alignment.centerRight,
                                       margin: const EdgeInsets.only(top: 3),
                                       child: Text(
                                         '${AppLocalizations.of(context)!.minimum_box_title} ${productDetails.first.sale?.saleMinQuantity}',
                                         style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
                                       ),
-                                    )
-                                  : 0.height,
-                              (productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMaxQuantity != '0'
-                                  ? Container(
+                                    ),
+                                    Container(
                                       alignment: Alignment.centerRight,
                                       margin: const EdgeInsets.only(top: 3),
                                       child: Text(
@@ -465,7 +465,52 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                         style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
                                       ),
                                     )
-                                  : 0.height,
+                                  ],
+                                )
+                              else if ((productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMaxQuantity == '100' && productDetails.first.sale?.saleMinQuantity != '0')
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  margin: const EdgeInsets.only(top: 3),
+                                  child: Text(
+                                    '${AppLocalizations.of(context)!.minimum_box_title} ${productDetails.first.sale?.saleMinQuantity}',
+                                    style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
+                                  ),
+                                )
+                              else if ((productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMinQuantity == '0' && productDetails.first.sale?.saleMaxQuantity != '0' && productDetails.first.sale?.saleMaxQuantity != '100')
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  margin: const EdgeInsets.only(top: 3),
+                                  child: Text(
+                                    '${AppLocalizations.of(context)!.maximum_qty}: ${productDetails.first.sale?.saleMaxQuantity}',
+                                    style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
+                                  ),
+                                )
+                              else if ((productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMinQuantity == '0' &&
+                                      productDetails.first.sale?.saleMaxQuantity == '0')
+                                const IgnorePointer()
+                              else
+                                const IgnorePointer(),
+
+                              // ((productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMinQuantity != '0')
+                              //     ? Container(
+                              //         alignment: Alignment.centerRight,
+                              //         margin: const EdgeInsets.only(top: 3),
+                              //         child: Text(
+                              //           '${AppLocalizations.of(context)!.minimum_box_title} ${productDetails.first.sale?.saleMinQuantity}',
+                              //           style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
+                              //         ),
+                              //       )
+                              //     : 0.height,
+                              // (productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMaxQuantity != '0'
+                              //     ? Container(
+                              //         alignment: Alignment.centerRight,
+                              //         margin: const EdgeInsets.only(top: 3),
+                              //         child: Text(
+                              //           '${AppLocalizations.of(context)!.maximum_qty}: ${productDetails.first.sale?.saleMaxQuantity}',
+                              //           style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
+                              //         ),
+                              //       )
+                              //     : 0.height,
                               (productDetails.first.supplierSales?.first.lowStock != '') && (productStock != '0' || productStock != '0.0')
                                   ? Text(
                                       (productDetails.first.supplierSales?.first.lowStock.toString() ?? ''),

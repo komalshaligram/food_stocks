@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:focus_detector/focus_detector.dart';
 import '/bloc/return/return_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '/ui/utils/constants/app_strings.dart';
@@ -36,10 +35,14 @@ class ReturnListScreen extends StatelessWidget {
 }
 
 class ReturnListWidget extends StatelessWidget {
-  const ReturnListWidget({super.key});
+  const ReturnListWidget({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map?;
+
     return BlocBuilder<ReturnBloc, ReturnState>(
       builder: (context, state) {
         ReturnBloc bloc = context.read<ReturnBloc>();
@@ -53,13 +56,26 @@ class ReturnListWidget extends StatelessWidget {
               title: AppLocalizations.of(context)!.returns,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
-                Navigator.pushReplacementNamed(
-                  context,
-                  RouteDefine.bottomNavScreen.name,
-                  arguments: {
-                    AppStrings.pushNavigationString: 'profileScreen',
-                  },
-                );
+                if (args?[AppStrings.isbackString] == 'Basket') {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    RouteDefine.bottomNavScreen.name,
+                    arguments: {
+                      AppStrings.pushNavigationString: 'basketScreen',
+                    },
+                  );
+                } else if (args?[AppStrings.isbackString] == 'orderSummary') {
+                  Navigator.pop(context);
+                } else {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    RouteDefine.bottomNavScreen.name,
+                    arguments: {
+                      AppStrings.pushNavigationString: 'profileScreen',
+                    },
+                  );
+                }
+
                 // Navigator.pop(context);
                 //   Navigator.pushReplacementNamed(context, RouteDefine.profileMenuScreen.name,);
               },
@@ -142,7 +158,6 @@ class ReturnListWidget extends StatelessWidget {
   Widget returnListItem({required int index, required BuildContext context, required List<Return> list, required ReturnState state}) {
     return GestureDetector(
       onTap: () {
-        printData("check here mkfmkfmks}");
         if (list[index].returnStatusNumber != 2) {
           Navigator.pushNamed(context, RouteDefine.createProductReturnListScreen.name, arguments: {AppStrings.idString: list[index].id, AppStrings.isUpdateParamString: true, 'status': list[index].returnStatusNumber.toString().contains('1') ? true : false});
         }
@@ -161,6 +176,14 @@ class ReturnListWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              '${AppLocalizations.of(context)!.return_number_text} ${list[index].returnNumber}',
+              style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.font_14,
+                color: AppColors.blackColor,
+              ),
+            ),
+            2.height,
             list[index].returnStatusNumber != 4
                 ? Text(
                     list[index].returnStatusNumber != 2 ? '${AppLocalizations.of(context)?.date_sent} ${list[index].createdAt}' : '${AppLocalizations.of(context)?.date_approved} ${list[index].invoiceDate}',

@@ -130,7 +130,6 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
 
           updatePermissionReq.removeWhere((key, value) {
             if (value != null) {
-              printData("[$key] = $value");
             }
             return value == null;
           });

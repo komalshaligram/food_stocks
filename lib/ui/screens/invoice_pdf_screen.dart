@@ -25,19 +25,20 @@ class InvoicePdfScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => InvoicePdfBloc()
         ..add(InvoicePdfEvent.getArgumentEvent(
-            invoiceDetailsList: args?[AppStrings.invoiceListString], context: context, )),
+          invoiceDetailsList: args?[AppStrings.invoiceListString],
+          context: context,
+        )),
       child: InvoicePdfScreenWidget(invoiceDetailsList: args?[AppStrings.invoiceListString]),
     );
   }
 }
 
 class InvoicePdfScreenWidget extends StatelessWidget {
- final  Invoice invoiceDetailsList;
+  final Invoice invoiceDetailsList;
   InvoicePdfScreenWidget({super.key, required this.invoiceDetailsList});
 
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
@@ -61,7 +62,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
               },
               trailingWidget: GestureDetector(
                 onTap: () async {
-                   Share.share('${AppUrlEndPoints.baseFileUrl}${state.invoiceDetailsList.link}');
+                  Share.share('${AppUrlEndPoints.baseFileUrl}${state.invoiceDetailsList.link}');
                 },
                 child: Icon(
                   Icons.download_outlined,
@@ -79,156 +80,42 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                     children: [
                       Container(
                         margin: const EdgeInsets.all(AppConstants.padding_8),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: AppConstants.padding_8,
-                            horizontal: AppConstants.padding_8),
+                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_8, horizontal: AppConstants.padding_8),
                         decoration: BoxDecoration(
                             color: AppColors.whiteColor,
                             boxShadow: [
-                              BoxShadow(
-                                  color:
-                                      AppColors.shadowColor.withOpacity(0.15),
-                                  blurRadius: AppConstants.blur_10),
+                              BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
                             ],
-                            borderRadius: const BorderRadius.all(
-                                Radius.circular(AppConstants.radius_5))),
+                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
                         child: Column(
                           children: [
                             Row(
                               children: [
-                                CommonOrderContentWidget(
-                                    backGroundColor: AppColors.iconBGColor,
-                                    borderCoder: AppColors.lightBorderColor,
-                                    flexValue: 2,
-                                    title: AppLocalizations.of(context)!
-                                        .invoice_number,
-                                    value: invoiceDetailsList.invoiceNumber
-                                        .toString(),
-                                    titleColor: AppColors.mainColor,
-                                    valueColor: AppColors.blackColor,
-                                    valueTextSize: AppConstants.smallFont,
-                                    titleTextSize: AppConstants.smallFont,
-                                    columnPadding: 2,
-                                    maxLine: 2,
-                                    titleMaxLine: 2,
-                                    valueTextWeight: FontWeight.w400),
+                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, title: AppLocalizations.of(context)!.invoice_number, value: invoiceDetailsList.invoiceNumber.toString(), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, titleTextSize: AppConstants.smallFont, columnPadding: 2, maxLine: 2, titleMaxLine: 2, valueTextWeight: FontWeight.w400),
                                 4.width,
-                                CommonOrderContentWidget(
-                                    backGroundColor: AppColors.iconBGColor,
-                                    borderCoder: AppColors.lightBorderColor,
-                                    flexValue: 2,
-                                    title:
-                                        AppLocalizations.of(context)!.invoice_date,
-                                    value: invoiceDetailsList.invoiceDate
-                                        .toString().replaceRange(10, 16, ''),
-                                    titleColor: AppColors.mainColor,
-                                    valueColor: AppColors.blackColor,
-                                    valueTextSize: AppConstants.smallFont,
-                                    columnPadding: 2,
-                                    maxLine: 2,
-                                    titleTextSize: AppConstants.smallFont,
-                                    titleMaxLine: 2,
-                                    valueTextWeight: FontWeight.w400),
+                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, title: AppLocalizations.of(context)!.invoice_date, value: invoiceDetailsList.invoiceDate.toString().replaceRange(10, 16, ''), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, columnPadding: 2, maxLine: 2, titleTextSize: AppConstants.smallFont, titleMaxLine: 2, valueTextWeight: FontWeight.w400),
                               ],
                             ),
                             5.height,
                             Row(
                               children: [
-                                CommonOrderContentWidget(
-                                    backGroundColor: AppColors.iconBGColor,
-                                    borderCoder: AppColors.lightBorderColor,
-                                    flexValue: 2,
-                                    title:
-                                    AppLocalizations.of(context)!.invoice_type,
-                                    value: invoiceDetailsList.invoiceType
-                                        .toString()
-                                        .toCapitalized(),
-                                    titleColor: AppColors.mainColor,
-                                    valueColor: AppColors.blackColor,
-                                    valueTextSize: AppConstants.smallFont,
-                                    columnPadding: 2,
-                                    maxLine: 2,
-                                    titleMaxLine: 2,
-                                    titleTextSize: AppConstants.smallFont,
-                                    valueTextWeight: FontWeight.w400),
+                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, title: AppLocalizations.of(context)!.invoice_type, value: invoiceDetailsList.invoiceType.toString().toCapitalized(), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, columnPadding: 2, maxLine: 2, titleMaxLine: 2, titleTextSize: AppConstants.smallFont, valueTextWeight: FontWeight.w400),
                                 4.width,
-                                CommonOrderContentWidget(
-                                    backGroundColor: AppColors.iconBGColor,
-                                    borderCoder: AppColors.lightBorderColor,
-                                    flexValue: 2,
-                                    title: AppLocalizations.of(context)!
-                                        .invoice_status,
-                                    value: invoiceDetailsList.paymentStatus
-                                        .toString()
-                                        .toCapitalized(),
-                                    titleColor: AppColors.mainColor,
-                                    valueColor: AppColors.blackColor,
-                                    valueTextSize: AppConstants.smallFont,
-                                    columnPadding: 2,
-                                    maxLine: 2,
-                                    titleTextSize: AppConstants.smallFont,
-                                    titleMaxLine: 2,
-                                    valueTextWeight: FontWeight.w400),
+                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, title: AppLocalizations.of(context)!.invoice_status, value: invoiceDetailsList.paymentStatus.toString().toCapitalized(), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, columnPadding: 2, maxLine: 2, titleTextSize: AppConstants.smallFont, titleMaxLine: 2, valueTextWeight: FontWeight.w400),
                               ],
                             ),
                             5.height,
                             Row(
                               children: [
-                                CommonOrderContentWidget(
-                                    backGroundColor: AppColors.iconBGColor,
-                                    borderCoder: AppColors.lightBorderColor,
-                                    flexValue: 2,
-                                    title: AppLocalizations.of(context)!
-                                        .invoice_amount,
-                                    value: formatNumber(
-                                        value: (invoiceDetailsList.invoiceAmount ??
-                                            '0.0'),
-                                        local: AppStrings.hebrewLocal),
-                                    titleColor: AppColors.mainColor,
-                                    valueColor: AppColors.blackColor,
-                                    valueTextSize: AppConstants.smallFont,
-                                    columnPadding: 2,
-                                    maxLine: 2,
-                                    titleTextSize: AppConstants.smallFont,
-                                    titleMaxLine: 2,
-                                    valueTextWeight: FontWeight.w700),
+                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, title: AppLocalizations.of(context)!.invoice_amount, value: formatNumber(value: (invoiceDetailsList.invoiceAmount ?? '0.0'), local: AppStrings.hebrewLocal), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, columnPadding: 2, maxLine: 2, titleTextSize: AppConstants.smallFont, titleMaxLine: 2, valueTextWeight: FontWeight.w700),
                                 4.width,
-                                CommonOrderContentWidget(
-                                    backGroundColor: AppColors.iconBGColor,
-                                    borderCoder: AppColors.lightBorderColor,
-                                    flexValue: 2,
-                                    titleMaxLine: 2,
-                                    maxLine: 2,
-                                    title: AppLocalizations.of(context)!.due_date,
-                                    value: invoiceDetailsList.dueDate!.isNotEmpty?invoiceDetailsList.dueDate
-                                        .toString()
-                                        .replaceRange(10, 16, ''):'',
-                                    titleColor: AppColors.mainColor,
-                                    valueColor: AppColors.blackColor,
-                                    valueTextSize: AppConstants.smallFont,
-                                    titleTextSize: AppConstants.smallFont,
-                                    columnPadding: 2,
-                                    valueTextWeight: FontWeight.w400),
+                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, titleMaxLine: 2, maxLine: 2, title: AppLocalizations.of(context)!.due_date, value: invoiceDetailsList.dueDate!.isNotEmpty ? invoiceDetailsList.dueDate.toString().replaceRange(10, 16, '') : '', titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, titleTextSize: AppConstants.smallFont, columnPadding: 2, valueTextWeight: FontWeight.w400),
                               ],
                             ),
                             5.height,
                             Row(
                               children: [
-                                CommonOrderContentWidget(
-                                    backGroundColor: AppColors.iconBGColor,
-                                    borderCoder: AppColors.lightBorderColor,
-                                    flexValue: 2,
-                                    titleMaxLine: 2,
-                                    maxLine: 2,
-                                    title: AppLocalizations.of(context)!.supplier_name,
-                                    value: invoiceDetailsList.supplierName??'',
-                                    titleColor: AppColors.mainColor,
-                                    valueColor: AppColors.blackColor,
-                                    valueTextSize: AppConstants.smallFont,
-                                    titleTextSize: AppConstants.smallFont,
-                                    columnPadding: 2,
-                                    valueTextWeight: FontWeight.w400),
-
+                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, titleMaxLine: 2, maxLine: 2, title: AppLocalizations.of(context)!.supplier_name, value: invoiceDetailsList.supplierName ?? '', titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, titleTextSize: AppConstants.smallFont, columnPadding: 2, valueTextWeight: FontWeight.w400),
                               ],
                             ),
                           ],
@@ -242,43 +129,37 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                           '${AppUrlEndPoints.baseFileUrl}${invoiceDetailsList.link ?? ''}',
                           key: _pdfViewerKey,
                           controller: _pdfViewerController,
-
                         ),
                       ),
                     ],
                   ),
                   state.isDownloading
                       ? Container(
-                    height: getScreenHeight(context),
-                    width: getScreenWidth(context),
-                    color: const Color.fromARGB(20, 0, 0, 0),
-                    alignment: Alignment.center,
-                    child: Container(
-                      height: 80,
-                      width: 80,
-                      decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(AppConstants.radius_10))),
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CupertinoActivityIndicator(
-                            color: AppColors.mainColor,
-                            radius: AppConstants.radius_10,
+                          height: getScreenHeight(context),
+                          width: getScreenWidth(context),
+                          color: const Color.fromARGB(20, 0, 0, 0),
+                          alignment: Alignment.center,
+                          child: Container(
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CupertinoActivityIndicator(
+                                  color: AppColors.mainColor,
+                                  radius: AppConstants.radius_10,
+                                ),
+                                10.height,
+                                Text(
+                                  '${state.downloadProgress}%',
+                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
+                                )
+                              ],
+                            ),
                           ),
-                          10.height,
-                          Text(
-                            '${state.downloadProgress}%',
-                            style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.font_14,
-                                color: AppColors.blackColor),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
+                        )
                       : 0.width,
                 ],
               ),

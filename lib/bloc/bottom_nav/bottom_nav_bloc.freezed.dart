@@ -110,6 +110,9 @@ class _$BottomNavEventCopyWithImpl<$Res, $Val extends BottomNavEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -129,6 +132,8 @@ class __$$ChangePageEventImplCopyWithImpl<$Res>
       _$ChangePageEventImpl _value, $Res Function(_$ChangePageEventImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -175,7 +180,9 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
   @override
   int get hashCode => Object.hash(runtimeType, index, context);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ChangePageEventImplCopyWith<_$ChangePageEventImpl> get copyWith =>
@@ -290,7 +297,10 @@ abstract class _ChangePageEvent implements BottomNavEvent {
 
   int get index;
   BuildContext get context;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ChangePageEventImplCopyWith<_$ChangePageEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -312,6 +322,8 @@ class __$$UpdateCartCountEventImplCopyWithImpl<$Res>
       $Res Function(_$UpdateCartCountEventImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -350,7 +362,9 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
   @override
   int get hashCode => Object.hash(runtimeType, context);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UpdateCartCountEventImplCopyWith<_$UpdateCartCountEventImpl>
@@ -464,7 +478,10 @@ abstract class _UpdateCartCountEvent implements BottomNavEvent {
       _$UpdateCartCountEventImpl;
 
   BuildContext get context;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UpdateCartCountEventImplCopyWith<_$UpdateCartCountEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -492,6 +509,8 @@ class __$$NavigateToStoreScreenEventImplCopyWithImpl<$Res>
       $Res Function(_$NavigateToStoreScreenEventImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -562,7 +581,9 @@ class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
   int get hashCode => Object.hash(
       runtimeType, context, storeScreen, profileScreen, basketScreen);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NavigateToStoreScreenEventImplCopyWith<_$NavigateToStoreScreenEventImpl>
@@ -684,7 +705,10 @@ abstract class _NavigateToStoreScreenEvent implements BottomNavEvent {
   String get storeScreen;
   String get profileScreen;
   String get basketScreen;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NavigateToStoreScreenEventImplCopyWith<_$NavigateToStoreScreenEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -709,6 +733,8 @@ class __$$seeWalletPermissionUpdateEventImplCopyWithImpl<$Res>
       $Res Function(_$seeWalletPermissionUpdateEventImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -748,7 +774,9 @@ class _$seeWalletPermissionUpdateEventImpl
   @override
   int get hashCode => Object.hash(runtimeType, context);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$seeWalletPermissionUpdateEventImplCopyWith<
@@ -863,7 +891,10 @@ abstract class _seeWalletPermissionUpdateEvent implements BottomNavEvent {
       _$seeWalletPermissionUpdateEventImpl;
 
   BuildContext get context;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$seeWalletPermissionUpdateEventImplCopyWith<
           _$seeWalletPermissionUpdateEventImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -888,6 +919,8 @@ class __$$getPreferencesDataEventImplCopyWithImpl<$Res>
       $Res Function(_$getPreferencesDataEventImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -926,7 +959,9 @@ class _$getPreferencesDataEventImpl implements _getPreferencesDataEvent {
   @override
   int get hashCode => Object.hash(runtimeType, context);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$getPreferencesDataEventImplCopyWith<_$getPreferencesDataEventImpl>
@@ -1039,7 +1074,10 @@ abstract class _getPreferencesDataEvent implements BottomNavEvent {
       {required final BuildContext context}) = _$getPreferencesDataEventImpl;
 
   BuildContext get context;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$getPreferencesDataEventImplCopyWith<_$getPreferencesDataEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1061,6 +1099,8 @@ class __$$SetDialogOpenEventImplCopyWithImpl<$Res>
       $Res Function(_$SetDialogOpenEventImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1099,7 +1139,9 @@ class _$SetDialogOpenEventImpl implements _SetDialogOpenEvent {
   @override
   int get hashCode => Object.hash(runtimeType, isOpen);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SetDialogOpenEventImplCopyWith<_$SetDialogOpenEventImpl> get copyWith =>
@@ -1212,7 +1254,10 @@ abstract class _SetDialogOpenEvent implements BottomNavEvent {
       _$SetDialogOpenEventImpl;
 
   bool get isOpen;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BottomNavEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SetDialogOpenEventImplCopyWith<_$SetDialogOpenEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1231,7 +1276,9 @@ mixin _$BottomNavState {
   bool get isRefreshing => throw _privateConstructorUsedError;
   List<BottomNavModel> get navList => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BottomNavState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $BottomNavStateCopyWith<BottomNavState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1266,6 +1313,8 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of BottomNavState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1360,6 +1409,8 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
       _$BottomNavStateImpl _value, $Res Function(_$BottomNavStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BottomNavState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1515,7 +1566,9 @@ class _$BottomNavStateImpl implements _BottomNavState {
       isRefreshing,
       const DeepCollectionEquality().hash(_navList));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BottomNavState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BottomNavStateImplCopyWith<_$BottomNavStateImpl> get copyWith =>
@@ -1559,8 +1612,11 @@ abstract class _BottomNavState implements BottomNavState {
   bool get isRefreshing;
   @override
   List<BottomNavModel> get navList;
+
+  /// Create a copy of BottomNavState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BottomNavStateImplCopyWith<_$BottomNavStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

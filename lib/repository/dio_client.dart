@@ -49,7 +49,6 @@ class DioClient {
               contentType: Headers.jsonContentType,
               responseType: ResponseType.json),
         )..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
-            //  printData("app request data ${options.data}");
             return handler.next(options);
           }, onResponse: (response, handler) async {
             if (kDebugMode) {

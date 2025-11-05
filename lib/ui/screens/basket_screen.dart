@@ -7,12 +7,10 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/ui/screens/product_details_screen.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/basket/basket_bloc.dart';
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
-import '../../data/model/req_model/get_all_order_req_model/get_all_order_req_model.dart';
-import '../../data/model/res_model/get_all_order_res_model/get_all_order_res_model.dart';
-import '../../data/model/res_model/get_latest_ontheway_order/get_latest_ontheway_order.dart';
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
 import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -134,7 +132,6 @@ class BasketScreenWidget extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context1) {
-              printData('available all : ${state.isAllPaymentAvailable}');
               if (state.isAllPaymentAvailable) {
                 if (state.isWalletRelatedError) {
                   return twoOptionPaymentDialog(context, state, bloc, context1);
@@ -219,115 +216,167 @@ class BasketScreenWidget extends StatelessWidget {
                   ),
                   child: AbsorbPointer(
                     absorbing: state.isRemoveProcess || state.isLoading || state.isShimmering ? true : false,
-                    child: Column(
+                    child: Stack(
                       children: [
-                        state.basketProductList.isNotEmpty
-                            ? Container(
-                                margin: const EdgeInsets.all(AppConstants.padding_10),
-                                padding: const EdgeInsets.all(AppConstants.padding_10),
-                                decoration: BoxDecoration(
-                                  color: AppColors.whiteColor.withOpacity(0.95),
-                                  boxShadow: [
-                                    BoxShadow(color: AppColors.shadowColor.withOpacity(0.20), blurRadius: AppConstants.blur_10),
-                                  ],
-                                  borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_40)),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        deleteDialog(
-                                          context: context,
-                                          updateClearString: AppStrings.clearString,
-                                          listIndex: 0,
-                                          cartProductId: '',
-                                          totalAmount: 0.0,
-                                        );
-                                      },
-                                      child: Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppImagePath.delete,
-                                            colorFilter: ColorFilter.mode(AppColors.redColor, BlendMode.srcIn),
-                                          ),
-                                          5.width,
-                                          Text(
-                                            AppLocalizations.of(context)!.empty,
-                                            style: AppStyles.rkRegularTextStyle(
-                                              size: AppConstants.font_14,
-                                              color: AppColors.redColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                        Column(
+                          children: [
+                            state.basketProductList.isNotEmpty
+                                ? Container(
+                                    margin: const EdgeInsets.all(AppConstants.padding_10),
+                                    padding: const EdgeInsets.all(AppConstants.padding_10),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.whiteColor.withOpacity(0.95),
+                                      boxShadow: [
+                                        BoxShadow(color: AppColors.shadowColor.withOpacity(0.20), blurRadius: AppConstants.blur_10),
+                                      ],
+                                      borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_40)),
                                     ),
-                                    Text(
-                                      AppLocalizations.of(context)!.my_basket,
-                                      textAlign: TextAlign.center,
-                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.greyColor, fontWeight: FontWeight.w500),
-                                    ),
-
-                                    // InkWell(
-                                    //   onTap: () {},
-                                    //   child: Icon(
-                                    //     Icons.info,
-                                    //     color: AppColors.greyColor,
-                                    //   ),
-                                    // ),
-                                    Row(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        SvgPicture.asset(
-                                          AppImagePath.delete,
-                                          colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),
-                                        ),
-                                        5.width,
-                                        Text(
-                                          AppLocalizations.of(context)!.empty,
-                                          style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.font_14,
-                                            color: AppColors.whiteColor,
+                                        InkWell(
+                                          onTap: () {
+                                            deleteDialog(
+                                              context: context,
+                                              updateClearString: AppStrings.clearString,
+                                              listIndex: 0,
+                                              cartProductId: '',
+                                              totalAmount: 0.0,
+                                            );
+                                          },
+                                          child: Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                AppImagePath.delete,
+                                                colorFilter: ColorFilter.mode(AppColors.redColor, BlendMode.srcIn),
+                                              ),
+                                              5.width,
+                                              Text(
+                                                AppLocalizations.of(context)!.empty,
+                                                style: AppStyles.rkRegularTextStyle(
+                                                  size: AppConstants.font_14,
+                                                  color: AppColors.redColor,
+                                                ),
+                                              ),
+                                            ],
                                           ),
+                                        ),
+                                        Text(
+                                          AppLocalizations.of(context)!.my_basket,
+                                          textAlign: TextAlign.center,
+                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.greyColor, fontWeight: FontWeight.w500),
+                                        ),
+
+                                        // InkWell(
+                                        //   onTap: () {},
+                                        //   child: Icon(
+                                        //     Icons.info,
+                                        //     color: AppColors.greyColor,
+                                        //   ),
+                                        // ),
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                              AppImagePath.delete,
+                                              colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),
+                                            ),
+                                            5.width,
+                                            Text(
+                                              AppLocalizations.of(context)!.empty,
+                                              style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.font_14,
+                                                color: AppColors.whiteColor,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              )
-                            : const SizedBox(),
-                        state.isShimmering
-                            ? const BasketScreenShimmerWidget()
-                            : state.basketProductList.isNotEmpty
-                                ? Expanded(
-                                    child: AnimationLimiter(
-                                      child: ListView.builder(
-                                        itemCount: state.basketProductList.length,
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.vertical,
-                                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-                                        itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
-                                          duration: const Duration(seconds: 1),
-                                          position: index,
-                                          child: SlideAnimation(
-                                            verticalOffset: 44.0,
-                                            child: FadeInAnimation(
-                                              child: basketListItem(isPesach: state.basketProductList[index].isPesach ?? false, index: index, context: context, isSaleOn: true, lowStock: state.basketProductList[index].lowStock.toString(), productStock: state.basketProductList[index].productStock ?? 0),
+                                  )
+                                : const SizedBox(),
+                            state.isShimmering
+                                ? const BasketScreenShimmerWidget()
+                                : state.basketProductList.isNotEmpty
+                                    ? Expanded(
+                                        child: AnimationLimiter(
+                                          child: ListView.builder(
+                                            itemCount: state.basketProductList.length,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.vertical,
+                                            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+                                            itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
+                                              duration: const Duration(seconds: 1),
+                                              position: index,
+                                              child: SlideAnimation(
+                                                verticalOffset: 44.0,
+                                                child: FadeInAnimation(
+                                                  child: basketListItem(
+                                                    isPesach: state.basketProductList[index].isPesach ?? false,
+                                                    index: index,
+                                                    context: context,
+                                                    isSaleOn: true,
+                                                    lowStock: state.basketProductList[index].lowStock.toString(),
+                                                    productStock: state.basketProductList[index].productStock ?? 0,
+                                                  ),
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  )
-                                : !state.isShimmering && state.basketProductList.isEmpty
-                                    ? Expanded(
-                                        child: Center(
-                                            child: Text(
-                                          AppLocalizations.of(context)!.cart_empty,
-                                          style: AppStyles.pVRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w400),
-                                        )),
                                       )
-                                    : const BasketScreenShimmerWidget(),
-                        state.basketProductList.isEmpty ? const SizedBox() : totalAmountCard(state, context)
+                                    : !state.isShimmering && state.basketProductList.isEmpty
+                                        ? Expanded(
+                                            child: Center(
+                                                child: Text(
+                                              AppLocalizations.of(context)!.cart_empty,
+                                              style: AppStyles.pVRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                                            )),
+                                          )
+                                        : const BasketScreenShimmerWidget(),
+                            state.basketProductList.isEmpty ? const SizedBox() : totalAmountCard(state, context)
+                          ],
+                        ),
+                        if (state.isSubmitLoading)
+                          Positioned.fill(
+                            child: Container(
+                              color: Colors.black.withOpacity(0.3),
+                              child: Center(
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: const [
+                                      BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 4)),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                          height: 80,
+                                          width: 130,
+                                          child: Lottie.asset(
+                                            'assets/images/super_market.json',
+                                            width: 50,
+                                            height: 50,
+                                            fit: BoxFit.fill,
+                                          )),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        AppLocalizations.of(context)!.basket_loader_text,
+                                        style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(AppLocalizations.of(context)!.please_wait_text, style: TextStyle(fontSize: AppConstants.font_14, color: AppColors.greyColor)),
+                                      const SizedBox(height: 8),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -462,8 +511,8 @@ class BasketScreenWidget extends StatelessWidget {
                     buttonText: AppLocalizations.of(context)!.submit,
                     bGColor: AppColors.mainColor,
                     height: 45,
-                    isLoading: state.isLoading,
-                    onPressed: () {
+                    // isLoading: state.isLoading,
+                    onPressed: () async {
                       List<double> basketProductStockList = [];
                       for (var element in state.basketProductList) {
                         basketProductStockList.add(element.productStock ?? 0);
@@ -476,7 +525,15 @@ class BasketScreenWidget extends StatelessWidget {
                       } else {
                         if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
                           if (state.supplierCount == 1) {
-                            paymentOptionPopup(state, context, bloc);
+                            if (state.draftReturnExists) {
+                              await showDialog(
+                                context: context,
+                                builder: (_) => CallAgentDialog(language: state.language, state: state, context1: context, bloc: bloc),
+                              );
+                            } else {
+                              paymentOptionPopup(state, context, bloc);
+                            }
+
                             //bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: true, isFromDialog: false, paymentMethod: ''));
                           } else {
                             Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
@@ -560,7 +617,7 @@ class BasketScreenWidget extends StatelessWidget {
                             child: CustomDialog(
                               isProcessing: state.isRemoveProcess,
                               title: AppLocalizations.of(context)!.you_want_delete_product,
-                              content: [],
+                              content: const [],
                               isMixedSale: false,
                               directionality: state.language,
                               positiveTitle: AppLocalizations.of(context)!.yes,
@@ -788,7 +845,7 @@ class BasketScreenWidget extends StatelessWidget {
                   ),
                 ),
               ),
-                if ((state.cartItemList.data?.data?[index].productStock ?? 0) == 0)
+              if ((state.cartItemList.data?.data?[index].productStock ?? 0) == 0)
                 Positioned.fill(
                   child: IgnorePointer(
                     child: Container(
@@ -824,16 +881,23 @@ class BasketScreenWidget extends StatelessWidget {
                       absorbing: state.isRemoveProcess ? true : false,
                       child: CustomDialog(
                         title: AppLocalizations.of(context)!.some_products_out_of_stock_Do_you_want_submit_order,
-                        content: [],
+                        content: const [],
                         isMixedSale: false,
                         directionality: state.language,
                         positiveTitle: AppLocalizations.of(context)!.yes,
                         isProcessing: state.isRemoveProcess,
                         negativeTitle: AppLocalizations.of(context)!.no,
-                        positiveOnTap: () {
+                        positiveOnTap: () async {
                           if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
                             if (state.supplierCount == 1) {
-                              paymentOptionPopup(state, context, bloc, isFromRemovePopUp: true);
+                              if (state.draftReturnExists) {
+                                await showDialog(
+                                  context: context,
+                                  builder: (_) => CallAgentDialog(language: state.language, state: state, context1: context, bloc: bloc),
+                                );
+                              } else {
+                                paymentOptionPopup(state, context, bloc, isFromRemovePopUp: true);
+                              }
                               //   bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: true, isFromDialog: false, paymentMethod: ''));
                             } else {
                               Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
@@ -855,8 +919,6 @@ class BasketScreenWidget extends StatelessWidget {
     showDialog(
         context: context,
         builder: (context1) {
-          printData("check here status ${state.paymentTypesList}");
-
           // old code
           return CustomOneButtonDialog(
             width: MediaQuery.of(context).size.width,
@@ -969,7 +1031,7 @@ class BasketScreenWidget extends StatelessWidget {
                       absorbing: state.isRemoveProcess ? true : false,
                       child: CustomDialog(
                         title: updateClearString == AppStrings.clearString ? AppLocalizations.of(context)!.you_want_clear_cart : AppLocalizations.of(context)!.you_want_delete_product,
-                        content: [],
+                        content: const [],
                         isMixedSale: false,
                         directionality: state.language,
                         positiveTitle: AppLocalizations.of(context)!.yes,
@@ -1110,8 +1172,6 @@ class BasketScreenWidget extends StatelessWidget {
                                             context.read<BasketBloc>().add(BasketEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
                                           },
                                           onQuantityIncreaseTap: () {
-                                            printData("check here ${state.productDetails.first.sale?.saleMaxQuantity} -- ${state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity}");
-
                                             context.read<BasketBloc>().add(BasketEvent.increaseQuantityOfProduct(context: context1));
                                           },
                                           onQuantityDecreaseTap: () {
@@ -1351,6 +1411,183 @@ class BasketScreenWidget extends StatelessWidget {
     final stock = state.cartItemList.data?.data?[index].productStock ?? 0.0;
     final totalQty = state.basketProductList[index].totalQuantity ?? 0;
 
-    return stock >= totalQty + 1 ? AppColors.whiteColor : Color(0XFFfadad7);
+    return stock >= totalQty + 1 ? AppColors.whiteColor : const Color(0XFFfadad7);
+  }
+}
+
+class CallAgentDialog extends StatelessWidget {
+  final String language;
+  final BasketState state;
+  final BuildContext context1;
+  final BasketBloc bloc;
+
+  const CallAgentDialog({Key? key, required this.language, required this.state, required this.context1, required this.bloc}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: language == 'en' ? TextDirection.ltr : TextDirection.rtl,
+      child: AlertDialog(
+        contentPadding: const EdgeInsets.all(20.0),
+        surfaceTintColor: AppColors.whiteColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        content: Text(
+          AppLocalizations.of(context)!.return_draft_not_sent,
+          // AppStrings.getLocalizedStrings(, context),
+          style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.smallFont),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, RouteDefine.returnListScreen.name, arguments: {AppStrings.isbackString: 'Basket'}
+                      //  arguments: false
+                      );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(5.0)),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.view_return,
+                        style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.smallFont,
+                          color: AppColors.whiteColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  paymentOptionPopup(state, context1, bloc);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(5.0)),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.send_any_way,
+                        style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.smallFont,
+                          color: AppColors.whiteColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void paymentOptionPopup(BasketState state, BuildContext context, BasketBloc bloc, {bool isFromRemovePopUp = false}) {
+    showDialog(
+        context: context,
+        builder: (context1) {
+          // old code
+          return CustomOneButtonDialog(
+            width: MediaQuery.of(context).size.width,
+            title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
+            directionality: state.language,
+            positiveTitle: state.paymentTypesList.any((e) => e == AppStrings.creditCard) ? AppLocalizations.of(context)!.pay_with_credit_card : null,
+            positiveOnTap: () {
+              Navigator.pop(context);
+              bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.creditCard, isFromRemovePopUp: isFromRemovePopUp));
+            },
+            positiveOnTap1: () {
+              Navigator.pop(context);
+              bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: false, isFromDialog: true, paymentMethod: AppStrings.wallet, isFromRemovePopUp: isFromRemovePopUp));
+            },
+            positiveOnTap2: () {
+              Navigator.pop(context);
+              bankTransferDialog(
+                  context: context1,
+                  language: state.language,
+                  text: state.bankTransferInfo,
+                  function: () {
+                    bloc.add(BasketEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: isFromRemovePopUp, id: state.supplierId));
+                  });
+            },
+            positiveOnTap3: () {
+              Navigator.pop(context);
+              bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, isFromDialog: true, paymentMethod: AppStrings.bankCheck, isFromRemovePopUp: isFromRemovePopUp));
+            },
+            positiveTitle1: state.paymentTypesList.any((e) => e == AppStrings.wallet) ? AppLocalizations.of(context)!.change_to_wallet_payment : null,
+            positiveTitle2: state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null,
+            positiveTitle3: state.paymentTypesList.any((e) => e == AppStrings.bankCheck) ? AppLocalizations.of(context)!.pay_with_bank_check : null,
+            paymentType: context.read<BasketBloc>().paymentType,
+          );
+        });
+  }
+
+  void bankTransferDialog({required BuildContext context, required String language, required String text, required Function function}) {
+    showDialog(
+      context: context,
+      builder: (context1) {
+        return Directionality(
+          textDirection: language == AppStrings.englishString ? TextDirection.ltr : TextDirection.rtl,
+          child: AlertDialog(
+            contentPadding: const EdgeInsets.all(20.0),
+            surfaceTintColor: AppColors.whiteColor,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            title: Text(
+              text,
+              style: AppStyles.rkRegularTextStyle(size: 16),
+            ),
+            actionsPadding: const EdgeInsets.only(right: AppConstants.padding_20, bottom: AppConstants.padding_10, left: AppConstants.padding_20),
+            actions: [
+              InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () {
+                  Navigator.pop(context1);
+                  function();
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(8.0)),
+                  child: Text(
+                    AppLocalizations.of(context)!.understand_submit_order,
+                    style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont),
+                  ),
+                ),
+              ),
+              8.height,
+              InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () {
+                  Navigator.pop(context1);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(gradient: AppColors.connectGradientColor, border: Border.all(color: AppColors.mainColor), borderRadius: BorderRadius.circular(8.0)),
+                  child: Text(
+                    AppLocalizations.of(context)!.close,
+                    style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor, size: AppConstants.smallFont),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

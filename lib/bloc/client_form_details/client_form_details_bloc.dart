@@ -72,7 +72,6 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
           ProfileDetailsResModel response = ProfileDetailsResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-            printData("check here data ${response}");
 
             businessType = res['data']['clients'][0]['clientDetail']['businessType']['businessTypeName'];
             agentId = response.data?.clients?[0].clientDetail?.agent?.id ?? '';
@@ -141,7 +140,6 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
           }
         } catch (e) {
-          printData(e.toString());
         }
       } else if (event is _selectBusinessTypeEvent) {
         for (var element in state.businessTypeList) {
@@ -149,7 +147,6 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
             debugPrint('element.haveMultiple${element.haveMultiple}');
 
             businessTypeId = element.id.toString();
-            printData("businessTypeId ${element.id}");
             emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false, ownerList: state.ownerList, owner: state.ownerList.first));
           }
         }
@@ -232,7 +229,6 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
             }
           };
 
-          printData("reqMap ${reqMap}");
 
           final res = await DioClient(event.context).post(
             "${AppUrlEndPoints.updateClientInfoDetailsUrl}/${preferencesHelper.getUserId()}",
@@ -241,7 +237,6 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
 
           ProfileDetailsUpdateResModel response = ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            printData("check response ${response}");
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
               context: event.context,

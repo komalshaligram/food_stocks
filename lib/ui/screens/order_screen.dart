@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/order/order_bloc.dart';
 import '../../data/model/res_model/get_all_order_res_model/get_all_order_res_model.dart';
 import '../../ui/screens/product_details_screen.dart';
@@ -63,7 +62,14 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
               title: AppLocalizations.of(context)!.orders,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pushReplacementNamed(
+                  context,
+                  RouteDefine.bottomNavScreen.name,
+                  arguments: {
+                    AppStrings.pushNavigationString: 'profileScreen',
+                  },
+                );
+                // Navigator.pop(context);
               },
             ),
           ),
@@ -139,7 +145,6 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
             AppStrings.orderNumberString: orderDetailsList[index].orderNumber,
           });
         } else {
-          printData("check order id ${orderDetailsList[index].id}");
           Navigator.push(
               context,
               PageRouteBuilder(
@@ -248,6 +253,30 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                   valueTextSize: getScreenWidth(context) < 380 ? AppConstants.font_14 : AppConstants.smallFont,
                 ),
                 5.width,
+
+                orderDetailsList[index].status?.orderStatusNo == 2 && orderDetailsList[index].paymentMethod == AppStrings.creditCard ?
+                Expanded(flex: 4, child: Container(decoration: BoxDecoration(
+                  color: AppColors.iconBGColor,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(AppConstants.radius_5),
+                  ),
+                  border: Border.all(color:AppColors.lightBorderColor, width: 1),
+                ),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: AppConstants.padding_5,
+                        vertical: 9), child: Text(AppLocalizations.of(context)!.invoice_charge, style: TextStyle(color: AppColors.blackColor, fontSize: 10),)))
+                // // Text(AppLocalizations.of(context)!.invoice_charge)
+                // CommonOrderContentWidget(
+                //   backGroundColor: AppColors.iconBGColor,
+                //   borderCoder: AppColors.lightBorderColor,
+                //   flexValue: 4,
+                //   title: AppLocalizations.of(context)!.invoice_charge,
+                //   value: '',
+                //   titleColor: AppColors.blackColor,
+                //   valueColor: AppColors.blackColor,
+                //   valueTextSize: AppConstants.smallFont,
+                // )
+                    :
                 CommonOrderContentWidget(
                   backGroundColor: AppColors.iconBGColor,
                   borderCoder: AppColors.lightBorderColor,
@@ -261,7 +290,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                   titleColor: AppColors.blackColor,
                   valueColor: AppColors.blackColor,
                   valueTextSize: AppConstants.smallFont,
-                ),
+                ) ,
                 5.width,
                 CommonOrderContentWidget(
                   backGroundColor: AppColors.iconBGColor,

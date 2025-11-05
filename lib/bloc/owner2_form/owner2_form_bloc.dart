@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/model/res_model/terms_condition_res/terms_condition_res_model.dart';
-import '../../ui/utils/constants/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
-import '../../data/model/res_model/agent_model/agent_model.dart';
-import '../../data/model/res_model/business_name_model/business_name_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
-import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
-import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
-import '../../ui/utils/constants/app_urls.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'owner2_form_event.dart';
 part 'owner2_form_state.dart';

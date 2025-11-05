@@ -28,7 +28,7 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>FDAllFilesDownloadedMessage</key>
+	<key>FDAllFilesDownloadedMessage</key>	    
 	<string>All files have been downloaded</string>
 	<key>FLTEnableImpeller</key>
 	<false/>

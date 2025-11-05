@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/bloc/owner1_form/owner1_form_bloc.dart';
-import 'package:food_stock/data/model/res_model/terms_condition_res/terms_condition_res_model.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../bloc/form_data/form_data_bloc.dart';
 import '../../bloc/owner2_form/owner2_form_bloc.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
-import '../../routes/app_routes.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
@@ -19,7 +15,6 @@ import '../utils/constants/app_styles.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
-import '../widget/form_data_screen_shimmer_widget.dart';
 
 class Owner2FormRoute {
   static Widget get route => const Owner2FormScreen();

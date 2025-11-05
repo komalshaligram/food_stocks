@@ -45,8 +45,6 @@ class ScanReturnProduct extends StatelessWidget {
           title: AppLocalizations.of(context)!.scan_return_product,
           iconData: Icons.arrow_back_ios_sharp,
           onTap: () {
-            // Navigator.pop(context);
-            // Navigator.pushNamedAndRemoveUntil(context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
             Navigator.pushReplacementNamed(context, RouteDefine.returnListScreen.name);
           },
         ),

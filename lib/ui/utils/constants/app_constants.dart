@@ -77,6 +77,7 @@ class AppConstants{
   static const double font_26 = 26;
   static const double font_22 = 22;
   static const double font_17 = 17;
+  static const double font_15 = 15;
 
  //order status
   static const int onTheWayStatus = 6;

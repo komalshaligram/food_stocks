@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '/ui/utils/app_utils.dart';
 import '/ui/widget/custom_button_widget.dart';
 import '/ui/widget/sized_box_widget.dart';
 import '../../bloc/return_summary/return_summary_bloc.dart';
@@ -82,8 +81,7 @@ class ReturnSummaryScreenWidget extends StatelessWidget {
   Widget orderListItem({required BuildContext context, required ReturnSummaryBloc bloc, required String supplierId}) {
     return BlocBuilder<ReturnSummaryBloc, ReturnSummaryState>(
       builder: (context1, state) {
-        printData('state.supplierWiseMap${state.supplierWiseMap}');
-        printData('state.returnProductList${state.returnProductList[0]}');
+
         return Container(
             height: 160,
             margin: const EdgeInsets.all(AppConstants.padding_10),

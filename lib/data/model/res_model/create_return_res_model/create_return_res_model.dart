@@ -19,6 +19,8 @@ class CreateReturnResModel with _$CreateReturnResModel {
     int? status,
     @JsonKey(name: "message")
     String? message,
+    @JsonKey(name: "agentPhoneNumber")
+    String? agentPhoneNumber,
     @JsonKey(name: "data")
     List<Datum>? data,
   }) = _CreateReturnResModel;

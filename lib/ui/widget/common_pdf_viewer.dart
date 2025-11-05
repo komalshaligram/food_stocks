@@ -13,7 +13,6 @@ class CommonPdfViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    printData('invoiceLink:$url');
     return Scaffold(
       appBar:  PreferredSize(
         preferredSize: const Size.fromHeight(AppConstants.appBarHeight),

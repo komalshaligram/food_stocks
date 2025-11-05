@@ -63,7 +63,6 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
           emit(state.copyWith(
             isLoading: false,
           ));
-          printData("error:${e.toString()}");
         }
       } else if (event is _termsConditionApiEvent) {
         try {
@@ -92,7 +91,6 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
           Map<String, dynamic> req = termsConditionReqModel.toJson();
           req.removeWhere((key, value) {
             if (value != null) {
-              printData("[$key] = $value");
             }
             return value == null;
           });

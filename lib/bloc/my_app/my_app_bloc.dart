@@ -45,7 +45,6 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
 
         clientDetail?.removeWhere((key, value) {
           if (value != null) {
-            printData("[$key] = $value");
           }
           return value == null;
         });
@@ -53,7 +52,6 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
         req[AppStrings.clientDetailString] = clientDetail;
         req.removeWhere((key, value) {
           if (value != null) {
-            printData("[$key] = $value");
           }
           return value == null;
         });
@@ -65,9 +63,7 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
           if (res != null) {
             ProfileDetailsUpdateResModel response =
                 ProfileDetailsUpdateResModel.fromJson(res);
-            printData('profile response = $response');
             if (response.status == AppConstants.code_200) {
-              printData('______success');
             } else {}
           }
         } on ServerException {}

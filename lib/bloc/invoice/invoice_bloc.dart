@@ -39,7 +39,6 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
           final args = ModalRoute.of(event.context)!.settings.arguments as Map<String, dynamic>;
           screenTitleName = args[AppStrings.invoiceTitleNameString] as String;
 
-          printData("check name  ${screenTitleName}");
 
           emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage(), isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
           InvoicesReqModel request = InvoicesReqModel(pageLimit: AppConstants.recommendationProductPageLimit, pageNum: state.pageNum + 1, id: preferences.getUserId());
@@ -50,7 +49,6 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
             data: request.toJson(),
           );
           InvoicesResModel response = InvoicesResModel.fromJson(res);
-          debugPrint('Invoices res = ${response.data}');
           if (response.status == AppConstants.code_200) {
             List<Invoice> invoiceDetailsList = state.invoiceDetailsList.toList(growable: true);
             if (screenTitleName == AppLocalizations.of(event.context)!.my_invoices) {

@@ -68,6 +68,7 @@ class AppStrings {
   static const planogramSortFieldString = 'planogramName';
   static const orderNumberString = 'orderNumber';
   static const signatureString = 'signature';
+  static const driverSignatureString = 'driverSignature';
   static const returnImagesString = 'returnimages';
   static const cartProductIdString = 'cartProductId';
   static const categoryIdString = 'catregoryId';
@@ -198,6 +199,11 @@ class AppStrings {
   static const deliveryDateString = 'deliveryDate';
   static const quantityString = 'quantity';
   static const supplierOrderNumberString = 'supplierOrderNumber';
+  static const driverDeliveryDocumentsImages = 'driverDeliveryDocumentsImages';
+  static const orderIssueReturnId = 'orderIssueReturnId';
+  static const sentReturnData = 'sentReturnData';
+  static const vatString = 'Vat';
+  static const usersIdString = 'UserId';
   static const totalAmountString = 'totalAmount';
   static const cartIdString = 'cartId';
   static const messageIdString = 'messageId';
@@ -206,7 +212,8 @@ class AppStrings {
   static const invoiceTitleNameString = 'invoiceTitleName';
   static const invoiceListString = 'invoiceListString';
   static const showPreviousBtn = 'showPreviousBtn';
-
+  static const isbackString = 'isBack';
+  static const statusList = 'statusList';
 
   static const textIdProof = 'צילום תעודת זהות';
 
@@ -215,7 +222,6 @@ class AppStrings {
   static const userPhoneNum =  "User phone number";
 
   static String getLocalizedStrings(String key, BuildContext context) {
-    printData('Key   $key');
     switch (key) {
       case 'errmessage':
         return AppLocalizations.of(context)!.err_message;
@@ -499,7 +505,7 @@ class AppStrings {
       case 'returncreatedsuccessfully' :
         return AppLocalizations.of(context)!.return_created_success;
       case 'returnupdatedsuccessfully' :
-        return AppLocalizations.of(context)!.return_created_success;
+        return AppLocalizations.of(context)!.return_updated_success;
     }
     return key;
   }

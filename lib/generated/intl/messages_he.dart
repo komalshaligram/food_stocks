@@ -40,6 +40,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "add_credit_card": MessageLookupByLibrary.simpleMessage(
       "הוספת כרטיס אשראי",
     ),
+    "add_driver_delivery_document_img": MessageLookupByLibrary.simpleMessage(
+      "צילום של תעודת משלוח שקיבלת",
+    ),
+    "add_driver_delivery_document_img_note":
+        MessageLookupByLibrary.simpleMessage(
+          "יש לצלם את תעודת המשלוח כהוכחה לקבלת הסחורה",
+        ),
     "add_notes": MessageLookupByLibrary.simpleMessage("הוסף הערות"),
     "add_one_proof_img": MessageLookupByLibrary.simpleMessage(
       "אתה צריך להעלות לפחות תמונת הוכחה אחת",
@@ -74,9 +81,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "already_verified": MessageLookupByLibrary.simpleMessage(
       "האימות כבר הושלם",
-    ),
-    "another_product_problem": MessageLookupByLibrary.simpleMessage(
-      "בעיה נוספת במוצר",
     ),
     "app_language": MessageLookupByLibrary.simpleMessage("שפה עברית"),
     "application_version": MessageLookupByLibrary.simpleMessage(
@@ -114,6 +118,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "bank_transfer_information": MessageLookupByLibrary.simpleMessage(
       "פרטי חשבון להעברה בנקאית",
     ),
+    "basket_loader_text": MessageLookupByLibrary.simpleMessage(
+      "ההזמנה שלך נשלחת עכשיו",
+    ),
     "bdi_error": MessageLookupByLibrary.simpleMessage("משהו השתבש בבדיקת BDI"),
     "bottle_deposit": MessageLookupByLibrary.simpleMessage("פקדון בקבוק"),
     "branch_number": MessageLookupByLibrary.simpleMessage("מספר סניף"),
@@ -125,6 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "business_type_not_found": MessageLookupByLibrary.simpleMessage(
       "לא נמצא סוג עסק",
     ),
+    "call_the_agent": MessageLookupByLibrary.simpleMessage("תתקשר לסוכן"),
     "camera": MessageLookupByLibrary.simpleMessage("מצלמה"),
     "camera_permission": MessageLookupByLibrary.simpleMessage(
       "אנא אפשר הרשאות מצלמה",
@@ -284,6 +292,21 @@ class MessageLookup extends MessageLookupByLibrary {
       " !הורד בהצלחה",
     ),
     "driver_name": MessageLookupByLibrary.simpleMessage("פרטי נהג"),
+    "driver_return": MessageLookupByLibrary.simpleMessage("החזרת נהג"),
+    "driver_return_delivery_document_img": MessageLookupByLibrary.simpleMessage(
+      "צילום של תעודת חזרה שקיבלת ",
+    ),
+    "driver_return_delivery_document_img_note":
+        MessageLookupByLibrary.simpleMessage(
+          "יש לצלם את תעודת החזרה כהוכחה להחזרת הסחורה",
+        ),
+    "driver_return_document_image": MessageLookupByLibrary.simpleMessage(
+      "יש להוסיף תמונה של תעודת החזרה חתומה",
+    ),
+    "driver_signature": MessageLookupByLibrary.simpleMessage("חתימת נהג"),
+    "driver_signature_missing": MessageLookupByLibrary.simpleMessage(
+      "חסרה חתימת הנהג",
+    ),
     "due_date": MessageLookupByLibrary.simpleMessage("תאריך לתשלום"),
     "duplicate_or_invalid_sku": MessageLookupByLibrary.simpleMessage(
       "מקט כפול או לא תקין",
@@ -336,6 +359,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "err_message": MessageLookupByLibrary.simpleMessage("משהו השתבש"),
     "everything_was_received": MessageLookupByLibrary.simpleMessage(
       "התקבל הכל",
+    ),
+    "expiration_date_issue": MessageLookupByLibrary.simpleMessage(
+      "בעיית תאריך תפוגה",
     ),
     "expired_code": MessageLookupByLibrary.simpleMessage(
       "קוד אימות פג תוקף. אנא בקש קוד אימות חדש",
@@ -444,6 +470,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "קוד אימות לא תקין. אנא בדוק את הקוד ונסה שוב",
     ),
     "invoice_amount": MessageLookupByLibrary.simpleMessage("סכום חשבונית"),
+    "invoice_charge": MessageLookupByLibrary.simpleMessage(
+      "החיוב יבוצע כאשר תקבל חשבונית",
+    ),
     "invoice_date": MessageLookupByLibrary.simpleMessage("תאריך חשבונית"),
     "invoice_number": MessageLookupByLibrary.simpleMessage("מס\' חשבונית"),
     "invoice_status": MessageLookupByLibrary.simpleMessage("סטטוס חשבונית"),
@@ -459,6 +488,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "issue_generated": MessageLookupByLibrary.simpleMessage("בעיות נוצרו"),
     "issue_remove": MessageLookupByLibrary.simpleMessage("הסר"),
     "issue_removed": MessageLookupByLibrary.simpleMessage("הבעיה הוסרה בהצלחה"),
+    "issue_text": MessageLookupByLibrary.simpleMessage("הסתייגות:"),
     "issue_with_payment": MessageLookupByLibrary.simpleMessage(
       "התשלום לא עבר בחברת האשראי",
     ),
@@ -494,7 +524,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "mar": MessageLookupByLibrary.simpleMessage("מרץ"),
     "march": MessageLookupByLibrary.simpleMessage("מרץ"),
-    "maximumGrid": MessageLookupByLibrary.simpleMessage("מקס"),
+    "maxGrid": MessageLookupByLibrary.simpleMessage("מקס"),
+    "maximumGrid": MessageLookupByLibrary.simpleMessage("מקסימום"),
     "maximumList": MessageLookupByLibrary.simpleMessage("מקסימום מארזים למבצע"),
     "maximum_qty": MessageLookupByLibrary.simpleMessage(
       "מקסימום מארזים להזמנה עבור המבצע",
@@ -512,7 +543,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "messages_not_found": MessageLookupByLibrary.simpleMessage(
       "לא נמצאו הודעות",
     ),
-    "minimumGrid": MessageLookupByLibrary.simpleMessage("מיני"),
+    "minGrid": MessageLookupByLibrary.simpleMessage("מיני"),
+    "minimumGrid": MessageLookupByLibrary.simpleMessage("מינימום"),
     "minimumList": MessageLookupByLibrary.simpleMessage("מינימום מארזים למבצע"),
     "minimum_box": MessageLookupByLibrary.simpleMessage(
       "מינימום מארזים להזמנה עבור המבצע",
@@ -598,6 +630,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "אין לך הרשאה",
     ),
     "note": MessageLookupByLibrary.simpleMessage("הערה"),
+    "notes": MessageLookupByLibrary.simpleMessage("הערות"),
     "nov": MessageLookupByLibrary.simpleMessage("נוב"),
     "november": MessageLookupByLibrary.simpleMessage("נוֹבֶמבֶּר"),
     "null_password": MessageLookupByLibrary.simpleMessage(
@@ -611,6 +644,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "הצג חשבונית זיכוי",
     ),
     "order": MessageLookupByLibrary.simpleMessage("הזמנה"),
+    "order_confirmation_loader_text": MessageLookupByLibrary.simpleMessage(
+      "אישור ההזמנה נשלח עכשיו",
+    ),
     "order_created_successfully": MessageLookupByLibrary.simpleMessage(
       "הזמנה הוצבה בהצלחה",
     ),
@@ -821,6 +857,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_select_time_grater_then_0": MessageLookupByLibrary.simpleMessage(
       "אנא בחר שעה גדולה יותר מ 00:00",
     ),
+    "please_wait_text": MessageLookupByLibrary.simpleMessage("אנא המתן..."),
     "previous_order_products": MessageLookupByLibrary.simpleMessage(
       "מוצרים מהזמנה קודמת",
     ),
@@ -852,7 +889,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "product_arrived_damaged": MessageLookupByLibrary.simpleMessage(
       "המוצר הגיע פגום",
     ),
+    "product_arrived_incomplete": MessageLookupByLibrary.simpleMessage(
+      "המוצר הגיע לא שלם",
+    ),
     "product_defective": MessageLookupByLibrary.simpleMessage("המוצר פגום"),
+    "product_did_not_arrive_at_all": MessageLookupByLibrary.simpleMessage(
+      "המוצר לא הגיע בכלל",
+    ),
     "product_does_not_exist": MessageLookupByLibrary.simpleMessage(
       "המוצר לא קיים במערכת",
     ),
@@ -978,8 +1021,21 @@ class MessageLookup extends MessageLookupByLibrary {
       "החזרה נוצרה בהצלחה",
     ),
     "return_deleted": MessageLookupByLibrary.simpleMessage("חזרה נמחקה בהצלחה"),
+    "return_delivery_document_image": MessageLookupByLibrary.simpleMessage(
+      "יש להוסיף תמונה של תעודת המשלוח חתומה כולל ההערות",
+    ),
+    "return_draft_not_sent": MessageLookupByLibrary.simpleMessage(
+      "יש לך החזרות שטרם נשלחו.",
+    ),
     "return_not_found": MessageLookupByLibrary.simpleMessage("חזרה לא קיימת"),
+    "return_number_text": MessageLookupByLibrary.simpleMessage("מספר החזרה:"),
+    "return_products_list": MessageLookupByLibrary.simpleMessage(
+      "רשימת מוצרים להחזרה",
+    ),
     "return_summary": MessageLookupByLibrary.simpleMessage("נתוני חזרה"),
+    "return_updated_success": MessageLookupByLibrary.simpleMessage(
+      "החזרה עודכנה בהצלחה.",
+    ),
     "returns": MessageLookupByLibrary.simpleMessage("חזרות"),
     "rivchit_credentials_not_set": MessageLookupByLibrary.simpleMessage(
       "פרטי ריווחית לא הוגדרו",
@@ -1019,8 +1075,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "יכול לראות רשימת הזמנות",
     ),
     "select_all": MessageLookupByLibrary.simpleMessage("בחר הכל"),
+    "select_atleast_one_checkbox": MessageLookupByLibrary.simpleMessage(
+      "אנא סמנו לפחות תיבת סימון אחת",
+    ),
     "select_business_type": MessageLookupByLibrary.simpleMessage(
       "אנא בחר את סוג העסק",
+    ),
+    "select_checkbox": MessageLookupByLibrary.simpleMessage(
+      "נא סמן את כל תיבת הסימון",
     ),
     "select_issue": MessageLookupByLibrary.simpleMessage("אנא בחר סוג בעיה"),
     "select_next_day_shift": MessageLookupByLibrary.simpleMessage(
@@ -1041,6 +1103,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "אנא בחר חודש תקף",
     ),
     "send_again": MessageLookupByLibrary.simpleMessage("שלח שוב"),
+    "send_any_way": MessageLookupByLibrary.simpleMessage("שלח בכל דרך"),
     "send_order": MessageLookupByLibrary.simpleMessage("שלח הזמנה"),
     "send_the_request": MessageLookupByLibrary.simpleMessage("שלח את הבקשה"),
     "send_timed_out": MessageLookupByLibrary.simpleMessage("בעיית שליחה לשרת"),
@@ -1121,12 +1184,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "surfaces_order": MessageLookupByLibrary.simpleMessage("משטחים להזמנה"),
     "terms_of_use": MessageLookupByLibrary.simpleMessage("תנאי שימוש"),
-    "the_product_arrived_missing": MessageLookupByLibrary.simpleMessage(
-      "המוצר הגיע חסר",
-    ),
-    "the_product_did_not_arrive_at_all": MessageLookupByLibrary.simpleMessage(
-      "המוצר לא הגיע בכלל",
-    ),
     "this_company_has_no_product": MessageLookupByLibrary.simpleMessage(
       "כרגע אין מוצרים לחברה הזו",
     ),
@@ -1189,8 +1246,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "verification_success": MessageLookupByLibrary.simpleMessage(
       "אימות בוצע בהצלחה",
     ),
+    "view_return": MessageLookupByLibrary.simpleMessage("הצג חזרה"),
     "wait_while_uploading": MessageLookupByLibrary.simpleMessage(
       "אנא המתן בזמן שמעלים",
+    ),
+    "waiting_for_new_order_success_msg": MessageLookupByLibrary.simpleMessage(
+      "ההחזרה נרשמה בהצלחה. לנוחיותכם, ההחזרה תישלח ביום ביצוע ההזמנה הבאה שלכם. עד אז, תוכלו להוסיף החזרות נוספות.",
     ),
     "wallet": MessageLookupByLibrary.simpleMessage("ארנק"),
     "wallet_already_exist": MessageLookupByLibrary.simpleMessage(
@@ -1211,6 +1272,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "למה אתה רוצה להחזיר את המוצר?",
     ),
     "wrong_product": MessageLookupByLibrary.simpleMessage("מוצר לא נכון"),
+    "wrong_product_received": MessageLookupByLibrary.simpleMessage(
+      "התקבל מוצר שגוי",
+    ),
     "year": MessageLookupByLibrary.simpleMessage("שנה"),
     "yes": MessageLookupByLibrary.simpleMessage("כן"),
     "you_can_not_confirm_delivery": MessageLookupByLibrary.simpleMessage(

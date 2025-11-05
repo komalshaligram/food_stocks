@@ -418,7 +418,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                               ? true
                                               : false,
                                       onSeeAllTap: () async {
-                                        printData("searchType: ${state.searchList[index].searchType}");
                                         if (state.searchList[index].searchType == SearchTypes.category) {
                                           dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
                                           if (searchResult != null) {
@@ -466,7 +465,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                       String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
                       if (scanResult != '-1') {
                         // -1 result for cancel scanning
-                        printData('result = $scanResult');
 
                         if (!state.isGuestUser) {
                           showProductDetails(

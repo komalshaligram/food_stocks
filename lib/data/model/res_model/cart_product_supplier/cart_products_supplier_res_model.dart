@@ -50,6 +50,8 @@ class CartProductDataResModel with _$CartProductDataResModel {
   const factory CartProductDataResModel({
     @JsonKey(name: "_id")
     String? id,
+    @JsonKey(name: "draftReturnExists")
+    bool? draftReturnExists,
     @JsonKey(name: "suppliers")
     Suppliers? suppliers,
     @JsonKey(name: "sales")

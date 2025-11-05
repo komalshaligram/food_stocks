@@ -188,9 +188,11 @@ class MessageContentScreenWidget extends StatelessWidget {
                                     5.height,
                                     Row(
                                       children: [
-                                        Text(
-                                          state.message.message?.title ?? '',
-                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w500),
+                                        Expanded(
+                                          child: Text(
+                                            state.message.message?.title ?? '',
+                                            style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w500),
+                                          ),
                                         ),
                                         10.width,
                                         Text(
@@ -251,7 +253,6 @@ class MessageContentScreenWidget extends StatelessWidget {
     required String id,
   }) {
     if (subPage == '') {
-      printData("check name ${mainPage}");
       if (mainPage == 'companyScreen') {
         Navigator.pushNamed(navigatorKey.currentState!.context, RouteDefine.companyScreen.name, arguments: {AppStrings.companyIdString: id});
       }
@@ -266,6 +267,9 @@ class MessageContentScreenWidget extends StatelessWidget {
       }
       if (mainPage == 'storeScreen') {
         Navigator.pushNamed(navigatorKey.currentState!.context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.companyIdString: id, AppStrings.pushNavigationString: 'storeScreen'});
+      }
+      if (mainPage == 'returnScreen') {
+        Navigator.pushNamed(navigatorKey.currentState!.context, RouteDefine.returnListScreen.name, arguments: {AppStrings.companyIdString: id, AppStrings.pushNavigationString: 'returnScreen'});
       }
     } else {
       if (subPage == 'companyProductsScreen') {

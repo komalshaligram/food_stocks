@@ -24,7 +24,6 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
          final args = ModalRoute.of(event.context)!.settings.arguments as Map<String, dynamic>;
          screenTitleName = args[AppStrings.invoiceTitleNameString ] as String;
 
-         printData("check name  ${screenTitleName}");
          emit(state.copyWith(invoiceDetailsList: event.invoiceDetailsList));
        }
        }

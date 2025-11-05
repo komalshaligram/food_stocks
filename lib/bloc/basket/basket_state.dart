@@ -8,7 +8,8 @@ class BasketState with _$BasketState {
       required double productWeight,
       required List<ProductDetailsModel> basketProductList,
       required double totalPayment,
-          required bool isLoading,
+      required bool isLoading,
+      required bool isSubmitLoading,
       required int productImageIndex,
       required String language,
       required int cartCount,
@@ -46,6 +47,7 @@ class BasketState with _$BasketState {
           required BuildContext? context,
           required List<String> paymentTypesList,
           required String supplierId,
+          required bool draftReturnExists,
       required bool updatePaymentMethod}) = _BasketState;
 
   //don't add const here
@@ -57,6 +59,7 @@ class BasketState with _$BasketState {
       basketProductList: [],
       totalPayment: 0,
       isLoading: false,
+      isSubmitLoading: false,
       productImageIndex: 0,
       language: AppStrings.hebrewString,
       cartCount: 0,
@@ -96,11 +99,6 @@ class BasketState with _$BasketState {
       isAllPaymentAvailable: false,
       errorString:'',
       supplierId:'',
+      draftReturnExists : false,
       updatePaymentMethod: false);
-
-
-
-
-
-
 }

@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../ui/utils/constants/app_colors.dart';
+import '../../ui/utils/constants/app_styles.dart';
 import '/data/model/req_model/delete_return_req/delete_return_req.dart';
 import '/data/model/res_model/get_return_by_id_res_model/get_return_by_id_res_model.dart';
 import '/ui/utils/constants/app_strings.dart';
@@ -21,7 +23,6 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 part 'product_return_info_state.dart';
 part 'product_return_info_event.dart';
 part 'product_return_info_bloc.freezed.dart';
@@ -36,18 +37,21 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
       if (event is _getArgumentEvent) {
         map = event.arguments;
         List<RadioModel> tempList = [];
-        RadioModel model = RadioModel(id: 1, text: AppLocalizations.of(event.context)!.product_defective);
-        RadioModel model1 = RadioModel(id: 2, text: AppLocalizations.of(event.context)!.product_expiration_date_issue);
-        RadioModel model2 = RadioModel(id: 3, text: AppLocalizations.of(event.context)!.wrong_product);
+        RadioModel model = RadioModel(id: 1, text: AppLocalizations.of(event.context)!.product_did_not_arrive_at_all);
+        RadioModel model1 = RadioModel(id: 2, text: AppLocalizations.of(event.context)!.product_arrived_damaged);
+        RadioModel model2 = RadioModel(id: 3, text: AppLocalizations.of(event.context)!.product_arrived_incomplete);
+        RadioModel model3 = RadioModel(id: 4, text: AppLocalizations.of(event.context)!.expiration_date_issue);
+        RadioModel model4 = RadioModel(id: 5, text: AppLocalizations.of(event.context)!.wrong_product_received);
         tempList.add(model);
         tempList.add(model1);
         tempList.add(model2);
+        tempList.add(model3);
+        tempList.add(model4);
         if (map.isNotEmpty) {
           if (map['list'] != null) {
             List<ReturnProduct> tempProductList = [];
             final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
             for (int i = 0; i < myList.length; i++) {
-              printData("myList[i].returnProductId ${myList[i].returnProductId}");
               tempProductList.add(
                 ReturnProduct(
                   returnId: myList[i].returnId,
@@ -68,6 +72,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             }
             int index = map['index'] ?? 0;
             int radioIndex = tempList.indexWhere((e) => e.text.toLowerCase() == tempProductList[index].reasonToReturn?.toLowerCase()).toInt();
+
             emit(
               state.copyWith(
                 selectedRadioTile: radioIndex + 1,
@@ -103,10 +108,22 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         if (state.productQty != 0) {
           if (state.selectedRadioTile != 0) {
             if (state.proofFile.path.isNotEmpty || state.proofFile1.path.isNotEmpty || state.proofFile2.path.isNotEmpty) {
-              ReturnProduct products = ReturnProduct(productName: state.productName, totalUnits: state.productQty,
-                  proofImages: state.proofImagesList, notes: state.addNoteController.text.toString(), barcode: state.barCode,
-                  isApproved: false, totalRefund: 0, reasonToReturn: state.reason, productImg: state.productImg, supplierName: state.supplierName,
-                  supplierId: state.supplierId, returnId: state.returnId, returnProductId: state.returnProductId,);
+              ReturnProduct products = ReturnProduct(
+                productName: state.productName,
+                totalUnits: state.productQty,
+                proofImages: state.proofImagesList,
+                notes: state.addNoteController.text.toString(),
+                barcode: state.barCode,
+                isApproved: false,
+                totalRefund: 0,
+                reasonToReturn: state.reason,
+                productImg: state.productImg,
+                supplierName: state.supplierName,
+                supplierId: state.supplierId,
+                returnId: state.returnId,
+                returnProductId: state.returnProductId,
+              );
+
               if (state.mainIndex != -1) {
                 //for update
                 List<ReturnProduct> returnList = [];
@@ -120,7 +137,6 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
                 // return;
               } else {
                 //for create
-
                 List<ReturnProduct> returnList = [];
                 returnList.addAll(state.returnProductList);
                 returnList.removeAt(0);
@@ -142,11 +158,9 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         } else {
           CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.enter_units, type: SnackBarType.failure);
         }
-      }  else if (event is _removeProductEvent) {
+      } else if (event is _removeProductEvent) {
         if (state.returnProductList.length > 1) {
           final updatedList = List<ReturnProduct>.from(state.returnProductList); // make a modifiable copy
-
-          printData("event.returnProductId ${event.returnProductId}");
 
           updatedList.removeWhere((returnProduct) => returnProduct.returnProductId == event.returnProductId); // safely remove item
 
@@ -239,10 +253,79 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         }
       } else if (event is _radioButtonEvent) {
         emit(state.copyWith(selectedRadioTile: event.selectRadioTile, reason: event.reason));
-      }
-      else if (event is _updateReturnEvent) {
+      } else if (event is _createReturnEvent) {
         emit(state.copyWith(isShimmer: true));
+        try {
+          List<req.ReturnProduct> list = [];
+          for (int i = 0; i < state.returnProductList.length; i++) {
+            list.add(
+              req.ReturnProduct(
+                totalRefund: state.returnProductList[i].totalRefund,
+                proofImages: state.returnProductList[i].proofImages,
+                notes: state.returnProductList[i].notes,
+                productName: state.returnProductList[i].productName,
+                productImage: state.returnProductList[i].productImg,
+                barcode: state.returnProductList[i].barcode,
+                totalUnits: state.returnProductList[i].totalUnits,
+                isApproved: state.returnProductList[i].isApproved,
+                reasonToReturn: state.returnProductList[i].reasonToReturn,
+                supplierId: event.supplierId,
+              ),
+            );
+          }
+          req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(
+            applicationName: AppStrings.appName,
+            clientId: preferencesHelper.getUserId(),
+            returnProducts: list,
+            subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null,
+            supplierId: '',
+            isDraft: true,
+          );
+          final res = await DioClient(event.context).post(
+            AppUrlEndPoints.createReturnUrl,
+            data: reqModel.toJson(),
+          );
+          CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
+          if (resModel.status == AppConstants.code_201) {
+            List<ReturnProduct> list = [];
+            if (resModel.data!.first.returnproducts != null) {
+              List<Returnproduct> tempList = [];
+              tempList.add(resModel.data!.first.returnproducts!.first);
+              for (var i in tempList) {
+                list.add(ReturnProduct(
+                  returnId: i.returnId,
+                  supplierName: i.supplierName,
+                  totalUnits: i.totalUnits,
+                  reasonToReturn: i.reasonToReturn,
+                  barcode: i.barcode,
+                  notes: i.notes,
+                  proofImages: i.proofImages ?? [],
+                  productName: i.productName,
+                  productImg: i.productImage,
+                  supplierId: i.supplierId,
+                ));
+              }
+            }
+            emit(state.copyWith(returnProductList: list, isShimmer: false, returnId: resModel.data!.first.id.toString()));
+            Navigator.pushReplacementNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {
+              'list': state.returnProductList,
+              AppStrings.isUpdateParamString: false,
+              'status': state.isFromPending,
+            });
+          } else if (resModel.status == AppConstants.code_403) {
+            emit(state.copyWith(isShimmer: false));
 
+            await showDialog(
+              context: event.context,
+              builder: (_) => CallAgentDialog(phoneNumber: resModel.agentPhoneNumber ?? '', message: res[AppStrings.messageString], language: state.language),
+            );
+          } else {
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
+            emit(state.copyWith(isShimmer: false));
+          }
+        } catch (e) {}
+      } else if (event is _updateReturnEvent) {
+        emit(state.copyWith(isShimmer: true));
         try {
           List<req.ReturnProduct> list = [];
           for (int i = 0; i < state.returnProductList.length; i++) {
@@ -258,13 +341,10 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
                 totalUnits: state.returnProductList[i].totalUnits,
                 isApproved: state.returnProductList[i].isApproved,
                 reasonToReturn: state.returnProductList[i].reasonToReturn,
-                returnProductId : state.returnProductList[i].returnProductId,
+                returnProductId: state.returnProductList[i].returnProductId,
               ),
             );
           }
-
-
-
           req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(
             applicationName: AppStrings.appName,
             supplierId: '',
@@ -272,7 +352,6 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             clientId: preferencesHelper.getUserId(),
             returnProducts: list,
             subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null,
-
           );
           final res = await DioClient(event.context).post(
             '${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId}',
@@ -307,76 +386,94 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
               returnId: state.returnProductList.first.returnId ?? '',
             ));
 
-            printData("afet update check list ${list}");
-
-            Navigator.pop(event.context); // Closes dialog
-            Navigator.pop(event.context); // Closes product detail page
             Navigator.pushReplacementNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {
               'list': list, //state.returnProductList,
               AppStrings.isUpdateParamString: false, 'status': state.isFromPending,
             });
-          } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
+          } else if (resModel.status == AppConstants.code_403) {
             emit(state.copyWith(isShimmer: false));
-          }
-        } catch (e) {}
-      }
-      else if (event is _createReturnEvent) {
-        emit(state.copyWith(isShimmer: true));
-        try {
-          List<req.ReturnProduct> list = [];
-          for (int i = 0; i < state.returnProductList.length; i++) {
-            list.add(req.ReturnProduct(totalRefund: state.returnProductList[i].totalRefund, proofImages: state.returnProductList[i].proofImages,
-                notes: state.returnProductList[i].notes, productName: state.returnProductList[i].productName,
-                productImage: state.returnProductList[i].productImg, barcode: state.returnProductList[i].barcode,
-                totalUnits: state.returnProductList[i].totalUnits, isApproved: state.returnProductList[i].isApproved,
-                reasonToReturn: state.returnProductList[i].reasonToReturn, supplierId: event.supplierId,));
-          }
-          req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(applicationName: AppStrings.appName, clientId: preferencesHelper.getUserId(),
-              returnProducts: list, subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null, supplierId: '', isDraft: true,);
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.createReturnUrl,
-            data: reqModel.toJson(),
-          );
-          CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
-          if (resModel.status == AppConstants.code_201) {
-            List<ReturnProduct> list = [];
-            if (resModel.data!.first.returnproducts != null) {
-              List<Returnproduct> tempList = [];
-              tempList.add(resModel.data!.first.returnproducts!.first);
 
-              printData("tempListdate ${tempList}");
-
-              for (var i in tempList) {
-                list.add(ReturnProduct(
-                  returnId: i.returnId,
-                  supplierName: i.supplierName,
-                  totalUnits: i.totalUnits,
-                  reasonToReturn: i.reasonToReturn,
-                  barcode: i.barcode,
-                  notes: i.notes,
-                  proofImages: i.proofImages ?? [],
-                  productName: i.productName,
-                  productImg: i.productImage,
-                  supplierId: i.supplierId,
-                  returnProductId: i.id
-                ));
-              }
-            }
-            emit(state.copyWith(returnProductList: list, isShimmer: false, returnId: resModel.data!.first.id.toString()));
-            printData("check here to go");
-            Navigator.pushReplacementNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {
-              'list': state.returnProductList,
-              AppStrings.isUpdateParamString: false,
-              'status': state.isFromPending,
-
-            });
+            await showDialog(
+              context: event.context,
+              builder: (_) => CallAgentDialog(
+                phoneNumber: resModel.agentPhoneNumber ?? '',
+                message: res[AppStrings.messageString],
+                language: state.language,
+              ),
+            );
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context),
+              type: SnackBarType.failure,
+            );
             emit(state.copyWith(isShimmer: false));
           }
         } catch (e) {}
       }
     });
+  }
+}
+
+class CallAgentDialog extends StatelessWidget {
+  final String phoneNumber;
+  final String message;
+  final String language;
+
+  const CallAgentDialog({Key? key, required this.phoneNumber, required this.message, required this.language}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: language == 'en' ? TextDirection.ltr : TextDirection.rtl,
+      child: AlertDialog(
+        contentPadding: const EdgeInsets.all(20.0),
+        surfaceTintColor: AppColors.whiteColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        content: Text(
+          AppStrings.getLocalizedStrings(message, context),
+          style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.smallFont),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: () async {
+                  final Uri callUri = Uri(scheme: 'tel', path: phoneNumber);
+
+                  if (await canLaunchUrl(callUri)) {
+                    await launchUrl(callUri);
+                  }
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(5.0)),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.call,
+                        color: AppColors.whiteColor,
+                        size: AppConstants.smallFont,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        AppLocalizations.of(context)!.call_the_agent,
+                        style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.smallFont,
+                          color: AppColors.whiteColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

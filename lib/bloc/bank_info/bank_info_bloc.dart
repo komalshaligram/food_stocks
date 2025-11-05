@@ -20,26 +20,23 @@ part 'bank_info_event.dart';
 part 'bank_info_state.dart';
 part 'bank_info_bloc.freezed.dart';
 
-
 class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
   TermsConditionReqModel termsConditionReqModel = const TermsConditionReqModel();
   BankInfoBloc() : super(BankInfoState.initial()) {
     on<BankInfoEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _selectBankEvent) {
         emit(state.copyWith(bankName: event.bankName));
-      }
-      else if (event is _getBankNameEvent) {
+      } else if (event is _getBankNameEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
-          final res = await DioClient(event.context).get(
-              path: AppUrlEndPoints.getBankDetailUrl);
+          final res = await DioClient(event.context).get(path: AppUrlEndPoints.getBankDetailUrl);
           BankDetailModel response = BankDetailModel.fromJson(res);
-        
+
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
-              isShimmering: false, bankList: response.data?.bankDetail ?? [],
+              isShimmering: false,
+              bankList: response.data?.bankDetail ?? [],
               bankName: response.data?.bankDetail?.first.bankName ?? '',
             ));
           } else {
@@ -50,12 +47,9 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
-      }
-      else if (event is _getTermsConditionModelEvent) {
+      } else if (event is _getTermsConditionModelEvent) {
         termsConditionReqModel = event.termsConditionReqModel;
-      }
-      else if (event is _termsConditionApiEvent) {
-     
+      } else if (event is _termsConditionApiEvent) {
         termsConditionReqModel = TermsConditionReqModel(
             id: preferencesHelper.getUserId(),
             businessTypeId: termsConditionReqModel.businessTypeId,
@@ -71,99 +65,76 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
             guarantee2IsraelId: termsConditionReqModel.guarantee2IsraelId,
             guarantee2Address: termsConditionReqModel.guarantee2Address,
             guarantee2PhoneNumber: termsConditionReqModel.guarantee2PhoneNumber,
-            bankId: state.bankList
-                .firstWhere((element) => element.bankName == state.bankName)
-                .id,
+            bankId: state.bankList.firstWhere((element) => element.bankName == state.bankName).id,
             accountNumber: state.accountNumberController.text.trim(),
             branchNumber: state.branchController.text.trim(),
-            paymentType: AppStrings.wallet
-
-        );
+            paymentType: AppStrings.wallet);
         Map<String, dynamic> req = termsConditionReqModel.toJson();
         req.removeWhere((key, value) {
-          if (value != null) {
-            printData("[$key] = $value");
-          }
+          if (value != null) {}
           return value == null;
         });
         try {
-          emit(state.copyWith(isApiShimmering: true,));
-          final res =
-          await DioClient(event.context).uploadFileProgressWithFormData(
+          emit(state.copyWith(
+            isApiShimmering: true,
+          ));
+          final res = await DioClient(event.context).uploadFileProgressWithFormData(
             path: AppUrlEndPoints.termsConditionUrl,
             formData: FormData.fromMap(
               {
-                AppStrings.userIdString : preferencesHelper.getUserId(),
-                AppStrings.businessTypeIdString : termsConditionReqModel.businessTypeId,
-                AppStrings.owner1FullNameString : termsConditionReqModel.owner1FullName,
-                AppStrings.owner1IsraelIdString : termsConditionReqModel.owner1IsraelId,
-                AppStrings.owner2FullNameString : termsConditionReqModel.owner2FullName,
-                AppStrings.owner2IsraelIdString : termsConditionReqModel.owner2IsraelId,
-                AppStrings.guarantee1FullNameString : termsConditionReqModel.guarantee1FullName,
-                AppStrings.guarantee1IsraelIdString : termsConditionReqModel.guarantee1IsraelId,
-                AppStrings.guarantee1AddressString : termsConditionReqModel.guarantee1Address,
-                AppStrings.guarantee1PhoneNumberString : termsConditionReqModel.guarantee1PhoneNumber,
-                AppStrings.guarantee2FullNameString : termsConditionReqModel.guarantee2FullName,
-                AppStrings.guarantee2IsraelIdString : termsConditionReqModel.guarantee2IsraelId,
-                AppStrings.guarantee2AddressString : termsConditionReqModel.guarantee2Address,
-                AppStrings.guarantee2PhoneNumberString : termsConditionReqModel.guarantee2PhoneNumber,
-                AppStrings.bankIdString : termsConditionReqModel.bankId,
-                AppStrings.branchNumberString : termsConditionReqModel.branchNumber,
-                AppStrings.accountNumberString : termsConditionReqModel.accountNumber,
-                AppStrings.paymentType : termsConditionReqModel.paymentType
+                AppStrings.userIdString: preferencesHelper.getUserId(),
+                AppStrings.businessTypeIdString: termsConditionReqModel.businessTypeId,
+                AppStrings.owner1FullNameString: termsConditionReqModel.owner1FullName,
+                AppStrings.owner1IsraelIdString: termsConditionReqModel.owner1IsraelId,
+                AppStrings.owner2FullNameString: termsConditionReqModel.owner2FullName,
+                AppStrings.owner2IsraelIdString: termsConditionReqModel.owner2IsraelId,
+                AppStrings.guarantee1FullNameString: termsConditionReqModel.guarantee1FullName,
+                AppStrings.guarantee1IsraelIdString: termsConditionReqModel.guarantee1IsraelId,
+                AppStrings.guarantee1AddressString: termsConditionReqModel.guarantee1Address,
+                AppStrings.guarantee1PhoneNumberString: termsConditionReqModel.guarantee1PhoneNumber,
+                AppStrings.guarantee2FullNameString: termsConditionReqModel.guarantee2FullName,
+                AppStrings.guarantee2IsraelIdString: termsConditionReqModel.guarantee2IsraelId,
+                AppStrings.guarantee2AddressString: termsConditionReqModel.guarantee2Address,
+                AppStrings.guarantee2PhoneNumberString: termsConditionReqModel.guarantee2PhoneNumber,
+                AppStrings.bankIdString: termsConditionReqModel.bankId,
+                AppStrings.branchNumberString: termsConditionReqModel.branchNumber,
+                AppStrings.accountNumberString: termsConditionReqModel.accountNumber,
+                AppStrings.paymentType: termsConditionReqModel.paymentType
               },
             ),
           );
 
-
-          TermsConditionResModel response =
-          TermsConditionResModel.fromJson(res);
-          if(response.status == AppConstants.code_200){
-            emit(state.copyWith(isApiShimmering: false,));
-            Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name,
-                arguments: {
-                  AppStrings.privacyPolicyPdfString : response.data ?? '',
-                  AppStrings.termsConditionParamString :termsConditionReqModel
-                }
-            );
-          }else{
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message??'',
-                    event.context),
-                type: SnackBarType.failure);
-            emit(state.copyWith(isApiShimmering: false,));
+          TermsConditionResModel response = TermsConditionResModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            emit(state.copyWith(
+              isApiShimmering: false,
+            ));
+            Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name, arguments: {AppStrings.privacyPolicyPdfString: response.data ?? '', AppStrings.termsConditionParamString: termsConditionReqModel});
+          } else {
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message ?? '', event.context), type: SnackBarType.failure);
+            emit(state.copyWith(
+              isApiShimmering: false,
+            ));
           }
         } on ServerException {
-          emit(state.copyWith(isApiShimmering: false,));
+          emit(state.copyWith(
+            isApiShimmering: false,
+          ));
+        } catch (e) {
+          CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
+          emit(state.copyWith(
+            isApiShimmering: false,
+          ));
         }
-        catch(e){
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: e.toString(),
-              type: SnackBarType.failure);
-          emit(state.copyWith(isApiShimmering: false,));
-        }
-      }
-     else if(event is _getArgumentEvent){
-        emit(state.copyWith(isPaymentFail: event.isPaymentFail,isUpdate: event.isUpdate));
-      }
-      else if(event is _addBankInfoEvent){
+      } else if (event is _getArgumentEvent) {
+        emit(state.copyWith(isPaymentFail: event.isPaymentFail, isUpdate: event.isUpdate));
+      } else if (event is _addBankInfoEvent) {
         emit(state.copyWith(isApiShimmering: true));
-        try{
-          BankInfoReqModel reqMap = BankInfoReqModel(
-            branchNumber: state.branchController.text.toString().trim(),
-            bankId: state.bankList
-                .firstWhere((element) => element.bankName == state.bankName)
-                .id,
-            accountNumber: state.accountNumberController.text.toString().trim(),
-            clientId: preferencesHelper.getUserId()
-          );
+        try {
+          BankInfoReqModel reqMap = BankInfoReqModel(branchNumber: state.branchController.text.toString().trim(), bankId: state.bankList.firstWhere((element) => element.bankName == state.bankName).id, accountNumber: state.accountNumberController.text.toString().trim(), clientId: preferencesHelper.getUserId());
 
           final res = await DioClient(event.context).put(
-            path:AppUrlEndPoints.addBankInfo,
+            path: AppUrlEndPoints.addBankInfo,
             data: reqMap.toJson(),
           );
 
@@ -171,22 +142,14 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
             preferencesHelper.setPaymentMethod(method: AppStrings.wallet);
             Navigator.pop(event.context);
             emit(state.copyWith(isApiShimmering: false));
-          }
-          else {
+          } else {
             emit(state.copyWith(isApiShimmering: false));
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    res['message'].toLocalization(),
-                    event.context),
-                type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res['message'].toLocalization(), event.context), type: SnackBarType.failure);
           }
-        }catch(e){
+        } catch (e) {
           emit(state.copyWith(isApiShimmering: false));
-          printData(e.toString());
         }
       }
-    }
-    );
+    });
   }
 }

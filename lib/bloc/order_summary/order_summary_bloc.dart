@@ -28,7 +28,6 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
   OrderSummaryBloc() : super(OrderSummaryState.initial()) {
     on<OrderSummaryEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      printData('cart id =  ${preferencesHelper.getCartId()}');
 
       if (event is _getDataEvent) {
         emit(state.copyWith(cartItemList: event.cartItemList, language: preferencesHelper.getAppLanguage()));
@@ -41,7 +40,11 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(orderSummaryList: response, tempList: response.data?.data ?? []));
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.failure,
+            );
           }
         } on ServerException {}
       }
@@ -55,7 +58,6 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
         });
 
         // productReqMap.add(Product(saleId: state.cartItemList.data?.data?[state.index].id, productId: state.cartItemList.data?.data?[state.index].productDetails?.id, quantity: int.parse(state.cartItemList.data?.data![state.index].totalQuantity.toString() ?? '0'), supplierId: state.cartItemList.data?.data?[state.index].suppliers?.first.id));
-        printData("check req ${productReqMap.toString()}");
         List<CartProductDataResModel> tempList = [];
         tempList = [...state.tempList];
         tempList[state.index] = tempList[state.index].copyWith(isProcess: true);
@@ -100,6 +102,8 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
               type: SnackBarType.failure,
             );
             emit(state.copyWith(isLoading: false, tempList: tempList));
+          } else if (response.status == AppConstants.code_405) {
+            emit(state.copyWith(isLoading: false, isOrderPending: true, isPaymentFail: false));
           } else {
             tempList[state.index] = tempList[state.index].copyWith(isProcess: false);
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
@@ -122,7 +126,6 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           tempList[event.index] = tempList[event.index].copyWith(isProcess: true);
 
           emit(state.copyWith(tempList: tempList, showPopUp: false));
-          printData("check id ${event.id}");
           final res = await DioClient(event.context).get(
             path: '${AppUrlEndPoints.getSupplierPaymentTypesUrl}${event.id}',
           );
@@ -137,6 +140,8 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
           }
         } on ServerException {}
+      } else if (event is _refreshEvent) {
+        emit(state.copyWith(isOrderPending: false, isPaymentFail: false, updatePaymentMethod: false));
       }
     });
   }

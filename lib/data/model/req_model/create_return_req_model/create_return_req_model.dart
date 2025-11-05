@@ -12,6 +12,7 @@ class CreateReturnReqModel with _$CreateReturnReqModel {
     String? clientId,
     String? supplierId,
     bool? isDraft,
+    String? orderId,
     required dynamic subUserId,
   }) = _CreateReturnReqModel;
 

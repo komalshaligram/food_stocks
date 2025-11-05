@@ -143,7 +143,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
             }
           } catch (e) {
-            printData('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         } else {
@@ -217,7 +216,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               isLoading: false,
             ));
           } else {
-            printData(response.message!.toLocalization());
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
             emit(state.copyWith(
               isLoading: false,

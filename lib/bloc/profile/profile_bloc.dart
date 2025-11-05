@@ -89,7 +89,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               emit(state.copyWith());
             }
           } else {
-            printData('${res.message}');
           }
         } on ServerException {
           emit(state.copyWith());
@@ -196,14 +195,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         Map<String, dynamic>? clientDetail = updatedProfileModel.clientDetail?.toJson();
         clientDetail?.removeWhere((key, value) {
           if (value != null) {
-            printData("[$key] = $value");
           }
           return value == null;
         });
         req[AppStrings.clientDetailString] = clientDetail;
         req.removeWhere((key, value) {
           if (value != null) {
-            printData("[$key] = $value");
           }
           return value == null;
         });
@@ -262,14 +259,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           Map<String, dynamic>? clientDetail = updatedProfileModel.clientDetail?.toJson();
           clientDetail?.removeWhere((key, value) {
             if (value != null) {
-              printData("[$key] = $value");
             }
             return value == null;
           });
           req[AppStrings.clientDetailString] = clientDetail;
           req.removeWhere((key, value) {
             if (value != null) {
-              printData("[$key] = $value");
             }
             return value == null;
           });

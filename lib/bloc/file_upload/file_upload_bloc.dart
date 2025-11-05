@@ -73,7 +73,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                       isForm: false,
                       // isDownloadable: true,
                       name: response.data?.clientFiles?[i].fileName));
-                  printData('fileList[$i] = ${filesList[i].name}');
                 }
                 emit(state.copyWith(formsAndFilesList: filesList, isLoading: false, isShimmering: false));
                 if (state.isUpdate) {
@@ -100,7 +99,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                           } else if (newModel[AppStrings.formsString] != '' && newModel[AppStrings.formsString] != null && (newModel[AppStrings.formsString].containsKey(formsAndFilesList[i].id) ?? false)) {
                             formsAndFilesList[i] = formsAndFilesList[i].copyWith(url: newModel[AppStrings.formsString][formsAndFilesList[i].id]);
                           }
-                          printData('url(${formsAndFilesList[i].id}) = ${formsAndFilesList[i].url}');
                         }
 
                         emit(state.copyWith(formsAndFilesList: formsAndFilesList, isShimmering: false));
@@ -144,7 +142,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   isForm: false,
                   // isDownloadable: true,
                   name: response.data?.clientFiles?[i].fileName));
-              printData('fileList[$i] = ${filesList[i].name}');
             }
             emit(state.copyWith(formsAndFilesList: filesList, isLoading: false));
           } else {
@@ -372,7 +369,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           Directory? dir;
           if (defaultTargetPlatform == TargetPlatform.android) {
             dir = Directory('/storage/emulated/0/Documents');
-            printData('dir = ${await dir.stat()}');
           } else {
             dir = await getApplicationDocumentsDirectory();
           }
@@ -433,7 +429,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           }
         } catch (e) {
           emit(state.copyWith(isApiLoading: false));
-          printData(e.toString());
         }
       }
     });

@@ -30,8 +30,6 @@ class CreateProductReturnListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
 
-    printData("args11 ${args}");
-
     return BlocProvider(
       create: (context) => CreateReturnBloc()..add(CreateReturnEvent.getReturnListEvent(product: args ?? {}, context: context)),
       child: const CreateProductReturnListWidget(),
@@ -45,7 +43,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<CreateReturnBloc>();
-   // Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+    // Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocBuilder<CreateReturnBloc, CreateReturnState>(
       builder: (context, state) {
         return PopScope(
@@ -73,7 +71,9 @@ class CreateProductReturnListWidget extends StatelessWidget {
                   trailingWidget: state.returnProductList.isNotEmpty
                       ? InkWell(
                           onTap: () {
-                            deleteProductDialog(context: context,);
+                            deleteProductDialog(
+                              context: context,
+                            );
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),

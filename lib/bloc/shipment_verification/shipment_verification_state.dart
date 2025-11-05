@@ -1,21 +1,20 @@
 part of 'shipment_verification_bloc.dart';
 
 @freezed
-class ShipmentVerificationState with _$ShipmentVerificationState{
-
-   factory ShipmentVerificationState({
+class ShipmentVerificationState with _$ShipmentVerificationState {
+  factory ShipmentVerificationState({
     required bool isSignaturePadActive,
-     required bool isLoading,
-     required bool isDelete,
-     required TextEditingController surfacesController,
-}) = _ShipmentVerificationState;
+    required bool isDriverSignaturePadActive,
+    required bool isLoading,
+    required bool isDelete,
+    required TextEditingController surfacesController,
+  }) = _ShipmentVerificationState;
 
-  factory ShipmentVerificationState.initial()=>  ShipmentVerificationState(
- isSignaturePadActive: true,
-    isLoading: false,
-    isDelete: false,
-    surfacesController: TextEditingController()
-
-  );
-
+  factory ShipmentVerificationState.initial() => ShipmentVerificationState(
+        isSignaturePadActive: true,
+        isDriverSignaturePadActive: true,
+        isLoading: false,
+        isDelete: false,
+        surfacesController: TextEditingController(),
+      );
 }

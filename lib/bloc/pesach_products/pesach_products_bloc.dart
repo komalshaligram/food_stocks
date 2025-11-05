@@ -133,55 +133,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
             }
             productStockList[1].clear();
             productStockList[1].addAll(stockList);
-            // Step 1: Clone productList and add new products
-            // List<PesachData> productList = List.from(state.productList, growable: true);
-            // productList.addAll(response.data ?? []);
-            //
-            // // Step 2: Clone productStockList and prepare new stock entries
-            // List<List<ProductStockModel>> productStockList = List.from(state.productStockList, growable: true);
-            // List<ProductStockModel> stockList = [];
-            //
-            // printData("i am here10");
-            // // Map product response into ProductStockModel
-            // for (var product in response.data ?? []) {
-            //   stockList.add(ProductStockModel(
-            //     maxQty: (product.sale?.isSale ?? false) ? int.tryParse(product.sale?.saleMaxQuantity.toString() ?? '0') ?? 0 : 0,
-            //     productId: product.id ?? '',
-            //     stock: product.productStock.toString(),
-            //     quantity: cartMap[product.id ?? ''] ?? 0, // initially set quantity to 0
-            //   ));
-            // }
-            //
-            // productStockList[1].addAll(stockList);
-            // printData("i am here11 ${productStockList[1]}");
-
-            // try {
-            //   // Step 3: Fetch Cart and update quantities if matched
-            //   final cartRes = await DioClient(event.context).post(
-            //     '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-            //   );
-            //
-            //   GetAllCartResModel cartResponse = GetAllCartResModel.fromJson(cartRes);
-            //
-            //   if (cartResponse.status == AppConstants.code_200) {
-            //     var cartItems = cartResponse.data?.data ?? [];
-            //
-            //     // Update product quantities if they exist in cart
-            //     productStockList[1] = productStockList[1].map((stockItem) {
-            //       var matchingItems = cartItems.where((cartProduct) => cartProduct.id == stockItem.productId);
-            //
-            //       if (matchingItems.isNotEmpty) {
-            //         var cartMatch = matchingItems.first;
-            //         return stockItem.copyWith(quantity: cartMatch.totalQuantity ?? 0);
-            //       } else {
-            //         // Explicitly set quantity to 0 if product not in cart
-            //         return stockItem.copyWith(quantity: 0);
-            //       }
-            //     }).toList();
-            //   }
-            // } on ServerException {
-            //   // Ignore cart failure
-            // }
 
             // Step 4: Emit updated state
             emit(state.copyWith(
@@ -499,7 +450,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
           } on ServerException {
             emit(state.copyWith(isLoading: false));
           } catch (e) {
-            debugPrint('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         } else {
@@ -508,9 +458,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
             insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(products: [insert.Product(productId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productId, quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity, supplierId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds, saleId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId.isEmpty ? null : state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId, note: state.productStockList[state.productListIndex][state.productStockUpdateIndex].note.isEmpty ? null : state.productStockList[state.productListIndex][state.productStockUpdateIndex].note)]);
             Map<String, dynamic> req = insertCartReqModel.toJson();
             req.removeWhere((key, value) {
-              if (value != null) {
-                debugPrint("[$key] = $value");
-              }
+              if (value != null) {}
               return value == null;
             });
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -686,8 +634,8 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
                           isSale: supplier.sale?.isSale,
                           saleMinQuantity: supplier.sale?.saleMinQuantity,
                           saleMaxQuantity: supplier.sale?.saleMaxQuantity,
-              isMixedSale: supplier.sale?.isMixedSale,
-              sameSaleProducts: supplier.sale?.sameSaleProducts,
+                          isMixedSale: supplier.sale?.isMixedSale,
+                          sameSaleProducts: supplier.sale?.sameSaleProducts,
                         ))
                     .toList() ??
                 []);
@@ -1026,7 +974,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
             } on ServerException {
               //  emit(state.copyWith(isLoading: false));
             } catch (e) {
-              printData('err = $e');
               //  emit(state.copyWith(isLoading: false));
             }
           } else {
@@ -1045,9 +992,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
               );
               Map<String, dynamic> req = insertCartReqModel.toJson();
               req.removeWhere((key, value) {
-                if (value != null) {
-                  printData("[$key] = $value");
-                }
+                if (value != null) {}
                 return value == null;
               });
               SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -1084,18 +1029,14 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
             } on ServerException {
-              printData('url1 = ');
               // emit(state.copyWith(isLoading: false));
             } catch (e) {
-              printData('err = $e');
               //  emit(state.copyWith(isLoading: false));
             }
           }
         }
         //
-      }
-
-      else if (event is _getCartCountNoEvent) {
+      } else if (event is _getCartCountNoEvent) {
         try {
           final res = await DioClient(event.context).post(
             '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',

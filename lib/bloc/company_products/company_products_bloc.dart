@@ -150,8 +150,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
               isProgress: false,
               bottleDeposit: preferences.getBottleTax(),
             ));
-            printData('totalFilteredCount____${response.metaData?.totalFilteredCount}');
-            printData('productListlength____${state.productList.length}');
+
             emit(
               state.copyWith(
                 isBottomOfProducts: state.productList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false,
@@ -243,7 +242,6 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
                       return;
                     }
                   });
-                  printData('1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
               } on ServerException {}
               if (response.product!.isNotEmpty) {
@@ -352,9 +350,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
           }
         } on ServerException {
           Navigator.pop(event.context);
-        } catch (e) {
-          printData('bs error = $e');
-        }
+        } catch (e) {}
       } else if (event is _increaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -482,7 +478,6 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
             Navigator.pop(event.context);
           } catch (e) {
             Navigator.pop(event.context);
-            printData('err = $e');
           }
         } else {
           try {
@@ -490,9 +485,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
             insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(products: [insert.Product(productId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productId, quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity, supplierId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds, saleId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId.isEmpty ? null : state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId, note: state.productStockList[state.productListIndex][state.productStockUpdateIndex].note.isEmpty ? null : state.productStockList[state.productListIndex][state.productStockUpdateIndex].note)]);
             Map<String, dynamic> req = insertCartReqModel.toJson();
             req.removeWhere((key, value) {
-              if (value != null) {
-                printData("[$key] = $value");
-              }
+              if (value != null) {}
               return value == null;
             });
 
@@ -822,9 +815,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
                 Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
               }
             }
-          } catch (e) {
-            printData('catch____$e');
-          }
+          } catch (e) {}
         }
       } else if (event is _increaseListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
@@ -1018,7 +1009,6 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
             } on ServerException {
               // emit(state.copyWith(isLoading: false));
             } catch (e) {
-              printData('err = $e');
               //   emit(state.copyWith(isLoading: false));
             }
           } else {
@@ -1037,9 +1027,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
               );
               Map<String, dynamic> req = insertCartReqModel.toJson();
               req.removeWhere((key, value) {
-                if (value != null) {
-                  printData("[$key] = $value");
-                }
+                if (value != null) {}
                 return value == null;
               });
               SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -1076,17 +1064,14 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
             } on ServerException {
-              printData('url1 = ');
               // emit(state.copyWith(isLoading: false));
             } catch (e) {
-              printData('err = $e');
               //  emit(state.copyWith(isLoading: false));
             }
           }
         }
         //
-      }
-      else if (event is _getCartCountNoEvent) {
+      } else if (event is _getCartCountNoEvent) {
         try {
           final res = await DioClient(event.context).post(
             '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',

@@ -22,8 +22,7 @@ part 'company_bloc.freezed.dart';
 class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
   CompanyBloc() : super(CompanyState.initial()) {
     on<CompanyEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getCompaniesListEvent) {
         emit(state.copyWith(language: preferencesHelper.getAppLanguage()));
         if (state.isLoadMore) {
@@ -39,56 +38,29 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
           return;
         }
         try {
-          emit(state.copyWith(
-              isShimmering: state.pageNum == 0 ? true : false,
-              isProgress : true,
-              isLoadMore: state.pageNum == 0 ? false : true));
-          final res = await DioClient(event.context).post(
-              AppUrlEndPoints.getCompaniesUrl,
-              data: CompanyReqModel(
-                      pageNum: state.pageNum + 1,
-                      pageLimit: AppConstants.supplierPageLimit,
-                      search: state.search)
-                  .toJson());
+          emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isProgress: true, isLoadMore: state.pageNum == 0 ? false : true));
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getCompaniesUrl, data: CompanyReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.supplierPageLimit, search: state.search).toJson());
           CompanyResModel response = CompanyResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            List<Brand> companiesList =
-                state.companiesList.toList(growable: true);
+            List<Brand> companiesList = state.companiesList.toList(growable: true);
             companiesList.addAll(response.data?.brandList ?? []);
-            emit(state.copyWith(
-                companiesList: companiesList,
-                pageNum: state.pageNum + 1,
-                isLoadMore: false,
-                isProgress : false,
-                isBottomOfCompanies: state.companiesList.length ==
-                    (response.data?.totalRecords ?? 0)
-                    ? true
-                    : false,
-                isShimmering: false));
+            emit(state.copyWith(companiesList: companiesList, pageNum: state.pageNum + 1, isLoadMore: false, isProgress: false, isBottomOfCompanies: state.companiesList.length == (response.data?.totalRecords ?? 0) ? true : false, isShimmering: false));
           } else {
-            emit(state.copyWith(isLoadMore: false, isProgress : false));
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.success);
+            emit(state.copyWith(isLoadMore: false, isProgress: false));
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
           }
         } on ServerException {
-          emit(state.copyWith(isLoadMore: false,isProgress: false));
+          emit(state.copyWith(isLoadMore: false, isProgress: false));
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
       } else if (event is _setSearchEvent) {
         emit(state.copyWith(search: event.search));
       } else if (event is _refreshListEvent) {
-        emit(state.copyWith(
-            pageNum: 0, companiesList: [], isBottomOfCompanies: false,isProgress: false));
-        if(!state.isProgress){
+        emit(state.copyWith(pageNum: 0, companiesList: [], isBottomOfCompanies: false, isProgress: false));
+        if (!state.isProgress) {
           add(CompanyEvent.getCompaniesListEvent(context: event.context));
         }
-
       }
     });
   }

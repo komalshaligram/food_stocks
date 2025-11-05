@@ -100,14 +100,12 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
         emit(state.copyWith(isBottomOfProducts: false,isPop: true,pageNum: 0));
 
         try {
-          printData('clientId_____${preferences.getUserId()}');
           final res = await DioClient(event.context).post(
               AppUrlEndPoints.verifyClientUrl,
               data: {AppStrings.clientIdString:preferences.getUserId()}
           );
           VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-          printData('verifyClient res_____$response');
-          printData('verifyClient url_____${AppUrlEndPoints.baseUrl}${AppUrlEndPoints.verifyClientUrl}');
+
           if (response.status == AppConstants.code_200) {
             if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
               Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
@@ -122,7 +120,6 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
           }
         }
         catch (e) {
-          printData('catch____$e');
         }
 
 

@@ -49,6 +49,8 @@ class OrderDatum with _$OrderDatum {
     Client? client,
     @JsonKey(name: "totalAmount")
     double? totalAmount,
+    @JsonKey(name: "hasReturnProducts")
+    bool? hasReturnProducts,
     @JsonKey(name: "totalWeight")
     double? totalWeight,
     @JsonKey(name: "surfaceWeight")
@@ -60,7 +62,8 @@ class OrderDatum with _$OrderDatum {
     double? comaxInvoicePrice,
     double? rivchitInvoicePrice,
     double? totalRefundAmount,
-
+    @JsonKey(name: "driverDeliveryDocumentsImages")
+    List<String>? driverDeliveryDocumentsImages,
 
   }) = _OrderDatum;
 
@@ -148,6 +151,8 @@ class Product with _$Product {
     int? unitQuantity,
     @JsonKey(name: "sku")
     String? sku,
+    @JsonKey(name: "barcode")
+    String? barcode,
     @JsonKey(name: "brand")
     String? brand,
     @JsonKey(name: "scale")

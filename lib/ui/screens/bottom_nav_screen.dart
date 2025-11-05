@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ class BottomNavScreen extends StatelessWidget {
       child: BottomNavScreenWidget(
         basketScreen: args?[AppStrings.isBasketScreenString] ?? '',
         storeScreen: args?[AppStrings.pushNavigationString] ?? '',
+        profileScreen: args?[AppStrings.pushNavigationString] ?? '',
       ),
     );
   }
@@ -73,113 +75,119 @@ class BottomNavScreenWidget extends StatelessWidget {
                 return Future.value(false);
               }
             },
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              backgroundColor: AppColors.pageColor,
-              bottomNavigationBar: Container(
-                decoration: BoxDecoration(color: Colors.transparent, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)]),
-                child: CurvedNavigationBar(
-                  // mainColor: AppColors.mainColor,
-                  // notificationColor: AppColors.notificationColor,
-                  // screenWidth: getScreenWidth(context),
-                  key: _bottomNavigationKey,
-                  index: state.index == 4 && !state.isSubUserSeeWallet ? (state.index - 1) : state.index,
-                  height: 65.0,
-                  // cartCount: state.cartCount,
-                  // isRTL: context.rtl,
-                  items: state.isSubUserSeeWallet
-                      ? [
-                          navItem(
-                            pos: 0,
-                            img: AppImagePath.home,
-                            isRTL: context.rtl,
-                            state: state,
-                          ),
-                          navItem(
-                            pos: 1,
-                            img: AppImagePath.store,
-                            isRTL: context.rtl,
-                            state: state,
-                          ),
-                          navItem(
-                            pos: 2,
-                            img: AppImagePath.cart,
-                            isRTL: context.rtl,
-                            state: state,
-                            isCart: true,
-                          ),
-                          navItem(
-                            pos: 3,
-                            img: AppImagePath.wallet,
-                            isRTL: context.rtl,
-                            state: state,
-                          ),
-                          navItem(
-                            pos: 4,
-                            img: AppImagePath.profile,
-                            isRTL: context.rtl,
-                            state: state,
-                          ),
-                        ]
-                      : [
-                          navItem(
-                            pos: 0,
-                            img: AppImagePath.home,
-                            isRTL: context.rtl,
-                            state: state,
-                          ),
-                          navItem(
-                            pos: 1,
-                            img: AppImagePath.store,
-                            isRTL: context.rtl,
-                            state: state,
-                          ),
-                          navItem(
-                            pos: 2,
-                            img: AppImagePath.cart,
-                            isRTL: context.rtl,
-                            state: state,
-                            isCart: true,
-                          ),
-                          navItem(
-                            pos: 3,
-                            img: AppImagePath.profile,
-                            isRTL: context.rtl,
-                            state: state,
-                          ),
+            child: Container(
+              color: AppColors.pageColor,
+              child: SafeArea(
+                bottom: Platform.isAndroid,
+                child: Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  backgroundColor: AppColors.pageColor,
+                  bottomNavigationBar: Container(
+                    decoration: BoxDecoration(color: Colors.transparent, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)]),
+                    child: CurvedNavigationBar(
+                      // mainColor: AppColors.mainColor,
+                      // notificationColor: AppColors.notificationColor,
+                      // screenWidth: getScreenWidth(context),
+                      key: _bottomNavigationKey,
+                      index: state.index == 4 && !state.isSubUserSeeWallet ? (state.index - 1) : state.index,
+                      height: 65.0,
+                      // cartCount: state.cartCount,
+                      // isRTL: context.rtl,
+                      items: state.isSubUserSeeWallet
+                          ? [
+                              navItem(
+                                pos: 0,
+                                img: AppImagePath.home,
+                                isRTL: context.rtl,
+                                state: state,
+                              ),
+                              navItem(
+                                pos: 1,
+                                img: AppImagePath.store,
+                                isRTL: context.rtl,
+                                state: state,
+                              ),
+                              navItem(
+                                pos: 2,
+                                img: AppImagePath.cart,
+                                isRTL: context.rtl,
+                                state: state,
+                                isCart: true,
+                              ),
+                              navItem(
+                                pos: 3,
+                                img: AppImagePath.wallet,
+                                isRTL: context.rtl,
+                                state: state,
+                              ),
+                              navItem(
+                                pos: 4,
+                                img: AppImagePath.profile,
+                                isRTL: context.rtl,
+                                state: state,
+                              ),
+                            ]
+                          : [
+                              navItem(
+                                pos: 0,
+                                img: AppImagePath.home,
+                                isRTL: context.rtl,
+                                state: state,
+                              ),
+                              navItem(
+                                pos: 1,
+                                img: AppImagePath.store,
+                                isRTL: context.rtl,
+                                state: state,
+                              ),
+                              navItem(
+                                pos: 2,
+                                img: AppImagePath.cart,
+                                isRTL: context.rtl,
+                                state: state,
+                                isCart: true,
+                              ),
+                              navItem(
+                                pos: 3,
+                                img: AppImagePath.profile,
+                                isRTL: context.rtl,
+                                state: state,
+                              ),
+                            ],
+                      color: AppColors.whiteColor,
+                      buttonBackgroundColor: AppColors.whiteColor,
+                      backgroundColor: Colors.transparent,
+                      animationCurve: Curves.decelerate,
+                      animationDuration: const Duration(milliseconds: 600),
+                      onTap: (index) async {
+                        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+                        if (preferencesHelper.getGuestUser()) {
+                          if (index == 1) {
+                            bloc.add(BottomNavEvent.changePage(index: index, context: context));
+                          } else {
+                            Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                          }
+                        } else {
+                          bloc.add(BottomNavEvent.changePage(index: index, context: context));
+                        }
+                      },
+                      letIndexChange: (index) {
+                        return true;
+                      },
+                    ),
+                  ),
+                  body: FocusDetector(
+                    onFocusGained: () {
+                      bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
+                      bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
+                    },
+                    child: SafeArea(
+                      child: Stack(
+                        children: [
+                          _pageContainers(screenHeight: getScreenHeight(context), screenWidth: getScreenWidth(context), state: state),
                         ],
-                  color: AppColors.whiteColor,
-                  buttonBackgroundColor: AppColors.whiteColor,
-                  backgroundColor: Colors.transparent,
-                  animationCurve: Curves.decelerate,
-                  animationDuration: const Duration(milliseconds: 600),
-                  onTap: (index) async {
-                    SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                    if (preferencesHelper.getGuestUser()) {
-                      if (index == 1) {
-                        bloc.add(BottomNavEvent.changePage(index: index, context: context));
-                      } else {
-                        Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                      }
-                    } else {
-                      bloc.add(BottomNavEvent.changePage(index: index, context: context));
-                    }
-                  },
-                  letIndexChange: (index) {
-                    return true;
-                  },
-                ),
-              ),
-              body: FocusDetector(
-                onFocusGained: () {
-                  bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
-                  bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
-                },
-                child: SafeArea(
-                  child: Stack(
-                    children: [
-                      _pageContainers(screenHeight: getScreenHeight(context), screenWidth: getScreenWidth(context), state: state),
-                    ],
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -198,13 +206,22 @@ class BottomNavScreenWidget extends StatelessWidget {
           index: state.index,
           children: state.isSubUserSeeWallet
               ? [
-                  HomeScreen(isSubCategory: 'false',),
+                  HomeScreen(
+                    isSubCategory: 'false',
+                  ),
                   const StoreScreen(),
                   const BasketScreen(),
                   const WalletScreen(),
                   const ProfileMenuScreen(),
                 ]
-              : [HomeScreen(isSubCategory: 'false', ), const StoreScreen(), const BasketScreen(), const ProfileMenuScreen()]),
+              : [
+                  HomeScreen(
+                    isSubCategory: 'false',
+                  ),
+                  const StoreScreen(),
+                  const BasketScreen(),
+                  const ProfileMenuScreen()
+                ]),
     );
   }
 

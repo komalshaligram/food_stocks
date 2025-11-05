@@ -52,7 +52,6 @@ class FileUploadScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<FileUploadBloc, FileUploadState>(
         builder: (context, state) {
-          printData('formsAndFilesList___${state.formsAndFilesList}');
           return WillPopScope(
             onWillPop: () async {
               SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());

@@ -242,21 +242,53 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                   )
                 : 0.width,
             // 3.height,
-            isSale!
-                ? Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '${AppLocalizations.of(context)!.minimumGrid}: ${minQuantity.toString()} / ${AppLocalizations.of(context)!.maximumGrid}: ${maxQuantity.toString()}',
-                        style: AppStyles.rkRegularTextStyle(
-                          color: AppColors.redColor,
-                          size: AppConstants.font_10,
-                        ),
-                      ),
-                    ],
-                  )
-                : const IgnorePointer(),
+            if (isSale! && minQuantity.toString() != '0' && maxQuantity.toString() != '100')
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${AppLocalizations.of(context)!.minGrid}: ${minQuantity.toString()} / ${AppLocalizations.of(context)!.maxGrid}: ${maxQuantity.toString()}',
+                    style: AppStyles.rkRegularTextStyle(
+                      color: AppColors.redColor,
+                      size: AppConstants.font_10,
+                    ),
+                  ),
+                ],
+              )
+            else if (isSale! && maxQuantity.toString() == '100' && minQuantity.toString() != '0')
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${AppLocalizations.of(context)!.minimumGrid}: ${minQuantity.toString()}',
+                    style: AppStyles.rkRegularTextStyle(
+                      color: AppColors.redColor,
+                      size: AppConstants.font_10,
+                    ),
+                  ),
+                ],
+              )
+            else if (isSale! && minQuantity.toString() == '0' && maxQuantity.toString() != '0' && maxQuantity.toString() != '100')
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${AppLocalizations.of(context)!.maximumGrid}: ${maxQuantity.toString()}',
+                    style: AppStyles.rkRegularTextStyle(
+                      color: AppColors.redColor,
+                      size: AppConstants.font_10,
+                    ),
+                  ),
+                ],
+              )
+            else if (isSale! && minQuantity.toString() == '0' && maxQuantity.toString() == '0')
+              const IgnorePointer()
+            else
+              const IgnorePointer(),
+
             isMixedSale!
                 ? Center(
                     child: Text(
@@ -315,7 +347,6 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-
               ],
             ),
             5.height,

@@ -46,6 +46,8 @@ class Cart with _$Cart {
     int? suppliers,
     @JsonKey(name: "isBottles")
     bool? isBottles,
+    @JsonKey(name: "draftReturnExists")
+    bool? draftReturnExists,
     @JsonKey(name: "bottleQuantities")
     int? bottleQuantities,
   }) = _Cart;

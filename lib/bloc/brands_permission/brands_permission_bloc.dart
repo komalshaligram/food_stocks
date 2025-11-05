@@ -24,7 +24,6 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
 
         try {
           emit(state.copyWith(isShimmering: true , subUserId: event.subUserId));
-          printData('subUserId____${event.subUserId}');
           final res = await DioClient(event.context).get(
               path: '${AppUrlEndPoints.getBrandPermissionUrl}${event.subUserId}');
           BrandPermissionResModel response = BrandPermissionResModel.fromJson(res);
@@ -111,7 +110,6 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
 
           updatePermissionReq.removeWhere((key, value) {
             if (value != null) {
-              printData("[$key] = $value");
             }
             return value == null;
           });

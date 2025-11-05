@@ -3,9 +3,7 @@ import 'dart:ui' as ui;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -14,7 +12,6 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../bloc/client_form_details/client_form_details_bloc.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
-import '../../data/model/res_model/bank_detail_model/bank_detail_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';

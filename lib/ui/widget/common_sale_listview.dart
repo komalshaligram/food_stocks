@@ -215,28 +215,83 @@ class CommonSaleListView extends StatelessWidget {
                       ],
                     ),
                     5.height,
-                    isFromSale!
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              minQuantity != '0' ?  Text(
-                                '${AppLocalizations.of(context)!.minimumList}: ${minQuantity.toString()}',
-                                style: AppStyles.rkRegularTextStyle(
-                                  color: AppColors.redColor,
-                                  size: AppConstants.font_14,
-                                ),
-                              ) : const IgnorePointer(),
-                              maxQuantity != '0' ?  Text(
-                                '${AppLocalizations.of(context)!.maximumList}: ${maxQuantity.toString()}',
-                                style: AppStyles.rkRegularTextStyle(
-                                  color: AppColors.redColor,
-                                  size: AppConstants.font_14,
-                                ),
-                              ): const IgnorePointer(),
-                            ],
+                    // if(isFromSale! && minQuantity != '0' || maxQuantity != '0')
+                    //      Column(
+                    //         crossAxisAlignment: CrossAxisAlignment.start,
+                    //         mainAxisAlignment: MainAxisAlignment.start,
+                    //         children: [
+                    //
+                    //             Text(
+                    //               '${AppLocalizations.of(context)!.minimumList}: ${minQuantity.toString()}',
+                    //               style: AppStyles.rkRegularTextStyle(
+                    //                 color: AppColors.redColor,
+                    //                 size: AppConstants.font_14,
+                    //               ),
+                    //             ),
+                    //           Text(
+                    //             '${AppLocalizations.of(context)!.maximumList}: ${maxQuantity.toString()}',
+                    //             style: AppStyles.rkRegularTextStyle(
+                    //               color: AppColors.redColor,
+                    //               size: AppConstants.font_14,
+                    //             ),
+                    //           )
+                    //
+                    //         ],
+                    //       )
+                    // else
+                    if (isFromSale! && minQuantity != '0' && maxQuantity != '100')
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${AppLocalizations.of(context)!.minimumList}: ${minQuantity.toString()}',
+                            style: AppStyles.rkRegularTextStyle(
+                              color: AppColors.redColor,
+                              size: AppConstants.font_14,
+                            ),
+                          ),
+                          Text(
+                            '${AppLocalizations.of(context)!.maximumList}: ${maxQuantity.toString()}',
+                            style: AppStyles.rkRegularTextStyle(
+                              color: AppColors.redColor,
+                              size: AppConstants.font_14,
+                            ),
                           )
-                        : const IgnorePointer(),
+                        ],
+                      )
+                    else if (isFromSale! && maxQuantity == '100' && minQuantity.toString() != '0')
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${AppLocalizations.of(context)!.minimumList}: ${minQuantity.toString()}',
+                            style: AppStyles.rkRegularTextStyle(
+                              color: AppColors.redColor,
+                              size: AppConstants.font_14,
+                            ),
+                          ),
+                        ],
+                      )
+                    else if (isFromSale! && minQuantity.toString() == '0' && maxQuantity.toString() != '0' && maxQuantity.toString() != '100')
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${AppLocalizations.of(context)!.maximumList}: ${maxQuantity.toString()}',
+                            style: AppStyles.rkRegularTextStyle(
+                              color: AppColors.redColor,
+                              size: AppConstants.font_14,
+                            ),
+                          ),
+                        ],
+                      )
+                    else if (isFromSale! && minQuantity.toString() == '0' && maxQuantity.toString() == '0')
+                      const IgnorePointer()
+                    else
+                      const IgnorePointer(),
                     // isMixedSale! ? 3.height : const IgnorePointer(),
                     isMixedSale!
                         ? Center(

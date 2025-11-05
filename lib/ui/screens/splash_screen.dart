@@ -50,7 +50,6 @@ class SplashScreenWidget extends StatelessWidget {
               prefs: await SharedPreferences.getInstance());
           getVersion(preferencesHelper);
 
-          printData('${preferencesHelper.getUserLoggedIn()}');
 
           if (preferencesHelper.getUserLoggedIn()) {
             Navigator.pushReplacementNamed(
