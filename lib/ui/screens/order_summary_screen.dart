@@ -22,6 +22,7 @@ import '../utils/constants/app_urls.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_order_content_widget.dart';
+import '../widget/common_shimmer_widget.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
 
 class OrderSummaryRoute {
@@ -35,7 +36,7 @@ class OrderSummaryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => OrderSummaryBloc()..add(OrderSummaryEvent.getDataEvent(context: context, cartItemList: args?[AppStrings.getCartListString])),
+      create: (context) => OrderSummaryBloc()..add(OrderSummaryEvent.getDataEvent(context: context, cartItemList: args?[AppStrings.getCartListString], totalAmount: args?[AppStrings.totalAmountString], backString: args?[AppStrings.isbackString])),
       child: const OrderSummaryScreenWidget(),
     );
   }
@@ -52,7 +53,6 @@ class OrderSummaryScreenWidget extends StatelessWidget {
         if (state.showPopUp) {
           paymentOptionPopup(state, context, bloc);
         } else if (state.isOrderPending) {
-          printData("check here pending");
           showDialog(
             context: context,
             builder: (context1) {
@@ -190,6 +190,10 @@ class OrderSummaryScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
         builder: (context, state) {
+          final refundAmount = state.orderSummaryList.data?.openRefundTotalAmount ?? 0.0;
+
+          final isHebrew = Localizations.localeOf(context).languageCode == 'he';
+
           return Stack(
             children: [
               Scaffold(
@@ -210,10 +214,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 8, right: 8, top: 3, bottom: 3),
                           decoration: BoxDecoration(color: AppColors.greyColor, borderRadius: const BorderRadius.all(Radius.circular(20))),
                           child: Text(
-                            '${AppLocalizations.of(context)!.total} :${formatNumber(
-                              value: vatCalculation(price: state.orderSummaryList.data?.cart?.first.totalAmount ?? 0, vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),
-                              local: AppStrings.hebrewLocal,
-                            )}',
+                            '${AppLocalizations.of(context)!.total} :${state.total}',
                             style: TextStyle(color: AppColors.whiteColor),
                           )),
                     ),
@@ -221,93 +222,146 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     title: AppLocalizations.of(context)!.order_summary,
                     iconData: Icons.arrow_back_ios_sharp,
                     onTap: () {
-                      Navigator.pop(context);
+                      if (state.backString == 'Basket') {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          RouteDefine.bottomNavScreen.name,
+                          arguments: {
+                            AppStrings.pushNavigationString: 'basketScreen',
+                          },
+                        );
+                      }
                     },
                   ),
                 ),
                 body: SafeArea(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       (state.tempList.length ?? 0) == 0
-                          ? const Expanded(child: OrderSummaryScreenShimmerWidget())
-                          : Expanded(
-                              child: AnimationLimiter(
-                                child: ListView.builder(
-                                  itemCount: state.tempList.length,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-                                  itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
-                                    duration: const Duration(seconds: 1),
-                                    position: index,
-                                    child: SlideAnimation(
-                                      child: FadeInAnimation(
-                                        child: orderListItem(
-                                          index: index,
-                                          context: context,
-                                          bloc: bloc,
-                                        ),
+                          ? const OrderSummaryScreenShimmerWidget()
+                          : AnimationLimiter(
+                              child: ListView.builder(
+                                itemCount: state.tempList.length,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+                                itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
+                                  duration: const Duration(seconds: 1),
+                                  position: index,
+                                  child: SlideAnimation(
+                                    child: FadeInAnimation(
+                                      child: orderListItem(
+                                        index: index,
+                                        context: context,
+                                        bloc: bloc,
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
+                      5.height,
+                      (state.tempList.length ?? 0) == 0
+                          ? refundShimmer()
+                          : Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 4, // space between texts
+                              children: [
+                                Text(
+                                  isHebrew ? '${AppLocalizations.of(context)!.refund_amount_3}'
+                                      ' ${refundAmount.abs().toStringAsFixed(2)}${'₪'}' : AppLocalizations.of(context)!.refund_amount_3,
+                                  style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_15,
+                                    color: AppColors.notificationColor,
+                                  ),
+                                ),
+                                Text(
+                                  isHebrew ? AppLocalizations.of(context)!.refund_amount_4 :
+                                  '${refundAmount.abs().toStringAsFixed(2)}${'₪'} ${AppLocalizations.of(context)!.refund_amount_4} ',
+                                  // '${AppLocalizations.of(context)!.refund_amount_3} ${formatNumber(
+                                  //    value: refundAmount.abs().toStringAsFixed(2), // use abs() to remove negative sign
+                                  //    local: AppStrings.hebrewLocal,
+                                  //  )}',
+                                  style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.font_15,
+                                    color: AppColors.notificationColor,
+                                  ),
+                                ),
+
+                              ],
+                            )
                     ],
                   ),
                 ),
               ),
-              if (state.isLoading)
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withOpacity(0.3),
-                    child: Center(
-                      child: Material(
-                        color: Colors.transparent,
-                        child: Container(
-                          padding: const EdgeInsets.all(5),
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: const [
-                              BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 4)),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                  height: 80,
-                                  width: 130,
-                                  child: Lottie.asset(
-                                    'assets/images/super_market.json',
-                                    width: 50,
-                                    height: 50,
-                                    fit: BoxFit.fill,
-                                  )),
-                              const SizedBox(height: 10),
-                              Text(
-                                AppLocalizations.of(context)!.basket_loader_text,
-                                style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(AppLocalizations.of(context)!.please_wait_text, style: TextStyle(fontSize: AppConstants.font_14, color: AppColors.greyColor)),
-                              const SizedBox(height: 8),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+              // if (state.isLoading)
+              //   Positioned.fill(
+              //     child: Container(
+              //       color: Colors.black.withOpacity(0.3),
+              //       child: Center(
+              //         child: Material(
+              //           color: Colors.transparent,
+              //           child: Container(
+              //             padding: const EdgeInsets.all(5),
+              //             width: 200,
+              //             decoration: BoxDecoration(
+              //               color: Colors.white,
+              //               borderRadius: BorderRadius.circular(8),
+              //               boxShadow: const [
+              //                 BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 4)),
+              //               ],
+              //             ),
+              //             child: Column(
+              //               mainAxisSize: MainAxisSize.min,
+              //               children: [
+              //                 SizedBox(
+              //                     height: 80,
+              //                     width: 130,
+              //                     child: Lottie.asset(
+              //                       'assets/images/super_market.json',
+              //                       width: 50,
+              //                       height: 50,
+              //                       fit: BoxFit.fill,
+              //                     )),
+              //                 const SizedBox(height: 10),
+              //                 Text(
+              //                   AppLocalizations.of(context)!.basket_loader_text,
+              //                   style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.bold),
+              //                 ),
+              //                 const SizedBox(height: 4),
+              //                 Text(AppLocalizations.of(context)!.please_wait_text, style: TextStyle(fontSize: AppConstants.font_14, color: AppColors.greyColor)),
+              //                 const SizedBox(height: 8),
+              //               ],
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
             ],
           );
         },
       ),
     );
   }
+
+  Widget refundShimmer() => CommonShimmerWidget(
+        child: Container(
+          margin: const EdgeInsets.all(AppConstants.padding_10),
+          padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
+          decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            boxShadow: [
+              BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+            ],
+            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          ),
+          child: Container(
+            height: 10,
+          ),
+        ),
+      );
 
   twoOptionPaymentDialog(BuildContext context, OrderSummaryState state, OrderSummaryBloc bloc, BuildContext context1) {
     return CustomOneButtonDialog(
@@ -559,12 +613,6 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                       color: AppColors.blackColor,
                     ),
                   ),
-                  // InkWell(
-                  //   onTap: () {
-                  //
-                  //   },
-                  //   child: Icon(Icons.info, color: AppColors.greyColor,),
-                  // ),
                 ],
               ),
               10.height,
@@ -599,7 +647,15 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     borderCoder: AppColors.lightBorderColor,
                     flexValue: 7,
                     title: AppLocalizations.of(context)!.total_order,
-                    value: formatNumber(value: vatCalculation(price: double.parse(state.tempList[index].totalAmount ?? '0'), vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2), local: AppStrings.hebrewLocal),
+                    value: formatNumber(
+                      value: vatCalculation(
+                        price: double.parse(state.tempList[index].totalAmount ?? '0'),
+                        vat: state.tempList[index].vatPercentage ?? 0,
+                        qty: state.tempList[index].bottleQuantities!.toDouble() ?? 0,
+                        deposit: state.tempList[index].bottleTax!.toDouble() ?? 0,
+                      ).toStringAsFixed(2),
+                      local: AppStrings.hebrewLocal,
+                    ),
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w500,
@@ -609,24 +665,25 @@ class OrderSummaryScreenWidget extends StatelessWidget {
               ),
               8.height,
               CustomButtonWidget(
-                buttonText: AppLocalizations.of(context)!.send_order,
+                buttonText: AppLocalizations.of(context)!.continues,
                 bGColor: AppColors.mainColor,
                 height: 40,
                 // isLoading: state.tempList[index].isProcess ?? false,
                 onPressed: () async {
-                  if (state.tempList[index].draftReturnExists!) {
-                    await showDialog(
-                      context: context,
-                      builder: (_) => CallAgentDialog(
-                        language: state.language,
-                        id: state.tempList[index].suppliers?.id ?? '',
-                        index: index,
-                        bloc: bloc,
-                      ),
-                    );
-                  } else {
-                    bloc.add(OrderSummaryEvent.getSupplierPaymentTypeEvent(context: context, id: state.tempList[index].suppliers?.id ?? '', index: index));
-                  }
+                  Navigator.pushNamed(context, RouteDefine.basketSummaryScreen.name, arguments: {AppStrings.getCartListString: state.cartItemList, AppStrings.orderBySupplierId: state.tempList[index].id, AppStrings.isSupplierSingle: 'No', AppStrings.totalSupplier: state.tempList.length});
+                  // if (state.tempList[index].draftReturnExists!) {
+                  //   await showDialog(
+                  //     context: context,
+                  //     builder: (_) => CallAgentDialog(
+                  //       language: state.language,
+                  //       id: state.tempList[index].suppliers?.id ?? '',
+                  //       index: index,
+                  //       bloc: bloc,
+                  //     ),
+                  //   );
+                  // } else {
+                  //   bloc.add(OrderSummaryEvent.getSupplierPaymentTypeEvent(context: context, id: state.tempList[index].suppliers?.id ?? '', index: index));
+                  // }
                 },
                 fontColors: AppColors.whiteColor,
               ),

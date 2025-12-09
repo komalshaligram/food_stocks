@@ -213,6 +213,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "client_info": MessageLookupByLibrary.simpleMessage("Client Info"),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
     "closeText": MessageLookupByLibrary.simpleMessage("Close"),
+    "closed_text": MessageLookupByLibrary.simpleMessage("Closed"),
     "collection_from_bank_account": MessageLookupByLibrary.simpleMessage(
       "Collection from bank account",
     ),
@@ -245,6 +246,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "content_already_exist": MessageLookupByLibrary.simpleMessage(
       "Content with the same name already exists",
     ),
+    "continues": MessageLookupByLibrary.simpleMessage("Continue"),
     "copied": MessageLookupByLibrary.simpleMessage("Copied!"),
     "copy": MessageLookupByLibrary.simpleMessage("Copy"),
     "countdown": MessageLookupByLibrary.simpleMessage(
@@ -476,6 +478,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "imported_successfully": MessageLookupByLibrary.simpleMessage(
       "Items imported successfully",
     ),
+    "in_progress_text": MessageLookupByLibrary.simpleMessage("In Progress"),
     "institutional": MessageLookupByLibrary.simpleMessage("Institutional"),
     "insufficient_data_for_product_removal_from_sale":
         MessageLookupByLibrary.simpleMessage(
@@ -515,7 +518,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "You will be charged when you get the invoice",
     ),
     "invoice_date": MessageLookupByLibrary.simpleMessage("Invoice date"),
-    "invoice_number": MessageLookupByLibrary.simpleMessage("Invoice Number"),
+    "invoice_number": MessageLookupByLibrary.simpleMessage("Refund invoice"),
     "invoice_status": MessageLookupByLibrary.simpleMessage("Invoice status"),
     "invoice_type": MessageLookupByLibrary.simpleMessage("Invoice type"),
     "israel_id": MessageLookupByLibrary.simpleMessage("Israel ID Number"),
@@ -646,6 +649,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_internet_connection": MessageLookupByLibrary.simpleMessage(
       "No Internet Connection",
     ),
+    "no_invoice_file": MessageLookupByLibrary.simpleMessage(
+      "No invoice file found",
+    ),
     "no_of_unit_for_return": MessageLookupByLibrary.simpleMessage(
       "Number of units for return?",
     ),
@@ -688,7 +694,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_refund_invoice": MessageLookupByLibrary.simpleMessage(
       "Open refund invoice",
     ),
+    "open_text": MessageLookupByLibrary.simpleMessage("Open"),
     "order": MessageLookupByLibrary.simpleMessage("Order"),
+    "order_amount": MessageLookupByLibrary.simpleMessage("Order amount"),
     "order_confirmation_loader_text": MessageLookupByLibrary.simpleMessage(
       "Your order confirmation is being sent",
     ),
@@ -749,6 +757,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "paid": MessageLookupByLibrary.simpleMessage("Paid"),
     "pallets_return": MessageLookupByLibrary.simpleMessage(
       "How many pallets do you return?",
+    ),
+    "partially_closed_text": MessageLookupByLibrary.simpleMessage(
+      "Partially Closed",
     ),
     "pay_with_bank_check": MessageLookupByLibrary.simpleMessage(
       "Pay with bank check",
@@ -1078,16 +1089,38 @@ class MessageLookup extends MessageLookupByLibrary {
       "Record updated successfully",
     ),
     "refund": MessageLookupByLibrary.simpleMessage("Refund"),
+    "refund_amount": MessageLookupByLibrary.simpleMessage("Refund amount"),
+    "refund_amount_1": MessageLookupByLibrary.simpleMessage(
+      "You still have a credit balance of:",
+    ),
+    "refund_amount_2": MessageLookupByLibrary.simpleMessage(
+      " NIS to be used on future orders.",
+    ),
+    "refund_amount_3": MessageLookupByLibrary.simpleMessage(
+      "You have a credit balance of:",
+    ),
+    "refund_amount_4": MessageLookupByLibrary.simpleMessage(
+      " NIS to used on these orders.",
+    ),
     "refund_for_order": MessageLookupByLibrary.simpleMessage(
       "Refund for order",
     ),
     "refund_invoice": MessageLookupByLibrary.simpleMessage("Refund invoice"),
+    "refunded_on_invoices": MessageLookupByLibrary.simpleMessage(
+      "Refunded on Invoices",
+    ),
+    "refunded_on_order": MessageLookupByLibrary.simpleMessage(
+      "Refunded on order",
+    ),
     "register": MessageLookupByLibrary.simpleMessage("Register"),
     "registered_successfully": MessageLookupByLibrary.simpleMessage(
       "Registered Successfully",
     ),
     "related_products": MessageLookupByLibrary.simpleMessage(
       "Related products",
+    ),
+    "remaining_refund": MessageLookupByLibrary.simpleMessage(
+      "Remaining refund",
     ),
     "remove": MessageLookupByLibrary.simpleMessage("Remove"),
     "removed_successfully": MessageLookupByLibrary.simpleMessage(
@@ -1310,7 +1343,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "total_price_with_vat": MessageLookupByLibrary.simpleMessage(
       "Total price with VAT",
     ),
-    "total_refund": MessageLookupByLibrary.simpleMessage("Total Refund:"),
+    "total_refund": MessageLookupByLibrary.simpleMessage("Total refunds:"),
+    "total_refunds": MessageLookupByLibrary.simpleMessage("Total refund"),
     "tuesday": MessageLookupByLibrary.simpleMessage("Tuesday"),
     "type_of_business": MessageLookupByLibrary.simpleMessage("Business Type"),
     "type_of_picture": MessageLookupByLibrary.simpleMessage("Type of Picture"),
@@ -1357,6 +1391,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "verification_success": MessageLookupByLibrary.simpleMessage(
       "Verification successfully",
     ),
+    "view_invoice": MessageLookupByLibrary.simpleMessage("View invoice"),
     "view_return": MessageLookupByLibrary.simpleMessage("View Return"),
     "wait_while_uploading": MessageLookupByLibrary.simpleMessage(
       "Please wait while uploading",

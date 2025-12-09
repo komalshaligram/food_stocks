@@ -55,7 +55,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       if (preferencesHelper.getGuestUser()) {
       } else {
         if (event is _getAllCartEvent) {
-          emit(state.copyWith(isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(), updatePaymentMethod: false, isPaymentFail: false, paymentTypesList: preferencesHelper.getPaymentMethodTypes(), context: event.context, isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(), isAllPaymentAvailable: preferencesHelper.getAvailablePayment()));
+          emit(state.copyWith(isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(), updatePaymentMethod: false,
+              isPaymentFail: false, paymentTypesList: preferencesHelper.getPaymentMethodTypes(), context: event.context,
+              isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(), isAllPaymentAvailable: preferencesHelper.getAvailablePayment()));
 
           emit(state.copyWith(isShimmering: event.isFromUpdate == true ? false : true, isAnimation: false, language: preferencesHelper.getAppLanguage(), cartCount: preferencesHelper.getCartCount()));
           try {
@@ -89,13 +91,29 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 productStockList[0].addAll(stockList);
               }
               response.data?.data?.forEach((element) {
-                temp.add(ProductDetailsModel(saleDesc: element.sale?.saleDescription ?? '', isSale: element.sale?.isSale ?? false, discountPrice: element.sale?.isSale ?? false ? double.parse(element.sale?.salePrice.toString() ?? '0.0') : 0.0, isPesach: element.productDetails?.isPesach ?? false, totalQuantity: element.totalQuantity, productName: element.productDetails?.productName ?? '', mainImage: element.productDetails?.mainImage, totalPayment: double.parse(element.totalAmount.toString()), cartProductId: element.cartProductId ?? '', scales: element.productDetails?.scales ?? '', weight: element.productDetails?.itemsWeight?.toDouble() ?? 0, lowStock: element.lowStock, productStock: element.productStock?.toDouble(), supplierName: element.suppliers?.first.contactName ?? ''));
+                temp.add(ProductDetailsModel(
+                  saleDesc: element.sale?.saleDescription ?? '',
+                  isSale: element.sale?.isSale ?? false,
+                  discountPrice: element.sale?.isSale ?? false ? double.parse(element.sale?.salePrice.toString() ?? '0.0') : 0.0,
+                  isPesach: element.productDetails?.isPesach ?? false,
+                  totalQuantity: element.totalQuantity,
+                  productName: element.productDetails?.productName ?? '',
+                  mainImage: element.productDetails?.mainImage,
+                  totalPayment: double.parse(element.totalAmount.toString()),
+                  cartProductId: element.cartProductId ?? '',
+                  scales: element.productDetails?.scales ?? '',
+                  weight: element.productDetails?.itemsWeight?.toDouble() ?? 0,
+                  lowStock: element.lowStock,
+                  productStock: element.productStock?.toDouble(),
+                  supplierName: element.suppliers?.first.contactName ?? '',
+                ));
               });
 
               await preferencesHelper.setCartCount(count: temp.isEmpty ? preferencesHelper.getCartCount() : temp.length);
 
               emit(state.copyWith(isAnimation: true));
-              emit(state.copyWith(vatPercentage: response.data!.vatPercentage?.toDouble() ?? 0.0, bottleQty: response.data?.cart?.first.bottleQuantities, bottleTax: response.data?.bottleTax ?? 0, basketProductList: temp, productStockList: productStockList, totalPayment: response.data?.cart?.first.totalAmount!.toDouble() ?? 0, supplierCount: response.data?.cart?.first.suppliers ?? 1, supplierId: response.data?.data?.first.suppliers?.first.id ?? '', isAnimation: false, draftReturnExists: response.data?.cart?.first.draftReturnExists! ?? false));
+              emit(state.copyWith(vatPercentage: response.data!.vatPercentage?.toDouble() ?? 0.0, bottleQty: response.data?.cart?.first.bottleQuantities,
+                  bottleTax: response.data?.bottleTax ?? 0, basketProductList: temp, productStockList: productStockList, totalPayment: response.data?.cart?.first.totalAmount!.toDouble() ?? 0, supplierCount: response.data?.cart?.first.suppliers ?? 1, supplierId: response.data?.data?.first.suppliers?.first.id ?? '', isAnimation: false, draftReturnExists: response.data?.cart?.first.draftReturnExists! ?? false));
             } else {
               emit(state.copyWith(isShimmering: false));
             }
@@ -446,22 +464,17 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         } else if (event is _increaseQuantityOfProduct) {
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
           if (state.productStockUpdateIndex != -1) {
-            if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity <
-                double.parse(productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString())) {
+            if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity < double.parse(productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString())) {
               if (productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds.isEmpty) {
                 return;
               }
               if (productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty != 0) {
-                if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity >=
-                    productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty) {
-                  CustomSnackBar.showSnackBar(context: event.context,
-                      title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
+                if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity >= productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty) {
+                  CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
                   return;
                 }
               }
-              productStockList[state.productListIndex][state.productStockUpdateIndex] =
-                  productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(quantity:
-                  productStockList[state.productListIndex][state.productStockUpdateIndex].quantity + 1);
+              productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(quantity: productStockList[state.productListIndex][state.productStockUpdateIndex].quantity + 1);
 
               emit(state.copyWith(productStockList: []));
               emit(state.copyWith(productStockList: productStockList));

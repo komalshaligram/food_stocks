@@ -17,7 +17,7 @@ class AppConstants{
   static const double containerHeight_130 = 130;
   static const double containerHeight_100 = 100;
   static const double relatedProductItemWidth = 140;
-  static const double withoutSaleItemHeight = 270;
+  static const double withoutSaleItemHeight = 290;
   static const double animationDuration = 8000;
   static const double timeOutDuration = 18000;
   static const double tabletImageHeight = 130;

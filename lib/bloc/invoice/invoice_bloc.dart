@@ -43,7 +43,6 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
           emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage(), isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
           InvoicesReqModel request = InvoicesReqModel(pageLimit: AppConstants.recommendationProductPageLimit, pageNum: state.pageNum + 1, id: preferences.getUserId());
 
-          debugPrint('Invoices req = ${request.toJson()}');
           final res = await DioClient(event.context).post(
             AppUrlEndPoints.clientInvoicesUrl,
             data: request.toJson(),

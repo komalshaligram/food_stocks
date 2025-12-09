@@ -83,8 +83,6 @@ class ProductDetailsScreenWidget extends StatefulWidget {
   final List<StatusData> statusList;
   const ProductDetailsScreenWidget({super.key, required this.orderId, required this.orderNumber, required this.statusList});
 
-
-
   @override
   State<ProductDetailsScreenWidget> createState() => _ProductDetailsScreenWidgetState();
 }
@@ -187,7 +185,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
             body: state.isShimmering && state.isLoading || (state.orderBySupplierProduct.products?.isEmpty ?? false)
                 ? const ProductDetailsScreenShimmerWidget()
                 : SingleChildScrollView(
-                  controller: _scrollController,
+                    controller: _scrollController,
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: SafeArea(
                       child: AnimationLimiter(
@@ -2191,5 +2189,3 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
     );
   }
 }
-
-

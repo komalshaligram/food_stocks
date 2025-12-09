@@ -76,6 +76,8 @@ class AppStrings {
   static const pdfString = 'PDF';
   static const jsonString = 'JSON';
   static const orderBySupplierId = 'orderSupplierId';
+  static const isSupplierSingle = 'isSupplierSingle';
+  static const totalSupplier = 'totalSupplier';
   static const getCartListString = 'getCartListString';
   static const isSubCategory = 'false';
   static const issueString = 'issue';
@@ -220,6 +222,11 @@ class AppStrings {
   //smartlook keys
   static const userBusinessName = 'User business name';
   static const userPhoneNum =  "User phone number";
+
+  static const openText =  "Open";
+  static const closedText = "Closed";
+  static const inProgressText = "In Progress";
+  static const partiallyClosedText =  "Partially Closed";
 
   static String getLocalizedStrings(String key, BuildContext context) {
     switch (key) {

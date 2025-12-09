@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz_unsafe.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
 import '../../data/model/res_model/supplier_payment_type_res_model/supplier_payment_type_res_model.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -18,19 +19,19 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
 
-part 'order_summary_event.dart';
+part 'basket_summary_event.dart';
 
-part 'order_summary_state.dart';
+part 'basket_summary_state.dart';
 
-part 'order_summary_bloc.freezed.dart';
+part 'basket_summary_bloc.freezed.dart';
 
-class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
-  OrderSummaryBloc() : super(OrderSummaryState.initial()) {
-    on<OrderSummaryEvent>((event, emit) async {
+class BasketSummaryBloc extends Bloc<BasketSummaryEvent, BasketSummaryState> {
+  BasketSummaryBloc() : super(BasketSummaryState.initial()) {
+    on<BasketSummaryEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getDataEvent) {
-        emit(state.copyWith(cartItemList: event.cartItemList, language: preferencesHelper.getAppLanguage(), total : event.totalAmount, backString: event.backString));
+        emit(state.copyWith(cartItemList: event.cartItemList, language: preferencesHelper.getAppLanguage()));
         try {
           final res = await DioClient(event.context).post(
             '${AppUrlEndPoints.listingCartProductsSupplierUrl}${preferencesHelper.getCartId()}',
@@ -38,7 +39,20 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           CartProductsSupplierResModel response = CartProductsSupplierResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(orderSummaryList: response, tempList: response.data?.data ?? [], ));
+            if (event.isSupplierSingle == 'No' && (response.data?.data?.any((supplier) => supplier.id == event.orderBySupplierId) ?? false)) {
+              final filteredList = response.data?.data?.where((supplier) => supplier.id == event.orderBySupplierId).toList();
+
+              printData("check here data ${filteredList}");
+
+              emit(
+                state.copyWith(orderSummaryList: response, tempList: filteredList ?? [], totalSupplier: event.totalSupplier!),
+              );
+            } else {
+              emit(state.copyWith(
+                orderSummaryList: response,
+                tempList: response.data?.data ?? [],
+              ));
+            }
           } else {
             CustomSnackBar.showSnackBar(
               context: event.context,
@@ -47,17 +61,44 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             );
           }
         } on ServerException {}
+      } else if (event is _generalSettings) {
+        try {
+          emit(state.copyWith(retryLoading: event.isRetryLoading));
+          final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
+          SettingResModel response = SettingResModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            if (preferencesHelper.getAppOnMaintenance() && !(response.data?.isAppOnMaintenance ?? false)) {
+              add(BasketSummaryEvent.updateMaintenanceEvent(context: event.context));
+              Navigator.pop(event.dialogContext);
+              preferencesHelper.setIsAppOnMaintenance(isAppOnMaintenance: false);
+              emit(state.copyWith(isDialogOpen: false, isAppOnMaintenance: false, retryLoading: false, updatePaymentMethod: false));
+              return;
+            } else {
+              if (!state.isDialogOpen && !(response.data?.isAppOnMaintenance ?? false)) {
+                emit(state.copyWith(isDialogOpen: true));
+              } else {
+                emit(state.copyWith(isDialogOpen: false));
+              }
+            }
+            preferencesHelper.setIsSaleOn(isSaleOn: response.data?.isSaleOn ?? false);
+            preferencesHelper.setIsIncludedVat(isIncludedVat: (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false);
+            preferencesHelper.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
+            preferencesHelper.setIsAppOnMaintenance(isAppOnMaintenance: response.data?.isAppOnMaintenance ?? false);
+
+            emit(state.copyWith(language: preferencesHelper.getAppLanguage(), isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(), isIncludedVat: preferencesHelper.getIsIncludedVat(), isSaleOn: preferencesHelper.getShowSale(), retryLoading: false, bankTransferInfo: preferencesHelper.getBankTransferDetail(), isAppOnMaintenance: preferencesHelper.getAppOnMaintenance()));
+          } else {}
+        } catch (e) {
+          CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
+        }
       }
 
       if (event is _orderSendEvent) {
         List<Product> productReqMap = [];
 
-        // saleId: state.tempList[state.index].sales?.id,
         state.tempList[state.index].productDetails?.forEach((product) {
-          productReqMap.add(Product(productId: product.id, supplierId: state.tempList[state.index].suppliers?.id, quantity: int.parse(state.tempList[state.index].totalQuantity.toString() ?? '0')));
+          productReqMap.add(Product(productId: product.id, supplierId: state.tempList[state.index].suppliers?.id, quantity: product.quantity ?? 0));
         });
 
-        // productReqMap.add(Product(saleId: state.cartItemList.data?.data?[state.index].id, productId: state.cartItemList.data?.data?[state.index].productDetails?.id, quantity: int.parse(state.cartItemList.data?.data![state.index].totalQuantity.toString() ?? '0'), supplierId: state.cartItemList.data?.data?[state.index].suppliers?.first.id));
         List<CartProductDataResModel> tempList = [];
         tempList = [...state.tempList];
         tempList[state.index] = tempList[state.index].copyWith(isProcess: true);
@@ -78,14 +119,15 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
               tempList.removeAt(state.index);
               emit(state.copyWith(tempList: tempList));
               if (tempList.isEmpty) {
-                final res = await DioClient(event.context).post(
-                  '${AppUrlEndPoints.clearCartUrl}${preferencesHelper.getCartId()}',
-                );
-                if (res[AppStrings.statusString] == AppConstants.code_201) {
-                  preferencesHelper.setCartCount(count: 0);
-                  Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name, arguments: {AppStrings.showPreviousBtn: false});
-                }
+                printData("come here if");
+
+                emit(state.copyWith(totalSupplier: state.totalSupplier - 1));
+
+                Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name,
+                    arguments: {AppStrings.showPreviousBtn: state.totalSupplier == 0 || state.totalSupplier == -1 ? false : true,
+                      AppStrings.totalSupplier : state.totalSupplier,});
               } else {
+                printData("come here else");
                 final res = await DioClient(event.context).post(
                   '${AppUrlEndPoints.getAllCartUrl}${preferencesHelper.getCartId()}',
                 );
@@ -114,7 +156,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           emit(state.copyWith(isLoading: false, tempList: tempList));
         }
       } else if (event is _payWithBankTransferEvent) {
-        add(OrderSummaryEvent.orderSendEvent(context: event.context, paymentMethod: AppStrings.bankTransfer, failPayment: false));
+        add(BasketSummaryEvent.orderSendEvent(context: event.context, paymentMethod: AppStrings.bankTransfer, failPayment: false));
       } else if (event is _getSupplierPaymentTypeEvent) {
         try {
           List<CartProductDataResModel> tempList = [];

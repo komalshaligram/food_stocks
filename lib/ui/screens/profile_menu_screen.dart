@@ -164,7 +164,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     ? profileMenuTiles(
                                         title: AppLocalizations.of(context)!.my_refunds,
                                         onTap: () {
-                                          Navigator.pushNamed(context, RouteDefine.invoiceScreen.name, arguments: {AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_refunds});
+                                          Navigator.pushNamed(context, RouteDefine.refundScreen.name, arguments:
+                                          {AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_refunds});
                                         })
                                     : 0.width,
                                 state.isSubUserSeeReturns

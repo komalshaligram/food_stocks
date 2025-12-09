@@ -7,7 +7,7 @@ import Flutter
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-  ) -> Bool {
+  ) -> Bool {	
       let controller = window.rootViewController as! FlutterViewController
              let flavorChannel = FlutterMethodChannel(
                      name: "flavor",

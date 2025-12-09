@@ -210,6 +210,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "client_info": MessageLookupByLibrary.simpleMessage("פרטי לקוח"),
     "close": MessageLookupByLibrary.simpleMessage("סגור"),
     "closeText": MessageLookupByLibrary.simpleMessage("סגור"),
+    "closed_text": MessageLookupByLibrary.simpleMessage("זיכוי סגור"),
     "collection_from_bank_account": MessageLookupByLibrary.simpleMessage(
       "גבייה מחשבון בנק לפי תנאי התשלום שנקבעו",
     ),
@@ -236,6 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "content_already_exist": MessageLookupByLibrary.simpleMessage(
       "תוכן עם אותו שם קיים כבר",
     ),
+    "continues": MessageLookupByLibrary.simpleMessage("המשך"),
     "copied": MessageLookupByLibrary.simpleMessage("הועתק"),
     "copy": MessageLookupByLibrary.simpleMessage("העתק"),
     "countdown": MessageLookupByLibrary.simpleMessage(
@@ -437,6 +439,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "imported_successfully": MessageLookupByLibrary.simpleMessage(
       "  הפריטים יובאו בהצלחה",
     ),
+    "in_progress_text": MessageLookupByLibrary.simpleMessage("בתהליך"),
     "institutional": MessageLookupByLibrary.simpleMessage("מוסדי"),
     "insufficient_data_for_product_removal_from_sale":
         MessageLookupByLibrary.simpleMessage(
@@ -473,8 +476,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "invoice_charge": MessageLookupByLibrary.simpleMessage(
       "החיוב יבוצע כאשר תקבל חשבונית",
     ),
-    "invoice_date": MessageLookupByLibrary.simpleMessage("תאריך חשבונית"),
-    "invoice_number": MessageLookupByLibrary.simpleMessage("מס\' חשבונית"),
+    "invoice_date": MessageLookupByLibrary.simpleMessage("תאריך החשבונית"),
+    "invoice_number": MessageLookupByLibrary.simpleMessage("חשבונית זיכוי"),
     "invoice_status": MessageLookupByLibrary.simpleMessage("סטטוס חשבונית"),
     "invoice_type": MessageLookupByLibrary.simpleMessage("סוג חשבונית"),
     "israel_id": MessageLookupByLibrary.simpleMessage("תעודת זהות"),
@@ -601,6 +604,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_internet_connection": MessageLookupByLibrary.simpleMessage(
       "אין חיבור לאינטרנט",
     ),
+    "no_invoice_file": MessageLookupByLibrary.simpleMessage(
+      "לא נמצא קובץ חשבונית",
+    ),
     "no_of_unit_for_return": MessageLookupByLibrary.simpleMessage(
       "מספר יחידות לחזרה?",
     ),
@@ -643,7 +649,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_refund_invoice": MessageLookupByLibrary.simpleMessage(
       "הצג חשבונית זיכוי",
     ),
+    "open_text": MessageLookupByLibrary.simpleMessage("זיכוי פתוח"),
     "order": MessageLookupByLibrary.simpleMessage("הזמנה"),
+    "order_amount": MessageLookupByLibrary.simpleMessage("סכום הזמנה"),
     "order_confirmation_loader_text": MessageLookupByLibrary.simpleMessage(
       "אישור ההזמנה נשלח עכשיו",
     ),
@@ -697,6 +705,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pallets_return": MessageLookupByLibrary.simpleMessage(
       "כמה משטחים אתה מחזיר ?",
     ),
+    "partially_closed_text": MessageLookupByLibrary.simpleMessage("זוכה חלקית"),
     "pay_with_bank_check": MessageLookupByLibrary.simpleMessage("תשלום בשיק"),
     "pay_with_bank_transfer": MessageLookupByLibrary.simpleMessage(
       "תשלום בהעברה בנקאית",
@@ -999,15 +1008,31 @@ class MessageLookup extends MessageLookupByLibrary {
       "הרשומה עודכנה בהצלחה",
     ),
     "refund": MessageLookupByLibrary.simpleMessage("החזר תשלום"),
+    "refund_amount": MessageLookupByLibrary.simpleMessage("סכום ההחזר"),
+    "refund_amount_1": MessageLookupByLibrary.simpleMessage(
+      "למימוש בהזמנות הבאות ",
+    ),
+    "refund_amount_2": MessageLookupByLibrary.simpleMessage(
+      "נותרה לך יתרת זכות של: ",
+    ),
+    "refund_amount_3": MessageLookupByLibrary.simpleMessage(
+      "יש לך יתרת זכות של:",
+    ),
+    "refund_amount_4": MessageLookupByLibrary.simpleMessage(" למימוש"),
     "refund_for_order": MessageLookupByLibrary.simpleMessage(
       "זיכוי עבור הזמנה",
     ),
     "refund_invoice": MessageLookupByLibrary.simpleMessage("חשבונית זיכוי"),
+    "refunded_on_invoices": MessageLookupByLibrary.simpleMessage(
+      "החזר כספי על חשבוניות",
+    ),
+    "refunded_on_order": MessageLookupByLibrary.simpleMessage("הזמנה שזוכתה"),
     "register": MessageLookupByLibrary.simpleMessage("הרשמה"),
     "registered_successfully": MessageLookupByLibrary.simpleMessage(
       "נרשמת בהצלחה",
     ),
     "related_products": MessageLookupByLibrary.simpleMessage("מוצרים דומים"),
+    "remaining_refund": MessageLookupByLibrary.simpleMessage("זיכוי שנשאר"),
     "remove": MessageLookupByLibrary.simpleMessage("מחק תמונה"),
     "removed_successfully": MessageLookupByLibrary.simpleMessage(
       "!הוסר בהצלחה",
@@ -1203,7 +1228,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "total_price_with_vat": MessageLookupByLibrary.simpleMessage(
       "סה\'כ לתשלום כולל מע\'מ",
     ),
-    "total_refund": MessageLookupByLibrary.simpleMessage("סה”כ זיכוי:"),
+    "total_refund": MessageLookupByLibrary.simpleMessage("סך החזרים:"),
+    "total_refunds": MessageLookupByLibrary.simpleMessage("סה”כ זיכויים"),
     "tuesday": MessageLookupByLibrary.simpleMessage("יום שלישי"),
     "type_of_business": MessageLookupByLibrary.simpleMessage("סוג העסק"),
     "type_of_picture": MessageLookupByLibrary.simpleMessage("סוג תמונה"),
@@ -1246,6 +1272,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "verification_success": MessageLookupByLibrary.simpleMessage(
       "אימות בוצע בהצלחה",
     ),
+    "view_invoice": MessageLookupByLibrary.simpleMessage("צפה בחשבונית"),
     "view_return": MessageLookupByLibrary.simpleMessage("הצג חזרה"),
     "wait_while_uploading": MessageLookupByLibrary.simpleMessage(
       "אנא המתן בזמן שמעלים",

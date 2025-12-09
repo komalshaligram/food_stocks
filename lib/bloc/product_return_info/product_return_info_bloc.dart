@@ -73,6 +73,9 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             int index = map['index'] ?? 0;
             int radioIndex = tempList.indexWhere((e) => e.text.toLowerCase() == tempProductList[index].reasonToReturn?.toLowerCase()).toInt();
 
+
+
+
             emit(
               state.copyWith(
                 selectedRadioTile: radioIndex + 1,
@@ -108,6 +111,9 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         if (state.productQty != 0) {
           if (state.selectedRadioTile != 0) {
             if (state.proofFile.path.isNotEmpty || state.proofFile1.path.isNotEmpty || state.proofFile2.path.isNotEmpty) {
+
+              printData("check here state.proofImagesList ${state.proofImagesList}");
+
               ReturnProduct products = ReturnProduct(
                 productName: state.productName,
                 totalUnits: state.productQty,
@@ -123,6 +129,10 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
                 returnId: state.returnId,
                 returnProductId: state.returnProductId,
               );
+
+              printData("check here state.mainIndex ${state.mainIndex}");
+
+
 
               if (state.mainIndex != -1) {
                 //for update
@@ -142,6 +152,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
                 returnList.removeAt(0);
                 returnList.add(products);
                 emit(state.copyWith(returnProductList: returnList));
+                printData("check here state.returnProductList.length ${state.returnProductList.length}");
                 if (state.returnProductList.length == 1) {
                   add(ProductReturnInfoEvent.createReturnEvent(context: event.context, supplierId: state.supplierId));
                 } else {
@@ -207,6 +218,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             return;
           }
           imgList.addAll(state.proofImagesList);
+
           final response = await DioClient(event.context).uploadFileProgressWithFormData(
             path: AppUrlEndPoints.fileUploadUrl,
             formData: FormData.fromMap(
@@ -226,6 +238,8 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             emit(state.copyWith(proofFile2: File(croppedImage?.path ?? image.path)));
           }
           emit(state.copyWith(proofImagesList: imgList));
+
+          printData("check here imagelist ${imgList}");
         }
       } else if (event is _deleteFileEvent) {
         if (event.index == 1) {

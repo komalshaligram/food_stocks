@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/screens/refund_screen.dart';
 import 'package:food_stock/ui/screens/return_summary_screen.dart';
 import 'package:food_stock/ui/screens/scan_return_product_screen.dart';
-import 'package:food_stock/ui/widget/common_pdf_viewer.dart';
 import '../../ui/screens/manage_credit_card.dart';
-
 import '../../ui/screens/bottom_nav_screen.dart';
 import '../../ui/screens/home_screen.dart';
 import '../../ui/screens/login_screen.dart';
@@ -26,6 +25,7 @@ import '../ui/screens/account_permission_screen.dart';
 import '../ui/screens/bank_info_screen.dart';
 import '../ui/screens/bank_transfer_screen.dart';
 import '../ui/screens/basket_screen.dart';
+import '../ui/screens/basket_summary_screen.dart';
 import '../ui/screens/brands_permission_screen.dart';
 import '../ui/screens/categories_permission_screen.dart';
 import '../ui/screens/client_form_details_screen.dart';
@@ -49,6 +49,7 @@ import '../ui/screens/product_details_screen.dart';
 import '../ui/screens/product_return_info_screen.dart';
 import '../ui/screens/profile_screen.dart';
 import '../ui/screens/more_details_screen.dart';
+import '../ui/screens/refund_pdf_screen.dart';
 import '../ui/screens/return_driver.dart';
 import '../ui/screens/return_list_screen.dart';
 import '../ui/screens/shipment_verification_screen.dart';
@@ -59,7 +60,6 @@ import '../ui/screens/supplier_permission_screen.dart';
 import '../ui/screens/supplier_screen.dart';
 import '../ui/screens/wallet_screen.dart';
 import '../ui/screens/way_of_payment_screen.dart';
-import '../ui/screens/client_form_details_screen.dart';
 
 enum RouteDefine {
   ///ADD NAME OF ROUTE SCREEN
@@ -75,6 +75,7 @@ enum RouteDefine {
   homeScreen,
   menuScreen,
   basketScreen,
+  basketSummaryScreen,
   walletScreen,
   orderScreen,
   questionAndAnswerScreen,
@@ -105,7 +106,9 @@ enum RouteDefine {
   bankInfoScreen, privacyPolicyScreen,
   previewScreen,
   invoiceScreen,
+  refundScreen,
   invoicePdfScreen,
+  refundPdfScreen,
   subUsersScreen,
   subUsersProfileScreen,
   accountPermissionScreen,
@@ -142,6 +145,7 @@ class AppRouting {
       RouteDefine.homeScreen.name: (_) => HomeRoute.route,
     //  RouteDefine.menuScreen.name: (_) => MenuRoute.route,
       RouteDefine.basketScreen.name: (_) => BasketRoute.route,
+      RouteDefine.basketSummaryScreen.name: (_) => BasketSummaryRoute.route,
       RouteDefine.walletScreen.name: (_) => WalletRoute.route,
       RouteDefine.storeScreen.name: (_) => StoreRoute.route,
       RouteDefine.orderScreen.name: (_) => OrderRoute.route,
@@ -174,7 +178,9 @@ class AppRouting {
       RouteDefine.pesachScreen.name: (_) => PesachProductsRoute.route,
       RouteDefine.previewScreen.name: (_) => PreviewScreenRoute.route,
       RouteDefine.invoiceScreen.name: (_) => InvoiceRoute.route,
+      RouteDefine.refundScreen.name: (_) => RefundRoute.route,
       RouteDefine.invoicePdfScreen.name: (_) => InvoicePdfRoute.route,
+      RouteDefine.refundPdfScreen.name: (_) => RefundPdfRoute.route,
       RouteDefine.subUsersScreen.name: (_) => SubUsersRoute.route,
       RouteDefine.subUsersProfileScreen.name: (_) => SubUsersProfileRoute.route,
       RouteDefine.accountPermissionScreen.name: (_) => AccountPermissionRoute.route,

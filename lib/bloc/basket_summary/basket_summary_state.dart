@@ -1,0 +1,63 @@
+part of 'basket_summary_bloc.dart';
+
+@freezed
+class BasketSummaryState with _$BasketSummaryState {
+  const factory BasketSummaryState({
+    required CartProductsSupplierResModel orderSummaryList,
+    required bool isLoading,
+    required bool isShimmering,
+    required bool isEnable,
+    required GetAllCartResModel cartItemList,
+    required String language,
+    required bool isAllPaymentAvailable,
+    required bool isWalletRelatedError,
+    required String errorString,
+    required bool isPaymentFail,
+    required bool updatePaymentMethod,
+    required String bankTransferInfo,
+    required List<String> paymentTypesList,
+    required bool showPopUp,
+    required int index,
+    required bool isDialogOpen,
+    required bool isOrderPending,
+    required List<CartProductDataResModel> tempList,
+    required bool isAppOnMaintenance,
+    required bool retryLoading,
+    required bool isIncludedVat,
+    required bool isSaleOn,
+    required bool isRemoveProcess,
+    required bool isSubUserCanCreateOrder,
+    required double refundAmount,
+    required int totalSupplier
+
+  }) = _BasketSummaryState;
+
+  factory BasketSummaryState.initial() => const BasketSummaryState(
+        orderSummaryList: CartProductsSupplierResModel(),
+        isLoading: false,
+        isShimmering: false,
+        isEnable: false,
+        cartItemList: GetAllCartResModel(),
+        language: '',
+        isAllPaymentAvailable: false,
+        isWalletRelatedError: false,
+        errorString: '',
+        isPaymentFail: false,
+        updatePaymentMethod: false,
+        bankTransferInfo: '',
+        showPopUp: false,
+        paymentTypesList: [],
+        index: 0,
+        isDialogOpen: false,
+        tempList: [],
+        isOrderPending: false,
+        isAppOnMaintenance: false,
+        retryLoading: false,
+        isIncludedVat: false,
+        isSaleOn: false,
+        isRemoveProcess: false,
+        isSubUserCanCreateOrder: false,
+        refundAmount : 0.0,
+        totalSupplier:0
+      );
+}

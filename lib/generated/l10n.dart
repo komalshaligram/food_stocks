@@ -934,6 +934,11 @@ class S {
     return Intl.message('Submit', name: 'submit', desc: '', args: []);
   }
 
+  /// `Continue`
+  String get continues {
+    return Intl.message('Continue', name: 'continues', desc: '', args: []);
+  }
+
   /// `Contact`
   String get contact {
     return Intl.message('Contact', name: 'contact', desc: '', args: []);
@@ -1172,6 +1177,16 @@ class S {
   /// `No data found`
   String get no_data {
     return Intl.message('No data found', name: 'no_data', desc: '', args: []);
+  }
+
+  /// `No invoice file found`
+  String get no_invoice_file {
+    return Intl.message(
+      'No invoice file found',
+      name: 'no_invoice_file',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Your cart is empty`
@@ -3339,9 +3354,79 @@ class S {
     return Intl.message('Sub Total', name: 'sub_total', desc: '', args: []);
   }
 
+  /// `Order amount`
+  String get order_amount {
+    return Intl.message(
+      'Order amount',
+      name: 'order_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `VAT`
   String get vat {
     return Intl.message('VAT', name: 'vat', desc: '', args: []);
+  }
+
+  /// `Total refund`
+  String get total_refunds {
+    return Intl.message(
+      'Total refund',
+      name: 'total_refunds',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remaining refund`
+  String get remaining_refund {
+    return Intl.message(
+      'Remaining refund',
+      name: 'remaining_refund',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You still have a credit balance of:`
+  String get refund_amount_1 {
+    return Intl.message(
+      'You still have a credit balance of:',
+      name: 'refund_amount_1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` NIS to be used on future orders.`
+  String get refund_amount_2 {
+    return Intl.message(
+      ' NIS to be used on future orders.',
+      name: 'refund_amount_2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have a credit balance of:`
+  String get refund_amount_3 {
+    return Intl.message(
+      'You have a credit balance of:',
+      name: 'refund_amount_3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` NIS to used on these orders.`
+  String get refund_amount_4 {
+    return Intl.message(
+      ' NIS to used on these orders.',
+      name: 'refund_amount_4',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Close`
@@ -3594,10 +3679,10 @@ class S {
     );
   }
 
-  /// `Invoice Number`
+  /// `Refund invoice`
   String get invoice_number {
     return Intl.message(
-      'Invoice Number',
+      'Refund invoice',
       name: 'invoice_number',
       desc: '',
       args: [],
@@ -4074,6 +4159,36 @@ class S {
     return Intl.message(
       'Invoice amount',
       name: 'invoice_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refund amount`
+  String get refund_amount {
+    return Intl.message(
+      'Refund amount',
+      name: 'refund_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refunded on order`
+  String get refunded_on_order {
+    return Intl.message(
+      'Refunded on order',
+      name: 'refunded_on_order',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refunded on Invoices`
+  String get refunded_on_invoices {
+    return Intl.message(
+      'Refunded on Invoices',
+      name: 'refunded_on_invoices',
       desc: '',
       args: [],
     );
@@ -5429,11 +5544,21 @@ class S {
     );
   }
 
-  /// `Total Refund:`
+  /// `Total refunds:`
   String get total_refund {
     return Intl.message(
-      'Total Refund:',
+      'Total refunds:',
       name: 'total_refund',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View invoice`
+  String get view_invoice {
+    return Intl.message(
+      'View invoice',
+      name: 'view_invoice',
       desc: '',
       args: [],
     );
@@ -5649,6 +5774,36 @@ class S {
     return Intl.message(
       'Your order confirmation is being sent',
       name: 'order_confirmation_loader_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open`
+  String get open_text {
+    return Intl.message('Open', name: 'open_text', desc: '', args: []);
+  }
+
+  /// `Closed`
+  String get closed_text {
+    return Intl.message('Closed', name: 'closed_text', desc: '', args: []);
+  }
+
+  /// `In Progress`
+  String get in_progress_text {
+    return Intl.message(
+      'In Progress',
+      name: 'in_progress_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Partially Closed`
+  String get partially_closed_text {
+    return Intl.message(
+      'Partially Closed',
+      name: 'partially_closed_text',
       desc: '',
       args: [],
     );

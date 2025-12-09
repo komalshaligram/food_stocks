@@ -1,3 +1,7 @@
+
+
+
+
 import 'dart:io';
 import 'dart:math';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -21,7 +25,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:another_flushbar/flushbar.dart';
 
 import 'constants/app_strings.dart';
-
 
 double getScreenHeight(BuildContext context) {
   final screenHeight = MediaQuery.of(context).size.height;
@@ -78,7 +81,7 @@ Future<String> getBottleTax() async {
 }
 
 Color getStatusColor(List<StatusData> statusList, String status) {
-  if(status.isEmpty){
+  if (status.isEmpty) {
     return AppColors.mainColor;
   }
   String color = statusList.where((e) => e.statusNameKey == status).first.statusColor ?? '';
@@ -86,14 +89,14 @@ Color getStatusColor(List<StatusData> statusList, String status) {
   return Color(int.parse('FF$hexCode', radix: 16));
 }
 
-String getStatus(List<StatusData> statusList, String currentStatus,String language){
+String getStatus(List<StatusData> statusList, String currentStatus, String language) {
   String status = '';
-  if(currentStatus.isEmpty) {
+  if (currentStatus.isEmpty) {
     return status;
   }
-  if(language==AppStrings.hebrewString){
+  if (language == AppStrings.hebrewString) {
     status = statusList.where((e) => e.statusNameKey == currentStatus).first.statusNameHebrew ?? '';
-  }else{
+  } else {
     status = statusList.where((e) => e.statusNameKey == currentStatus).first.statusNameEnglish ?? '';
   }
   return status;
@@ -103,32 +106,32 @@ double getChildAspectRatio(BuildContext context, bool isSaleOn) {
   return !isSaleOn
       ? AppConstants.productGridAspectRatio8
       : Platform.isAndroid
-          ? getScreenHeight(context) > 900
-              ? AppConstants.productGridAspectRatio9
-              : getScreenHeight(context) > 820 && getScreenHeight(context) < 900
-                  ? AppConstants.productGridAspectRatio51
-                  : AppConstants.productGridAspectRatio51
-          : getScreenHeight(context) > 820
-              ? AppConstants.productGridAspectRatio51
-              : AppConstants.productGridAspectRatio51;
+      ? getScreenHeight(context) > 900
+      ? AppConstants.productGridAspectRatio9
+      : getScreenHeight(context) > 820 && getScreenHeight(context) < 900
+      ? AppConstants.productGridAspectRatio51
+      : AppConstants.productGridAspectRatio51
+      : getScreenHeight(context) > 820
+      ? AppConstants.productGridAspectRatio51
+      : AppConstants.productGridAspectRatio51;
 }
 
 double getItemHeight(BuildContext context, bool isSaleOn) {
   return getScreenHeight(context) > 1000 && getScreenWidth(context) > 700
       ? 350
       : getScreenHeight(context) < 1000 && getScreenHeight(context) > 800 && getScreenWidth(context) > 550
-          ? 260
-          : isSaleOn
-              ? AppConstants.salesProductItemHeight
-              : AppConstants.withoutSaleItemHeight;
+      ? 260
+      : isSaleOn
+      ? AppConstants.salesProductItemHeight
+      : AppConstants.withoutSaleItemHeight;
 }
 
 double getItemWidth(BuildContext context) {
   return getScreenHeight(context) > 1000 && getScreenWidth(context) > 700
       ? 190
       : getScreenWidth(context) > 500
-          ? 160
-          : 140;
+      ? 160
+      : 140;
 }
 
 Widget isPesachLabelShow(bool isPesach, BuildContext context) {
@@ -156,7 +159,7 @@ class CustomSnackBar {
   }) {
     Flushbar(
       backgroundColor: type == SnackBarType.success ? AppColors.mainColor.withOpacity(0.85) : AppColors.redColor.withOpacity(0.85),
-      messageText: Text(title,style:  AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400)),
+      messageText: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400)),
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.all(20),
       borderRadius: BorderRadius.circular(15),
@@ -345,20 +348,12 @@ String formatNumber({required String value, required String local}) {
   final double number = double.parse(value);
   final bool isNegative = number < 0;
 
-  final formatted = NumberFormat.simpleCurrency(locale: local)
-      .format(number.abs()); // Format absolute value to avoid trailing minus
+  final formatted = NumberFormat.simpleCurrency(locale: local).format(number.abs()); // Format absolute value to avoid trailing minus
 
   final String result = isNegative ? '-$formatted' : formatted;
 
   return splitNumber(result);
 }
-// String formatNumber({required String value, required String local}) {
-//   String result = (NumberFormat.simpleCurrency(
-//     locale: local,
-//   ).format(double.parse(value)));
-//   String result1 = splitNumber(result);
-//   return result1;
-// }
 
 String formatNumberForWallet({required String value, required String local, required BuildContext context}) {
   String result = (NumberFormat.compactSimpleCurrency(
@@ -371,9 +366,44 @@ String formatNumberForWallet({required String value, required String local, requ
   return result1;
 }
 
-double vatCalculation({required double price, required double vat, double qty = 0, double deposit = 0}) {
+double vatCalculation({
+  required double price,
+  required double vat,
+  double qty = 0,
+  double deposit = 0,
+}) {
   double result = price + ((price * vat) / 100) + (qty * deposit) + ((qty * deposit * vat) / 100);
   return result;
+}
+
+double vatCalculationRefund({
+  required double price,
+  required double vat,
+  double qty = 0,
+  double deposit = 0,
+  double? refund, // refund is always negative
+}) {
+  double priceWithVat = price + ((price * vat) / 100);
+  double depositWithVat = (qty * deposit) + ((qty * deposit * vat) / 100);
+
+  double total = priceWithVat + depositWithVat;
+
+  // Apply refund logic
+  if (refund != null) {
+    // refund is negative, so -refund is positive
+    if (total <= -refund) {
+      return 1; // refund greater than total
+    } else {
+      if(total <= -refund){
+        return total + refund + 1;
+      }else {
+        return total + refund;
+      }
+      // refund is negative, so subtract from total
+    }
+  }
+
+  return total;
 }
 
 double totalVatAmountCalculation({required double price, required double vat, double qty = 0, double deposit = 0}) {
@@ -390,3 +420,28 @@ double bottleDepositCalculationWithVat({required double deposit, required double
   double result = (qty * deposit) + ((qty * deposit * vatPercentage) / 100);
   return result;
 }
+
+double bottleDepositCalculationWithVatRefund({
+  required double deposit,
+  required double qty,
+  double vatPercentage = 1,
+  double? refund,
+}) {
+  double depositWithVat = (qty * deposit) + ((qty * deposit * vatPercentage) / 100);
+
+  if (refund != null) {
+    if (depositWithVat <= -refund) {
+      return 1;
+    } else {
+      if (depositWithVat <= -refund) {
+        return depositWithVat + refund + 1;
+      }else {
+        return depositWithVat + refund;
+      }
+
+    }
+  }
+
+  return depositWithVat;
+}
+

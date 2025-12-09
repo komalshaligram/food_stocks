@@ -43,17 +43,18 @@ class BasketState with _$BasketState {
       required String bankTransferInfo,
       required bool isAllPaymentAvailable,
       required bool isWalletRelatedError,
-          required String errorString,
-          required BuildContext? context,
-          required List<String> paymentTypesList,
-          required String supplierId,
-          required bool draftReturnExists,
+      required String errorString,
+      required BuildContext? context,
+      required List<String> paymentTypesList,
+      required String supplierId,
+      required bool draftReturnExists,
+
       required bool updatePaymentMethod}) = _BasketState;
 
   //don't add const here
-  factory BasketState.initial() =>  const BasketState(
+  factory BasketState.initial() => const BasketState(
       cartItemList: GetAllCartResModel(),
-      context:null,
+      context: null,
       isShimmering: false,
       productWeight: 0,
       basketProductList: [],
@@ -74,7 +75,7 @@ class BasketState with _$BasketState {
         []
       ],
       isCartCountChange: false,
-      paymentTypesList:[],
+      paymentTypesList: [],
       productDetails: [],
       isProductLoading: false,
       isWalletRelatedError: false,
@@ -97,8 +98,9 @@ class BasketState with _$BasketState {
       retryLoading: false,
       isPaymentFail: true,
       isAllPaymentAvailable: false,
-      errorString:'',
-      supplierId:'',
-      draftReturnExists : false,
-      updatePaymentMethod: false);
+      errorString: '',
+      supplierId: '',
+      draftReturnExists: false,
+      updatePaymentMethod: false,
+      );
 }

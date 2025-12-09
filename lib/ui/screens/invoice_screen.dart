@@ -87,8 +87,18 @@ class InvoiceScreenWidget extends StatelessWidget {
                           itemCount: state.invoiceDetailsList.length,
                           shrinkWrap: true,
                           physics: const AlwaysScrollableScrollPhysics(),
-                          itemBuilder: (context, index) => invoiceList(index: index, invoicesList: state.invoiceDetailsList, context: context, invoiceType: state.invoiceDetailsList[index].invoiceType.toString(),
-                              invoiceDate: state.invoiceDetailsList[index].invoiceDate.toString(), invoicePrice: state.invoiceDetailsList[index].invoiceAmount.toString(), invoiceNumber: state.invoiceDetailsList[index].invoiceNumber.toString(), invoiceStatus: state.statusList.isNotEmpty ? getStatus(state.statusList, state.invoiceDetailsList[index].paymentStatus.toString(), state.language).toCapitalized() : '', supplierName: state.invoiceDetailsList[index].supplierName ?? '', dueDate: state.invoiceDetailsList[index].dueDate.toString()),
+                          itemBuilder: (context, index) => invoiceList(
+                            index: index,
+                            invoicesList: state.invoiceDetailsList,
+                            context: context,
+                            invoiceType: state.invoiceDetailsList[index].invoiceType.toString(),
+                            invoiceDate: state.invoiceDetailsList[index].invoiceDate.toString(),
+                            invoicePrice: state.invoiceDetailsList[index].invoiceAmount.toString(),
+                            invoiceNumber: state.invoiceDetailsList[index].invoiceNumber.toString(),
+                            invoiceStatus: state.statusList.isNotEmpty ? getStatus(state.statusList, state.invoiceDetailsList[index].paymentStatus.toString(), state.language).toCapitalized() : '',
+                            supplierName: state.invoiceDetailsList[index].supplierName ?? '',
+                            dueDate: state.invoiceDetailsList[index].dueDate.toString(),
+                          ),
                         ),
             ),
           )),
@@ -111,7 +121,13 @@ class InvoiceScreenWidget extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, RouteDefine.invoicePdfScreen.name, arguments: {AppStrings.invoiceListString: invoicesList[index], AppStrings.invoiceTitleNameString: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds});
+
+        printData("check here data ${invoicesList[index].toJson()}");
+
+        Navigator.pushNamed(context, RouteDefine.invoicePdfScreen.name,
+            arguments: {AppStrings.invoiceListString: invoicesList[index], AppStrings.invoiceTitleNameString:
+            context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices :
+            AppLocalizations.of(context)!.my_refunds});
       },
       child: Container(
         margin: const EdgeInsets.all(AppConstants.padding_8),

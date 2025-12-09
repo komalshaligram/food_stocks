@@ -140,11 +140,13 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         preferencesHelper.setOrderId(productOrderId: orderDetailsList[index].id ?? '');
         if ((orderDetailsList[index].suppliers ?? 0) > 1) {
+          printData("check here if");
           Navigator.pushNamed(context, RouteDefine.orderDetailsScreen.name, arguments: {
             AppStrings.orderIdString: orderDetailsList[index].id,
             AppStrings.orderNumberString: orderDetailsList[index].orderNumber,
           });
         } else {
+          printData("check here else");
           Navigator.push(
               context,
               PageRouteBuilder(
@@ -253,44 +255,47 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                   valueTextSize: getScreenWidth(context) < 380 ? AppConstants.font_14 : AppConstants.smallFont,
                 ),
                 5.width,
-
-                orderDetailsList[index].status?.orderStatusNo == 2 && orderDetailsList[index].paymentMethod == AppStrings.creditCard ?
-                Expanded(flex: 4, child: Container(decoration: BoxDecoration(
-                  color: AppColors.iconBGColor,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(AppConstants.radius_5),
-                  ),
-                  border: Border.all(color:AppColors.lightBorderColor, width: 1),
-                ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_5,
-                        vertical: 9), child: Text(AppLocalizations.of(context)!.invoice_charge, style: TextStyle(color: AppColors.blackColor, fontSize: 10),)))
-                // // Text(AppLocalizations.of(context)!.invoice_charge)
-                // CommonOrderContentWidget(
-                //   backGroundColor: AppColors.iconBGColor,
-                //   borderCoder: AppColors.lightBorderColor,
-                //   flexValue: 4,
-                //   title: AppLocalizations.of(context)!.invoice_charge,
-                //   value: '',
-                //   titleColor: AppColors.blackColor,
-                //   valueColor: AppColors.blackColor,
-                //   valueTextSize: AppConstants.smallFont,
-                // )
-                    :
-                CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 4,
-                  title: AppLocalizations.of(context)!.due_date,
-                  value: orderDetailsList[index].paymentMethod == AppStrings.creditCard
-                      ? "-"
-                      : (orderDetailsList[index].dueDate?.isNotEmpty ?? false)
-                          ? orderDetailsList[index].dueDate?.replaceRange(11, 16, '').replaceRange(6, 8, '') ?? '-'
-                          : "-",
-                  titleColor: AppColors.blackColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextSize: AppConstants.smallFont,
-                ) ,
+                orderDetailsList[index].status?.orderStatusNo == 2 && orderDetailsList[index].paymentMethod == AppStrings.creditCard
+                    ? Expanded(
+                        flex: 4,
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.iconBGColor,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(AppConstants.radius_5),
+                              ),
+                              border: Border.all(color: AppColors.lightBorderColor, width: 1),
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: 9),
+                            child: Text(
+                              AppLocalizations.of(context)!.invoice_charge,
+                              style: TextStyle(color: AppColors.blackColor, fontSize: 10),
+                            )))
+                    // // Text(AppLocalizations.of(context)!.invoice_charge)
+                    // CommonOrderContentWidget(
+                    //   backGroundColor: AppColors.iconBGColor,
+                    //   borderCoder: AppColors.lightBorderColor,
+                    //   flexValue: 4,
+                    //   title: AppLocalizations.of(context)!.invoice_charge,
+                    //   value: '',
+                    //   titleColor: AppColors.blackColor,
+                    //   valueColor: AppColors.blackColor,
+                    //   valueTextSize: AppConstants.smallFont,
+                    // )
+                    : CommonOrderContentWidget(
+                        backGroundColor: AppColors.iconBGColor,
+                        borderCoder: AppColors.lightBorderColor,
+                        flexValue: 4,
+                        title: AppLocalizations.of(context)!.due_date,
+                        value: orderDetailsList[index].paymentMethod == AppStrings.creditCard
+                            ? "-"
+                            : (orderDetailsList[index].dueDate?.isNotEmpty ?? false)
+                                ? orderDetailsList[index].dueDate?.replaceRange(11, 16, '').replaceRange(6, 8, '') ?? '-'
+                                : "-",
+                        titleColor: AppColors.blackColor,
+                        valueColor: AppColors.blackColor,
+                        valueTextSize: AppConstants.smallFont,
+                      ),
                 5.width,
                 CommonOrderContentWidget(
                   backGroundColor: AppColors.iconBGColor,

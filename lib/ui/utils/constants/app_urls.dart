@@ -4,7 +4,7 @@ class AppUrlEndPoints {
       // static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl live
     static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; // local
 
-  // static const String baseUrl = 'http://192.168.3.75:3000/api'; // local 75 yash 45 harshit
+  // static const String baseUrl = 'http://192.168.3.75:3000/api'; // local 75 yash 45 harshit // prachi :192.168.4.48
 
   ///devUrl
   //static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
@@ -71,6 +71,7 @@ class AppUrlEndPoints {
   static const String termsConditionUrl = '/v1/clients/getTermsAndConditionForm';
   static const String duplicateOrderUrl = '/v1/cart/duplicateOrder';
   static const String clientInvoicesUrl = '/v1/clients/clientInvoices';
+  static const String clientRefundUrl = '/v1/refund/getRefundInvoices/';
   static const String createSubUserUrl = '/v1/subuser/createSubuser';
   static const String getAccountPermissionUrl = '/v1/subuser/accountpermissions/';
   static const String getCategoriesPermissionUrl = '/v1/subuser/categorypermissions/';
@@ -136,6 +137,7 @@ class AppUrlEndPoints {
   static const String deleteReturnUrl = '/v1/return/deleteReturn';
   static const String getLatestOnthewayOrderUrl = '/v2/orders/get-latest-ontheway-order/';
   static const String getClientPendingReturnProducts = '/v1/return/getClientPendingReturnProducts/';
+  static const String getRefundInvoiceCopy = '/v1/refund/getRefundInvoiceCopy';
 }
 
 

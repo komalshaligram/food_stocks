@@ -118,8 +118,7 @@ class BasketScreenWidget extends StatelessWidget {
                       CustomSnackBar.showSnackBar(context: context, title: e.toString(), type: SnackBarType.failure);
                     }
 
-                    // Navigator.pop(context1);
-                    // Navigator.pushNamed(context, RouteDefine.orderScreen.name);
+
                   },
                   positiveTitle: AppLocalizations.of(context)!.show_order,
                   width: 120,
@@ -333,7 +332,12 @@ class BasketScreenWidget extends StatelessWidget {
                                             )),
                                           )
                                         : const BasketScreenShimmerWidget(),
-                            state.basketProductList.isEmpty ? const SizedBox() : totalAmountCard(state, context)
+                            state.basketProductList.isEmpty
+                                ? const SizedBox()
+                                : totalAmountCard(
+                                    state,
+                                    context,
+                                  )
                           ],
                         ),
                         if (state.isSubmitLoading)
@@ -477,7 +481,10 @@ class BasketScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget totalAmountCard(BasketState state, BuildContext context) {
+  Widget totalAmountCard(
+    BasketState state,
+    BuildContext context,
+  ) {
     BasketBloc bloc = context.read<BasketBloc>();
     return Container(
         alignment: state.language == AppStrings.englishString ? Alignment.centerLeft : Alignment.centerRight,
@@ -489,26 +496,62 @@ class BasketScreenWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            state.bottleQty! > 0 ? basketRow(state.language == AppStrings.englishString ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.bottleQty.toString()}' : '${AppLocalizations.of(context)!.bottle_deposit}${state.bottleQty.toString()}${'X'}', state.isIncludedVat ? (formatNumber(value: bottleDepositCalculationWithVat(deposit: state.bottleTax, vatPercentage: state.vatPercentage, qty: state.bottleQty?.toDouble() ?? 0).toStringAsFixed(2), local: AppStrings.hebrewLocal)) : (formatNumber(value: bottleDepositCalculation(deposit: state.bottleTax, qty: state.bottleQty?.toDouble() ?? 0).toStringAsFixed(2), local: AppStrings.hebrewLocal))) : 0.height,
-            state.bottleQty! > 0
-                ? const Divider(
-                    height: 8,
-                  )
-                : 0.height,
-            state.isIncludedVat ? const SizedBox() : basketRow(AppLocalizations.of(context)!.sub_total, (formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))),
-            state.isIncludedVat ? const SizedBox() : const Divider(height: 8),
-            state.isIncludedVat ? const SizedBox() : basketRow(AppLocalizations.of(context)!.vat, (formatNumber(value: totalVatAmountCalculation(price: state.totalPayment, vat: state.vatPercentage, qty: state.bottleQty?.toDouble() ?? 0, deposit: state.bottleTax).toStringAsFixed(2), local: AppStrings.hebrewLocal))),
-            state.isIncludedVat ? const SizedBox() : const Divider(height: 8),
-            state.isIncludedVat ? basketRow(AppLocalizations.of(context)!.total_price_with_vat, (formatNumber(value: (state.totalPayment + (bottleDepositCalculationWithVat(deposit: state.bottleTax, qty: state.bottleQty?.toDouble() ?? 0, vatPercentage: state.vatPercentage))).toString(), local: AppStrings.hebrewLocal)), isTitle: true) : basketRow(AppLocalizations.of(context)!.total, (formatNumber(value: vatCalculation(price: state.totalPayment, vat: state.vatPercentage, qty: state.bottleQty?.toDouble() ?? 0, deposit: state.bottleTax).toStringAsFixed(2), local: AppStrings.hebrewLocal)), isTitle: true),
+            // state.bottleQty! > 0 ? basketRow(state.language == AppStrings.englishString ?
+            // '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.bottleQty.toString()}' :
+            // '${AppLocalizations.of(context)!.bottle_deposit}${state.bottleQty.toString()}${'X'}',
+            //     state.isIncludedVat ? (formatNumber(value: bottleDepositCalculationWithVat(deposit: state.bottleTax, vatPercentage: state.vatPercentage,
+            //         qty: state.bottleQty?.toDouble() ?? 0).toStringAsFixed(2), local: AppStrings.hebrewLocal)) :
+            //     (formatNumber(value: bottleDepositCalculation(deposit: state.bottleTax, qty: state.bottleQty?.toDouble() ?? 0).toStringAsFixed(2),
+            //         local: AppStrings.hebrewLocal))) : 0.height,
+            // state.bottleQty! > 0
+            //     ? const Divider(
+            //         height: 8,
+            //       )
+            //     : 0.height,
+            // state.isIncludedVat ? const SizedBox() : basketRow(AppLocalizations.of(context)!.sub_total,
+            //     (formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal,))),
+            // state.isIncludedVat ? const SizedBox() : const Divider(height: 8),
+            // state.isIncludedVat ? const SizedBox() : basketRow(AppLocalizations.of(context)!.vat, (formatNumber(value: totalVatAmountCalculation(price:
+            // state.totalPayment, vat: state.vatPercentage, qty: state.bottleQty?.toDouble() ?? 0, deposit: state.bottleTax).toStringAsFixed(2), local: AppStrings.hebrewLocal,))),
+            // state.isIncludedVat ? const SizedBox() : const Divider(height: 8),
             const Divider(height: 10),
-            Text(
-              '${AppLocalizations.of(context)!.note} : ${AppLocalizations.of(context)!.not_include_surfaces_price}',
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.redColor),
-            ),
-            2.height,
+            state.isIncludedVat
+                ? basketRow(
+                    AppLocalizations.of(context)!.total_price_with_vat,
+                    (formatNumber(
+                      value: (state.totalPayment +
+                              (bottleDepositCalculationWithVat(
+                                deposit: state.bottleTax,
+                                qty: state.bottleQty?.toDouble() ?? 0,
+                                vatPercentage: state.vatPercentage,
+                              )))
+                          .toString(),
+                      local: AppStrings.hebrewLocal,
+                    )),
+                    isTitle: true,
+                  )
+                : basketRow(
+                    AppLocalizations.of(context)!.total,
+                    (formatNumber(
+                      value: vatCalculation(
+                        price: state.totalPayment,
+                        vat: state.vatPercentage,
+                        qty: state.bottleQty?.toDouble() ?? 0,
+                        deposit: state.bottleTax,
+                      ).toStringAsFixed(2), //refund: 0.0
+                      local: AppStrings.hebrewLocal,
+                    )),
+                    isTitle: true),
+            // const Divider(height: 10),
+            // Text(
+            //   '${AppLocalizations.of(context)!.note} : ${AppLocalizations.of(context)!.not_include_surfaces_price}',
+            //   style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.redColor),
+            // ),
+            const Divider(height: 10),
+            5.height,
             state.isSubUserCanCreateOrder
                 ? CustomButtonWidget(
-                    buttonText: AppLocalizations.of(context)!.submit,
+                    buttonText: AppLocalizations.of(context)!.continues,
                     bGColor: AppColors.mainColor,
                     height: 45,
                     // isLoading: state.isLoading,
@@ -525,19 +568,31 @@ class BasketScreenWidget extends StatelessWidget {
                       } else {
                         if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
                           if (state.supplierCount == 1) {
-                            if (state.draftReturnExists) {
-                              await showDialog(
-                                context: context,
-                                builder: (_) => CallAgentDialog(language: state.language, state: state, context1: context, bloc: bloc),
-                              );
-                            } else {
-                              paymentOptionPopup(state, context, bloc);
-                            }
-
-                            //bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: true, isFromDialog: false, paymentMethod: ''));
+                            Navigator.pushNamed(context, RouteDefine.basketSummaryScreen.name, arguments: {AppStrings.getCartListString: state.cartItemList, AppStrings.isSupplierSingle: 'Yes'});
                           } else {
                             Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
                               AppStrings.getCartListString: state.cartItemList,
+                              AppStrings.isbackString: 'Basket',
+                              AppStrings.totalAmountString: state.isIncludedVat
+                                  ? formatNumber(
+                                      value: (state.totalPayment +
+                                              (bottleDepositCalculationWithVat(
+                                                deposit: state.bottleTax,
+                                                qty: state.bottleQty?.toDouble() ?? 0,
+                                                vatPercentage: state.vatPercentage,
+                                              )))
+                                          .toString(),
+                                      local: AppStrings.hebrewLocal,
+                                    )
+                                  : (formatNumber(
+                                      value: vatCalculation(
+                                        price: state.totalPayment,
+                                        vat: state.vatPercentage,
+                                        qty: state.bottleQty?.toDouble() ?? 0,
+                                        deposit: state.bottleTax,
+                                      ).toStringAsFixed(2), //refund: 0.0
+                                      local: AppStrings.hebrewLocal,
+                                    )),
                             });
                           }
                         }
