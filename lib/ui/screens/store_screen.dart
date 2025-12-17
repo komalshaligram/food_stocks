@@ -35,6 +35,7 @@ import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/custom_dialog.dart';
+import '../widget/custom_text_icon_button_widget.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/pesach_banner_shimmer.dart';
 import '../widget/product_details_shimmer_widget.dart';
@@ -148,6 +149,15 @@ class StoreScreenWidget extends StatelessWidget {
                                     childAnimationBuilder: (widget) => SlideAnimation(verticalOffset: MediaQuery.of(context).size.height / 5, child: FadeInAnimation(child: widget)),
                                     children: [
                                       80.height,
+                                      state.showClientDataOnApp
+                                          ? CustomTextIconButtonWidget(
+                                        width: double.maxFinite,
+                                        title: state.language == 'en' ? state.buttonEnglishText! : state.buttonHebrewText! ,
+                                        onPressed: () {
+                                          Navigator.pushNamed(context, RouteDefine.webViewScreen.name);
+                                        },
+                                      )
+                                          : 0.width,
                                       AnimatedCrossFade(
                                           firstChild: getScreenWidth(context).width,
                                           secondChild: Column(

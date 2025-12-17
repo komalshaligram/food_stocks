@@ -23,11 +23,13 @@ class CartProductsSupplierResModel with _$CartProductsSupplierResModel {
 @freezed
 class Data with _$Data {
   const factory Data({
-    double? vatPercentage,
+    // double? vatPercentage,
     @JsonKey(name: "cart")
     List<Cart>? cart,
     @JsonKey(name: "data")
     List<CartProductDataResModel>? data,
+    @JsonKey(name: "openRefundTotalAmount")
+    double? openRefundTotalAmount,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -38,6 +40,8 @@ class Cart with _$Cart {
   const factory Cart({
     @JsonKey(name: "_id")
     String? id,
+    @JsonKey(name: "clientId")
+    String? clientId,
     @JsonKey(name: "totalAmount")
     double? totalAmount,
   }) = _Cart;
@@ -66,6 +70,13 @@ class CartProductDataResModel with _$CartProductDataResModel {
     bool? notMinimumOrder,
     @JsonKey(name: "totalSavings")
     String? totalSavings,
+    @JsonKey(name: "vatPercentage")
+    double? vatPercentage,
+    @JsonKey(name: "bottleTax")
+    double? bottleTax,
+    @JsonKey(name: "bottleQuantities")
+    double? bottleQuantities,
+
     bool? isProcess
 
   }) = _CartProductDataResModel;

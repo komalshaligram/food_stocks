@@ -17,7 +17,7 @@ class AppConstants{
   static const double containerHeight_130 = 130;
   static const double containerHeight_100 = 100;
   static const double relatedProductItemWidth = 140;
-  static const double withoutSaleItemHeight = 270;
+  static const double withoutSaleItemHeight = 290;
   static const double animationDuration = 8000;
   static const double timeOutDuration = 18000;
   static const double tabletImageHeight = 130;
@@ -41,6 +41,9 @@ class AppConstants{
   static const double padding_8 = 8;
   static const double padding_3 = 3;
   static const double padding_50 = 50;
+  static const double padding_55 = 55;
+  static const double padding_60 = 60;
+  static const double padding_65 = 65;
   static const double padding_80 = 80;
   static const double padding_2 = 2;
   static const double padding_40 = 40;

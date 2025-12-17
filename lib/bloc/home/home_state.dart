@@ -58,6 +58,9 @@ class HomeState with _$HomeState {
     required BuildContext? context,
     required RefreshController refreshController,
     required bool isDialog,
+    required bool showClientDataOnApp,
+    required String? buttonEnglishText,
+    required String? buttonHebrewText
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -122,5 +125,8 @@ class HomeState with _$HomeState {
     context : null,
     refreshController: RefreshController(),
     isDialog : false,
+    showClientDataOnApp : false,
+    buttonEnglishText: '',
+    buttonHebrewText : ''
   );
 }

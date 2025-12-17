@@ -27,6 +27,7 @@ class Data with _$Data {
     bool? isAppOnMaintenance,
     TaviliRivchitDetails? taviliRivchitDetails,
     List<String>? showVatApplication,
+    DataWebViewSettings? dataWebViewSettings,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -39,5 +40,19 @@ class TaviliRivchitDetails with _$TaviliRivchitDetails {
   }) = _TaviliRivchitDetails;
 
   factory TaviliRivchitDetails.fromJson(Map<String, dynamic> json) => _$TaviliRivchitDetailsFromJson(json);
+}
+
+@freezed
+class DataWebViewSettings with _$DataWebViewSettings {
+  const factory DataWebViewSettings({
+    String? baseUrl,
+    String? buttonEnglishText,
+    String? screenEnglishTitle,
+    String? buttonHebrewText,
+    String? screenHebrewTitle,
+  }) = _DataWebViewSettings;
+
+  factory DataWebViewSettings.fromJson(Map<String, dynamic> json)
+  => _$DataWebViewSettingsFromJson(json);
 }
 

@@ -546,11 +546,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             if (response.status == AppConstants.code_200) {
               preferences.setAvailableAllPayment(isAvailableAllPayment: response.data?.clients?.first.clientDetail?.isAvailableAllPayments ?? false);
               preferences.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
+              preferences.setClientDataOnApp(showClientDataOnApp: response.data?.clients?.first.clientDetail?.showClientDataOnApp ?? false);
               // preferences.setIsWalletApproved(walletApproved: response.data?.clients?.first.clientDetail?.isWalletApproved??false);
               preferences.setPaymentMethodTypes(methods: response.data?.clients?.first.clientDetail?.availablePaymentTypes ?? []);
               preferences.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
               preferences.setBusinessName(businessName: response.data?.clients?.first.clientDetail?.bussinessName ?? '');
               preferences.setEmailId(userEmailId: response.data?.clients?.first.email ?? '');
+              emit(state.copyWith(showClientDataOnApp: response.data?.clients?.first.clientDetail?.showClientDataOnApp ?? false));
               if (!preferences.getSubUser()) {
                 preferences.setUserImageUrl(imageUrl: response.data?.clients?.first.profileImage ?? '');
                 emit(
@@ -794,6 +796,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         } else if (event is _checkVersionOfAppEvent) {
           final checker = StoreVersionChecker();
           checker.checkUpdate().then((value) {
+            printData("check here ${value}");
+            printData("check here currentVersion ${value.currentVersion}"); //return current app version
+            printData("check here newVersion ${value.newVersion}"); //return the new app version
+            printData("check here appURL ${value.appURL}"); //return the app url
+            printData("check here errorMessage ${value.errorMessage}"); //return error message if found else it will return null
             if (value.canUpdate && Platform.isAndroid) {
               customShowUpdateDialog(event.context, preferences.getAppLanguage(), value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
             } else if (value.canUpdate && Platform.isIOS) {
@@ -879,7 +886,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               preferences.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
               preferences.setIsAppOnMaintenance(isAppOnMaintenance: response.data?.isAppOnMaintenance ?? false);
 
-              emit(state.copyWith(language: preferences.getAppLanguage(), pesachBannerShimmering: false, pesachBannerURL: response.data?.pesachBanner ?? '', showPesachBanner: response.data?.isShowPesachBanner ?? false, bottlePrice: response.data?.bottlePrice ?? 0.0, isIncludedVat: preferences.getIsIncludedVat(), isSaleOn: preferences.getShowSale(), retryLoading: false, isAppOnMaintenance: preferences.getAppOnMaintenance()));
+              emit(state.copyWith(
+                language: preferences.getAppLanguage(),
+                pesachBannerShimmering: false,
+                pesachBannerURL: response.data?.pesachBanner ?? '',
+                showPesachBanner: response.data?.isShowPesachBanner ?? false,
+                bottlePrice: response.data?.bottlePrice ?? 0.0,
+                isIncludedVat: preferences.getIsIncludedVat(),
+                isSaleOn: preferences.getShowSale(),
+                retryLoading: false,
+                isAppOnMaintenance: preferences.getAppOnMaintenance(),
+                buttonEnglishText: response.data?.dataWebViewSettings?.buttonEnglishText,
+                buttonHebrewText: response.data?.dataWebViewSettings?.buttonHebrewText,
+              ));
             } else {
               emit(state.copyWith(pesachBannerShimmering: false, retryLoading: false));
             }

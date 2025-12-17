@@ -214,7 +214,7 @@ class AppStrings {
   static const showPreviousBtn = 'showPreviousBtn';
   static const isbackString = 'isBack';
   static const statusList = 'statusList';
-
+  static const totalSupplier = 'totalSupplier';
   static const textIdProof = 'צילום תעודת זהות';
 
   //smartlook keys

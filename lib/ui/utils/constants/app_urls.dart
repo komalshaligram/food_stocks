@@ -1,8 +1,8 @@
 
 
 class AppUrlEndPoints {
-      // static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl live
-    static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; // local
+      static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; ///prodUrl live
+    // static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; // local
 
   // static const String baseUrl = 'http://192.168.3.75:3000/api'; // local 75 yash 45 harshit
 
@@ -136,6 +136,8 @@ class AppUrlEndPoints {
   static const String deleteReturnUrl = '/v1/return/deleteReturn';
   static const String getLatestOnthewayOrderUrl = '/v2/orders/get-latest-ontheway-order/';
   static const String getClientPendingReturnProducts = '/v1/return/getClientPendingReturnProducts/';
+  static const String getRefundInvoiceCopy = '/v1/refund/getRefundInvoiceCopy';
+  static const String clientRefundUrl = '/v1/refund/getRefundInvoices/';
 }
 
 

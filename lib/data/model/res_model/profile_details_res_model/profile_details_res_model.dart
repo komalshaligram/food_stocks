@@ -127,7 +127,7 @@ class ClientDetail with _$ClientDetail {
     bool? isAvailableAllPayments,
     @JsonKey(name: "bank") Bank? bank,
     @JsonKey(name: "agent") Agent? agent,
-
+    @JsonKey(name: "showClientDataOnApp") bool? showClientDataOnApp,
     //bool? isWalletApproved
   }) = _ClientDetail;
 

@@ -58,6 +58,7 @@ class SharedPreferencesHelper {
   static const String manageSubUser = 'manageSubUser';
   static const String subUserId = 'subUserId';
   static const String canSeeInvoices = 'canSeeInvoices';
+  static const String clientDataOnApp = 'showClientDataOnApp';
   static const String appOnMaintenance = 'isAppOnMaintenance';
   static const String paymentMethod = 'selectedPaymentMethod';
   static const String paymentMethodCount = 'paymentMethodCount';
@@ -236,6 +237,9 @@ class SharedPreferencesHelper {
   Future<void> setIsAppOnMaintenance({required bool isAppOnMaintenance}) async {
     await prefs.setBool(appOnMaintenance, isAppOnMaintenance);
   }
+  Future<void> setClientDataOnApp({required bool showClientDataOnApp}) async {
+    await prefs.setBool(clientDataOnApp, showClientDataOnApp);
+  }
 
   Future<void> setIsWalletApproved({required bool walletApproved}) async {
     await prefs.setBool(isWalletApproved, walletApproved);
@@ -405,6 +409,10 @@ class SharedPreferencesHelper {
 
   String getAppLanguage() {
     return prefs.getString(lang) ?? AppStrings.hebrewString;
+  }
+
+  bool getClientDataOnApp() {
+    return prefs.getBool(clientDataOnApp) ?? false;
   }
 
   bool getUserLoggedIn() {

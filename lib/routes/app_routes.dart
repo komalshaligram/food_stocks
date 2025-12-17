@@ -60,6 +60,7 @@ import '../ui/screens/supplier_screen.dart';
 import '../ui/screens/wallet_screen.dart';
 import '../ui/screens/way_of_payment_screen.dart';
 import '../ui/screens/client_form_details_screen.dart';
+import '../ui/screens/webview_screen.dart';
 
 enum RouteDefine {
   ///ADD NAME OF ROUTE SCREEN
@@ -124,7 +125,8 @@ enum RouteDefine {
   createProductReturnListScreen,
   returnSummaryScreen,
   clientFormDetailsScreen,
-  returnDriverScreen
+  returnDriverScreen,
+  webViewScreen
 }
 
 class AppRouting {
@@ -194,6 +196,7 @@ class AppRouting {
       RouteDefine.returnSummaryScreen.name:(_)=>ReturnSummaryRoute.route,
       RouteDefine.clientFormDetailsScreen.name:(_)=>ClientFormDetailsRoute.route,
       RouteDefine.returnDriverScreen.name:(_)=>ReturnDriverRoute.route,
+      RouteDefine.webViewScreen.name:(_)=>WebViewRoute.route,
     };
 
     final routeBuilder = routes[settings.name];
