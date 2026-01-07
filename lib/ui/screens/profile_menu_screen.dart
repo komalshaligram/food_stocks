@@ -155,19 +155,26 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     : 0.width,
                                 state.isCanSeeInvoices
                                     ? profileMenuTiles(
-                                        title: AppLocalizations.of(context)!.my_invoices,
-                                        onTap: () {
-                                          Navigator.pushNamed(context, RouteDefine.invoiceScreen.name, arguments: {AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_invoices});
-                                        })
+                                    title: AppLocalizations.of(context)!.my_accounting_card,
+                                    onTap: () {
+                                      Navigator.pushNamed(context, RouteDefine.myAccountingCardScreen.name,);
+                                    })
                                     : 0.width,
-                                state.isCanSeeInvoices
-                                    ? profileMenuTiles(
-                                        title: AppLocalizations.of(context)!.my_refunds,
-                                        onTap: () {
-                                          Navigator.pushNamed(context, RouteDefine.refundScreen.name, arguments:
-                                          {AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_refunds});
-                                        })
-                                    : 0.width,
+                                // state.isCanSeeInvoices
+                                //     ? profileMenuTiles(
+                                //         title: AppLocalizations.of(context)!.my_invoices,
+                                //         onTap: () {
+                                //           Navigator.pushNamed(context, RouteDefine.invoiceScreen.name, arguments: {AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_invoices});
+                                //         })
+                                //     : 0.width,
+                                // state.isCanSeeInvoices
+                                //     ? profileMenuTiles(
+                                //         title: AppLocalizations.of(context)!.my_refunds,
+                                //         onTap: () {
+                                //           Navigator.pushNamed(context, RouteDefine.refundScreen.name, arguments:
+                                //           {AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_refunds});
+                                //         })
+                                //     : 0.width,
                                 state.isSubUserSeeReturns
                                     ? profileMenuTiles(
                                         title: AppLocalizations.of(context)!.returns,
@@ -207,7 +214,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     ? profileMenuTiles(
                                         title: AppLocalizations.of(context)!.files,
                                         onTap: () {
-                                          Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name, arguments: {AppStrings.isUpdateParamString: true});
+                                          Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name, arguments: {
+                                          AppStrings.isUpdateParamString: true,
+                                            AppStrings.isRegisterFileString: false});
                                         })
                                     : 0.width,
                                 state.isSubUserCanManageSubUser

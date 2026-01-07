@@ -55,7 +55,7 @@ class BasketScreen extends StatelessWidget {
 }
 
 class BasketScreenWidget extends StatelessWidget {
-  BasketScreenWidget({Key? key}) : super(key: key);
+  const BasketScreenWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -117,8 +117,6 @@ class BasketScreenWidget extends StatelessWidget {
                     } catch (e) {
                       CustomSnackBar.showSnackBar(context: context, title: e.toString(), type: SnackBarType.failure);
                     }
-
-
                   },
                   positiveTitle: AppLocalizations.of(context)!.show_order,
                   width: 120,
@@ -606,13 +604,13 @@ class BasketScreenWidget extends StatelessWidget {
         ));
   }
 
-  Widget basketRow(String title, String amount, {bool isTitle = false, double fontSize = 16}) {
+  Widget basketRow(String title, String amount, {bool isTitle = false, double fontSize = 20}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
-          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor),
+          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_20, color: AppColors.blackColor, fontWeight: FontWeight.w700),
         ),
         Text(
           amount,

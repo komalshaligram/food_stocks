@@ -127,7 +127,7 @@ class ClientDetail with _$ClientDetail {
     bool? isAvailableAllPayments,
     @JsonKey(name: "bank") Bank? bank,
     @JsonKey(name: "agent") Agent? agent,
-
+    @JsonKey(name: "showClientDataOnApp") bool? showClientDataOnApp,
     //bool? isWalletApproved
   }) = _ClientDetail;
 
@@ -148,7 +148,7 @@ class SupplierCustomerDetails with _$SupplierCustomerDetails {
     @JsonKey(name: "supplierCustomerNumber") int? supplierCustomerNumber,
     @JsonKey(name: "updatedAt") String? updatedAt,
     @JsonKey(name: "customerComaxId") String? customerComaxId,
-    @JsonKey(name: "customerRivchitId") int? customerRivchitId,
+    @JsonKey(name: "customerRivchitId") dynamic customerRivchitId,
     @JsonKey(name: "customerCreditcardToken") String? customerCreditcardToken,
     @JsonKey(name: "costumerStatusName") String? costumerStatusName,
     @JsonKey(name: "costumerStatusNumber") dynamic costumerStatusNumber,

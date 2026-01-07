@@ -96,13 +96,9 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                               );
                             },
                           ));
-                      //
                     } catch (e) {
                       CustomSnackBar.showSnackBar(context: context, title: e.toString(), type: SnackBarType.failure);
                     }
-
-                    // Navigator.pop(context1);
-                    // Navigator.pushNamed(context, RouteDefine.orderScreen.name);
                   },
                   positiveTitle: AppLocalizations.of(context)!.show_order,
                   width: 120,
@@ -110,7 +106,6 @@ class BasketSummaryScreenWidget extends StatelessWidget {
             },
           ).then((value) {
             context.read<BasketSummaryBloc>().add(const BasketSummaryEvent.refreshEvent());
-            // context.read<OrderSummaryBloc>().add(const OrderSummaryEvent.refreshEvent());
           });
         } else if (state.isPaymentFail) {
           showDialog(
@@ -455,7 +450,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
               directionality: state.language,
-              positiveTitle: AppLocalizations.of(context)!.pay_with_credit_card, //state.paymentTypesList.any((e) => e == AppStrings.creditCard) ? AppLocalizations.of(context)!.pay_with_credit_card : null,
+              positiveTitle: AppLocalizations.of(context)!.pay_with_credit_card,
               positiveOnTap: () {
                 Navigator.pop(context);
                 bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.creditCard));
@@ -478,9 +473,9 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                 Navigator.pop(context1);
                 bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.bankCheck));
               },
-              positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment, //state.paymentTypesList.any((e) => e == AppStrings.wallet) ? AppLocalizations.of(context)!.change_to_wallet_payment : null,
-              positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer, //state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null,
-              positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check, //state.paymentTypesList.any((e) => e == AppStrings.bankCheck) ? AppLocalizations.of(context)!.pay_with_bank_check : null,
+              positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
+              positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
+              positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
             );
           } else {
             return CustomOneButtonDialog(
@@ -495,7 +490,6 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                   failPayment: false,
                   paymentMethod: AppStrings.creditCard,
                 ));
-                //  Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
               },
               positiveOnTap1: () {
                 Navigator.pop(context);
@@ -506,7 +500,6 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                     function: () {
                       bloc.add(BasketSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: isFromRemovePopUp));
                     });
-                //   bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: false,  paymentMethod: AppStrings.bankTransfer,));
               },
               positiveTitle1: AppLocalizations.of(context)!.pay_with_bank_transfer,
             );
@@ -515,7 +508,6 @@ class BasketSummaryScreenWidget extends StatelessWidget {
   }
 
   Widget orderListItem({required int index, required BuildContext context, required BasketSummaryBloc bloc}) {
-    /* OrderSummaryBloc bloc = context.read<OrderSummaryBloc>();*/
     return BlocBuilder<BasketSummaryBloc, BasketSummaryState>(
       builder: (context, state) {
         return Column(
@@ -595,29 +587,6 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-
-                  // CustomButtonWidget(
-                  //   buttonText: AppLocalizations.of(context)!.send_order,
-                  //   bGColor: AppColors.mainColor,
-                  //   height: 40,
-                  //   // isLoading: state.tempList[index].isProcess ?? false,
-                  //   onPressed: () async {
-                  //     if (state.tempList[index].draftReturnExists!) {
-                  //       await showDialog(
-                  //         context: context,
-                  //         builder: (_) => CallAgentDialog(
-                  //           language: state.language,
-                  //           id: state.tempList[index].suppliers?.id ?? '',
-                  //           index: index,
-                  //           bloc: bloc,
-                  //         ),
-                  //       );
-                  //     } else {
-                  //       bloc.add(BasketSummaryEvent.getSupplierPaymentTypeEvent(context: context, id: state.tempList[index].suppliers?.id ?? '', index: index));
-                  //     }
-                  //   },
-                  //   fontColors: AppColors.whiteColor,
-                  // ),
                 ],
               ),
             ),
@@ -631,14 +600,12 @@ class BasketSummaryScreenWidget extends StatelessWidget {
   Widget totalAmountCard(BasketSummaryState state, BuildContext context, int index) {
     BasketSummaryBloc bloc = context.read<BasketSummaryBloc>();
 
-    // --- Compute price parts ---
     double orderAmount = double.tryParse(state.tempList[index].totalAmount ?? '0') ?? 0;
     double vatPercentage = state.tempList[index].vatPercentage ?? 0;
     double deposit = state.tempList[index].bottleTax ?? 0;
     double qty = state.tempList[index].bottleQuantities?.toDouble() ?? 0;
-    double refundAmount = state.orderSummaryList.data?.openRefundTotalAmount ?? 0; // negative value (e.g. -150)
+    double refundAmount = state.orderSummaryList.data?.openRefundTotalAmount ?? 0;
 
-// --- Compute each component ---
     double vatAmount = totalVatAmountCalculation(
       price: orderAmount,
       vat: vatPercentage,
@@ -651,47 +618,33 @@ class BasketSummaryScreenWidget extends StatelessWidget {
       qty: qty,
     );
 
-    double bottleDepositVat = (qty * deposit * vatPercentage) / 100;
-
-// --- Calculate total payable before refund ---
     double totalBeforeRefund;
 
     if (state.isIncludedVat) {
-      // VAT already included in totalAmount
-      // So total = orderAmount (already with VAT) + deposit + deposit VAT
-      totalBeforeRefund = orderAmount + bottleDeposit ; // +bottleDepositVat
+      totalBeforeRefund = orderAmount + bottleDeposit;
     } else {
-      // VAT is not included yet
-      totalBeforeRefund = orderAmount + vatAmount + bottleDeposit ; // +bottleDepositVat
+      totalBeforeRefund = orderAmount + vatAmount + bottleDeposit;
     }
 
-// --- Apply refund logic ---
     double remainingRefund = 0;
-    double totalRefund =0.0;
+    double totalRefund = 0.0;
     if (refundAmount < 0) {
-      double refundAbs = -refundAmount; // make refund positive
+      double refundAbs = -refundAmount;
       if (refundAbs > totalBeforeRefund) {
-        // extra refund left
-        totalRefund = totalBeforeRefund - 1;
+        totalRefund = totalBeforeRefund;
         remainingRefund = refundAbs - totalRefund;
-
-      }
-      else{
-        totalRefund =refundAbs;
+      } else {
+        totalRefund = refundAbs;
         remainingRefund = 0;
       }
-
-      printData("check totalRefund ${totalRefund}");
-      printData("check remainingRefund ${remainingRefund}");
-      printData("check totalBeforeRefund ${totalBeforeRefund}");
-      printData("check total refund ${state.orderSummaryList.data?.openRefundTotalAmount}");
     }
 
     final isHebrew = Localizations.localeOf(context).languageCode == 'he';
 
-
-
-
+    final rawAmount = state.orderSummaryList.data?.openRefundTotalAmount;
+    final amountStr = rawAmount?.toString() ?? '0';
+    final isNegative = amountStr.startsWith('-');
+    final refundTotalAmount = isNegative ? ' $amountStr₪' : '$amountStr₪';
 
     return Container(
         alignment: state.language == AppStrings.englishString ? Alignment.centerLeft : Alignment.centerRight,
@@ -718,7 +671,6 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                       local: AppStrings.hebrewLocal,
                     ),
                   ),
-
             state.isIncludedVat ? const SizedBox() : const Divider(height: 8),
             state.isIncludedVat
                 ? const SizedBox()
@@ -733,12 +685,16 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                 ? const SizedBox()
                 : basketRow(
                     AppLocalizations.of(context)!.total_refunds,
-
-                    '${totalRefund.toStringAsFixed(2)}₪', //state.orderSummaryList.data?.openRefundTotalAmount! ?? 0
-                    // (formatNumber(
-                    //   value: (state.orderSummaryList.data?.openRefundTotalAmount! ?? 0).toString(),
-                    //   local: AppStrings.hebrewLocal,
-                    // ))
+                    formatNumberPositiveToNegative(
+                      value: (-vatCalculation(
+                        price: double.parse(state.tempList[index].totalAmount ?? '0'),
+                        vat: state.tempList[index].vatPercentage ?? 0,
+                        qty: state.tempList[index].bottleQuantities!.toDouble() ?? 0,
+                        deposit: state.tempList[index].bottleTax!.toDouble() ?? 0,
+                      ))
+                          .toStringAsFixed(2),
+                      local: AppStrings.hebrewLocal,
+                    ),
                   ),
             state.isIncludedVat ? const SizedBox() : const Divider(height: 8),
             state.isIncludedVat
@@ -775,19 +731,14 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                 spacing: 4, // space between texts
                 children: [
                   Text(
-                  isHebrew ? AppLocalizations.of(context)!.refund_amount_1 :
-                    '${AppLocalizations.of(context)!.refund_amount_1} ${remainingRefund.toStringAsFixed(2)}${'₪'}', // ₪ // ${formatNumber(
-                    // value: remainingRefund.toStringAsFixed(2),
-                    // local: AppStrings.hebrewLocal,
-                    // )
+                    isHebrew ? AppLocalizations.of(context)!.refund_amount_1 : '${AppLocalizations.of(context)!.refund_amount_1} ${remainingRefund.toStringAsFixed(2)}${'₪'}', // ₪ // ${formatNumber(
                     style: AppStyles.rkBoldTextStyle(
                       size: AppConstants.font_15,
                       color: AppColors.notificationColor,
                     ),
                   ),
                   Text(
-                    isHebrew ? '${AppLocalizations.of(context)!.refund_amount_2} ${remainingRefund.toStringAsFixed(2)}${'₪'}' :
-                    AppLocalizations.of(context)!.refund_amount_2,
+                    isHebrew ? '${AppLocalizations.of(context)!.refund_amount_2} ${remainingRefund.toStringAsFixed(2)}${'₪'}' : AppLocalizations.of(context)!.refund_amount_2,
                     style: AppStyles.rkBoldTextStyle(
                       size: AppConstants.font_15,
                       color: AppColors.notificationColor,
@@ -795,19 +746,16 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                   ),
                 ],
               ),
-
             30.height,
             Text(
               '${AppLocalizations.of(context)!.note} : ${AppLocalizations.of(context)!.not_include_surfaces_price}',
               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.redColor),
             ),
             2.height,
-
             CustomButtonWidget(
               buttonText: AppLocalizations.of(context)!.submit,
               bGColor: AppColors.mainColor,
               height: 45,
-              // isLoading: state.isLoading,
               onPressed: () async {
                 if (state.tempList[index].draftReturnExists!) {
                   await showDialog(
@@ -822,44 +770,21 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                 } else {
                   bloc.add(BasketSummaryEvent.getSupplierPaymentTypeEvent(context: context, id: state.tempList[index].suppliers?.id ?? '', index: index));
                 }
-                // if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
-                //   if (state.supplierCount == 1) {
-                //     Navigator.pushNamed(context, RouteDefine.basketSummaryScreen.name, arguments: {
-                //       AppStrings.getCartListString: state.cartItemList,
-                //     });
-                //     // if (state.draftReturnExists) {
-                //     //   await showDialog(
-                //     //     context: context,
-                //     //     builder: (_) => CallAgentDialog(language: state.language, state: state, context1: context, bloc: bloc),
-                //     //   );
-                //     // } else {
-                //     //   paymentOptionPopup(state, context, bloc);
-                //     // }
-                //
-                //     //bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: true, isFromDialog: false, paymentMethod: ''));
-                //   } else {
-                //     Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
-                //       AppStrings.getCartListString: state.cartItemList,
-                //     });
-                //   }
-                // }
-                // }
               },
               fontColors: AppColors.whiteColor,
             ),
-            // : 0.width,
             10.height
           ],
         ));
   }
 
-  Widget basketRow(String title, String amount, {bool isTitle = false, double fontSize = 16}) {
+  Widget basketRow(String title, String amount, {bool isTitle = false, double fontSize = 15}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
-          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor),
+          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_15, color: AppColors.blackColor),
         ),
         Directionality(
           textDirection: TextDirection.ltr,
@@ -872,54 +797,6 @@ class BasketSummaryScreenWidget extends StatelessWidget {
       ],
     );
   }
-
-  // void removeOutOfStockProductDialog({
-  //   required BuildContext context,
-  // }) {
-  //   BasketSummaryBloc bloc = context.read<BasketSummaryBloc>();
-  //   showDialog(
-  //       context: context,
-  //       builder: (context1) => BlocProvider.value(
-  //         value: context.read<BasketSummaryBloc>(),
-  //         child: BlocBuilder<BasketSummaryBloc, BasketSummaryState>(
-  //           builder: (context, state) {
-  //             return AbsorbPointer(
-  //                 absorbing: state.isRemoveProcess ? true : false,
-  //                 child: CustomDialog(
-  //                   title: AppLocalizations.of(context)!.some_products_out_of_stock_Do_you_want_submit_order,
-  //                   content: const [],
-  //                   isMixedSale: false,
-  //                   directionality: state.language,
-  //                   positiveTitle: AppLocalizations.of(context)!.yes,
-  //                   isProcessing: state.isRemoveProcess,
-  //                   negativeTitle: AppLocalizations.of(context)!.no,
-  //                   positiveOnTap: () async {
-  //                     if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
-  //                       if (state.supplierCount == 1) {
-  //                         if (state.draftReturnExists) {
-  //                           await showDialog(
-  //                             context: context,
-  //                             builder: (_) => CallAgentDialog(language: state.language, state: state, context1: context, bloc: bloc),
-  //                           );
-  //                         } else {
-  //                           paymentOptionPopup(state, context, bloc, isFromRemovePopUp: true);
-  //                         }
-  //                         //   bloc.add(BasketEvent.orderSendEvent(context: context, failPayment: true, isFromDialog: false, paymentMethod: ''));
-  //                       } else {
-  //                         Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
-  //                           AppStrings.getCartListString: state.cartItemList,
-  //                         });
-  //                       }
-  //                     }
-  //                   },
-  //                   negativeOnTap: () {
-  //                     Navigator.pop(context1);
-  //                   },
-  //                 ));
-  //           },
-  //         ),
-  //       ));
-  // }
 }
 
 class CallAgentDialog extends StatelessWidget {
@@ -946,7 +823,6 @@ class CallAgentDialog extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
         content: Text(
           AppLocalizations.of(context)!.return_draft_not_sent,
-          // AppStrings.getLocalizedStrings(, context),
           style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.smallFont),
         ),
         actions: [

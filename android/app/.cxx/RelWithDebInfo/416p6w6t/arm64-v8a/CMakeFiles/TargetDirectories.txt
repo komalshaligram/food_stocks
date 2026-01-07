@@ -1,2 +1,0 @@
-/Users/komal-sit/Documents/Projects/30-06-2025/food_stocks/android/app/.cxx/RelWithDebInfo/416p6w6t/arm64-v8a/CMakeFiles/edit_cache.dir
-/Users/komal-sit/Documents/Projects/30-06-2025/food_stocks/android/app/.cxx/RelWithDebInfo/416p6w6t/arm64-v8a/CMakeFiles/rebuild_cache.dir

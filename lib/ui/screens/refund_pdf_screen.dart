@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../bloc/refund_pdf/refund_pdf_bloc.dart';
-import '../../data/model/res_model/refund_res/refund_res_model.dart';
+import '../../data/model/res_model/refund_invoice_common_res/refund_invoice_common.dart';
 import '../../ui/utils/constants/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -37,7 +37,7 @@ class RefundPdfScreen extends StatelessWidget {
 }
 
 class RefundPdfScreenWidget extends StatelessWidget {
-  final RefundInvoice? invoiceDetailsList;
+  final RefundInvoiceCommon? invoiceDetailsList; // ← CHANGED TYPE
 
   RefundPdfScreenWidget({super.key, required this.invoiceDetailsList});
 
@@ -46,7 +46,7 @@ class RefundPdfScreenWidget extends StatelessWidget {
     return BlocBuilder<RefundPdfBloc, RefundPdfState>(
       builder: (context, state) {
         final bloc = context.read<RefundPdfBloc>();
-        final String? fullUrl = state.invoiceDetailsList.invoiceLink;
+        final String? fullUrl = state.invoiceDetailsList?.invoiceLink;
 
         return Scaffold(
           backgroundColor: AppColors.pageColor,
@@ -59,17 +59,15 @@ class RefundPdfScreenWidget extends StatelessWidget {
               onTap: () => Navigator.pop(context),
               trailingWidget: GestureDetector(
                 onTap: () async {
-                  // If PDF URL exists, share directly
                   if (bloc.isValidLink(fullUrl)) {
                     await Share.share(fullUrl!);
                     return;
                   }
 
-                  // Otherwise fetch from API
                   bloc.add(RefundPdfEvent.verifyInvoiceLink(context: context));
                   await Future.delayed(const Duration(milliseconds: 500));
 
-                  final newUrl = bloc.state.invoiceDetailsList.invoiceLink;
+                  final newUrl = bloc.state.invoiceDetailsList?.invoiceLink;
 
                   if (bloc.isValidLink(newUrl)) {
                     await Share.share(newUrl!);
@@ -86,19 +84,16 @@ class RefundPdfScreenWidget extends StatelessWidget {
 
           body: Builder(
             builder: (_) {
-              // 1️⃣ API loading → show nothing, PDF loader will appear automatically once URL is set
               if (state.hasValidLink == null) {
                 return const SizedBox.shrink();
               }
 
-              // 2️⃣ Invalid → show message
               if (state.hasValidLink == false || !bloc.isValidLink(fullUrl)) {
                 return Center(
                   child: Text(AppLocalizations.of(context)!.no_invoice_file),
                 );
               }
 
-              // 3️⃣ Valid URL → PDF Viewer automatically shows loader
               return SfPdfViewer.network(
                 fullUrl!,
                 canShowScrollStatus: true,

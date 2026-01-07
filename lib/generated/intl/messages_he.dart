@@ -243,7 +243,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "countdown": MessageLookupByLibrary.simpleMessage(
       "שעות ליצירת הזמנות נוספות ללא הגבלה מינימלית לספק Tavili.",
     ),
-    "credit_card": MessageLookupByLibrary.simpleMessage("גבייה בכרטיס אשראי"),
+    "credit_card": MessageLookupByLibrary.simpleMessage("כרטיס אשראי"),
     "credit_card_details": MessageLookupByLibrary.simpleMessage(
       "פרטי כרטיס אשראי",
     ),
@@ -386,6 +386,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "files": MessageLookupByLibrary.simpleMessage("קבצים"),
     "filtering": MessageLookupByLibrary.simpleMessage("Filtering"),
     "finish": MessageLookupByLibrary.simpleMessage("לתשלום"),
+    "for_order": MessageLookupByLibrary.simpleMessage("להזמנה"),
     "form_create_successful": MessageLookupByLibrary.simpleMessage(
       "יצירת טופס בוצעה בהצלחה",
     ),
@@ -472,14 +473,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "invalid_verification_code": MessageLookupByLibrary.simpleMessage(
       "קוד אימות לא תקין. אנא בדוק את הקוד ונסה שוב",
     ),
+    "invoice": MessageLookupByLibrary.simpleMessage("חשבונית"),
     "invoice_amount": MessageLookupByLibrary.simpleMessage("סכום חשבונית"),
     "invoice_charge": MessageLookupByLibrary.simpleMessage(
       "החיוב יבוצע כאשר תקבל חשבונית",
     ),
+    "invoice_close": MessageLookupByLibrary.simpleMessage("סגור"),
     "invoice_date": MessageLookupByLibrary.simpleMessage("תאריך החשבונית"),
     "invoice_number": MessageLookupByLibrary.simpleMessage("חשבונית זיכוי"),
+    "invoice_open": MessageLookupByLibrary.simpleMessage("פתוח"),
     "invoice_status": MessageLookupByLibrary.simpleMessage("סטטוס חשבונית"),
     "invoice_type": MessageLookupByLibrary.simpleMessage("סוג חשבונית"),
+    "invoices": MessageLookupByLibrary.simpleMessage("חשבוניות"),
     "israel_id": MessageLookupByLibrary.simpleMessage("תעודת זהות"),
     "israel_id_exist": MessageLookupByLibrary.simpleMessage(
       "מספר הת.ז. או מספר העוסק מורשה כבר קיים במערכת",
@@ -581,6 +586,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "more": MessageLookupByLibrary.simpleMessage("הכל"),
     "more_details": MessageLookupByLibrary.simpleMessage("פרטים נוספים"),
+    "my_accounting_card": MessageLookupByLibrary.simpleMessage("הכרטסת שלי"),
     "my_agent_code": MessageLookupByLibrary.simpleMessage("קוד סוכן"),
     "my_basket": MessageLookupByLibrary.simpleMessage("הסל שלי"),
     "my_invoices": MessageLookupByLibrary.simpleMessage("החשבוניות שלי"),
@@ -604,6 +610,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_internet_connection": MessageLookupByLibrary.simpleMessage(
       "אין חיבור לאינטרנט",
     ),
+    "no_invoice_data": MessageLookupByLibrary.simpleMessage(
+      "לא נמצאו נתוני חשבונית",
+    ),
     "no_invoice_file": MessageLookupByLibrary.simpleMessage(
       "לא נמצא קובץ חשבונית",
     ),
@@ -613,6 +622,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_product": MessageLookupByLibrary.simpleMessage("המוצר לא נמצא"),
     "no_products_are_registered": MessageLookupByLibrary.simpleMessage(
       "אף מוצר אינו רשום",
+    ),
+    "no_refund_data": MessageLookupByLibrary.simpleMessage(
+      "לא נמצאו נתוני החזר כספי",
     ),
     "not_add_more_than_max_qty": MessageLookupByLibrary.simpleMessage(
       "לא ניתן להוסיף יותר מהמקסימום עבור המבצע הזה",
@@ -662,6 +674,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "order_issue_created_notification_title":
         MessageLookupByLibrary.simpleMessage("בעיות דווחו במספר הזמנת הספק #"),
     "order_not_found": MessageLookupByLibrary.simpleMessage("הזמנה לא נמצאה"),
+    "order_number": MessageLookupByLibrary.simpleMessage("מספר הזמנה"),
     "order_products_bad_request": MessageLookupByLibrary.simpleMessage(
       "לפחות מוצר אחד דרוש",
     ),
@@ -715,11 +728,17 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "pay_with_wallet": MessageLookupByLibrary.simpleMessage("תשלום מהארנק"),
     "payed": MessageLookupByLibrary.simpleMessage("שולם"),
+    "payment_bank_check": MessageLookupByLibrary.simpleMessage("צ\'ק"),
+    "payment_bank_transfer": MessageLookupByLibrary.simpleMessage(
+      "העברה בנקאית",
+    ),
+    "payment_credit_card": MessageLookupByLibrary.simpleMessage("כרטיס אשראי"),
     "payment_dialog_option_title": MessageLookupByLibrary.simpleMessage(
       "ניתן לבצע את התשלום כך:",
     ),
     "payment_invoice": MessageLookupByLibrary.simpleMessage("חשבונית תשלום"),
     "payment_type": MessageLookupByLibrary.simpleMessage("שיטת תשלום"),
+    "payment_wallet": MessageLookupByLibrary.simpleMessage("ארנק"),
     "pending": MessageLookupByLibrary.simpleMessage("ממתין"),
     "pending_delivery": MessageLookupByLibrary.simpleMessage("Pending"),
     "per_unit": MessageLookupByLibrary.simpleMessage("ליחידה"),
@@ -1027,12 +1046,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "החזר כספי על חשבוניות",
     ),
     "refunded_on_order": MessageLookupByLibrary.simpleMessage("הזמנה שזוכתה"),
+    "refunds": MessageLookupByLibrary.simpleMessage("זיכויים"),
+    "refunds_for_order": MessageLookupByLibrary.simpleMessage(
+      "חשבוניות זיכוי עבור הזמנה: ",
+    ),
     "register": MessageLookupByLibrary.simpleMessage("הרשמה"),
     "registered_successfully": MessageLookupByLibrary.simpleMessage(
       "נרשמת בהצלחה",
     ),
     "related_products": MessageLookupByLibrary.simpleMessage("מוצרים דומים"),
     "remaining_refund": MessageLookupByLibrary.simpleMessage("זיכוי שנשאר"),
+    "remaining_to_pay": MessageLookupByLibrary.simpleMessage("יתרה לתשלום"),
     "remove": MessageLookupByLibrary.simpleMessage("מחק תמונה"),
     "removed_successfully": MessageLookupByLibrary.simpleMessage(
       "!הוסר בהצלחה",
@@ -1189,6 +1213,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "הבקשה הושלמה בהצלחה",
     ),
     "sunday": MessageLookupByLibrary.simpleMessage("יום ראשון"),
+    "supplier": MessageLookupByLibrary.simpleMessage("ספק"),
     "supplier_does_not_have_quantity": MessageLookupByLibrary.simpleMessage(
       "הספק אינו מספק כמות מספיקה",
     ),
@@ -1224,7 +1249,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "סה\"כ לתשלום לא יכול להיות אפס",
     ),
     "total_credit": MessageLookupByLibrary.simpleMessage("סך האשראי"),
+    "total_invoice_amount": MessageLookupByLibrary.simpleMessage(
+      "סכום החשבונית הכולל",
+    ),
     "total_order": MessageLookupByLibrary.simpleMessage("סה”כ הזמנה"),
+    "total_payment": MessageLookupByLibrary.simpleMessage("סה״כ לתשלום"),
     "total_price_with_vat": MessageLookupByLibrary.simpleMessage(
       "סה\'כ לתשלום כולל מע\'מ",
     ),

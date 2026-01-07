@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
+import '../../data/model/res_model/refund_invoice_common_res/refund_invoice_common.dart';
 import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -51,18 +52,18 @@ class RefundBloc extends Bloc<RefundEvent, RefundState> {
           RefundResModel response = RefundResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-            List<RefundInvoice> invoiceDetailsList =
+            List<RefundInvoiceCommon> invoiceDetailsList =
             state.invoiceDetailsList.toList(growable: true);
 
             /// NEW API: response.data is directly the list
-            invoiceDetailsList.addAll(response.data?.refundInvoices ?? []);
+            invoiceDetailsList.addAll(response.data!);
 
             /// No openTotalAmount in new API
             emit(state.copyWith(
               invoiceDetailsList: invoiceDetailsList,
               pageNum: state.pageNum + 1,
               isShimmering: false,
-              openTotalAmount: response.data?.totalOpenRefundAmount ?? '0', // or remove if not needed
+              // openTotalAmount: response.data?.totalOpenRefundAmount ?? '0', // or remove if not needed
             ));
           } else {
             emit(state.copyWith(isShimmering: false));

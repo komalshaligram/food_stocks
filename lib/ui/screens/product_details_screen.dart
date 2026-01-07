@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/data/model/res_model/get_return_by_id_res_model/get_return_by_id_res_model.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../data/model/res_model/invoices_res/invoices_res_model.dart';
 import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_urls.dart';
@@ -22,7 +22,6 @@ import '../utils/constants/app_strings.dart';
 import '../utils/constants/app_styles.dart';
 import '../widget/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
-import '../widget/common_order_content_widget.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_dialog.dart';
 import '../widget/custom_form_field_widget.dart';
@@ -67,7 +66,6 @@ class ProductDetailsScreen extends StatelessWidget {
                 orderBySupplierProduct: productData,
                 statusList: statusList,
               )),
-      //..add(ProductDetailsEvent.getReturnListEvent(context: context)),
       child: ProductDetailsScreenWidget(
         orderId: orderId,
         orderNumber: orderNumber,
@@ -98,8 +96,193 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
   Widget build(BuildContext context) {
     ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
 
+    Widget itemOne(ProductDetailsState state) => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _keyTextWidget(AppLocalizations.of(context)!.supplier),
+                _valueTextWidget(state.orderBySupplierProduct.supplierName?.toString() ?? ''),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _keyTextWidget(AppLocalizations.of(context)!.order_number),
+                _valueTextWidget(state.orderData.orderNumber.toString()),
+              ],
+            ),
+            state.orderData.orderstatus != null
+                ? Container(
+                    padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: getStatusColor(widget.statusList, state.orderData.orderstatus?.statusName ?? ''),
+                    ),
+                    child: Text(
+                      getStatus(widget.statusList, state.orderData.orderstatus?.statusName ?? '', state.language).toTitleCase(),
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w700),
+                    ),
+                  )
+                : 0.width
+          ],
+        );
+
+    Widget itemTwo(ProductDetailsState state) => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _keyTextWidget(AppLocalizations.of(context)!.order_date),
+                _valueTextWidget(state.orderBySupplierProduct.orderDate.toString()),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _keyTextWidget(AppLocalizations.of(context)!.order_amount),
+                _valueTextWidget(state.orderData.totalVatAmount.toString()),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _keyTextWidget(AppLocalizations.of(context)!.payment_type),
+                _valueTextWidget(state.orderData.paymentMethod.toString() == AppStrings.wallet
+                    ? AppLocalizations.of(context)!.payment_wallet
+                    : state.orderData.paymentMethod.toString() == AppStrings.creditCard
+                        ? AppLocalizations.of(context)!.payment_credit_card
+                        : state.orderData.paymentMethod.toString() == AppStrings.bankTransfer
+                            ? AppLocalizations.of(context)!.payment_bank_transfer
+                            : AppLocalizations.of(context)!.payment_bank_check)
+              ],
+            ),
+          ],
+        );
+
+    Widget invoiceRefundAmountItem({required String title, required String value, required orderId, int? orderNumber, required InvoiceDetails orderData}) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 2.8,
+            child: _keyTextWidget(title),
+          ),
+          GestureDetector(
+            onTap: () async {
+              if (title == AppLocalizations.of(context)!.invoice_amount) {
+                final refundInvoiceData = InvoiceDetails(
+                  invoiceLink: orderData.invoiceLink,
+                  invoiceNumber: orderData.invoiceNumber,
+                  invoiceAmount: orderData.invoiceAmount,
+                  status: orderData.status,
+                  invoiceDate: orderData.invoiceDate,
+                  dueDate: orderData.dueDate,
+                  orderNumber: orderData.orderNumber,
+                  orderId: orderData.orderId,
+                  rivchitApiKey: orderData.rivchitApiKey,
+                );
+                //
+                final invoiceData = Invoice(
+                  invoiceLink: refundInvoiceData.invoiceLink,
+                  invoiceNumber: refundInvoiceData.invoiceNumber.toString(),
+                  invoiceAmount: refundInvoiceData.invoiceAmount,
+                  paymentStatus: refundInvoiceData.status,
+                  invoiceDate: refundInvoiceData.invoiceDate,
+                  dueDate: refundInvoiceData.dueDate,
+                  orderNumber: refundInvoiceData.orderNumber.toString(),
+                  orderId: refundInvoiceData.orderId,
+                  rivchitApiKey: refundInvoiceData.rivchitApiKey,
+                );
+
+                Navigator.pushNamed(
+                  context,
+                  RouteDefine.invoicePdfScreen.name,
+                  arguments: {
+                    AppStrings.invoiceListString: invoiceData,
+                    AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_invoices,
+                  },
+                );
+              } else {
+                Navigator.pushNamed(
+                  context,
+                  RouteDefine.orderRefundsScreen.name,
+                  arguments: {
+                    AppStrings.orderIdString: orderId,
+                    AppStrings.orderNumberString: orderNumber,
+                  },
+                );
+              }
+            },
+            child: value == '0₪' || value == '0.0₪'
+                ? Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Text(
+                      value,
+                      style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.smallFont,
+                        color: AppColors.blackColor,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )
+                : Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Text(
+                          value,
+                          style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.smallFont,
+                            color: AppColors.notificationColor,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 1,
+                          color: AppColors.notificationColor,
+                          margin: const EdgeInsets.only(top: 4),
+                        ),
+                      ),
+                    ],
+                  ),
+          )
+        ],
+      );
+    }
+
+    Widget itemFour(totalAmount, InvoiceDetails? invoiceDetails) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _keyTextWidget(AppLocalizations.of(context)!.total_payment),
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: _valueTextWidget(invoiceDetails == null || invoiceDetails.invoiceNumber == null ? '---' : '${totalAmount.toStringAsFixed(2)}₪'),
+            ),
+          ],
+        );
+
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
       builder: (context, state) {
+        final double invoiceAmount = state.orderData.rivchitInvoicePrice ?? 0;
+
+        final double refundAmount = state.orderData.adjustedRefundAmount ?? 0.0;
+
+        final double totalAmount = invoiceAmount + refundAmount;
         return FocusDetector(
           onFocusGained: () {
             bloc.add(ProductDetailsEvent.getPermissionList(context: context));
@@ -152,12 +335,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                     ],
                                   ),
                                 ),
-                              )
-                        // CircularButtonWidget(
-                        //         buttonName: AppLocalizations.of(context)!.total,
-                        //         buttonValue: state.orderData.comaxInvoicePrice != 0.0 ? formatNumber(value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0', local: AppStrings.hebrewLocal) : formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0', local: AppStrings.hebrewLocal),
-                        //       ),
-                        ),
+                              )),
                     state.isSubUserCreateDuplicateOrder
                         ? GestureDetector(
                             onTap: () {
@@ -199,99 +377,47 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                 Container(
                                   margin: const EdgeInsets.all(AppConstants.padding_10),
                                   padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_10),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.whiteColor,
-                                    boxShadow: [
-                                      BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: 10),
-                                    ],
-                                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-                                  ),
+                                  decoration: BoxDecoration(color: AppColors.whiteColor, border: Border.all(color: AppColors.borderColor), borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
                                   child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            state.orderBySupplierProduct.supplierName?.toString() ?? '',
-                                            style: AppStyles.rkRegularTextStyle(
-                                              size: AppConstants.font_14,
-                                              color: AppColors.blackColor,
-                                            ),
-                                          ),
-                                          state.orderData.orderstatus != null
-                                              ? Text(
-                                                  getStatus(widget.statusList, state.orderData.orderstatus?.statusName ?? '', state.language).toTitleCase(),
-                                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: getStatusColor(widget.statusList, state.orderData.orderstatus?.statusName ?? ''), fontWeight: FontWeight.w700),
-                                                )
-                                              : 0.width
-                                        ],
+                                      itemOne(state),
+                                      Divider(
+                                        height: 20.0,
+                                        color: AppColors.borderColor,
                                       ),
-                                      7.height,
-                                      Row(
+                                      itemTwo(state),
+                                      Divider(
+                                        height: 20.0,
+                                        color: AppColors.borderColor,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          CommonOrderContentWidget(
-                                            backGroundColor: AppColors.iconBGColor,
-                                            borderCoder: AppColors.lightBorderColor,
-                                            flexValue: 2,
-                                            title: AppLocalizations.of(context)!.products,
-                                            value: state.orderBySupplierProduct.products?.length.toString() ?? '',
-                                            titleColor: AppColors.mainColor,
-                                            valueColor: AppColors.blackColor,
-                                            valueTextWeight: FontWeight.w700,
-                                            valueTextSize: AppConstants.smallFont,
+                                          invoiceRefundAmountItem(
+                                            title: AppLocalizations.of(context)!.invoice_amount,
+                                            value: '${state.orderData.rivchitInvoicePrice}₪',
+                                            orderId: state.orderData.id,
+                                            orderNumber: state.orderData.orderNumber,
+                                            orderData: state.orderData.invoiceDetails ?? const InvoiceDetails(),
                                           ),
-                                          5.width,
-                                          (state.orderBySupplierProduct.orderDeliveryDate) != ''
-                                              ? CommonOrderContentWidget(
-                                                  backGroundColor: AppColors.iconBGColor,
-                                                  borderCoder: AppColors.lightBorderColor,
-                                                  flexValue: 4,
-                                                  maxLine: 2,
-                                                  columnPadding: 7,
-                                                  title: AppLocalizations.of(context)!.delivery_date,
-                                                  value: (state.orderBySupplierProduct.orderDeliveryDate) != '' ? '${state.orderBySupplierProduct.orderDeliveryDate?.toString()}' : AppLocalizations.of(context)!.delivery_date_value,
-                                                  titleColor: AppColors.mainColor,
-                                                  valueColor: AppColors.blackColor,
-                                                  valueTextSize: 13,
-                                                  valueTextWeight: FontWeight.w500,
-                                                )
-                                              : Container(),
-                                          5.width,
-                                          CommonOrderContentWidget(
-                                            backGroundColor: AppColors.iconBGColor,
-                                            borderCoder: AppColors.lightBorderColor,
-                                            flexValue: 4,
-                                            title: AppLocalizations.of(context)!.total_order,
-                                            value: state.orderData.comaxInvoicePrice != 0.0 ? formatNumber(value: state.orderData.comaxInvoicePrice?.toStringAsFixed(AppConstants.amountFrLength) ?? '0', local: AppStrings.hebrewLocal) : formatNumber(value: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? '0', local: AppStrings.hebrewLocal),
-                                            titleColor: AppColors.mainColor,
-                                            valueColor: AppColors.blackColor,
-                                            valueTextWeight: FontWeight.w500,
-                                            valueTextSize: AppConstants.smallFont,
+                                          10.height,
+                                          invoiceRefundAmountItem(
+                                            title: AppLocalizations.of(context)!.refund_amount,
+                                            value: state.orderData.adjustedRefundAmount.toString() == 'null' || state.orderData.adjustedRefundAmount == null ? '0.0₪' :
+                                            '${state.orderData.adjustedRefundAmount}₪',
+                                            orderId: state.orderData.id,
+                                            orderNumber: state.orderData.orderNumber,
+                                            orderData: state.orderData.invoiceDetails ?? const InvoiceDetails(),
                                           ),
                                         ],
                                       ),
-                                      15.height,
-                                      state.orderData.bottleQuantities != 0 ? basketRow(state.language == AppStrings.englishString ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.orderData.bottleQuantities}' : '${AppLocalizations.of(context)!.bottle_deposit}${state.orderData.bottleQuantities}${'X'}', state.isIncludedVat ? (formatNumber(value: bottleDepositCalculationWithVat(deposit: state.orderData.bottleTax ?? 1, vatPercentage: state.orderData.vatPercentage ?? 1, qty: double.parse(state.orderData.bottleQuantities.toString())).toStringAsFixed(2), local: AppStrings.hebrewLocal)) : '${AppLocalizations.of(context)!.currency}${state.orderData.bottlePrice}') : 0.width,
-                                      3.height,
-                                      !state.isIncludedVat ? basketRow(AppLocalizations.of(context)!.vat, '${AppLocalizations.of(context)!.currency}${state.orderData.vatAmount}') : 0.width,
-                                      5.height,
-                                      state.orderData.totalRefundAmount != 0.0 ? basketRow(AppLocalizations.of(context)!.refund, '${AppLocalizations.of(context)!.currency}${state.orderData.totalRefundAmount}', color: AppColors.mainColor) : 0.width,
-                                      5.height,
-                                      RichText(
-                                        text: TextSpan(
-                                          text: AppLocalizations.of(context)!.supplier_order_number,
-                                          style: AppStyles.rkRegularTextStyle(
-                                            color: AppColors.blackColor,
-                                            size: AppConstants.font_14,
-                                          ),
-                                          children: <TextSpan>[
-                                            TextSpan(text: '${': '}${widget.orderNumber}', style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_14, fontWeight: FontWeight.w700)),
-                                          ],
-                                        ),
+                                      Divider(
+                                        height: 20.0,
+                                        color: AppColors.borderColor,
                                       ),
+                                      itemFour(totalAmount, state.orderData.invoiceDetails),
                                     ],
                                   ),
                                 ),
@@ -336,8 +462,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                           physics: const NeverScrollableScrollPhysics(),
                                           padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
                                           itemBuilder: (context, index) {
-                                            // bloc.add(ProductDetailsEvent.getReturnListEvent(context: context));
-
                                             return productListItem(
                                                 numberOfUnit: state.orderBySupplierProduct.products?[index].numberOfUnit ?? 0,
                                                 quantity: state.orderBySupplierProduct.products?[index].quantity ?? 0,
@@ -627,18 +751,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                       onPressed: () {
                         if (!state.isAllCheck) {
                           CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_checkbox, type: SnackBarType.failure);
-                        }
-                        // else if (state.driverDeliveryProofImagesList.isEmpty) {
-                        //   CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.return_delivery_document_image, type: SnackBarType.failure);
-                        //
-                        //   _scrollController.animateTo(
-                        //     _scrollController.position.maxScrollExtent,
-                        //     duration: const Duration(milliseconds: 500),
-                        //     curve: Curves.easeInOut,
-                        //   );
-                        //   return;
-                        // }
-                        else {
+                        } else {
                           if (state.orderData.hasReturnProducts == true) {
                             Navigator.pushNamed(context, RouteDefine.returnDriverScreen.name, arguments: {
                               AppStrings.supplierNameString: state.orderBySupplierProduct.supplierName?.toString() ?? '',
@@ -695,6 +808,16 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
       },
     );
   }
+
+  Widget _keyTextWidget(String key) => Text(
+        key,
+        style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.w700),
+      );
+
+  Widget _valueTextWidget(String value) => Text(
+        value,
+        style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.w400),
+      );
 
   Widget productListItem({
     required int index,
@@ -781,25 +904,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                     },
                                   ),
                                 )
-                              // ? SizedBox(
-                              //     width: 30,
-                              //     child: Checkbox(
-                              //         value: state.productListIndex.contains(index) || matchedProductIndex != -1 ? true : false, //state.productListIndex.contains(matchedProductIndex),
-                              //
-                              //         shape: RoundedRectangleBorder(
-                              //           borderRadius: BorderRadius.circular(AppConstants.radius_3),
-                              //         ),
-                              //         side: BorderSide(width: 1.0, color: AppColors.greyColor),
-                              //         activeColor: AppColors.mainColor,
-                              //         onChanged: (value) {
-                              //           bloc.add(
-                              //             ProductDetailsEvent.productProblemEvent(
-                              //               isProductProblem: value!,
-                              //               index: matchedProductIndex != -1 ? matchedProductIndex! : index,
-                              //             ),
-                              //           );
-                              //         }),
-                              //   )
                               : 30.width,
                           state.orderBySupplierProduct.products?[index].mainImage != ''
                               ? Image.network(

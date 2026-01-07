@@ -439,6 +439,11 @@ class S {
     return Intl.message('Orders', name: 'orders', desc: '', args: []);
   }
 
+  /// `Supplier`
+  String get supplier {
+    return Intl.message('Supplier', name: 'supplier', desc: '', args: []);
+  }
+
   /// `Order Status`
   String get order_status {
     return Intl.message(
@@ -452,6 +457,16 @@ class S {
   /// `Order Date`
   String get order_date {
     return Intl.message('Order Date', name: 'order_date', desc: '', args: []);
+  }
+
+  /// `Order Number`
+  String get order_number {
+    return Intl.message(
+      'Order Number',
+      name: 'order_number',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Suppliers`
@@ -1184,6 +1199,26 @@ class S {
     return Intl.message(
       'No invoice file found',
       name: 'no_invoice_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No invoice data found`
+  String get no_invoice_data {
+    return Intl.message(
+      'No invoice data found',
+      name: 'no_invoice_data',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No refund data found`
+  String get no_refund_data {
+    return Intl.message(
+      'No refund data found',
+      name: 'no_refund_data',
       desc: '',
       args: [],
     );
@@ -3689,6 +3724,26 @@ class S {
     );
   }
 
+  /// `Invoice`
+  String get invoice {
+    return Intl.message('Invoice', name: 'invoice', desc: '', args: []);
+  }
+
+  /// `For Order`
+  String get for_order {
+    return Intl.message('For Order', name: 'for_order', desc: '', args: []);
+  }
+
+  /// `Total invoice amount`
+  String get total_invoice_amount {
+    return Intl.message(
+      'Total invoice amount',
+      name: 'total_invoice_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `This price does not include surfaces price`
   String get not_include_surfaces_price {
     return Intl.message(
@@ -4149,6 +4204,16 @@ class S {
     return Intl.message(
       'Invoice status',
       name: 'invoice_status',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total payment`
+  String get total_payment {
+    return Intl.message(
+      'Total payment',
+      name: 'total_payment',
       desc: '',
       args: [],
     );
@@ -5789,6 +5854,16 @@ class S {
     return Intl.message('Closed', name: 'closed_text', desc: '', args: []);
   }
 
+  /// `Open`
+  String get invoice_open {
+    return Intl.message('Open', name: 'invoice_open', desc: '', args: []);
+  }
+
+  /// `Closed`
+  String get invoice_close {
+    return Intl.message('Closed', name: 'invoice_close', desc: '', args: []);
+  }
+
   /// `In Progress`
   String get in_progress_text {
     return Intl.message(
@@ -5804,6 +5879,81 @@ class S {
     return Intl.message(
       'Partially Closed',
       name: 'partially_closed_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refunds for order: `
+  String get refunds_for_order {
+    return Intl.message(
+      'Refunds for order: ',
+      name: 'refunds_for_order',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My accounting card`
+  String get my_accounting_card {
+    return Intl.message(
+      'My accounting card',
+      name: 'my_accounting_card',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remaining to Pay`
+  String get remaining_to_pay {
+    return Intl.message(
+      'Remaining to Pay',
+      name: 'remaining_to_pay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoices`
+  String get invoices {
+    return Intl.message('Invoices', name: 'invoices', desc: '', args: []);
+  }
+
+  /// `Refunds`
+  String get refunds {
+    return Intl.message('Refunds', name: 'refunds', desc: '', args: []);
+  }
+
+  /// `Wallet`
+  String get payment_wallet {
+    return Intl.message('Wallet', name: 'payment_wallet', desc: '', args: []);
+  }
+
+  /// `Credit Card`
+  String get payment_credit_card {
+    return Intl.message(
+      'Credit Card',
+      name: 'payment_credit_card',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bank Transfer`
+  String get payment_bank_transfer {
+    return Intl.message(
+      'Bank Transfer',
+      name: 'payment_bank_transfer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bank Check`
+  String get payment_bank_check {
+    return Intl.message(
+      'Bank Check',
+      name: 'payment_bank_check',
       desc: '',
       args: [],
     );

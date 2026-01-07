@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../data/model/req_model/refund_invoice_req_model/refund_invoice_req_model.dart';
 import '../../data/model/res_model/refund_invoice/refund_invoice_res_model.dart';
-import '../../data/model/res_model/refund_res/refund_res_model.dart';
+import '../../data/model/res_model/refund_invoice_common_res/refund_invoice_common.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/constants/app_constants.dart';
@@ -35,13 +36,15 @@ class RefundPdfBloc extends Bloc<RefundPdfEvent, RefundPdfState> {
       ) async {
     await _initPrefs();
 
+    // FIXED: Removed unsafe cast. Just assign directly.
     emit(
       state.copyWith(
-        invoiceDetailsList: event.invoiceDetailsList,
-        hasValidLink: null, // API loading / PDF loader
+        invoiceDetailsList: event.invoiceDetailsList, // Already RefundInvoiceCommon?
+        hasValidLink: null,
       ),
     );
 
+    // Trigger link verification
     add(RefundPdfEvent.verifyInvoiceLink(context: event.context));
   }
 
@@ -51,27 +54,36 @@ class RefundPdfBloc extends Bloc<RefundPdfEvent, RefundPdfState> {
       ) async {
     await _initPrefs();
 
-    final initialLink = state.invoiceDetailsList.invoiceLink;
+    final currentInvoice = state.invoiceDetailsList;
 
-    // 1️⃣ If initial link exists, just show PDF
+    // Return early if no invoice data
+    if (currentInvoice == null) {
+      emit(state.copyWith(hasValidLink: false));
+      return;
+    }
+
+    final initialLink = currentInvoice.invoiceLink;
+
+    // If we already have a valid link, use it
     if (isValidLink(initialLink)) {
       emit(
         state.copyWith(
           hasValidLink: true,
-          invoiceDetailsList: state.invoiceDetailsList.copyWith(invoiceLink: initialLink),
+          // Ensure link is preserved
+          invoiceDetailsList: currentInvoice.copyWith(invoiceLink: initialLink),
         ),
       );
       return;
     }
 
-    // 2️⃣ Call API if link invalid or null
+    // Otherwise, try to fetch from API
     try {
       final res = await DioClient(event.context).post(
         AppUrlEndPoints.getRefundInvoiceCopy,
         data: RefundInvoiceReqModel(
           clientId: preferencesHelper!.getUserId(),
-          invoiceNumber: state.invoiceDetailsList.invoiceNumber,
-          rivchitApiKey: state.invoiceDetailsList.rivchitApiKey,
+          invoiceNumber: int.tryParse(currentInvoice.invoiceNumber ?? '') ?? 0,
+          rivchitApiKey: currentInvoice.rivchitApiKey,
         ),
       );
 
@@ -81,24 +93,22 @@ class RefundPdfBloc extends Bloc<RefundPdfEvent, RefundPdfState> {
         emit(
           state.copyWith(
             hasValidLink: true,
-            invoiceDetailsList: state.invoiceDetailsList.copyWith(invoiceLink: response.data),
+            invoiceDetailsList: currentInvoice.copyWith(invoiceLink: response.data),
           ),
         );
-        return;
+      } else {
+        emit(
+          state.copyWith(
+            hasValidLink: false,
+            invoiceDetailsList: currentInvoice.copyWith(invoiceLink: ""),
+          ),
+        );
       }
-
-      // API returned no link
-      emit(
-        state.copyWith(
-          hasValidLink: false,
-          invoiceDetailsList: state.invoiceDetailsList.copyWith(invoiceLink: ""),
-        ),
-      );
     } catch (_) {
       emit(
         state.copyWith(
           hasValidLink: false,
-          invoiceDetailsList: state.invoiceDetailsList.copyWith(invoiceLink: ""),
+          invoiceDetailsList: currentInvoice.copyWith(invoiceLink: ""),
         ),
       );
     }

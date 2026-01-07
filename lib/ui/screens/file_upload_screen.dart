@@ -35,16 +35,26 @@ class FileUploadScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+    bool isRegisterFile = args?[AppStrings.isRegisterFileString] ?? false;
 
     return BlocProvider(
-      create: (context) => FileUploadBloc()..add(FileUploadEvent.getFormsListEvent(context: context, isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false)),
-      child: const FileUploadScreenWidget(),
+      create: (context) => FileUploadBloc()
+        ..add(FileUploadEvent.getFormsListEvent(
+          context: context,
+          isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false,
+
+        )),
+      child:  FileUploadScreenWidget(isRegisterFile: isRegisterFile),
     );
   }
 }
 
 class FileUploadScreenWidget extends StatelessWidget {
-  const FileUploadScreenWidget({super.key});
+  final bool isRegisterFile;
+  const FileUploadScreenWidget({
+    required this.isRegisterFile,
+    super.key,
+  });
   @override
   Widget build(BuildContext context) {
     FileUploadBloc bloc = context.read<FileUploadBloc>();
@@ -71,7 +81,12 @@ class FileUploadScreenWidget extends StatelessWidget {
                 leadingWidth: 60,
                 title: Align(
                   alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Text(AppLocalizations.of(context)!.files, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, fontWeight: FontWeight.w400, color: AppColors.blackColor)),
+                  child: Text(AppLocalizations.of(context)!.files,
+                      style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.smallFont,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.blackColor,
+                      )),
                 ),
                 leading: GestureDetector(
                     onTap: () async {
@@ -121,7 +136,21 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 itemCount: state.formsAndFilesList.length,
                                                 physics: const NeverScrollableScrollPhysics(),
                                                 itemBuilder: (context, index) {
-                                                  return buildFormsAndFilesUploadFields(isForm: state.formsAndFilesList[index].isForm ?? false, updateState: state.isUpdate, directionality: state.language, fileIndex: index, context: context, fileName: state.formsAndFilesList[index].name ?? '', url: state.formsAndFilesList[index].url ?? '', localUrl: state.formsAndFilesList[index].localUrl ?? '', isUploading: state.isUploadLoading, uploadIndex: state.uploadIndex, isDownloadable: state.formsAndFilesList[index].isForm ?? false, isRemoveProcess: state.isRemoveProcess);
+                                                  return buildFormsAndFilesUploadFields(
+                                                    isForm: state.formsAndFilesList[index].isForm ?? false,
+                                                    updateState: state.isUpdate,
+                                                    directionality: state.language,
+                                                    fileIndex: index,
+                                                    context: context,
+                                                    fileName: state.formsAndFilesList[index].name ?? '',
+                                                    url: state.formsAndFilesList[index].url ?? '',
+                                                    localUrl: state.formsAndFilesList[index].localUrl ?? '',
+                                                    isUploading: state.isUploadLoading,
+                                                    uploadIndex: state.uploadIndex,
+                                                    isDownloadable: state.formsAndFilesList[index].isForm ?? false,
+                                                    isRemoveProcess: state.isRemoveProcess,
+                                                    isRegisterString: isRegisterFile!,
+                                                  );
                                                 },
                                               ),
                                         SizedBox(
@@ -207,6 +236,7 @@ class FileUploadScreenWidget extends StatelessWidget {
     required String directionality,
     required bool updateState,
     required bool isForm,
+    required bool isRegisterString,
   }) {
     return Container(
       margin: const EdgeInsets.only(top: AppConstants.padding_10),
@@ -278,19 +308,41 @@ class FileUploadScreenWidget extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    if (isUploading) {
-                      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.wait_while_uploading, type: SnackBarType.failure);
-                      return;
-                    }
-                    if (isForm) {
-                      if (url.isNotEmpty) {
-                        Navigator.pushNamed(context, RouteDefine.previewScreen.name, arguments: {
-                          AppStrings.privacyPolicyPdfString: url,
-                          AppStrings.clientFormString: fileName,
-                        });
+                    if (isRegisterString != true) {
+                      if (isUploading) {
+                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.wait_while_uploading, type: SnackBarType.failure);
+                        return;
                       }
-                    }
-                    if (!updateState) {
+                      if (isForm) {
+                        if (url.isNotEmpty) {
+                          Navigator.pushNamed(context, RouteDefine.previewScreen.name, arguments: {
+                            AppStrings.privacyPolicyPdfString: url,
+                            AppStrings.clientFormString: fileName,
+                          });
+                        }
+                      }
+                    } else {
+                      // if (!updateState) {
+                      if (isUploading && uploadIndex == fileIndex) {
+                        CustomSnackBar.showSnackBar(
+                          context: context,
+                          title: AppLocalizations.of(context)!.wait_while_uploading,
+                          type: SnackBarType.failure,
+                        );
+                        return;
+                      }
+
+                      if (isForm && url.isNotEmpty) {
+                        Navigator.pushNamed(
+                          context,
+                          RouteDefine.previewScreen.name,
+                          arguments: {
+                            AppStrings.privacyPolicyPdfString: url,
+                            AppStrings.clientFormString: fileName,
+                          },
+                        );
+                        return;
+                      }
                       showModalBottomSheet(
                           context: context,
                           builder: (context1) => Container(

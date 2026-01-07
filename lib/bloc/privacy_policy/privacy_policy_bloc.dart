@@ -89,7 +89,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
           TermsConditionResModel response = TermsConditionResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isShimmering: false));
-            Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
+            Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name, arguments: {AppStrings.isRegisterFileString: true});
           } else {
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);

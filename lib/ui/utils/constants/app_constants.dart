@@ -41,6 +41,9 @@ class AppConstants{
   static const double padding_8 = 8;
   static const double padding_3 = 3;
   static const double padding_50 = 50;
+  static const double padding_55 = 55;
+  static const double padding_60 = 60;
+  static const double padding_65 = 65;
   static const double padding_80 = 80;
   static const double padding_2 = 2;
   static const double padding_40 = 40;
@@ -78,6 +81,7 @@ class AppConstants{
   static const double font_22 = 22;
   static const double font_17 = 17;
   static const double font_15 = 15;
+  static const double font_20 = 20;
 
  //order status
   static const int onTheWayStatus = 6;

@@ -259,6 +259,16 @@ class HomeScreenWidget extends StatelessWidget {
                                     child: Column(
                                       children: [
                                         80.height,
+                                        state.showClientDataOnApp
+                                            ? CustomTextIconButtonWidget(
+                                                width: double.maxFinite,
+                                                title: state.language == 'en' ? state.buttonEnglishText! : state.buttonHebrewText!,
+                                                onPressed: () {
+                                                  Navigator.pushNamed(context, RouteDefine.webViewScreen.name);
+                                                },
+                                              )
+                                            : 0.width,
+                                        0.height,
                                         state.pesachBannerShimmering && state.pesachBannerURL.isEmpty
                                             ? const PesachBannerShimmerWidget()
                                             : state.showPesachBanner && state.pesachBannerURL.isNotEmpty
@@ -620,6 +630,15 @@ class HomeScreenWidget extends StatelessWidget {
                                     ),
                                   ),
                                 ),
+                                // state.showClientDataOnApp
+                                //     ? CustomTextIconButtonWidget(
+                                //         width: double.maxFinite,
+                                //         title: state.language == 'en' ? state.buttonEnglishText! : state.buttonHebrewText! ,
+                                //         onPressed: () {
+                                //           context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 2, context: context));
+                                //         },
+                                //       )
+                                //     : 0.width,
                                 CommonSearchWidget(
                                   isFilterTap: true,
                                   isCategoryExpand: state.isCategoryExpand,
@@ -825,10 +844,12 @@ class HomeScreenWidget extends StatelessWidget {
                                       showProductDetails(context: context, productId: scanResult, isBarcode: true, productStock: '1', productListIndex: 0, isSaleOn: state.isSaleOn);
                                     }
                                   },
-                                ),
+                                )
+
+                                // state.showClientDataOnApp ? 100.height : 0.width,
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),

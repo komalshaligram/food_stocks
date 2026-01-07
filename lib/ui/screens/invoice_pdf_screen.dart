@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/screens/product_details_screen.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../data/storage/shared_preferences_helper.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/constants/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../ui/widget/sized_box_widget.dart';
@@ -49,6 +53,153 @@ class InvoicePdfScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<InvoicePdfBloc, InvoicePdfState>(
       builder: (context, state) {
+        final bloc = context.read<InvoicePdfBloc>();
+        final String? fullUrl = state.invoiceDetailsList.invoiceLink;
+
+        Widget keyTextWidget(String key) => Text(
+              key,
+              style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.w700),
+            );
+
+        Widget valueTextWidget(String value) => Text(
+              value,
+              style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.w400),
+            );
+
+        Widget itemOne(InvoicePdfState state) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    keyTextWidget(AppLocalizations.of(context)!.invoice),
+                    valueTextWidget(invoiceDetailsList.invoiceNumber.toString()),
+                  ],
+                ),
+
+                invoiceDetailsList.paymentStatus != null
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: invoiceDetailsList.paymentStatus == AppStrings.openText ? AppColors.statusOpenColor : AppColors.statusCloseColor,
+                        ),
+                        child: Text(
+                          invoiceDetailsList.paymentStatus == AppStrings.openText ? AppLocalizations.of(context)!.open_text : AppLocalizations.of(context)!.closed_text,
+                          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w700),
+                        ),
+                      )
+                    : 0.width
+              ],
+            );
+
+        Widget itemTwo(InvoicePdfState state) => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  keyTextWidget(AppLocalizations.of(context)!.invoice_date),
+                  valueTextWidget((invoiceDetailsList.invoiceDate ?? '').isNotEmpty ? invoiceDetailsList.invoiceDate!.substring(0, 10) : ''),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  keyTextWidget(AppLocalizations.of(context)!.due_date),
+                  valueTextWidget((invoiceDetailsList.dueDate ?? '').isNotEmpty ? invoiceDetailsList.dueDate!.substring(0, 10) : '--'),
+                ],
+              ),
+            ),
+
+          ],
+        );
+
+        Widget itemThree(InvoicePdfState state) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      keyTextWidget(AppLocalizations.of(context)!.for_order),
+                      GestureDetector(
+                        onTap: () async {
+                          Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(
+                                  statusList: state.statusList,
+                                  orderNumber: invoiceDetailsList.orderNumber.toString() ?? '',
+                                  orderId: invoiceDetailsList.orderId.toString() ?? '',
+                                  isNavigateToProductDetailString: true,
+                                ),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  const begin = Offset(0.0, 1.0);
+                                  const end = Offset.zero;
+                                  const curve = Curves.bounceIn;
+                                  var tween = Tween(
+                                    begin: begin,
+                                    end: end,
+                                  ).chain(CurveTween(curve: curve));
+                                  return SlideTransition(
+                                    position: animation.drive(tween),
+                                    child: child,
+                                  );
+                                },
+                              ));
+                        },
+                        child: invoiceDetailsList.orderNumber == null
+                            ? const Text('---')
+                            : Stack(
+                                alignment: Alignment.bottomLeft,
+                                children: [
+                                  Text(
+                                    invoiceDetailsList.orderNumber.toString(),
+                                    style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.smallFont,
+                                      color: AppColors.notificationColor,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: Container(
+                                      height: 1,
+                                      color: AppColors.notificationColor,
+                                      margin: const EdgeInsets.only(top: 4),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+                      // valueTextWidget(invoiceDetailsList.orderNumber.toString()),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      keyTextWidget(AppLocalizations.of(context)!.total_invoice_amount),
+                      valueTextWidget('${invoiceDetailsList.invoiceAmount}₪'),
+                    ],
+                  ),
+                ),
+              ],
+            );
+
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
@@ -62,7 +213,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
               },
               trailingWidget: GestureDetector(
                 onTap: () async {
-                  Share.share('${AppUrlEndPoints.baseFileUrl}${state.invoiceDetailsList.link}');
+                  Share.share('${invoiceDetailsList.invoiceLink}');
                 },
                 child: Icon(
                   Icons.download_outlined,
@@ -71,100 +222,95 @@ class InvoicePdfScreenWidget extends StatelessWidget {
               ),
             ),
           ),
-          body: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: SafeArea(
-              child: Stack(
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(AppConstants.padding_8),
-                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_8, horizontal: AppConstants.padding_8),
-                        decoration: BoxDecoration(
+          body: Builder(builder: (_) {
+            if (state.hasValidLink == null) {
+              return const SizedBox.shrink();
+            }
+            return SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: SafeArea(
+                child: Stack(
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(AppConstants.padding_8),
+                          padding: const EdgeInsets.all(AppConstants.padding_8),
+                          decoration: BoxDecoration(
                             color: AppColors.whiteColor,
-                            boxShadow: [
-                              BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
-                            ],
-                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, title: AppLocalizations.of(context)!.invoice_number, value: invoiceDetailsList.invoiceNumber.toString(), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, titleTextSize: AppConstants.smallFont, columnPadding: 2, maxLine: 2, titleMaxLine: 2, valueTextWeight: FontWeight.w400),
-                                4.width,
-                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, title: AppLocalizations.of(context)!.invoice_date, value: invoiceDetailsList.invoiceDate.toString().replaceRange(10, 16, ''), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, columnPadding: 2, maxLine: 2, titleTextSize: AppConstants.smallFont, titleMaxLine: 2, valueTextWeight: FontWeight.w400),
-                              ],
-                            ),
-                            5.height,
-                            Row(
-                              children: [
-                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, title: AppLocalizations.of(context)!.invoice_type, value: invoiceDetailsList.invoiceType.toString().toCapitalized(), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, columnPadding: 2, maxLine: 2, titleMaxLine: 2, titleTextSize: AppConstants.smallFont, valueTextWeight: FontWeight.w400),
-                                4.width,
-                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, title: AppLocalizations.of(context)!.invoice_status, value: invoiceDetailsList.paymentStatus.toString().toCapitalized(), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, columnPadding: 2, maxLine: 2, titleTextSize: AppConstants.smallFont, titleMaxLine: 2, valueTextWeight: FontWeight.w400),
-                              ],
-                            ),
-                            5.height,
-                            Row(
-                              children: [
-                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, title: AppLocalizations.of(context)!.invoice_amount, value: formatNumber(value: (invoiceDetailsList.invoiceAmount ?? '0.0'), local: AppStrings.hebrewLocal), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, columnPadding: 2, maxLine: 2, titleTextSize: AppConstants.smallFont, titleMaxLine: 2, valueTextWeight: FontWeight.w700),
-                                4.width,
-                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, titleMaxLine: 2, maxLine: 2, title: AppLocalizations.of(context)!.due_date, value: invoiceDetailsList.dueDate!.isNotEmpty ? invoiceDetailsList.dueDate.toString().replaceRange(10, 16, '') : '', titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, titleTextSize: AppConstants.smallFont, columnPadding: 2, valueTextWeight: FontWeight.w400),
-                              ],
-                            ),
-                            5.height,
-                            Row(
-                              children: [
-                                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, titleMaxLine: 2, maxLine: 2, title: AppLocalizations.of(context)!.supplier_name, value: invoiceDetailsList.supplierName ?? '', titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, titleTextSize: AppConstants.smallFont, columnPadding: 2, valueTextWeight: FontWeight.w400),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      15.height,
-                      Container(
-                        color: Colors.white,
-                        height: getScreenHeight(context) * 0.7,
-                        child: SfPdfViewer.network(
-                          '${AppUrlEndPoints.baseFileUrl}${invoiceDetailsList.link ?? ''}',
-                          key: _pdfViewerKey,
-                          controller: _pdfViewerController,
-                        ),
-                      ),
-                    ],
-                  ),
-                  state.isDownloading
-                      ? Container(
-                          height: getScreenHeight(context),
-                          width: getScreenWidth(context),
-                          color: const Color.fromARGB(20, 0, 0, 0),
-                          alignment: Alignment.center,
-                          child: Container(
-                            height: 80,
-                            width: 80,
-                            decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CupertinoActivityIndicator(
-                                  color: AppColors.mainColor,
-                                  radius: AppConstants.radius_10,
-                                ),
-                                10.height,
-                                Text(
-                                  '${state.downloadProgress}%',
-                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
-                                )
-                              ],
+                            border: Border.all(color: AppColors.borderColor),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(
+                                AppConstants.radius_10,
+                              ),
                             ),
                           ),
-                        )
-                      : 0.width,
-                ],
+                          child: Column(
+                            children: [
+                              itemOne(state),
+                              Divider(
+                                height: 20.0,
+                                color: AppColors.borderColor,
+                              ),
+                              itemTwo(state),
+                              Divider(
+                                height: 20.0,
+                                color: AppColors.borderColor,
+                              ),
+                              itemThree(state),
+                            ],
+                          ),
+                        ),
+
+                        15.height,
+                        state.hasValidLink == false || !bloc.isValidLink(fullUrl)
+                            ? Center(
+                                child: Text(AppLocalizations.of(context)!.no_invoice_file),
+                              )
+                            : Container(
+                                color: Colors.white,
+                                height: getScreenHeight(context) * 0.7,
+                                child: SfPdfViewer.network(
+                                  invoiceDetailsList.invoiceLink ?? '',
+                                  key: _pdfViewerKey,
+                                  controller: _pdfViewerController,
+                                ),
+                              ),
+                      ],
+                    ),
+                    state.isDownloading
+                        ? Container(
+                            height: getScreenHeight(context),
+                            width: getScreenWidth(context),
+                            color: const Color.fromARGB(20, 0, 0, 0),
+                            alignment: Alignment.center,
+                            child: Container(
+                              height: 80,
+                              width: 80,
+                              decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CupertinoActivityIndicator(
+                                    color: AppColors.mainColor,
+                                    radius: AppConstants.radius_10,
+                                  ),
+                                  10.height,
+                                  Text(
+                                    '${state.downloadProgress}%',
+                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        : 0.width,
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          }),
         );
       },
     );

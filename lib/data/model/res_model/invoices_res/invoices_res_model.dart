@@ -58,20 +58,32 @@ class InvoiceGroup with _$InvoiceGroup {
 @freezed
 class Invoice with _$Invoice {
   const factory Invoice({
-    @JsonKey(name: "_id")
-    String? id,
-    @JsonKey(name: "link")
-    String? link,
+    @JsonKey(name: "invoiceLink")
+    String? invoiceLink,
     @JsonKey(name: "invoiceNumber")
     String? invoiceNumber,
     @JsonKey(name: "invoiceAmount")
     String? invoiceAmount,
     @JsonKey(name: "paymentStatus")
     String? paymentStatus,
+    @JsonKey(name: "invoiceAdjustAmount")
+    double? invoiceAdjustAmount,
+    @JsonKey(name: "invoiceDate")
     String? invoiceDate,
+    @JsonKey(name: "invoiceType")
     String? invoiceType,
+    @JsonKey(name: "dueDate")
     String? dueDate,
-    String? supplierName
+    @JsonKey(name: "supplierName")
+    String? supplierName,
+    @JsonKey(name: "status")
+    String? status,
+    @JsonKey(name: "orderNumber")
+    String? orderNumber,
+    @JsonKey(name: "orderId")
+    String? orderId,
+    @JsonKey(name: "rivchitApiKey")
+    String? rivchitApiKey,
 
   }) = _Invoice;
 

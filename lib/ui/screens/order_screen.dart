@@ -271,17 +271,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                               AppLocalizations.of(context)!.invoice_charge,
                               style: TextStyle(color: AppColors.blackColor, fontSize: 10),
                             )))
-                    // // Text(AppLocalizations.of(context)!.invoice_charge)
-                    // CommonOrderContentWidget(
-                    //   backGroundColor: AppColors.iconBGColor,
-                    //   borderCoder: AppColors.lightBorderColor,
-                    //   flexValue: 4,
-                    //   title: AppLocalizations.of(context)!.invoice_charge,
-                    //   value: '',
-                    //   titleColor: AppColors.blackColor,
-                    //   valueColor: AppColors.blackColor,
-                    //   valueTextSize: AppConstants.smallFont,
-                    // )
+
                     : CommonOrderContentWidget(
                         backGroundColor: AppColors.iconBGColor,
                         borderCoder: AppColors.lightBorderColor,

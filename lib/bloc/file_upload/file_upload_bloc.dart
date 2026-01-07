@@ -40,7 +40,13 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getFormsListEvent) {
-        emit(state.copyWith(isLoading: true, isShimmering: true, isUpdate: event.isUpdate, language: preferencesHelper.getAppLanguage()));
+
+        emit(state.copyWith(
+          isLoading: true,
+          isShimmering: true,
+          isUpdate: event.isUpdate,
+          language: preferencesHelper.getAppLanguage(),
+        ));
         try {
           final res = await DioClient(event.context).get(path: AppUrlEndPoints.formsListUrl);
           FormsResModel response = FormsResModel.fromJson(res);

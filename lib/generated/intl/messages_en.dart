@@ -409,6 +409,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "files": MessageLookupByLibrary.simpleMessage("Files"),
     "filtering": MessageLookupByLibrary.simpleMessage("Filtering"),
     "finish": MessageLookupByLibrary.simpleMessage("Finish"),
+    "for_order": MessageLookupByLibrary.simpleMessage("For Order"),
     "form_create_successful": MessageLookupByLibrary.simpleMessage(
       "Form created successfully",
     ),
@@ -513,14 +514,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "invalid_verification_code": MessageLookupByLibrary.simpleMessage(
       "Invalid verification code. Please check the code and try again",
     ),
+    "invoice": MessageLookupByLibrary.simpleMessage("Invoice"),
     "invoice_amount": MessageLookupByLibrary.simpleMessage("Invoice amount"),
     "invoice_charge": MessageLookupByLibrary.simpleMessage(
       "You will be charged when you get the invoice",
     ),
+    "invoice_close": MessageLookupByLibrary.simpleMessage("Closed"),
     "invoice_date": MessageLookupByLibrary.simpleMessage("Invoice date"),
     "invoice_number": MessageLookupByLibrary.simpleMessage("Refund invoice"),
+    "invoice_open": MessageLookupByLibrary.simpleMessage("Open"),
     "invoice_status": MessageLookupByLibrary.simpleMessage("Invoice status"),
     "invoice_type": MessageLookupByLibrary.simpleMessage("Invoice type"),
+    "invoices": MessageLookupByLibrary.simpleMessage("Invoices"),
     "israel_id": MessageLookupByLibrary.simpleMessage("Israel ID Number"),
     "israel_id_exist": MessageLookupByLibrary.simpleMessage(
       "This Israel ID already exist in the system.",
@@ -626,6 +631,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "more_details": MessageLookupByLibrary.simpleMessage("More Info"),
+    "my_accounting_card": MessageLookupByLibrary.simpleMessage(
+      "My accounting card",
+    ),
     "my_agent_code": MessageLookupByLibrary.simpleMessage("My Agent Code"),
     "my_basket": MessageLookupByLibrary.simpleMessage("My Basket"),
     "my_invoices": MessageLookupByLibrary.simpleMessage("My invoices"),
@@ -649,6 +657,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_internet_connection": MessageLookupByLibrary.simpleMessage(
       "No Internet Connection",
     ),
+    "no_invoice_data": MessageLookupByLibrary.simpleMessage(
+      "No invoice data found",
+    ),
     "no_invoice_file": MessageLookupByLibrary.simpleMessage(
       "No invoice file found",
     ),
@@ -658,6 +669,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_product": MessageLookupByLibrary.simpleMessage("המוצר לא קיים"),
     "no_products_are_registered": MessageLookupByLibrary.simpleMessage(
       "None of the products are registered",
+    ),
+    "no_refund_data": MessageLookupByLibrary.simpleMessage(
+      "No refund data found",
     ),
     "not_add_more_than_max_qty": MessageLookupByLibrary.simpleMessage(
       "You can not add more than maximum quantity",
@@ -709,6 +723,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Issues Reported in SupplierOrderNumber#",
         ),
     "order_not_found": MessageLookupByLibrary.simpleMessage("Order not found"),
+    "order_number": MessageLookupByLibrary.simpleMessage("Order Number"),
     "order_products_bad_request": MessageLookupByLibrary.simpleMessage(
       "At-least one product required",
     ),
@@ -772,11 +787,17 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "pay_with_wallet": MessageLookupByLibrary.simpleMessage("Pay with wallet"),
     "payed": MessageLookupByLibrary.simpleMessage("Payed"),
+    "payment_bank_check": MessageLookupByLibrary.simpleMessage("Bank Check"),
+    "payment_bank_transfer": MessageLookupByLibrary.simpleMessage(
+      "Bank Transfer",
+    ),
+    "payment_credit_card": MessageLookupByLibrary.simpleMessage("Credit Card"),
     "payment_dialog_option_title": MessageLookupByLibrary.simpleMessage(
       "You can try again with these options:",
     ),
     "payment_invoice": MessageLookupByLibrary.simpleMessage("Payment invoice"),
     "payment_type": MessageLookupByLibrary.simpleMessage("Payment Type"),
+    "payment_wallet": MessageLookupByLibrary.simpleMessage("Wallet"),
     "pending": MessageLookupByLibrary.simpleMessage("Pending"),
     "pending_delivery": MessageLookupByLibrary.simpleMessage("Pending"),
     "per_unit": MessageLookupByLibrary.simpleMessage("per unit"),
@@ -1112,6 +1133,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "refunded_on_order": MessageLookupByLibrary.simpleMessage(
       "Refunded on order",
     ),
+    "refunds": MessageLookupByLibrary.simpleMessage("Refunds"),
+    "refunds_for_order": MessageLookupByLibrary.simpleMessage(
+      "Refunds for order: ",
+    ),
     "register": MessageLookupByLibrary.simpleMessage("Register"),
     "registered_successfully": MessageLookupByLibrary.simpleMessage(
       "Registered Successfully",
@@ -1121,6 +1146,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "remaining_refund": MessageLookupByLibrary.simpleMessage(
       "Remaining refund",
+    ),
+    "remaining_to_pay": MessageLookupByLibrary.simpleMessage(
+      "Remaining to Pay",
     ),
     "remove": MessageLookupByLibrary.simpleMessage("Remove"),
     "removed_successfully": MessageLookupByLibrary.simpleMessage(
@@ -1294,6 +1322,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Request completed successfully",
     ),
     "sunday": MessageLookupByLibrary.simpleMessage("Sunday"),
+    "supplier": MessageLookupByLibrary.simpleMessage("Supplier"),
     "supplier_does_not_have_quantity": MessageLookupByLibrary.simpleMessage(
       "Supplier Does Not Have Enough Quantity",
     ),
@@ -1339,7 +1368,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "Total amount can\'t be zero",
     ),
     "total_credit": MessageLookupByLibrary.simpleMessage("Total Credit"),
+    "total_invoice_amount": MessageLookupByLibrary.simpleMessage(
+      "Total invoice amount",
+    ),
     "total_order": MessageLookupByLibrary.simpleMessage("Total Order"),
+    "total_payment": MessageLookupByLibrary.simpleMessage("Total payment"),
     "total_price_with_vat": MessageLookupByLibrary.simpleMessage(
       "Total price with VAT",
     ),

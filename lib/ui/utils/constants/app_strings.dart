@@ -216,9 +216,8 @@ class AppStrings {
   static const showPreviousBtn = 'showPreviousBtn';
   static const isbackString = 'isBack';
   static const statusList = 'statusList';
-
   static const textIdProof = 'צילום תעודת זהות';
-
+  static const isRegisterFileString = 'isRegisterFile';
   //smartlook keys
   static const userBusinessName = 'User business name';
   static const userPhoneNum =  "User phone number";

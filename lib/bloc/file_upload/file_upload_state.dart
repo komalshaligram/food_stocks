@@ -18,8 +18,8 @@ class FileUploadState with _$FileUploadState {
     required bool isPdfPreview,
   }) = _FileUploadState;
 
-  factory FileUploadState.initial() => FileUploadState(
-    formsAndFilesList: <FormAndFileModel>[],
+  factory FileUploadState.initial() => const FileUploadState(
+        formsAndFilesList: <FormAndFileModel>[],
         isUpdate: false,
         isLoading: false,
         isApiLoading: false,
@@ -29,8 +29,8 @@ class FileUploadState with _$FileUploadState {
         isShimmering: false,
         isDownloading: false,
         downloadProgress: 0,
-    isRemoveProcess: false,
-    language: AppStrings.hebrewString,
-    isPdfPreview: false,
+        isRemoveProcess: false,
+        language: AppStrings.hebrewString,
+        isPdfPreview: false,
       );
 }

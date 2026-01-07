@@ -32,15 +32,13 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
 
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
 
-
           final String statusData = preferencesHelper.getOrderStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
           emit(state.copyWith(statusData: statusList, language: preferencesHelper.getAppLanguage()));
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(orderByIdList: response));
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-                type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
           }
         } on ServerException {}
       }

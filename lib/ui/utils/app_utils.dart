@@ -354,6 +354,20 @@ String formatNumber({required String value, required String local}) {
 
   return splitNumber(result);
 }
+String formatNumberPositiveToNegative({required String value, required String local}) {
+  final double number = double.parse(value);
+  final bool isNegative = number < 0;
+
+  String formatted = NumberFormat.simpleCurrency(
+    locale: local,
+  ).format(number.abs());
+
+  formatted = formatted.replaceAll(RegExp(r'\s+'), '');
+
+  return isNegative ? ' -$formatted' : formatted;
+}
+
+
 
 String formatNumberForWallet({required String value, required String local, required BuildContext context}) {
   String result = (NumberFormat.compactSimpleCurrency(
@@ -392,10 +406,10 @@ double vatCalculationRefund({
   if (refund != null) {
     // refund is negative, so -refund is positive
     if (total <= -refund) {
-      return 1; // refund greater than total
+      return 0; // refund greater than total
     } else {
       if(total <= -refund){
-        return total + refund + 1;
+        return total + refund;
       }else {
         return total + refund;
       }
@@ -431,10 +445,10 @@ double bottleDepositCalculationWithVatRefund({
 
   if (refund != null) {
     if (depositWithVat <= -refund) {
-      return 1;
+      return 0;
     } else {
       if (depositWithVat <= -refund) {
-        return depositWithVat + refund + 1;
+        return depositWithVat + refund;
       }else {
         return depositWithVat + refund;
       }

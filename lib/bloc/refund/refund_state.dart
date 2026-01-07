@@ -3,7 +3,7 @@ part of 'refund_bloc.dart';
 @freezed
 class RefundState with _$RefundState {
   const factory RefundState({
-    required List<RefundInvoice> invoiceDetailsList,
+    required List<RefundInvoiceCommon> invoiceDetailsList,
     required bool isShimmering,
     required bool isBottomOfProducts,
     required RefreshController refreshController,
