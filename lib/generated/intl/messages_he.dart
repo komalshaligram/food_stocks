@@ -761,6 +761,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_enter_contact_name": MessageLookupByLibrary.simpleMessage(
       "אנא הזם שם איש קשר",
     ),
+    "please_enter_driverName": MessageLookupByLibrary.simpleMessage(
+      "נא להזין את שם הנהג",
+    ),
     "please_enter_email": MessageLookupByLibrary.simpleMessage(
       "אנא הזן כתובת מייל",
     ),

@@ -4114,6 +4114,16 @@ class S {
     );
   }
 
+  /// `Please enter driver name`
+  String get please_enter_driverName {
+    return Intl.message(
+      'Please enter driver name',
+      name: 'please_enter_driverName',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `How many pallets do you return?`
   String get pallets_return {
     return Intl.message(

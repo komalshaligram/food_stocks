@@ -822,6 +822,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_enter_contact_name": MessageLookupByLibrary.simpleMessage(
       "Please enter contact name",
     ),
+    "please_enter_driverName": MessageLookupByLibrary.simpleMessage(
+      "Please enter driver name",
+    ),
     "please_enter_email": MessageLookupByLibrary.simpleMessage(
       "Please enter email",
     ),

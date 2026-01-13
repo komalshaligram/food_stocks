@@ -249,8 +249,22 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                                     controller: state.surfacesController,
                                     keyboardType: TextInputType.number,
                                     hint: "",
-                                    textInputAction: TextInputAction.done,
+                                    textInputAction: TextInputAction.next,
                                     validator: AppStrings.surfaceValString,
+                                  ),
+                                  8.height,
+                                  CustomContainerWidget(
+                                    name: AppLocalizations.of(context)!.driver_name,
+                                    star: '*',
+                                  ),
+                                  CustomFormField(
+                                    context: context,
+                                    fillColor: AppColors.whiteColor,
+                                    controller: state.driverNameController,
+                                    keyboardType: TextInputType.text,
+                                    hint: "",
+                                    textInputAction: TextInputAction.done,
+                                    validator: AppStrings.driverNameString,
                                   ),
                                   8.height,
                                   Padding(
@@ -421,19 +435,19 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                         return;
                       }
               
-                      // if (!isDriverSign) {
-                      //   CustomSnackBar.showSnackBar(
-                      //     context: context,
-                      //     title: AppLocalizations.of(context)!.driver_signature_missing,
-                      //     type: SnackBarType.failure,
-                      //   );
-                      //   _scrollController.animateTo(
-                      //     _scrollController.position.maxScrollExtent,
-                      //     duration: const Duration(milliseconds: 500),
-                      //     curve: Curves.easeInOut,
-                      //   );
-                      //   return;
-                      // }
+                      if (!isDriverSign) {
+                        CustomSnackBar.showSnackBar(
+                          context: context,
+                          title: AppLocalizations.of(context)!.driver_signature_missing,
+                          type: SnackBarType.failure,
+                        );
+                        _scrollController.animateTo(
+                          _scrollController.position.maxScrollExtent,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                        );
+                        return;
+                      }
               
                       final signImage = await signatureGlobalKey.currentState!.toImage();
                       final signData = await signImage.toByteData(format: ui.ImageByteFormat.png);

@@ -196,6 +196,13 @@ class FormFieldValidation {
     return null;
   }
 
+  String? driverNameField(String value,BuildContext context) {
+    if (value.isEmpty) {
+      return AppLocalizations.of(context)!.please_enter_driverName;
+    }
+    return null;
+  }
+
   String? subUserNameField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
     RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");

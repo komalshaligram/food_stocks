@@ -93,7 +93,16 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
           printData("check here ${event.orderIssueReturnId}");
 
           // 4. Construct request payload
-          final deliveryConfirmRequest = DeliveryConfirmReqModel(supplierId: event.supplierId, signature: signUrl, driverSignature: driverSignUrl, returningSurface: int.tryParse(state.surfacesController.text) ?? 0, driverDeliveryDocumentsImages: event.driverDeliveryDocumentsImages, sentReturnData: event.sentReturnData, orderIssueReturnId: event.orderIssueReturnId ?? '');
+          final deliveryConfirmRequest = DeliveryConfirmReqModel(
+            supplierId: event.supplierId,
+            signature: signUrl,
+            driverSignature: driverSignUrl,
+            returningSurface: int.tryParse(state.surfacesController.text) ?? 0,
+            driverDeliveryDocumentsImages: event.driverDeliveryDocumentsImages,
+            sentReturnData: event.sentReturnData,
+            orderIssueReturnId: event.orderIssueReturnId ?? '',
+            driverName: state.driverNameController.text ?? ''
+          );
 
           // 5. Make the delivery confirmation API call
           final response = await DioClient(event.context).post(

@@ -67,6 +67,9 @@ class AuthFormValidation {
       case AppStrings.surfaceValString:
         return formFieldValidation.surfaceField(value,context);
 
+      case AppStrings.driverNameString:
+        return formFieldValidation.driverNameField(value,context);
+
       case AppStrings.subUserValString:
         return formFieldValidation.subUserNameField(value,context);
 

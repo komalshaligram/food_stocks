@@ -8,6 +8,7 @@ class ShipmentVerificationState with _$ShipmentVerificationState {
     required bool isLoading,
     required bool isDelete,
     required TextEditingController surfacesController,
+    required TextEditingController driverNameController,
   }) = _ShipmentVerificationState;
 
   factory ShipmentVerificationState.initial() => ShipmentVerificationState(
@@ -16,5 +17,6 @@ class ShipmentVerificationState with _$ShipmentVerificationState {
         isLoading: false,
         isDelete: false,
         surfacesController: TextEditingController(),
+        driverNameController: TextEditingController(),
       );
 }

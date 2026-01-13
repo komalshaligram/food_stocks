@@ -131,6 +131,7 @@ class AppStrings {
   static const branchValString = 'branchVal';
   static const accountValString = 'accountVal';
   static const surfaceValString = 'surfacesVal';
+  static const driverNameString = 'driverName';
   static const subUserValString = 'subUserNameVal';
   static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
   static const creditCardNumberString = 'creditCardNumber';

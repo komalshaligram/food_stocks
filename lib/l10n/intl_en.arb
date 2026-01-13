@@ -474,6 +474,7 @@
   "order_sign_dialog": "It is not possible to transmit an order because there are orders that you received and did not sign\nPlease go through your order list and confirm that you have received them\nOnce you confirm you can broadcast the order\nThank you!",
   "show_order":"Show order",
   "please_enter_surfaces":"Please enter the number of Returning surfaces",
+  "please_enter_driverName":"Please enter driver name",
   "pallets_return":"How many pallets do you return?",
   "sub_user": "Sub Users",
   "new_user": "New",
