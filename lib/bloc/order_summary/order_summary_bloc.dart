@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:dartz/dartz_unsafe.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../data/model/res_model/supplier_payment_type_res_model/supplier_payment_type_res_model.dart';
@@ -30,7 +29,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getDataEvent) {
-        emit(state.copyWith(cartItemList: event.cartItemList, language: preferencesHelper.getAppLanguage(), total : event.totalAmount, backString: event.backString));
+        emit(state.copyWith(cartItemList: event.cartItemList, language: preferencesHelper.getAppLanguage(), total: event.totalAmount, backString: event.backString));
         try {
           final res = await DioClient(event.context).post(
             '${AppUrlEndPoints.listingCartProductsSupplierUrl}${preferencesHelper.getCartId()}',
@@ -38,7 +37,10 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           CartProductsSupplierResModel response = CartProductsSupplierResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(orderSummaryList: response, tempList: response.data?.data ?? [], ));
+            emit(state.copyWith(
+              orderSummaryList: response,
+              tempList: response.data?.data ?? [],
+            ));
           } else {
             CustomSnackBar.showSnackBar(
               context: event.context,
@@ -52,12 +54,10 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
       if (event is _orderSendEvent) {
         List<Product> productReqMap = [];
 
-        // saleId: state.tempList[state.index].sales?.id,
         state.tempList[state.index].productDetails?.forEach((product) {
           productReqMap.add(Product(productId: product.id, supplierId: state.tempList[state.index].suppliers?.id, quantity: int.parse(state.tempList[state.index].totalQuantity.toString() ?? '0')));
         });
 
-        // productReqMap.add(Product(saleId: state.cartItemList.data?.data?[state.index].id, productId: state.cartItemList.data?.data?[state.index].productDetails?.id, quantity: int.parse(state.cartItemList.data?.data![state.index].totalQuantity.toString() ?? '0'), supplierId: state.cartItemList.data?.data?[state.index].suppliers?.first.id));
         List<CartProductDataResModel> tempList = [];
         tempList = [...state.tempList];
         tempList[state.index] = tempList[state.index].copyWith(isProcess: true);

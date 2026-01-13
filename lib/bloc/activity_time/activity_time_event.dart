@@ -1,9 +1,7 @@
 part of 'activity_time_bloc.dart';
 
-
 @freezed
-class ActivityTimeEvent with _$ActivityTimeEvent{
-
+class ActivityTimeEvent with _$ActivityTimeEvent {
   factory ActivityTimeEvent.timePickerEvent({
     required BuildContext timePickerContext,
     required int openingIndex,
@@ -12,43 +10,31 @@ class ActivityTimeEvent with _$ActivityTimeEvent{
     required String time,
     required BuildContext context,
     required String previousTime,
-}) = _timePickerEvent;
+  }) = _timePickerEvent;
 
   factory ActivityTimeEvent.defaultValueAddInListEvent({
     required BuildContext context,
-}
-  ) = _defaultValueAddInListEvent;
+  }) = _defaultValueAddInListEvent;
 
   factory ActivityTimeEvent.addMoreTimeZoneEvent({
     required int rowIndex,
     required BuildContext context,
-}
-      ) = _addMoreTimeZoneEventEvent;
+  }) = _addMoreTimeZoneEventEvent;
 
   factory ActivityTimeEvent.deleteTimeZoneEvent({
     required int rowIndex,
     required int timeIndex,
-
-  }
-      ) = _deleteTimeZoneEvent;
+  }) = _deleteTimeZoneEvent;
 
   factory ActivityTimeEvent.activityTimeApiEvent({
     required BuildContext context,
-
-}
-      ) = _activityTimeApiEvent;
+  }) = _activityTimeApiEvent;
 
   factory ActivityTimeEvent.getActivityTimeListEvent({
     required BuildContext context,
-
-}
-      ) = _getActivityTimeListEvent;
+  }) = _getActivityTimeListEvent;
 
   factory ActivityTimeEvent.getActivityTimeDetailsEvent({
     required bool isUpdate,
-  }
-      ) = _getActivityTimeDetailsEvent;
-
-
-
+  }) = _getActivityTimeDetailsEvent;
 }

@@ -547,7 +547,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               preferences.setAvailableAllPayment(isAvailableAllPayment: response.data?.clients?.first.clientDetail?.isAvailableAllPayments ?? false);
               preferences.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
               preferences.setClientDataOnApp(showClientDataOnApp: response.data?.clients?.first.clientDetail?.showClientDataOnApp ?? false);
-              // preferences.setIsWalletApproved(walletApproved: response.data?.clients?.first.clientDetail?.isWalletApproved??false);
               preferences.setPaymentMethodTypes(methods: response.data?.clients?.first.clientDetail?.availablePaymentTypes ?? []);
               preferences.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
               preferences.setBusinessName(businessName: response.data?.clients?.first.clientDetail?.bussinessName ?? '');
@@ -574,8 +573,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 add(HomeEvent.generalSettings(context: event.context, dialogContext: event.context, isRetryLoading: false));
               }
               add(const HomeEvent.getPreferencesDataEvent());
-              // add(HomeEvent.getProductSalesListEvent(context: event.context));
-              // add(HomeEvent.getRecommendationProductsListEvent(context: event.context));
               add(HomeEvent.getCartCountEvent(context: event.context));
               add(HomeEvent.getMessageListEvent(context: event.context));
               add(HomeEvent.getOrderCountEvent(context: event.context));
@@ -599,7 +596,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             final response = RecommendationProductsResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {
-              final cartMap = await fetchCartQuantities(event.context); // fetch once
+              final cartMap = await fetchCartQuantities(event.context);
 
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
 

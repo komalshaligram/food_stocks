@@ -223,7 +223,9 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                       ),
                     ),
                     child: Text(
-                      orderDetailsList[index].rivchitInvoicePrice != '0' ? (formatNumber(value: orderDetailsList[index].rivchitInvoicePrice.toString(), local: AppStrings.hebrewLocal)) : (formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal)),
+                      orderDetailsList[index].rivchitInvoicePrice != '0' ?
+                      formatSignedNumber(orderDetailsList[index].rivchitInvoicePrice) :
+                      formatSignedNumber(orderDetailsList[index].totalAmount),
                       style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.bold),
                     ),
                   ),

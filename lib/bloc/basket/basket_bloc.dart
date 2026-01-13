@@ -73,7 +73,17 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               if (productStockList.isNotEmpty) {
                 productStockList[0] = [];
               }
-              add(BasketEvent.getSupplierPaymentTypeEvent(context: event.context, id: response.data?.data?.first.suppliers?.first.id ?? '', index: 0));
+              printData("check here res ${response.data?.data?.length}");
+              if (response.data?.data?.isNotEmpty == true) {
+                add(
+                  BasketEvent.getSupplierPaymentTypeEvent(
+                    context: event.context,
+                    id: response.data!.data!.first.suppliers?.first.id ?? '',
+                    index: 0,
+                  ),
+                );
+              }
+
 
               List<ProductStockModel> stockList = [];
               stockList.addAll(response.data?.data?.map((product) => ProductStockModel(
@@ -113,7 +123,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
               emit(state.copyWith(isAnimation: true));
               emit(state.copyWith(vatPercentage: response.data!.vatPercentage?.toDouble() ?? 0.0, bottleQty: response.data?.cart?.first.bottleQuantities,
-                  bottleTax: response.data?.bottleTax ?? 0, basketProductList: temp, productStockList: productStockList, totalPayment: response.data?.cart?.first.totalAmount!.toDouble() ?? 0, supplierCount: response.data?.cart?.first.suppliers ?? 1, supplierId: response.data?.data?.first.suppliers?.first.id ?? '', isAnimation: false, draftReturnExists: response.data?.cart?.first.draftReturnExists! ?? false));
+                  bottleTax: response.data?.bottleTax ?? 0, basketProductList: temp, productStockList: productStockList, totalPayment:
+                  response.data?.cart?.first.totalAmount!.toDouble() ?? 0, supplierCount: response.data?.cart?.first.suppliers ?? 1, supplierId:
+                  response.data?.data?.isNotEmpty == true ?  response.data?.data?.first.suppliers?.first.id ?? '' : '', isAnimation: false, draftReturnExists: response.data?.cart?.first.draftReturnExists! ?? false));
             } else {
               emit(state.copyWith(isShimmering: false));
             }
@@ -143,19 +155,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           list = [...state.basketProductList];
 
           try {
-            // if (state.productStockList[0][state.productStockUpdateIndex].maxQty > 0) {
-            //   if (event.productWeight > state.productStockList[0][state.productStockUpdateIndex].maxQty) {
-            //     CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
-            //     return;
-            //   }
-            // }
 
-            // if (state.productStockList[event.listIndex][state.productStockUpdateIndex].maxQty > 0) {
-            //   if (event.productWeight == state.productStockList[event.listIndex][state.productStockUpdateIndex].maxQty) {
-            //     CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
-            //     return;
-            //   }
-            // }
 
             list[event.listIndex].isProcess = true;
             emit(state.copyWith(

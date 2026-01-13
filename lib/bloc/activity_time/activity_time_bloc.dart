@@ -112,7 +112,11 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 emit(state.copyWith(isShimmering: false));
               }
             } else {
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure,
+              );
               emit(state.copyWith(isShimmering: false));
             }
           } on ServerException {
@@ -229,13 +233,10 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 if (closingTime == AppStrings.timeString && selectTimeZone.isAfter(preEnd)) {
                   shortVar.removeAt(event.timeIndex);
                   shortVar.insert(event.timeIndex, Day(from: selectedTime, until: closingTime));
-                  //  shortVar.add(Day(from: selectedTime, until: closingTime));
                 } else if (closingTime != AppStrings.timeString) {
                   if (selectTimeZone.isAfter(preEnd) && selectTimeZone.isBefore(end)) {
                     shortVar.removeAt(event.timeIndex);
                     shortVar.insert(event.timeIndex, Day(from: selectedTime, until: closingTime));
-
-                    //shortVar.add(Day(from: selectedTime, until: closingTime));
                   } else if (selectTimeZone.isBefore(preEnd)) {
                     CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_select_opening_time_after_previous_closing_time, type: SnackBarType.failure);
                   } else {

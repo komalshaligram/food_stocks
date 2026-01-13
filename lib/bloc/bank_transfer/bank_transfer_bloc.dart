@@ -7,19 +7,16 @@ part 'bank_transfer_state.dart';
 part 'bank_transfer_event.dart';
 part 'bank_transfer_bloc.freezed.dart';
 
-
-
-
 class BankTransferBloc extends Bloc<BankTransferEvent, BankTransferState> {
   BankTransferBloc() : super(BankTransferState.initial()) {
     on<BankTransferEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getBankTransferInfoEvent) {
-        debugPrint('details:${preferencesHelper.getBankTransferDetail()}');
-        emit(state.copyWith(bankTransferDetails:preferencesHelper.getBankTransferDetail(),isLoading: false));
+        emit(state.copyWith(
+          bankTransferDetails: preferencesHelper.getBankTransferDetail(),
+          isLoading: false,
+        ));
       }
-    }
-    );
+    });
   }
 }

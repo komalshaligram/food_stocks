@@ -55,7 +55,6 @@ class HomeScreen extends StatelessWidget {
       create: (context) => HomeBloc()
         ..add(HomeEvent.getProfileDetailsEvent(context: context))
         ..add(HomeEvent.getProductSalesListEvent(context: context))
-        //..add(HomeEvent.getRecommendationProductsListEvent(context: context))
         ..add(const HomeEvent.getPreferencesDataEvent()),
       child: HomeScreenWidget(isNavigation: isSubCategory),
     );
@@ -75,7 +74,6 @@ class HomeScreenWidget extends StatelessWidget {
       listener: (context, state) {
         if (state.isCartCountChange) {
           BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.updateCartCountEvent(context: context));
-          //  BlocProvider.of<HomeBloc>(context).add(HomeEvent.getCartCountEvent(context: context));
         }
         if (state.isAccountPermissionShimmering) {
           BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.seeWalletPermissionUpdateEvent(context: context));
@@ -630,15 +628,6 @@ class HomeScreenWidget extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                // state.showClientDataOnApp
-                                //     ? CustomTextIconButtonWidget(
-                                //         width: double.maxFinite,
-                                //         title: state.language == 'en' ? state.buttonEnglishText! : state.buttonHebrewText! ,
-                                //         onPressed: () {
-                                //           context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 2, context: context));
-                                //         },
-                                //       )
-                                //     : 0.width,
                                 CommonSearchWidget(
                                   isFilterTap: true,
                                   isCategoryExpand: state.isCategoryExpand,
@@ -845,8 +834,6 @@ class HomeScreenWidget extends StatelessWidget {
                                     }
                                   },
                                 )
-
-                                // state.showClientDataOnApp ? 100.height : 0.width,
                               ],
                             ),
                           ),

@@ -510,6 +510,17 @@ class BasketSummaryScreenWidget extends StatelessWidget {
   Widget orderListItem({required int index, required BuildContext context, required BasketSummaryBloc bloc}) {
     return BlocBuilder<BasketSummaryBloc, BasketSummaryState>(
       builder: (context, state) {
+
+        final totalSavingsValue = double.tryParse(
+          state.tempList[index].totalSavings.toString(),
+        ) ?? 0.0;
+
+        final savingsSalesValue = totalSavingsValue < 0
+            ? '\u200E-${totalSavingsValue.abs().toStringAsFixed(2)}₪'
+            : '\u200E${totalSavingsValue.toStringAsFixed(2)}₪';
+
+        final isHebrew = Localizations.localeOf(context).languageCode == 'he';
+
         return Column(
           children: [
             Container(
@@ -558,7 +569,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                         borderCoder: AppColors.lightBorderColor,
                         flexValue: 5,
                         title: AppLocalizations.of(context)!.savings_for_sales,
-                        value: state.tempList[index].totalSavings != null ? state.tempList[index].totalSavings! ?? '' : '',
+                        value: savingsSalesValue,
                         titleColor: AppColors.orangeColor,
                         valueColor: AppColors.blackColor,
                         valueTextWeight: FontWeight.w700,
@@ -571,15 +582,15 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                         flexValue: 7,
                         title: AppLocalizations.of(context)!.total_order,
 
-                        value: formatNumber(
-                          value: vatCalculation(
+                        value: '${
+                         vatCalculation(
                             price: double.parse(state.tempList[index].totalAmount ?? '0'),
                             vat: state.tempList[index].vatPercentage ?? 0,
-                            qty: state.tempList[index].bottleQuantities!.toDouble() ?? 0,
-                            deposit: state.tempList[index].bottleTax!.toDouble() ?? 0,
-                          ).toStringAsFixed(2),
-                          local: AppStrings.hebrewLocal,
-                        ), //refund: 0.0
+                            qty: (state.tempList[index].bottleQuantities ?? 0).toDouble(),
+                            deposit: (state.tempList[index].bottleTax ?? 0).toDouble(),
+                          ).toStringAsFixed(2)
+
+                        }₪', //refund: 0.0
                         titleColor: AppColors.mainColor,
                         valueColor: AppColors.blackColor,
                         valueTextWeight: FontWeight.w500,
@@ -641,10 +652,23 @@ class BasketSummaryScreenWidget extends StatelessWidget {
 
     final isHebrew = Localizations.localeOf(context).languageCode == 'he';
 
-    final rawAmount = state.orderSummaryList.data?.openRefundTotalAmount;
-    final amountStr = rawAmount?.toString() ?? '0';
-    final isNegative = amountStr.startsWith('-');
-    final refundTotalAmount = isNegative ? ' $amountStr₪' : '$amountStr₪';
+    final rawRefundAmount =
+        state.orderSummaryList.data?.openRefundTotalAmount ?? 0.0;
+
+    final totalOrderAmount = vatCalculation(
+      price: double.parse(state.tempList[index].totalAmount ?? '0'),
+      vat: state.tempList[index].vatPercentage ?? 0,
+      qty: (state.tempList[index].bottleQuantities ?? 0).toDouble(),
+      deposit: (state.tempList[index].bottleTax ?? 0).toDouble(),
+    );
+
+    final adjustedAmount = totalOrderAmount.abs() < rawRefundAmount.abs()
+        ? totalOrderAmount
+        : rawRefundAmount;
+
+    final displayAmount =
+        ' -${adjustedAmount.abs().toStringAsFixed(2)}₪';
+
 
     return Container(
         alignment: state.language == AppStrings.englishString ? Alignment.centerLeft : Alignment.centerRight,
@@ -685,16 +709,8 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                 ? const SizedBox()
                 : basketRow(
                     AppLocalizations.of(context)!.total_refunds,
-                    formatNumberPositiveToNegative(
-                      value: (-vatCalculation(
-                        price: double.parse(state.tempList[index].totalAmount ?? '0'),
-                        vat: state.tempList[index].vatPercentage ?? 0,
-                        qty: state.tempList[index].bottleQuantities!.toDouble() ?? 0,
-                        deposit: state.tempList[index].bottleTax!.toDouble() ?? 0,
-                      ))
-                          .toStringAsFixed(2),
-                      local: AppStrings.hebrewLocal,
-                    ),
+                displayAmount
+
                   ),
             state.isIncludedVat ? const SizedBox() : const Divider(height: 8),
             state.isIncludedVat

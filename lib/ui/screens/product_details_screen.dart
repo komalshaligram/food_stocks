@@ -103,15 +103,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _keyTextWidget(AppLocalizations.of(context)!.supplier),
-                _valueTextWidget(state.orderBySupplierProduct.supplierName?.toString() ?? ''),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _keyTextWidget(AppLocalizations.of(context)!.order_number),
-                _valueTextWidget(state.orderData.orderNumber.toString()),
+                titleText(context, AppLocalizations.of(context)!.supplier),
+                subTitleValueText(context, state.orderBySupplierProduct.supplierName?.toString() ?? ''),
               ],
             ),
             state.orderData.orderstatus != null
@@ -134,32 +127,57 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _keyTextWidget(AppLocalizations.of(context)!.order_date),
-                _valueTextWidget(state.orderBySupplierProduct.orderDate.toString()),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  titleText(context, AppLocalizations.of(context)!.order_number),
+                  subTitleValueText(context, state.orderData.orderNumber.toString()),
+                ],
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _keyTextWidget(AppLocalizations.of(context)!.order_amount),
-                _valueTextWidget(state.orderData.totalVatAmount.toString()),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  titleText(context, AppLocalizations.of(context)!.order_date),
+                  subTitleValueText(context, state.orderBySupplierProduct.orderDate.toString()),
+                ],
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _keyTextWidget(AppLocalizations.of(context)!.payment_type),
-                _valueTextWidget(state.orderData.paymentMethod.toString() == AppStrings.wallet
-                    ? AppLocalizations.of(context)!.payment_wallet
-                    : state.orderData.paymentMethod.toString() == AppStrings.creditCard
-                        ? AppLocalizations.of(context)!.payment_credit_card
-                        : state.orderData.paymentMethod.toString() == AppStrings.bankTransfer
-                            ? AppLocalizations.of(context)!.payment_bank_transfer
-                            : AppLocalizations.of(context)!.payment_bank_check)
-              ],
+          ],
+        );
+
+    Widget itemThree(ProductDetailsState state) => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  titleText(context, AppLocalizations.of(context)!.order_amount),
+                  subTitleValueText(context, state.orderData.totalVatAmount.toString()),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  titleText(context, AppLocalizations.of(context)!.payment_type),
+                  subTitleValueText(
+                      context,
+                      state.orderData.paymentMethod.toString() == AppStrings.wallet
+                          ? AppLocalizations.of(context)!.payment_wallet
+                          : state.orderData.paymentMethod.toString() == AppStrings.creditCard
+                              ? AppLocalizations.of(context)!.payment_credit_card
+                              : state.orderData.paymentMethod.toString() == AppStrings.bankTransfer
+                                  ? AppLocalizations.of(context)!.payment_bank_transfer
+                                  : AppLocalizations.of(context)!.payment_bank_check)
+                ],
+              ),
             ),
           ],
         );
@@ -170,7 +188,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
         children: [
           SizedBox(
             width: MediaQuery.of(context).size.width / 2.8,
-            child: _keyTextWidget(title),
+            child: titleText(context, title),
           ),
           GestureDetector(
             onTap: () async {
@@ -268,10 +286,10 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
     Widget itemFour(totalAmount, InvoiceDetails? invoiceDetails) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _keyTextWidget(AppLocalizations.of(context)!.total_payment),
+            titleText(context, AppLocalizations.of(context)!.total_payment),
             Directionality(
               textDirection: TextDirection.ltr,
-              child: _valueTextWidget(invoiceDetails == null || invoiceDetails.invoiceNumber == null ? '---' : '${totalAmount.toStringAsFixed(2)}₪'),
+              child: subTitleValueText(context, invoiceDetails == null || invoiceDetails.invoiceNumber == null ? '---' : '${totalAmount.toStringAsFixed(2)}₪'),
             ),
           ],
         );
@@ -329,7 +347,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         style: TextStyle(color: AppColors.whiteColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.w400),
                                       ),
                                       Text(
-                                        state.orderData.comaxInvoicePrice != 0.0 ? formatNumber(value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0', local: AppStrings.hebrewLocal) : formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0', local: AppStrings.hebrewLocal), // orderDetailsList[index].rivchitInvoicePrice != '0' ? (formatNumber(value: orderDetailsList[index].rivchitInvoicePrice.toString(), local: AppStrings.hebrewLocal)) : (formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal)),
+                                        state.orderData.comaxInvoicePrice != 0.0 ?
+                                        formatNumber(value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0', local: AppStrings.hebrewLocal) :
+                                        formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0', local: AppStrings.hebrewLocal), // orderDetailsList[index].rivchitInvoicePrice != '0' ? (formatNumber(value: orderDetailsList[index].rivchitInvoicePrice.toString(), local: AppStrings.hebrewLocal)) : (formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal)),
                                         style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.bold),
                                       ),
                                     ],
@@ -392,6 +412,11 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         height: 20.0,
                                         color: AppColors.borderColor,
                                       ),
+                                      itemThree(state),
+                                      Divider(
+                                        height: 20.0,
+                                        color: AppColors.borderColor,
+                                      ),
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
@@ -405,8 +430,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                           10.height,
                                           invoiceRefundAmountItem(
                                             title: AppLocalizations.of(context)!.refund_amount,
-                                            value: state.orderData.adjustedRefundAmount.toString() == 'null' || state.orderData.adjustedRefundAmount == null ? '0.0₪' :
-                                            '${state.orderData.adjustedRefundAmount}₪',
+                                            value: state.orderData.adjustedRefundAmount.toString() == 'null' || state.orderData.adjustedRefundAmount == null ? '0.0₪' : '${state.orderData.adjustedRefundAmount}₪',
                                             orderId: state.orderData.id,
                                             orderNumber: state.orderData.orderNumber,
                                             orderData: state.orderData.invoiceDetails ?? const InvoiceDetails(),
@@ -809,14 +833,18 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
     );
   }
 
-  Widget _keyTextWidget(String key) => Text(
-        key,
-        style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.w700),
+  Widget titleText(BuildContext context, String title) => Text(
+        title,
+        style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       );
 
-  Widget _valueTextWidget(String value) => Text(
-        value,
-        style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.w400),
+  Widget subTitleValueText(BuildContext context, String subTitle) => Text(
+        subTitle,
+        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.normal),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       );
 
   Widget productListItem({

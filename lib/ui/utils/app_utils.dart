@@ -354,6 +354,18 @@ String formatNumber({required String value, required String local}) {
 
   return splitNumber(result);
 }
+
+String formatSignedNumber(dynamic value) {
+  final double amount = value is num
+      ? value.toDouble()
+      : double.tryParse(value?.toString() ?? '0') ?? 0;
+
+  final formatted =
+  NumberFormat.decimalPattern('en_IN').format(amount.abs());
+
+  return amount.isNegative ? '-$formatted ₪' : '$formatted ₪';
+}
+
 String formatNumberPositiveToNegative({required String value, required String local}) {
   final double number = double.parse(value);
   final bool isNegative = number < 0;

@@ -56,15 +56,19 @@ class InvoicePdfScreenWidget extends StatelessWidget {
         final bloc = context.read<InvoicePdfBloc>();
         final String? fullUrl = state.invoiceDetailsList.invoiceLink;
 
-        Widget keyTextWidget(String key) => Text(
-              key,
-              style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.w700),
-            );
+        Widget titleText(BuildContext context, String title) => Text(
+          title,
+          style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        );
 
-        Widget valueTextWidget(String value) => Text(
-              value,
-              style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.w400),
-            );
+        Widget subTitleValueText(BuildContext context, String subTitle) => Text(
+          subTitle,
+          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.normal),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        );
 
         Widget itemOne(InvoicePdfState state) => Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,8 +77,8 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    keyTextWidget(AppLocalizations.of(context)!.invoice),
-                    valueTextWidget(invoiceDetailsList.invoiceNumber.toString()),
+                    titleText(context, AppLocalizations.of(context)!.invoice),
+                    subTitleValueText(context, invoiceDetailsList.invoiceNumber.toString()),
                   ],
                 ),
 
@@ -86,7 +90,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                           color: invoiceDetailsList.paymentStatus == AppStrings.openText ? AppColors.statusOpenColor : AppColors.statusCloseColor,
                         ),
                         child: Text(
-                          invoiceDetailsList.paymentStatus == AppStrings.openText ? AppLocalizations.of(context)!.open_text : AppLocalizations.of(context)!.closed_text,
+                          invoiceDetailsList.paymentStatus == AppStrings.openText ? AppLocalizations.of(context)!.invoice_open : AppLocalizations.of(context)!.invoice_close,
                           style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w700),
                         ),
                       )
@@ -103,8 +107,8 @@ class InvoicePdfScreenWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  keyTextWidget(AppLocalizations.of(context)!.invoice_date),
-                  valueTextWidget((invoiceDetailsList.invoiceDate ?? '').isNotEmpty ? invoiceDetailsList.invoiceDate!.substring(0, 10) : ''),
+                  titleText(context,AppLocalizations.of(context)!.invoice_date),
+                  subTitleValueText(context, (invoiceDetailsList.invoiceDate ?? '').isNotEmpty ? invoiceDetailsList.invoiceDate!.substring(0, 10) : ''),
                 ],
               ),
             ),
@@ -112,8 +116,8 @@ class InvoicePdfScreenWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  keyTextWidget(AppLocalizations.of(context)!.due_date),
-                  valueTextWidget((invoiceDetailsList.dueDate ?? '').isNotEmpty ? invoiceDetailsList.dueDate!.substring(0, 10) : '--'),
+                  titleText(context,AppLocalizations.of(context)!.due_date),
+                  subTitleValueText(context, (invoiceDetailsList.dueDate ?? '').isNotEmpty ? invoiceDetailsList.dueDate!.substring(0, 10) : '--'),
                 ],
               ),
             ),
@@ -129,7 +133,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      keyTextWidget(AppLocalizations.of(context)!.for_order),
+                      titleText(context,AppLocalizations.of(context)!.for_order),
                       GestureDetector(
                         onTap: () async {
                           Navigator.push(
@@ -184,7 +188,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                 ],
                               ),
                       ),
-                      // valueTextWidget(invoiceDetailsList.orderNumber.toString()),
+
                     ],
                   ),
                 ),
@@ -192,8 +196,8 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      keyTextWidget(AppLocalizations.of(context)!.total_invoice_amount),
-                      valueTextWidget('${invoiceDetailsList.invoiceAmount}₪'),
+                      titleText(context,AppLocalizations.of(context)!.total_invoice_amount),
+                      subTitleValueText(context, '${invoiceDetailsList.invoiceAmount}₪'),
                     ],
                   ),
                 ),

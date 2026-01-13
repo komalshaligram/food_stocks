@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:food_stock/ui/screens/product_details_screen.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/order_summary/order_summary_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -36,7 +35,15 @@ class OrderSummaryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => OrderSummaryBloc()..add(OrderSummaryEvent.getDataEvent(context: context, cartItemList: args?[AppStrings.getCartListString], totalAmount: args?[AppStrings.totalAmountString], backString: args?[AppStrings.isbackString])),
+      create: (context) => OrderSummaryBloc()
+        ..add(
+          OrderSummaryEvent.getDataEvent(
+            context: context,
+            cartItemList: args?[AppStrings.getCartListString],
+            totalAmount: args?[AppStrings.totalAmountString],
+            backString: args?[AppStrings.isbackString],
+          ),
+        ),
       child: const OrderSummaryScreenWidget(),
     );
   }
@@ -110,7 +117,6 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             },
           ).then((value) {
             context.read<OrderSummaryBloc>().add(const OrderSummaryEvent.refreshEvent());
-            // context.read<OrderSummaryBloc>().add(const OrderSummaryEvent.refreshEvent());
           });
         } else if (state.isPaymentFail) {
           showDialog(
@@ -265,80 +271,35 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                       (state.tempList.length ?? 0) == 0
                           ? refundShimmer()
                           : Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 4, // space between texts
+                              alignment: WrapAlignment.center,
+                              spacing: 4, // space between texts
                               children: [
                                 Text(
-                                  isHebrew ? '${AppLocalizations.of(context)!.refund_amount_3}'
-                                      ' ${refundAmount.abs().toStringAsFixed(2)}${'₪'}' : AppLocalizations.of(context)!.refund_amount_3,
+                                  isHebrew
+                                      ? '${AppLocalizations.of(context)!.refund_amount_3}'
+                                          ' ${refundAmount.abs().toStringAsFixed(2)}${'₪'}'
+                                      : AppLocalizations.of(context)!.refund_amount_3,
                                   style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_15,
                                     color: AppColors.notificationColor,
                                   ),
                                 ),
                                 Text(
-                                  isHebrew ? AppLocalizations.of(context)!.refund_amount_4 :
-                                  '${refundAmount.abs().toStringAsFixed(2)}${'₪'} ${AppLocalizations.of(context)!.refund_amount_4} ',
-                                  // '${AppLocalizations.of(context)!.refund_amount_3} ${formatNumber(
-                                  //    value: refundAmount.abs().toStringAsFixed(2), // use abs() to remove negative sign
-                                  //    local: AppStrings.hebrewLocal,
-                                  //  )}',
+                                  isHebrew
+                                      ? AppLocalizations.of(context)!.refund_amount_4
+                                      : '${refundAmount.abs().toStringAsFixed(2)}${'₪'} '
+                                          '${AppLocalizations.of(context)!.refund_amount_4} ',
                                   style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_15,
                                     color: AppColors.notificationColor,
                                   ),
                                 ),
-
                               ],
                             )
                     ],
                   ),
                 ),
               ),
-              // if (state.isLoading)
-              //   Positioned.fill(
-              //     child: Container(
-              //       color: Colors.black.withOpacity(0.3),
-              //       child: Center(
-              //         child: Material(
-              //           color: Colors.transparent,
-              //           child: Container(
-              //             padding: const EdgeInsets.all(5),
-              //             width: 200,
-              //             decoration: BoxDecoration(
-              //               color: Colors.white,
-              //               borderRadius: BorderRadius.circular(8),
-              //               boxShadow: const [
-              //                 BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 4)),
-              //               ],
-              //             ),
-              //             child: Column(
-              //               mainAxisSize: MainAxisSize.min,
-              //               children: [
-              //                 SizedBox(
-              //                     height: 80,
-              //                     width: 130,
-              //                     child: Lottie.asset(
-              //                       'assets/images/super_market.json',
-              //                       width: 50,
-              //                       height: 50,
-              //                       fit: BoxFit.fill,
-              //                     )),
-              //                 const SizedBox(height: 10),
-              //                 Text(
-              //                   AppLocalizations.of(context)!.basket_loader_text,
-              //                   style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.bold),
-              //                 ),
-              //                 const SizedBox(height: 4),
-              //                 Text(AppLocalizations.of(context)!.please_wait_text, style: TextStyle(fontSize: AppConstants.font_14, color: AppColors.greyColor)),
-              //                 const SizedBox(height: 8),
-              //               ],
-              //             ),
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //   ),
             ],
           );
         },
@@ -526,7 +487,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
               directionality: state.language,
-              positiveTitle: AppLocalizations.of(context)!.pay_with_credit_card, //state.paymentTypesList.any((e) => e == AppStrings.creditCard) ? AppLocalizations.of(context)!.pay_with_credit_card : null,
+              positiveTitle: AppLocalizations.of(context)!.pay_with_credit_card,
               positiveOnTap: () {
                 Navigator.pop(context);
                 bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.creditCard));
@@ -549,9 +510,9 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                 Navigator.pop(context1);
                 bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.bankCheck));
               },
-              positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment, //state.paymentTypesList.any((e) => e == AppStrings.wallet) ? AppLocalizations.of(context)!.change_to_wallet_payment : null,
-              positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer, //state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null,
-              positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check, //state.paymentTypesList.any((e) => e == AppStrings.bankCheck) ? AppLocalizations.of(context)!.pay_with_bank_check : null,
+              positiveTitle1: AppLocalizations.of(context)!.change_to_wallet_payment,
+              positiveTitle2: AppLocalizations.of(context)!.pay_with_bank_transfer,
+              positiveTitle3: AppLocalizations.of(context)!.pay_with_bank_check,
             );
           } else {
             return CustomOneButtonDialog(
@@ -566,7 +527,6 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   failPayment: false,
                   paymentMethod: AppStrings.creditCard,
                 ));
-                //  Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
               },
               positiveOnTap1: () {
                 Navigator.pop(context);
@@ -577,7 +537,6 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     function: () {
                       bloc.add(OrderSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: isFromRemovePopUp));
                     });
-                //   bloc.add(OrderSummaryEvent.orderSendEvent(context: context, failPayment: false,  paymentMethod: AppStrings.bankTransfer,));
               },
               positiveTitle1: AppLocalizations.of(context)!.pay_with_bank_transfer,
             );
@@ -668,22 +627,13 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                 buttonText: AppLocalizations.of(context)!.continues,
                 bGColor: AppColors.mainColor,
                 height: 40,
-                // isLoading: state.tempList[index].isProcess ?? false,
                 onPressed: () async {
-                  Navigator.pushNamed(context, RouteDefine.basketSummaryScreen.name, arguments: {AppStrings.getCartListString: state.cartItemList, AppStrings.orderBySupplierId: state.tempList[index].id, AppStrings.isSupplierSingle: 'No', AppStrings.totalSupplier: state.tempList.length});
-                  // if (state.tempList[index].draftReturnExists!) {
-                  //   await showDialog(
-                  //     context: context,
-                  //     builder: (_) => CallAgentDialog(
-                  //       language: state.language,
-                  //       id: state.tempList[index].suppliers?.id ?? '',
-                  //       index: index,
-                  //       bloc: bloc,
-                  //     ),
-                  //   );
-                  // } else {
-                  //   bloc.add(OrderSummaryEvent.getSupplierPaymentTypeEvent(context: context, id: state.tempList[index].suppliers?.id ?? '', index: index));
-                  // }
+                  Navigator.pushNamed(context, RouteDefine.basketSummaryScreen.name, arguments: {
+                    AppStrings.getCartListString: state.cartItemList,
+                    AppStrings.orderBySupplierId: state.tempList[index].id,
+                    AppStrings.isSupplierSingle: 'No',
+                    AppStrings.totalSupplier: state.tempList.length,
+                  });
                 },
                 fontColors: AppColors.whiteColor,
               ),

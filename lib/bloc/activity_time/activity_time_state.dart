@@ -10,11 +10,10 @@ class ActivityTimeState with _$ActivityTimeState {
     required bool isUpdate,
     required bool isLoading,
     required bool isShimmering,
-
   }) = _ActivityTimeState;
 
-  factory ActivityTimeState.initial()=>  const ActivityTimeState(
-    time: AppStrings.timeString,
+  factory ActivityTimeState.initial() => const ActivityTimeState(
+        time: AppStrings.timeString,
         operationTimeList: [],
         isRefresh: false,
         errorMessage: '',
